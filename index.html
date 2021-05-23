@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <title>Dungeons of Tavaraen</title>
+</head>
+<body>
+  <div class="main">
+    <div class="canvasLayers">
+      <canvas class="baseSheet layer" width="1920" height="1344"></canvas>
+      <div class="enemyLayers"></div>
+      <div class="projectileLayers"></div>
+      <canvas class="playerSheet layer" width="1920" height="1344"></canvas>
+    </div>
+    <div class="xpBar">
+      <div class="barFill"></div>
+    </div>
+    <div class="hotbar"></div>
+    <div class="playerUI">
+      <div class="playerHpBg">
+        <img src="resources/ui/health_bg.png" alt="" class="PlayerHpBgImg">
+        <img src="resources/ui/health.png" alt="" class="PlayerHpFill">
+        <p class="hpText">50/50</p>
+      </div>
+      <div class="playerMpBg">
+        <img src="resources/ui/mana_bg.png" alt="" class="PlayerMpBgImg">
+        <img src="resources/ui/mana.png" alt="" class="PlayerMpFill">
+      </div>
+    </div>
+    <div class="mapHover"></div>
+  </div>
+</body>
+
+<div class="sprites">
+  <script src="script/loadImg.js"></script>
+  <!-- Player Sprites -->
+
+  <!-- Body Models  -->
+  <img src="resources/tiles/player/human_model.png" alt="" onload="imgLoaded()" class="humanModel sprite">
+  <img src="resources/tiles/player/elf_model.png" alt="" onload="imgLoaded()" class="elfModel sprite">
+  <img src="resources/tiles/player/orc_model.png" alt="" onload="imgLoaded()" class="orcModel sprite">
+  <img src="resources/tiles/player/ashen_model.png" alt="" onload="imgLoaded()" class="ashenModel sprite">
+
+  <!-- Ears -->
+  <img src="resources/tiles/player/human_ears.png" alt="" onload="imgLoaded()" class="humanEars sprite">
+  <img src="resources/tiles/player/elf_ears.png" alt="" onload="imgLoaded()" class="elfEars sprite">
+  <img src="resources/tiles/player/orc_ears.png" alt="" onload="imgLoaded()" class="orcEars sprite">
+  <img src="resources/tiles/player/ashen_ears.png" alt="" onload="imgLoaded()" class="ashenEars sprite">
+
+   <!-- Hair  -->
+  <img src="resources/tiles/player/hair_1.png" alt="" onload="imgLoaded()" class="hair1 sprite">
+  <img src="resources/tiles/player/hair_2.png" alt="" onload="imgLoaded()" class="hair2 sprite">
+  <img src="resources/tiles/player/hair_3.png" alt="" onload="imgLoaded()" class="hair3 sprite">
+  <img src="resources/tiles/player/hair_4.png" alt="" onload="imgLoaded()" class="hair4 sprite">
+   <!-- Eyes  -->
+  <img src="resources/tiles/player/eyes_1.png" alt="" onload="imgLoaded()" class="eyes1 sprite">
+  <img src="resources/tiles/player/eyes_2.png" alt="" onload="imgLoaded()" class="eyes2 sprite">
+   <!-- Faces  -->
+  <img src="resources/tiles/player/nose_mouth_1.png" alt="" onload="imgLoaded()" class="face1 sprite">
+   <!-- Clothes  -->
+  <img src="resources/tiles/player/generic_pants.png" alt="" onload="imgLoaded()" class="defaultPants sprite">
+  <img src="resources/tiles/player/ragged_shirt.png" alt="" onload="imgLoaded()" class="raggedShirt sprite">
+  <img src="resources/tiles/player/ragged_boots.png" alt="" onload="imgLoaded()" class="raggedBoots sprite">
+
+  <!-- Weapons -->
+  <img src="resources/tiles/player/dagger_model.png" alt="" onload="imgLoaded()" class="rustyDagger sprite">
+  <img src="resources/tiles/player/stick_model.png" alt="" onload="imgLoaded()" class="stick sprite">
+  <img src="resources/tiles/player/bow_model.png" alt="" onload="imgLoaded()" class="bow sprite">
+
+  <!-- Projectiles -->
+  <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
+
+  <!-- Enemies -->
+  <img src="resources/tiles/enemies/grey_slime.png" alt="" onload="imgLoaded()" class="greySlime sprite">
+  <img src="resources/tiles/enemies/skeleton_warrior.png" alt="" onload="imgLoaded()" class="skeletonWarrior sprite">
+
+  <!-- Health & Mana Bars -->
+  <img src="resources/tiles/enemies/healthBackground.png" alt="" onload="imgLoaded()" class="hpBg sprite">
+  <img src="resources/tiles/enemies/healthBar.png" alt="" onload="imgLoaded()" class="hpBar sprite">
+  <img src="resources/tiles/enemies/healthBorder.png" alt="" onload="imgLoaded()" class="hpBorder sprite">
+
+   <!-- Map Tiles  -->
+   <img src="resources/tiles/hovering.png" alt="" onload="imgLoaded()" class="hoverTile sprite">
+   <img src="resources/tiles/void.png" alt="" onload="imgLoaded()" class="tileVOID sprite">
+   <img src="resources/tiles/highlight.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT sprite">
+   <img src="resources/tiles/highlight_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT_RED sprite">
+   <img src="resources/tiles/water.png" alt="" onload="imgLoaded()" class="tile0 sprite">
+   <img src="resources/tiles/grass.png" alt="" onload="imgLoaded()" class="tile1 sprite">
+
+  <!-- Clutters -->
+  <img src="resources/tiles/tree_1.png" alt="" onload="imgLoaded()" class="clutter1 sprite">
+  <img src="resources/tiles/tree_2.png" alt="" onload="imgLoaded()" class="clutter2 sprite">
+</div>
+
+</html>
+
+<script src="arrays/tiles.js"></script>
+<script src="arrays/abilities.js"></script>
+<script src="script/ability.js"></script>
+<script src="arrays/enemies.js"></script>
+<script src="arrays/items.js"></script>
+<script src="script/equipment.js"></script>
+<script src="script/character.js"></script>
+<script src="script/player.js"></script>
+<script src="script/enemy.js"></script>
+<script src="arrays/maps.js"></script>
+<script src="script/hotbar.js"></script>
+<script src="script/map.js"></script>
+<script src="script/combat.js"></script>
