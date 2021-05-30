@@ -17,6 +17,7 @@ function sleep(ms) {
 /* Move this to a state file later */
 const state = {
     inCombat: false,
+    clicked: false
 };
 /* temporarily store highlight variables here */
 const highlight = {
@@ -94,6 +95,7 @@ function renderMap(map) {
     renderPlayerModel(spriteSize);
 }
 function renderTileHover(tile) {
+    var _a;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -115,23 +117,32 @@ function renderTileHover(tile) {
             hideMapHover();
         }
         /* Render highlight test */
-        const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
-        var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
-        var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
-        path.forEach((step) => {
-            if (step.x == player.cords.x && step.y == player.cords.y)
-                return;
-            var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-            if (step.blocked) {
-                playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
-            }
-            else
-                playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
-        });
+        // @ts-expect-error
+        if (((abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.shoots_projectile) && isSelected) || (((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.firesProjectile) && !isSelected)) {
+            const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
+            var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
+            var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
+            // @ts-expect-error
+            let distance = isSelected ? abiSelected.use_range : player.weapon.range;
+            let iteration = 0;
+            path.forEach((step) => {
+                iteration++;
+                if (step.x == player.cords.x && step.y == player.cords.y)
+                    return;
+                var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                if (iteration > distance)
+                    return;
+                if (step.blocked) {
+                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+                }
+                else
+                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+            });
+        }
         playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
     }
-    catch (_a) { }
+    catch (_b) { }
 }
 function mapHover(event) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -144,7 +155,9 @@ function mapHover(event) {
     renderTileHover({ x: x, y: y });
 }
 function clickMap(event) {
-    var _a;
+    var _a, _b;
+    if (state.clicked)
+        return;
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
     const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
@@ -157,33 +170,56 @@ function clickMap(event) {
         if (enemy.cords.x == x && enemy.cords.y == y) {
             if (!enemy.alive)
                 break;
+            if (isSelected) {
+                console.log(abiSelected.ranged);
+                // @ts-expect-error
+                if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
+                    // @ts-expect-error
+                    if ((abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
+                        break;
+                    if (abiSelected.type == "attack") {
+                        if (abiSelected.shoots_projectile)
+                            fireProjectile(player.cords, enemy.cords, abiSelected.shoots_projectile, abiSelected, true);
+                        // @ts-expect-error
+                        else
+                            regularAttack(player, enemy, abiSelected);
+                        // @ts-expect-error
+                        if (weaponReach(player, abiSelected.use_range, enemy))
+                            attackTarget(player, enemy, weaponReach(player, abiSelected.use_range, enemy));
+                        // @ts-expect-error
+                        player.effects();
+                        if (!abiSelected.shoots_projectile)
+                            advanceTurn();
+                    }
+                }
+            }
             // @ts-expect-error
-            if (weaponReach(player, player.weapon.range, enemy)) {
+            else if (weaponReach(player, player.weapon.range, enemy)) {
                 // @ts-expect-error
                 attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
                 // @ts-expect-error
                 if (weaponReach(player, player.weapon.range, enemy)) {
                     // @ts-expect-error
                     regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
+                    // @ts-expect-error
+                    player.effects();
                     advanceTurn();
                 }
                 // @ts-ignore
             }
-            else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords, true) && player.weapon.firesProjectile) {
+            else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
                 // @ts-ignore
-                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, a => { var _a; return regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack")); });
-                // const time: number = generatePath(player.cords, enemy.cords, true, true);
-                // setTimeout(() => {
-                //   // @ts-expect-error
-                //   regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
-                //   advanceTurn();
-                // }, time * 70);
+                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true);
+                // @ts-expect-error
+                player.effects();
             }
             move = false;
             break;
         }
     }
     ;
+    state.clicked = true;
+    setTimeout(() => { state.clicked = false; }, 30);
     if (move)
         movePlayer({ x: x, y: y });
 }
@@ -202,17 +238,37 @@ async function movePlayer(goal) {
     if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1)
         return;
     const path = generatePath(player.cords, goal, false);
+    let count = 0;
+    isSelected = false;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
             await sleep(45);
+            // @ts-ignore
+            player.effects();
             player.cords.x = step.x;
             player.cords.y = step.y;
             modifyCanvas();
             advanceTurn();
             updateUI();
+            count++;
             if (state.inCombat)
                 break moving;
         }
+    }
+    if (count > 0)
+        displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
+    if (state.inCombat && count == 1) {
+        console.log(Math.floor(player.hpRegen() * 0.5) > 0);
+        if (Math.floor(player.hpRegen() * 0.5) > 0)
+            displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
+    }
+    else if (state.inCombat && count > 1) {
+        let regen = Math.floor(player.hpRegen() * count - 1) + Math.floor(player.hpRegen() * 0.5);
+        displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
+        displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
+    }
+    else if (count > 0) {
+        displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
     }
 }
 function canMove(char, dir) {
@@ -255,6 +311,12 @@ function renderPlayerModel(size) {
     const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
     const faceModel = document.querySelector(".sprites .face" + player.face);
     const leggings = document.querySelector(".sprites .defaultPants");
+    player.statusEffects.forEach((eff) => {
+        if (eff.aura) {
+            const aura = document.querySelector(".sprites ." + eff.aura);
+            playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        }
+    });
     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
@@ -422,16 +484,37 @@ function modifyCanvas() {
 }
 /* Move to state file later */
 function advanceTurn() {
+    // @ts-expect-error
+    player.updateAbilities();
     state.inCombat = false;
     var map = maps[currentMap];
+    hideMapHover();
     map.enemies.forEach(enemy => {
         if (!enemy.alive)
             return;
+        // @ts-ignore
+        enemy.effects();
         if (enemy.aggro()) {
             state.inCombat = true;
+            // @ts-expect-error
+            enemy.updateAbilities();
             enemy.decideAction();
         }
     });
+    if (state.inCombat) {
+        // Combat regen = 50% of regen
+        if (Math.floor(player.hpRegen() * 0.5) > 0 && player.stats.hp < player.getStats().hpMax) {
+            player.stats.hp += Math.floor(player.hpRegen() * 0.5);
+        }
+    }
+    else {
+        if (player.hpRegen() > 0 && player.stats.hp < player.getStats().hpMax) {
+            player.stats.hp += player.hpRegen();
+        }
+    }
+    if (player.stats.hp > player.getStats().hpMax) {
+        player.stats.hp = player.getStats().hpMax;
+    }
 }
 /* Show enemy stats when hovering */
 function hoverEnemyShow(enemy) {
@@ -440,15 +523,14 @@ function hoverEnemyShow(enemy) {
     const name = document.createElement("p");
     name.classList.add("enemyName");
     name.textContent = enemy.name;
-    const hp = document.createElement("p");
-    hp.classList.add("enemyHealth");
+    var mainStatText = "";
     // @ts-ignore
-    hp.textContent = `HP: ${enemy.stats.hp}/${enemy.getStats().hpMax}`;
-    const mp = document.createElement("p");
-    mp.classList.add("enemyMana");
+    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>Health: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
     // @ts-ignore
-    mp.textContent = `MP: ${enemy.stats.mp}/${enemy.getStats().mpMax}`;
-    staticHover.append(name, hp, mp);
+    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>Mana: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
+    // @ts-expect-error
+    const mainStats = textSyntax(mainStatText);
+    staticHover.append(name, mainStats);
 }
 /* Hide map hover */
 function hideMapHover() {

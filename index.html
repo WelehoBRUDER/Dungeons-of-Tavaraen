@@ -31,13 +31,19 @@
         <img src="resources/ui/mana.png" alt="" class="PlayerMpFill">
       </div>
     </div>
+    <div class="playerEffects"></div>
     <div class="mapHover"></div>
+    <div id="globalHover"></div>
+    <div class="worldText"></div>
   </div>
 </body>
 
 <div class="sprites">
   <script src="script/loadImg.js"></script>
   <!-- Player Sprites -->
+
+  <!-- Auras -->
+  <img src="resources/tiles/player/red_mist_aura.png" alt="" onload="imgLoaded()" class="redMist sprite">
 
   <!-- Body Models  -->
   <img src="resources/tiles/player/human_model.png" alt="" onload="imgLoaded()" class="humanModel sprite">
@@ -73,6 +79,8 @@
 
   <!-- Projectiles -->
   <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
+  <img src="resources/tiles/projectiles/arrowCharged.png" alt="" onload="imgLoaded()" class="arrowChargedProjectile sprite">
+  <img src="resources/tiles/projectiles/iceSpike.png" alt="" onload="imgLoaded()" class="iceSpikedProjectile sprite">
 
   <!-- Enemies -->
   <img src="resources/tiles/enemies/grey_slime.png" alt="" onload="imgLoaded()" class="greySlime sprite">
@@ -98,16 +106,19 @@
 
 </html>
 
+<script src="script/syntax.js"></script>
 <script src="arrays/tiles.js"></script>
+<script src="arrays/effects.js"></script>
 <script src="arrays/abilities.js"></script>
 <script src="script/ability.js"></script>
+<script src="script/character.js"></script>
 <script src="arrays/enemies.js"></script>
 <script src="arrays/items.js"></script>
 <script src="script/equipment.js"></script>
-<script src="script/character.js"></script>
+<script src="script/status.js"></script>
 <script src="script/player.js"></script>
 <script src="script/enemy.js"></script>
 <script src="arrays/maps.js"></script>
-<script src="script/hotbar.js"></script>
 <script src="script/map.js"></script>
 <script src="script/combat.js"></script>
+<script src="script/hotbar.js"></script>

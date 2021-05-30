@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface playerChar extends characterObject {
   canFly: boolean,
   sprite: string,
@@ -6,6 +7,7 @@ interface playerChar extends characterObject {
   eyes: number;
   face: number;
   level: levelObject;
+  hpRegen?: Function;
 }
 
 interface levelObject {
@@ -27,6 +29,7 @@ class PlayerCharacter extends Character {
   helmet: armorClass | {};
   gloves: armorClass | {};
   boots: armorClass | {};
+  hpRegen: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -41,6 +44,11 @@ class PlayerCharacter extends Character {
     this.helmet = base.helmet ?? {};
     this.gloves = base.gloves ?? {};
     this.boots = base.boots ?? {};
+
+    this.hpRegen = () => {
+      const { v: val, m: mod } = getModifiers(this, "hpRegen");
+      return Math.floor((1 + val) * mod);
+    }
   }
 }
 
@@ -49,12 +57,12 @@ var player = new PlayerCharacter({
   name: "Player",
   cords: { x: 1, y: 1 },
   stats: {
-      str: 1,
-      dex: 1,
-      int: 1,
-      vit: 1,
+      str: 5,
+      dex: 5,
+      int: 5,
+      vit: 5,
       hp: 100,
-      mp: 35
+      mp: 30
   },
   resistances: {
     slash: 0,
@@ -66,6 +74,13 @@ var player = new PlayerCharacter({
     lightning: 0,
     ice: 0
   },
+  statusResistances: {
+    poison: 0,
+    burning: 0,
+    curse: 0,
+    stun: 0,
+    bleed: 0
+  },
   level: {
     xp: 0,
     xpNeed: 100,
@@ -76,22 +91,31 @@ var player = new PlayerCharacter({
   hair: 4,
   eyes: 2,
   face: 1,
-  weapon: new Weapon(items.huntingBow),
-  chest: new Armor(items.raggedShirt),
+  weapon: new Weapon({...items.stick}),
+  chest: new Armor({...items.raggedShirt}),
   helmet: {},
   gloves: {},
-  boots: new Armor(items.raggedBoots),
+  boots: new Armor({...items.raggedBoots}),
   canFly: false,
   abilities: [
-    new Ability({...abilities.attack, equippedSlot: 0})
+    new Ability({...abilities.attack}, dummy),
+    new Ability({...abilities.focus_strike, equippedSlot: 0}, dummy),
+    new Ability({...abilities.true_shot, equippedSlot: 1}, dummy),
+    new Ability({...abilities.first_aid, equippedSlot: 2}, dummy),
+    new Ability({...abilities.icy_javelin, equippedSlot: 3}, dummy),
+    new Ability({...abilities.barbarian_rage, equippedSlot: 4}, dummy),
+    new Ability({...abilities.berserk, equippedSlot: 5}, dummy)
   ],
   statModifiers: [
     {
       name: "Resilience of the Lone Wanderer",
       effects: {
-        hpMaxV: 75,
-        mpMaxV: 20
+        hpMaxV: 55,
+        mpMaxV: 10
       }
     }
-  ]
+  ],
+  statusEffects: [
+    new statEffect({...statusEffects.poison}, s_def)
+  ],
 });

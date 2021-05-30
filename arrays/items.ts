@@ -58,7 +58,7 @@ const items = {
       { type: "strV", value: [1, 2, 3], chance: 1.25 },
       { type: "dexV", value: [1, 2, 3], chance: 1.75 },
     ],
-    range: 80,
+    range: 7,
     img: "",
     sprite: "bow",
     price: 10,

@@ -31,7 +31,8 @@ const maps = [
     ],
     enemies: [
       new Enemy({ ...enemies.skeletonWarrior, cords: { x: 3, y: 10 }, spawnCords: { x: 3, y: 10 } }),
-      new Enemy({ ...enemies.skeletonWarrior, cords: { x: 5, y: 6 }, spawnCords: { x: 5, y: 6 } })
+      new Enemy({ ...enemies.skeletonWarrior, cords: { x: 5, y: 6 }, spawnCords: { x: 5, y: 6 } }),
+      new Enemy({ ...enemies.greySlime, cords: { x: 13, y: 8 }, spawnCords: { x: 13, y: 8 } })
     ],
   }
 ]

@@ -20,12 +20,21 @@ interface resistances {
   ice: number;
 }
 
+interface statusResistances {
+  [poison: string]: number;
+  burning: number;
+  curse: number;
+  stun: number;
+  bleed: number;
+}
+
 interface characterObject {
   id: string;
   name: string;
   cords: tileObject;
   stats: stats;
   resistances: resistances;
+  statusResistances: statusResistances;
   abilities: ability[];
   weapon?: weaponClass | {};
   chest?: armorClass | {};
@@ -36,8 +45,15 @@ interface characterObject {
   kill?: Function;
   xp?: number;
   statModifiers?: any;
+  statusEffects?: any;
   getStats?: Function;
   getResists?: Function;
+  getStatusResists?: Function;
+  effects?: Function;
+  updateAbilities?: Function;
+  aura?: string;
+  silenced?: Function;
+  concentration?: Function;
 }
 
 interface statusObject {
@@ -55,15 +71,23 @@ function getModifiers(char: any, stat: string) {
   char.statModifiers.forEach((mod: any) => {
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
   });
+  char.statusEffects.forEach((mod: any) => {
+    Object.entries(mod.effects).forEach((eff: any) => {
+      if (eff[0].startsWith(stat)) {
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
+        else if (eff[0] == stat + "V") val += eff[1];
+      }
+    });
+  })
   if (char.weapon?.stats) {
     Object.entries(char.weapon.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -71,7 +95,7 @@ function getModifiers(char: any, stat: string) {
   if (char.chest?.stats) {
     Object.entries(char.chest.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -79,7 +103,7 @@ function getModifiers(char: any, stat: string) {
   if (char.helmet?.stats) {
     Object.entries(char.helmet.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -87,7 +111,7 @@ function getModifiers(char: any, stat: string) {
   if (char.gloves?.stats) {
     Object.entries(char.gloves.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -95,7 +119,7 @@ function getModifiers(char: any, stat: string) {
   if (char.boots?.stats) {
     Object.entries(char.boots.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P") modif *= eff[1] / 100;
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -123,19 +147,28 @@ class Character {
   cords: tileObject;
   stats: stats;
   resistances: resistances;
+  statusResistances: statusResistances;
   getStats: Function;
   getResists: Function;
+  getStatusResists: Function;
   kill?: Function;
   statModifiers?: any;
+  statusEffects?: any;
   statRemaining?: Function;
   abilities?: ability[];
+  effects?: Function;
+  updateAbilities?: Function;
+  silenced?: Function;
+  concentration?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
     this.cords = base.cords ?? { x: 0, y: 0 };
     this.stats = { ...base.stats };
     this.resistances = { ...base.resistances };
+    this.statusResistances = { ...base.statusResistances };
     this.statModifiers = base.statModifiers ?? [];
+    this.statusEffects = base.statusEffects ?? [];
 
     this.getStats = () => {
       let stats = {} as statusObject;
@@ -149,7 +182,8 @@ class Character {
       // get mp
       const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax");
       stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
-
+      stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
+      stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
       return stats;
     };
 
@@ -162,11 +196,68 @@ class Character {
       return resists;
     };
 
+    this.getStatusResists = () => {
+      let resists = {} as statusResistances;
+      Object.keys(this.statusResistances).forEach((res: string) => {
+        const { v: val, m: mod } = getModifiers(this, res + "Resist");
+        resists[res] = Math.floor((this.statusResistances[res] + val) * mod);
+      });
+      return resists;
+    }
+
     this.statRemaining = (stat: string) => {
       return <number>((this.stats[stat] / this.getStats()[stat + "Max"]) * 100);
     };
 
+    this.effects = () => {
+      this.statusEffects.forEach((status: statEffect, index: number)=>{
+        if(status.dot) {
+          const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType]));
+          this.stats.hp -= dmg;
+          spawnFloatingText(this.cords, dmg.toString(), "red", 32);
+          if(this.id == "player") displayText(`<c>purple<c>[EFFECT] <c>yellow<c>You <c>white<c>take ${dmg} damage from <i>${status.dot.icon}<i>${status.dot.damageType}.`);
+          else displayText(`<c>yellow<c>${this.name} <c>white<c>takes ${dmg} damage from ${status.dot.damageType}.`);
+          if(this.stats.hp <= 0) {
+            // @ts-expect-error
+            this.kill();
+          }
+        }
+        status.last.current--;
+        if(status.last.current <= 0) {
+          this.statusEffects.splice(index, 1);
+        }
+      });
+      this.abilities?.forEach((abi: ability) => {
+        // @ts-expect-error
+        if(abi.onCooldown > 0) abi.onCooldown--;
+      });
+    }
+
     this.abilities = base.abilities ?? [];
+
+    this.silenced = () => {
+      var result = false;
+      this.statusEffects.forEach((eff: statEffect) => {
+        if(eff.silence) { result = true; return;}
+      });
+      return result;
+    }
+
+    this.concentration = () => {
+      var result = true;
+      this.statusEffects.forEach((eff: statEffect) => {
+        if(eff.break_concentration) { result = false; return;}
+      });
+      return result;
+    }
+
+    this.updateAbilities = () => {
+      // @ts-ignore
+      for(let i = 0; i < this.abilities?.length; i++) {
+        // @ts-ignore
+        this.abilities[i] = new Ability(this.abilities[i], this);
+      }
+    }
   }
 }
 

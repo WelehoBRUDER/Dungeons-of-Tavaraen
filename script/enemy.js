@@ -30,6 +30,8 @@ class Enemy extends Character {
                 try {
                     this.cords.x = path[0].x;
                     this.cords.y = path[0].y;
+                    if (settings.log_enemy_movement)
+                        displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${this.name} <c>white<c>moves to [${this.cords.x}, ${this.cords.y}]`);
                 }
                 catch (_a) {
                     console.warn("Enemy pathfinding can't find correct path!");
@@ -41,6 +43,7 @@ class Enemy extends Character {
             player.level.xp += this.xp;
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
+            displayText(`<c>white<c>[WORLD] <c>yellow<c>${this.name}<c>white<c> dies.`);
             fallenEnemies.push(Object.assign({}, this));
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;

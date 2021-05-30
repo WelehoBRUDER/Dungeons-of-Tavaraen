@@ -46,28 +46,89 @@ function attackTarget(attacker: characterObject, target: characterObject, attack
   }
 }
 
-function regularAttack(attacker: characterObject, target: characterObject, ability: ability) {
-  console.log(tileCordsToScreen(target.cords));
+var abiSelected: any = {};
+var isSelected: boolean = false;
+
+function useAbi(abi: ability) {
+  abiSelected = abi;
+  isSelected = true;
+  if (abi.self_target) {
+    // @ts-ignore
+    buffOrHeal(player, abiSelected);
+  }
+  updateUI();
+}
+
+function buffOrHeal(character: characterObject, ability: ability) {
+  isSelected = false;
+  // @ts-expect-error
+  player.effects();
+  if (ability.base_heal) {
+    const { v: val, m: mod } = getModifiers(character, "healPower");
+    const heal: number = Math.floor((ability.base_heal + val) * mod);
+    character.stats.hp += heal;
+    spawnFloatingText(character.cords, heal.toString(), "lime", 36);
+    if (character.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${ability.action_desc} on their self, recovering ${heal} health.`);
+    else displayText(`<c>cyan<c>[ACTION] <c>yellow<c>You <c>white<c>${ability.action_desc_pl} on your self, recovering ${heal} health.`);
+  }
+  if (ability.status) {
+    if(!player.statusEffects.find((eff: statEffect)=>eff.id == ability.status)) {
+      // @ts-ignore
+      character.statusEffects.push(new statEffect({...statusEffects[ability.status]}, ability.statusModifiers));
+    } else {
+      // @ts-expect-error
+      player.statusEffects.find((eff: statEffect)=>eff.id == ability.status).last.current += statusEffects[ability.status].last.total;
+    }
+    // @ts-ignore
+    statusEffects[ability.status].last.current = statusEffects[ability.status].last.total;
+    // @ts-expect-error
+    spawnFloatingText(character.cords, ability.line, "crimson", 36);
+    if (character.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${ability.action_desc}`);
+    else displayText(`<c>cyan<c>[ACTION] <c>yellow<c>You <c>white<c>${ability.action_desc_pl}`);
+  }
+  character.stats.mp -= ability.mana_cost;
+  ability.onCooldown = ability.cooldown;
+  advanceTurn();
+}
+
+function regularAttack(attacker: characterObject, target: characterObject, ability: ability, targetCords?: any) {
+  if (targetCords) {
+    maps[currentMap].enemies.forEach((en: any) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y) target = en; });
+  }
   // @ts-ignore
   if (target.isFoe) {
     let dmg: number = 0;
-    // @ts-ignore
-    Object.entries(attacker.weapon?.damages).forEach((value: any) => {
-      const key: string = value[0];
-      const num: number = value[1];
-      const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-      let bonus: number = 0;
+    if (!ability.damages) {
       // @ts-ignore
-      if (ability.damages?.[key]) bonus = ability.damages[key];
-      // @ts-ignore
-      if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 20;
-      // @ts-ignore
-      else bonus += num * attacker.getStats().str / 20;
-      // @ts-ignore
-      dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - target.getResists()[key] / 100));
-    });
+      Object.entries(attacker.weapon?.damages).forEach((value: any) => {
+        const key: string = value[0];
+        const num: number = value[1];
+        const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+        let bonus: number = 0;
+        // @ts-ignore
+        if (ability.damages?.[key]) bonus = ability.damages[key];
+        // @ts-ignore
+        if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 20;
+        // @ts-ignore
+        else bonus += num * attacker.getStats().str / 20;
+        // @ts-ignore
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+      });
+    } else {
+      Object.entries(ability.damages).forEach((value: any) => {
+        const key: string = value[0];
+        const num: number = value[1];
+        const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+        let bonus: number = 0;
+        // @ts-ignore
+        bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
+        // @ts-ignore
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+      });
+    }
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    displayText(`<c>cyan<c>[ACTION] <c>yellow<c>You <c>white<c>${ability.action_desc_pl} ${target.name} for ${dmg} damage.`);
     if (ability.cooldown) ability.onCooldown = ability.cooldown;
     if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
     if (target.stats.hp <= 0) {
@@ -91,13 +152,15 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       // @ts-ignore
       else bonus += num * attacker.getStats().str / 20;
       // @ts-ignore
-      dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier)) * (1 - target.getResists()[key] / 100));
+      dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
     });
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${attacker.name} <c>white<c>${ability.action_desc} ${target.name} for ${dmg} damage.`);
     if (ability.cooldown) ability.onCooldown = ability.cooldown;
     if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
   }
+  isSelected = false;
   updateUI();
 }
 
@@ -129,7 +192,7 @@ function spawnFloatingText(cords: tileObject, text: string, color: string = "gre
 
 }
 
-async function fireProjectile(start: tileObject, end: tileObject, projectileSprite: string, collisionFunction: Function) {
+async function fireProjectile(start: tileObject, end: tileObject, projectileSprite: string, ability: ability, isPlayer: boolean) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   const path: any = generateArrowPath(start, end);
   const projectile = <HTMLImageElement>document.querySelector("." + projectileSprite);
@@ -141,23 +204,32 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   for (let step of path) {
     await sleep(70);
     const { screenX: x, screenY: y } = tileCordsToScreen(step);
-    if(step.enemy) {
-      collisionFunction();
+    if (step.enemy) {
+      console.log(step);
+      collision({ x: step.x, y: step.y }, ability, isPlayer);
       setTimeout(advanceTurn, 70);
       break;
     }
-    if(step.blocked) {
+    if (step.blocked) {
       setTimeout(advanceTurn, 70);
       break;
-    } 
+    }
     canvas.width = canvas.width;
-    ctx?.translate(x + spriteSize/2, y + spriteSize/2);
+    ctx?.translate(x + spriteSize / 2, y + spriteSize / 2);
     const rotation = calcAngleDegrees(end.x - start.x, end.y - start.y);
-    ctx?.rotate(rotation * Math.PI/180);
-    ctx?.translate((x + spriteSize/2) * -1, (y + spriteSize/2) * -1);
+    ctx?.rotate(rotation * Math.PI / 180);
+    ctx?.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
     ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
   }
   projectileLayers.removeChild(canvas);
+}
+
+function collision(target: tileObject, ability: ability, isPlayer: boolean, theme?: string) {
+  if (isPlayer) {
+    let targetEnemy = maps[currentMap].enemies.find((en: any) => en.cords.x == target.x && en.cords.y == target.y);
+    // @ts-ignore
+    regularAttack(player, targetEnemy, ability);
+  }
 }
 
 function calcAngleDegrees(x: number, y: number) {
