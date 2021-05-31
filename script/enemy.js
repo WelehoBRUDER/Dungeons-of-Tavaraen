@@ -14,6 +14,7 @@ class Enemy extends Character {
         this.alive = (_d = base.alive) !== null && _d !== void 0 ? _d : true;
         this.spawnCords = base.spawnCords;
         this.spawnMap = base.spawnMap;
+        this.loot = base.loot;
         this.decideAction = async () => {
             // Will make enemy take their turn
             // For now just move towards player
@@ -44,6 +45,7 @@ class Enemy extends Character {
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${this.name}<c>white<c> dies.`);
+            lootEnemy(this);
             fallenEnemies.push(Object.assign({}, this));
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;

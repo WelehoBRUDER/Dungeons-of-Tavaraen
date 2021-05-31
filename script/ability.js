@@ -15,6 +15,21 @@ const less_is_better = {
     damage_multiplier: false,
     use_range: false
 };
+const parsed_modifiers = {
+    "strV": "Strength",
+    "strP": "Strength%",
+    "vitV": "Vitality",
+    "vitP": "Vitality%",
+    "dexV": "Dexterity",
+    "dexP": "Dexterity%",
+    "intV": "Intelligence",
+    "intP": "Intelligence%",
+    "hpV": "Health",
+    "hpP": "Health%",
+    "mpV": "Mana",
+    "mpP": "Mana%",
+    "last": "Effect time",
+};
 const possible_stat_modifiers = [
     "strV",
     "strP",
@@ -66,12 +81,12 @@ class Ability {
     }
 }
 function getAbiModifiers(char, id) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const total = {};
     straight_modifiers.forEach((mod) => {
         total[mod] = { value: 0, modif: 1 };
     });
     char.statusEffects.forEach((stat) => {
-        // @ts-expect-error
         Object.entries(stat.effects).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -85,9 +100,122 @@ function getAbiModifiers(char, id) {
             }
         });
     });
+    if ((_a = char.weapon) === null || _a === void 0 ? void 0 : _a.stats) {
+        Object.entries(char.weapon.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_b = char.offhand) === null || _b === void 0 ? void 0 : _b.stats) {
+        Object.entries(char.offhand.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_c = char.helmet) === null || _c === void 0 ? void 0 : _c.stats) {
+        Object.entries(char.helmet.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_d = char.chest) === null || _d === void 0 ? void 0 : _d.stats) {
+        Object.entries(char.chest.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_e = char.boots) === null || _e === void 0 ? void 0 : _e.stats) {
+        Object.entries(char.boots.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_f = char.artifact1) === null || _f === void 0 ? void 0 : _f.stats) {
+        Object.entries(char.artifact1.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_g = char.artifact2) === null || _g === void 0 ? void 0 : _g.stats) {
+        Object.entries(char.artifact2.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
+    if ((_h = char.artifact3) === null || _h === void 0 ? void 0 : _h.stats) {
+        Object.entries(char.artifact3.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P"))
+                    total[_key].modif *= (1 + value / 100);
+            }
+        });
+    }
     return total;
 }
 function getAbiStatusModifiers(char, abilityId, effectId) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const total = { effects: {} };
     possible_stat_modifiers.forEach((mod) => {
         total["effects"][mod] = { value: 0, modif: 1 };
@@ -97,7 +225,6 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
     });
     char.statusEffects.forEach((stat) => {
         // Go through stat modifiers
-        // @ts-expect-error
         Object.entries(stat.effects).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -122,5 +249,205 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
             }
         });
     });
+    if ((_a = char.weapon) === null || _a === void 0 ? void 0 : _a.stats) {
+        Object.entries(char.weapon.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_b = char.offhand) === null || _b === void 0 ? void 0 : _b.stats) {
+        Object.entries(char.offhand.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_c = char.helmet) === null || _c === void 0 ? void 0 : _c.stats) {
+        Object.entries(char.helmet.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_d = char.chest) === null || _d === void 0 ? void 0 : _d.stats) {
+        Object.entries(char.chest.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_e = char.boots) === null || _e === void 0 ? void 0 : _e.stats) {
+        Object.entries(char.boots.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_f = char.artifact1) === null || _f === void 0 ? void 0 : _f.stats) {
+        Object.entries(char.artifact1.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_g = char.artifact2) === null || _g === void 0 ? void 0 : _g.stats) {
+        Object.entries(char.artifact2.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_h = char.artifact3) === null || _h === void 0 ? void 0 : _h.stats) {
+        Object.entries(char.artifact3.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif *= (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P"))
+                            total[__key].modif *= (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
     return total;
 }

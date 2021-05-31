@@ -1,5 +1,7 @@
 const baseCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const mapDataCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .mapData");
+const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .playerSheet");
 const playerCtx = playerCanvas.getContext("2d");
 const enemyLayers = <HTMLDivElement>document.querySelector(".canvasLayers .enemyLayers");
@@ -40,6 +42,7 @@ interface tileObject {
 }
 
 window.addEventListener("resize", modifyCanvas);
+document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
 function spriteVariables() {
   const spriteSize = 128 * zoomLevels[currentZoom];
@@ -108,8 +111,20 @@ function renderMap(map: mapObject) {
     enemyLayers.append(canvas);
   });
 
+  /* Render Items */
+  mapDataCanvas.width = mapDataCanvas.width;
+  itemData.forEach((item: any) => {
+    var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    const itemImg = new Image();
+    itemImg.src = item.itm.img;
+    itemImg.onload = function(){
+      mapDataCtx?.drawImage(itemImg, (tileX + spriteSize*item.mapCords.xMod), (tileY + spriteSize*item.mapCords.yMod), spriteSize/3, spriteSize/3);
+    };
+  })
+
   /* Render Player */
-  renderPlayerModel(spriteSize);
+  renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 
 function renderTileHover(tile: tileObject) {
@@ -124,7 +139,7 @@ function renderTileHover(tile: tileObject) {
 
     /* Render tile */
     var strokeImg = <HTMLImageElement>document.querySelector(".sprites .hoverTile");
-    renderPlayerModel(spriteSize);
+    renderPlayerModel(spriteSize, playerCanvas, playerCtx);
     var hoveredEnemy = false;
     maps[currentMap].enemies.forEach((enemy: any) => {
       if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
@@ -137,12 +152,10 @@ function renderTileHover(tile: tileObject) {
     }
 
     /* Render highlight test */
-    // @ts-expect-error
     if ((abiSelected?.shoots_projectile && isSelected) || (player.weapon?.firesProjectile && !isSelected)) {
       const path: any = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
       var highlightImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT");
       var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
-      // @ts-expect-error
       let distance: number = isSelected ? abiSelected.use_range : player.weapon.range;
       let iteration: number = 0;
       path.forEach((step: any) => {
@@ -175,6 +188,10 @@ function mapHover(event: MouseEvent) {
 
 function clickMap(event: MouseEvent) {
   if (state.clicked) return;
+  if (invOpen) {
+    closeInventory();
+    return;
+  }
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
   const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
@@ -189,7 +206,6 @@ function clickMap(event: MouseEvent) {
         console.log(abiSelected.ranged);
         // @ts-expect-error
         if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
-          // @ts-expect-error
           if ((abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile)) break;
           if (abiSelected.type == "attack") {
             if (abiSelected.shoots_projectile) fireProjectile(player.cords, enemy.cords, abiSelected.shoots_projectile, abiSelected, true);
@@ -197,7 +213,6 @@ function clickMap(event: MouseEvent) {
             else regularAttack(player, enemy, abiSelected);
             // @ts-expect-error
             if (weaponReach(player, abiSelected.use_range, enemy)) attackTarget(player, enemy, weaponReach(player, abiSelected.use_range, enemy));
-            // @ts-expect-error
             player.effects();
             if (!abiSelected.shoots_projectile) advanceTurn();
           }
@@ -211,7 +226,6 @@ function clickMap(event: MouseEvent) {
         if (weaponReach(player, player.weapon.range, enemy)) {
           // @ts-expect-error
           regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
-          // @ts-expect-error
           player.effects();
           advanceTurn();
         }
@@ -219,7 +233,6 @@ function clickMap(event: MouseEvent) {
       } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
         // @ts-ignore
         fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true);
-        // @ts-expect-error
         player.effects();
       }
       move = false;
@@ -242,6 +255,13 @@ function clickMap(event: MouseEvent) {
 //     advanceTurn();
 //   }
 // });
+
+document.addEventListener("keyup", (kbe: KeyboardEvent) => {
+  // Believe it or not, this is the space key!
+  if(kbe.key == " ") {
+    pickLoot();
+  }
+})
 
 async function movePlayer(goal: tileObject) {
   if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1) return;
@@ -300,8 +320,44 @@ function canMoveTo(char: any, tile: tileObject) {
   return movable;
 }
 
-function renderPlayerModel(size: number) {
-  playerCanvas.width = playerCanvas.width; // Clear canvas
+function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any) {
+  canvas.width = canvas.width; // Clear canvas
+  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
+  const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
+  const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
+  const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
+  const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
+  const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
+  ctx?.drawImage(bodyModel, 0, 0, size, size);
+  ctx?.drawImage(earModel, 0, 0, size, size);
+  ctx?.drawImage(eyeModel, 0, 0, size, size);
+  ctx?.drawImage(faceModel, 0, 0, size, size);
+  ctx?.drawImage(leggings, 0, 0, size, size);
+  if (player.chest?.sprite) {
+    const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
+    ctx?.drawImage(chestModel, 0, 0, size, size);
+  }
+  if (player.helmet?.sprite) {
+    const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
+    ctx?.drawImage(helmetModel, 0, 0, size, size);
+  }
+  if (player.gloves?.sprite) {
+    const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + player.gloves.sprite);
+    ctx?.drawImage(glovesModel, 0, 0, size, size);
+  }
+  if (player.boots?.sprite) {
+    const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite);
+    ctx?.drawImage(bootsModel, 0, 0, size, size);
+  }
+  if (player.weapon?.sprite) {
+    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
+    ctx?.drawImage(weaponModel, 0, 0, size, size);
+  }
+  ctx?.drawImage(hairModel, 0, 0, size, size);
+}
+
+function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
+  canvas.width = canvas.width; // Clear canvas
   const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
@@ -311,45 +367,35 @@ function renderPlayerModel(size: number) {
   player.statusEffects.forEach((eff: statEffect) => {
     if (eff.aura) {
       const aura = <HTMLImageElement>document.querySelector(".sprites ." + eff.aura);
-      playerCtx?.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+      ctx?.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
   });
-  playerCtx?.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  playerCtx?.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  playerCtx?.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  playerCtx?.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  playerCtx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  // @ts-expect-error
+  ctx?.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   if (player.chest?.sprite) {
-    // @ts-expect-error
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
-    playerCtx?.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  // @ts-expect-error
   if (player.helmet?.sprite) {
-    // @ts-expect-error
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
-    playerCtx?.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  // @ts-expect-error
   if (player.gloves?.sprite) {
-    // @ts-expect-error
     const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + player.gloves.sprite);
-    playerCtx?.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  // @ts-expect-error
   if (player.boots?.sprite) {
-    // @ts-expect-error
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite);
-    playerCtx?.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  // @ts-expect-error
   if (player.weapon?.sprite) {
-    // @ts-expect-error
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
-    playerCtx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  playerCtx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
 }
 
 function generatePath(start: tileObject, end: tileObject, canFly: boolean, distanceOnly: boolean = false) {
@@ -456,7 +502,6 @@ function modifyCanvas() {
 
 /* Move to state file later */
 function advanceTurn() {
-  // @ts-expect-error
   player.updateAbilities();
   state.inCombat = false;
   var map = maps[currentMap];
@@ -467,7 +512,6 @@ function advanceTurn() {
     enemy.effects();
     if (enemy.aggro()) {
       state.inCombat = true;
-      // @ts-expect-error
       enemy.updateAbilities();
       enemy.decideAction();
     }

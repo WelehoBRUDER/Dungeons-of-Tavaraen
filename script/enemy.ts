@@ -12,6 +12,7 @@ interface enemy extends characterObject {
   aggro?: Function;
   spawnCords?: tileObject;
   spawnMap?: number;
+  loot: Array<any>;
 }
 
 class Enemy extends Character {
@@ -28,6 +29,7 @@ class Enemy extends Character {
   aggro: Function;
   spawnCords?: tileObject;
   spawnMap?: number;
+  loot: Array<any>;
   constructor(base: enemy) {
     super(base);
     this.sprite = base.sprite;
@@ -41,6 +43,7 @@ class Enemy extends Character {
     this.alive = base.alive ?? true;
     this.spawnCords = base.spawnCords;
     this.spawnMap = base.spawnMap;
+    this.loot = base.loot;
 
     this.decideAction = async () => {
       // Will make enemy take their turn
@@ -70,6 +73,7 @@ class Enemy extends Character {
       this.spawnMap = currentMap;
       const index: number = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
       displayText(`<c>white<c>[WORLD] <c>yellow<c>${this.name}<c>white<c> dies.`);
+      lootEnemy(this);
       fallenEnemies.push({ ...this });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;

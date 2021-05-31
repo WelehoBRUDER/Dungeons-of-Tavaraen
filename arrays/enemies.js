@@ -79,7 +79,8 @@ const enemies = {
         canFly: false,
         abilities: [
             new Ability(abilities.attack, dummy)
-        ]
+        ],
+        loot: []
     },
     skeletonWarrior: {
         id: "skeletonWarrior",
@@ -132,5 +133,10 @@ const enemies = {
                 }
             }
         ],
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100 },
+            { type: "weapon", amount: [1, 1], item: "stick", chance: 100 },
+            { type: "weapon", amount: [1, 1], item: "longsword", chance: 100 }
+        ]
     }
 };

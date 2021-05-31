@@ -1,5 +1,6 @@
 "use strict";
 /* THIS FILE IS ACTUALLY FOR MOST UI RELATED STUFF, DESPITE THE NAME */
+// @ts-nocheck
 const tooltipBox = document.querySelector("#globalHover");
 var settings = {
     log_enemy_movement: false
@@ -25,12 +26,10 @@ function generateHotbar() {
                     frame.style.border = "4px solid gold";
                 abiImg.src = abi.icon;
                 tooltip(abiDiv, abiTT(abi));
-                // @ts-expect-error
                 if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))
                     abiDiv.addEventListener("click", () => useAbi(abi));
                 else {
                     abiDiv.style.filter = "brightness(0.25)";
-                    // @ts-expect-error
                     if (abi.onCooldown > 0) {
                         const cdTxt = document.createElement("p");
                         cdTxt.textContent = ((_a = abi.onCooldown) === null || _a === void 0 ? void 0 : _a.toString()) || "0";
@@ -58,10 +57,8 @@ function generateEffects() {
 function abiTT(abi) {
     var txt = "";
     txt += `\t<f>26px<f>${abi.name}\t\n`;
-    // @ts-expect-error
     if (abi.mana_cost > 0 && player.silenced())
         txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>You are silenced!§\n`;
-    // @ts-expect-error
     if (abi.requires_concentration && !player.concentration())
         txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>Your concentration is broken!§\n`;
     if (abi.base_heal)
@@ -69,21 +66,18 @@ function abiTT(abi) {
     if (abi.damages) {
         var total = 0;
         var text = "";
-        // @ts-expect-error
         Object.entries(abi.damages).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>20px<f>Damage: ${total} <f>17px<f>(${text})\n`;
     }
     if (abi.damage_multiplier)
         txt += `<i>${icons.damage_icon}<i><f>20px<f>Damage Multiplier: ${abi.damage_multiplier * 100}%\n`;
-    if (abi.resistance_penetration !== 0)
+    if (abi.resistance_penetration)
         txt += `<i>${icons.rp_icon}<i><f>20px<f>Resistance Penetration: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
         txt += `<i>${icons.range_icon}<i><f>20px<f>Use Range: ${abi.use_range} tiles\n`;
     if (abi.status) {
-        // @ts-ignore
         txt += `<f>20px<f>Status Effect:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${statusEffects[abi.status].name}\n`;
-        // @ts-expect-error
         txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
     }
     if (abi.type)
@@ -110,8 +104,7 @@ function statTT(status, embed = false) {
         txt += `\t<f>26px<f>${status.name}\t\n`;
     if (status.dot)
         txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>Deals ${status.dot.damageAmount} <i>${status.dot.icon}<i>${status.dot.damageType} damage\n`;
-    // @ts-ignore
-    Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed));
+    Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed, status.id));
     if (status.silence)
         txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>Magic silenced!\n`;
     if (status.break_concentration)
@@ -131,7 +124,8 @@ function keyIncludesAbility(key) {
     return answer;
 }
 // Syntax for effects
-function effectSyntax(effect, embed = false) {
+function effectSyntax(effect, embed = false, effectId = "") {
+    var _a, _b, _c;
     let text = "";
     const rawKey = effect[0];
     var value = effect[1];
@@ -139,6 +133,7 @@ function effectSyntax(effect, embed = false) {
     var key = rawKey.substring(0, rawKey.length - 1);
     var key_ = key;
     var tailEnd = "";
+    var lastBit = "";
     const _key = key;
     var frontImg = "";
     var backImg = "";
@@ -152,20 +147,46 @@ function effectSyntax(effect, embed = false) {
         key_ = key;
         tailEnd = "Damage";
     }
+    else if (key.includes("status_effect")) {
+        key_ = key.replace("status_effect_", "");
+        let id = key_;
+        let _d = "";
+        const mod_array = possible_modifiers.concat(possible_stat_modifiers);
+        mod_array.forEach((modi) => {
+            if (id.includes(modi)) {
+                id = id.replace("_" + modi, "");
+                if (modi[modi.length - 1] == "P" || modi[modi.length - 1] == "V")
+                    key_ = modi.substring(0, modi.length - 1);
+                else
+                    key_ = modi;
+                _d = modi;
+            }
+        });
+        let _value = 0;
+        if (player.statusEffects.find((eff) => eff.id == effectId))
+            _value = value;
+        key = abilities[id].name + "'s";
+        frontImg = abilities[id].icon;
+        if (value < 0)
+            backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
+        else
+            backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
+        var _abi = new Ability((_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find((__abi) => __abi.id == id), player);
+        if (!_abi)
+            _abi = new Ability(abilities[id], dummy);
+        let status = new statEffect(statusEffects[_abi.status], _abi.statusModifiers);
+        tailEnd = parsed_modifiers[_d] + " status";
+        lastBit = `[${((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_b = status === null || status === void 0 ? void 0 : status[_d]) === null || _b === void 0 ? void 0 : _b["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${(((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_c = status === null || status === void 0 ? void 0 : status[_d]) === null || _c === void 0 ? void 0 : _c["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
+    }
     else if (keyIncludesAbility(key)) {
         key_ = keyIncludesAbility(key);
         let id = key.replace("_" + key_, "");
-        // @ts-ignore
         frontImg = abilities[id].icon;
-        // @ts-ignore
         key = abilities[id].name;
         key += "'s";
-        // @ts-ignore
         flipColor = less_is_better[key_];
-        // @ts-ignore
         if (value < 0)
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
-        // @ts-ignore
         else
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
         tailEnd = key_.replace("_", " ");
@@ -213,29 +234,20 @@ function effectSyntax(effect, embed = false) {
             key = "Lightning";
             break;
     }
-    // @ts-ignore
     var img = icons[_key + "_icon"];
-    // @ts-ignore
     if (!img)
         img = icons[key_ + tailEnd + "_icon"];
-    // @ts-ignore
     if (!img)
         img = icons[key_ + "_icon"];
-    // @ts-ignore
     if (value < 0) {
-        // @ts-ignore
-        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>Decreases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? Math.abs(value) + "%" : Math.abs(value)}\n`;
-        // @ts-ignore
+        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>Decreases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? Math.abs(value) + "%" : Math.abs(value)} ${lastBit}\n`;
     }
     else
-        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>Increases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? value + "%" : value}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>Increases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
     return text;
 }
-// @ts-ignore
 tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>player.stats.mp<v>§/§<v>player.getStats().mpMax<v>§");
-// @ts-ignore
 tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>player.stats.hp<v>§/§<v>player.getStats().hpMax<v>§");
-// @ts-ignore
 tooltip(document.querySelector(".xpBar"), "<f>20px<f>Experience: <v>player.level.xp<v>§/§<v>player.level.xpNeed<v>§");
 function updateUI() {
     const ui = document.querySelector(".playerUI");
@@ -246,9 +258,7 @@ function updateUI() {
     const mpImg = ui.querySelector(".PlayerMpFill");
     const xp = document.querySelector(".xpBar .barFill");
     hpText.textContent = `${player.stats.hp} / ${player.getStats().hpMax}`;
-    // @ts-ignore
     hpImg.style.setProperty("--value", (100 - player.statRemaining("hp")) + "%");
-    // @ts-ignore
     mpImg.style.setProperty("--value", (100 - player.statRemaining("mp")) + "%");
     generateHotbar();
     generateEffects();
@@ -256,7 +266,6 @@ function updateUI() {
 }
 function displayText(txt) {
     var _a, _b;
-    // @ts-ignore
     (_a = document.querySelector(".worldText")) === null || _a === void 0 ? void 0 : _a.append(textSyntax(txt));
     (_b = document.querySelector(".worldText")) === null || _b === void 0 ? void 0 : _b.scrollBy(0, 1000);
 }
@@ -268,7 +277,6 @@ function tooltip(element, text) {
 function showHover(mouseEvent, text) {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "block";
-    // @ts-expect-error
     tooltipBox.append(textSyntax(text));
     moveHover(mouseEvent);
 }
@@ -286,8 +294,7 @@ function hideHover() {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "none";
 }
-// @ts-expect-error
 player.updateAbilities();
-// @ts-expect-error
 maps[currentMap].enemies.forEach((en) => en.updateAbilities());
 updateUI();
+setTimeout(renderInventory, 700);

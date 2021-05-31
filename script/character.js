@@ -152,7 +152,6 @@ class Character {
                     else
                         displayText(`<c>yellow<c>${this.name} <c>white<c>takes ${dmg} damage from ${status.dot.damageType}.`);
                     if (this.stats.hp <= 0) {
-                        // @ts-expect-error
                         this.kill();
                     }
                 }
@@ -162,7 +161,6 @@ class Character {
                 }
             });
             (_a = this.abilities) === null || _a === void 0 ? void 0 : _a.forEach((abi) => {
-                // @ts-expect-error
                 if (abi.onCooldown > 0)
                     abi.onCooldown--;
             });
@@ -189,11 +187,23 @@ class Character {
             return result;
         };
         this.updateAbilities = () => {
-            var _a;
+            var _a, _b;
             // @ts-ignore
             for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
                 // @ts-ignore
                 this.abilities[i] = new Ability(this.abilities[i], this);
+            }
+            // @ts-ignore
+            if (this.inventory) {
+                // @ts-ignore
+                for (let i = 0; i < ((_b = this.inventory) === null || _b === void 0 ? void 0 : _b.length); i++) {
+                    // @ts-ignore
+                    if (this.inventory[i].type == "weapon")
+                        this.inventory[i] = new Weapon(this.inventory[i]);
+                    // @ts-ignore
+                    else if (this.inventory[i].type == "armor")
+                        this.inventory[i] = new Armor(this.inventory[i]);
+                }
             }
         };
     }

@@ -1,4 +1,18 @@
 "use strict";
+const grades = {
+    common: {
+        color: "#e0e0e0"
+    },
+    rare: {
+        color: "#7ccf63"
+    },
+    mythical: {
+        color: "#cfcf32"
+    },
+    legendary: {
+        color: "#5e18a3"
+    }
+};
 const items = {
     dagger: {
         id: "dagger",
@@ -24,7 +38,8 @@ const items = {
         sprite: "rustyDagger",
         price: 10,
         weight: 1.2,
-        type: "weapon"
+        type: "weapon",
+        grade: "common"
     },
     stick: {
         id: "stick",
@@ -40,11 +55,75 @@ const items = {
             { type: "dexV", value: [1, 2, 3], chance: 1.75 },
         ],
         range: 1,
-        img: "",
+        img: "resources/icons/weapon_club.png",
         sprite: "stick",
         price: 10,
         weight: 0.9,
-        type: "weapon"
+        type: "weapon",
+        grade: "common"
+    },
+    chippedBlade: {
+        id: "chippedBlade",
+        name: "Chipped Longsword",
+        damages: { slash: 6, pierce: 2 },
+        damagesTemplate: [
+            { type: "slash", value: [2, 4], chance: 10 },
+            { type: "pierce", value: [1, 2], chance: 10 },
+            { type: "dark", value: [2, 5], chance: 4 },
+            { type: "divine", value: [2, 5], chance: 4 },
+            { type: "fire", value: [2, 5], chance: 7 },
+            { type: "lightning", value: [2, 5], chance: 5 },
+            { type: "ice", value: [2, 5], chance: 5 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 4], chance: 1.25 },
+            { type: "strP", value: [3, 5, 9], chance: 1 },
+            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 3], chance: 1.25 },
+            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+        ],
+        range: 1,
+        img: "resources/icons/weapon_chipped_blade.png",
+        sprite: "chippedBlade",
+        price: 18,
+        weight: 2.1,
+        type: "weapon",
+        grade: "common"
+    },
+    longsword: {
+        id: "longsword",
+        name: "Longsword",
+        damages: { slash: 8, pierce: 5 },
+        damagesTemplate: [
+            { type: "slash", value: [2, 4], chance: 4 },
+            { type: "pierce", value: [1, 3], chance: 4 },
+            { type: "dark", value: [2, 7], chance: 4 },
+            { type: "divine", value: [2, 7], chance: 4 },
+            { type: "fire", value: [6, 11], chance: 21 },
+            { type: "lightning", value: [5, 8], chance: 15 },
+            { type: "ice", value: [2, 4], chance: 5 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 5], chance: 1.75 },
+            { type: "strP", value: [3, 5, 9], chance: 1 },
+            { type: "dexV", value: [1, 2, 5], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 5], chance: 1.25 },
+            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+        ],
+        stats: {
+            strP: 10,
+            fireResistV: 20,
+            first_aid_base_healV: 5
+        },
+        range: 1,
+        img: "resources/icons/weapon_blade.png",
+        sprite: "blade",
+        price: 60,
+        weight: 2.4,
+        type: "weapon",
+        grade: "rare"
     },
     huntingBow: {
         id: "huntingBow",
@@ -65,7 +144,8 @@ const items = {
         price: 10,
         weight: 0.9,
         type: "weapon",
-        firesProjectile: "arrowProjectile"
+        firesProjectile: "arrowProjectile",
+        grade: "common"
     },
     raggedShirt: {
         id: "raggedShirt",
@@ -89,11 +169,12 @@ const items = {
             { type: "vitP", value: [3, 6, 9], chance: 1.8 },
             { type: "hpV", value: [4, 8, 12], chance: 3.5 },
         ],
-        img: "",
+        img: "resources/icons/ragged_shirt.png",
         sprite: "raggedShirt",
         price: 6,
         weight: 0.8,
-        type: "armor"
+        type: "armor",
+        grade: "common"
     },
     raggedBoots: {
         id: "raggedBoots",
@@ -115,10 +196,11 @@ const items = {
             { type: "dexV", value: [1, 2, 3], chance: 1.75 },
             { type: "dexP", value: [3, 5, 7], chance: 1.5 },
         ],
-        img: "",
+        img: "resources/icons/ragged_boots.png",
         sprite: "raggedBoots",
         price: 4,
         weight: 0.2,
-        type: "armor"
+        type: "armor",
+        grade: "common"
     },
 };

@@ -36,11 +36,15 @@ interface characterObject {
   resistances: resistances;
   statusResistances: statusResistances;
   abilities: ability[];
-  weapon?: weaponClass | {};
-  chest?: armorClass | {};
-  helmet?: armorClass | {};
-  gloves?: armorClass | {};
-  boots?: armorClass | {};
+  weapon?: weaponClass | any;
+  offhand?: any;
+  chest?: armorClass | any;
+  helmet?: armorClass | any;
+  gloves?: armorClass | any;
+  boots?: armorClass | any;
+  artifact1?: any;
+  artifact2?: any;
+  artifact3?: any;
   isFoe?: boolean;
   kill?: Function;
   xp?: number;
@@ -218,7 +222,6 @@ class Character {
           if(this.id == "player") displayText(`<c>purple<c>[EFFECT] <c>yellow<c>You <c>white<c>take ${dmg} damage from <i>${status.dot.icon}<i>${status.dot.damageType}.`);
           else displayText(`<c>yellow<c>${this.name} <c>white<c>takes ${dmg} damage from ${status.dot.damageType}.`);
           if(this.stats.hp <= 0) {
-            // @ts-expect-error
             this.kill();
           }
         }
@@ -228,7 +231,6 @@ class Character {
         }
       });
       this.abilities?.forEach((abi: ability) => {
-        // @ts-expect-error
         if(abi.onCooldown > 0) abi.onCooldown--;
       });
     }
@@ -256,6 +258,16 @@ class Character {
       for(let i = 0; i < this.abilities?.length; i++) {
         // @ts-ignore
         this.abilities[i] = new Ability(this.abilities[i], this);
+      }
+      // @ts-ignore
+      if(this.inventory) {
+        // @ts-ignore
+      for(let i = 0; i < this.inventory?.length; i++) {
+        // @ts-ignore
+        if(this.inventory[i].type == "weapon") this.inventory[i] = new Weapon(this.inventory[i]);
+        // @ts-ignore
+        else if(this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
+      }
       }
     }
   }

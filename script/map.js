@@ -1,6 +1,9 @@
 "use strict";
+var _a;
 const baseCanvas = document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const mapDataCanvas = document.querySelector(".canvasLayers .mapData");
+const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = document.querySelector(".canvasLayers .playerSheet");
 const playerCtx = playerCanvas.getContext("2d");
 const enemyLayers = document.querySelector(".canvasLayers .enemyLayers");
@@ -25,6 +28,7 @@ const highlight = {
     y: 0
 };
 window.addEventListener("resize", modifyCanvas);
+(_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
 function spriteVariables() {
     const spriteSize = 128 * zoomLevels[currentZoom];
     var spriteLimitX = Math.ceil(baseCanvas.width / spriteSize);
@@ -91,8 +95,19 @@ function renderMap(map) {
         }
         enemyLayers.append(canvas);
     });
+    /* Render Items */
+    mapDataCanvas.width = mapDataCanvas.width;
+    itemData.forEach((item) => {
+        var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        const itemImg = new Image();
+        itemImg.src = item.itm.img;
+        itemImg.onload = function () {
+            mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+        };
+    });
     /* Render Player */
-    renderPlayerModel(spriteSize);
+    renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 function renderTileHover(tile) {
     var _a;
@@ -105,7 +120,7 @@ function renderTileHover(tile) {
     try {
         /* Render tile */
         var strokeImg = document.querySelector(".sprites .hoverTile");
-        renderPlayerModel(spriteSize);
+        renderPlayerModel(spriteSize, playerCanvas, playerCtx);
         var hoveredEnemy = false;
         maps[currentMap].enemies.forEach((enemy) => {
             if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
@@ -117,12 +132,10 @@ function renderTileHover(tile) {
             hideMapHover();
         }
         /* Render highlight test */
-        // @ts-expect-error
         if (((abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.shoots_projectile) && isSelected) || (((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.firesProjectile) && !isSelected)) {
             const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
             var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
             var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
-            // @ts-expect-error
             let distance = isSelected ? abiSelected.use_range : player.weapon.range;
             let iteration = 0;
             path.forEach((step) => {
@@ -158,6 +171,10 @@ function clickMap(event) {
     var _a, _b;
     if (state.clicked)
         return;
+    if (invOpen) {
+        closeInventory();
+        return;
+    }
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
     const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
@@ -174,7 +191,6 @@ function clickMap(event) {
                 console.log(abiSelected.ranged);
                 // @ts-expect-error
                 if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
-                    // @ts-expect-error
                     if ((abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
                     if (abiSelected.type == "attack") {
@@ -186,7 +202,6 @@ function clickMap(event) {
                         // @ts-expect-error
                         if (weaponReach(player, abiSelected.use_range, enemy))
                             attackTarget(player, enemy, weaponReach(player, abiSelected.use_range, enemy));
-                        // @ts-expect-error
                         player.effects();
                         if (!abiSelected.shoots_projectile)
                             advanceTurn();
@@ -201,7 +216,6 @@ function clickMap(event) {
                 if (weaponReach(player, player.weapon.range, enemy)) {
                     // @ts-expect-error
                     regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
-                    // @ts-expect-error
                     player.effects();
                     advanceTurn();
                 }
@@ -210,7 +224,6 @@ function clickMap(event) {
             else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
                 // @ts-ignore
                 fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true);
-                // @ts-expect-error
                 player.effects();
             }
             move = false;
@@ -234,6 +247,12 @@ function clickMap(event) {
 //     advanceTurn();
 //   }
 // });
+document.addEventListener("keyup", (kbe) => {
+    // Believe it or not, this is the space key!
+    if (kbe.key == " ") {
+        pickLoot();
+    }
+});
 async function movePlayer(goal) {
     if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1)
         return;
@@ -302,9 +321,45 @@ function canMoveTo(char, tile) {
     }
     return movable;
 }
-function renderPlayerModel(size) {
+function renderPlayerOutOfMap(size, canvas, ctx) {
     var _a, _b, _c, _d, _e;
-    playerCanvas.width = playerCanvas.width; // Clear canvas
+    canvas.width = canvas.width; // Clear canvas
+    const bodyModel = document.querySelector(".sprites ." + player.race + "Model");
+    const earModel = document.querySelector(".sprites ." + player.race + "Ears");
+    const hairModel = document.querySelector(".sprites .hair" + player.hair);
+    const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
+    const faceModel = document.querySelector(".sprites .face" + player.face);
+    const leggings = document.querySelector(".sprites .defaultPants");
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, 0, 0, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, 0, 0, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, 0, 0, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, 0, 0, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, 0, 0, size, size);
+    if ((_a = player.chest) === null || _a === void 0 ? void 0 : _a.sprite) {
+        const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, 0, 0, size, size);
+    }
+    if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
+        const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, 0, 0, size, size);
+    }
+    if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
+        const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, 0, 0, size, size);
+    }
+    if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
+        const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, 0, 0, size, size);
+    }
+    if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
+        const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, 0, 0, size, size);
+    }
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, 0, 0, size, size);
+}
+function renderPlayerModel(size, canvas, ctx) {
+    var _a, _b, _c, _d, _e;
+    canvas.width = canvas.width; // Clear canvas
     const bodyModel = document.querySelector(".sprites ." + player.race + "Model");
     const earModel = document.querySelector(".sprites ." + player.race + "Ears");
     const hairModel = document.querySelector(".sprites .hair" + player.hair);
@@ -314,45 +369,35 @@ function renderPlayerModel(size) {
     player.statusEffects.forEach((eff) => {
         if (eff.aura) {
             const aura = document.querySelector(".sprites ." + eff.aura);
-            playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
         }
     });
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    // @ts-expect-error
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     if ((_a = player.chest) === null || _a === void 0 ? void 0 : _a.sprite) {
-        // @ts-expect-error
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    // @ts-expect-error
     if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
-        // @ts-expect-error
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite);
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    // @ts-expect-error
     if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
-        // @ts-expect-error
         const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite);
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    // @ts-expect-error
     if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
-        // @ts-expect-error
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    // @ts-expect-error
     if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
-        // @ts-expect-error
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
 }
 function generatePath(start, end, canFly, distanceOnly = false) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -484,7 +529,6 @@ function modifyCanvas() {
 }
 /* Move to state file later */
 function advanceTurn() {
-    // @ts-expect-error
     player.updateAbilities();
     state.inCombat = false;
     var map = maps[currentMap];
@@ -496,7 +540,6 @@ function advanceTurn() {
         enemy.effects();
         if (enemy.aggro()) {
             state.inCombat = true;
-            // @ts-expect-error
             enemy.updateAbilities();
             enemy.decideAction();
         }

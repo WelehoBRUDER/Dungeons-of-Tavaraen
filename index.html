@@ -12,6 +12,7 @@
   <div class="main">
     <div class="canvasLayers">
       <canvas class="baseSheet layer" width="1920" height="1344"></canvas>
+      <canvas class="mapData layer" width="1920" height="1344"></canvas>
       <div class="enemyLayers"></div>
       <div class="projectileLayers"></div>
       <canvas class="playerSheet layer" width="1920" height="1344"></canvas>
@@ -30,6 +31,27 @@
         <img src="resources/ui/mana_bg.png" alt="" class="PlayerMpBgImg">
         <img src="resources/ui/mana.png" alt="" class="PlayerMpFill">
       </div>
+    </div>
+    <div class="playerInventory">
+      <div class="weapon slot"></div>
+      <img src="resources/icons/weapon_blade.png" alt="" class="weaponBg slotImg">
+      <div class="offhand slot"></div>
+      <img src="resources/icons/shield_symbol.png" alt="" class="offhandBg slotImg">
+      <div class="chest slot"></div>
+      <img src="resources/icons/breastplate.png" alt="" class="chestBg slotImg">
+      <div class="helmet slot"></div>
+      <img src="resources/icons/breastplate.png" alt="" class="helmetBg slotImg">
+      <div class="gloves slot"></div>
+      <img src="resources/icons/gloves.png" alt="" class="glovesBg slotImg">
+      <div class="boots slot"></div>
+      <img src="resources/icons/breastplate.png" alt="" class="bootsBg slotImg">
+      <div class="artifact1 slot"></div>
+      <img src="resources/icons/ring.png" alt="" class="artifact1Bg slotImg">
+      <div class="artifact2 slot"></div>
+      <img src="resources/icons/ring.png" alt="" class="artifact2Bg slotImg">
+      <div class="artifact3 slot"></div>
+      <img src="resources/icons/ring.png" alt="" class="artifact3Bg slotImg">
+      <canvas class="playerRender" width="256" height="256"></canvas>
     </div>
     <div class="playerEffects"></div>
     <div class="mapHover"></div>
@@ -76,6 +98,8 @@
   <img src="resources/tiles/player/dagger_model.png" alt="" onload="imgLoaded()" class="rustyDagger sprite">
   <img src="resources/tiles/player/stick_model.png" alt="" onload="imgLoaded()" class="stick sprite">
   <img src="resources/tiles/player/bow_model.png" alt="" onload="imgLoaded()" class="bow sprite">
+  <img src="resources/tiles/player/blade_model.png" alt="" onload="imgLoaded()" class="blade sprite">
+  <img src="resources/tiles/player/chipped_blade_model.png" alt="" onload="imgLoaded()" class="chippedBlade sprite">
 
   <!-- Projectiles -->
   <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
@@ -120,5 +144,6 @@
 <script src="script/enemy.js"></script>
 <script src="arrays/maps.js"></script>
 <script src="script/map.js"></script>
+<script src="script/mapData.js"></script>
 <script src="script/combat.js"></script>
 <script src="script/hotbar.js"></script>

@@ -10,10 +10,6 @@ const statusEffects = {
     effects: {
       strV: -5,
       dexV: -5,
-      berserk_status_effect_strPV: 20,
-      berserk_status_effect_lastV: 3,
-      berserk_status_effect_dexPV: 33,
-      barbarian_rage_status_effect_strPV: -78
     },
     last: {
       total: 5,
@@ -35,14 +31,6 @@ const statusEffects = {
       slashResistV: 10,
       pierceResistV: 10,
       iceResistV: 5,
-      berserk_mana_costV: 8,
-      berserk_cooldownP: 75,
-      focus_strike_resistance_penetrationV: 20,
-      focus_strike_cooldownV: -2,
-      icy_javelin_damage_multiplierV: 0.3,
-      icy_javelin_use_rangeP: 30,
-      first_aid_base_healV: 10,
-      berserk_status_effect_strPV: 20
     },
     silence: true,
     last: {

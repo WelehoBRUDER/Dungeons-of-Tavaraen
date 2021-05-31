@@ -1,3 +1,7 @@
+interface icons {
+  [melee: string]: string;
+}
+
 const icons = {
   melee: "resources/icons/melee_icon.png",
   ranged: "resources/icons/ranged_icon.png",
@@ -7,8 +11,13 @@ const icons = {
   iceResist_icon: "resources/icons/ice_resist_icon.png",
   rp_icon: "resources/icons/resistance_penetration_icon.png",
   resistance_penetration_icon: "resources/icons/resistance_penetration_icon.png",
+  gold_icon: "resources/icons/gold_icon.png",
   fire: "resources/icons/fire_icon.png",
+  fire_icon: "resources/icons/fire_icon.png",
   fireDamage_icon: "resources/icons/fire_icon.png",
+  dark_icon: "resources/icons/dark_icon.png",
+  divine_icon: "resources/icons/divine_icon.png",
+  lightning_icon: "resources/icons/lightning_icon.png",
   poison: "resources/icons/poison_icon.png",
   rage: "resources/icons/rage_icon.png",
   berserk: "resources/icons/berserk_icon.png",
@@ -23,6 +32,7 @@ const icons = {
   base_heal_icon: "resources/icons/healing_icon.png",
   cooldown: "resources/icons/cooldown.png",
   cooldown_icon: "resources/icons/cooldown_icon.png",
+  last_icon: "resources/icons/cooldown_icon.png",
   health: "resources/icons/health.png",
   health_icon: "resources/icons/health_icon.png",
   mana: "resources/icons/mana.png",
@@ -51,7 +61,7 @@ const icons = {
   concentration_icon: "resources/icons/concentration_icon.png",
   break_concentration: "resources/icons/break_concentration.png",
   break_concentration_icon: "resources/icons/break_concentration_icon.png",
-}
+} as icons;
 
 const tiles = [
   {

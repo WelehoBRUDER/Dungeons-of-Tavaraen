@@ -32,7 +32,6 @@ function attackTarget(attacker, target, attackDir) {
     // @ts-ignore
     if (target.isFoe) {
         const layer = document.querySelector(".playerSheet");
-        console.log(attackDir);
         layer.style.animation = 'none';
         // @ts-ignore
         layer.offsetHeight; /* trigger reflow */
@@ -43,8 +42,6 @@ function attackTarget(attacker, target, attackDir) {
     else {
         // @ts-ignore
         const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
-        console.log(layer);
-        console.log(attackDir);
         layer.style.animation = 'none';
         // @ts-ignore
         layer.offsetHeight; /* trigger reflow */
@@ -66,7 +63,6 @@ function useAbi(abi) {
 }
 function buffOrHeal(character, ability) {
     isSelected = false;
-    // @ts-expect-error
     player.effects();
     if (ability.base_heal) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
@@ -89,7 +85,6 @@ function buffOrHeal(character, ability) {
         }
         // @ts-ignore
         statusEffects[ability.status].last.current = statusEffects[ability.status].last.total;
-        // @ts-expect-error
         spawnFloatingText(character.cords, ability.line, "crimson", 36);
         if (character.isFoe)
             displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${ability.action_desc}`);
@@ -117,16 +112,13 @@ function regularAttack(attacker, target, ability, targetCords) {
                 const num = value[1];
                 const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 let bonus = 0;
-                // @ts-ignore
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
                 // @ts-ignore
                 if (attacker.weapon.firesProjectile)
                     bonus += num * attacker.getStats().dex / 20;
-                // @ts-ignore
                 else
                     bonus += num * attacker.getStats().str / 20;
-                // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
         }
@@ -203,7 +195,7 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
         floatingText.textContent = text;
         floatingText.style.fontSize = `${fontSize}px`;
         floatingText.style.color = color;
-        floatingText.style.left = `${x + spriteSize / (random(4, 1))}px`;
+        floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (random(2.5, 0.5))}px`;
         floatingText.style.top = `${y + spriteSize / (random(4, 1))}px`;
         floatingText.classList.add("floatingText");
         floatingText.style.animationDuration = `${ms / 1000}s`;
@@ -226,7 +218,6 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer) {
         await sleep(70);
         const { screenX: x, screenY: y } = tileCordsToScreen(step);
         if (step.enemy) {
-            console.log(step);
             collision({ x: step.x, y: step.y }, ability, isPlayer);
             setTimeout(advanceTurn, 70);
             break;

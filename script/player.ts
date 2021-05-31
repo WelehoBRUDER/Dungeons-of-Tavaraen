@@ -6,6 +6,15 @@ interface playerChar extends characterObject {
   hair: number;
   eyes: number;
   face: number;
+  weapon: weaponClass | any;
+  offhand: any;
+  chest: armorClass | any;
+  helmet: armorClass | any;
+  gloves: armorClass | any;
+  boots: armorClass | any;
+  artifact1: any;
+  artifact2: any;
+  artifact3: any;
   level: levelObject;
   hpRegen?: Function;
 }
@@ -17,19 +26,24 @@ interface levelObject {
 }
 
 class PlayerCharacter extends Character {
-  canFly: boolean;
+  [canFly: string]: any;
   sprite: string;
   race: string;
   hair: number;
   eyes: number;
   face: number;
   level: levelObject;
-  weapon: weaponClass | {};
-  chest: armorClass | {};
-  helmet: armorClass | {};
-  gloves: armorClass | {};
-  boots: armorClass | {};
+  weapon: weaponClass | any;
+  offhand: any;
+  chest: armorClass | any;
+  helmet: armorClass | any;
+  gloves: armorClass | any;
+  boots: armorClass | any;
+  artifact1: any;
+  artifact2: any;
+  artifact3: any;
   hpRegen: Function;
+  inventory: Array<any>;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -40,10 +54,15 @@ class PlayerCharacter extends Character {
     this.face = base.face ?? 1;
     this.level = base.level;
     this.weapon = base.weapon ?? {};
+    this.offhand = base.offhand ?? {};
     this.chest = base.chest ?? {};
     this.helmet = base.helmet ?? {};
     this.gloves = base.gloves ?? {};
     this.boots = base.boots ?? {};
+    this.artifact1 = base.artifact1 ?? {};
+    this.artifact2 = base.artifact2 ?? {};
+    this.artifact3 = base.artifact3 ?? {};
+    this.inventory = base.inventory ?? [];
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
@@ -91,7 +110,7 @@ var player = new PlayerCharacter({
   hair: 4,
   eyes: 2,
   face: 1,
-  weapon: new Weapon({...items.stick}),
+  weapon: new Weapon({...items.longsword}),
   chest: new Armor({...items.raggedShirt}),
   helmet: {},
   gloves: {},
@@ -118,4 +137,5 @@ var player = new PlayerCharacter({
   statusEffects: [
     new statEffect({...statusEffects.poison}, s_def)
   ],
+  inventory: []
 });
