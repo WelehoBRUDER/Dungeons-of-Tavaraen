@@ -264,7 +264,7 @@ class Character {
         // @ts-ignore
       for(let i = 0; i < this.inventory?.length; i++) {
         // @ts-ignore
-        if(this.inventory[i].type == "weapon") this.inventory[i] = new Weapon(this.inventory[i]);
+        if(this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({...this.inventory[i]});
         // @ts-ignore
         else if(this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
       }

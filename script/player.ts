@@ -17,6 +17,8 @@ interface playerChar extends characterObject {
   artifact3: any;
   level: levelObject;
   hpRegen?: Function;
+  carryingWeight?: Function;
+  maxCarryWeight?: Function;
 }
 
 interface levelObject {
@@ -44,6 +46,8 @@ class PlayerCharacter extends Character {
   artifact3: any;
   hpRegen: Function;
   inventory: Array<any>;
+  carryingWeight?: Function;
+  maxCarryWeight?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -68,6 +72,114 @@ class PlayerCharacter extends Character {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
       return Math.floor((1 + val) * mod);
     }
+
+    this.drop = (itm) => {
+      const item = {...itm};
+      this.inventory.splice(itm.index, 1);
+      createDroppedItem(this.cords, item);
+      renderInventory();
+      modifyCanvas();
+    }
+
+    this.unequip = (event: any, slot: string) => {
+      if(event.button !== 2) return;
+      if(this[slot]?.id) {
+        this.inventory.push(this[slot]);
+      };
+      this[slot] = {};
+      renderInventory();
+    }
+
+    this.equip = (event: any, item: any) => {
+      if(event.button !== 2) return;
+      const itm = {...item};
+      player.inventory.splice(item.index, 1);
+      this.unequip(event, itm.slot);
+      this[itm.slot] = {...itm};
+      renderInventory();
+    }
+
+    this.carryingWeight = () => {
+      let total = 0;
+      this.inventory.forEach(itm=>{
+        total += itm.weight;
+      });
+      return total.toFixed(1);
+    }
+
+    this.maxCarryWeight = () => {
+      const { v: val, m: mod } = getModifiers(this, "carryStrength");
+      return ((92.5 + val + this.getStats().str/2 + this.getStats().vit) * mod).toFixed(1);
+    }
+  }
+}
+
+function updatePlayerInventoryIndexes() {
+  for(let i = 0; i < player.inventory.length; i++) {
+    player.inventory[i].index = i;
+  }
+}
+
+function sortInventory(category: string, reverse: boolean) {
+  sortingReverse = !sortingReverse;
+  if(category == "name" || category == "type") {
+    player.inventory.sort((a,b)=>stringSort(a,b, category, reverse));
+  }
+  else player.inventory.sort((a,b)=>numberSort(a,b, category, reverse));
+  renderInventory();
+}
+
+function stringSort(a, b, string: string, reverse: boolean = false) {
+  var nameA = a[string].toUpperCase(); // ignore upper and lowercase
+  var nameB = b[string].toUpperCase(); // ignore upper and lowercase
+  if(reverse) {
+    if (nameA > nameB) {
+      return -1;
+    }
+    if (nameA < nameB) {
+      return 1;
+    }
+  
+    // names must be equal
+    return 0;
+  } 
+  else {
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+  
+    // names must be equal
+    return 0;
+  }
+};
+
+function numberSort(a, b, string: string, reverse: boolean = false) {
+  var numA = a[string];
+  var numB = b[string];
+  if(!reverse) {
+    if (numA > numB) {
+      return -1;
+    }
+    if (numA < numB) {
+      return 1;
+    }
+  
+    // names must be equal
+    return 0;
+  } 
+  else {
+    if (numA < numB) {
+      return -1;
+    }
+    if (numA > numB) {
+      return 1;
+    }
+  
+    // names must be equal
+    return 0;
   }
 }
 
@@ -139,3 +251,13 @@ var player = new PlayerCharacter({
   ],
   inventory: []
 });
+
+var randomProperty = function (obj) {
+  var keys = Object.keys(obj);
+  return obj[keys[ keys.length * Math.random() << 0]];
+};
+
+for(let i = 0; i < 25; i++) {
+  player.inventory.push({...randomProperty(items)});
+}
+

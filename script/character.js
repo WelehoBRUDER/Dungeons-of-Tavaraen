@@ -199,7 +199,7 @@ class Character {
                 for (let i = 0; i < ((_b = this.inventory) === null || _b === void 0 ? void 0 : _b.length); i++) {
                     // @ts-ignore
                     if (this.inventory[i].type == "weapon")
-                        this.inventory[i] = new Weapon(this.inventory[i]);
+                        this.inventory[i] = new Weapon(Object.assign({}, this.inventory[i]));
                     // @ts-ignore
                     else if (this.inventory[i].type == "armor")
                         this.inventory[i] = new Armor(this.inventory[i]);

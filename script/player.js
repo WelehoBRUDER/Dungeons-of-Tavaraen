@@ -24,6 +24,107 @@ class PlayerCharacter extends Character {
             const { v: val, m: mod } = getModifiers(this, "hpRegen");
             return Math.floor((1 + val) * mod);
         };
+        this.drop = (itm) => {
+            const item = Object.assign({}, itm);
+            this.inventory.splice(itm.index, 1);
+            createDroppedItem(this.cords, item);
+            renderInventory();
+            modifyCanvas();
+        };
+        this.unequip = (event, slot) => {
+            var _a;
+            if (event.button !== 2)
+                return;
+            if ((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id) {
+                this.inventory.push(this[slot]);
+            }
+            ;
+            this[slot] = {};
+            renderInventory();
+        };
+        this.equip = (event, item) => {
+            if (event.button !== 2)
+                return;
+            const itm = Object.assign({}, item);
+            player.inventory.splice(item.index, 1);
+            this.unequip(event, itm.slot);
+            this[itm.slot] = Object.assign({}, itm);
+            renderInventory();
+        };
+        this.carryingWeight = () => {
+            let total = 0;
+            this.inventory.forEach(itm => {
+                total += itm.weight;
+            });
+            return total.toFixed(1);
+        };
+        this.maxCarryWeight = () => {
+            const { v: val, m: mod } = getModifiers(this, "carryStrength");
+            return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
+        };
+    }
+}
+function updatePlayerInventoryIndexes() {
+    for (let i = 0; i < player.inventory.length; i++) {
+        player.inventory[i].index = i;
+    }
+}
+function sortInventory(category, reverse) {
+    sortingReverse = !sortingReverse;
+    if (category == "name" || category == "type") {
+        player.inventory.sort((a, b) => stringSort(a, b, category, reverse));
+    }
+    else
+        player.inventory.sort((a, b) => numberSort(a, b, category, reverse));
+    renderInventory();
+}
+function stringSort(a, b, string, reverse = false) {
+    var nameA = a[string].toUpperCase(); // ignore upper and lowercase
+    var nameB = b[string].toUpperCase(); // ignore upper and lowercase
+    if (reverse) {
+        if (nameA > nameB) {
+            return -1;
+        }
+        if (nameA < nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+    else {
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+}
+;
+function numberSort(a, b, string, reverse = false) {
+    var numA = a[string];
+    var numB = b[string];
+    if (!reverse) {
+        if (numA > numB) {
+            return -1;
+        }
+        if (numA < numB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+    else {
+        if (numA < numB) {
+            return -1;
+        }
+        if (numA > numB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
     }
 }
 var player = new PlayerCharacter({
@@ -94,3 +195,10 @@ var player = new PlayerCharacter({
     ],
     inventory: []
 });
+var randomProperty = function (obj) {
+    var keys = Object.keys(obj);
+    return obj[keys[keys.length * Math.random() << 0]];
+};
+for (let i = 0; i < 25; i++) {
+    player.inventory.push(Object.assign({}, randomProperty(items)));
+}

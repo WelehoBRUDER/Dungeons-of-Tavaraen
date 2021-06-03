@@ -233,6 +233,12 @@ function effectSyntax(effect, embed = false, effectId = "") {
         case "lightning":
             key = "Lightning";
             break;
+        case "hpMax":
+            key = "Health";
+            break;
+        case "mpMax":
+            key = "Mana";
+            break;
     }
     var img = icons[_key + "_icon"];
     if (!img)
@@ -293,6 +299,86 @@ function moveHover(mouseEvent) {
 function hideHover() {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "none";
+}
+window.addEventListener("keyup", e => {
+    if (e.key == "i") {
+        renderInventory();
+    }
+    else if (e.key == "Escape") {
+        closeInventory();
+    }
+});
+function saveToFile() {
+    var saveData = (function () {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        return function (data, fileName) {
+            var json = JSON.stringify(data), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+    let saveArray = [
+        {
+            key: "player",
+            data: player
+        },
+        {
+            key: "itemData",
+            data: itemData
+        },
+        {
+            key: "enemies",
+            data: fallenEnemies
+        }
+    ];
+    let minutes = new Date().getMinutes();
+    if (minutes < 10)
+        minutes = `0${new Date().getMinutes()}`;
+    saveData(saveArray, `TAVARAEN-${player.name}-save-${new Date().getHours()}.${minutes}.txt`);
+}
+function loadFromfile() {
+    let fileInput = document.createElement("input");
+    fileInput.setAttribute('type', 'file');
+    fileInput.click();
+    fileInput.addEventListener("change", () => HandleFile(fileInput.files[0]));
+}
+function HandleFile(file) {
+    let reader = new FileReader();
+    let text = "";
+    // file reading finished successfully
+    reader.addEventListener('load', function (e) {
+        // contents of file in variable     
+        text = e.target.result;
+        FinishRead();
+    });
+    // read as text file
+    reader.readAsText(file);
+    function FinishRead() {
+        let Table = JSON.parse(text);
+        LoadSlotPromptFile(file.name, Table);
+    }
+}
+function LoadSlotPromptFile(name, data) {
+    LoadSlot(data);
+}
+function GetKey(key, table) {
+    for (let object of table) {
+        if (object.key == key) {
+            return object;
+        }
+    }
+}
+function LoadSlot(data) {
+    player = new PlayerCharacter(GetKey("player", data).data);
+    itemData = GetKey("itemData", data).data;
+    fallenEnemies = GetKey("enemies", data).data;
+    modifyCanvas();
+    player.updateAbilities();
+    updateUI();
 }
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en) => en.updateAbilities());

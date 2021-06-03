@@ -280,32 +280,32 @@ body {
     }
 
     .weapon, .weaponBg {
-      left: 2%;
+      left: 3%;
       top: 21%;
     }
 
     .offhand, .offhandBg {
-      left: 2%;
+      left: 3%;
       top: 38.5%;
     }
 
     .gloves, .glovesBg {
-      left: 2%;
+      left: 3%;
       top: 56%;
     }
 
     .helmet, .helmetBg {
-      left: 25.5%;
+      left: 26.5%;
       top: 21%;
     }
 
     .chest, .chestBg {
-      left: 25.5%;
+      left: 26.5%;
       top: 38.5%;
     }
 
     .boots, .bootsBg {
-      left: 25.5%;
+      left: 26.5%;
       top: 56%;
     }
 
@@ -314,25 +314,44 @@ body {
     }
 
     .artifact1, .artifact1Bg {
-      left: 4%;
+      left: 5%;
     }
 
     .artifact2, .artifact2Bg {
-      left: 14.5%;
+      left: 15.5%;
       top: 72.5%;
     }
 
     .artifact3, .artifact3Bg {
-      left: 23%;
+      left: 24%;
     }
 
     .playerRender {
       width: 16%;
       height: 36%;
       position: absolute;
-      left: 10%;
+      left: 11%;
       top: 28.25%;
       z-index: 5;
+    }
+
+    .enc {
+      font-size: 21px;
+      color: silver;
+      position: absolute;
+      left: 2.5%;
+      bottom: 2.5%;
+    }
+
+    .items {
+      width: 61%;
+      height: 100%;
+      position: absolute;
+      left: 39%;
+      top: 0;
+      background: rgba(7, 10, 17, 0.9);
+      border: 6px solid rgb(40, 46, 71);
+      box-sizing: border-box;
     }
   }
 
@@ -455,6 +474,132 @@ body {
       }
     }
   }
+
+  .itemsContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+
+      
+    .itemListTop {
+      width: 100%;
+      height: 36px;
+      display: flex;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      user-select: none;
+
+      p {
+        font-size: 22px;
+        color: white;
+        top: 0;
+        margin: 0px;
+        border-radius: 8px;
+        background: rgba(41, 190, 41, 0.77);
+        height: 36px;
+      }
+
+      .topImage {
+        width: 36px;
+        height: 36px;
+      }
+
+      .topName {
+        width: calc(54% - 36px);
+        padding-left: 1%;
+      }
+
+      .topType {
+        width: 24%;
+        padding-left: 1%;
+      }
+
+      .topWeight {
+        width: 19%;
+        padding-left: 1%;
+      }
+    }
+
+    .itemList {
+      position: absolute;
+      left: 0;
+      top: 36px;
+      width: 100%;
+      height: calc(100% - 36px);
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+  
+      .itemListObject {
+        transition: 0.07s;
+        transition-timing-function: ease-in;
+        width: 100%;
+        height: 36px;
+        margin: 0px;
+        display: flex;
+        position: relative;
+        left: 0;
+        top: 0px;
+        user-select: none;
+        overflow: hidden;
+        white-space: nowrap;
+  
+        p {
+          transition: 0.07s;
+          transition-timing-function: ease-in;
+          font-size: 22px;
+          height: 36px;
+          margin: 0px;
+          color: white;
+          top: 0px;
+          border-radius: 8px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+  
+        img {
+          transition: 0.07s;
+          transition-timing-function: ease-in;
+          left: 0%;
+          width: 36px;
+          height: 36px;
+          top: 100%;
+          margin: 0px;
+          -webkit-user-drag: none;
+          border-radius: 8px;
+          max-height: 36px;
+        }
+  
+        .itemName {
+          width: calc(54% - 36px);
+          padding-left: 1%;
+        }
+  
+        .itemType {
+          width: 24%;
+          padding-left: 1%;
+        }
+  
+        .itemWeight {
+          width: 19%;
+          padding-left: 1%;
+        }
+      }
+  
+      .itemListObject:hover {
+        *{
+          background: rgba(192, 192, 43, 0.66);
+        }
+      }
+    }
+  }
+  
 
   @media only screen and (max-width: 1500px) {
     .hotbar {

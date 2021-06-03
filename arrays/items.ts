@@ -41,12 +41,13 @@ const items = {
       { type: "vitV", value: [1, 2, 3], chance: 1.25 },
     ],
     range: 1,
-    img: "",
+    img: "resources/icons/weapon_dagger.png",
     sprite: "rustyDagger",
     price: 10,
     weight: 1.2,
     type: "weapon",
-    grade: "common"
+    grade: "common",
+    slot: "weapon"
   },
   stick: {
     id: "stick",
@@ -67,7 +68,8 @@ const items = {
     price: 10,
     weight: 0.9,
     type: "weapon",
-    grade: "common"
+    grade: "common",
+    slot: "weapon"
   },
   chippedBlade: {
     id: "chippedBlade",
@@ -96,7 +98,8 @@ const items = {
     price: 18,
     weight: 2.1,
     type: "weapon",
-    grade: "common"
+    grade: "common",
+    slot: "weapon"
   },
   longsword: {
     id: "longsword",
@@ -130,7 +133,8 @@ const items = {
     price: 60,
     weight: 2.4,
     type: "weapon",
-    grade: "rare"
+    grade: "rare",
+    slot: "weapon"
   },
   huntingBow: {
     id: "huntingBow",
@@ -146,13 +150,14 @@ const items = {
       { type: "dexV", value: [1, 2, 3], chance: 1.75 },
     ],
     range: 7,
-    img: "",
+    img: "resources/icons/weapon_bow.png",
     sprite: "bow",
     price: 10,
     weight: 0.9,
     type: "weapon",
     firesProjectile: "arrowProjectile",
-    grade: "common"
+    grade: "common",
+    slot: "weapon"
   },
   raggedShirt: {
     id: "raggedShirt",
@@ -174,14 +179,15 @@ const items = {
       { type: "dexP", value: [3, 5, 7], chance: 1.5 },
       { type: "vitV", value: [1, 2, 4], chance: 2 },
       { type: "vitP", value: [3, 6, 9], chance: 1.8 },
-      { type: "hpV", value: [4, 8, 12], chance: 3.5 },
+      { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
     ],
     img: "resources/icons/ragged_shirt.png",
     sprite: "raggedShirt",
     price: 6,
     weight: 0.8,
     type: "armor",
-    grade: "common"
+    grade: "common",
+    slot: "chest"
   },
   raggedBoots: {
     id: "raggedBoots",
@@ -208,7 +214,8 @@ const items = {
     price: 4,
     weight: 0.2,
     type: "armor",
-    grade: "common"
+    grade: "common",
+    slot: "boots"
   },
   
 }
