@@ -110,6 +110,7 @@ class Character {
             baseStats.forEach((stat) => {
                 const { v: val, m: mod } = getModifiers(this, stat);
                 stats[stat] = Math.floor((this.stats[stat] + val) * mod);
+                stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
             });
             // get hp
             const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax");
@@ -126,6 +127,7 @@ class Character {
             Object.keys(this.resistances).forEach((res) => {
                 const { v: val, m: mod } = getModifiers(this, res + "Resist");
                 resists[res] = Math.floor((this.resistances[res] + val) * mod);
+                resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
             });
             return resists;
         };
@@ -212,7 +214,8 @@ const baseStats = [
     "str",
     "vit",
     "dex",
-    "int"
+    "int",
+    "cun"
 ];
 ;
 // var ley = new Character({

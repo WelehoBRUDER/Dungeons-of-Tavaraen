@@ -1,3 +1,7 @@
+interface _abb {
+  [string: string]: any;
+}
+
 const abilities = {
   attack: {
     id: "attack",
@@ -107,4 +111,4 @@ const abilities = {
     shoots_projectile: "iceSpikedProjectile",
     use_range: "9"
   }
-}
+} as _abb;

@@ -198,7 +198,6 @@ function clickMap(event) {
                     if (abiSelected.type == "attack") {
                         if (abiSelected.shoots_projectile)
                             fireProjectile(player.cords, enemy.cords, abiSelected.shoots_projectile, abiSelected, true);
-                        // @ts-expect-error
                         else
                             regularAttack(player, enemy, abiSelected);
                         // @ts-expect-error
@@ -210,13 +209,10 @@ function clickMap(event) {
                     }
                 }
             }
-            // @ts-expect-error
             else if (weaponReach(player, player.weapon.range, enemy)) {
                 // @ts-expect-error
                 attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-                // @ts-expect-error
                 if (weaponReach(player, player.weapon.range, enemy)) {
-                    // @ts-expect-error
                     regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
                     player.effects();
                     advanceTurn();
@@ -323,7 +319,7 @@ function canMoveTo(char, tile) {
     }
     return movable;
 }
-function renderPlayerOutOfMap(size, canvas, ctx) {
+function renderPlayerOutOfMap(size, canvas, ctx, side = "center") {
     var _a, _b, _c, _d, _e;
     canvas.width = canvas.width; // Clear canvas
     const bodyModel = document.querySelector(".sprites ." + player.race + "Model");
@@ -332,32 +328,47 @@ function renderPlayerOutOfMap(size, canvas, ctx) {
     const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
     const faceModel = document.querySelector(".sprites .face" + player.face);
     const leggings = document.querySelector(".sprites .defaultPants");
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, 0, 0, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, 0, 0, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, 0, 0, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, 0, 0, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, 0, 0, size, size);
+    var x = 0;
+    var y = 0;
+    if (side == "left")
+        x = 0 - size / 4;
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, x, y, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, x, y, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, x, y, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, x, y, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
     if ((_a = player.chest) === null || _a === void 0 ? void 0 : _a.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, 0, 0, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, x, y, size, size);
     }
     if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, 0, 0, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, x, y, size, size);
     }
     if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
         const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, 0, 0, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, x, y, size, size);
     }
     if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, 0, 0, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, x, y, size, size);
     }
     if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, 0, 0, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, 0, 0, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, x, y, size, size);
+}
+function renderPlayerPortrait() {
+    const portrait = document.createElement("div");
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d");
+    portrait.classList.add("playerPortrait");
+    renderPlayerOutOfMap(512, canvas, ctx, "left");
+    portrait.append(canvas);
+    return portrait;
 }
 function renderPlayerModel(size, canvas, ctx) {
     var _a, _b, _c, _d, _e;

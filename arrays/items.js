@@ -3,14 +3,17 @@ const grades = {
     common: {
         color: "#e0e0e0"
     },
-    rare: {
+    uncommon: {
         color: "#7ccf63"
     },
+    rare: {
+        color: "#4287f5"
+    },
     mythical: {
-        color: "#cfcf32"
+        color: "#5e18a3"
     },
     legendary: {
-        color: "#5e18a3"
+        color: "#cfcf32"
     }
 };
 const items = {
@@ -39,7 +42,7 @@ const items = {
         price: 10,
         weight: 1.2,
         type: "weapon",
-        grade: "common",
+        grade: "uncommon",
         slot: "weapon"
     },
     stick: {
@@ -115,10 +118,8 @@ const items = {
             { type: "vitV", value: [1, 2, 5], chance: 1.25 },
             { type: "vitP", value: [3, 5, 7], chance: 1.25 },
         ],
-        stats: {
-            strP: 10,
-            fireResistV: 20,
-            first_aid_base_healV: 5
+        commands: {
+            add_ability_focus_strike: 1
         },
         range: 1,
         img: "resources/icons/weapon_blade.png",
@@ -179,7 +180,7 @@ const items = {
         price: 6,
         weight: 0.8,
         type: "armor",
-        grade: "common",
+        grade: "mythical",
         slot: "chest"
     },
     raggedBoots: {
@@ -207,7 +208,7 @@ const items = {
         price: 4,
         weight: 0.2,
         type: "armor",
-        grade: "common",
+        grade: "legendary",
         slot: "boots"
     },
 };

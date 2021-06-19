@@ -73,6 +73,7 @@ interface weaponClass extends itemClass {
   range: number;
   firesProjectile?: string;
   stats?: any;
+  commands?: any;
   rolledStats?: any;
   rolledDamages?: any;
 }
@@ -123,6 +124,7 @@ class Weapon extends Item {
   range: number;
   firesProjectile?: string;
   stats?: statModifiers;
+  commands?: any;
   rolledStats?: any;
   rolledDamages?: any;
   constructor(base: weaponClass) {
@@ -135,6 +137,7 @@ class Weapon extends Item {
     this.statsTemplate = baseItem.statsTemplate;
     this.damages = { ...baseItem.damages } ?? {};
     this.stats = { ...baseItem.stats } ?? {};
+    this.commands = { ...baseItem.commands } ?? {};
     this.rolledDamages = {...base.rolledDamages} ?? {};
     this.rolledStats = {...base.rolledStats} ?? {};
 
@@ -199,6 +202,7 @@ interface armorClass extends itemClass {
   resistancesTemplate: any;
   statsTemplate: any;
   stats?: any;
+  commands?: any;
   rolledResistances?: any;
   rolledStats?: any;
 }
@@ -208,6 +212,7 @@ class Armor extends Item {
   resistancesTemplate: any;
   statsTemplate: any;
   stats?: any;
+  commands?: any;
   rolledResistances?: any;
   rolledStats?: any;
   constructor(base: armorClass) {
@@ -218,6 +223,7 @@ class Armor extends Item {
     this.statsTemplate = baseItem.statsTemplate;
     this.resistances = {...baseItem.resistances};
     this.stats = {...baseItem.stats} ?? {};
+    this.commands = {...baseItem.commands} ?? {};
     this.rolledResistances = {...base.rolledResistances} ?? {};
     this.rolledStats = {...base.rolledStats} ?? {};
 
@@ -341,7 +347,7 @@ function itemTT(item: any) {
     let txt: string = "";
     Object.entries(item.damages).forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.damage_icon}<i><f>20px<f>Damage: ${total} <f>17px<f>(${txt})\n`;
+    text += `<i>${icons.damage_icon}<i><f>18px<f>Damage: ${total} <f>17px<f>(${txt})\n`;
   }
   if (item.resistances) {
     let total: number = 0;
@@ -353,6 +359,9 @@ function itemTT(item: any) {
   if(Object.values(item.stats).length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>Stat effects:\n`;
     Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
+  }
+  if(Object.values(item.commands).length > 0) {
+    Object.entries(item.commands).forEach(eff => text += `<f>18px<f>${eff[0]}\n`);
   }
   text += `<i>${icons.resistance}<i><f>18px<f>Weight: ${item.weight}\n`;
   text += `<f>18px<f>Worth: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
@@ -368,38 +377,46 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   const topImage = document.createElement("p");
   const topName = document.createElement("p");
   const topType = document.createElement("p");
+  const topRarity = document.createElement("p");
   const topWeight = document.createElement("p");
   container.classList.add("itemsContainer");
   topImage.classList.add("topImage");
   topName.classList.add("topName");
   topType.classList.add("topType");
+  topRarity.classList.add("topRarity");
   topWeight.classList.add("topWeight");
   topName.textContent = "Item name";
   topType.textContent = "Type";
+  topRarity.textContent = "Rarity";
   topWeight.textContent = "Weight";
   topName.addEventListener("click", e=>sortInventory("name", sortingReverse));
   topType.addEventListener("click", e=>sortInventory("type", sortingReverse));
+  topRarity.addEventListener("click", e=>sortInventory("grade", sortingReverse));
   topWeight.addEventListener("click", e=>sortInventory("weight", sortingReverse));
   itemsList.classList.add("itemList");
   itemsListBar.classList.add("itemListTop");
-  itemsListBar.append(topImage, topName, topType, topWeight);
+  itemsListBar.append(topImage, topName, topType, topRarity, topWeight);
   const items: Array<any> = [...inventory];
   items.forEach((itm: any) => {
     const itemObject = document.createElement("div");
     const itemImage = document.createElement("img");
     const itemName = document.createElement("p");
+    const itemRarity = document.createElement("p");
     const itemType = document.createElement("p");
     const itemWeight = document.createElement("p");
     itemObject.classList.add("itemListObject");
     itemImage.classList.add("itemImg");
     itemName.classList.add("itemName");
+    itemRarity.classList.add("itemRarity");
     itemType.classList.add("itemType");
     itemWeight.classList.add("itemWeight");
     itemImage.src = itm.img;
     itemName.style.color = grades[itm.grade].color;
     itemType.style.color = grades[itm.grade].color;
+    itemRarity.style.color = grades[itm.grade].color;
     itemWeight.style.color = grades[itm.grade].color;
     itemName.textContent = itm.name;
+    itemRarity.textContent = itm.grade;
     itemType.textContent = itm.type;
     itemWeight.textContent = itm.weight;
     if(context == "PLAYER_INVENTORY") {
@@ -407,7 +424,7 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
       itemObject.addEventListener("dblclick", e=>player.drop(itm));
     } 
     tooltip(itemObject, itemTT(itm));
-    itemObject.append(itemImage, itemName, itemType, itemWeight);
+    itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight);
     itemsList.append(itemObject);
   });
   container.append(itemsList, itemsListBar);

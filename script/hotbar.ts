@@ -279,10 +279,58 @@ window.addEventListener("keyup", e => {
   if (e.key == "i") {
     renderInventory();
   }
+  else if (e.key == "c") {
+    renderCharacter();
+  }
   else if (e.key == "Escape") {
     closeInventory();
+    closeCharacter();
   }
 });
+
+function renderCharacter() {
+  hideHover();
+  const bg = document.querySelector<HTMLDivElement>(".playerWindow");
+  document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";
+  bg.style.transform = "scale(1)";
+  bg.textContent = "";
+  const pc = renderPlayerPortrait();
+  const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getStats().hpMax} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getStats().mpMax} MP`);
+  var statsText = `<bcss>position: absolute; left: 24px; top: 298px;<bcss><f>32px<f>Core stats§\n\n`;
+  statsText += `<cl>strSpan<cl><i>${icons.str_icon}<i><f>24px<f>Strength: ${player.getStats().str}\n§<cl>dexSpan<cl><i>${icons.dex_icon}<i><f>24px<f>Dexterity: ${player.getStats().dex}\n§<cl>vitSpan<cl><i>${icons.vit_icon}<i><f>24px<f>Vitality: ${player.getStats().vit}\n§<cl>intSpan<cl><i>${icons.int_icon}<i><f>24px<f>Intelligence: ${player.getStats().int}\n§<cl>cunSpan<cl><i>${icons.cun_icon}<i><f>24px<f>Cunning: ${player.getStats().cun}`;
+  const stats = textSyntax(statsText);
+  var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
+  Object.entries(player.getResists()).forEach(resistance=>{
+    const str = resistance[0];
+    const val = resistance[1];
+    resistancesText += `<i>${icons[str + "_icon"]}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;
+  });
+  const resistances = textSyntax(resistancesText);
+  tooltip(resistances, "Resistance decreases incoming damage\n of its type by the indicated number.\n For example, 50% resistance means\n you take half damage.");
+  var effectResTxt = `<bcss>position: absolute; left: 364px; top: 298px;<bcss><f>32px<f>Status resistances§\n\n`;
+  Object.entries(player.getStatusResists()).forEach(resistance=>{
+    const str = resistance[0];
+    const val = resistance[1];
+    effectResTxt += `<i>${icons[str] ? icons[str] : "resources/icons/damage_icon.png"}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;
+  });
+  const effResistances = textSyntax(effectResTxt);
+  tooltip(effResistances, "Status resistance either decreases damage\n of its type by the indicated number\n or decreases the chance of the status effecting you.");
+  pc.style.left = "24px";
+  pc.style.top = "24px";
+  bg.append(pc, nameAndRace, stats, resistances, effResistances);
+  tooltip(bg.querySelector(".strSpan"), `<i>${icons.str_icon}<i>Strength increases <i>${icons.melee}<i>melee \ndamage by 5% per level. \nAlso increases carry weight by 0.5.`);
+  tooltip(bg.querySelector(".dexSpan"), `<i>${icons.dex_icon}<i>Dexterity increases <i>${icons.ranged}<i>ranged \ndamage by 5% per level.`);
+  tooltip(bg.querySelector(".vitSpan"), `<i>${icons.vit_icon}<i>Vitality increases <i>${icons.health_icon}<i>health by by 5 per level. \nAlso increases carry weight by 1.`);
+  tooltip(bg.querySelector(".intSpan"), `<i>${icons.int_icon}<i>Intelligence increases spell \ndamage by 5% per level. \nAlso increases mana by 2.`);
+  tooltip(bg.querySelector(".cunSpan"), `<i>${icons.cun_icon}<i>Cunning increases crit chance by 0.25% \nand crit dmg by 2% per level.`);
+}
+
+function closeCharacter() {
+  hideHover();
+  document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
+  const bg = document.querySelector<HTMLDivElement>(".playerWindow");
+  bg.style.transform = "scale(0)";
+}
 
 function saveToFile() {
   var saveData = (function () {
@@ -351,8 +399,8 @@ function LoadSlotPromptFile(name, data) {
 }
 
 function GetKey(key, table) {
-  for(let object of table) {
-    if(object.key == key) {
+  for (let object of table) {
+    if (object.key == key) {
       return object;
     }
   }
@@ -373,4 +421,3 @@ function LoadSlot(data) {
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en: Enemy) => en.updateAbilities());
 updateUI();
-setTimeout(renderInventory, 700);

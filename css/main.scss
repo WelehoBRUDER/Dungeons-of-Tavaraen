@@ -355,6 +355,57 @@ body {
     }
   }
 
+
+  .playerWindow {
+    transition: 0.275s;
+    transition-timing-function: ease-in;
+    width: 1360px;
+    height: 780px;
+    background: rgba(5, 5, 5, 0.95);
+    border: 6px solid rgb(50, 50, 50);
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -680px;
+    margin-top: -390px;
+    z-index: 8;
+    transform: scale(0);
+
+    pre {
+      margin: 0;
+      span {
+        margin: 0;
+        color: white;
+        font-size: 22px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        text-shadow: 0px 0px 8px black;
+        line-height: 24px;
+      }
+
+      img {
+        width: 22px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .playerPortrait {
+    width: auto;
+    max-width: 272px;
+    height: 192px;
+    overflow: hidden;
+    border: 4px solid rgb(201, 152, 47);
+    background: url(../resources/ui/red_background.png);
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    canvas {
+      filter: drop-shadow(0px 0px 8px black);
+    }
+  }
+
   .playerEffects {
     max-width: 70%;
     width: auto;
@@ -516,12 +567,17 @@ body {
       }
 
       .topType {
-        width: 24%;
+        width: 18%;
+        padding-left: 1%;
+      }
+
+      .topRarity {
+        width: 11%;
         padding-left: 1%;
       }
 
       .topWeight {
-        width: 19%;
+        width: 13%;
         padding-left: 1%;
       }
     }
@@ -582,12 +638,17 @@ body {
         }
   
         .itemType {
-          width: 24%;
+          width: 18%;
+          padding-left: 1%;
+        }
+
+        .itemRarity {
+          width: 11%;
           padding-left: 1%;
         }
   
         .itemWeight {
-          width: 19%;
+          width: 13%;
           padding-left: 1%;
         }
       }
@@ -632,7 +693,7 @@ body {
       height: 41px;
     }
 
-    .playerInventory {
+    .playerInventory, .playerWindow, .playerImprovement {
       width: 1610px;
       height: 920px;
       margin-left: -805px;

@@ -210,7 +210,6 @@ function clickMap(event: MouseEvent) {
           if ((abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile)) break;
           if (abiSelected.type == "attack") {
             if (abiSelected.shoots_projectile) fireProjectile(player.cords, enemy.cords, abiSelected.shoots_projectile, abiSelected, true);
-            // @ts-expect-error
             else regularAttack(player, enemy, abiSelected);
             // @ts-expect-error
             if (weaponReach(player, abiSelected.use_range, enemy)) attackTarget(player, enemy, weaponReach(player, abiSelected.use_range, enemy));
@@ -219,13 +218,10 @@ function clickMap(event: MouseEvent) {
           }
         }
       }
-      // @ts-expect-error
       else if (weaponReach(player, player.weapon.range, enemy)) {
         // @ts-expect-error
         attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-        // @ts-expect-error
         if (weaponReach(player, player.weapon.range, enemy)) {
-          // @ts-expect-error
           regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
           player.effects();
           advanceTurn();
@@ -321,7 +317,7 @@ function canMoveTo(char: any, tile: tileObject) {
   return movable;
 }
 
-function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any) {
+function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, side: string = "center") {
   canvas.width = canvas.width; // Clear canvas
   const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
@@ -329,32 +325,47 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any)
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
   const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
   const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
-  ctx?.drawImage(bodyModel, 0, 0, size, size);
-  ctx?.drawImage(earModel, 0, 0, size, size);
-  ctx?.drawImage(eyeModel, 0, 0, size, size);
-  ctx?.drawImage(faceModel, 0, 0, size, size);
-  ctx?.drawImage(leggings, 0, 0, size, size);
+  var x = 0;
+  var y = 0;
+  if(side == "left") x = 0 - size/4;
+  ctx?.drawImage(bodyModel, x, y, size, size);
+  ctx?.drawImage(earModel, x, y, size, size);
+  ctx?.drawImage(eyeModel, x, y, size, size);
+  ctx?.drawImage(faceModel, x, y, size, size);
+  ctx?.drawImage(leggings, x, y, size, size);
   if (player.chest?.sprite) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
-    ctx?.drawImage(chestModel, 0, 0, size, size);
+    ctx?.drawImage(chestModel, x, y, size, size);
   }
   if (player.helmet?.sprite) {
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
-    ctx?.drawImage(helmetModel, 0, 0, size, size);
+    ctx?.drawImage(helmetModel, x, y, size, size);
   }
   if (player.gloves?.sprite) {
     const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + player.gloves.sprite);
-    ctx?.drawImage(glovesModel, 0, 0, size, size);
+    ctx?.drawImage(glovesModel, x, y, size, size);
   }
   if (player.boots?.sprite) {
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite);
-    ctx?.drawImage(bootsModel, 0, 0, size, size);
+    ctx?.drawImage(bootsModel, x, y, size, size);
   }
   if (player.weapon?.sprite) {
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
-    ctx?.drawImage(weaponModel, 0, 0, size, size);
+    ctx?.drawImage(weaponModel, x, y, size, size);
   }
-  ctx?.drawImage(hairModel, 0, 0, size, size);
+  ctx?.drawImage(hairModel, x, y, size, size);
+}
+
+function renderPlayerPortrait() {
+  const portrait = document.createElement("div");
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  portrait.classList.add("playerPortrait");
+  renderPlayerOutOfMap(512, canvas, ctx, "left");
+  portrait.append(canvas);
+  return portrait;
 }
 
 function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {

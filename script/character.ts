@@ -67,6 +67,7 @@ interface statusObject {
   dex: number;
   int: number;
   vit: number;
+  cun: number;
 }
 
 function getModifiers(char: any, stat: string) {
@@ -152,18 +153,30 @@ class Character {
   stats: stats;
   resistances: resistances;
   statusResistances: statusResistances;
-  getStats: Function;
-  getResists: Function;
-  getStatusResists: Function;
+  abilities: ability[];
+  weapon?: weaponClass | any;
+  offhand?: any;
+  chest?: armorClass | any;
+  helmet?: armorClass | any;
+  gloves?: armorClass | any;
+  boots?: armorClass | any;
+  artifact1?: any;
+  artifact2?: any;
+  artifact3?: any;
+  isFoe?: boolean;
   kill?: Function;
+  xp?: number;
   statModifiers?: any;
   statusEffects?: any;
-  statRemaining?: Function;
-  abilities?: ability[];
+  getStats?: Function;
+  getResists?: Function;
+  getStatusResists?: Function;
   effects?: Function;
   updateAbilities?: Function;
+  aura?: string;
   silenced?: Function;
   concentration?: Function;
+  statRemaining?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -179,6 +192,7 @@ class Character {
       baseStats.forEach((stat: string) => {
         const { v: val, m: mod } = getModifiers(this, stat);
         stats[stat] = Math.floor((this.stats[stat] + val) * mod);
+        stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat]-100)/17) : "";
       });
       // get hp
       const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax");
@@ -196,6 +210,7 @@ class Character {
       Object.keys(this.resistances).forEach((res: string) => {
         const { v: val, m: mod } = getModifiers(this, res + "Resist");
         resists[res] = Math.floor((this.resistances[res] + val) * mod);
+        resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res]-85)/17) : "";
       });
       return resists;
     };
@@ -277,7 +292,8 @@ const baseStats = [
   "str",
   "vit",
   "dex",
-  "int"
+  "int",
+  "cun"
 ];;
 
 // var ley = new Character({

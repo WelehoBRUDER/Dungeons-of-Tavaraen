@@ -1,4 +1,22 @@
 "use strict";
+const raceTexts = {
+    human: {
+        name: "Human",
+        desc: ""
+    },
+    elf: {
+        name: "Half-Elf",
+        desc: ""
+    },
+    orc: {
+        name: "Half-Orc",
+        desc: ""
+    },
+    ashen: {
+        name: "Ashen",
+        desc: ""
+    }
+};
 class PlayerCharacter extends Character {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
@@ -32,13 +50,19 @@ class PlayerCharacter extends Character {
             modifyCanvas();
         };
         this.unequip = (event, slot) => {
-            var _a;
-            if (event.button !== 2)
+            var _a, _b;
+            if (event.button !== 2 || !((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id))
                 return;
-            if ((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id) {
+            if ((_b = this[slot]) === null || _b === void 0 ? void 0 : _b.id) {
                 this.inventory.push(this[slot]);
             }
             ;
+            Object.entries(this[slot].commands).forEach(cmd => {
+                console.log("h");
+                if (cmd[0].includes("ability_")) {
+                    commandRemoveAbility(cmd);
+                }
+            });
             this[slot] = {};
             renderInventory();
         };
@@ -49,6 +73,7 @@ class PlayerCharacter extends Character {
             player.inventory.splice(item.index, 1);
             this.unequip(event, itm.slot);
             this[itm.slot] = Object.assign({}, itm);
+            Object.entries(item.commands).forEach(cmd => command(cmd));
             renderInventory();
         };
         this.carryingWeight = () => {
@@ -74,13 +99,56 @@ function sortInventory(category, reverse) {
     if (category == "name" || category == "type") {
         player.inventory.sort((a, b) => stringSort(a, b, category, reverse));
     }
+    if (category == "grade") {
+        player.inventory.sort((a, b) => gradeSort(a, b, "grade", reverse));
+    }
     else
         player.inventory.sort((a, b) => numberSort(a, b, category, reverse));
     renderInventory();
 }
+function commandRemoveAbility(cmd) {
+    const id = cmd[0].replace("add_ability_", "");
+    for (let i = 0; i < player.abilities.length; i++) {
+        if (player.abilities[i].id == id)
+            player.abilities.splice(i, 1);
+    }
+    updateUI();
+}
 function stringSort(a, b, string, reverse = false) {
     var nameA = a[string].toUpperCase(); // ignore upper and lowercase
     var nameB = b[string].toUpperCase(); // ignore upper and lowercase
+    if (reverse) {
+        if (nameA > nameB) {
+            return -1;
+        }
+        if (nameA < nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+    else {
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+}
+;
+const grade_vals = {
+    common: 0,
+    uncommon: 1,
+    rare: 2,
+    mythical: 3,
+    legendary: 4
+};
+function gradeSort(a, b, string, reverse = false) {
+    var nameA = grade_vals[a[string]];
+    var nameB = grade_vals[b[string]];
     if (reverse) {
         if (nameA > nameB) {
             return -1;
@@ -129,13 +197,14 @@ function numberSort(a, b, string, reverse = false) {
 }
 var player = new PlayerCharacter({
     id: "player",
-    name: "Player",
+    name: "Varien Loreanus",
     cords: { x: 1, y: 1 },
     stats: {
         str: 5,
         dex: 5,
         int: 5,
         vit: 5,
+        cun: 5,
         hp: 100,
         mp: 30
     },

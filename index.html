@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/perks.css">
   <title>Dungeons of Tavaraen</title>
 </head>
 <body>
@@ -55,7 +56,14 @@
       <p class="enc"></p>
       <div class="items"></div>
     </div>
+    <div class="playerWindow"></div>
     <div class="playerEffects"></div>
+    <div class="playerImprovement">
+      <div class="sideBar"></div>
+      <div class="perkArea">
+        <canvas width="1360" height="720" class="prkcanvas"></canvas>
+      </div>
+    </div>
     <div class="mapHover"></div>
     <div id="globalHover"></div>
     <div class="worldText"></div>
@@ -133,6 +141,7 @@
 </html>
 
 <script src="script/syntax.js"></script>
+<script src="arrays/perks.js"></script>
 <script src="arrays/tiles.js"></script>
 <script src="arrays/effects.js"></script>
 <script src="arrays/abilities.js"></script>
@@ -147,5 +156,7 @@
 <script src="arrays/maps.js"></script>
 <script src="script/map.js"></script>
 <script src="script/mapData.js"></script>
+<script src="script/perk.js"></script>
+<script src="script/commands.js"></script>
 <script src="script/combat.js"></script>
 <script src="script/hotbar.js"></script>
