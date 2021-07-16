@@ -32,7 +32,8 @@ const maps = [
         ],
         enemies: [
             new Enemy(Object.assign(Object.assign({}, enemies.skeletonWarrior), { cords: { x: 3, y: 10 }, spawnCords: { x: 3, y: 10 } })),
-            new Enemy(Object.assign(Object.assign({}, enemies.skeletonWarrior), { cords: { x: 5, y: 6 }, spawnCords: { x: 5, y: 6 } })),
+            new Enemy(Object.assign(Object.assign({}, enemies.norsemanBerserk), { cords: { x: 5, y: 6 }, spawnCords: { x: 5, y: 6 } })),
+            new Enemy(Object.assign(Object.assign({}, enemies.skeletonArcher), { cords: { x: 3, y: 7 }, spawnCords: { x: 3, y: 7 } })),
             new Enemy(Object.assign(Object.assign({}, enemies.greySlime), { cords: { x: 13, y: 8 }, spawnCords: { x: 13, y: 8 } }))
         ],
     }

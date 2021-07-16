@@ -107,5 +107,30 @@ const abilities = {
         icon: "resources/icons/ice_javelin.png",
         shoots_projectile: "iceSpikedProjectile",
         use_range: "9"
+    },
+    shadow_step: {
+        id: "shadow_step",
+        name: "Shadow Step",
+        mana_cost: 0,
+        cooldown: 9,
+        type: "movement",
+        action_desc: "step into a shadow, moving rapidly.",
+        action_desc_pl: "steps into a shadow, moving rapidly.",
+        icon: "resources/icons/shadow_step.png",
+        use_range: "5"
+    },
+    charge: {
+        id: "charge",
+        name: "Charge",
+        mana_cost: 0,
+        cooldown: 11,
+        type: "charge",
+        damage_multiplier: 1.25,
+        resistance_penetration: 10,
+        status: "dazed",
+        action_desc: "charges at foe.",
+        action_desc_pl: "you charge at foe",
+        icon: "resources/icons/charge_ability.png",
+        use_range: "8"
     }
 };

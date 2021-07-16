@@ -23,6 +23,15 @@ body {
   right: 0;
   bottom: 0;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-size: cover;
+  background-position: center;
+
+  $redBgSolid: url("../resources/ui/large_background_red.png");
+  $greyBgSolid: url("../resources/ui/large_background_grey.png");
+  $goldBgSolid: url("../resources/ui/large_background_gold.png");
+  $redBgFade: url("../resources/ui/large_background_redFade.png");
+  $greyBgFade: url("../resources/ui/large_background_greyFade.png");
+  $goldBgFade: url("../resources/ui/large_background_goldFade.png");
 
   .canvasLayers {
     width: 100%;
@@ -121,6 +130,18 @@ body {
         transform: translateX(-50%);
         position: absolute;
         z-index: 2;
+        pointer-events: none;
+      }
+
+      span {
+        color: silver;
+        font-size: 20px;
+        text-shadow: 0px 0px 4px black;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 4px;
+        z-index: 5;
         pointer-events: none;
       }
 
@@ -225,6 +246,9 @@ body {
     background: rgba(10, 10, 10, 0.9);
     border: 6px solid rgb(50, 50, 50);
     border-radius: 4px;
+    background-image: $greyBgFade;
+    background-size: inherit;
+    background-position: inherit;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -363,6 +387,9 @@ body {
     height: 780px;
     background: rgba(5, 5, 5, 0.95);
     border: 6px solid rgb(50, 50, 50);
+    background-image: $greyBgFade;
+    background-size: inherit;
+    background-position: inherit;
     border-radius: 4px;
     position: absolute;
     left: 50%;
@@ -657,6 +684,103 @@ body {
         *{
           background: rgba(192, 192, 43, 0.66);
         }
+      }
+    }
+  }
+
+  .contextMenu {
+    width: 180px;
+    height: auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    button {
+      transition: 0.13s;
+      font-size: 16px;
+      color: white;
+      background: $greyBgFade;
+      background-size: inherit;
+      background-position: inherit;
+      border: 2px solid rgba(192, 192, 192, 0.95);
+      height: 28px;
+      width: 175px;
+      z-index: inherit;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      filter: brightness(1.5);
+    }
+  }
+
+  .assignContainer {
+    width: 1280px;
+    height: 720px;
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    margin-left: -640px;
+    grid-template-columns: max-content;
+    grid-template-rows: max-content;
+    display: none;
+    background: $redBgFade;
+
+    .assignFrame {
+      transition: 0.05s;
+      width: 124px;
+      height: 72px;
+      border: 4px solid rgb(90, 89, 89);
+      margin: 1px;
+      border-radius: 8px;
+      position: relative;
+      top: 0;
+      left: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      p {
+        color: white;
+        font-size: 40px;
+        text-shadow: 0px 0px 4px black;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        transform: translateX(-50%);
+        position: absolute;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      span {
+        color: silver;
+        font-size: 20px;
+        text-shadow: 0px 0px 4px black;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 4px;
+        z-index: 5;
+      }
+
+      .ability {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .ability:hover {
+        filter: contrast(1.25) brightness(1.1);
       }
     }
   }

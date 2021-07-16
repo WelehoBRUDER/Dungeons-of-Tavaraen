@@ -15,11 +15,15 @@ class Enemy extends Character {
         this.spawnCords = base.spawnCords;
         this.spawnMap = base.spawnMap;
         this.loot = base.loot;
+        this.shootsProjectile = base.shootsProjectile;
         this.decideAction = async () => {
             // Will make enemy take their turn
             // For now just move towards player
             // @ts-ignore
-            if (generatePath(this.cords, player.cords, this.canFly, true) <= this.attackRange) {
+            if (this.shootsProjectile && generateArrowPath(this.cords, player.cords, true) <= this.attackRange) {
+                fireProjectile(this.cords, player.cords, this.shootsProjectile, abilities.attack, false, this);
+            }
+            else if (!this.shootsProjectile && generatePath(this.cords, player.cords, this.canFly, true) <= this.attackRange) {
                 // regular attack for now
                 // @ts-ignore
                 attackTarget(this, player, weaponReach(this, this.attackRange, player));
@@ -44,7 +48,7 @@ class Enemy extends Character {
             player.level.xp += this.xp;
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
-            displayText(`<c>white<c>[WORLD] <c>yellow<c>${this.name}<c>white<c> dies.`);
+            displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
             lootEnemy(this);
             fallenEnemies.push(Object.assign({}, this));
             maps[currentMap].enemies.splice(index, 1);

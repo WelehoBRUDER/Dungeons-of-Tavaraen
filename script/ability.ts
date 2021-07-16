@@ -43,22 +43,6 @@ const less_is_better = {
   use_range: false
 };
 
-const parsed_modifiers = {
-  "strV": "Strength",
-  "strP": "Strength%",
-  "vitV": "Vitality",
-  "vitP": "Vitality%",
-  "dexV": "Dexterity",
-  "dexP": "Dexterity%",
-  "intV": "Intelligence",
-  "intP": "Intelligence%",
-  "hpV": "Health",
-  "hpP": "Health%",
-  "mpV": "Mana",
-  "mpP": "Mana%",
-  "last": "Effect time",
-};
-
 const possible_stat_modifiers = [
   "strV",
   "strP",

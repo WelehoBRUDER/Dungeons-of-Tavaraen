@@ -11,6 +11,7 @@ const statusEffects = {
         effects: {
             strV: -5,
             dexV: -5,
+            sightV: -1
         },
         last: {
             total: 5,
@@ -64,5 +65,19 @@ const statusEffects = {
         textIcon: icons.berserk,
         aura: "redMist",
         icon: "resources/icons/berserk.png"
+    },
+    dazed: {
+        id: "dazed",
+        name: "Dazed",
+        effects: {
+            damageP: -50
+        },
+        break_concentration: true,
+        last: {
+            total: 1,
+            current: 1
+        },
+        textIcon: icons.dazed,
+        icon: "resources/icons/dazed.png"
     }
 };

@@ -54,6 +54,65 @@ const raceTexts = {
   }
 } as racesTxt;
 
+interface RaceEffect {
+  [modifiers: string]: any;
+  name: string;
+  desc: string;
+}
+
+const raceEffects = {
+  elf: {
+    modifiers: {
+      strV: -3,
+      vitV: -3,
+      dexV: 5,
+      intV: 5,
+      cunV: 3,
+      sightV: 2,
+      mpMaxV: 20 
+    },
+    name: "Elvish Blood",
+    desc: "Snobby pricks can show a good dance, but not a good fight."
+  },
+  orc: {
+    modifiers: {
+      strV: 5,
+      vit: 8,
+      dexV: -4,
+      intV: -4,
+      cunV: -1,
+      sightV: 1,
+      hpMaxV: 30
+    },
+    name: "Orcy Bod",
+    desc: "Orcies not make gud thinkaz', but do good git smashaz."
+  },
+  ashen: {
+    modifiers: {
+      strV: -1,
+      vitV: -1,
+      intV: -1,
+      dexV: 3,
+      cunV: 3,
+      sightV: 5,
+      hpMaxV: 15
+    },
+    name: "Ashen Constitution",
+    desc: "The Ashen are sly and slippery, not gifted in straight battle."
+  },
+  human: {
+    modifiers: {
+      strV: 1,
+      vitV: 2,
+      dexV: 1,
+      intV: 3,
+      cunV: 2
+    },
+    name: "Human Will",
+    desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
+  }
+}
+
 class PlayerCharacter extends Character {
   [canFly: string]: any;
   sprite: string;
@@ -73,8 +132,10 @@ class PlayerCharacter extends Character {
   artifact3: any;
   hpRegen: Function;
   inventory: Array<any>;
+  raceEffect: RaceEffect;
   carryingWeight?: Function;
   maxCarryWeight?: Function;
+  sight?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -90,6 +151,7 @@ class PlayerCharacter extends Character {
     this.helmet = base.helmet ?? {};
     this.gloves = base.gloves ?? {};
     this.boots = base.boots ?? {};
+    this.raceEffect = raceEffects[this.race];
     this.artifact1 = base.artifact1 ?? {};
     this.artifact2 = base.artifact2 ?? {};
     this.artifact3 = base.artifact3 ?? {};
@@ -97,7 +159,12 @@ class PlayerCharacter extends Character {
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
-      return Math.floor((1 + val) * mod);
+      return Math.floor((val) * mod);
+    }
+
+    this.sight = () => {
+      const { v: val, m: mod } = getModifiers(this, "sight");
+      return Math.floor((5 + val) * mod);
     }
 
     this.drop = (itm) => {
@@ -317,7 +384,9 @@ var player = new PlayerCharacter({
     new Ability({...abilities.first_aid, equippedSlot: 2}, dummy),
     new Ability({...abilities.icy_javelin, equippedSlot: 3}, dummy),
     new Ability({...abilities.barbarian_rage, equippedSlot: 4}, dummy),
-    new Ability({...abilities.berserk, equippedSlot: 5}, dummy)
+    new Ability({...abilities.berserk, equippedSlot: 5}, dummy),
+    new Ability({...abilities.shadow_step, equippedSlot: 6}, dummy),
+    new Ability({...abilities.charge, equippedSlot: 7}, dummy)
   ],
   statModifiers: [
     {

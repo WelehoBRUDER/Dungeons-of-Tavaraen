@@ -1,6 +1,6 @@
 "use strict";
 function getModifiers(char, stat) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     let val = 0;
     let modif = 1;
     char.statModifiers.forEach((mod) => {
@@ -23,7 +23,17 @@ function getModifiers(char, stat) {
             }
         });
     });
-    if ((_a = char.weapon) === null || _a === void 0 ? void 0 : _a.stats) {
+    if ((_a = char.raceEffect) === null || _a === void 0 ? void 0 : _a.modifiers) {
+        Object.entries((_b = char.raceEffect) === null || _b === void 0 ? void 0 : _b.modifiers).forEach((eff) => {
+            if (eff[0].startsWith(stat)) {
+                if (eff[0] == stat + "P")
+                    modif *= (1 + eff[1] / 100);
+                else if (eff[0] == stat + "V")
+                    val += eff[1];
+            }
+        });
+    }
+    if ((_c = char.weapon) === null || _c === void 0 ? void 0 : _c.stats) {
         Object.entries(char.weapon.stats).forEach((eff) => {
             if (eff[0].startsWith(stat)) {
                 if (eff[0] == stat + "P")
@@ -33,7 +43,7 @@ function getModifiers(char, stat) {
             }
         });
     }
-    if ((_b = char.chest) === null || _b === void 0 ? void 0 : _b.stats) {
+    if ((_d = char.chest) === null || _d === void 0 ? void 0 : _d.stats) {
         Object.entries(char.chest.stats).forEach((eff) => {
             if (eff[0].startsWith(stat)) {
                 if (eff[0] == stat + "P")
@@ -43,7 +53,7 @@ function getModifiers(char, stat) {
             }
         });
     }
-    if ((_c = char.helmet) === null || _c === void 0 ? void 0 : _c.stats) {
+    if ((_e = char.helmet) === null || _e === void 0 ? void 0 : _e.stats) {
         Object.entries(char.helmet.stats).forEach((eff) => {
             if (eff[0].startsWith(stat)) {
                 if (eff[0] == stat + "P")
@@ -53,7 +63,7 @@ function getModifiers(char, stat) {
             }
         });
     }
-    if ((_d = char.gloves) === null || _d === void 0 ? void 0 : _d.stats) {
+    if ((_f = char.gloves) === null || _f === void 0 ? void 0 : _f.stats) {
         Object.entries(char.gloves.stats).forEach((eff) => {
             if (eff[0].startsWith(stat)) {
                 if (eff[0] == stat + "P")
@@ -63,7 +73,7 @@ function getModifiers(char, stat) {
             }
         });
     }
-    if ((_e = char.boots) === null || _e === void 0 ? void 0 : _e.stats) {
+    if ((_g = char.boots) === null || _g === void 0 ? void 0 : _g.stats) {
         Object.entries(char.boots.stats).forEach((eff) => {
             if (eff[0].startsWith(stat)) {
                 if (eff[0] == stat + "P")
@@ -74,19 +84,19 @@ function getModifiers(char, stat) {
         });
     }
     if (stat.includes("Resist")) {
-        if ((_f = char.chest) === null || _f === void 0 ? void 0 : _f.resistances) {
+        if ((_h = char.chest) === null || _h === void 0 ? void 0 : _h.resistances) {
             if (char.chest.resistances[stat.replace("Resist", '')])
                 val += char.chest.resistances[stat.replace("Resist", '')];
         }
-        if ((_g = char.helmet) === null || _g === void 0 ? void 0 : _g.resistances) {
+        if ((_j = char.helmet) === null || _j === void 0 ? void 0 : _j.resistances) {
             if (char.helmet.resistances[stat.replace("Resist", '')])
                 val += char.helmet.resistances[stat.replace("Resist", '')];
         }
-        if ((_h = char.gloves) === null || _h === void 0 ? void 0 : _h.resistances) {
+        if ((_k = char.gloves) === null || _k === void 0 ? void 0 : _k.resistances) {
             if (char.gloves.resistances[stat.replace("Resist", '')])
                 val += char.gloves.resistances[stat.replace("Resist", '')];
         }
-        if ((_j = char.boots) === null || _j === void 0 ? void 0 : _j.resistances) {
+        if ((_l = char.boots) === null || _l === void 0 ? void 0 : _l.resistances) {
             if (char.boots.resistances[stat.replace("Resist", '')])
                 val += char.boots.resistances[stat.replace("Resist", '')];
         }
@@ -120,6 +130,10 @@ class Character {
             stats["mpMax"] = Math.floor((((_d = (_c = this.stats) === null || _c === void 0 ? void 0 : _c.mpMax) !== null && _d !== void 0 ? _d : 10) + mp_val + stats.int * 2) * mp_mod);
             stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
             stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
+            const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage");
+            const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance");
+            stats["critDamage"] = Math.floor(critAtkVal + critAtkMulti + (stats["cun"] * 1.5));
+            stats["critChance"] = Math.floor(critHitVal + critHitMulti + (stats["cun"] * 0.4));
             return stats;
         };
         this.getResists = () => {
@@ -149,10 +163,12 @@ class Character {
                     const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType]));
                     this.stats.hp -= dmg;
                     spawnFloatingText(this.cords, dmg.toString(), "red", 32);
-                    if (this.id == "player")
-                        displayText(`<c>purple<c>[EFFECT] <c>yellow<c>You <c>white<c>take ${dmg} damage from <i>${status.dot.icon}<i>${status.dot.damageType}.`);
-                    else
-                        displayText(`<c>yellow<c>${this.name} <c>white<c>takes ${dmg} damage from ${status.dot.damageType}.`);
+                    let effectText = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
+                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
+                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[ICON]", `<i>${status.dot.icon}<i>`);
+                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
+                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[DMG]", `${dmg}`);
+                    displayText(`<c>purple<c>[EFFECT] ${effectText}`);
                     if (this.stats.hp <= 0) {
                         this.kill();
                     }

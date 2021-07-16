@@ -8,7 +8,7 @@ class statEffect {
         this.name = defaultEffect.name;
         this.dot = defaultEffect.dot;
         this.effects = effectsInit(Object.assign({}, defaultEffect.effects));
-        this.last = { total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif) };
+        this.last = { total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif) };
         this.onRemove = defaultEffect.onRemove;
         this.textIcon = defaultEffect.textIcon;
         this.icon = defaultEffect.icon;

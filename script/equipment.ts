@@ -76,6 +76,7 @@ interface weaponClass extends itemClass {
   commands?: any;
   rolledStats?: any;
   rolledDamages?: any;
+  statStrings?: any;
 }
 
 const namePartsArmor = {
@@ -127,6 +128,7 @@ class Weapon extends Item {
   commands?: any;
   rolledStats?: any;
   rolledDamages?: any;
+  statStrings?: any;
   constructor(base: weaponClass) {
     super(base);
     // @ts-ignore
@@ -192,8 +194,15 @@ class Weapon extends Item {
       });
     }
 
+    this.statStrings = {
+      main: mainDamage,
+      sub: subDamage
+    }
+    if(lang["changeWordOrder"]) {
+      this.name = `${lang[this.statStrings["main"] + "_damageMain"]} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
+    }
     // @ts-expect-error
-    this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${nameParts[mainDamage + "Main"]}`;
+    else this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${nameParts[mainDamage + "Main"]}`;
   }
 }
 
@@ -205,6 +214,7 @@ interface armorClass extends itemClass {
   commands?: any;
   rolledResistances?: any;
   rolledStats?: any;
+  resString?: any;
 }
 
 class Armor extends Item {
@@ -215,6 +225,7 @@ class Armor extends Item {
   commands?: any;
   rolledResistances?: any;
   rolledStats?: any;
+  resStrings?: any;
   constructor(base: armorClass) {
     super(base);
     // @ts-ignore
@@ -277,8 +288,20 @@ class Armor extends Item {
       });
     }
 
+    this.resStrings = {
+      main: mainResistance,
+      sub: subResistance
+    }
+
+    if(lang["changeWordOrder"]) {
+      this.name = `${lang[this.resStrings["main"] + "_resistanceMain"]} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
+    } 
+    else {
     // @ts-expect-error
     this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
+    }
+
+
   }
 }
 

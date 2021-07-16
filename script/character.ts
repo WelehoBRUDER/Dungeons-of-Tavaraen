@@ -89,6 +89,14 @@ function getModifiers(char: any, stat: string) {
       }
     });
   })
+  if(char.raceEffect?.modifiers) {
+    Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
+      if (eff[0].startsWith(stat)) {
+        if (eff[0] == stat + "P") modif *= (1 + eff[1] / 100);
+        else if (eff[0] == stat + "V") val += eff[1];
+      }
+    });
+  }
   if (char.weapon?.stats) {
     Object.entries(char.weapon.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
@@ -202,6 +210,10 @@ class Character {
       stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
       stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
       stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
+      const {v: critAtkVal, m: critAtkMulti} = getModifiers(this, "critDamage");
+      const {v: critHitVal, m: critHitMulti} = getModifiers(this, "critChance");
+      stats["critDamage"] = Math.floor(critAtkVal + critAtkMulti + (stats["cun"]*1.5));
+      stats["critChance"] = Math.floor(critHitVal + critHitMulti + (stats["cun"]*0.4));
       return stats;
     };
 
@@ -234,8 +246,12 @@ class Character {
           const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType]));
           this.stats.hp -= dmg;
           spawnFloatingText(this.cords, dmg.toString(), "red", 32);
-          if(this.id == "player") displayText(`<c>purple<c>[EFFECT] <c>yellow<c>You <c>white<c>take ${dmg} damage from <i>${status.dot.icon}<i>${status.dot.damageType}.`);
-          else displayText(`<c>yellow<c>${this.name} <c>white<c>takes ${dmg} damage from ${status.dot.damageType}.`);
+          let effectText: string = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
+          effectText = effectText?.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
+          effectText = effectText?.replace("[ICON]", `<i>${status.dot.icon}<i>`);
+          effectText = effectText?.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
+          effectText = effectText?.replace("[DMG]", `${dmg}`);
+          displayText(`<c>purple<c>[EFFECT] ${effectText}`);
           if(this.stats.hp <= 0) {
             this.kill();
           }

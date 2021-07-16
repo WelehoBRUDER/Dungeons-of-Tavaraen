@@ -127,8 +127,16 @@ class Weapon extends Item {
                 }
             });
         }
+        this.statStrings = {
+            main: mainDamage,
+            sub: subDamage
+        };
+        if (lang["changeWordOrder"]) {
+            this.name = `${lang[this.statStrings["main"] + "_damageMain"]} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
+        }
         // @ts-expect-error
-        this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${nameParts[mainDamage + "Main"]}`;
+        else
+            this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${nameParts[mainDamage + "Main"]}`;
     }
 }
 class Armor extends Item {
@@ -203,8 +211,17 @@ class Armor extends Item {
                 }
             });
         }
-        // @ts-expect-error
-        this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
+        this.resStrings = {
+            main: mainResistance,
+            sub: subResistance
+        };
+        if (lang["changeWordOrder"]) {
+            this.name = `${lang[this.resStrings["main"] + "_resistanceMain"]} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
+        }
+        else {
+            // @ts-expect-error
+            this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
+        }
     }
 }
 var invOpen = false;

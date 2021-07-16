@@ -1,6 +1,8 @@
 /* THIS FILE IS ACTUALLY FOR MOST UI RELATED STUFF, DESPITE THE NAME */
 // @ts-nocheck
 const tooltipBox = <HTMLDivElement>document.querySelector("#globalHover");
+const contextMenu = document.querySelector<HTMLDivElement>(".contextMenu");
+const assignContainer = document.querySelector<HTMLDivElement>(".assignContainer");
 
 var settings = {
   log_enemy_movement: false
@@ -12,9 +14,12 @@ function generateHotbar() {
   for (let i = 0; i < 20; i++) {
     const bg = document.createElement("img");
     const frame = document.createElement("div");
+    const hotKey = document.createElement("span");
     frame.classList.add("hotbarFrame");
     bg.src = "resources/ui/hotbar_bg.png";
-    frame.append(bg);
+    hotKey.textContent = `${i > 9 ? "Shift + " : ""}${i < 9 ? (i+1).toString() : i == 9 ? "0" : i > 9 && i < 19 ? (i-9).toString() : "0"}`;
+    frame.addEventListener("mouseup", e=>rightClickHotBar(e, i));
+    frame.append(bg, hotKey);
     hotbar.append(frame);
     player.abilities?.map((abi: ability) => {
       if (abi.equippedSlot == i && abi.id != "attack") {
@@ -40,6 +45,68 @@ function generateHotbar() {
   }
 }
 
+function rightClickHotBar(Event: MouseEvent, Index: number) {
+  contextMenu.textContent = "";
+  if(Event.button != 2) return;
+  contextMenu.style.left = `${Event.x}px`;
+  contextMenu.style.top = `${Event.y}px`;
+  let hotbarItem = player.abilities.find(a=>a.equippedSlot == Index);
+  if(!hotbarItem) hotbarItem = player.inventory.find(itm=>itm.equippedSlot == Index);
+  if(hotbarItem) {
+    contextMenuButton(lang["map_to_hotbar"], a=>mapToHotBar(Index));
+    contextMenuButton(lang["remove_from_hotbar"], a=>removeFromHotBar(Index));
+  }
+  else {
+    contextMenuButton(lang["map_to_hotbar"], a=>mapToHotBar(Index));
+  }
+}
+
+function contextMenuButton(text: string, onClick: any) {
+  const but = document.createElement("button");
+  but.addEventListener("click", e=>onClick());
+  but.textContent = text;
+  contextMenu.append(but);
+}
+
+function mapToHotBar(index) {
+  contextMenu.textContent = "";
+  assignContainer.style.display = "block";
+  assignContainer.textContent = "";
+  player.abilities?.map((abi: ability) => {
+    const bg = document.createElement("img");
+    const frame = document.createElement("div");
+    frame.classList.add("assignFrame");
+    bg.src = "resources/ui/hotbar_bg.png";
+    frame.append(bg);
+    if (abi.equippedSlot == -1 && abi.id != "attack") {
+      const abiDiv = document.createElement("div");
+      const abiImg = document.createElement("img");
+      abiDiv.classList.add("ability");
+      if (abiSelected == abi && isSelected) frame.style.border = "4px solid gold";
+      abiImg.src = abi.icon;
+      tooltip(abiDiv, abiTT(abi));
+      abiDiv.append(abiImg);
+      frame.append(abiDiv);
+      frame.addEventListener("click", a=>addToHotBar(index, abi));
+      assignContainer.append(frame);
+    }
+  });
+}
+
+function addToHotBar(index, abi) {
+  contextMenu.textContent = "";
+  assignContainer.style.display = "none";
+  player.abilities.find(a=>a.equippedSlot == index)?.equippedSlot = -1;
+  abi.equippedSlot = index;
+  updateUI();
+}
+
+function removeFromHotBar(index) {
+  contextMenu.textContent = "";
+  player.abilities.find(a=>a.equippedSlot == index)?.equippedSlot = -1;
+  updateUI();
+}
+
 function generateEffects() {
   const effects = <HTMLDivElement>document.querySelector(".playerEffects");
   effects.textContent = "";
@@ -55,45 +122,47 @@ function generateEffects() {
 // Tooltip for ability
 function abiTT(abi: ability) {
   var txt: string = "";
-  txt += `\t<f>26px<f>${abi.name}\t\n`;
-  if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>You are silenced!§\n`;
-  if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>Your concentration is broken!§\n`;
-  if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>20px<f>Healing Power: ${abi.base_heal}\n`;
+  txt += `\t<f>26px<f>${lang[abi.id + "_name"]}\t\n`;
+  txt += `<f>21px<f><c>silver<c>"${lang[abi.id + "_desc"]}"\n`;
+  if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
+  if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+  if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
   if (abi.damages) {
     var total: number = 0;
     var text: string = "";
     Object.entries(abi.damages).forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     text = text.substring(0, text.length - 2);
-    txt += `<i>${icons.damage_icon}<i><f>20px<f>Damage: ${total} <f>17px<f>(${text})\n`;
+    txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
   }
-  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>20px<f>Damage Multiplier: ${abi.damage_multiplier * 100}%\n`;
-  if (abi.resistance_penetration) txt += `<i>${icons.rp_icon}<i><f>20px<f>Resistance Penetration: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
-  if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range_icon}<i><f>20px<f>Use Range: ${abi.use_range} tiles\n`;
+  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage_multiplier"]}: ${abi.damage_multiplier * 100}%\n`;
+  if (abi.resistance_penetration) txt += `<i>${icons.rp_icon}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
+  if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range_icon}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
   if (abi.status) {
-    txt += `<f>20px<f>Status Effect:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${statusEffects[abi.status].name}\n`;
+    txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
     txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
   }
-  if (abi.type) txt += `<f>20px<f>Type: ${abi.type}\n`;
-  txt += `<f>20px<f>Ranged: ${abi.shoots_projectile != "" ? "yes" : "no"}\n`;
-  if (abi.requires_melee_weapon) txt += `<i>${icons.melee}<i><f>20px<f>Requires Melee Weapon: ${abi.requires_melee_weapon ? "yes" : "no"}\n`;
-  else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>20px<f>Requires Ranged Weapon: ${abi.requires_ranged_weapon ? "yes" : "no"}\n`;
-  if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>20px<f>Requires Concentration: ${abi.requires_concentration ? "yes" : "no"}\n`;
-  if (abi.self_target) txt += `<f>20px<f>Targets Self: yes\n`;
-  if (abi.mana_cost > 0) txt += `<i>${icons.mana_icon}<i><f>20px<f>Mana Cost: ${abi.mana_cost}\n`;
-  if (abi.cooldown > 0) txt += `<i>${icons.cooldown_icon}<i><f>20px<f>Cooldown: ${abi.cooldown} turns\n`;
+  if (abi.type) txt += `<f>20px<f>${lang["type"]}: ${lang[abi.type]}\n`;
+  if(abi.shoots_projectile != "") txt += `<f>20px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
+  if (abi.requires_melee_weapon) txt += `<i>${icons.melee}<i><f>20px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
+  else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
+  if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+  if (abi.self_target) txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
+  if (abi.mana_cost > 0) txt += `<i>${icons.mana_icon}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+  if (abi.cooldown > 0) txt += `<i>${icons.cooldown_icon}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
   return txt;
 }
 
 // Tooltip for status
 function statTT(status: statEffect, embed: boolean = false) {
   var txt: string = "";
-  if (!embed) txt += `\t<f>26px<f>${status.name}\t\n`;
-  if (status.dot) txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>Deals ${status.dot.damageAmount} <i>${status.dot.icon}<i>${status.dot.damageType} damage\n`;
+  if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"]}\t\n`;
+  if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"]}"\t\n`;
+  if (status.dot) txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
   Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed, status.id));
-  if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>Magic silenced!\n`;
-  if (status.break_concentration) txt += `§${embed ? " " : ""}<i>${icons.break_concentration_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>Concentration broken!\n`;
-  if (!embed) txt += `§<i>${icons.cooldown_icon}<i><f>20px<f>Removed in: ${status.last.current} turns\n`;
-  else txt += `§${embed ? " " : ""}<i>${icons.cooldown_icon}<i><f>16px<f>Lasts for: ${status.last.total} turns\n`;
+  if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
+  if (status.break_concentration) txt += `§${embed ? " " : ""}<i>${icons.break_concentration_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
+  if (!embed) txt += `§<i>${icons.cooldown_icon}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
+  else txt += `§${embed ? " " : ""}<i>${icons.cooldown_icon}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
   return txt;
 }
 
@@ -121,12 +190,12 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
   if (key.includes("Resist")) {
     key = key.replace("Resist", "");
     key_ = key;
-    tailEnd = "Resist";
+    tailEnd = lang["resist"];
   }
   else if (key.includes("Damage")) {
     key = key.replace("Damage", "");
     key_ = key;
-    tailEnd = "Damage";
+    tailEnd = lang["damage"];
   }
   else if (key.includes("status_effect")) {
     key_ = key.replace("status_effect_", "");
@@ -142,7 +211,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
       }
     });
     let _value = 0;
-    if (player.statusEffects.find((eff: any) => eff.id == effectId)) _value = value;
+    if (9oi,ynj 9ol6mt58nhmjto.find((eff: any) => eff.id == effectId)) _value = value;
     key = abilities[id].name + "'s";
     frontImg = abilities[id].icon;
     if (value < 0) backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
@@ -150,7 +219,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     var _abi: ability = new Ability(player.abilities?.find((__abi: ability) => __abi.id == id), player);
     if (!_abi) _abi = new Ability(abilities[id], dummy);
     let status: statusEffect = new statEffect(statusEffects[_abi.status], _abi.statusModifiers);
-    tailEnd = parsed_modifiers[_d] + " status";
+    tailEnd = lang[_d] + " status";
     lastBit = `[${(status?.effects[_d] - _value || status?.[_d]?.["total"] - _value || status?.[_d] - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${((status?.effects[_d] - _value || status?.[_d]?.["total"] - _value || status?.[_d] - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
   }
   else if (keyIncludesAbility(key)) {
@@ -165,59 +234,14 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     tailEnd = key_.replace("_", " ");
     if (tailEnd.includes("multiplier")) value = value * 100;
   }
-  switch (key) {
-    case "str":
-      key = "Strength";
-      break;
-    case "dex":
-      key = "Dexterity";
-      break;
-    case "vit":
-      key = "Vitality";
-      break;
-    case "int":
-      key = "Intelligence";
-      break;
-    case "awr":
-      key = "awareness";
-      break;
-    case "crush":
-      key = "Crushing";
-      break;
-    case "slash":
-      key = "Slashing";
-      break;
-    case "pierce":
-      key = "Piercing";
-      break;
-    case "fire":
-      key = "Fire";
-      break;
-    case "ice":
-      key = "Ice";
-      break;
-    case "dark":
-      key = "Dark";
-      break;
-    case "divine":
-      key = "Divine";
-      break;
-    case "lightning":
-      key = "Lightning";
-      break;
-    case "hpMax":
-      key = "Health";
-      break;
-    case "mpMax":
-      key = "Mana";
-      break;
-  }
+  if(tailEnd == lang["resist"]) key = lang[key + "_def"];
+  else key = lang[key];
   var img = icons[_key + "_icon"];
   if (!img) img = icons[key_ + tailEnd + "_icon"];
   if (!img) img = icons[key_ + "_icon"];
   if (value < 0) {
-    text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>Decreases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? Math.abs(value) + "%" : Math.abs(value)} ${lastBit}\n`;
-  } else text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>Increases <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} by ${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
+    text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? Math.abs(value) + "%" : Math.abs(value)} ${lastBit}\n`;
+  } else text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
   return text;
 }
 
@@ -276,6 +300,7 @@ function hideHover() {
 }
 
 window.addEventListener("keyup", e => {
+  const number = parseInt(e.keyCode) - 48;
   if (e.key == "i") {
     renderInventory();
   }
@@ -283,8 +308,25 @@ window.addEventListener("keyup", e => {
     renderCharacter();
   }
   else if (e.key == "Escape") {
+    isSelected = false;
+    abiSelected = {};
     closeInventory();
     closeCharacter();
+    updateUI();
+    contextMenu.textContent = "";
+    assignContainer.style.display = "none";
+  }
+  else if (number > -1 && e.shiftKey) {
+    let abi = player.abilities.find(a => a.equippedSlot == number + 9);
+    if(number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
+    if(!abi) return;
+    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+  }
+  else if (number > -1 && !e.shiftKey) {
+    let abi = player.abilities.find(a => a.equippedSlot == number - 1);
+    if(number == 0) abi = player.abilities.find(a => a.equippedSlot == 9);
+    if(!abi) return;
+    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
 });
 
@@ -295,12 +337,12 @@ function renderCharacter() {
   bg.style.transform = "scale(1)";
   bg.textContent = "";
   const pc = renderPlayerPortrait();
-  const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getStats().hpMax} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getStats().mpMax} MP`);
+  const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>Level ${player.level.level} ${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getStats().hpMax} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getStats().mpMax} MP`);
   var statsText = `<bcss>position: absolute; left: 24px; top: 298px;<bcss><f>32px<f>Core stats§\n\n`;
   statsText += `<cl>strSpan<cl><i>${icons.str_icon}<i><f>24px<f>Strength: ${player.getStats().str}\n§<cl>dexSpan<cl><i>${icons.dex_icon}<i><f>24px<f>Dexterity: ${player.getStats().dex}\n§<cl>vitSpan<cl><i>${icons.vit_icon}<i><f>24px<f>Vitality: ${player.getStats().vit}\n§<cl>intSpan<cl><i>${icons.int_icon}<i><f>24px<f>Intelligence: ${player.getStats().int}\n§<cl>cunSpan<cl><i>${icons.cun_icon}<i><f>24px<f>Cunning: ${player.getStats().cun}`;
   const stats = textSyntax(statsText);
   var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
-  Object.entries(player.getResists()).forEach(resistance=>{
+  Object.entries(player.getResists()).forEach(resistance => {
     const str = resistance[0];
     const val = resistance[1];
     resistancesText += `<i>${icons[str + "_icon"]}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;
@@ -308,7 +350,7 @@ function renderCharacter() {
   const resistances = textSyntax(resistancesText);
   tooltip(resistances, "Resistance decreases incoming damage\n of its type by the indicated number.\n For example, 50% resistance means\n you take half damage.");
   var effectResTxt = `<bcss>position: absolute; left: 364px; top: 298px;<bcss><f>32px<f>Status resistances§\n\n`;
-  Object.entries(player.getStatusResists()).forEach(resistance=>{
+  Object.entries(player.getStatusResists()).forEach(resistance => {
     const str = resistance[0];
     const val = resistance[1];
     effectResTxt += `<i>${icons[str] ? icons[str] : "resources/icons/damage_icon.png"}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;

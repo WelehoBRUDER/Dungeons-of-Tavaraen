@@ -58,7 +58,7 @@
     </div>
     <div class="playerWindow"></div>
     <div class="playerEffects"></div>
-    <div class="playerImprovement">
+    <div class="playerImprovement" hidden>
       <div class="sideBar"></div>
       <div class="perkArea">
         <canvas width="1360" height="720" class="prkcanvas"></canvas>
@@ -67,6 +67,8 @@
     <div class="mapHover"></div>
     <div id="globalHover"></div>
     <div class="worldText"></div>
+    <div class="contextMenu"></div>
+    <div class="assignContainer"></div>
   </div>
 </body>
 
@@ -119,6 +121,8 @@
   <!-- Enemies -->
   <img src="resources/tiles/enemies/grey_slime.png" alt="" onload="imgLoaded()" class="greySlime sprite">
   <img src="resources/tiles/enemies/skeleton_warrior.png" alt="" onload="imgLoaded()" class="skeletonWarrior sprite">
+  <img src="resources/tiles/enemies/skeleton_archer.png" alt="" onload="imgLoaded()" class="skeletonArcher sprite">
+  <img src="resources/tiles/enemies/norseman_berserk.png" alt="" onload="imgLoaded()" class="norsemanBerserk sprite">
 
   <!-- Health & Mana Bars -->
   <img src="resources/tiles/enemies/healthBackground.png" alt="" onload="imgLoaded()" class="hpBg sprite">
@@ -128,8 +132,11 @@
    <!-- Map Tiles  -->
    <img src="resources/tiles/hovering.png" alt="" onload="imgLoaded()" class="hoverTile sprite">
    <img src="resources/tiles/void.png" alt="" onload="imgLoaded()" class="tileVOID sprite">
+   <img src="resources/tiles/fog_of_war_2.png" alt="" onload="imgLoaded()" class="tileNoVision sprite">
    <img src="resources/tiles/highlight.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT sprite">
    <img src="resources/tiles/highlight_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT_RED sprite">
+   <img src="resources/tiles/highlight2.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT2 sprite">
+   <img src="resources/tiles/highlight2_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT2_RED sprite">
    <img src="resources/tiles/water.png" alt="" onload="imgLoaded()" class="tile0 sprite">
    <img src="resources/tiles/grass.png" alt="" onload="imgLoaded()" class="tile1 sprite">
 
@@ -141,6 +148,7 @@
 </html>
 
 <script src="script/syntax.js"></script>
+<script src="script/localisation.js"></script>
 <script src="arrays/perks.js"></script>
 <script src="arrays/tiles.js"></script>
 <script src="arrays/effects.js"></script>

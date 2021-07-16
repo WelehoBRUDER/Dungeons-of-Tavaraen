@@ -17,6 +17,58 @@ const raceTexts = {
         desc: ""
     }
 };
+const raceEffects = {
+    elf: {
+        modifiers: {
+            strV: -3,
+            vitV: -3,
+            dexV: 5,
+            intV: 5,
+            cunV: 3,
+            sightV: 2,
+            mpMaxV: 20
+        },
+        name: "Elvish Blood",
+        desc: "Snobby pricks can show a good dance, but not a good fight."
+    },
+    orc: {
+        modifiers: {
+            strV: 5,
+            vit: 8,
+            dexV: -4,
+            intV: -4,
+            cunV: -1,
+            sightV: 1,
+            hpMaxV: 30
+        },
+        name: "Orcy Bod",
+        desc: "Orcies not make gud thinkaz', but do good git smashaz."
+    },
+    ashen: {
+        modifiers: {
+            strV: -1,
+            vitV: -1,
+            intV: -1,
+            dexV: 3,
+            cunV: 3,
+            sightV: 5,
+            hpMaxV: 15
+        },
+        name: "Ashen Constitution",
+        desc: "The Ashen are sly and slippery, not gifted in straight battle."
+    },
+    human: {
+        modifiers: {
+            strV: 1,
+            vitV: 2,
+            dexV: 1,
+            intV: 3,
+            cunV: 2
+        },
+        name: "Human Will",
+        desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
+    }
+};
 class PlayerCharacter extends Character {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
@@ -34,13 +86,18 @@ class PlayerCharacter extends Character {
         this.helmet = (_k = base.helmet) !== null && _k !== void 0 ? _k : {};
         this.gloves = (_l = base.gloves) !== null && _l !== void 0 ? _l : {};
         this.boots = (_m = base.boots) !== null && _m !== void 0 ? _m : {};
+        this.raceEffect = raceEffects[this.race];
         this.artifact1 = (_o = base.artifact1) !== null && _o !== void 0 ? _o : {};
         this.artifact2 = (_p = base.artifact2) !== null && _p !== void 0 ? _p : {};
         this.artifact3 = (_q = base.artifact3) !== null && _q !== void 0 ? _q : {};
         this.inventory = (_r = base.inventory) !== null && _r !== void 0 ? _r : [];
         this.hpRegen = () => {
             const { v: val, m: mod } = getModifiers(this, "hpRegen");
-            return Math.floor((1 + val) * mod);
+            return Math.floor((val) * mod);
+        };
+        this.sight = () => {
+            const { v: val, m: mod } = getModifiers(this, "sight");
+            return Math.floor((5 + val) * mod);
         };
         this.drop = (itm) => {
             const item = Object.assign({}, itm);
@@ -248,7 +305,9 @@ var player = new PlayerCharacter({
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 2 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.icy_javelin), { equippedSlot: 3 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.barbarian_rage), { equippedSlot: 4 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.berserk), { equippedSlot: 5 }), dummy)
+        new Ability(Object.assign(Object.assign({}, abilities.berserk), { equippedSlot: 5 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.shadow_step), { equippedSlot: 6 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.charge), { equippedSlot: 7 }), dummy)
     ],
     statModifiers: [
         {

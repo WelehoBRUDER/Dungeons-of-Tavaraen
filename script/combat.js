@@ -70,18 +70,19 @@ function buffOrHeal(character, ability) {
         character.stats.hp += heal;
         spawnFloatingText(character.cords, heal.toString(), "lime", 36);
         if (character.isFoe)
-            displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${ability.action_desc} on their self, recovering ${heal} health.`);
+            displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${lang[ability.id + "_action_desc"]} ${lang["recovery_foe"]} ${heal} ${lang["health_points"]}.`);
         else
-            displayText(`<c>cyan<c>[ACTION] <c>yellow<c>You <c>white<c>${ability.action_desc_pl} on your self, recovering ${heal} health.`);
+            displayText(`<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`);
     }
     if (ability.status) {
-        if (!player.statusEffects.find((eff) => eff.id == ability.status)) {
+        if (!character.statusEffects.find((eff) => eff.id == ability.status)) {
             // @ts-ignore
             character.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.status]), ability.statusModifiers));
+            if (character.id == player.id)
+                character.statusEffects.find((eff) => eff.id == ability.status).last.current -= 1;
         }
         else {
-            // @ts-expect-error
-            player.statusEffects.find((eff) => eff.id == ability.status).last.current += statusEffects[ability.status].last.total;
+            character.statusEffects.find((eff) => eff.id == ability.status).last.current += statusEffects[ability.status].last.total;
         }
         // @ts-ignore
         statusEffects[ability.status].last.current = statusEffects[ability.status].last.total;
@@ -96,11 +97,12 @@ function buffOrHeal(character, ability) {
     advanceTurn();
 }
 function regularAttack(attacker, target, ability, targetCords) {
-    var _a;
+    var _a, _b;
     if (targetCords) {
         maps[currentMap].enemies.forEach((en) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
             target = en; });
     }
+    const critRolled = attacker.getStats().critChance >= random(100, 0);
     // @ts-ignore
     if (target.isFoe) {
         let dmg = 0;
@@ -110,7 +112,9 @@ function regularAttack(attacker, target, ability, targetCords) {
                 var _a;
                 const key = value[0];
                 const num = value[1];
-                const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+                val += getModifiers(attacker, "damage").v;
+                mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
@@ -119,24 +123,33 @@ function regularAttack(attacker, target, ability, targetCords) {
                     bonus += num * attacker.getStats().dex / 20;
                 else
                     bonus += num * attacker.getStats().str / 20;
-                dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+                dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
         }
         else {
             Object.entries(ability.damages).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
-                const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+                val += getModifiers(attacker, "damage").v;
+                mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
                 // @ts-ignore
                 bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
                 // @ts-ignore
-                dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+                dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
         }
+        if (ability.status) {
+            target.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.status]), s_def));
+        }
+        dmg = Math.floor(dmg * random(1.2, 0.8));
         target.stats.hp -= dmg;
         spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-        displayText(`<c>cyan<c>[ACTION] <c>yellow<c>You <c>white<c>${ability.action_desc_pl} ${target.name} for ${dmg} damage.`);
+        let actionText = (_b = lang[ability.id + "_action_desc_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
+        actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
+        actionText = actionText.replace("[DMG]", `${dmg}`);
+        displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
         if (ability.cooldown)
             ability.onCooldown = ability.cooldown;
         if (ability.mana_cost)
@@ -155,23 +168,26 @@ function regularAttack(attacker, target, ability, targetCords) {
             var _a;
             const key = value[0];
             const num = value[1];
-            const { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+            let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
+            val += getModifiers(attacker, "damage").v;
+            mod *= getModifiers(attacker, "damage").m;
             let bonus = 0;
             // @ts-ignore
             if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                 bonus = ability.damages[key];
             // @ts-ignore
-            if (attacker.firesProjectile)
+            if (attacker.shootsProjectile)
                 bonus += num * attacker.getStats().dex / 20;
             // @ts-ignore
             else
                 bonus += num * attacker.getStats().str / 20;
             // @ts-ignore
-            dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier)) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+            dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
         });
+        dmg = Math.floor(dmg * random(1.2, 0.8));
         target.stats.hp -= dmg;
         spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-        displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${attacker.name} <c>white<c>${ability.action_desc} ${target.name} for ${dmg} damage.`);
+        displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${lang[ability.id + "_action_desc"]} '<c>yellow<c>${target.name}<c>white<c>' ${lang["for"]} ${dmg} ${lang["damage"].toLowerCase()}.`);
         if (ability.cooldown)
             ability.onCooldown = ability.cooldown;
         if (ability.mana_cost)
@@ -205,7 +221,7 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
         }, ms);
     }, delay);
 }
-async function fireProjectile(start, end, projectileSprite, ability, isPlayer) {
+async function fireProjectile(start, end, projectileSprite, ability, isPlayer, attacker) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const path = generateArrowPath(start, end);
     const projectile = document.querySelector("." + projectileSprite);
@@ -214,16 +230,23 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer) {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     projectileLayers.append(canvas);
+    console.log(path);
     for (let step of path) {
         await sleep(70);
         const { screenX: x, screenY: y } = tileCordsToScreen(step);
         if (step.enemy) {
-            collision({ x: step.x, y: step.y }, ability, isPlayer);
-            setTimeout(advanceTurn, 70);
+            collision({ x: step.x, y: step.y }, ability, isPlayer, player);
+            if (isPlayer)
+                setTimeout(advanceTurn, 70);
+            break;
+        }
+        if (step.player) {
+            collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
             break;
         }
         if (step.blocked) {
-            setTimeout(advanceTurn, 70);
+            if (isPlayer)
+                setTimeout(advanceTurn, 70);
             break;
         }
         canvas.width = canvas.width;
@@ -235,11 +258,14 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer) {
     }
     projectileLayers.removeChild(canvas);
 }
-function collision(target, ability, isPlayer, theme) {
+function collision(target, ability, isPlayer, attacker, theme) {
     if (isPlayer) {
         let targetEnemy = maps[currentMap].enemies.find((en) => en.cords.x == target.x && en.cords.y == target.y);
         // @ts-ignore
         regularAttack(player, targetEnemy, ability);
+    }
+    else if (player.cords.x == target.x && player.cords.y == target.y) {
+        regularAttack(attacker, player, ability);
     }
 }
 function calcAngleDegrees(x, y) {

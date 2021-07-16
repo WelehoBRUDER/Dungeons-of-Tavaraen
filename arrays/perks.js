@@ -89,3 +89,4 @@ const perksArray = {
         }
     }
 };
+var lang = finnish;

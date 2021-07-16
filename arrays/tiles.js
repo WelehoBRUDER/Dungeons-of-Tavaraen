@@ -18,6 +18,7 @@ const icons = {
     poison: "resources/icons/poison_icon.png",
     rage: "resources/icons/rage_icon.png",
     berserk: "resources/icons/berserk_icon.png",
+    dazed: "resources/icons/dazed_icon.png",
     range: "resources/icons/use_range.png",
     range_icon: "resources/icons/use_range_icon.png",
     use_range_icon: "resources/icons/use_range_icon.png",
@@ -64,6 +65,8 @@ const icons = {
     concentration_icon: "resources/icons/concentration_icon.png",
     break_concentration: "resources/icons/break_concentration.png",
     break_concentration_icon: "resources/icons/break_concentration_icon.png",
+    sight: "resources/icons/eye_open.png",
+    sight_icon: "resources/icons/sight_icon.png"
 };
 const tiles = [
     {
