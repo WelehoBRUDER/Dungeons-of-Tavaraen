@@ -40,6 +40,8 @@ class Ability {
         // @ts-ignore
         const baseAbility = abilities[this.id];
         const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
+        if (this.id == "attack" && user.id == "player")
+            console.log(values);
         this.name = baseAbility.name;
         this.mana_cost = (_a = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif)) !== null && _a !== void 0 ? _a : 0;
         this.cooldown = (_b = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif)) !== null && _b !== void 0 ? _b : 0;
@@ -47,8 +49,8 @@ class Ability {
         this.onCooldown = (_d = base.onCooldown) !== null && _d !== void 0 ? _d : 0;
         this.equippedSlot = (_e = base.equippedSlot) !== null && _e !== void 0 ? _e : -1;
         this.damages = baseAbility.damages;
-        this.damage_multiplier = (_f = (baseAbility.damage_multiplier + values.damage_multiplier.value) * values.damage_multiplier.modif) !== null && _f !== void 0 ? _f : 1;
-        this.resistance_penetration = (_g = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value) * values.resistance_penetration.modif)) !== null && _g !== void 0 ? _g : 0;
+        this.damage_multiplier = (_f = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1))) !== null && _f !== void 0 ? _f : 1;
+        this.resistance_penetration = (_g = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + (values.resistance_penetration.modif - 1)))) !== null && _g !== void 0 ? _g : 0;
         this.base_heal = (_h = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif)) !== null && _h !== void 0 ? _h : 0;
         this.stat_bonus = (_j = baseAbility.stat_bonus) !== null && _j !== void 0 ? _j : "";
         this.status = (_k = baseAbility.status) !== null && _k !== void 0 ? _k : "";
@@ -63,6 +65,8 @@ class Ability {
         this.statusModifiers = statusModifiers;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;
+        if (this.cooldown < 0)
+            this.cooldown = 0;
     }
 }
 function getAbiModifiers(char, id) {

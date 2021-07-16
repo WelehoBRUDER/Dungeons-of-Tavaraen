@@ -54,6 +54,8 @@ const statusEffects = {
       crushResistV: -25,
       slashResistV: -25,
       pierceResistV: -25,
+      barbarian_rage_status_effect_strPV: 33,
+      attack_damage_multiplierP: 50
     },
     silence: true,
     break_concentration: true,

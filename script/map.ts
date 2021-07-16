@@ -8,7 +8,7 @@ const enemyLayers = <HTMLDivElement>document.querySelector(".canvasLayers .enemy
 const projectileLayers = <HTMLDivElement>document.querySelector(".canvasLayers .projectileLayers");
 const staticHover = <HTMLDivElement>document.querySelector(".mapHover");
 baseCanvas.addEventListener("mousemove", mapHover);
-baseCanvas.addEventListener("click", clickMap);
+baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
 
 const zoomLevels = [0.75, 1, 1.25, 1.5];
@@ -222,7 +222,7 @@ function mapHover(event: MouseEvent) {
 
 function clickMap(event: MouseEvent) {
   if (state.clicked) return;
-  if (invOpen) {
+  if (invOpen || (event.button != 0 && event.button != 2)) {
     closeInventory();
     return;
   }
@@ -231,6 +231,13 @@ function clickMap(event: MouseEvent) {
   const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
   const x = lX + player.cords.x;
   const y = lY + player.cords.y;
+  if(event.button == 2) {
+    isSelected = false;
+    abiSelected = {};
+    updateUI();
+    renderTileHover({x: x, y: y});
+    return;
+  }
   if (x == player.cords.x && y == player.cords.y) console.log("You clicked on yourself!");
   let move = true;
   for (let enemy of maps[currentMap].enemies) {

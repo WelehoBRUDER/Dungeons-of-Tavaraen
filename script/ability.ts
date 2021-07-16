@@ -93,6 +93,7 @@ class Ability {
     // @ts-ignore
     const baseAbility = abilities[this.id];
     const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
+    if(this.id == "attack" && user.id == "player")console.log(values);
     this.name = baseAbility.name;
     this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;
     this.cooldown = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif) ?? 0;
@@ -100,8 +101,8 @@ class Ability {
     this.onCooldown = base.onCooldown ?? 0;
     this.equippedSlot = base.equippedSlot ?? -1;
     this.damages = baseAbility.damages;
-    this.damage_multiplier = (baseAbility.damage_multiplier + values.damage_multiplier.value) * values.damage_multiplier.modif ?? 1;
-    this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value) * values.resistance_penetration.modif) ?? 0;
+    this.damage_multiplier = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1)) ?? 1;
+    this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value +( values.resistance_penetration.modif - 1))) ?? 0;
     this.base_heal = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif) ?? 0;
     this.stat_bonus = baseAbility.stat_bonus ?? "";
     this.status = baseAbility.status ?? "";
@@ -116,6 +117,8 @@ class Ability {
     this.statusModifiers = statusModifiers;
     this.action_desc = baseAbility.action_desc;
     this.action_desc_pl = baseAbility.action_desc_pl;
+
+    if(this.cooldown < 0) this.cooldown = 0;
   }
 }
 

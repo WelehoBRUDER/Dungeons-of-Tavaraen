@@ -120,6 +120,7 @@ const finnish = {
   stick_name: "Keppi",
   chippedBlade_name: "Kulunut Terä",
   longsword_name: "Pitkämiekkä",
+  chippedAxe_name: "Kulunut Kirves",
   huntingBow_name: "Metsästys Jousi",
   raggedShirt_name: "Ryysyinen Paita",
   raggedBoots_name: "Ryysyiset Jalkimet",
@@ -141,6 +142,9 @@ const finnish = {
 
   // Damage types
   poison_damage: "Myrkytys",
+
+  // Misc
+  attack_name: "tavallisten iskujen vahinkoa",
 
   // Statuses
   effect_poison_name: "Myrkky",
@@ -286,6 +290,9 @@ const english = {
 
   // Damage types
   poison_damage: "Poison",
+
+  // Misc
+  attack_name: "base attack damage",
 
   // Statuses
   effect_poison_name: "Poison",

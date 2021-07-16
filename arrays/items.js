@@ -130,6 +130,36 @@ const items = {
         grade: "rare",
         slot: "weapon"
     },
+    chippedAxe: {
+        id: "chippedAxe",
+        name: "Chipped Axe",
+        damages: { crush: 6, pierce: 4 },
+        damagesTemplate: [
+            { type: "crush", value: [2, 3], chance: 4 },
+            { type: "pierce", value: [1, 3], chance: 4 },
+            { type: "dark", value: [2, 6], chance: 4 },
+            { type: "divine", value: [2, 6], chance: 4 },
+            { type: "fire", value: [4, 8], chance: 13 },
+            { type: "lightning", value: [3, 7], chance: 15 },
+            { type: "ice", value: [3, 7], chance: 5 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 5], chance: 1.75 },
+            { type: "strP", value: [3, 5, 9], chance: 1 },
+            { type: "dexV", value: [1, 2, 5], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 5], chance: 1.25 },
+            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+        ],
+        range: 1,
+        img: "resources/icons/chipped_axe.png",
+        sprite: "chippedAxe",
+        price: 35,
+        weight: 2.9,
+        type: "weapon",
+        grade: "common",
+        slot: "weapon"
+    },
     huntingBow: {
         id: "huntingBow",
         name: "Hunting Bow",

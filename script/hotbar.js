@@ -234,13 +234,10 @@ function effectSyntax(effect, embed = false, effectId = "") {
                 _d = modi;
             }
         });
+        key = id + "_name";
         let _value = 0;
-        if (9)
-            oi, ynj;
-        9;
-        ol6mt58nhmjto.find((eff) => eff.id == effectId);
-        _value = value;
-        key = abilities[id].name + "'s";
+        if (player.statusEffects.find((eff) => eff.id == effectId))
+            _value = value;
         frontImg = abilities[id].icon;
         if (value < 0)
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
@@ -257,16 +254,16 @@ function effectSyntax(effect, embed = false, effectId = "") {
         key_ = keyIncludesAbility(key);
         let id = key.replace("_" + key_, "");
         frontImg = abilities[id].icon;
-        key = abilities[id].name;
-        key += "'s";
+        key = id + "_name";
         flipColor = less_is_better[key_];
-        if (value < 0)
-            backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
-        else
-            backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
-        tailEnd = key_.replace("_", " ");
-        if (tailEnd.includes("multiplier"))
-            value = value * 100;
+        if (key !== "attack_name") {
+            if (value < 0)
+                backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
+            else
+                backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
+            tailEnd = key_.replace("_", " ");
+        }
+        //if (tailEnd.includes("multiplier")) value = value * 100;
     }
     if (tailEnd == lang["resist"])
         key = lang[key + "_def"];

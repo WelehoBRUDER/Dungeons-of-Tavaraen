@@ -212,6 +212,11 @@ class PlayerCharacter extends Character {
       const { v: val, m: mod } = getModifiers(this, "carryStrength");
       return ((92.5 + val + this.getStats().str/2 + this.getStats().vit) * mod).toFixed(1);
     }
+
+    this.kill = () => {
+      // handle death logic once we get there ;)
+      console.log("player is kill");
+    }
   }
 }
 

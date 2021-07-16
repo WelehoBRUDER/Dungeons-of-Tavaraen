@@ -247,6 +247,15 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy)
     ],
+    statModifiers: [
+      {
+        id: "simple_fights",
+        effects: {
+          attack_damage_multiplier: 25,
+          damageP: -25
+        }
+      }
+    ],
     loot: [
       {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
       {type: "weapon", amount: [1, 1], item: "stick", chance: 100},

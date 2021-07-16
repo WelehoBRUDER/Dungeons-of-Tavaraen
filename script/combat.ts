@@ -107,7 +107,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 20;
         else bonus += num * attacker.getStats().str / 20;
-        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1 + (attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     } else {
       Object.entries(ability.damages).forEach((value: any) => {

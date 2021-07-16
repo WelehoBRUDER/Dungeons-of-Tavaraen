@@ -118,6 +118,7 @@ const finnish = {
     stick_name: "Keppi",
     chippedBlade_name: "Kulunut Terä",
     longsword_name: "Pitkämiekkä",
+    chippedAxe_name: "Kulunut Kirves",
     huntingBow_name: "Metsästys Jousi",
     raggedShirt_name: "Ryysyinen Paita",
     raggedBoots_name: "Ryysyiset Jalkimet",
@@ -136,6 +137,8 @@ const finnish = {
     damage_from_effect: "<c>white<c>[STATUS] aiheuttaa hahmolle [TARGET] [ICON][DMG] vahinkoa.",
     // Damage types
     poison_damage: "Myrkytys",
+    // Misc
+    attack_name: "tavallisten iskujen vahinkoa",
     // Statuses
     effect_poison_name: "Myrkky",
     effect_poison_desc: "Myrkky kiertää veressäsi, \nsyöden voimasi ja terveytesi.",
@@ -275,6 +278,8 @@ const english = {
     damage_from_effect: "<c>white<c>[TARGET] takes [ICON][DMG] damage from [STATUS].",
     // Damage types
     poison_damage: "Poison",
+    // Misc
+    attack_name: "base attack damage",
     // Statuses
     effect_poison_name: "Poison",
     effect_poison_desc: "Poison courses through your body, \nweakening and harming you.",
