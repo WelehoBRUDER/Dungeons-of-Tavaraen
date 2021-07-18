@@ -23,6 +23,8 @@ interface ability {
   statusModifiers?: any;
   action_desc: string;
   action_desc_pl: string;
+  ai_chance?: number;
+  remove_status: Array<string>
 }
 
 const straight_modifiers = [
@@ -87,13 +89,14 @@ class Ability {
   statusModifiers?: any;
   action_desc: string;
   action_desc_pl: string;
+  ai_chance?: number;
+  remove_status: Array<string>;
   constructor(base: ability, user: characterObject) {
     this.id = base.id;
     const values = getAbiModifiers(user, base.id);
     // @ts-ignore
     const baseAbility = abilities[this.id];
     const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
-    if(this.id == "attack" && user.id == "player")console.log(values);
     this.name = baseAbility.name;
     this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;
     this.cooldown = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif) ?? 0;
@@ -117,6 +120,8 @@ class Ability {
     this.statusModifiers = statusModifiers;
     this.action_desc = baseAbility.action_desc;
     this.action_desc_pl = baseAbility.action_desc_pl;
+    this.ai_chance = baseAbility.ai_chance;
+    this.remove_status = baseAbility.remove_status;
 
     if(this.cooldown < 0) this.cooldown = 0;
   }

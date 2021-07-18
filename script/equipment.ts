@@ -363,31 +363,31 @@ function closeInventory() {
 
 function itemTT(item: any) {
   var text = "";
-  text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§\t\n`;
-  text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>Grade: <c>${grades[item.grade].color}<c>${item.grade}§\n`;
+  text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
+  text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
   if (item.damages) {
     let total: number = 0;
     let txt: string = "";
     Object.entries(item.damages).forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.damage_icon}<i><f>18px<f>Damage: ${total} <f>17px<f>(${txt})\n`;
+    text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
   }
   if (item.resistances) {
     let total: number = 0;
     let txt: string = "";
     Object.entries(item.resistances).forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.resistance}<i><f>18px<f>Resistance: ${total} <f>17px<f>(${txt})\n`;
+    text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
   }
   if(Object.values(item.stats).length > 0) {
-    text += `<i>${icons.resistance}<i><f>18px<f>Stat effects:\n`;
+    text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
     Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
   }
   if(Object.values(item.commands).length > 0) {
     Object.entries(item.commands).forEach(eff => text += `<f>18px<f>${eff[0]}\n`);
   }
-  text += `<i>${icons.resistance}<i><f>18px<f>Weight: ${item.weight}\n`;
-  text += `<f>18px<f>Worth: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
+  text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
+  text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
   return text;
 }
 

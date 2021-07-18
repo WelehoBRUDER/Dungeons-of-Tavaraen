@@ -83,6 +83,11 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy)
     ],
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    statsPerLevel: {
+      str: 1,
+      vit: 1
+    },
     loot: []
   },
   skeletonWarrior: {
@@ -137,6 +142,12 @@ const enemies = {
         }
       }
     ],
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    statsPerLevel: {
+      str: 2,
+      dex: 1,
+      vit: 1
+    },
     loot: [
       {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
       {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
@@ -196,6 +207,71 @@ const enemies = {
         }
       }
     ],
+    statsPerLevel: {
+      str: 1,
+      dex: 2,
+      vit: 1
+    },
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    loot: [
+      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
+      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
+      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+    ]
+  },
+  skeletonMage: {
+    id: "skeletonMage",
+    name: "Skeleton Mage",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 1,
+      dex: 4,
+      int: 4,
+      vit: 0,
+      cun: 0,
+      hp: 14,
+      mp: 12,
+      hpMax: 14,
+      mpMax: 4
+    },
+    resistances: {
+      slash: 70,
+      crush: -15,
+      pierce: 60,
+      dark: 40,
+      divine: -50,
+      fire: -20,
+      lightning: 20,
+      ice: 20
+    },
+    statusResistances: {
+      poison: 100,
+      burning: -20,
+      curse: 50,
+      stun: 0,
+      bleed: 100
+    },
+    damages: {
+      pierce: 4
+    },
+    alive: true,
+    xp: 10,
+    sprite: "skeletonMage",
+    aggroRange: 12,
+    attackRange: 8,
+    canFly: false,
+    shootsProjectile: "blightProjectile",
+    abilities: [
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.blight, dummy)
+    ],
+    statModifiers: [],
+    statsPerLevel: {
+      dex: 1,
+      int: 2,
+      vit: 1
+    },
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
       {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
       {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
@@ -235,9 +311,10 @@ const enemies = {
       bleed: 0
     },
     damages: {
-      slash: 7,
-      pierce: 2
+      slash: 4,
+      pierce: 3
     },
+    retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
     xp: 30,
     sprite: "norsemanBerserk",
@@ -245,17 +322,73 @@ const enemies = {
     attackRange: 1,
     canFly: false,
     abilities: [
-      new Ability(abilities.attack, dummy)
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.charge, dummy),
     ],
-    statModifiers: [
-      {
-        id: "simple_fights",
-        effects: {
-          attack_damage_multiplier: 25,
-          damageP: -25
-        }
-      }
+    statModifiers: [],
+    statsPerLevel: {
+      str: 2,
+      vit: 2,
+      cun: 1
+    },
+    loot: [
+      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
+      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
+      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+    ]
+  },
+  norsemanHunter: {
+    id: "norsemanHunter",
+    name: "Norseman Hunter",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 10,
+      dex: 13,
+      int: 4,
+      vit: 0,
+      cun: 0,
+      hp: 30,
+      mp: 0,
+      hpMax: 30,
+      mpMax: 0
+    },
+    resistances: {
+      slash: 5,
+      crush: 5,
+      pierce: 5,
+      dark: 15,
+      divine: 15,
+      fire: 0,
+      lightning: 0,
+      ice: 0
+    },
+    statusResistances: {
+      poison: 25,
+      burning: 0,
+      curse: 0,
+      stun: 0,
+      bleed: 0
+    },
+    damages: {
+      pierce: 6
+    },
+    retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
+    alive: true,
+    xp: 30,
+    sprite: "norsemanHunter",
+    aggroRange: 12,
+    attackRange: 6,
+    canFly: false,
+    abilities: [
+      new Ability(abilities.attack, dummy),
     ],
+    statModifiers: [],
+    statsPerLevel: {
+      dex: 2,
+      vit: 1,
+      cun: 2
+    },
+    shootsProjectile: "hunterJavelinProjectile",
     loot: [
       {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
       {type: "weapon", amount: [1, 1], item: "stick", chance: 100},

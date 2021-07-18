@@ -58,6 +58,7 @@ interface characterObject {
   aura?: string;
   silenced?: Function;
   concentration?: Function;
+  hpRemain?: Function;
 }
 
 interface statusObject {
@@ -185,6 +186,7 @@ class Character {
   silenced?: Function;
   concentration?: Function;
   statRemaining?: Function;
+  hpRemain?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -282,6 +284,10 @@ class Character {
         if(eff.break_concentration) { result = false; return;}
       });
       return result;
+    }
+
+    this.hpRemain = () => {
+      return (this.stats.hp / this.getStats().hpMax) * 100;
     }
 
     this.updateAbilities = () => {

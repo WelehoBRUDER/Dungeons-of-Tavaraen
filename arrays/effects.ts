@@ -19,6 +19,22 @@ const statusEffects = {
     textIcon: icons.poison,
     icon: "resources/icons/poison.png"
   },
+  blighted: {
+    id: "blighted",
+    name: "Blighted",
+    effects: {
+      strV: -4,
+      dexV: -4,
+      cunV: -2,
+      sightV: -2
+    },
+    last: {
+      total: 4,
+      current: 4
+    },
+    textIcon: icons.blight_icon,
+    icon: "resources/icons/blighted.png"
+  },
   rage: {
     id: "rage",
     name: "Rage",
@@ -28,9 +44,9 @@ const statusEffects = {
       crushDamageP: 20,
       slashDamageP: 20,
       pierceDamageP: 20,
-      crushResistV: 10,
-      slashResistV: 10,
-      pierceResistV: 10,
+      crushResistV: -10,
+      slashResistV: -10,
+      pierceResistV: -10,
       iceResistV: 5,
     },
     silence: true,

@@ -19,6 +19,10 @@ interface playerChar extends characterObject {
   hpRegen?: Function;
   carryingWeight?: Function;
   maxCarryWeight?: Function;
+  isDead?: boolean;
+  grave: any;
+  respawnPoint: any;
+  gold: number;
 }
 
 interface levelObject {
@@ -136,6 +140,10 @@ class PlayerCharacter extends Character {
   carryingWeight?: Function;
   maxCarryWeight?: Function;
   sight?: Function;
+  isDead?: boolean;
+  grave: any;
+  respawnPoint: any;
+  gold: number;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -156,6 +164,10 @@ class PlayerCharacter extends Character {
     this.artifact2 = base.artifact2 ?? {};
     this.artifact3 = base.artifact3 ?? {};
     this.inventory = base.inventory ?? [];
+    this.isDead = base.isDead ?? false;
+    this.grave = base.grave ?? null;
+    this.respawnPoint = base.respawnPoint ?? null // need to add default point, or this might soft lock
+    this.gold = base.gold ?? 0;
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
@@ -215,7 +227,17 @@ class PlayerCharacter extends Character {
 
     this.kill = () => {
       // handle death logic once we get there ;)
-      console.log("player is kill");
+      this.isDead = true;
+      displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
+      const xpLoss = Math.floor(random(this.level.xp * 0.5, this.level.xp * 0.07));
+      const goldLoss = Math.floor(random(this.gold * 0.6, this.gold * 0.1));
+      this.level.xp -= xpLoss;
+      this.gold -= goldLoss;
+      if(xpLoss > 0) spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
+      if(goldLoss > 0) spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
+      this.grave = {cords: this.cords, xp: xpLoss, gold: goldLoss};
+      setTimeout(modifyCanvas, 300);
+      updateUI();
     }
   }
 }
@@ -391,7 +413,9 @@ var player = new PlayerCharacter({
     new Ability({...abilities.barbarian_rage, equippedSlot: 4}, dummy),
     new Ability({...abilities.berserk, equippedSlot: 5}, dummy),
     new Ability({...abilities.shadow_step, equippedSlot: 6}, dummy),
-    new Ability({...abilities.charge, equippedSlot: 7}, dummy)
+    new Ability({...abilities.charge, equippedSlot: 7}, dummy),
+    new Ability({...abilities.purification, equippedSlot: 8}, dummy),
+    new Ability({...abilities.blight, equippedSlot: 9}, dummy)
   ],
   statModifiers: [
     {
@@ -405,7 +429,8 @@ var player = new PlayerCharacter({
   statusEffects: [
     new statEffect({...statusEffects.poison}, s_def)
   ],
-  inventory: []
+  inventory: [],
+  gold: 50
 });
 
 var randomProperty = function (obj) {

@@ -10,8 +10,10 @@ const staticHover = <HTMLDivElement>document.querySelector(".mapHover");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
+var turnOver = true;
+var enemiesHadTurn = 0;
 
-const zoomLevels = [0.75, 1, 1.25, 1.5];
+const zoomLevels = [0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8];
 var currentZoom = 1;
 
 function sleep(ms: number) {
@@ -35,17 +37,30 @@ interface mapObject {
   base: Array<number[][]>,
   clutter: Array<number[][]>,
   enemies: Array<[]>;
+  playerGrave: any;
 }
 interface tileObject {
   x: number;
   y: number;
 }
 
+baseCanvas.addEventListener("wheel", changeZoomLevel);
+// @ts-expect-error
+function changeZoomLevel({ deltaY }) {
+  if (deltaY > 0) {
+    currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
+  } else {
+    currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) + 1] || zoomLevels[zoomLevels.length - 1];
+  }
+
+  modifyCanvas();
+}
+
 window.addEventListener("resize", modifyCanvas);
 document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
 function spriteVariables() {
-  const spriteSize = 128 * zoomLevels[currentZoom];
+  const spriteSize = 128 * currentZoom;
   var spriteLimitX = Math.ceil(baseCanvas.width / spriteSize);
   var spriteLimitY = Math.ceil(baseCanvas.height / spriteSize);
   if (spriteLimitX % 2 == 0) spriteLimitX++;
@@ -71,11 +86,17 @@ function renderMap(map: mapObject) {
     for (let x = 0; x < spriteLimitX; x++) {
       const imgId = map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
       const img = <HTMLImageElement>document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+      const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
       const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
       const fog = document.querySelector<HTMLImageElement>(".tileNoVision");
       if (img) {
         baseCtx.drawImage(img, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
         //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+      }
+      if (player.grave) {
+        if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
+          baseCtx.drawImage(grave, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+        }
       }
       // @ts-expect-error
       if (clutterId > 0) {
@@ -137,7 +158,9 @@ function renderMap(map: mapObject) {
     const itemImg = new Image();
     itemImg.src = item.itm.img;
     itemImg.onload = function () {
-      mapDataCtx?.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+      if(sightMap[item.cords.y]?.[item.cords.x] == "x") {
+        mapDataCtx?.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+      }
     };
   });
 
@@ -221,7 +244,7 @@ function mapHover(event: MouseEvent) {
 }
 
 function clickMap(event: MouseEvent) {
-  if (state.clicked) return;
+  if (state.clicked || player.isDead) return;
   if (invOpen || (event.button != 0 && event.button != 2)) {
     closeInventory();
     return;
@@ -231,11 +254,11 @@ function clickMap(event: MouseEvent) {
   const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
   const x = lX + player.cords.x;
   const y = lY + player.cords.y;
-  if(event.button == 2) {
+  if (event.button == 2) {
     isSelected = false;
     abiSelected = {};
     updateUI();
-    renderTileHover({x: x, y: y});
+    renderTileHover({ x: x, y: y });
     return;
   }
   if (x == player.cords.x && y == player.cords.y) console.log("You clicked on yourself!");
@@ -301,7 +324,8 @@ function createSightMap(start: tileObject, size: number) {
   }));
 }
 
-document.addEventListener("keydown", (keyPress) => {
+document.addEventListener("keyup", (keyPress) => {
+  if (!turnOver || player.isDead) return;
   let dirs = { w: "up", s: "down", a: "left", d: "right" };
   let shittyFix = JSON.parse(JSON.stringify(player));
   if (keyPress.key == "w" && canMove(player, "up")) { player.cords.y--; }
@@ -330,6 +354,7 @@ document.addEventListener("keyup", (kbe: KeyboardEvent) => {
 
 async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: number = 99, action: Function = null) {
   if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1) return;
+  if (!turnOver || player.isDead) return;
   const path: any = generatePath(player.cords, goal, false);
   let count: number = 0;
   isSelected = false;
@@ -356,20 +381,67 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
     }
     else if (state.inCombat && count > 1) {
       let regen = Math.floor(player.hpRegen() * count - 1) + Math.floor(player.hpRegen() * 0.5);
-      displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
+      if(regen > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
       displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
     } else if (count > 0) {
-      displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
+      if(Math.floor(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
     }
   }
-  else if (!action) { advanceTurn(); updateUI(); abiSelected = {}; }
+  else if (!action) { player.effects(); advanceTurn(); updateUI(); abiSelected = {}; }
   else if (action) {
+    player.effects();
     action();
     advanceTurn();
     updateUI();
     abiSelected = {};
   }
 }
+
+async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null, maxRange: number = 99) {
+  // @ts-ignore
+  const path: any = generatePath(enemy.cords, goal, false);
+  let count: number = 0;
+  moving: for (let step of path) {
+    if(canMoveTo(enemy, step)) {
+      await sleep(55);
+      enemy.cords.x = step.x;
+      enemy.cords.y = step.y;
+      modifyCanvas();
+      // canvas.width = canvas.width;
+      // if (enemyImg && (sightMap[enemy.cords.y]?.[enemy.cords.x] == "x")) {
+      //   var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      //   var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      //   /* Render hp bar */
+      //   const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
+      //   const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
+      //   const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
+      //   ctx?.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
+      //   ctx?.drawImage(hpbar, tileX, tileY - 12, enemy.statRemaining("hp") * spriteSize / 100, spriteSize);
+      //   ctx?.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
+      //   /* Render enemy on top of hp bar */
+      //   ctx?.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
+      //   let statCount = 0;
+      //   enemy.statusEffects.forEach((effect: statEffect) => {
+      //     if (statCount > 4) return;
+      //     const img = new Image(32, 32);
+      //     img.src = effect.icon;
+      //     img.addEventListener("load", e => {
+      //       ctx?.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+      //       statCount++;
+      //     });
+      //   });
+      //
+      count++;
+      if (count > maxRange) break moving;
+    }
+  }
+  // @ts-expect-error
+  attackTarget(enemy, player, weaponReach(enemy, 1, player));
+  regularAttack(enemy, player, ability);
+  updateEnemiesTurn();
+} 
+
+
 
 function canMove(char: any, dir: string) {
   try {
@@ -396,6 +468,7 @@ function canMoveTo(char: any, tile: tileObject) {
   for (let enemy of maps[currentMap].enemies) {
     if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) movable = false;
   }
+  if(player.cords.x == tile.x && player.cords.y == tile.y) movable = false;
   return movable;
 }
 
@@ -452,6 +525,7 @@ function renderPlayerPortrait() {
 
 function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   canvas.width = canvas.width; // Clear canvas
+  if (player.isDead) return;
   const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
@@ -492,7 +566,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
 }
 
-function generatePath(start: tileObject, end: tileObject, canFly: boolean, distanceOnly: boolean = false) {
+function generatePath(start: tileObject, end: tileObject, canFly: boolean, distanceOnly: boolean = false, retreatPath: number = 0) {
   if (end.x < 0 || end.x > maps[currentMap].base[0].length - 1 || end.y < 0 || end.y > maps[currentMap].base.length - 1) return;
   var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
   var fieldMap: Array<number[]> = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
@@ -504,12 +578,12 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }));
   if (start.x !== player.cords.x && start.y !== player.cords.y) fieldMap[player.cords.y][player.cords.x] = 1;
   maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
-  fieldMap[end.y][end.x] = 5;
   if (distanceOnly) {
     let newDistance = distance;
     if (Math.abs(start.x - end.x) == Math.abs(start.y - end.y)) newDistance = Math.round(newDistance / 2);
     return newDistance;
   }
+  fieldMap[end.y][end.x] = 5;
   main: for (let i = 5; i < 500; i++) {
     for (let y = 0; y < maps[currentMap].base.length; y++) {
       for (let x = 0; x < maps[currentMap].base[y].length; x++) {
@@ -522,10 +596,46 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
       }
     }
   }
+  const maxValueCords = { x: null as any, y: null as any, v: 0 as any };
+  const maxNum = fieldMap[start.y][start.x];
+  if (retreatPath > 0) fieldMap[start.y][start.x] = 0;
+  if (retreatPath > 0) {
+    const arr = [...new Array(retreatPath)].map(_ => []);
+
+    arr[0].push({ x: start.x, y: start.y });
+    for (let i = 0; i < arr.length; i++) {
+      for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
+        for (const value of arr[i]) {
+          if (fieldMap[value.y][value.x] !== 0) continue;
+
+          const left = fieldMap[value.y]?.[value.x - 1] ?? null;
+          const right = fieldMap[value.y]?.[value.x + 1] ?? null;
+          const top = fieldMap[value.y - 1]?.[value.x] ?? null;
+          const bottom = fieldMap[value.y + 1]?.[value.x] ?? null;
+
+          // if(i != 0) map[value.y][value.x] = min + 1;
+          if ([left, right, top, bottom].find(e => e == i2)) {
+            fieldMap[value.y][value.x] = i2 + 1;
+
+            if (left == 0) arr[i + 1]?.push({ y: value.y, x: value.x - 1 });
+            if (right == 0) arr[i + 1]?.push({ y: value.y, x: value.x + 1 });
+            if (top == 0) arr[i + 1]?.push({ y: value.y - 1, x: value.x });
+            if (bottom == 0) arr[i + 1]?.push({ y: value.y + 1, x: value.x });
+          }
+
+
+          if (i2 >= maxValueCords.v - 1) {
+            Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
+          }
+        }
+      }
+    }
+  }
   const data = {
     x: start.x,
     y: start.y
   };
+  if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
   const cords = [];
   siksakki: for (let i = 0; i < 500; i++) {
     const v = fieldMap[data.y][data.x] - 1;
@@ -542,6 +652,22 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
     if (data.y == end.y && data.x == end.x) break siksakki;
   }
   return cords;
+}
+
+function arrowHitsTarget(start: tileObject, end: tileObject) {
+  let path: any = generateArrowPath(start, end);
+  let hits = true;
+  path.forEach((step: any)=>{
+    if (step.enemy) {
+      hits = false;
+      return;
+    }
+    if (step.blocked && !step.player) {
+      hits = false
+      return;
+    }
+  });
+  return hits;
 }
 
 function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boolean = false) {
@@ -598,21 +724,27 @@ function modifyCanvas() {
 }
 
 /* Move to state file later */
-function advanceTurn() {
+async function advanceTurn() {
+  if (player.isDead) return;
   player.updateAbilities();
   state.inCombat = false;
+  turnOver = false;
+  enemiesHadTurn = 0;
   var map = maps[currentMap];
   hideMapHover();
   map.enemies.forEach(enemy => {
-    if (!enemy.alive) return;
+    if (player.isDead) return;
+    if (!enemy.alive) { updateEnemiesTurn(); return; };
     // @ts-ignore
     if (enemy.aggro()) {
       state.inCombat = true;
       enemy.updateAbilities();
       enemy.decideAction();
     }
+    else updateEnemiesTurn();
     enemy.effects();
   });
+  if (map.enemies.length == 0) turnOver = true;
   if (state.inCombat) {
     // Combat regen = 50% of regen
     if (Math.floor(player.hpRegen() * 0.5) > 0 && player.stats.hp < player.getStats().hpMax) {
@@ -634,7 +766,7 @@ function hoverEnemyShow(enemy: enemy) {
   staticHover.style.display = "block";
   const name = document.createElement("p");
   name.classList.add("enemyName");
-  name.textContent = enemy.name;
+  name.textContent = `Lvl ${enemy.level} ${enemy.name}`;
   var mainStatText: string = "";
   // @ts-ignore
   mainStatText += `<f>20px<f><i>${icons.health_icon}<i>Health: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;

@@ -29,7 +29,8 @@ const abilities = {
     action_desc_pl: "focus strike",
     requires_concentration: true,
     icon: "resources/icons/focus_strike.png",
-    use_range: "1"
+    use_range: "1",
+    ai_chance: 3
   },
   true_shot: {
     id: "true_shot",
@@ -45,7 +46,8 @@ const abilities = {
     requires_concentration: true,
     icon: "resources/icons/true_shot.png",
     shoots_projectile: "arrowChargedProjectile",
-    use_range: "10"
+    use_range: "10",
+    ai_chance: 3
   },
   first_aid: {
     id: "first_aid",
@@ -60,7 +62,8 @@ const abilities = {
     requires_concentration: true,
     icon: "resources/icons/first_aid.png",
     use_range: "0",
-    self_target: true
+    self_target: true,
+    ai_chance: 1
   },
   barbarian_rage: {
     id: "barbarian_rage",
@@ -75,7 +78,8 @@ const abilities = {
     line: "RAAAGHH!!!",
     status: "rage",
     use_range: "0",
-    self_target: true
+    self_target: true,
+    ai_chance: 2
   },
   berserk: {
     id: "berserk",
@@ -90,7 +94,8 @@ const abilities = {
     line: "RAAAAAAHHHHH!!!!!",
     status: "berserk",
     use_range: "0",
-    self_target: true
+    self_target: true,
+    ai_chance: 2
   },
   icy_javelin: {
     id: "icy_javelin",
@@ -109,7 +114,8 @@ const abilities = {
     action_desc_pl: "shoot a javelin made of ice at",
     icon: "resources/icons/ice_javelin.png",
     shoots_projectile: "iceSpikedProjectile",
-    use_range: "9"
+    use_range: "9",
+    ai_chance: 2
   },
   shadow_step: {
     id: "shadow_step",
@@ -120,7 +126,8 @@ const abilities = {
     action_desc: "step into a shadow, moving rapidly.",
     action_desc_pl: "steps into a shadow, moving rapidly.",
     icon: "resources/icons/shadow_step.png",
-    use_range: "5"
+    use_range: "5",
+    ai_chance: 0
   },
   charge: {
     id: "charge",
@@ -134,6 +141,41 @@ const abilities = {
     action_desc: "charges at foe.",
     action_desc_pl: "you charge at foe",
     icon: "resources/icons/charge_ability.png",
-    use_range: "8"
-  }
+    use_range: "8",
+    ai_chance: 5
+  },
+  purification: {
+    id: "purification",
+    name: "Purification",
+    mana_cost: 0,
+    cooldown: 22,
+    type: "heal",
+    remove_status: ["poison", "venom", "blighted"],
+    action_desc: "purifies theirself",
+    action_desc_pl: "you purify yourself",
+    icon: "resources/icons/purification.png",
+    use_range: "0",
+    self_target: true,
+    ai_chance: 1
+  },
+  blight: {
+    id: "blight",
+    name: "Blight",
+    mana_cost: 4,
+    cooldown: 5,
+    damages: {
+      dark: 3
+    },
+    status: "blighted",
+    stat_bonus: "int",
+    damage_multiplier: 1,
+    resistance_penetration: 0,
+    type: "attack",
+    action_desc: "blights",
+    action_desc_pl: "blight",
+    icon: "resources/icons/blighted.png",
+    shoots_projectile: "blightProjectile",
+    use_range: "6",
+    ai_chance: 2
+  },
 } as _abb;

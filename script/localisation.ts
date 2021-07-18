@@ -128,8 +128,10 @@ const finnish = {
   // Enemy names
   skeletonWarrior_name: "Luuranko Soturi",
   skeletonArcher_name: "Luuranko Jousimies",
+  skeletonMage_name: "Luuranko Maagi",
   greySlime_name: "Harmaa Lima",
   norsemanBerserk_name: "Pohjoismies Berserkki",
+  norsemanHunter_name: "Pohjoismies Metsästäjä",
 
   // LOG TEXTS
   you: "",
@@ -139,26 +141,49 @@ const finnish = {
   death: "kuoli.",
   damage_from_effect_pl: "<c>white<c>[STATUS] aiheuttaa [ICON][DMG] vahinkoa kehollesi!",
   damage_from_effect: "<c>white<c>[STATUS] aiheuttaa hahmolle [TARGET] [ICON][DMG] vahinkoa.",
+  player_death_log: "OLET KUOLLUT...",
+  cure_pl: "Parannat itsesi!",
+  cure: "[ACTOR] parantaa itsensä.",
+
+  // WORLD TEXTS
+  gained_xp: "Sait [XP] XP!",
+  player_death: "SINUT SURMATTIIN!",
 
   // Damage types
   poison_damage: "Myrkytys",
 
   // Misc
   attack_name: "tavallisten iskujen vahinkoa",
+  cures_statuses: "Parantaa efektit",
+  item_weight: "Paino",
+  item_worth: "Arvo",
+  item_grade: "Taso",
+  resistance: "Puolustus",
+
+  // Grades
+  common: "Yleinen",
+  uncommon: "Epätavallinen",
+  rare: "Harvinainen",
+  mythical: "Myyttinen",
+  legendary: "Legendaarinen",
 
   // Statuses
   effect_poison_name: "Myrkky",
   effect_poison_desc: "Myrkky kiertää veressäsi, \nsyöden voimasi ja terveytesi.",
+  effect_venom_name: "Syvä myrkky",
+  effect_venom_desc: "Myrkytys heikentää kehoasi.",
   effect_rage_name: "Raivo",
   effect_rage_desc: "Hävisit äskettäin kilpailun, \nmutta vain koska vastustajasi huijasi!",
   effect_berserk_name: "Berserkki",
   effect_berserk_desc: "HAKKAA PÄÄLLE POHJANPOIKA!!!",
   effect_dazed_name: "Pökerryksissä",
-  effect_dazed_desc: "Pääsi on sekaisin iskun jäljiltä, \njonka takia et kykene tarkkoihin liikkeisiin",
+  effect_dazed_desc: "Pääsi on sekaisin iskun jäljiltä, \njonka takia et kykene tarkkoihin liikkeisiin.",
+  effect_blighted_name: "Vitsattu",
+  effect_blighted_desc: "Kehosi on heikentynyt vitsauksesta.",
 
   // Abilities and stuff
   attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
-  attack_action_desc: "iskee hahmoa",
+  attack_action_desc: "iskee hahmoa [TARGET], tehden [DMG] vahinkoa.",
   focus_strike_name: "Tarkka Isku",
   focus_strike_desc: "Silmäile kohteesi liikettä tarkasti,\niskien sopivimmalla hetkellä.",
   focus_strike_action_desc_pl: "Isket hahmoa [TARGET] tarkasti koko voimallasi, ja teet [DMG] vahinkoa.",
@@ -178,7 +203,7 @@ const finnish = {
   barbarian_rage_name: "Barbaarin Raivo",
   barbarian_rage_desc: "Aivotyö on ajan tuhlaamista,\nhaluat näkyviä tuloksia HETI!",
   barbarian_rage_action_desc_pl: "Taistelussa ei muuta tarvitse kuin vihata näitä mulkkuja ympärilläsi! HAAA!!",
-  barbarian_rage_action_desc: "[ACTOR] käy kuumana ja alkaa raivota kovaa.",
+  barbarian_rage_action_desc: "käy kuumana ja alkaa raivota kovaa.",
   berserk_name: "Berserkki",
   berserk_desc: "PERRRRRRRRKELE!!!!",
   berserk_action_desc_pl: "NYT KYLLÄ PALO PINNA, ON AIKA PISTÄÄ NÄITÄ HULLUJA KUONOON!!!!!!",
@@ -188,9 +213,15 @@ const finnish = {
   shadow_step_action_desc_pl: "Käytät varjoja hyväksesi, ja liikut haluamaasi suuntaan väläyksessä.",
   shadow_step_action: "käyttää ympäröiviä varjoja liikkuakseen nopeasti.",
   charge_name: "Rynnäkkö",
-  charge_desc: "Ryntää vihollistasi kohti rajusti.",
-  charge_action_desc_pl: "Ryntäät vastustajaa [TARGET] kohti, tehden [DMG] vahinkoa!",
-  charge_action: "ryntää kohti hahmoa [TARGET], aiheuttaen [DMG] vahinkoa.",
+  charge_desc: "Ryntää vihollistasi päin rajusti.",
+  charge_action_desc_pl: "Ryntäät vastustajaa [TARGET] päin, tehden [DMG] vahinkoa!",
+  charge_action_desc: "ryntää päin hahmoa [TARGET], aiheuttaen [DMG] vahinkoa.",
+  purification_name: "Puhdistus",
+  purification_desc: "Puhdista kehosi myrkyistä ja epäpuhtauksista.",
+  blight_name: "Vitsaus",
+  blight_desc: "Kiroa kohteesi vitsauksella.",
+  blight_action_desc_pl: "Vitsaat hahmon [TARGET], tehden [DMG] vahinkoa, ja heikentäen häntä!",
+  blight_action_desc: "vitsaa hahmon [TARGET], aiheuttaen [DMG] vahinkoa, ja heikentäen häntä.",
 } as any;
 
 const english = {
@@ -276,8 +307,10 @@ const english = {
   // Enemy names
   skeletonWarrior_name: "Skeleton Warrior",
   skeletonArcher_name: "Skeleton Archer",
+  skeletonMage_name: "Skeleton Mage",
   greySlime_name: "Grey Slime",
   norsemanBerserk_name: "Norseman Berserker",
+  norsemanHunter_name: "Norseman Hunter",
 
   // LOG TEXTS
   you: "You",
@@ -287,16 +320,38 @@ const english = {
   death: "dies.",
   damage_from_effect_pl: "<c>yellow<c>You<c>white<c> take [ICON][DMG] damage from [STATUS]!",
   damage_from_effect: "<c>white<c>[TARGET] takes [ICON][DMG] damage from [STATUS].",
+  player_death_log: "YOU ARE DEAD...",
+  cure_pl: "<c>yellow<c>You<c>white<c> cure yourself!",
+  cure: "[ACTOR] cures themself.",
+
+
+  // WORLD TEXTS
+  gained_xp: "Gained [XP] XP!",
+  player_death: "YOU WERE KILLED!",
 
   // Damage types
   poison_damage: "Poison",
 
   // Misc
   attack_name: "base attack damage",
+  cures_statuses: "Cures",
+  resistance: "Resistances",
+  item_weight: "Weight",
+  item_worth: "Worth",
+  item_grade: "Grade",
+
+    // Grades
+    common: "Common",
+    uncommon: "Uncommon",
+    rare: "Rare",
+    mythical: "Mythical",
+    legendary: "Legendary",
 
   // Statuses
   effect_poison_name: "Poison",
   effect_poison_desc: "Poison courses through your body, \nweakening and harming you.",
+  effect_venom_name: "Venom",
+  effect_venom_desc: "Venom courses through your body, \nweakening and harming you.",
   effect_rage_name: "Rage",
   effect_rage_desc: "You are slighty upset.",
   effect_berserk_name: "Berserk",
@@ -306,7 +361,7 @@ const english = {
 
   // Abilities and stuff
   attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
-  attack_action_desc: "attacks",
+  attack_action_desc: "attacks [TARGET], dealing [DMG] damage.",
   focus_strike_name: "Focus Strike",
   focus_strike_desc: "Observe your opponent with precision,\nstriking only at the greatest opening.",
   focus_strike_action_desc_pl: "<c>yellow<c>You<c>white<c> focus on your opponents' mistakes, punishing [TARGET] with [DMG] damage.",
@@ -338,5 +393,11 @@ const english = {
   charge_name: "Charge",
   charge_desc: "Charge wildly at your foe.",
   charge_action_desc_pl: "<c>yellow<c>You<c>white<c> charge at [TARGET], dealing [DMG] damage!",
-  charge_action: "charges at [TARGET], dealing [DMG] damage.",
+  charge_action_desc: "charges at [TARGET], dealing [DMG] damage.",
+  purification_name: "Purification",
+  purification_desc: "Purify your body of poisons and other maladies.",
+  blight_name: "Blight",
+  blight_desc: "Blight your foe to weaken them.",
+  blight_action_desc_pl: "<c>yellow<c>You<c>white<c> blight [TARGET], dealing [DMG] damage and weakening them!",
+  blight_action_desc: "blights [TARGET], dealing [DMG] damage and weakening them.",
 } as any;

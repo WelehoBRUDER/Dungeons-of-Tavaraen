@@ -69,7 +69,9 @@ const icons = {
   break_concentration: "resources/icons/break_concentration.png",
   break_concentration_icon: "resources/icons/break_concentration_icon.png",
   sight: "resources/icons/eye_open.png",
-  sight_icon: "resources/icons/sight_icon.png"
+  sight_icon: "resources/icons/sight_icon.png",
+  blight: "resources/icons/blighted.png",
+  blight_icon: "resoures/icons/blighted_icon.png",
 } as icons;
 
 const tiles = [

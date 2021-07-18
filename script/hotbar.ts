@@ -29,7 +29,7 @@ function generateHotbar() {
         if (abiSelected == abi && isSelected) frame.style.border = "4px solid gold";
         abiImg.src = abi.icon;
         tooltip(abiDiv, abiTT(abi));
-        if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)) abiDiv.addEventListener("click", () => useAbi(abi));
+        if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead) abiDiv.addEventListener("click", () => useAbi(abi));
         else {
           abiDiv.style.filter = "brightness(0.25)";
           if (abi.onCooldown > 0) {
@@ -123,7 +123,7 @@ function generateEffects() {
 function abiTT(abi: ability) {
   var txt: string = "";
   txt += `\t<f>26px<f>${lang[abi.id + "_name"]}\t\n`;
-  txt += `<f>21px<f><c>silver<c>"${lang[abi.id + "_desc"]}"\n`;
+  txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"]}"<c>white<c>\n`;
   if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
   if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
   if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
@@ -133,6 +133,13 @@ function abiTT(abi: ability) {
     Object.entries(abi.damages).forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     text = text.substring(0, text.length - 2);
     txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
+  }
+  if(abi.remove_status) {
+    txt += `§<c>white<c><f>20px<f>${lang["cures_statuses"]}: `;
+    abi.remove_status.forEach(stat=>{
+      txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
+    });
+    txt += "\n";
   }
   if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage_multiplier"]}: ${abi.damage_multiplier * 100}%\n`;
   if (abi.resistance_penetration) txt += `<i>${icons.rp_icon}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
@@ -301,6 +308,7 @@ function hideHover() {
 }
 
 window.addEventListener("keyup", e => {
+  if(player.isDead) return;
   const number = parseInt(e.keyCode) - 48;
   if (e.key == "i") {
     renderInventory();
