@@ -23,6 +23,7 @@ class Enemy extends Character {
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;
+        this.img = base.img;
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -38,7 +39,10 @@ class Enemy extends Character {
         }
         this.decideAction = async () => {
             // Will make enemy take their turn
-            // For now just move towards player
+            // Right now AI only randomly chooses an ability and checks if there's any point in using it,
+            // Which is whether or not it'll actually hit the player.
+            // This system already provides plenty of depht, but not truly intelligent foes.
+            // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
             // if(this.hpRemain() <= this.retreatLimit && !this.hasRetreated) {
             //   console.log(this.cords);
@@ -57,9 +61,10 @@ class Enemy extends Character {
             //   if(this.retreatIndex + 1 == this.retreatPath.length) this.hasRetreated = true;
             //   updateEnemiesTurn();
             // }
+            // Choose a random ability
             let chosenAbility = this.chooseAbility();
-            console.log(chosenAbility);
-            if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, player.cords, this.canFly, true) : chosenAbility.use_range >= generateArrowPath(this.cords, player.cords, true)) || chosenAbility.self_target)) {
+            // Check if it should be used
+            if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, player.cords, this.canFly, true) : (chosenAbility.use_range >= generateArrowPath(this.cords, player.cords, true) && arrowHitsTarget(this.cords, player.cords))) || chosenAbility.self_target)) {
                 if (chosenAbility.type == "charge") {
                     moveEnemy(player.cords, this, chosenAbility, chosenAbility.use_range);
                 }
@@ -73,9 +78,11 @@ class Enemy extends Character {
                     regularAttack(this, player, chosenAbility);
                 }
             }
+            // Check if enemy should shoot the player
             else if (this.shootsProjectile && generateArrowPath(this.cords, player.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, player.cords)) {
                 fireProjectile(this.cords, player.cords, this.shootsProjectile, abilities.attack, false, this);
             }
+            // Check if enemy should instead punch the player (and is in range)
             else if (!this.shootsProjectile && generatePath(this.cords, player.cords, this.canFly, true) <= this.attackRange) {
                 // regular attack for now
                 // @ts-ignore
@@ -84,6 +91,7 @@ class Enemy extends Character {
                 regularAttack(this, player, this.abilities[0]);
                 updateEnemiesTurn();
             }
+            // If there's no offensive action to be taken, just move towards the player.
             else {
                 var path = generatePath(this.cords, player.cords, this.canFly);
                 try {

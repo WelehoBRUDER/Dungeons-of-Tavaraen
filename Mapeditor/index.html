@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+  <html lang="fi">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tavaraen Map Editor</title>
+    <link rel="stylesheet" href="styles/edtor.css">
+  </head>
+
+  <body>
+    <div class="mapContainer">
+      <canvas id="mainMap" width="1280px" height="896px"></canvas>
+      <canvas id="enemyLayer" width="1280px" height="896px"></canvas>
+      <canvas id="selecting" width="1280px" height="896px"></canvas>
+    </div>
+    <div id="tileProperties"></div>
+    <div class="leftContainer">
+      <div id="mapButtons">
+        <button id="printMap" onclick="printMap()">PrintMap</button>
+        <button id="importMap" onclick="importMap()">ImportMap</button>
+        <button id="newMap" onclick="createNewMap()">CreateMap</button>
+        <button id="teleport" onclick="tpTo()">Teleport</button>
+  
+        <button id="tilesMenu" onclick=" updateTilesMenu()">TilesMenu</button>
+        <i class="gg-trash" onclick="clearTileSelect()"></i>
+  
+        <button id="cluttersMenu" onclick="updateClutterMenu()">CluttersMenu&emsp;</button>
+        <i class="gg-trash" onclick="clearClutterSelect()"></i>
+        
+        <button id="enemiesMenu" onclick="updateEnemiesMenu()">EnemiesMenu</button>
+      </div>
+      <div id="tilesContainer"></div>
+    </div>
+
+    <div class="enemyInfoContainer" style="display: none">
+      <div class="enemyInfoBox">
+        <div class="valintaPohja"></div>
+        <div class="buttonBox">
+          <button class="done">Done</button>
+          <button class="reset">Reset all</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<div class="sprites">
+  <!-- Player Sprites -->
+
+  <!-- Auras -->
+  <img src="resources/tiles/player/red_mist_aura.png" alt=""  class="redMist sprite">
+
+  <!-- Body Models  -->
+  <img src="resources/tiles/player/human_model.png" alt=""  class="humanModel sprite">
+  <img src="resources/tiles/player/elf_model.png" alt=""  class="elfModel sprite">
+  <img src="resources/tiles/player/orc_model.png" alt=""  class="orcModel sprite">
+  <img src="resources/tiles/player/ashen_model.png" alt=""  class="ashenModel sprite">
+  <img src="resources/tiles/player/death.png" alt=""  class="deadModel sprite">
+
+  <!-- Ears -->
+  <img src="resources/tiles/player/human_ears.png" alt=""  class="humanEars sprite">
+  <img src="resources/tiles/player/elf_ears.png" alt=""  class="elfEars sprite">
+  <img src="resources/tiles/player/orc_ears.png" alt=""  class="orcEars sprite">
+  <img src="resources/tiles/player/ashen_ears.png" alt=""  class="ashenEars sprite">
+
+   <!-- Hair  -->
+  <img src="resources/tiles/player/hair_1.png" alt=""  class="hair1 sprite">
+  <img src="resources/tiles/player/hair_2.png" alt=""  class="hair2 sprite">
+  <img src="resources/tiles/player/hair_3.png" alt=""  class="hair3 sprite">
+  <img src="resources/tiles/player/hair_4.png" alt=""  class="hair4 sprite">
+   <!-- Eyes  -->
+  <img src="resources/tiles/player/eyes_1.png" alt=""  class="eyes1 sprite">
+  <img src="resources/tiles/player/eyes_2.png" alt=""  class="eyes2 sprite">
+   <!-- Faces  -->
+  <img src="resources/tiles/player/nose_mouth_1.png" alt=""  class="face1 sprite">
+   <!-- Clothes  -->
+  <img src="resources/tiles/player/generic_pants.png" alt=""  class="defaultPants sprite">
+  <img src="resources/tiles/player/ragged_shirt.png" alt=""  class="raggedShirt sprite">
+  <img src="resources/tiles/player/ragged_boots.png" alt=""  class="raggedBoots sprite">
+
+  <!-- Weapons -->
+  <img src="resources/tiles/player/dagger_model.png" alt=""  class="rustyDagger sprite">
+  <img src="resources/tiles/player/stick_model.png" alt=""  class="stick sprite">
+  <img src="resources/tiles/player/bow_model.png" alt=""  class="bow sprite">
+  <img src="resources/tiles/player/blade_model.png" alt=""  class="blade sprite">
+  <img src="resources/tiles/player/chipped_blade_model.png" alt=""  class="chippedBlade sprite">
+  <img src="resources/tiles/player/chipped_axe_model.png" alt=""  class="chippedAxe sprite">
+
+  <!-- Projectiles -->
+  <img src="resources/tiles/projectiles/arrow.png" alt=""  class="arrowProjectile sprite">
+  <img src="resources/tiles/projectiles/arrowCharged.png" alt=""  class="arrowChargedProjectile sprite">
+  <img src="resources/tiles/projectiles/iceSpike.png" alt=""  class="iceSpikedProjectile sprite">
+  <img src="resources/tiles/projectiles/hunterJavelin.png" alt=""  class="hunterJavelinProjectile sprite">
+  <img src="resources/tiles/projectiles/blight.png" alt=""  class="blightProjectile sprite">
+
+  <!-- Enemies -->
+  <img src="resources/tiles/enemies/grey_slime.png" alt=""  class="greySlime sprite">
+  <img src="resources/tiles/enemies/skeleton_warrior.png" alt=""  class="skeletonWarrior sprite">
+  <img src="resources/tiles/enemies/skeleton_archer.png" alt=""  class="skeletonArcher sprite">
+  <img src="resources/tiles/enemies/skeleton_mage.png" alt=""  class="skeletonMage sprite">
+  <img src="resources/tiles/enemies/norseman_berserk.png" alt=""  class="norsemanBerserk sprite">
+  <img src="resources/tiles/enemies/norseman_hunter.png" alt=""  class="norsemanHunter sprite">
+
+  <!-- Health & Mana Bars -->
+  <img src="resources/tiles/enemies/healthBackground.png" alt=""  class="hpBg sprite">
+  <img src="resources/tiles/enemies/healthBar.png" alt=""  class="hpBar sprite">
+  <img src="resources/tiles/enemies/healthBorder.png" alt=""  class="hpBorder sprite">
+
+   <!-- Map Tiles  -->
+   <img src="resources/tiles/hovering.png" alt=""  class="hoverTile sprite">
+   <img src="resources/tiles/void.png" alt=""  class="tileVOID sprite">
+   <img src="resources/tiles/fog_of_war_2.png" alt=""  class="tileNoVision sprite">
+   <img src="resources/tiles/highlight.png" alt=""  class="tileHIGHLIGHT sprite">
+   <img src="resources/tiles/highlight_red.png" alt=""  class="tileHIGHLIGHT_RED sprite">
+   <img src="resources/tiles/highlight2.png" alt=""  class="tileHIGHLIGHT2 sprite">
+   <img src="resources/tiles/highlight2_red.png" alt=""  class="tileHIGHLIGHT2_RED sprite">
+   <img src="resources/tiles/shrine.png" alt="" class="shrineTile sprite">
+   <img src="resources/tiles/shrine_lit.png" alt="" class="shrineLitTile sprite">
+   <img src="resources/tiles/water.png" alt=""  class="tile0 sprite">
+   <img src="resources/tiles/grass.png" alt=""  class="tile1 sprite">
+   <img src="resources/tiles/dirt.png" alt="" class="tile2 sprite">
+   <img src="resources/tiles/pond_water.png" alt="" class="tile3 sprite">
+   <img src="resources/tiles/gravel.png" alt="" class="tile4 sprite">
+   <img src="resources/tiles/cobble_flooring.png" alt="" class="tile5 sprite">
+   <img src="resources/tiles/dungeon_wall.png" alt=""class="tile6 sprite">
+
+  <!-- Clutters -->
+  <img src="resources/tiles/tree_1.png" alt=""  class="clutter1 sprite">
+  <img src="resources/tiles/tree_2.png" alt=""  class="clutter2 sprite">
+</div>
+
+
+<script src="scripts/spreadSheets.js"></script>
+<script src="../resources/compiledJS/script/ability.js"></script>
+<script src="../resources/compiledJS/script/character.js"></script>
+<script src="../resources/compiledJS/arrays/abilities.js"></script>
+<script src="../resources/compiledJS/arrays/enemies.js"></script>
+<script src="../resources/compiledJS/script/enemy.js"></script>
+<script src="../resources/compiledJS/arrays/tiles.js"></script>
+<script src="../resources/compiledJS/arrays/maps.js"></script>
+<script src="scripts/editor.js"></script>

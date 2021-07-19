@@ -76,31 +76,68 @@ const icons = {
 
 const tiles = [
   {
-    name: "Tile 1",
-    img: "resources/tiles/tile1.png",
+    name: "Water",
+    img: "resources/tiles/water.png",
     sprite: ".tile0",
     isLedge: true,
     isWall: false
   },
   {
-    name: "Tile 2",
-    img: "resources/tiles/tile2.png",
+    name: "Grass",
+    img: "resources/tiles/grass.png",
     sprite: ".tile1",
     isLedge: false,
     isWall: false
-  }
+  },
+  {
+    name: "Dirt",
+    img: "resources/tiles/dirt.png",
+    sprite: ".tile2",
+    isLedge: false,
+    isWall: false
+  },
+  {
+    name: "Pond",
+    img: "resources/tiles/pond_water.png",
+    sprite: ".tile3",
+    isLedge: false,
+    isWall: false
+  },
+  {
+    name: "Gravel",
+    img: "resources/tiles/gravel.png",
+    sprite: ".tile4",
+    isLedge: false,
+    isWall: false
+  },
+  {
+    name: "Cobble",
+    img: "resources/tiles/cobble_flooring.png",
+    sprite: ".tile5",
+    isLedge: false,
+    isWall: false
+  },
+  {
+    name: "Dungeon Wall",
+    img: "resources/tiles/dungeon_wall.png",
+    sprite: ".tile6",
+    isLedge: false,
+    isWall: true
+  },
 ];
 
 const clutters = [
   {
     name: "Nothing",
+    img: "resources/tiles/void.png",
+    sprite: ".tileVOID",
     isWall: false
   },
   {
     name: "Tree 1",
     img: "resources/tiles/tree_1.png",
     sprite: ".clutter1",
-    isWall: true
+    isWall: true,
   },
   {
     name: "Tree 2",

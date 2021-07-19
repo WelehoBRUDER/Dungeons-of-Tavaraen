@@ -237,6 +237,7 @@ class PlayerCharacter extends Character {
       if(goldLoss > 0) spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
       this.grave = {cords: this.cords, xp: xpLoss, gold: goldLoss};
       setTimeout(modifyCanvas, 300);
+      //displayText("PAINA [R] JA RESPAWNAAT");
       updateUI();
     }
   }
@@ -430,7 +431,8 @@ var player = new PlayerCharacter({
     new statEffect({...statusEffects.poison}, s_def)
   ],
   inventory: [],
-  gold: 50
+  gold: 50,
+  respawnPoint: {cords: {}}
 });
 
 var randomProperty = function (obj) {

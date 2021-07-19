@@ -149,6 +149,15 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     if(ability.status) {
       target.statusEffects.push(new statEffect({...statusEffects[ability.status]}, s_def));
     }
+    setTimeout((paskaFixi: null)=>{
+      const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
+      layer.style.animation = 'none';
+      // @ts-ignore
+      layer.offsetHeight; /* trigger reflow */
+      // @ts-ignore
+      layer.style.animation = null;
+      layer.style.animationName = `charHurt`;
+    }, 160);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
@@ -203,6 +212,15 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     if(ability.status) {
       target.statusEffects.push(new statEffect({...statusEffects[ability.status]}, s_def));
     }
+    const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
+    setTimeout((paskaFixi: null)=>{
+      layer.style.animation = 'none';
+      // @ts-ignore
+      layer.offsetHeight; /* trigger reflow */
+      // @ts-ignore
+      layer.style.animation = null;
+      layer.style.animationName = `screenHurt`;
+    }, 160);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
@@ -260,6 +278,23 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   canvas.width = innerWidth;
   canvas.height = innerHeight;
   projectileLayers.append(canvas);
+  if(isPlayer) {
+    const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
+    layer.style.animation = 'none';
+    // @ts-ignore
+    layer.offsetHeight; /* trigger reflow */
+    // @ts-ignore
+    layer.style.animation = null;
+    layer.style.animationName = `shakeObject`;
+  } else {
+    const layer = document.querySelector<HTMLCanvasElement>(`.enemy${maps[currentMap].enemies.findIndex(e=>e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+    layer.style.animation = 'none';
+    // @ts-ignore
+    layer.offsetHeight; /* trigger reflow */
+    // @ts-ignore
+    layer.style.animation = null;
+    layer.style.animationName = `shakeObject`;
+  }
   for (let step of path) {
     await sleep(70);
     const { screenX: x, screenY: y } = tileCordsToScreen(step);

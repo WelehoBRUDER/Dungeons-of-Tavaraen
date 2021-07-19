@@ -38,6 +38,7 @@ interface mapObject {
   clutter: Array<number[][]>,
   enemies: Array<[]>;
   playerGrave: any;
+  shrines: Array<any>;
 }
 interface tileObject {
   x: number;
@@ -111,6 +112,17 @@ function renderMap(map: mapObject) {
       }
     }
   }
+
+  map.shrines.forEach((checkpoint: any)=>{
+    if((sightMap[checkpoint.cords.y]?.[checkpoint.cords.x] == "x")) {
+      const shrine = document.querySelector<HTMLImageElement>(".shrineTile");
+      const shrineLit = document.querySelector<HTMLImageElement>(".shrineLitTile");
+      var tileX = (checkpoint.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var tileY = (checkpoint.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      if(player?.respawnPoint?.cords.x == checkpoint.cords.x && player?.respawnPoint?.cords.y == checkpoint.cords.y) baseCtx?.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
+      else baseCtx?.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
+    }
+  })
 
   /* Render Enemies */
   enemyLayers.textContent = ""; // Delete enemy canvases
@@ -348,6 +360,7 @@ document.addEventListener("keyup", (keyPress) => {
 document.addEventListener("keyup", (kbe: KeyboardEvent) => {
   // Believe it or not, this is the space key!
   if (kbe.key == " ") {
+    activateShrine();
     pickLoot();
   }
 });
@@ -781,4 +794,16 @@ function hoverEnemyShow(enemy: enemy) {
 function hideMapHover() {
   staticHover.textContent = "";
   staticHover.style.display = "none";
+}
+
+function activateShrine() {
+  maps[currentMap].shrines.forEach(shrine=>{
+    if(shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
+        player.stats.hp = player.getStats().hpMax;
+        player.stats.mp = player.getStats().mpMax;
+        player.respawnPoint.cords = shrine.cords;
+        updateUI();
+        modifyCanvas();
+    }
+  })
 }

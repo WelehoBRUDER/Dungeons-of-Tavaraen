@@ -337,6 +337,15 @@ function hideHover() {
     tooltipBox.style.display = "none";
 }
 window.addEventListener("keyup", e => {
+    // if(e.key == "r") {
+    //   if(player.isDead) {
+    //     player.cords.x = player.respawnPoint.cords.x;
+    //     player.cords.y = player.respawnPoint.cords.y;
+    //     player.isDead = false;
+    //     activateShrine();
+    //     displayText("HERÄSIT KUOLLEISTA!");
+    //   }
+    // }
     if (player.isDead)
         return;
     const number = parseInt(e.keyCode) - 48;

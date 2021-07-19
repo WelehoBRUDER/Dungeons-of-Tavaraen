@@ -92,6 +92,19 @@ function renderMap(map) {
             }
         }
     }
+    map.shrines.forEach((checkpoint) => {
+        var _a, _b, _c;
+        if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
+            const shrine = document.querySelector(".shrineTile");
+            const shrineLit = document.querySelector(".shrineLitTile");
+            var tileX = (checkpoint.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (checkpoint.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            if (((_b = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _b === void 0 ? void 0 : _b.cords.x) == checkpoint.cords.x && ((_c = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _c === void 0 ? void 0 : _c.cords.y) == checkpoint.cords.y)
+                baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
+            else
+                baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
+        }
+    });
     /* Render Enemies */
     enemyLayers.textContent = ""; // Delete enemy canvases
     map.enemies.forEach((enemy, index) => {
@@ -350,6 +363,7 @@ document.addEventListener("keyup", (keyPress) => {
 document.addEventListener("keyup", (kbe) => {
     // Believe it or not, this is the space key!
     if (kbe.key == " ") {
+        activateShrine();
         pickLoot();
     }
 });
@@ -839,5 +853,16 @@ function hoverEnemyShow(enemy) {
 function hideMapHover() {
     staticHover.textContent = "";
     staticHover.style.display = "none";
+}
+function activateShrine() {
+    maps[currentMap].shrines.forEach(shrine => {
+        if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
+            player.stats.hp = player.getStats().hpMax;
+            player.stats.mp = player.getStats().mpMax;
+            player.respawnPoint.cords = shrine.cords;
+            updateUI();
+            modifyCanvas();
+        }
+    });
 }
 //# sourceMappingURL=map.js.map
