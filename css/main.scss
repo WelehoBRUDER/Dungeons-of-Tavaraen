@@ -26,7 +26,7 @@ body {
   background-size: cover;
   background-position: center;
 
-  animation-duration: 0.22s;
+  animation-duration: 0.15s;
 
   $redBgSolid: url("../resources/ui/large_background_red.png");
   $greyBgSolid: url("../resources/ui/large_background_grey.png");
@@ -48,7 +48,7 @@ body {
       left: 0;
       top: 0;
       z-index: inherit;
-      animation-duration: 0.16s;
+      animation-duration: 0.11s;
     }
 
     :not(.baseSheet) {
@@ -526,6 +526,7 @@ body {
     transition: 0.25s;
     transition-timing-function: ease-in;
     width: auto;
+    max-width: 20vw;
     height: 55%;
     position: absolute;
     left: 0;
@@ -544,14 +545,15 @@ body {
       margin-bottom: 0px;
       span {
         color: white;
-        font-size: 22px;
+        font-size: 15px;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        white-space: nowrap;
+        white-space: normal;
         text-shadow: 0px 0px 8px black;
+        margin: 0;
       }
 
       img {
-        width: 28px;
+        width: 18px;
         vertical-align: middle;
       }
     }

@@ -23,6 +23,7 @@ interface playerChar extends characterObject {
   grave: any;
   respawnPoint: any;
   gold: number;
+  usedShrines: Array<any>;
 }
 
 interface levelObject {
@@ -144,6 +145,7 @@ class PlayerCharacter extends Character {
   grave: any;
   respawnPoint: any;
   gold: number;
+  usedShrines: Array<any>;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -168,6 +170,7 @@ class PlayerCharacter extends Character {
     this.grave = base.grave ?? null;
     this.respawnPoint = base.respawnPoint ?? null // need to add default point, or this might soft lock
     this.gold = base.gold ?? 0;
+    this.usedShrines = base.usedShrines ?? [];
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
@@ -193,7 +196,6 @@ class PlayerCharacter extends Character {
         this.inventory.push(this[slot]);
       };
       Object.entries(this[slot].commands).forEach(cmd=>{
-        console.log("h");
         if(cmd[0].includes("ability_")) {
           commandRemoveAbility(cmd);
         }
@@ -226,6 +228,7 @@ class PlayerCharacter extends Character {
     }
 
     this.kill = () => {
+      if(this.isDead) return;
       // handle death logic once we get there ;)
       this.isDead = true;
       displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
@@ -235,9 +238,10 @@ class PlayerCharacter extends Character {
       this.gold -= goldLoss;
       if(xpLoss > 0) spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
       if(goldLoss > 0) spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
-      this.grave = {cords: this.cords, xp: xpLoss, gold: goldLoss};
+      this.grave = {cords: {...this.cords}, xp: xpLoss, gold: goldLoss};
+      this.usedShrines = [];
       setTimeout(modifyCanvas, 300);
-      //displayText("PAINA [R] JA RESPAWNAAT");
+      displayText("PAINA [R] JA RESPAWNAAT");
       updateUI();
     }
   }
@@ -432,7 +436,8 @@ var player = new PlayerCharacter({
   ],
   inventory: [],
   gold: 50,
-  respawnPoint: {cords: {}}
+  respawnPoint: {cords: {x: 4, y: 4}},
+  usedShrines: []
 });
 
 var randomProperty = function (obj) {

@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -95,6 +95,7 @@ class PlayerCharacter extends Character {
         this.grave = (_t = base.grave) !== null && _t !== void 0 ? _t : null;
         this.respawnPoint = (_u = base.respawnPoint) !== null && _u !== void 0 ? _u : null; // need to add default point, or this might soft lock
         this.gold = (_v = base.gold) !== null && _v !== void 0 ? _v : 0;
+        this.usedShrines = (_w = base.usedShrines) !== null && _w !== void 0 ? _w : [];
         this.hpRegen = () => {
             const { v: val, m: mod } = getModifiers(this, "hpRegen");
             return Math.floor((val) * mod);
@@ -119,7 +120,6 @@ class PlayerCharacter extends Character {
             }
             ;
             Object.entries(this[slot].commands).forEach(cmd => {
-                console.log("h");
                 if (cmd[0].includes("ability_")) {
                     commandRemoveAbility(cmd);
                 }
@@ -149,6 +149,8 @@ class PlayerCharacter extends Character {
             return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
         };
         this.kill = () => {
+            if (this.isDead)
+                return;
             // handle death logic once we get there ;)
             this.isDead = true;
             displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
@@ -160,9 +162,10 @@ class PlayerCharacter extends Character {
                 spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
             if (goldLoss > 0)
                 spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
-            this.grave = { cords: this.cords, xp: xpLoss, gold: goldLoss };
+            this.grave = { cords: Object.assign({}, this.cords), xp: xpLoss, gold: goldLoss };
+            this.usedShrines = [];
             setTimeout(modifyCanvas, 300);
-            //displayText("PAINA [R] JA RESPAWNAAT");
+            displayText("PAINA [R] JA RESPAWNAAT");
             updateUI();
         };
     }
@@ -346,7 +349,8 @@ var player = new PlayerCharacter({
     ],
     inventory: [],
     gold: 50,
-    respawnPoint: { cords: {} }
+    respawnPoint: { cords: { x: 4, y: 4 } },
+    usedShrines: []
 });
 var randomProperty = function (obj) {
     var keys = Object.keys(obj);

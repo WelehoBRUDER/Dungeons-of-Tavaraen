@@ -100,9 +100,7 @@ class Enemy extends Character {
                     if (settings.log_enemy_movement)
                         displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${this.name} <c>white<c>moves to [${this.cords.x}, ${this.cords.y}]`);
                 }
-                catch (_a) {
-                    console.warn("Enemy pathfinding can't find correct path!");
-                }
+                catch (_a) { }
                 updateEnemiesTurn();
             }
             setTimeout(modifyCanvas, 200);

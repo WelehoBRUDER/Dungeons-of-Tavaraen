@@ -337,15 +337,24 @@ function hideHover() {
     tooltipBox.style.display = "none";
 }
 window.addEventListener("keyup", e => {
-    // if(e.key == "r") {
-    //   if(player.isDead) {
-    //     player.cords.x = player.respawnPoint.cords.x;
-    //     player.cords.y = player.respawnPoint.cords.y;
-    //     player.isDead = false;
-    //     activateShrine();
-    //     displayText("HERÄSIT KUOLLEISTA!");
-    //   }
-    // }
+    if (e.key == "r") {
+        if (player.isDead) {
+            player.cords.x = player.respawnPoint.cords.x;
+            player.cords.y = player.respawnPoint.cords.y;
+            player.isDead = false;
+            player.stats.hp = player.getStats().hpMax;
+            player.stats.mp = player.getStats().mpMax;
+            state.inCombat = false;
+            isSelected = false;
+            abiSelected = {};
+            enemiesHadTurn = 0;
+            turnOver = true;
+            updateUI();
+            modifyCanvas();
+            displayText("HERÄSIT KUOLLEISTA!");
+            spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+        }
+    }
     if (player.isDead)
         return;
     const number = parseInt(e.keyCode) - 48;

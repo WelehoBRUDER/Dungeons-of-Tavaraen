@@ -329,7 +329,20 @@ function createSightMap(start, size) {
         return "0";
     }));
 }
+function cordsFromDir(cords, dir) {
+    let cord = Object.assign({}, cords);
+    if (dir == "up")
+        cord.y--;
+    else if (dir == "down")
+        cord.y++;
+    else if (dir == "left")
+        cord.x--;
+    else if (dir == "right")
+        cord.x++;
+    return cord;
+}
 document.addEventListener("keyup", (keyPress) => {
+    var _a;
     if (!turnOver || player.isDead)
         return;
     let dirs = { w: "up", s: "down", a: "left", d: "right" };
@@ -358,6 +371,18 @@ document.addEventListener("keyup", (keyPress) => {
             if (Math.floor(player.hpRegen() * 0.5) > 0)
                 displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
         }
+        else {
+            let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+            if (target) {
+                // @ts-expect-error
+                attackTarget(player, target, weaponReach(player, player.weapon.range, target));
+                if (weaponReach(player, player.weapon.range, target)) {
+                    regularAttack(player, target, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
+                    player.effects();
+                    advanceTurn();
+                }
+            }
+        }
     }
 });
 document.addEventListener("keyup", (kbe) => {
@@ -377,7 +402,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
     isSelected = false;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
-            await sleep(45);
+            await sleep(30);
             player.cords.x = step.x;
             player.cords.y = step.y;
             modifyCanvas();
@@ -395,7 +420,6 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         if (count > 0)
             displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
         if (state.inCombat && count == 1) {
-            console.log(Math.floor(player.hpRegen() * 0.5) > 0);
             if (Math.floor(player.hpRegen() * 0.5) > 0)
                 displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
         }
@@ -434,30 +458,6 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
             enemy.cords.x = step.x;
             enemy.cords.y = step.y;
             modifyCanvas();
-            // canvas.width = canvas.width;
-            // if (enemyImg && (sightMap[enemy.cords.y]?.[enemy.cords.x] == "x")) {
-            //   var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            //   var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-            //   /* Render hp bar */
-            //   const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
-            //   const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
-            //   const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-            //   ctx?.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-            //   ctx?.drawImage(hpbar, tileX, tileY - 12, enemy.statRemaining("hp") * spriteSize / 100, spriteSize);
-            //   ctx?.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
-            //   /* Render enemy on top of hp bar */
-            //   ctx?.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
-            //   let statCount = 0;
-            //   enemy.statusEffects.forEach((effect: statEffect) => {
-            //     if (statCount > 4) return;
-            //     const img = new Image(32, 32);
-            //     img.src = effect.icon;
-            //     img.addEventListener("load", e => {
-            //       ctx?.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
-            //       statCount++;
-            //     });
-            //   });
-            //
             count++;
             if (count > maxRange)
                 break moving;
@@ -625,7 +625,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     } });
     if (distanceOnly) {
         let newDistance = distance;
-        if (Math.abs(start.x - end.x) == Math.abs(start.y - end.y))
+        if ((Math.abs(start.x - end.x) == Math.abs(start.y - end.y)) && distance < 3)
             newDistance = Math.round(newDistance / 2);
         return newDistance;
     }
@@ -857,11 +857,18 @@ function hideMapHover() {
 function activateShrine() {
     maps[currentMap].shrines.forEach(shrine => {
         if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
-            player.stats.hp = player.getStats().hpMax;
-            player.stats.mp = player.getStats().mpMax;
-            player.respawnPoint.cords = shrine.cords;
-            updateUI();
-            modifyCanvas();
+            if (!(player.usedShrines.find((used) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
+                player.stats.hp = player.getStats().hpMax;
+                player.stats.mp = player.getStats().mpMax;
+                player.respawnPoint.cords = shrine.cords;
+                player.usedShrines.push({ cords: shrine.cords, map: currentMap });
+                spawnFloatingText(player.cords, lang["shrine_activated"], "lime", 30, 500, 75);
+                updateUI();
+                modifyCanvas();
+            }
+            else {
+                spawnFloatingText(player.cords, lang["shrine_used"], "cyan", 30, 500, 75);
+            }
         }
     });
 }

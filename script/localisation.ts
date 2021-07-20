@@ -159,6 +159,10 @@ const finnish = {
   item_worth: "Arvo",
   item_grade: "Taso",
   resistance: "Puolustus",
+  status_effects: "Tila efektit",
+  encumbrance: "Taakka",
+  shrine_activated: "Pyhäkkö aktivoitu!",
+  shrine_used: "Pyhäkön voimat ovat jo kulutettu...",
 
   // Grades
   common: "Yleinen",
@@ -339,6 +343,10 @@ const english = {
   item_weight: "Weight",
   item_worth: "Worth",
   item_grade: "Grade",
+  status_effects: "Status effects",
+  encumbrance: "Encumbrance",
+  shrine_activated: "Shrine activated!",
+  shrine_used: "Shrine's power has already been spent...",
 
     // Grades
     common: "Common",

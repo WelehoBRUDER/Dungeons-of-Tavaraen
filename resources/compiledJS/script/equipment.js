@@ -263,7 +263,7 @@ function renderInventory() {
             inventory.querySelector("." + slot).append(img, name);
         }
     });
-    inventory.querySelector(".enc").textContent = `Encumbrance: ${player.carryingWeight()}/${player.maxCarryWeight()}`;
+    inventory.querySelector(".enc").textContent = `${lang["encumbrance"]}: ${player.carryingWeight()}/${player.maxCarryWeight()}`;
     const itemsArea = inventory.querySelector(".items");
     itemsArea.textContent = "";
     itemsArea.append(createItems(player.inventory));

@@ -150,6 +150,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       target.statusEffects.push(new statEffect({...statusEffects[ability.status]}, s_def));
     }
     setTimeout((paskaFixi: null)=>{
+      if(!enemyIndex(target.cords)) return;
       const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
       layer.style.animation = 'none';
       // @ts-ignore
@@ -157,7 +158,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       // @ts-ignore
       layer.style.animation = null;
       layer.style.animationName = `charHurt`;
-    }, 160);
+    }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
@@ -220,7 +221,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       // @ts-ignore
       layer.style.animation = null;
       layer.style.animationName = `screenHurt`;
-    }, 160);
+    }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
@@ -296,11 +297,11 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animationName = `shakeObject`;
   }
   for (let step of path) {
-    await sleep(70);
+    await sleep(50);
     const { screenX: x, screenY: y } = tileCordsToScreen(step);
     if (step.enemy) {
       collision({ x: step.x, y: step.y }, ability, isPlayer, player);
-      if(isPlayer) setTimeout(advanceTurn, 70);
+      if(isPlayer) setTimeout(advanceTurn, 50);
       else updateEnemiesTurn();
       break;
     }
@@ -310,7 +311,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       break;
     }
     if (step.blocked) {
-      if(isPlayer) setTimeout(advanceTurn, 70);
+      if(isPlayer) setTimeout(advanceTurn, 50);
       else updateEnemiesTurn();
       break;
     }
