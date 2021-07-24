@@ -423,6 +423,8 @@ document.addEventListener("keyup", (kbe) => {
         pickLoot();
     }
 });
+let isMovingCurrently = false;
+let breakMoving = false;
 async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
     if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1)
         return;
@@ -431,9 +433,12 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
     const path = generatePath(player.cords, goal, false);
     let count = 0;
     isSelected = false;
+    if (isMovingCurrently)
+        breakMoving = true;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
             await sleep(30);
+            isMovingCurrently = true;
             player.cords.x = step.x;
             player.cords.y = step.y;
             modifyCanvas();
@@ -443,10 +448,12 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
                 updateUI();
             }
             count++;
-            if (state.inCombat && !ability || count > maxRange && ability)
+            if (state.inCombat && !ability || count > maxRange && ability || breakMoving)
                 break moving;
         }
     }
+    breakMoving = false;
+    isMovingCurrently = false;
     if (!ability) {
         if (count > 0)
             displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
