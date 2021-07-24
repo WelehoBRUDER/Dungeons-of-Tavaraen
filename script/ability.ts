@@ -19,6 +19,8 @@ interface ability {
   requires_melee_weapon?: boolean;
   requires_ranged_weapon?: boolean;
   requires_concentration?: boolean;
+  aoe_size?: number;
+  aoe_effect?: string;
   self_target?: boolean;
   statusModifiers?: any;
   action_desc: string;
@@ -34,6 +36,7 @@ const straight_modifiers = [
   "base_heal",
   "damage_multiplier",
   "use_range",
+  "aoe_size",
 ];
 
 const less_is_better = {
@@ -85,6 +88,8 @@ class Ability {
   requires_melee_weapon?: boolean;
   requires_ranged_weapon?: boolean;
   requires_concentration?: boolean;
+  aoe_size?: number;
+  aoe_effect?: string;
   self_target?: boolean;
   statusModifiers?: any;
   action_desc: string;
@@ -116,6 +121,8 @@ class Ability {
     this.requires_melee_weapon = baseAbility.requires_melee_weapon ?? false;
     this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
     this.requires_concentration = baseAbility.requires_concentration ?? false;
+    this.aoe_size = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif ?? 0;
+    this.aoe_effect = baseAbility.aoe_effect ?? "";
     this.self_target = baseAbility.self_target ?? false;
     this.statusModifiers = statusModifiers;
     this.action_desc = baseAbility.action_desc;

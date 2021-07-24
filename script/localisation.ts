@@ -64,6 +64,7 @@ const finnish = {
   use_range: "Käyttö matka",
   damage_multiplier: "Vahingon kerroin",
   resistance_penetration: "Puolustuksen läpäisy",
+  aoe_size: "Vahinkoalueen koko",
   yes: "kyllä",
   no: "ei",
   tiles: "tiiliä",
@@ -204,6 +205,7 @@ const finnish = {
   icy_javelin_desc: "Ammu jäästä tehty keihäs vihollistasi päin.",
   icy_javelin_action_desc_pl: "Ammut jäästä tehdyn keihään kohti hahmoa [TARGET], tehden [DMG] vahinkoa.",
   icy_javelin_action_desc: "ampuu jäästä tehdyn keihään kohti hahmoa [TARGET], aiheuttaen [DMG] vahinkoa.",
+  icy_javelin_action_desc_aoe_pl: "[TARGET] ottaa [DMG] vahinkoa räjähdyksen voimasta!",
   barbarian_rage_name: "Barbaarin Raivo",
   barbarian_rage_desc: "Aivotyö on ajan tuhlaamista,\nhaluat näkyviä tuloksia HETI!",
   barbarian_rage_action_desc_pl: "Taistelussa ei muuta tarvitse kuin vihata näitä mulkkuja ympärilläsi! HAAA!!",
@@ -226,6 +228,10 @@ const finnish = {
   blight_desc: "Kiroa kohteesi vitsauksella.",
   blight_action_desc_pl: "Vitsaat hahmon [TARGET], tehden [DMG] vahinkoa, ja heikentäen häntä!",
   blight_action_desc: "vitsaa hahmon [TARGET], aiheuttaen [DMG] vahinkoa, ja heikentäen häntä.",
+  fireball_name: "Tulipallo",
+  fireball_desc: "Heitä tulinen räjähde vihollistesi suuntaan \nja sytytä kaikki kohteesi liekkeihin.",
+  fireball_action_desc_pl: "Lähetät tulisen ammuksen kohti vastustajiesi turmiota!",
+  fireball_action_desc_aoe_pl: "[TARGET] paistuu räjähtävissä liekeissä, ottaen [DMG] vahinkoa!"
 } as any;
 
 const english = {
@@ -292,6 +298,7 @@ const english = {
   use_range: "Use Range",
   damage_multiplier: "Damage Multiplier",
   resistance_penetration: "Resistance Penetration",
+  aoe_size: "Area of Effect",
   yes: "yes",
   no: "no",
   tiles: "tiles",
@@ -408,4 +415,8 @@ const english = {
   blight_desc: "Blight your foe to weaken them.",
   blight_action_desc_pl: "<c>yellow<c>You<c>white<c> blight [TARGET], dealing [DMG] damage and weakening them!",
   blight_action_desc: "blights [TARGET], dealing [DMG] damage and weakening them.",
+  fireball_name: "Fireball",
+  fireball_desc: "Incinerate your foes with a flaming ball of destruction.",
+  fireball_action_desc_pl: "You throw a fiery ball towards your foes!",
+  fireball_action_desc_aoe_pl: "[TARGET] is burned by the blast, causing [DMG] damage!"
 } as any;

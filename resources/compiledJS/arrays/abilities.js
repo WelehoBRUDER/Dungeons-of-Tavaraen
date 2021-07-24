@@ -114,6 +114,28 @@ const abilities = {
         use_range: "9",
         ai_chance: 2
     },
+    fireball: {
+        id: "fireball",
+        name: "Fireball",
+        mana_cost: 30,
+        cooldown: 5,
+        damages: {
+            crush: 3,
+            fire: 17
+        },
+        stat_bonus: "int",
+        damage_multiplier: 1,
+        resistance_penetration: 0,
+        type: "attack",
+        action_desc: "shoots a ball made of fire at",
+        action_desc_pl: "shoot a ball made of fire at",
+        icon: "resources/icons/fireball_spell.png",
+        shoots_projectile: "fireballProjectile",
+        aoe_size: 2.1,
+        aoe_effect: "fireAOE",
+        use_range: "9",
+        ai_chance: 2
+    },
     shadow_step: {
         id: "shadow_step",
         name: "Shadow Step",

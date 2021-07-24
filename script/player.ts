@@ -420,7 +420,8 @@ var player = new PlayerCharacter({
     new Ability({...abilities.shadow_step, equippedSlot: 6}, dummy),
     new Ability({...abilities.charge, equippedSlot: 7}, dummy),
     new Ability({...abilities.purification, equippedSlot: 8}, dummy),
-    new Ability({...abilities.blight, equippedSlot: 9}, dummy)
+    new Ability({...abilities.blight, equippedSlot: 9}, dummy),
+    new Ability({...abilities.fireball, equippedSlot: 10}, dummy)
   ],
   statModifiers: [
     {

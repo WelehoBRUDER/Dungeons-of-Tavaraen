@@ -109,7 +109,7 @@ function buffOrHeal(character: characterObject, ability: ability) {
   else updateEnemiesTurn();
 }
 
-function regularAttack(attacker: characterObject, target: characterObject, ability: ability, targetCords?: any) {
+function regularAttack(attacker: characterObject, target: characterObject, ability: ability, targetCords?: any, isAoe: boolean = false) {
   if (targetCords) {
     maps[currentMap].enemies.forEach((en: any) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y) target = en; });
   }
@@ -162,12 +162,21 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
     spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-    let actionText: string = lang[ability.id + "_action_desc_pl"] ?? ability.action_desc_pl;
-    actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
-    actionText = actionText.replace("[DMG]", `${dmg}`);
-    displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
-    if (ability.cooldown) ability.onCooldown = ability.cooldown;
-    if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
+    if(isAoe) {
+      let actionText: string = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
+      actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
+      actionText = actionText.replace("[DMG]", `${dmg}`);
+      displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
+    }
+    else {
+      let actionText: string = lang[ability.id + "_action_desc_pl"] ?? ability.action_desc_pl;
+      actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
+      actionText = actionText.replace("[DMG]", `${dmg}`);
+      displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
+      if (ability.cooldown) ability.onCooldown = ability.cooldown;
+      if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
+    }
+
     if (target.stats.hp <= 0) {
       // @ts-ignore
       target.kill();
@@ -296,21 +305,25 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
   }
+  let collided = false;
   for (let step of path) {
     await sleep(50);
     const { screenX: x, screenY: y } = tileCordsToScreen(step);
     if (step.enemy) {
+      collided = true;
       collision({ x: step.x, y: step.y }, ability, isPlayer, player);
       if(isPlayer) setTimeout(advanceTurn, 50);
       else updateEnemiesTurn();
       break;
     }
     if (step.player) {
+      collided = true;
       updateEnemiesTurn();
       collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
       break;
     }
     if (step.blocked) {
+      collided = true;
       if(isPlayer) setTimeout(advanceTurn, 50);
       else updateEnemiesTurn();
       break;
@@ -322,18 +335,53 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     ctx?.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
     ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
   }
+  if(!collided && ability.aoe_size > 0) {
+    if(isPlayer) setTimeout(advanceTurn, 50);
+    aoeCollision(createAOEMap(path[path.length-1], ability.aoe_size), attacker, ability);
+  }
   projectileLayers.removeChild(canvas);
 }
 
 function collision(target: tileObject, ability: ability, isPlayer: boolean, attacker: characterObject, theme?: string) {
   if (isPlayer) {
     let targetEnemy = maps[currentMap].enemies.find((en: any) => en.cords.x == target.x && en.cords.y == target.y);
+    if(ability.aoe_size > 0) {
+      aoeCollision(createAOEMap(targetEnemy?.cords, ability.aoe_size), attacker, ability);
+    }
+    else {
     // @ts-ignore
     regularAttack(player, targetEnemy, ability);
+    }
+
   }
   else if(player.cords.x == target.x && player.cords.y == target.y) {
     regularAttack(attacker, player, ability);
   }
+}
+
+function aoeCollision(area: Array<any>, attacker: characterObject, ability: ability) {
+  const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+  const effect = document.querySelector<HTMLImageElement>(`.${ability.aoe_effect}`);
+  for (let y = 0; y < spriteLimitY; y++) {
+    for (let x = 0; x < spriteLimitX; x++) {
+      if (area[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
+        baseCtx.drawImage(effect, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+      }
+    }
+  }
+  let actionText: string = lang[ability.id + "_action_desc_pl"] ?? ability.action_desc_pl;
+  displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
+  maps[currentMap].enemies.forEach(en=>{
+    if(area[en.cords.y][en.cords.x] == "x") {
+      regularAttack(attacker, en, ability, null, true);
+    }
+  });
+  setTimeout(modifyCanvas, 150);
+  isSelected = false;
+  abiSelected = {};
+  if (ability.cooldown) ability.onCooldown = ability.cooldown;
+  if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
+  updateUI();
 }
 
 function calcAngleDegrees(x: number, y: number) {

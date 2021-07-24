@@ -166,6 +166,8 @@ function abiTT(abi) {
         txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
     if (abi.requires_concentration)
         txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+    if (abi.aoe_size > 0)
+        txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)

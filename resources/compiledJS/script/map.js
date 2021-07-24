@@ -164,7 +164,7 @@ function renderMap(map) {
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 function renderTileHover(tile) {
-    var _a;
+    var _a, _b;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -185,7 +185,7 @@ function renderTileHover(tile) {
         if (!hoveredEnemy) {
             hideMapHover();
         }
-        if (abiSelected.type == "movement") {
+        if (abiSelected.type == "movement" || abiSelected.type == "charge") {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, false, false);
             var highlight2Img = document.querySelector(".sprites .tileHIGHLIGHT2");
             var highlight2RedImg = document.querySelector(".sprites .tileHIGHLIGHT2_RED");
@@ -211,6 +211,7 @@ function renderTileHover(tile) {
             var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
             let distance = isSelected ? abiSelected.use_range : player.weapon.range;
             let iteration = 0;
+            let lastStep = 0;
             path.forEach((step) => {
                 iteration++;
                 if (step.x == player.cords.x && step.y == player.cords.y)
@@ -218,15 +219,27 @@ function renderTileHover(tile) {
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (step.blocked || iteration > distance) {
+                    if (lastStep == 0)
+                        lastStep = iteration;
                     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
                 }
                 else
                     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
             });
+            if ((abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.aoe_size) > 0) {
+                let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], abiSelected.aoe_size);
+                for (let y = 0; y < spriteLimitY; y++) {
+                    for (let x = 0; x < spriteLimitX; x++) {
+                        if (((_b = aoeMap[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]) == "x") {
+                            playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+                        }
+                    }
+                }
+            }
         }
         playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
     }
-    catch (_b) { }
+    catch (_c) { }
 }
 function mapHover(event) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -258,13 +271,13 @@ function clickMap(event) {
         renderTileHover({ x: x, y: y });
         return;
     }
-    if (x == player.cords.x && y == player.cords.y)
-        console.log("You clicked on yourself!");
     let move = true;
+    let targetingEnemy = false;
     for (let enemy of maps[currentMap].enemies) {
         if (enemy.cords.x == x && enemy.cords.y == y) {
             if (!enemy.alive)
                 break;
+            targetingEnemy = true;
             if (isSelected) {
                 // @ts-expect-error
                 if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
@@ -309,6 +322,13 @@ function clickMap(event) {
         }
     }
     ;
+    if (isSelected && (abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.aoe_size) > 0 && !targetingEnemy) {
+        // @ts-expect-error
+        if (generateArrowPath(player.cords, { x: x, y: y }).length <= abiSelected.use_range) {
+            move = false;
+            fireProjectile(player.cords, { x: x, y: y }, abiSelected.shoots_projectile, abiSelected, true, player);
+        }
+    }
     state.clicked = true;
     setTimeout(() => { state.clicked = false; }, 30);
     if (abiSelected.type == "movement") {
@@ -326,6 +346,17 @@ function createSightMap(start, size) {
     return sightMap.map((rivi, y) => rivi.map((_, x) => {
         if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus)
             return "x";
+        return "0";
+    }));
+}
+function createAOEMap(start, size) {
+    let aoeMap = emptyMap(maps[currentMap].base);
+    let testiIsonnus = size ** 2;
+    return aoeMap.map((rivi, y) => rivi.map((_, x) => {
+        if (!tiles[maps[currentMap].base[y][x]].isLedge && !tiles[maps[currentMap].base[y][x]].isWall && !clutters[maps[currentMap].clutter[y][x]].isWall) {
+            if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus)
+                return "x";
+        }
         return "0";
     }));
 }

@@ -333,7 +333,8 @@ var player = new PlayerCharacter({
         new Ability(Object.assign(Object.assign({}, abilities.shadow_step), { equippedSlot: 6 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.charge), { equippedSlot: 7 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.purification), { equippedSlot: 8 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.blight), { equippedSlot: 9 }), dummy)
+        new Ability(Object.assign(Object.assign({}, abilities.blight), { equippedSlot: 9 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.fireball), { equippedSlot: 10 }), dummy)
     ],
     statModifiers: [
         {

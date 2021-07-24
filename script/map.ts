@@ -204,7 +204,7 @@ function renderTileHover(tile: tileObject) {
       hideMapHover();
     }
 
-    if (abiSelected.type == "movement") {
+    if (abiSelected.type == "movement" || abiSelected.type == "charge") {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, false, false);
       var highlight2Img = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT2");
       var highlight2RedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT2_RED");
@@ -228,16 +228,28 @@ function renderTileHover(tile: tileObject) {
       var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
       let distance: number = isSelected ? abiSelected.use_range : player.weapon.range;
       let iteration: number = 0;
+      let lastStep: number = 0;
       path.forEach((step: any) => {
         iteration++;
         if (step.x == player.cords.x && step.y == player.cords.y) return;
         var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked || iteration > distance) {
+          if (lastStep == 0) lastStep = iteration;
           playerCtx?.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
         }
         else playerCtx?.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
       });
+      if (abiSelected?.aoe_size > 0) {
+        let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], abiSelected.aoe_size);
+        for (let y = 0; y < spriteLimitY; y++) {
+          for (let x = 0; x < spriteLimitX; x++) {
+            if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
+              playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            }
+          }
+        }
+      }
     }
 
     playerCtx?.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
@@ -273,11 +285,12 @@ function clickMap(event: MouseEvent) {
     renderTileHover({ x: x, y: y });
     return;
   }
-  if (x == player.cords.x && y == player.cords.y) console.log("You clicked on yourself!");
   let move = true;
+  let targetingEnemy = false;
   for (let enemy of maps[currentMap].enemies) {
     if (enemy.cords.x == x && enemy.cords.y == y) {
       if (!enemy.alive) break;
+      targetingEnemy = true;
       if (isSelected) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
@@ -315,6 +328,13 @@ function clickMap(event: MouseEvent) {
       break;
     }
   };
+  if (isSelected && abiSelected?.aoe_size > 0 && !targetingEnemy) {
+    // @ts-expect-error
+    if (generateArrowPath(player.cords, { x: x, y: y }).length <= abiSelected.use_range) {
+      move = false;
+      fireProjectile(player.cords, { x: x, y: y }, abiSelected.shoots_projectile, abiSelected, true, player);
+    }
+  }
   state.clicked = true;
   setTimeout(() => { state.clicked = false; }, 30);
   if (abiSelected.type == "movement") {
@@ -332,6 +352,17 @@ function createSightMap(start: tileObject, size: number) {
   let testiIsonnus = size ** 2;
   return sightMap.map((rivi, y) => rivi.map((_, x) => {
     if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus) return "x";
+    return "0";
+  }));
+}
+
+function createAOEMap(start: tileObject, size: number) {
+  let aoeMap = emptyMap(maps[currentMap].base);
+  let testiIsonnus = size ** 2;
+  return aoeMap.map((rivi, y) => rivi.map((_, x) => {
+    if (!tiles[maps[currentMap].base[y][x]].isLedge && !tiles[maps[currentMap].base[y][x]].isWall && !clutters[maps[currentMap].clutter[y][x]].isWall) {
+      if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus) return "x";
+    }
     return "0";
   }));
 }
@@ -797,11 +828,11 @@ function hideMapHover() {
 function activateShrine() {
   maps[currentMap].shrines.forEach(shrine => {
     if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
-      if(!(player.usedShrines.find((used: any)=>used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
+      if (!(player.usedShrines.find((used: any) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
         player.stats.hp = player.getStats().hpMax;
         player.stats.mp = player.getStats().mpMax;
         player.respawnPoint.cords = shrine.cords;
-        player.usedShrines.push({cords: shrine.cords, map: currentMap});
+        player.usedShrines.push({ cords: shrine.cords, map: currentMap });
         spawnFloatingText(player.cords, lang["shrine_activated"], "lime", 30, 500, 75);
         updateUI();
         modifyCanvas();

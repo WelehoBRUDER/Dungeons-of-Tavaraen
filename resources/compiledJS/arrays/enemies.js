@@ -76,7 +76,7 @@ const enemies = {
         xp: 5,
         sprite: "greySlime",
         img: "resources/tiles/enemies/grey_slime.png",
-        aggroRange: 7,
+        aggroRange: 6,
         attackRange: 1,
         canFly: false,
         abilities: [
@@ -128,7 +128,7 @@ const enemies = {
         xp: 5,
         sprite: "skeletonWarrior",
         img: "resources/tiles/enemies/skeleton_warrior.png",
-        aggroRange: 10,
+        aggroRange: 8,
         attackRange: 1,
         canFly: false,
         abilities: [
@@ -193,8 +193,8 @@ const enemies = {
         xp: 5,
         sprite: "skeletonArcher",
         img: "resources/tiles/enemies/skeleton_archer.png",
-        aggroRange: 9,
-        attackRange: 8,
+        aggroRange: 8,
+        attackRange: 7,
         canFly: false,
         shootsProjectile: "arrowProjectile",
         abilities: [
@@ -259,8 +259,8 @@ const enemies = {
         xp: 10,
         sprite: "skeletonMage",
         img: "resources/tiles/enemies/skeleton_mage.png",
-        aggroRange: 9,
-        attackRange: 7,
+        aggroRange: 8,
+        attackRange: 6,
         canFly: false,
         shootsProjectile: "blightProjectile",
         abilities: [
@@ -321,7 +321,7 @@ const enemies = {
         xp: 30,
         sprite: "norsemanBerserk",
         img: "resources/tiles/enemies/norseman_berserk.png",
-        aggroRange: 10,
+        aggroRange: 8,
         attackRange: 1,
         canFly: false,
         abilities: [
@@ -380,8 +380,8 @@ const enemies = {
         xp: 30,
         sprite: "norsemanHunter",
         img: "resources/tiles/enemies/norseman_hunter.png",
-        aggroRange: 10,
-        attackRange: 6,
+        aggroRange: 8,
+        attackRange: 5,
         canFly: false,
         abilities: [
             new Ability(abilities.attack, dummy),
