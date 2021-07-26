@@ -130,6 +130,7 @@ class Enemy extends Character {
             fallenEnemies.push(Object.assign({}, this));
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
+            player.lvlUp();
         };
         this.aggro = () => {
             // @ts-ignore

@@ -1,44 +1,170 @@
-.playerImprovement {
+.playerLeveling {
   transition: 0.275s;
   transition-timing-function: ease-in;
-  width: 1360px;
-  height: 780px;
+  width: 100%;
+  height: 100%;
   background: rgba(5, 5, 5, 0.95);
-  border: 6px solid rgb(50, 50, 50);
+  border: 15px solid rgb(50, 50, 50);
+  box-sizing: border-box;
   border-radius: 4px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: -680px;
-  margin-top: -390px;
-  z-index: 8;
-  transform: scale(1);
+  left: 0;
+  top: 0;
+  z-index: 10;
+  transform: scale(0);
 
-  .sideBar {
-    background:rgba(30, 30, 30, 0.95);
+  .stats {
     width: 20%;
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
+    box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+
+    .statPoints {
+      font-size: 32px;
+      color: white;
+      background: rgba(24, 24, 24, 0.95);
+      padding: 10px;
+      position: absolute;
+      left: 20px;
+      top: 30px;
+      border-radius: 25%;
+      box-shadow: -2px 2px 8px 8px rgb(14, 13, 13);
+    }
+
+    .statContainer {
+      position: absolute;
+      left: 20px;
+      top: 155px;
+      width: calc(100% - 20px);
+      height: auto;
+      user-select: none;
+
+      .statUp {
+        display: flex;
+        text-align: center;
+
+        img {
+          width: 96px;
+          height: 96px;
+          vertical-align: middle;
+          filter: drop-shadow(-2px 2px 4px rgba(118, 118, 118, 0.92));
+        }
+
+        p {
+          color: white;
+          font-size: 36px;
+          margin-left: 10px;
+          margin-right: 5px;
+          margin-top: 24px;
+          vertical-align: middle;
+          text-shadow: -3px 3px 6px rgba(206, 206, 206, 0.97);
+        }
+
+        span {
+          transition: 0.175s;
+          color: white;
+          font-size: 36px;
+          margin-left: 10px;
+          margin-right: 5px;
+          margin-top: 24px;
+          transform: scale(1);
+          text-align: center;
+          vertical-align: middle;
+          background: rgb(131, 126, 101);
+          width: 42px;
+          height: 42px;
+          box-shadow: inset 0 0 8px 6px rgb(87, 83, 66), -2px 2px 6px 5px rgb(33, 33, 33);
+        }
+
+        span:hover {
+          margin-top: 30px;
+          box-shadow: inset 0 0 8px 6px rgb(87, 83, 66), -1px 1px 4px 3px rgb(33, 33, 33);
+        }
+
+        span:active {
+          margin-top: 32px;
+          box-shadow: inset 0 0 8px 6px rgb(87, 83, 66), -1px 1px 3px 2px rgb(33, 33, 33);
+        }
+      }
+    }
   }
 
-  .perkArea {
-    background: crimson;
+  .perks {
     width: 80%;
     height: 100%;
     position: absolute;
     right: 0;
     top: 0;
+    box-shadow: inset 0 0 18px 24px rgba(48, 48, 48, 0.95);
 
-    .prkcanvas {
+    .perkPoints {
+      font-size: 36px;
+      color: white;
+      background: rgba(24, 24, 24, 0.95);
+      padding: 10px;
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 50px;
+      top: 30px;
+      border-radius: 25%;
+      box-shadow: -2px 2px 8px 8px rgb(14, 13, 13);
     }
 
-    .rounded-perk {
-      border-radius: 100%;
+    .container {
+      width: 100%;
+      height: 100%;
+      position: inherit;
+      left: 0;
+      top: 0;
+
+      svg {
+        filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.97));
+      }
+
+      .perkBg {
+        transition: 0.275s;
+        position: absolute;
+        width: 128px;
+        height: 128px;
+        background:rgba(24, 24, 24, 0.95);
+        background-size: cover;
+        box-sizing: border-box;
+        border: 4px solid rgb(50, 50, 50);
+        border-radius: 33%;
+        text-align: center;
+        user-select: none;
+        box-shadow: inset 0 0 6px 4px rgba(16, 16, 16, 0.93), 0 0 7px 4px rgb(24, 24, 24);
+        
+        img {
+          width: 104px;
+          height: 104px;
+          filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.93));
+        }
+        
+        p {
+          color: white;
+          font-size: 12px;
+          background: rgba(16, 16, 16, 0.98);
+          border-radius: 8px;
+          text-shadow: 0 0 2px black;
+          filter: drop-shadow(0 0 8px rgba(4, 4, 4, 0.98));
+          padding: 2px;
+        }
+      }
+
+      :where(.perkBg:hover) {
+        filter: brightness(1.5);
+        box-shadow: inset 0 0 12px 7px rgba(16, 16, 16, 0.93), 0 0 9px 7px rgb(24, 24, 24);
+      }
+
+      .perkBought {
+        border: 4px solid gold;
+      }
+
+      .perkUnavailable {
+        filter: brightness(.5);
+      }
     }
   }
 }

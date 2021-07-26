@@ -114,6 +114,26 @@ const abilities = {
         use_range: "9",
         ai_chance: 2
     },
+    piercing_mana_bolt: {
+        id: "piercing_mana_bolt",
+        name: "Piercing Mana Bolt",
+        mana_cost: 10,
+        cooldown: 0,
+        damages: {
+            pierce: 3,
+            magic: 10
+        },
+        stat_bonus: "int",
+        damage_multiplier: 1,
+        resistance_penetration: 0,
+        type: "attack",
+        action_desc: "shoots a bolt made of magic at",
+        action_desc_pl: "shoot a bolt made of magic at",
+        icon: "resources/icons/piercing_mana_bolt.png",
+        shoots_projectile: "piercingManaBoltProjectile",
+        use_range: "10",
+        ai_chance: 2
+    },
     fireball: {
         id: "fireball",
         name: "Fireball",

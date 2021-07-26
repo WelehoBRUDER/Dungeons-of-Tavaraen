@@ -1,0 +1,4 @@
+liikkumiselle highlight:
+hiiri pohjassa näkyis reitti jota hahmo tulee kulkemaan
+koitetaan tehdä fade in reitille
+uus layer ja siihen opacity animaatio, 100-200ms?

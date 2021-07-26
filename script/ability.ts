@@ -139,6 +139,19 @@ function getAbiModifiers(char: characterObject, id: string) {
   straight_modifiers.forEach((mod: string) => {
     total[mod] = { value: 0, modif: 1 };
   });
+  char.perks?.forEach((prk: statEffect) => {
+    Object.entries(prk.effects).forEach((eff: any) => {
+      let key = eff[0];
+      let value = eff[1];
+      if (key.includes(id) && !key.includes("status")) {
+        key = key.replace(id + "_", "");
+        const _key = key.substring(0, key.length - 1);
+        if (key.endsWith("V")) total[_key].value += value;
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+      }
+    });
+  });
   char.statusEffects.forEach((stat: statEffect) => {
     Object.entries(stat.effects).forEach((eff: any) => {
       let key = eff[0];
@@ -147,7 +160,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   });
@@ -159,7 +173,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -171,7 +186,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -183,7 +199,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -195,7 +212,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -207,7 +225,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -219,7 +238,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -231,7 +251,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -243,7 +264,8 @@ function getAbiModifiers(char: characterObject, id: string) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P")) total[_key].modif *= (1 + value / 100);
+        else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
       }
     });
   }
@@ -270,11 +292,37 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
+          }
+        }
+      }
+    });
+  });
+  char.perks?.forEach((prk: statEffect) => {
+    // Go through stat modifiers
+    Object.entries(prk.effects).forEach((eff: any) => {
+      let key = eff[0];
+      let value = eff[1];
+      if (key.includes(abilityId) && key.includes("status")) {
+        key = key.replace(abilityId + "_", "");
+        if (key.includes("status_effect")) {
+          const _key = key.replace("status_effect_", "");
+          const __key = _key.substring(0, _key.length - 1);
+          if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
+            if (key.endsWith("V")) total["effects"][__key].value += value;
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
+          }
+          else {
+            if (key.endsWith("V")) total[__key].value += value;
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -291,11 +339,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -312,11 +362,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -333,11 +385,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -354,11 +408,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -375,11 +431,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -396,11 +454,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -417,11 +477,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }
@@ -438,11 +500,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           const __key = _key.substring(0, _key.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P")) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P")) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
+            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
           }
         }
       }

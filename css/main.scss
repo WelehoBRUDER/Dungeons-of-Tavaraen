@@ -498,7 +498,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 40;
     display: none;
     pointer-events: none;
     color: white;
@@ -537,6 +537,7 @@ body {
     background: rgba(15, 15, 15, 0.5);
     padding: 10px;
     pointer-events: none;
+    z-index: 3;
 
     pre {
       margin-left: 10px;
@@ -831,7 +832,7 @@ body {
     }
   }
 
-  :not(.canvasLayers) {
+  :where(:not(.canvasLayers)) {
     z-index: 1;
   }
 }

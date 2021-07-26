@@ -24,6 +24,8 @@ const namePartsArmor = {
     crushMain: " Of Bluntness",
     pierceSub: "Shielding ",
     pierceMain: " Of Missile Protection",
+    magicSub: "Enchanted",
+    magicMain: " Of Magic",
     darkSub: "Grimshielding ",
     darkMain: " Of Darkshatter",
     divineSub: "Blinding ",
@@ -42,6 +44,8 @@ const nameParts = {
     crushMain: " Of Crushing",
     pierceSub: "Penetrating ",
     pierceMain: " Of Breakthrough",
+    magicSub: "Enchanted ",
+    magicMain: " Of Magic",
     darkSub: "Corrupt ",
     darkMain: " Of Calamity",
     divineSub: "Divine ",
@@ -274,6 +278,11 @@ function closeInventory() {
     const inventory = document.querySelector(".playerInventory");
     inventory.style.transform = "scale(0)";
     invOpen = false;
+}
+function closeLeveling() {
+    document.querySelector(".worldText").style.opacity = "1";
+    const lvling = document.querySelector(".playerLeveling");
+    lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
     var text = "";

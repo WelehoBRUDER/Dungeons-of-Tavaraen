@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -95,7 +95,10 @@ class PlayerCharacter extends Character {
         this.grave = (_t = base.grave) !== null && _t !== void 0 ? _t : null;
         this.respawnPoint = (_u = base.respawnPoint) !== null && _u !== void 0 ? _u : null; // need to add default point, or this might soft lock
         this.gold = (_v = base.gold) !== null && _v !== void 0 ? _v : 0;
-        this.usedShrines = (_w = base.usedShrines) !== null && _w !== void 0 ? _w : [];
+        this.perks = (_w = base.perks) !== null && _w !== void 0 ? _w : [];
+        this.sp = (_x = base.sp) !== null && _x !== void 0 ? _x : 0;
+        this.pp = (_y = base.pp) !== null && _y !== void 0 ? _y : 0;
+        this.usedShrines = (_z = base.usedShrines) !== null && _z !== void 0 ? _z : [];
         this.hpRegen = () => {
             const { v: val, m: mod } = getModifiers(this, "hpRegen");
             return Math.floor((val) * mod);
@@ -110,6 +113,18 @@ class PlayerCharacter extends Character {
             createDroppedItem(this.cords, item);
             renderInventory();
             modifyCanvas();
+        };
+        this.updatePerks = () => {
+            this.perks.forEach(prk => {
+                var _a;
+                let cmdsEx = prk.commandsExecuted;
+                prk = new perk(Object.assign({}, perksArray[prk.tree]["perks"][prk.id]));
+                if (!cmdsEx) {
+                    (_a = Object.entries(prk.commands)) === null || _a === void 0 ? void 0 : _a.forEach(cmd => { command(cmd); });
+                }
+                prk.commandsExecuted = cmdsEx;
+            });
+            updateUI();
         };
         this.unequip = (event, slot) => {
             var _a, _b;
@@ -148,6 +163,20 @@ class PlayerCharacter extends Character {
             const { v: val, m: mod } = getModifiers(this, "carryStrength");
             return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
         };
+        this.lvlUp = () => {
+            while (this.level.xp >= this.level.xpNeed) {
+                this.level.xp -= this.level.xpNeed;
+                this.level.level++;
+                this.sp += 3;
+                this.pp += 1;
+                this.level.xpNeed = nextLevel(this.level.level);
+                let lvlText = lang["lvl_up"];
+                lvlText = lvlText.replace("[LVL]", this.level.level.toString());
+                spawnFloatingText(this.cords, "LVL UP!", "lime", 50, 2000, 450);
+                displayText(`<c>white<c>[WORLD] <c>gold<c>${lvlText}`);
+                updateUI();
+            }
+        };
         this.kill = () => {
             if (this.isDead)
                 return;
@@ -169,6 +198,17 @@ class PlayerCharacter extends Character {
             updateUI();
         };
     }
+}
+function nextLevel(level) {
+    let base = 75;
+    let exponent = 1.35;
+    if (level >= 9)
+        base = 100;
+    if (level >= 29)
+        base = 200;
+    if (level >= 49)
+        base = 375;
+    return Math.floor(base * (Math.pow(level, exponent)));
 }
 function updatePlayerInventoryIndexes() {
     for (let i = 0; i < player.inventory.length; i++) {
@@ -322,6 +362,7 @@ var player = new PlayerCharacter({
     gloves: {},
     boots: new Armor(Object.assign({}, items.raggedBoots)),
     canFly: false,
+    perks: [],
     abilities: [
         new Ability(Object.assign({}, abilities.attack), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.focus_strike), { equippedSlot: 0 }), dummy),
@@ -350,6 +391,8 @@ var player = new PlayerCharacter({
     ],
     inventory: [],
     gold: 50,
+    sp: 5,
+    pp: 1,
     respawnPoint: { cords: { x: 4, y: 4 } },
     usedShrines: []
 });

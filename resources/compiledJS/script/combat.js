@@ -149,9 +149,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                     bonus = ability.damages[key];
                 // @ts-ignore
                 if (attacker.weapon.firesProjectile)
-                    bonus += num * attacker.getStats().dex / 20;
+                    bonus += num * attacker.getStats().dex / 50;
                 else
-                    bonus += num * attacker.getStats().str / 20;
+                    bonus += num * attacker.getStats().str / 50;
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
         }
@@ -164,7 +164,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
                 // @ts-ignore
-                bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
+                bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
                 // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
@@ -221,7 +221,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
                 // @ts-ignore
-                bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
+                bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
                 // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });
@@ -241,10 +241,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                     bonus = ability.damages[key];
                 // @ts-ignore
                 if (attacker.shootsProjectile)
-                    bonus += num * attacker.getStats().dex / 20;
+                    bonus += num * attacker.getStats().dex / 50;
                 // @ts-ignore
                 else
-                    bonus += num * attacker.getStats().str / 20;
+                    bonus += num * attacker.getStats().str / 50;
                 // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
             });

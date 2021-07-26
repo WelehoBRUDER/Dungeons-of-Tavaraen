@@ -145,7 +145,12 @@ class PlayerCharacter extends Character {
   grave: any;
   respawnPoint: any;
   gold: number;
+  perks: Array<any>;
+  sp: number;
+  pp: number;
   usedShrines: Array<any>;
+  updatePerks?: Function;
+  lvlUp?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -170,6 +175,9 @@ class PlayerCharacter extends Character {
     this.grave = base.grave ?? null;
     this.respawnPoint = base.respawnPoint ?? null // need to add default point, or this might soft lock
     this.gold = base.gold ?? 0;
+    this.perks = base.perks ?? [];
+    this.sp = base.sp ?? 0;
+    this.pp = base.pp ?? 0;
     this.usedShrines = base.usedShrines ?? [];
 
     this.hpRegen = () => {
@@ -188,6 +196,18 @@ class PlayerCharacter extends Character {
       createDroppedItem(this.cords, item);
       renderInventory();
       modifyCanvas();
+    }
+
+    this.updatePerks = () => {
+      this.perks.forEach(prk=>{
+        let cmdsEx = prk.commandsExecuted;
+        prk = new perk({...perksArray[prk.tree]["perks"][prk.id]});
+        if(!cmdsEx) {
+          Object.entries(prk.commands)?.forEach(cmd=>{command(cmd);})
+        }
+        prk.commandsExecuted = cmdsEx;
+      });
+      updateUI();
     }
 
     this.unequip = (event: any, slot: string) => {
@@ -227,6 +247,21 @@ class PlayerCharacter extends Character {
       return ((92.5 + val + this.getStats().str/2 + this.getStats().vit) * mod).toFixed(1);
     }
 
+    this.lvlUp = () => {
+      while(this.level.xp >= this.level.xpNeed) {
+        this.level.xp -= this.level.xpNeed;
+        this.level.level++;
+        this.sp += 3;
+        this.pp += 1;
+        this.level.xpNeed = nextLevel(this.level.level);
+        let lvlText = lang["lvl_up"];
+        lvlText = lvlText.replace("[LVL]", this.level.level.toString());
+        spawnFloatingText(this.cords, "LVL UP!", "lime", 50, 2000, 450);
+        displayText(`<c>white<c>[WORLD] <c>gold<c>${lvlText}`);
+        updateUI();
+      }
+    }
+
     this.kill = () => {
       if(this.isDead) return;
       // handle death logic once we get there ;)
@@ -245,6 +280,16 @@ class PlayerCharacter extends Character {
       updateUI();
     }
   }
+}
+
+
+function nextLevel(level) {
+  let base = 75;
+  let exponent = 1.35;
+  if(level >= 9) base = 100;
+  if(level >= 29) base = 200;
+  if(level >= 49) base = 375; 
+  return Math.floor(base * (Math.pow(level, exponent)));
 }
 
 function updatePlayerInventoryIndexes() {
@@ -409,6 +454,7 @@ var player = new PlayerCharacter({
   gloves: {},
   boots: new Armor({...items.raggedBoots}),
   canFly: false,
+  perks: [],
   abilities: [
     new Ability({...abilities.attack}, dummy),
     new Ability({...abilities.focus_strike, equippedSlot: 0}, dummy),
@@ -437,6 +483,8 @@ var player = new PlayerCharacter({
   ],
   inventory: [],
   gold: 50,
+  sp: 5,
+  pp: 1,
   respawnPoint: {cords: {x: 4, y: 4}},
   usedShrines: []
 });

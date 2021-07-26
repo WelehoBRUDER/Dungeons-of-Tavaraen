@@ -13,6 +13,7 @@ const finnish = {
   crush: "Murskaavaa",
   slash: "Viiltävää",
   pierce: "Lävistävää",
+  magic: "Maagista",
   fire: "Tuli",
   ice: "Jää",
   dark: "Pimeää",
@@ -21,6 +22,7 @@ const finnish = {
   crush_def: "Murskaus",
   slash_def: "Viilto",
   pierce_def: "Lävistävyys",
+  magic_def: "Maaginen",
   fire_def: "Tuli",
   ice_def: "Jää",
   dark_def: "Pimeä",
@@ -30,7 +32,7 @@ const finnish = {
   mpMax: "Taikaa",
   sight: "Näköä",
   increases: "Parantaa",
-  decreases: "Heikentää",
+  decreases: "Alentaa",
   damage: "Vahinkoa",
   by: "",
   strV: "Voima",
@@ -60,7 +62,7 @@ const finnish = {
   requires_melee_weapon: "Vaatii lähitaistelu aseen",
   requires_ranged_weapon: "Vaatii kaukotaistelu aseen",
   targets_self: "Kohde on oma hahmo",
-  mana_cost: "taian käyttö",
+  mana_cost: "Taian käyttö",
   use_range: "Käyttö matka",
   damage_multiplier: "Vahingon kerroin",
   resistance_penetration: "Puolustuksen läpäisy",
@@ -80,6 +82,9 @@ const finnish = {
   remove_from_hotbar: "Poista kyky/työkalu",
   removed_in: "Kestää",
   deals: "Aiheuttaa",
+  perk_points: "Perkki pisteet",
+  stat_points: "Stat pisteet",
+  lvl_up: "Tasosi nousi! Se on nyt [LVL]!",
 
   // Item definitions
   slash_damageSub: "Viiltävä",
@@ -88,6 +93,8 @@ const finnish = {
   crush_damageMain: "Murskaavan",
   pierce_damageSub: "Pistävä",
   pierce_damageMain: "Lävistävän",
+  magic_damageSub: "Lumottu",
+  magic_damageMain: "Maagisen",
   dark_damageSub: "Pimeä",
   dark_damageMain: "Kamalan",
   divine_damageSub: "Pyhä",
@@ -105,6 +112,8 @@ const finnish = {
   crush_resistanceMain: "Murskaukselta Suojeleva",
   pierce_resistanceSub: "Paksu",
   pierce_resistanceMain: "Pistoilta Suojaava",
+  magic_resistanceSub: "Lumottu",
+  magic_resistanceMain: "Magialta Suojaava",
   dark_resistanceSub: "Pyhä",
   dark_resistanceMain: "Pimeyden Karkottava",
   divine_resistanceSub: "Kirottu",
@@ -231,7 +240,23 @@ const finnish = {
   fireball_name: "Tulipallo",
   fireball_desc: "Heitä tulinen räjähde vihollistesi suuntaan \nja sytytä kaikki kohteesi liekkeihin.",
   fireball_action_desc_pl: "Lähetät tulisen ammuksen kohti vastustajiesi turmiota!",
-  fireball_action_desc_aoe_pl: "[TARGET] paistuu räjähtävissä liekeissä, ottaen [DMG] vahinkoa!"
+  fireball_action_desc_aoe_pl: "[TARGET] paistuu räjähtävissä liekeissä, ottaen [DMG] vahinkoa!",
+  piercing_mana_bolt_name: "Maaginen Pultti",
+  piercing_mana_bolt_desc: "Ammu taiallinen panos vihollistasi kohti.",
+  piercing_mana_bolt_action_desc_pl: "Taiot maagisen ammuksen lentämään kohti hahmoa [TARGET], tehden [DMG] vahinkoa!",
+  piercing_mana_bolt_action_desc: "ampuu maagisen pultin hahmoa [TARGET] kohti, aiheuttaen [DMG] vahinkoa.",
+
+  // PERKS // 
+
+  // SORCERER
+  introduction_to_sorcery_name: "Maagin Alkukirja",
+  introduction_to_sorcery_desc: "Kehitys tapahtuu askel kerrallaan.",
+  intent_studies_name: "Taikojan Oppi",
+  intent_studies_desc: "Opiskelu korostaa kokemusta.",
+
+  // NECROMANCER
+  pursuit_of_undeath_name: "Kuolemattomuuden Tavoittelu",
+  pursuit_of_undeath_desc: "Kryptisin keinoin.",
 } as any;
 
 const english = {
@@ -247,6 +272,7 @@ const english = {
   crush: "Crushing",
   slash: "Slashing",
   pierce: "Piercing",
+  magic: "Magical",
   fire: "Fire",
   ice: "Ice",
   dark: "Dark",
@@ -255,6 +281,7 @@ const english = {
   crush_def: "Crushing",
   slash_def: "Slashing",
   pierce_def: "Piercing",
+  magic_def: "Magical",
   fire_def: "Fire",
   ice_def: "Ice",
   dark_def: "Dark",
@@ -314,6 +341,9 @@ const english = {
   remove_from_hotbar: "Remove ability/item",
   removed_in: "Removed in",
   deals: "Deals",
+  perk_points: "Perk points",
+  stat_points: "Stat points",
+  lvl_up: "You levelled up! Your level is now [LVL]!",
 
   // Enemy names
   skeletonWarrior_name: "Skeleton Warrior",
@@ -418,5 +448,21 @@ const english = {
   fireball_name: "Fireball",
   fireball_desc: "Incinerate your foes with a flaming ball of destruction.",
   fireball_action_desc_pl: "You throw a fiery ball towards your foes!",
-  fireball_action_desc_aoe_pl: "[TARGET] is burned by the blast, causing [DMG] damage!"
+  fireball_action_desc_aoe_pl: "[TARGET] is burned by the blast, causing [DMG] damage!",
+  piercing_mana_bolt_name: "Piercing Bolt of Magic",
+  piercing_mana_bolt_desc: "Pierce your foe with pure magic.",
+  piercing_mana_bolt_action_desc_pl: "<c>yellow<c>You<c>white<c> fire a mana bolt at [TARGET], dealing [DMG] damage!",
+  piercing_mana_bolt_action_desc: "shoots a mana bolt at [TARGET], dealing [DMG] damage.",
+
+  // PERKS //
+
+  // SORCERER
+  introduction_to_sorcery_name: "Introduction to Sorcery",
+  introduction_to_sorcery_desc: "Even the greatest of mages \nmust start somewhere.",
+  intent_studies_name: "Intent Studies",
+  intent_studies_desc: "Learning is a sign of good fortune.",
+
+  // NECROMANCER
+  pursuit_of_undeath_name: "Pursuit of Undeath",
+  pursuit_of_undeath_desc: "Pursuing undeath.",
 } as any;

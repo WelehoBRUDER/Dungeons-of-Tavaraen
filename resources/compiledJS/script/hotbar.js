@@ -270,7 +270,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
                 backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
             else
                 backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
-            tailEnd = key_.replace("_", " ");
+            tailEnd = lang[key_];
         }
         //if (tailEnd.includes("multiplier")) value = value * 100;
     }
@@ -284,7 +284,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
     if (!img)
         img = icons[key_ + "_icon"];
     if (value < 0) {
-        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? Math.abs(value) + "%" : Math.abs(value)} ${lastBit}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
     }
     else
         text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
@@ -366,11 +366,15 @@ window.addEventListener("keyup", e => {
     else if (e.key == "c") {
         renderCharacter();
     }
+    else if (e.key == "p") {
+        openLevelingScreen();
+    }
     else if (e.key == "Escape") {
         isSelected = false;
         abiSelected = {};
         closeInventory();
         closeCharacter();
+        closeLeveling();
         updateUI();
         contextMenu.textContent = "";
         assignContainer.style.display = "none";

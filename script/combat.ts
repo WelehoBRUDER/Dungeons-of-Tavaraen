@@ -128,8 +128,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let bonus: number = 0;
         if (ability.damages?.[key]) bonus = ability.damages[key];
         // @ts-ignore
-        if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 20;
-        else bonus += num * attacker.getStats().str / 20;
+        if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 50;
+        else bonus += num * attacker.getStats().str / 50;
         dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1 + (attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     } else {
@@ -141,7 +141,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         mod *= getModifiers(attacker, "damage").m;
         let bonus: number = 0;
         // @ts-ignore
-        bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
+        bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
         // @ts-ignore
         dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
@@ -195,7 +195,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         mod *= getModifiers(attacker, "damage").m;
         let bonus: number = 0;
         // @ts-ignore
-        bonus += num * attacker.getStats()[ability.stat_bonus] / 20;
+        bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
         // @ts-ignore
         dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
@@ -212,9 +212,9 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         if (ability.damages?.[key]) bonus = ability.damages[key];
         // @ts-ignore
-        if (attacker.shootsProjectile) bonus += num * attacker.getStats().dex / 20;
+        if (attacker.shootsProjectile) bonus += num * attacker.getStats().dex / 50;
         // @ts-ignore
-        else bonus += num * attacker.getStats().str / 20;
+        else bonus += num * attacker.getStats().str / 50;
         // @ts-ignore
         dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
