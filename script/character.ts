@@ -80,7 +80,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -89,7 +89,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -98,7 +98,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -107,7 +107,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -116,7 +116,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.weapon.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -125,7 +125,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.chest.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -134,7 +134,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.helmet.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -143,7 +143,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.gloves.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
@@ -152,7 +152,7 @@ function getModifiers(char: any, stat: string) {
     Object.entries(char.boots.stats).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });

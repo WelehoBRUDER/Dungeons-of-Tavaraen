@@ -58,6 +58,45 @@ const statusEffects = {
     aura: "redMist",
     icon: "resources/icons/rage.png"
   },
+  battle_fury: {
+    id: "battle_fury",
+    name: "Battle Fury",
+    effects: {
+      attack_damage_multiplierP: 20,
+      strV: 10,
+      crushDamageP: 9,
+      slashDamageP: 9,
+      pierceDamageP: 7,
+    },
+    silence: true,
+    last: {
+      total: 10,
+      current: 10
+    },
+    textIcon: icons.battle_fury,
+    aura: "redMist",
+    icon: "resources/icons/fighters_rage.png"
+  },
+  ward_of_aurous: {
+    id: "ward_of_aurous",
+    name: "WoA",
+    effects: {
+      crushResistV: 30,
+      slashResistV: 30,
+      pierceResistV: 30,
+      magicResistV: 45,
+      fireResistV: 45,
+      iceResistV: 45,
+      lightningResistV: 45
+    },
+    last: {
+      total: 5,
+      current: 5
+    },
+    textIcon: icons.ward,
+    aura: "ward",
+    icon: "resources/icons/shield_of_aurous.png"
+  },
   berserk: {
     id: "berserk",
     name: "Berserk",

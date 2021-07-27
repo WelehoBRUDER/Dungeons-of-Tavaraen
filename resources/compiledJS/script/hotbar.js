@@ -167,13 +167,67 @@ function abiTT(abi) {
     if (abi.requires_concentration)
         txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
     if (abi.aoe_size > 0)
-        txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
+        txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)
         txt += `<i>${icons.mana_icon}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
     if (abi.cooldown > 0)
         txt += `<i>${icons.cooldown_icon}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
+    return txt;
+}
+function embedAbiTT(abi) {
+    var txt = "";
+    txt += `\t<f>17px<f>${lang[abi.id + "_name"]}\t\n`;
+    txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"]}"<c>white<c>\n`;
+    if (abi.mana_cost > 0 && player.silenced())
+        txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
+    if (abi.requires_concentration && !player.concentration())
+        txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+    if (abi.base_heal)
+        txt += `<i>${icons.heal_icon}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
+    if (abi.damages) {
+        var total = 0;
+        var text = "";
+        Object.entries(abi.damages).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        text = text.substring(0, text.length - 2);
+        txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
+    }
+    if (abi.remove_status) {
+        txt += `§<c>white<c><f>15px<f>${lang["cures_statuses"]}: `;
+        abi.remove_status.forEach(stat => {
+            txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
+        });
+        txt += "\n";
+    }
+    if (abi.damage_multiplier)
+        txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage_multiplier"]}: ${abi.damage_multiplier * 100}%\n`;
+    if (abi.resistance_penetration)
+        txt += `<i>${icons.rp_icon}<i><f>15px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
+    if (parseInt(abi.use_range) > 0)
+        txt += `<i>${icons.range_icon}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
+    if (abi.status) {
+        txt += `<f>15px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
+        txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
+    }
+    if (abi.type)
+        txt += `<f>15px<f>${lang["type"]}: ${lang[abi.type]}\n`;
+    if (abi.shoots_projectile != "")
+        txt += `<f>15px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
+    if (abi.requires_melee_weapon)
+        txt += `<i>${icons.melee}<i><f>15px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
+    else if (abi.requires_ranged_weapon)
+        txt += `<i>${icons.ranged}<i><f>15px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
+    if (abi.requires_concentration)
+        txt += `<i>${icons.concentration_icon}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+    if (abi.aoe_size > 0)
+        txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
+    if (abi.self_target)
+        txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
+    if (abi.mana_cost > 0)
+        txt += `<i>${icons.mana_icon}<i><f>15px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+    if (abi.cooldown > 0)
+        txt += `<i>${icons.cooldown_icon}<i><f>15px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
 }
 // Tooltip for status
@@ -252,11 +306,19 @@ function effectSyntax(effect, embed = false, effectId = "") {
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
         else
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
-        var _abi = new Ability((_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find((__abi) => __abi.id == id), player);
+        try {
+            var _abi = new Ability((_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find((__abi) => __abi.id == id), player);
+        }
+        catch (_e) { }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);
         let status = new statEffect(statusEffects[_abi.status], _abi.statusModifiers);
-        tailEnd = lang[_d] + " status";
+        console.log(status);
+        if (_d.includes("attack_damage_multiplier")) {
+            tailEnd = lang["attack_name"];
+        }
+        else
+            tailEnd = lang[_d] + " status";
         lastBit = `[${((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_b = status === null || status === void 0 ? void 0 : status[_d]) === null || _b === void 0 ? void 0 : _b["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${(((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_c = status === null || status === void 0 ? void 0 : status[_d]) === null || _c === void 0 ? void 0 : _c["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
     }
     else if (keyIncludesAbility(key)) {

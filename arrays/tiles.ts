@@ -3,6 +3,7 @@ interface icons {
 }
 
 const icons = {
+  attack_damage_multiplier_icon: "resources/icons/atk.png",
   melee: "resources/icons/melee_icon.png",
   ranged: "resources/icons/ranged_icon.png",
   resistance: "resources/icons/resistance_icon.png",
@@ -21,10 +22,15 @@ const icons = {
   poison: "resources/icons/poison_icon.png",
   rage: "resources/icons/rage_icon.png",
   berserk: "resources/icons/berserk_icon.png",
+  battle_fury: "resources/icons/fighters_fury_icon.png",
   dazed: "resources/icons/dazed_icon.png",
+  ward: "resources/icons/ward_icon.png",
+  ward_icon: "resources/icons/ward_icon.png",
   range: "resources/icons/use_range.png",
   range_icon: "resources/icons/use_range_icon.png",
   use_range_icon: "resources/icons/use_range_icon.png",
+  aoe_size: "resources/icons/splash_area.png",
+  aoe_size_icon: "resources/icons/splash_area_icon.png",
   damage: "resources/icons/damage.png",
   damage_icon: "resources/icons/damage_icon.png",
   damage_multiplier_icon: "resources/icons/damage_icon.png",

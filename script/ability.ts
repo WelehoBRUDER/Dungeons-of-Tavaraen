@@ -64,7 +64,11 @@ const possible_stat_modifiers = [
 ];
 
 const possible_modifiers = [
-  "last"
+  "last",
+  "attack_damage_multiplierV",
+  "attack_damage_multiplierP",
+  "attack_resistance_penetrationV",
+  "attack_resistance_penetrationP"
 ];
 
 class Ability {
@@ -102,6 +106,10 @@ class Ability {
     // @ts-ignore
     const baseAbility = abilities[this.id];
     const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
+    if(this.id == "piercing_mana_bolt") {
+      console.log(values);
+      console.log(statusModifiers);
+    }
     this.name = baseAbility.name;
     this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;
     this.cooldown = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif) ?? 0;
@@ -110,7 +118,7 @@ class Ability {
     this.equippedSlot = base.equippedSlot ?? -1;
     this.damages = baseAbility.damages;
     this.damage_multiplier = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1)) ?? 1;
-    this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value +( values.resistance_penetration.modif - 1))) ?? 0;
+    this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + ( values.resistance_penetration.modif - 1))) ?? 0;
     this.base_heal = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif) ?? 0;
     this.stat_bonus = baseAbility.stat_bonus ?? "";
     this.status = baseAbility.status ?? "";
@@ -148,7 +156,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   });
@@ -161,7 +169,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   });
@@ -174,7 +182,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -187,7 +195,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -200,7 +208,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -213,7 +221,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -226,7 +234,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -239,7 +247,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -252,7 +260,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }
@@ -265,7 +273,7 @@ function getAbiModifiers(char: characterObject, id: string) {
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
         else if(key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (1 + value / 100);
+        else if (key.endsWith("P")) total[_key].modif += (value / 100);
       }
     });
   }

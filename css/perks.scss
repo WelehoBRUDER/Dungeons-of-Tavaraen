@@ -98,6 +98,9 @@
     right: 0;
     top: 0;
     box-shadow: inset 0 0 18px 24px rgba(48, 48, 48, 0.95);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-drag: none;
 
     .perkPoints {
       font-size: 36px;
@@ -112,11 +115,14 @@
     }
 
     .container {
-      width: 100%;
-      height: 100%;
+      width: fit-content;
+      height: fit-content;
       position: inherit;
       left: 0;
       top: 0;
+      overflow: auto;
+      user-select: none;
+      -webkit-user-drag: none;
 
       svg {
         filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.97));
@@ -125,8 +131,6 @@
       .perkBg {
         transition: 0.275s;
         position: absolute;
-        width: 128px;
-        height: 128px;
         background:rgba(24, 24, 24, 0.95);
         background-size: cover;
         box-sizing: border-box;
@@ -137,14 +141,12 @@
         box-shadow: inset 0 0 6px 4px rgba(16, 16, 16, 0.93), 0 0 7px 4px rgb(24, 24, 24);
         
         img {
-          width: 104px;
-          height: 104px;
           filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.93));
+          -webkit-user-drag: none;
         }
         
         p {
           color: white;
-          font-size: 12px;
           background: rgba(16, 16, 16, 0.98);
           border-radius: 8px;
           text-shadow: 0 0 2px black;

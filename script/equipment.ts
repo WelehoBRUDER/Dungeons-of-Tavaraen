@@ -395,7 +395,7 @@ function itemTT(item: any) {
     Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
   }
   if(Object.values(item.commands).length > 0) {
-    Object.entries(item.commands).forEach(eff => text += `<f>18px<f>${eff[0]}\n`);
+    Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;

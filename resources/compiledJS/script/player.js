@@ -333,6 +333,7 @@ var player = new PlayerCharacter({
         slash: 0,
         crush: 0,
         pierce: 0,
+        magic: 0,
         dark: 0,
         divine: 0,
         fire: 0,
@@ -365,17 +366,6 @@ var player = new PlayerCharacter({
     perks: [],
     abilities: [
         new Ability(Object.assign({}, abilities.attack), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.focus_strike), { equippedSlot: 0 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.true_shot), { equippedSlot: 1 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 2 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.icy_javelin), { equippedSlot: 3 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.barbarian_rage), { equippedSlot: 4 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.berserk), { equippedSlot: 5 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.shadow_step), { equippedSlot: 6 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.charge), { equippedSlot: 7 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.purification), { equippedSlot: 8 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.blight), { equippedSlot: 9 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.fireball), { equippedSlot: 10 }), dummy)
     ],
     statModifiers: [
         {

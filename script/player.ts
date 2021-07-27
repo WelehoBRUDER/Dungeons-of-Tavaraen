@@ -425,6 +425,7 @@ var player = new PlayerCharacter({
     slash: 0,
     crush: 0,
     pierce: 0,
+    magic: 0,
     dark: 0,
     divine: 0,
     fire: 0,
@@ -457,17 +458,6 @@ var player = new PlayerCharacter({
   perks: [],
   abilities: [
     new Ability({...abilities.attack}, dummy),
-    new Ability({...abilities.focus_strike, equippedSlot: 0}, dummy),
-    new Ability({...abilities.true_shot, equippedSlot: 1}, dummy),
-    new Ability({...abilities.first_aid, equippedSlot: 2}, dummy),
-    new Ability({...abilities.icy_javelin, equippedSlot: 3}, dummy),
-    new Ability({...abilities.barbarian_rage, equippedSlot: 4}, dummy),
-    new Ability({...abilities.berserk, equippedSlot: 5}, dummy),
-    new Ability({...abilities.shadow_step, equippedSlot: 6}, dummy),
-    new Ability({...abilities.charge, equippedSlot: 7}, dummy),
-    new Ability({...abilities.purification, equippedSlot: 8}, dummy),
-    new Ability({...abilities.blight, equippedSlot: 9}, dummy),
-    new Ability({...abilities.fireball, equippedSlot: 10}, dummy)
   ],
   statModifiers: [
     {

@@ -9,7 +9,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -21,7 +21,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -33,7 +33,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -45,7 +45,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -57,7 +57,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -69,7 +69,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -81,7 +81,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -93,7 +93,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
@@ -105,7 +105,7 @@ function getModifiers(char, stat) {
                 if (eff[0] == stat + "P" && eff[1] < 0)
                     modif *= (1 + eff[1] / 100);
                 else if (eff[0] == stat + "P")
-                    modif += (1 + eff[1] / 100);
+                    modif += (eff[1] / 100);
                 else if (eff[0] == stat + "V")
                     val += eff[1];
             }
