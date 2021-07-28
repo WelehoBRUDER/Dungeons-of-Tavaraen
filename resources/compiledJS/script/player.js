@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -99,6 +99,18 @@ class PlayerCharacter extends Character {
         this.sp = (_x = base.sp) !== null && _x !== void 0 ? _x : 0;
         this.pp = (_y = base.pp) !== null && _y !== void 0 ? _y : 0;
         this.usedShrines = (_z = base.usedShrines) !== null && _z !== void 0 ? _z : [];
+        this.unarmedDamages = (_0 = base.unarmedDamages) !== null && _0 !== void 0 ? _0 : { crush: 5 };
+        this.fistDmg = () => {
+            let damages = {};
+            Object.entries(this.unarmedDamages).forEach((dmg) => {
+                const key = dmg[0];
+                const _val = dmg[1];
+                const { v: val, m: mod } = getModifiers(this, "unarmedDmg" + key);
+                const { v: baseVal, m: baseMod } = getModifiers(this, "unarmedDmg");
+                damages[key] = Math.floor((((val + _val) * mod) + baseVal) * baseMod);
+            });
+            return damages;
+        };
         this.hpRegen = () => {
             const { v: val, m: mod } = getModifiers(this, "hpRegen");
             return Math.floor((val) * mod);
@@ -223,6 +235,9 @@ function sortInventory(category, reverse) {
     if (category == "grade") {
         player.inventory.sort((a, b) => gradeSort(a, b, "grade", reverse));
     }
+    if (category == "worth") {
+        player.inventory.sort((a, b) => worthSort(a, b, reverse));
+    }
     else
         player.inventory.sort((a, b) => numberSort(a, b, category, reverse));
     renderInventory();
@@ -316,6 +331,30 @@ function numberSort(a, b, string, reverse = false) {
         return 0;
     }
 }
+function worthSort(a, b, reverse = false) {
+    var numA = a.fullPrice();
+    var numB = b.fullPrice();
+    if (!reverse) {
+        if (numA > numB) {
+            return -1;
+        }
+        if (numA < numB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+    else {
+        if (numA < numB) {
+            return -1;
+        }
+        if (numA > numB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
+}
 var player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
@@ -366,6 +405,7 @@ var player = new PlayerCharacter({
     perks: [],
     abilities: [
         new Ability(Object.assign({}, abilities.attack), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 0 }), dummy),
     ],
     statModifiers: [
         {
@@ -376,6 +416,7 @@ var player = new PlayerCharacter({
             }
         }
     ],
+    unarmed_damages: { crush: 5 },
     statusEffects: [
         new statEffect(Object.assign({}, statusEffects.poison), s_def)
     ],
@@ -390,7 +431,7 @@ var randomProperty = function (obj) {
     var keys = Object.keys(obj);
     return obj[keys[keys.length * Math.random() << 0]];
 };
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 50; i++) {
     player.inventory.push(Object.assign({}, randomProperty(items)));
 }
 //# sourceMappingURL=player.js.map

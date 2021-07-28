@@ -24,6 +24,8 @@ interface playerChar extends characterObject {
   respawnPoint: any;
   gold: number;
   usedShrines: Array<any>;
+  unarmedDamages?: any;
+  fistDmg?: Function;
 }
 
 interface levelObject {
@@ -151,6 +153,8 @@ class PlayerCharacter extends Character {
   usedShrines: Array<any>;
   updatePerks?: Function;
   lvlUp?: Function;
+  unarmedDamages?: any;
+  fistDmg?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -179,6 +183,19 @@ class PlayerCharacter extends Character {
     this.sp = base.sp ?? 0;
     this.pp = base.pp ?? 0;
     this.usedShrines = base.usedShrines ?? [];
+    this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
+
+    this.fistDmg = () => {
+      let damages = {} as damageClass;
+      Object.entries(this.unarmedDamages).forEach((dmg: any) => {
+        const key = dmg[0];
+        const _val = dmg[1];
+        const { v: val, m: mod } = getModifiers(this, "unarmedDmg" + key);
+        const { v: baseVal, m: baseMod } = getModifiers(this, "unarmedDmg");
+        damages[key] = Math.floor((((val + _val) * mod) + baseVal) * baseMod);
+      });
+      return damages;
+    }
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
@@ -306,6 +323,9 @@ function sortInventory(category: string, reverse: boolean) {
   if(category == "grade") {
     player.inventory.sort((a,b)=>gradeSort(a,b, "grade", reverse));
   }
+  if(category == "worth") {
+    player.inventory.sort((a,b)=>worthSort(a,b, reverse));
+  }
   else player.inventory.sort((a,b)=>numberSort(a,b, category, reverse));
   renderInventory();
 }
@@ -407,6 +427,33 @@ function numberSort(a, b, string: string, reverse: boolean = false) {
     return 0;
   }
 }
+  
+  function worthSort(a, b, reverse: boolean = false) {
+    var numA = a.fullPrice();
+    var numB = b.fullPrice();
+    if(!reverse) {
+      if (numA > numB) {
+        return -1;
+      }
+      if (numA < numB) {
+        return 1;
+      }
+    
+      // names must be equal
+      return 0;
+    } 
+    else {
+      if (numA < numB) {
+        return -1;
+      }
+      if (numA > numB) {
+        return 1;
+      }
+    
+      // names must be equal
+      return 0;
+    }
+  }
 
 var player = new PlayerCharacter({
   id: "player",
@@ -458,6 +505,7 @@ var player = new PlayerCharacter({
   perks: [],
   abilities: [
     new Ability({...abilities.attack}, dummy),
+    new Ability({...abilities.first_aid, equippedSlot: 0}, dummy),
   ],
   statModifiers: [
     {
@@ -468,6 +516,7 @@ var player = new PlayerCharacter({
       }
     }
   ],
+  unarmed_damages: { crush: 5 },
   statusEffects: [
     new statEffect({...statusEffects.poison}, s_def)
   ],
@@ -484,7 +533,7 @@ var randomProperty = function (obj) {
   return obj[keys[ keys.length * Math.random() << 0]];
 };
 
-for(let i = 0; i < 25; i++) {
+for(let i = 0; i < 50; i++) {
   player.inventory.push({...randomProperty(items)});
 }
 

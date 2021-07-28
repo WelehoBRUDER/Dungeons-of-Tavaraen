@@ -214,9 +214,7 @@ const perksArray = {
         name: "Resistant in Melee",
         desc: "",
         effects: {
-          pierceResistV: 5,
-          crushResistV: 5,
-          slashResistV: 5
+          resistAllV: 5
         },
         relative_to: "patient_blow",
         requires: ["patient_blow"],
@@ -308,6 +306,164 @@ const perksArray = {
         tree: "fighter",
         pos: { x: 0, y: 2 },
         icon: "resources/icons/concentrated_warrior.png"
+      },
+    }
+  },
+  rogue: {
+    id: "rogue_perks",
+    name: "Rogue",
+    perks: {
+      way_of_the_rogue: {
+        id: "way_of_the_rogue",
+        name: "Way of the Rogue",
+        desc: "",
+        effects: {
+          cunV: 1,
+        },
+        commands: {
+          add_ability_shadow_step: 1
+        },
+        tree: "rogue",
+        pos: { x: 7.5, y: 1 },
+        icon: "resources/icons/skull.png"
+      },
+      weakpoint_spotter: {
+        id: "weakpoint_spotter",
+        name: "Weakpoint Spotter",
+        desc: "",
+        effects: {
+          critChanceP: 5
+        },
+        tree: "rogue",
+        relative_to: "way_of_the_rogue",
+        requires: ["way_of_the_rogue"],
+        pos: { x: 0, y: 2 },
+        icon: "resources/icons/damage.png"
+      },
+      shadow_warrior: {
+        id: "shadow_warrior",
+        name: "Shadow Warrior",
+        desc: "",
+        effects: {
+          shadow_step_use_rangeP: 50,
+          shadow_step_cooldownP: -22
+        },
+        tree: "rogue",
+        relative_to: "weakpoint_spotter",
+        requires: ["weakpoint_spotter"],
+        pos: { x: -1.5, y: 2 },
+        icon: "resources/icons/shadow_step.png"
+      },
+      fighting_dirty: {
+        id: "fighting_dirty",
+        name: "Fighting Dirty",
+        desc: "",
+        commands: {
+          add_ability_venomous_blow: 1,
+        },
+        tree: "rogue",
+        relative_to: "weakpoint_spotter",
+        requires: ["weakpoint_spotter"],
+        pos: { x: 1.5, y: 2 },
+        icon: "resources/icons/venomous_blow.png"
+      },
+      glass_cannon: {
+        id: "glass_cannon",
+        name: "Glass Cannon",
+        desc: "",
+        effects: {
+          damageP: 5,
+          critDamageP: 25,
+          hpMaxP: -10,
+        },
+        tree: "rogue",
+        relative_to: "shadow_warrior",
+        requires: ["shadow_warrior"],
+        pos: { x: -2, y: 1.5 },
+        icon: "resources/icons/glass_cannon.png"
+      },
+      simple_strokes: {
+        id: "simple_strokes",
+        name: "Simple Strokes",
+        desc: "",
+        effects: {
+          attack_damage_multiplierP: 13
+        },
+        tree: "rogue",
+        relative_to: "glass_cannon",
+        requires: ["glass_cannon"],
+        pos: { x: -1.5, y: 1.5 },
+        icon: "resources/icons/damage.png"
+      },
+      ranged_expert: {
+        id: "ranged_expert",
+        name: "Ranged Expert",
+        desc: "",
+        effects: {
+          dexV: 5
+        },
+        tree: "rogue",
+        relative_to: "shadow_warrior",
+        requires: ["shadow_warrior", "fighting_dirty"],
+        pos: { x: 1.5, y: 1.5 },
+        icon: "resources/icons/weapon_bow.png"
+      },
+      poison_specialist: {
+        id: "poison_specialist",
+        name: "Poison Specialist",
+        desc: "",
+        effects: {
+          venomous_blow_status_effect_lastV: 2,
+          venomous_blow_cooldownP: -20,
+        },
+        tree: "rogue",
+        relative_to: "fighting_dirty",
+        requires: ["fighting_dirty"],
+        pos: { x: 2, y: 1.5 },
+        icon: "resources/icons/venom.png"
+      },
+      quicker_draw: {
+        id: "quicker_draw",
+        name: "Quicker Draw",
+        desc: "",
+        effects: {
+          venomous_blow_cooldownV: -1,
+          poisoned_arrow_cooldownV: -3,
+          shadow_step_cooldownV: -1
+        },
+        tree: "rogue",
+        relative_to: "poison_specialist",
+        requires: ["poison_specialist"],
+        pos: { x: 1.5, y: 1.5 },
+        icon: "resources/icons/cooldown.png"
+      },
+      dance_of_death: {
+        id: "dance_of_death",
+        name: "Dance of Death",
+        desc: "",
+        effects: {
+          critChanceP: 5,
+          critDamageP: 10,
+          pierceDamageP: 15
+        },
+        tree: "rogue",
+        relative_to: "ranged_expert",
+        requires: ["ranged_expert", "glass_cannon"],
+        pos: { x: -1.75, y: 1.5 },
+        icon: "resources/icons/skull_bleeding_eyes.png"
+      },
+      poison_from_afar: {
+        id: "poison_from_afar",
+        name: "Poison from Afar",
+        desc: "",
+        commands: {
+          add_ability_poisoned_arrow: 1,
+        },
+        tree: "rogue",
+        relative_to: "poison_specialist",
+        requires: ["poison_specialist", "ranged_expert"],
+        pos: { x: -1.75, y: 1.5 },
+        icon: "resources/icons/poison_arrow.png"
       },
     }
   },

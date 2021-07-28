@@ -137,7 +137,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         let dmg = 0;
         if (!ability.damages) {
             // @ts-ignore
-            Object.entries((_a = attacker.weapon) === null || _a === void 0 ? void 0 : _a.damages).forEach((value) => {
+            let _damages = (_a = attacker.weapon) === null || _a === void 0 ? void 0 : _a.damages;
+            if (!_damages)
+                _damages = attacker.fistDmg();
+            Object.entries(_damages).forEach((value) => {
                 var _a;
                 const key = value[0];
                 const num = value[1];

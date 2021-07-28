@@ -43,12 +43,13 @@
 
       .statUp {
         display: flex;
-        text-align: center;
+        width: 100%;
 
         img {
           width: 96px;
           height: 96px;
           vertical-align: middle;
+          -webkit-user-drag: none;
           filter: drop-shadow(-2px 2px 4px rgba(118, 118, 118, 0.92));
         }
 
@@ -91,6 +92,30 @@
     }
   }
 
+  .perksStatic {
+    width: 80%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+
+    .perkPoints {
+      font-size: 36px;
+      color: white;
+      background: rgba(24, 24, 24, 0.95);
+      padding: 10px;
+      position: absolute;
+      left: 25px;
+      top: 5px;
+      border-radius: 10%;
+      box-shadow: -2px 2px 8px 8px rgb(14, 13, 13);
+    }
+  }
+
   .perks {
     width: 80%;
     height: 100%;
@@ -101,18 +126,6 @@
     overflow: hidden;
     user-select: none;
     -webkit-user-drag: none;
-
-    .perkPoints {
-      font-size: 36px;
-      color: white;
-      background: rgba(24, 24, 24, 0.95);
-      padding: 10px;
-      position: absolute;
-      left: 50px;
-      top: 30px;
-      border-radius: 25%;
-      box-shadow: -2px 2px 8px 8px rgb(14, 13, 13);
-    }
 
     .container {
       width: fit-content;

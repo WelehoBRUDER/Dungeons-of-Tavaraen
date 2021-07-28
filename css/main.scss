@@ -282,7 +282,7 @@ body {
       }
 
       .slotText {
-        font-size: 16px;
+        font-size: 14px;
         white-space: nowrap;
         position: absolute;
         left: 50%;
@@ -452,14 +452,14 @@ body {
   }
 
   .mapHover {
-    width: 500px;
-    height: 320px;
-    background: rgb(15, 15, 15);
-    box-shadow: inset 0px 0px 20px 16px black, 0px 0px 4px 2px white;
+    width: 450px;
+    height: 280px;
+    background: rgba(15, 15, 15, 0.95);
+    box-shadow: inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95), 0px 0px 4px 2px gold;
     position: absolute;
     right: 10px;
     bottom: 10px;
-    border: 5px solid silver;
+    border: 5px solid goldenrod;
     display: none;
     pointer-events: none;
 
@@ -484,6 +484,12 @@ body {
         width: 22px;
         vertical-align: middle;
       }
+    }
+
+    .enResists {
+      position: absolute;
+      top: 50px;
+      right: 10px;
     }
   }
 
@@ -643,7 +649,7 @@ body {
         p {
           transition: 0.07s;
           transition-timing-function: ease-in;
-          font-size: 22px;
+          font-size: 19px;
           height: 36px;
           margin: 0px;
           color: white;
@@ -677,12 +683,17 @@ body {
         }
 
         .itemRarity {
-          width: 11%;
+          width: 12%;
           padding-left: 1%;
         }
   
         .itemWeight {
-          width: 13%;
+          width: 12%;
+          padding-left: 1%;
+        }
+
+        .itemWorth {
+          width: 7%;
           padding-left: 1%;
         }
       }
@@ -829,6 +840,12 @@ body {
       height: 920px;
       margin-left: -805px;
       margin-top: -460px;
+
+      .slot {
+        .slotText {
+          font-size: 16px;
+        }
+      }
     }
   }
 

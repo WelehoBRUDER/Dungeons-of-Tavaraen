@@ -39,7 +39,7 @@ const possible_modifiers = [
 ];
 class Ability {
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
         // @ts-ignore
@@ -68,9 +68,10 @@ class Ability {
         this.requires_melee_weapon = (_o = baseAbility.requires_melee_weapon) !== null && _o !== void 0 ? _o : false;
         this.requires_ranged_weapon = (_p = baseAbility.requires_ranged_weapon) !== null && _p !== void 0 ? _p : false;
         this.requires_concentration = (_q = baseAbility.requires_concentration) !== null && _q !== void 0 ? _q : false;
-        this.aoe_size = (_r = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _r !== void 0 ? _r : 0;
-        this.aoe_effect = (_s = baseAbility.aoe_effect) !== null && _s !== void 0 ? _s : "";
-        this.self_target = (_t = baseAbility.self_target) !== null && _t !== void 0 ? _t : false;
+        this.recharge_only_in_combat = (_r = baseAbility.recharge_only_in_combat) !== null && _r !== void 0 ? _r : false;
+        this.aoe_size = (_s = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _s !== void 0 ? _s : 0;
+        this.aoe_effect = (_t = baseAbility.aoe_effect) !== null && _t !== void 0 ? _t : "";
+        this.self_target = (_u = baseAbility.self_target) !== null && _u !== void 0 ? _u : false;
         this.statusModifiers = statusModifiers;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;

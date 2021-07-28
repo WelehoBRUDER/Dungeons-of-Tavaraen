@@ -1,11 +1,12 @@
 "use strict";
 var perksData = [];
 var perks = [];
-var tree = "fighter"; // replace with player class when added
+var tree = "rogue"; // replace with player class when added
 const perkColors = {
     necromancer: "#20142e",
     sorcerer: "#183952",
     fighter: "#5e2813",
+    rogue: "#2b2b2b",
 };
 class perk {
     constructor(base) {
@@ -58,6 +59,7 @@ class perk {
                 player.pp--;
                 player.updatePerks();
                 formPerks();
+                formStatUpgrades();
             }
         };
     }
@@ -65,6 +67,7 @@ class perk {
 function formPerks() {
     perks = [];
     const bg = document.querySelector(".playerLeveling .perks");
+    const staticBg = document.querySelector(".playerLeveling .perksStatic");
     const perkArea = bg.querySelector(".container");
     perkArea.innerHTML = "";
     Object.entries(perksArray[tree].perks).forEach((_perk) => {
@@ -80,7 +83,7 @@ function formPerks() {
     svg.setAttribute('height', "4000");
     points.textContent = lang["perk_points"] + ": " + player.pp.toString();
     points.classList.add("perkPoints");
-    bg.append(points);
+    staticBg.append(points);
     perks.forEach((_perk) => {
         var _a;
         const perk = document.createElement("div");
@@ -90,7 +93,7 @@ function formPerks() {
         perk.classList.add(`${_perk.id}`);
         perk.style.backgroundColor = perkColors[tree];
         img.src = _perk.icon;
-        name.textContent = (_a = lang[_perk.id + "_name"]) !== null && _a !== void 0 ? _a : _perk.name;
+        name.textContent = (_a = lang[_perk.id + "_name"]) !== null && _a !== void 0 ? _a : _perk.id;
         tooltip(perk, perkTT(_perk));
         perk.style.width = `${baseSize}px`;
         perk.style.height = `${baseSize}px`;
@@ -183,20 +186,21 @@ function openLevelingScreen() {
     invOpen = true;
 }
 function perkTT(perk) {
-    var _a;
+    var _a, _b, _c;
     var txt = "";
-    txt += `\t<f>21px<f>${lang[perk.id + "_name"]}\t\n`;
-    txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"]}"<c>white<c>\n`;
-    if (((_a = perk.requires) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+    txt += `\t<f>21px<f>${(_a = lang[perk.id + "_name"]) !== null && _a !== void 0 ? _a : perk.id}\t\n`;
+    txt += `<f>15px<f><c>silver<c>"${(_b = lang[perk.id + "_desc"]) !== null && _b !== void 0 ? _b : perk.id + "_desc"}"<c>white<c>\n`;
+    if (((_c = perk.requires) === null || _c === void 0 ? void 0 : _c.length) > 0) {
         txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
         perk.requires.forEach(req => {
+            var _a;
             let found = false;
             player.perks.forEach((prk) => {
                 if (prk.id == req) {
                     found = true;
                 }
             });
-            txt += `<c>${found ? "lime" : "red"}<c>${lang[req + "_name"]}, `;
+            txt += `<c> ${found ? "lime" : "red"}<c>${(_a = lang[req + "_name"]) !== null && _a !== void 0 ? _a : req}, `;
         });
         txt = txt.substring(0, txt.length - 2);
         txt += "§";

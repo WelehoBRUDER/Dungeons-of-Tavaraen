@@ -78,6 +78,7 @@ interface weaponClass extends itemClass {
   rolledStats?: any;
   rolledDamages?: any;
   statStrings?: any;
+  fullPrice?: Function;
 }
 
 const namePartsArmor = {
@@ -122,6 +123,33 @@ const nameParts = {
   iceMain: " Of Frost"
 };
 
+const dmgWorths = {
+  slash: 0.5,
+  crush: 0.5,
+  pierce: 0.6,
+  magic: 1,
+  dark: 1.5,
+  divine: 1.5,
+  fire: 1.25,
+  lightning: 1.25,
+  ice: 1.25
+} as any;
+
+const statWorths = {
+  strV: 10,
+  strP: 7.5,
+  vitV: 10,
+  vitP: 7.5,
+  dexV: 10,
+  dexP: 7.5,
+  intV: 10,
+  intP: 7.5,
+  hpV: 2,
+  hpP: 3.5,
+  mpV: 5,
+  mpP: 3.5,
+} as any; 
+
 
 class Weapon extends Item {
   damages: damageClass;
@@ -134,6 +162,7 @@ class Weapon extends Item {
   rolledStats?: any;
   rolledDamages?: any;
   statStrings?: any;
+  fullPrice?: Function;
   constructor(base: weaponClass) {
     super(base);
     // @ts-ignore
@@ -145,8 +174,8 @@ class Weapon extends Item {
     this.damages = { ...baseItem.damages } ?? {};
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
-    this.rolledDamages = {...base.rolledDamages} ?? {};
-    this.rolledStats = {...base.rolledStats} ?? {};
+    this.rolledDamages = { ...base.rolledDamages } ?? {};
+    this.rolledStats = { ...base.rolledStats } ?? {};
 
     if (Object.values(this.rolledDamages).length == 0) {
       /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
@@ -164,6 +193,21 @@ class Weapon extends Item {
         }
       });
     }
+
+    this.fullPrice = () => {
+      let bonus = 0;
+      Object.entries(this.damages).forEach((dmg: any) => {
+        const key = dmg[0];
+        const val = dmg[1];
+        bonus += val * dmgWorths[key];
+      });
+      Object.entries(this.stats).forEach((stat: any)=>{
+        bonus += statWorths[stat[0]] * stat[1] ?? stat[1] * 0.5;
+      });
+      bonus *= grades[this.grade]["worth"];
+      let price = Math.floor(bonus + this.price)
+      return price < 1 ? 1 : price;
+    };
 
     Object.entries(this.rolledDamages).forEach((dmg: any) => {
       if (!this.damages[dmg[0]]) this.damages[dmg[0]] = dmg[1];
@@ -202,8 +246,8 @@ class Weapon extends Item {
     this.statStrings = {
       main: mainDamage,
       sub: subDamage
-    }
-    if(lang["changeWordOrder"]) {
+    };
+    if (lang["changeWordOrder"]) {
       this.name = `${lang[this.statStrings["main"] + "_damageMain"]} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
     }
     // @ts-expect-error
@@ -220,6 +264,8 @@ interface armorClass extends itemClass {
   rolledResistances?: any;
   rolledStats?: any;
   resString?: any;
+  coversHair?: boolean;
+  fullPrice?: Function;
 }
 
 class Armor extends Item {
@@ -231,17 +277,20 @@ class Armor extends Item {
   rolledResistances?: any;
   rolledStats?: any;
   resStrings?: any;
+  coversHair?: boolean;
+  fullPrice?: Function;
   constructor(base: armorClass) {
     super(base);
     // @ts-ignore
     const baseItem = { ...items[this.id] };
     this.resistancesTemplate = baseItem.resistancesTemplate;
     this.statsTemplate = baseItem.statsTemplate;
-    this.resistances = {...baseItem.resistances};
-    this.stats = {...baseItem.stats} ?? {};
-    this.commands = {...baseItem.commands} ?? {};
-    this.rolledResistances = {...base.rolledResistances} ?? {};
-    this.rolledStats = {...base.rolledStats} ?? {};
+    this.resistances = { ...baseItem.resistances };
+    this.stats = { ...baseItem.stats } ?? {};
+    this.commands = { ...baseItem.commands } ?? {};
+    this.rolledResistances = { ...base.rolledResistances } ?? {};
+    this.rolledStats = { ...base.rolledStats } ?? {};
+    this.coversHair = base.coversHair ?? false;
 
     if (Object.values(this.rolledResistances).length == 0) {
       /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
@@ -259,6 +308,21 @@ class Armor extends Item {
         }
       });
     }
+
+    this.fullPrice = () => {
+      let bonus = 0;
+      Object.entries(this.resistances).forEach((dmg: any) => {
+        const key = dmg[0];
+        const val = dmg[1];
+        bonus += val * dmgWorths[key];
+      });
+      Object.entries(this.stats).forEach((stat: any)=>{
+        bonus += statWorths[stat[0]] * stat[1] ?? stat[1] * 0.5;
+      });
+      bonus *= grades[this.grade]["worth"];
+      let price = Math.floor(bonus + this.price)
+      return price < 1 ? 1 : price;
+    };
 
     Object.entries(this.rolledResistances).forEach((dmg: any) => {
       if (!this.resistances[dmg[0]]) this.resistances[dmg[0]] = dmg[1];
@@ -296,14 +360,14 @@ class Armor extends Item {
     this.resStrings = {
       main: mainResistance,
       sub: subResistance
-    }
+    };
 
-    if(lang["changeWordOrder"]) {
+    if (lang["changeWordOrder"]) {
       this.name = `${lang[this.resStrings["main"] + "_resistanceMain"]} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
-    } 
+    }
     else {
-    // @ts-expect-error
-    this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
+      // @ts-expect-error
+      this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
     }
 
 
@@ -324,7 +388,7 @@ const equipSlots = [
   "artifact3"
 ];
 
-document.querySelector<HTMLDivElement>(".playerInventory").querySelectorAll<HTMLDivElement>(".slot").forEach(slot=>slot.addEventListener("mousedown", e=>player.unequip(e, slot.classList[0].toString())));
+document.querySelector<HTMLDivElement>(".playerInventory").querySelectorAll<HTMLDivElement>(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 
 function renderInventory() {
   updatePlayerInventoryIndexes();
@@ -339,7 +403,7 @@ function renderInventory() {
     inventory.querySelector<HTMLDivElement>("." + slot + "Bg").style.opacity = "0.33";
     inventory.querySelector<HTMLDivElement>("." + slot).textContent = "";
     if (Object.values(player[slot]).length > 0) {
-      const _item = {...player[slot]};
+      const _item = { ...player[slot] };
       const img = document.createElement("img");
       const name = document.createElement("p");
       img.src = _item.img;
@@ -390,15 +454,15 @@ function itemTT(item: any) {
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
   }
-  if(Object.values(item.stats).length > 0) {
+  if (Object.values(item.stats).length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
     Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
   }
-  if(Object.values(item.commands).length > 0) {
+  if (Object.values(item.commands).length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
-  text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
+  text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   return text;
 }
 
@@ -413,23 +477,27 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   const topType = document.createElement("p");
   const topRarity = document.createElement("p");
   const topWeight = document.createElement("p");
+  const topWorth = document.createElement("p");
   container.classList.add("itemsContainer");
   topImage.classList.add("topImage");
   topName.classList.add("topName");
   topType.classList.add("topType");
   topRarity.classList.add("topRarity");
   topWeight.classList.add("topWeight");
+  topWorth.classList.add("topWorth");
   topName.textContent = "Item name";
   topType.textContent = "Type";
   topRarity.textContent = "Rarity";
   topWeight.textContent = "Weight";
-  topName.addEventListener("click", e=>sortInventory("name", sortingReverse));
-  topType.addEventListener("click", e=>sortInventory("type", sortingReverse));
-  topRarity.addEventListener("click", e=>sortInventory("grade", sortingReverse));
-  topWeight.addEventListener("click", e=>sortInventory("weight", sortingReverse));
+  topWorth.textContent = "Worth";
+  topName.addEventListener("click", e => sortInventory("name", sortingReverse));
+  topType.addEventListener("click", e => sortInventory("type", sortingReverse));
+  topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
+  topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse));
+  topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse));
   itemsList.classList.add("itemList");
   itemsListBar.classList.add("itemListTop");
-  itemsListBar.append(topImage, topName, topType, topRarity, topWeight);
+  itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
   const items: Array<any> = [...inventory];
   items.forEach((itm: any) => {
     const itemObject = document.createElement("div");
@@ -438,27 +506,31 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     const itemRarity = document.createElement("p");
     const itemType = document.createElement("p");
     const itemWeight = document.createElement("p");
+    const itemWorth = document.createElement("p");
     itemObject.classList.add("itemListObject");
     itemImage.classList.add("itemImg");
     itemName.classList.add("itemName");
     itemRarity.classList.add("itemRarity");
     itemType.classList.add("itemType");
     itemWeight.classList.add("itemWeight");
+    itemWorth.classList.add("itemWorth");
     itemImage.src = itm.img;
     itemName.style.color = grades[itm.grade].color;
     itemType.style.color = grades[itm.grade].color;
     itemRarity.style.color = grades[itm.grade].color;
     itemWeight.style.color = grades[itm.grade].color;
+    itemWorth.style.color = "gold";
     itemName.textContent = itm.name;
     itemRarity.textContent = itm.grade;
     itemType.textContent = itm.type;
     itemWeight.textContent = itm.weight;
-    if(context == "PLAYER_INVENTORY") {
-      itemObject.addEventListener("mousedown", e=>player.equip(e, itm));
-      itemObject.addEventListener("dblclick", e=>player.drop(itm));
-    } 
+    itemWorth.textContent = itm.fullPrice();
+    if (context == "PLAYER_INVENTORY") {
+      itemObject.addEventListener("mousedown", e => player.equip(e, itm));
+      itemObject.addEventListener("dblclick", e => player.drop(itm));
+    }
     tooltip(itemObject, itemTT(itm));
-    itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight);
+    itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
     itemsList.append(itemObject);
   });
   container.append(itemsList, itemsListBar);

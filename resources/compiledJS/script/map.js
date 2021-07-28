@@ -14,6 +14,7 @@ baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
 var turnOver = true;
 var enemiesHadTurn = 0;
+let dontMove = false;
 const zoomLevels = [0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8];
 var currentZoom = 1;
 function sleep(ms) {
@@ -163,7 +164,7 @@ function renderMap(map) {
     /* Render Player */
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
-function renderTileHover(tile) {
+function renderTileHover(tile, event) {
     var _a, _b;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
@@ -171,6 +172,10 @@ function renderTileHover(tile) {
     var tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
     var tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     playerCanvas.width = playerCanvas.width;
+    if (dontMove) {
+        renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+        return;
+    }
     try {
         /* Render tile */
         var strokeImg = document.querySelector(".sprites .hoverTile");
@@ -237,6 +242,22 @@ function renderTileHover(tile) {
                 }
             }
         }
+        if (event.buttons == 1 && !isSelected) {
+            const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
+            var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
+            var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
+            path.forEach((step) => {
+                if (step.x == player.cords.x && step.y == player.cords.y)
+                    return;
+                var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                if (step.blocked) {
+                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+                }
+                else
+                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+            });
+        }
         playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
     }
     catch (_c) { }
@@ -249,7 +270,7 @@ function mapHover(event) {
     const y = lY + player.cords.y;
     if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1)
         return;
-    renderTileHover({ x: x, y: y });
+    renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
     var _a, _b;
@@ -268,7 +289,12 @@ function clickMap(event) {
         isSelected = false;
         abiSelected = {};
         updateUI();
-        renderTileHover({ x: x, y: y });
+        renderTileHover({ x: x, y: y }, event);
+        dontMove = true;
+        return;
+    }
+    if (dontMove) {
+        dontMove = false;
         return;
     }
     let move = true;
@@ -545,7 +571,7 @@ function canMoveTo(char, tile) {
     return movable;
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center") {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     canvas.width = canvas.width; // Clear canvas
     const bodyModel = document.querySelector(".sprites ." + player.race + "Model");
     const earModel = document.querySelector(".sprites ." + player.race + "Ears");
@@ -566,23 +592,24 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center") {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, x, y, size, size);
     }
-    if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
+    if (!((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.coversHair))
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, x, y, size, size);
+    if ((_c = player.helmet) === null || _c === void 0 ? void 0 : _c.sprite) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, x, y, size, size);
     }
-    if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
+    if ((_d = player.gloves) === null || _d === void 0 ? void 0 : _d.sprite) {
         const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, x, y, size, size);
     }
-    if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
+    if ((_e = player.boots) === null || _e === void 0 ? void 0 : _e.sprite) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, x, y, size, size);
     }
-    if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
+    if ((_f = player.weapon) === null || _f === void 0 ? void 0 : _f.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, x, y, size, size);
 }
 function renderPlayerPortrait() {
     const portrait = document.createElement("div");
@@ -596,7 +623,7 @@ function renderPlayerPortrait() {
     return portrait;
 }
 function renderPlayerModel(size, canvas, ctx) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     canvas.width = canvas.width; // Clear canvas
     if (player.isDead)
         return;
@@ -621,23 +648,24 @@ function renderPlayerModel(size, canvas, ctx) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
+    if (!((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.coversHair))
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    if ((_c = player.helmet) === null || _c === void 0 ? void 0 : _c.sprite) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
+    if ((_d = player.gloves) === null || _d === void 0 ? void 0 : _d.sprite) {
         const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
+    if ((_e = player.boots) === null || _e === void 0 ? void 0 : _e.sprite) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
+    if ((_f = player.weapon) === null || _f === void 0 ? void 0 : _f.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
@@ -873,19 +901,32 @@ async function advanceTurn() {
 }
 /* Show enemy stats when hovering */
 function hoverEnemyShow(enemy) {
+    var _a;
     staticHover.textContent = "";
     staticHover.style.display = "block";
     const name = document.createElement("p");
     name.classList.add("enemyName");
-    name.textContent = `Lvl ${enemy.level} ${enemy.name}`;
+    name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
     var mainStatText = "";
-    // @ts-ignore
-    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>Health: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
-    // @ts-ignore
-    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>Mana: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
+    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
+    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
+    mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemy.getStats().str}\n`;
+    mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemy.getStats().dex}\n`;
+    mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemy.getStats().vit}\n`;
+    mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemy.getStats().int}\n`;
+    mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemy.getStats().cun}\n`;
     // @ts-expect-error
     const mainStats = textSyntax(mainStatText);
-    staticHover.append(name, mainStats);
+    var resists = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
+    Object.entries(enemy.getResists()).forEach((res) => {
+        const key = res[0];
+        const val = res[1];
+        resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
+    });
+    // @ts-expect-error
+    const resistFrame = textSyntax(resists);
+    resistFrame.classList.add("enResists");
+    staticHover.append(name, mainStats, resistFrame);
 }
 /* Hide map hover */
 function hideMapHover() {

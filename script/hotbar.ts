@@ -34,6 +34,7 @@ function generateHotbar() {
           abiDiv.style.filter = "brightness(0.25)";
           if (abi.onCooldown > 0) {
             const cdTxt = document.createElement("p");
+            if(abi.recharge_only_in_combat && !state.inCombat) cdTxt.style.color = "red";
             cdTxt.textContent = abi.onCooldown?.toString() || "0";
             frame.append(cdTxt);
           }
@@ -122,8 +123,8 @@ function generateEffects() {
 // Tooltip for ability
 function abiTT(abi: ability) {
   var txt: string = "";
-  txt += `\t<f>26px<f>${lang[abi.id + "_name"]}\t\n`;
-  txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"]}"<c>white<c>\n`;
+  txt += `\t<f>26px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
+  txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
   if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
   if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
   if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
@@ -141,7 +142,7 @@ function abiTT(abi: ability) {
     });
     txt += "\n";
   }
-  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage_multiplier"]}: ${abi.damage_multiplier * 100}%\n`;
+  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
   if (abi.resistance_penetration) txt += `<i>${icons.rp_icon}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
   if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range_icon}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
   if (abi.status) {
@@ -153,6 +154,7 @@ function abiTT(abi: ability) {
   if (abi.requires_melee_weapon) txt += `<i>${icons.melee}<i><f>20px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
   else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
   if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+  if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
   if (abi.mana_cost > 0) txt += `<i>${icons.mana_icon}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
@@ -162,8 +164,8 @@ function abiTT(abi: ability) {
 
 function embedAbiTT(abi: ability) {
   var txt: string = "";
-  txt += `\t<f>17px<f>${lang[abi.id + "_name"]}\t\n`;
-  txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"]}"<c>white<c>\n`;
+  txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
+  txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
   if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
   if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
   if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
@@ -181,7 +183,7 @@ function embedAbiTT(abi: ability) {
     });
     txt += "\n";
   }
-  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage_multiplier"]}: ${abi.damage_multiplier * 100}%\n`;
+  if (abi.damage_multiplier) txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
   if (abi.resistance_penetration) txt += `<i>${icons.rp_icon}<i><f>15px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
   if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range_icon}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
   if (abi.status) {
@@ -193,6 +195,7 @@ function embedAbiTT(abi: ability) {
   if (abi.requires_melee_weapon) txt += `<i>${icons.melee}<i><f>15px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
   else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>15px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
   if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+  if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
   if (abi.mana_cost > 0) txt += `<i>${icons.mana_icon}<i><f>15px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
@@ -203,8 +206,8 @@ function embedAbiTT(abi: ability) {
 // Tooltip for status
 function statTT(status: statEffect, embed: boolean = false) {
   var txt: string = "";
-  if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"]}\t\n`;
-  if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"]}"\t\n`;
+  if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
+  if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
   if (status.dot) txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
   Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed, status.id));
   if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
@@ -240,7 +243,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     key_ = key;
     tailEnd = lang["resist"];
   }
-  else if (key.includes("Damage")) {
+  else if (key.includes("Damage") && !key.includes("crit")) {
     key = key.replace("Damage", "");
     key_ = key;
     tailEnd = lang["damage"];
@@ -270,11 +273,11 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     catch {}
     if (!_abi) _abi = new Ability(abilities[id], dummy);
     let status: statusEffect = new statEffect(statusEffects[_abi.status], _abi.statusModifiers);
-    console.log(status);
     if(_d.includes("attack_damage_multiplier")) {
       tailEnd = lang["attack_name"];
     } 
     else tailEnd = lang[_d] + " status";
+    if(tailEnd.includes("undefined")) tailEnd = _d + " status";
     lastBit = `[${(status?.effects[_d] - _value || status?.[_d]?.["total"] - _value || status?.[_d] - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${((status?.effects[_d] - _value || status?.[_d]?.["total"] - _value || status?.[_d] - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
   }
   else if (keyIncludesAbility(key)) {
@@ -287,11 +290,12 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
       if (value < 0) backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
       else backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
     tailEnd = lang[key_];
+    if(tailEnd.includes("undefined")) tailEnd = key_;
     }
     //if (tailEnd.includes("multiplier")) value = value * 100;
   }
   if(tailEnd == lang["resist"]) key = lang[key + "_def"];
-  else key = lang[key];
+  else if(lang[key]) key = lang[key];
   var img = icons[_key + "_icon"];
   if (!img) img = icons[key_ + tailEnd + "_icon"];
   if (!img) img = icons[key_ + "_icon"];

@@ -1,11 +1,12 @@
 var perksData: Array<any> = [];
 var perks: Array<any> = [];
-var tree = "fighter"; // replace with player class when added
+var tree = "rogue"; // replace with player class when added
 
 const perkColors = {
   necromancer: "#20142e",
   sorcerer: "#183952",
   fighter: "#5e2813",
+  rogue: "#2b2b2b",
 } as any;
 
 class perk {
@@ -63,6 +64,7 @@ class perk {
         player.pp--;
         player.updatePerks();
         formPerks();
+        formStatUpgrades();
       }
     };
   }
@@ -71,6 +73,7 @@ class perk {
 function formPerks() {
   perks = [];
   const bg = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
+  const staticBg = document.querySelector<HTMLDivElement>(".playerLeveling .perksStatic");
   const perkArea = bg.querySelector<HTMLDivElement>(".container");
   perkArea.innerHTML = "";
   Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
@@ -86,7 +89,7 @@ function formPerks() {
   svg.setAttribute('height', "4000");
   points.textContent = lang["perk_points"] + ": " + player.pp.toString();
   points.classList.add("perkPoints");
-  bg.append(points);
+  staticBg.append(points);
   perks.forEach((_perk: perk) => {
     const perk = document.createElement("div");
     const img = document.createElement("img");
@@ -95,7 +98,7 @@ function formPerks() {
     perk.classList.add(`${_perk.id}`);
     perk.style.backgroundColor = perkColors[tree];
     img.src = _perk.icon;
-    name.textContent = lang[_perk.id + "_name"] ?? _perk.name;
+    name.textContent = lang[_perk.id + "_name"] ?? _perk.id;
     tooltip(perk, perkTT(_perk));
     perk.style.width = `${baseSize}px`;
     perk.style.height = `${baseSize}px`;
@@ -190,8 +193,8 @@ function openLevelingScreen() {
 
 function perkTT(perk: perk) {
   var txt: string = "";
-  txt += `\t<f>21px<f>${lang[perk.id + "_name"]}\t\n`;
-  txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"]}"<c>white<c>\n`;
+  txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
+  txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
   if (perk.requires?.length > 0) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
     perk.requires.forEach(req => {
@@ -201,7 +204,7 @@ function perkTT(perk: perk) {
           found = true;
         }
       });
-      txt += `<c>${found ? "lime" : "red"}<c>${lang[req + "_name"]}, `;
+      txt += `<c> ${found ? "lime" : "red"}<c>${lang[req + "_name"] ?? req}, `;
     });
     txt = txt.substring(0, txt.length - 2);
     txt += "§";

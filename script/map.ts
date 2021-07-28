@@ -12,6 +12,7 @@ baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
 var turnOver = true;
 var enemiesHadTurn = 0;
+let dontMove = false;
 
 const zoomLevels = [0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8];
 var currentZoom = 1;
@@ -180,14 +181,17 @@ function renderMap(map: mapObject) {
   renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 
-function renderTileHover(tile: tileObject) {
+function renderTileHover(tile: tileObject, event: MouseEvent) {
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   var tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
   var tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
 
   playerCanvas.width = playerCanvas.width;
-
+  if(dontMove) {
+    renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+    return;
+  }
   try {
 
     /* Render tile */
@@ -251,6 +255,21 @@ function renderTileHover(tile: tileObject) {
         }
       }
     }
+    if (event.buttons == 1 && !isSelected) {
+      const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
+      var highlightImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT");
+      var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
+      path.forEach((step: any) => {
+        if (step.x == player.cords.x && step.y == player.cords.y) return;
+        var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        if (step.blocked) {
+          playerCtx?.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+        }
+        else playerCtx?.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+      });
+    }
+
 
     playerCtx?.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
   }
@@ -264,7 +283,7 @@ function mapHover(event: MouseEvent) {
   const x = lX + player.cords.x;
   const y = lY + player.cords.y;
   if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1) return;
-  renderTileHover({ x: x, y: y });
+  renderTileHover({ x: x, y: y }, event);
 }
 
 function clickMap(event: MouseEvent) {
@@ -282,7 +301,12 @@ function clickMap(event: MouseEvent) {
     isSelected = false;
     abiSelected = {};
     updateUI();
-    renderTileHover({ x: x, y: y });
+    renderTileHover({ x: x, y: y }, event);
+    dontMove = true;
+    return;
+  }
+  if(dontMove) {
+    dontMove = false;
     return;
   }
   let move = true;
@@ -427,7 +451,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   const path: any = generatePath(player.cords, goal, false);
   let count: number = 0;
   isSelected = false;
-  if(isMovingCurrently) breakMoving = true;
+  if (isMovingCurrently) breakMoving = true;
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
       await sleep(30);
@@ -541,6 +565,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
     ctx?.drawImage(chestModel, x, y, size, size);
   }
+  if (!player.helmet?.coversHair) ctx?.drawImage(hairModel, x, y, size, size);
   if (player.helmet?.sprite) {
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
     ctx?.drawImage(helmetModel, x, y, size, size);
@@ -557,7 +582,6 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
     ctx?.drawImage(weaponModel, x, y, size, size);
   }
-  ctx?.drawImage(hairModel, x, y, size, size);
 }
 
 function renderPlayerPortrait() {
@@ -596,6 +620,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
     ctx?.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
+  if (!player.helmet?.coversHair) ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   if (player.helmet?.sprite) {
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
     ctx?.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
@@ -612,7 +637,6 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
     ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
 }
 
 function generatePath(start: tileObject, end: tileObject, canFly: boolean, distanceOnly: boolean = false, retreatPath: number = 0) {
@@ -815,15 +839,27 @@ function hoverEnemyShow(enemy: enemy) {
   staticHover.style.display = "block";
   const name = document.createElement("p");
   name.classList.add("enemyName");
-  name.textContent = `Lvl ${enemy.level} ${enemy.name}`;
+  name.textContent = `Lvl ${enemy.level} ${lang[enemy.id + "_name"] ?? enemy.id}`;
   var mainStatText: string = "";
-  // @ts-ignore
-  mainStatText += `<f>20px<f><i>${icons.health_icon}<i>Health: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
-  // @ts-ignore
-  mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>Mana: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
+  mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
+  mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
+  mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemy.getStats().str}\n`;
+  mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemy.getStats().dex}\n`;
+  mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemy.getStats().vit}\n`;
+  mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemy.getStats().int}\n`;
+  mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemy.getStats().cun}\n`;
   // @ts-expect-error
   const mainStats = textSyntax(mainStatText);
-  staticHover.append(name, mainStats);
+  var resists: string = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
+  Object.entries(enemy.getResists()).forEach((res: any) => {
+    const key = res[0];
+    const val = res[1];
+    resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
+  });
+  // @ts-expect-error
+  const resistFrame = textSyntax(resists);
+  resistFrame.classList.add("enResists");
+  staticHover.append(name, mainStats, resistFrame);
 }
 
 /* Hide map hover */

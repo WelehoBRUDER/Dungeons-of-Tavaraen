@@ -21,7 +21,7 @@ function commandSyntax(cmd: string, val: number) {
     if(key.includes("ability_")) {
       key = key.replace("ability_", "");
       let abi = new Ability(abilities[key], dummy);
-      txt = `\n<f>18px<f><c>white<c>${lang["add_ability"]} '<c>yellow<c>${lang[abi.id + "_name"]}<c>white<c>'\n§`;
+      txt = `\n<f>18px<f><c>white<c>${lang["add_ability"]} '<c>yellow<c>${lang[abi.id + "_name"] ?? abi.id}<c>white<c>'\n§`;
       txt += embedAbiTT(abi);
     }
   }

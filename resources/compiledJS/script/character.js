@@ -160,15 +160,17 @@ class Character {
             stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
             const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage");
             const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance");
-            stats["critDamage"] = Math.floor(critAtkVal + critAtkMulti + (stats["cun"] * 1.5));
-            stats["critChance"] = Math.floor(critHitVal + critHitMulti + (stats["cun"] * 0.4));
+            stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
+            stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
             return stats;
         };
         this.getResists = () => {
             let resists = {};
             Object.keys(this.resistances).forEach((res) => {
                 const { v: val, m: mod } = getModifiers(this, res + "Resist");
-                resists[res] = Math.floor((this.resistances[res] + val) * mod);
+                const { v: _val, m: _mod } = getModifiers(this, "resistAll");
+                let value = Math.floor((this.resistances[res] + val) * mod);
+                resists[res] = Math.floor((value + _val) * _mod);
                 resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
             });
             return resists;
@@ -188,7 +190,7 @@ class Character {
             var _a;
             this.statusEffects.forEach((status, index) => {
                 if (status.dot) {
-                    const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType]));
+                    const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
                     this.stats.hp -= dmg;
                     spawnFloatingText(this.cords, dmg.toString(), "red", 32);
                     let effectText = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
@@ -207,8 +209,14 @@ class Character {
                 }
             });
             (_a = this.abilities) === null || _a === void 0 ? void 0 : _a.forEach((abi) => {
-                if (abi.onCooldown > 0)
-                    abi.onCooldown--;
+                if (abi.onCooldown > 0) {
+                    if (abi.recharge_only_in_combat) {
+                        if (state.inCombat)
+                            abi.onCooldown--;
+                    }
+                    else
+                        abi.onCooldown--;
+                }
             });
         };
         this.abilities = (_e = base.abilities) !== null && _e !== void 0 ? _e : [];

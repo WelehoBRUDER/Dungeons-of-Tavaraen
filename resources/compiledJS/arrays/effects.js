@@ -20,6 +20,27 @@ const statusEffects = {
         textIcon: icons.poison,
         icon: "resources/icons/poison.png"
     },
+    venom: {
+        id: "venom",
+        name: "Venom",
+        dot: {
+            damageType: "poison",
+            damageAmount: 8,
+            icon: icons.venom
+        },
+        effects: {
+            strV: -3,
+            dexV: -3,
+            intV: -3,
+            damageP: -20
+        },
+        last: {
+            total: 4,
+            current: 4
+        },
+        textIcon: icons.venom,
+        icon: "resources/icons/venom.png"
+    },
     blighted: {
         id: "blighted",
         name: "Blighted",

@@ -57,6 +57,31 @@ const nameParts = {
     iceSub: "Chilling ",
     iceMain: " Of Frost"
 };
+const dmgWorths = {
+    slash: 0.5,
+    crush: 0.5,
+    pierce: 0.6,
+    magic: 1,
+    dark: 1.5,
+    divine: 1.5,
+    fire: 1.25,
+    lightning: 1.25,
+    ice: 1.25
+};
+const statWorths = {
+    strV: 10,
+    strP: 7.5,
+    vitV: 10,
+    vitP: 7.5,
+    dexV: 10,
+    dexP: 7.5,
+    intV: 10,
+    intP: 7.5,
+    hpV: 2,
+    hpP: 3.5,
+    mpV: 5,
+    mpP: 3.5,
+};
 class Weapon extends Item {
     constructor(base) {
         var _a, _b, _c, _d, _e;
@@ -88,6 +113,21 @@ class Weapon extends Item {
                 }
             });
         }
+        this.fullPrice = () => {
+            let bonus = 0;
+            Object.entries(this.damages).forEach((dmg) => {
+                const key = dmg[0];
+                const val = dmg[1];
+                bonus += val * dmgWorths[key];
+            });
+            Object.entries(this.stats).forEach((stat) => {
+                var _a;
+                bonus += (_a = statWorths[stat[0]] * stat[1]) !== null && _a !== void 0 ? _a : stat[1] * 0.5;
+            });
+            bonus *= grades[this.grade]["worth"];
+            let price = Math.floor(bonus + this.price);
+            return price < 1 ? 1 : price;
+        };
         Object.entries(this.rolledDamages).forEach((dmg) => {
             if (!this.damages[dmg[0]])
                 this.damages[dmg[0]] = dmg[1];
@@ -145,7 +185,7 @@ class Weapon extends Item {
 }
 class Armor extends Item {
     constructor(base) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         super(base);
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
@@ -156,6 +196,7 @@ class Armor extends Item {
         this.commands = (_b = Object.assign({}, baseItem.commands)) !== null && _b !== void 0 ? _b : {};
         this.rolledResistances = (_c = Object.assign({}, base.rolledResistances)) !== null && _c !== void 0 ? _c : {};
         this.rolledStats = (_d = Object.assign({}, base.rolledStats)) !== null && _d !== void 0 ? _d : {};
+        this.coversHair = (_e = base.coversHair) !== null && _e !== void 0 ? _e : false;
         if (Object.values(this.rolledResistances).length == 0) {
             /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
             this.resistancesTemplate.forEach((template) => {
@@ -172,6 +213,21 @@ class Armor extends Item {
                 }
             });
         }
+        this.fullPrice = () => {
+            let bonus = 0;
+            Object.entries(this.resistances).forEach((dmg) => {
+                const key = dmg[0];
+                const val = dmg[1];
+                bonus += val * dmgWorths[key];
+            });
+            Object.entries(this.stats).forEach((stat) => {
+                var _a;
+                bonus += (_a = statWorths[stat[0]] * stat[1]) !== null && _a !== void 0 ? _a : stat[1] * 0.5;
+            });
+            bonus *= grades[this.grade]["worth"];
+            let price = Math.floor(bonus + this.price);
+            return price < 1 ? 1 : price;
+        };
         Object.entries(this.rolledResistances).forEach((dmg) => {
             if (!this.resistances[dmg[0]])
                 this.resistances[dmg[0]] = dmg[1];
@@ -310,7 +366,7 @@ function itemTT(item) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
-    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
+    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
     return text;
 }
 var sortingReverse = false;
@@ -323,23 +379,27 @@ function createItems(inventory, context = "PLAYER_INVENTORY") {
     const topType = document.createElement("p");
     const topRarity = document.createElement("p");
     const topWeight = document.createElement("p");
+    const topWorth = document.createElement("p");
     container.classList.add("itemsContainer");
     topImage.classList.add("topImage");
     topName.classList.add("topName");
     topType.classList.add("topType");
     topRarity.classList.add("topRarity");
     topWeight.classList.add("topWeight");
+    topWorth.classList.add("topWorth");
     topName.textContent = "Item name";
     topType.textContent = "Type";
     topRarity.textContent = "Rarity";
     topWeight.textContent = "Weight";
+    topWorth.textContent = "Worth";
     topName.addEventListener("click", e => sortInventory("name", sortingReverse));
     topType.addEventListener("click", e => sortInventory("type", sortingReverse));
     topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
     topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse));
+    topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse));
     itemsList.classList.add("itemList");
     itemsListBar.classList.add("itemListTop");
-    itemsListBar.append(topImage, topName, topType, topRarity, topWeight);
+    itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
     const items = [...inventory];
     items.forEach((itm) => {
         const itemObject = document.createElement("div");
@@ -348,27 +408,31 @@ function createItems(inventory, context = "PLAYER_INVENTORY") {
         const itemRarity = document.createElement("p");
         const itemType = document.createElement("p");
         const itemWeight = document.createElement("p");
+        const itemWorth = document.createElement("p");
         itemObject.classList.add("itemListObject");
         itemImage.classList.add("itemImg");
         itemName.classList.add("itemName");
         itemRarity.classList.add("itemRarity");
         itemType.classList.add("itemType");
         itemWeight.classList.add("itemWeight");
+        itemWorth.classList.add("itemWorth");
         itemImage.src = itm.img;
         itemName.style.color = grades[itm.grade].color;
         itemType.style.color = grades[itm.grade].color;
         itemRarity.style.color = grades[itm.grade].color;
         itemWeight.style.color = grades[itm.grade].color;
+        itemWorth.style.color = "gold";
         itemName.textContent = itm.name;
         itemRarity.textContent = itm.grade;
         itemType.textContent = itm.type;
         itemWeight.textContent = itm.weight;
+        itemWorth.textContent = itm.fullPrice();
         if (context == "PLAYER_INVENTORY") {
             itemObject.addEventListener("mousedown", e => player.equip(e, itm));
             itemObject.addEventListener("dblclick", e => player.drop(itm));
         }
         tooltip(itemObject, itemTT(itm));
-        itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight);
+        itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
         itemsList.append(itemObject);
     });
     container.append(itemsList, itemsListBar);

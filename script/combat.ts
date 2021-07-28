@@ -119,7 +119,9 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     let dmg: number = 0;
     if (!ability.damages) {
       // @ts-ignore
-      Object.entries(attacker.weapon?.damages).forEach((value: any) => {
+      let _damages = attacker.weapon?.damages;
+      if (!_damages) _damages = attacker.fistDmg();
+      Object.entries(_damages).forEach((value: any) => {
         const key: string = value[0];
         const num: number = value[1];
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
