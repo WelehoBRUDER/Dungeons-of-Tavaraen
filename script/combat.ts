@@ -307,41 +307,46 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
   }
-  let collided = false;
-  for (let step of path) {
-    await sleep(50);
-    const { screenX: x, screenY: y } = tileCordsToScreen(step);
-    if (step.enemy) {
-      collided = true;
-      collision({ x: step.x, y: step.y }, ability, isPlayer, player);
+  try {
+    let collided = false;
+    for (let step of path) {
+      await sleep(50);
+      const { screenX: x, screenY: y } = tileCordsToScreen(step);
+      if (step.enemy) {
+        collided = true;
+        collision({ x: step.x, y: step.y }, ability, isPlayer, player);
+        if(isPlayer) setTimeout(advanceTurn, 50);
+        else updateEnemiesTurn();
+        break;
+      }
+      if (step.player) {
+        collided = true;
+        updateEnemiesTurn();
+        collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
+        break;
+      }
+      if (step.blocked) {
+        collided = true;
+        if(isPlayer) setTimeout(advanceTurn, 50);
+        else updateEnemiesTurn();
+        break;
+      }
+      canvas.width = canvas.width;
+      ctx?.translate(x + spriteSize / 2, y + spriteSize / 2);
+      const rotation = calcAngleDegrees(end.x - start.x, end.y - start.y);
+      ctx?.rotate(rotation * Math.PI / 180);
+      ctx?.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
+      ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
+    }
+    if(!collided && ability.aoe_size > 0) {
       if(isPlayer) setTimeout(advanceTurn, 50);
-      else updateEnemiesTurn();
-      break;
+      aoeCollision(createAOEMap(path[path.length-1], ability.aoe_size), attacker, ability);
     }
-    if (step.player) {
-      collided = true;
-      updateEnemiesTurn();
-      collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
-      break;
-    }
-    if (step.blocked) {
-      collided = true;
-      if(isPlayer) setTimeout(advanceTurn, 50);
-      else updateEnemiesTurn();
-      break;
-    }
-    canvas.width = canvas.width;
-    ctx?.translate(x + spriteSize / 2, y + spriteSize / 2);
-    const rotation = calcAngleDegrees(end.x - start.x, end.y - start.y);
-    ctx?.rotate(rotation * Math.PI / 180);
-    ctx?.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
-    ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
+    projectileLayers.removeChild(canvas);
   }
-  if(!collided && ability.aoe_size > 0) {
-    if(isPlayer) setTimeout(advanceTurn, 50);
-    aoeCollision(createAOEMap(path[path.length-1], ability.aoe_size), attacker, ability);
+  catch {
+    projectileLayers.removeChild(canvas);
   }
-  projectileLayers.removeChild(canvas);
 }
 
 function collision(target: tileObject, ability: ability, isPlayer: boolean, attacker: characterObject, theme?: string) {

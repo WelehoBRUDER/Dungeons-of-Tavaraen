@@ -149,7 +149,7 @@ class Enemy extends Character {
         try {
           this.cords.x = path[0].x;
           this.cords.y = path[0].y;
-          if (settings.log_enemy_movement) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${this.name} <c>white<c>moves to [${this.cords.x}, ${this.cords.y}]`);
+          if (settings.log_enemy_movement) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[this.id + "_name"] ?? this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
         }
         catch {  }
 

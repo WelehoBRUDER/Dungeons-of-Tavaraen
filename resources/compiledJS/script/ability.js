@@ -45,10 +45,6 @@ class Ability {
         // @ts-ignore
         const baseAbility = abilities[this.id];
         const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
-        if (this.id == "piercing_mana_bolt") {
-            console.log(values);
-            console.log(statusModifiers);
-        }
         this.name = baseAbility.name;
         this.mana_cost = (_a = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif)) !== null && _a !== void 0 ? _a : 0;
         this.cooldown = (_b = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif)) !== null && _b !== void 0 ? _b : 0;
@@ -82,7 +78,7 @@ class Ability {
     }
 }
 function getAbiModifiers(char, id) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     const total = {};
     straight_modifiers.forEach((mod) => {
         total[mod] = { value: 0, modif: 1 };
@@ -199,7 +195,23 @@ function getAbiModifiers(char, id) {
             }
         });
     }
-    if ((_g = char.artifact1) === null || _g === void 0 ? void 0 : _g.stats) {
+    if ((_g = char.legs) === null || _g === void 0 ? void 0 : _g.stats) {
+        Object.entries(char.legs.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(id) && !key.includes("status")) {
+                key = key.replace(id + "_", "");
+                const _key = key.substring(0, key.length - 1);
+                if (key.endsWith("V"))
+                    total[_key].value += value;
+                else if (key.endsWith("P") && value < 0)
+                    total[_key].modif *= (1 + value / 100);
+                else if (key.endsWith("P"))
+                    total[_key].modif += (value / 100);
+            }
+        });
+    }
+    if ((_h = char.artifact1) === null || _h === void 0 ? void 0 : _h.stats) {
         Object.entries(char.artifact1.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -215,7 +227,7 @@ function getAbiModifiers(char, id) {
             }
         });
     }
-    if ((_h = char.artifact2) === null || _h === void 0 ? void 0 : _h.stats) {
+    if ((_j = char.artifact2) === null || _j === void 0 ? void 0 : _j.stats) {
         Object.entries(char.artifact2.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -231,7 +243,7 @@ function getAbiModifiers(char, id) {
             }
         });
     }
-    if ((_j = char.artifact3) === null || _j === void 0 ? void 0 : _j.stats) {
+    if ((_k = char.artifact3) === null || _k === void 0 ? void 0 : _k.stats) {
         Object.entries(char.artifact3.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -250,7 +262,7 @@ function getAbiModifiers(char, id) {
     return total;
 }
 function getAbiStatusModifiers(char, abilityId, effectId) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     const total = { effects: {} };
     possible_stat_modifiers.forEach((mod) => {
         total["effects"][mod] = { value: 0, modif: 1 };
@@ -463,7 +475,36 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
             }
         });
     }
-    if ((_g = char.artifact1) === null || _g === void 0 ? void 0 : _g.stats) {
+    if ((_g = char.legs) === null || _g === void 0 ? void 0 : _g.stats) {
+        Object.entries(char.legs.stats).forEach((eff) => {
+            let key = eff[0];
+            let value = eff[1];
+            if (key.includes(abilityId) && key.includes("status")) {
+                key = key.replace(abilityId + "_", "");
+                if (key.includes("status_effect")) {
+                    const _key = key.replace("status_effect_", "");
+                    const __key = _key.substring(0, _key.length - 1);
+                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                        if (key.endsWith("V"))
+                            total["effects"][__key].value += value;
+                        else if (key.endsWith("P") && value < 0)
+                            total["effects"][__key].modif *= (1 + value / 100);
+                        else if (key.endsWith("P"))
+                            total["effects"][__key].modif += (1 + value / 100);
+                    }
+                    else {
+                        if (key.endsWith("V"))
+                            total[__key].value += value;
+                        else if (key.endsWith("P") && value < 0)
+                            total[__key].modif *= (1 + value / 100);
+                        else if (key.endsWith("P"))
+                            total[__key].modif += (1 + value / 100);
+                    }
+                }
+            }
+        });
+    }
+    if ((_h = char.artifact1) === null || _h === void 0 ? void 0 : _h.stats) {
         Object.entries(char.artifact1.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -492,7 +533,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
             }
         });
     }
-    if ((_h = char.artifact2) === null || _h === void 0 ? void 0 : _h.stats) {
+    if ((_j = char.artifact2) === null || _j === void 0 ? void 0 : _j.stats) {
         Object.entries(char.artifact2.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
@@ -521,7 +562,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
             }
         });
     }
-    if ((_j = char.artifact3) === null || _j === void 0 ? void 0 : _j.stats) {
+    if ((_k = char.artifact3) === null || _k === void 0 ? void 0 : _k.stats) {
         Object.entries(char.artifact3.stats).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];

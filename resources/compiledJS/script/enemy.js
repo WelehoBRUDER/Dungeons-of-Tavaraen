@@ -42,6 +42,7 @@ class Enemy extends Character {
             // Right now AI only randomly chooses an ability and checks if there's any point in using it,
             // Which is whether or not it'll actually hit the player.
             // This system already provides plenty of depht, but not truly intelligent foes.
+            var _a;
             // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
             // if(this.hpRemain() <= this.retreatLimit && !this.hasRetreated) {
@@ -98,9 +99,9 @@ class Enemy extends Character {
                     this.cords.x = path[0].x;
                     this.cords.y = path[0].y;
                     if (settings.log_enemy_movement)
-                        displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${this.name} <c>white<c>moves to [${this.cords.x}, ${this.cords.y}]`);
+                        displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
                 }
-                catch (_a) { }
+                catch (_b) { }
                 updateEnemiesTurn();
             }
             setTimeout(modifyCanvas, 200);

@@ -43,6 +43,7 @@ interface characterObject {
   helmet?: armorClass | any;
   gloves?: armorClass | any;
   boots?: armorClass | any;
+  legs?: armorClass | any;
   artifact1?: any;
   artifact2?: any;
   artifact3?: any;
@@ -159,6 +160,15 @@ function getModifiers(char: any, stat: string) {
       }
     });
   }
+  if (char.legs?.stats) {
+    Object.entries(char.legs.stats).forEach((eff: any) => {
+      if (eff[0].startsWith(stat)) {
+        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+        else if (eff[0] == stat + "V") val += eff[1];
+      }
+    });
+  }
   if (stat.includes("Resist")) {
     if (char.chest?.resistances) {
       if (char.chest.resistances[stat.replace("Resist", '')]) val += char.chest.resistances[stat.replace("Resist", '')];
@@ -171,6 +181,9 @@ function getModifiers(char: any, stat: string) {
     }
     if (char.boots?.resistances) {
       if (char.boots.resistances[stat.replace("Resist", '')]) val += char.boots.resistances[stat.replace("Resist", '')];
+    }
+    if (char.legs?.resistances) {
+      if (char.legs.resistances[stat.replace("Resist", '')]) val += char.legs.resistances[stat.replace("Resist", '')];
     }
   }
   return { v: val, m: modif };
@@ -190,6 +203,7 @@ class Character {
   helmet?: armorClass | any;
   gloves?: armorClass | any;
   boots?: armorClass | any;
+  legs?: armorClass | any;
   artifact1?: any;
   artifact2?: any;
   artifact3?: any;
@@ -332,8 +346,16 @@ class Character {
         if(this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({...this.inventory[i]});
         // @ts-ignore
         else if(this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
+        // @ts-ignore
+        else if(this.inventory[i].type == "consumable") this.inventory[i] = new Consumable(this.inventory[i]);
+        }
       }
-      }
+      if(this.weapon?.type) this.weapon = new Weapon({...this.weapon});
+      if(this.chest?.type) this.chest = new Armor({...this.chest});
+      if(this.legs?.type) this.legs = new Armor({...this.legs});
+      if(this.helmet?.type) this.helmet = new Armor({...this.helmet});
+      if(this.gloves?.type) this.gloves = new Armor({...this.gloves});
+      if(this.boots?.type) this.boots = new Armor({...this.boots});
     }
   }
 }

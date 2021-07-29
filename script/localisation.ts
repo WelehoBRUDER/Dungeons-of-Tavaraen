@@ -1,6 +1,11 @@
 // /* NOTE - THIS WILL *NEVER* FULLY TRANSLATE THE GAME, BUT IT WILL ATLEAST PROVIDE YOU WITH FLAVOUR TEXTS IN YOUR PREFERRED LANGUAGE */ //
 
 const finnish = {
+  // identifier
+  language_id: "finnish",
+  finnish: "Suomi",
+  english: "English",
+
   // Technical stuff
   changeWordOrder: true,
   mana: "Taika",
@@ -127,6 +132,8 @@ const finnish = {
   ice_resistanceMain: "Jäänmurtava",
 
   // Item names
+  healingScrollI_name: "Parannuksen Loitsukirja I",
+  manaScrollI_name: "Taianpalautuksen Loitsukirja I",
   dagger_name: "Tikari",
   stick_name: "Keppi",
   chippedBlade_name: "Kulunut Terä",
@@ -135,6 +142,7 @@ const finnish = {
   huntingBow_name: "Metsästys Jousi",
   raggedShirt_name: "Ryysyinen Paita",
   raggedBoots_name: "Ryysyiset Jalkimet",
+  raggedPants_name: "Ryysyiset Housut",
   raggedGloves_name: "Ryysyiset Hanskat",
   raggedHood_name: "Ryysyinen Huppu",
 
@@ -157,6 +165,8 @@ const finnish = {
   player_death_log: "OLET KUOLLUT...",
   cure_pl: "Parannat itsesi!",
   cure: "[ACTOR] parantaa itsensä.",
+  useConsumable: "Käytät taiallisen esineen!",
+  moves_to: "liikkuu ruutuun",
 
   // WORLD TEXTS
   gained_xp: "Sait [XP] XP!",
@@ -181,6 +191,26 @@ const finnish = {
   critChance: "Kriittisen iskun mahdollisuus",
   critDamage: "Kriittisen iskun voima",
   resistAll: "Puolustusvoima",
+  uses: "Käyttökerrat",
+  item_name: "Tavaran Nimi",
+  item_type: "Tyyppi",
+  item_rarity: "Harvinaisuus",
+  item_weight_title: "Paino",
+  item_worth_title: "Arvo",
+  weapon: "ase",
+  armor: "panssari",
+  consumable: "käytettävä",
+
+  /* MENU */
+
+  menu_resume: "Takaisin",
+  menu_options: "Asetukset",
+  menu_main_screen: "Päämenu",
+  menu_new_game: "Uusi Peli",
+  menu_load_game: "Lataa Peli",
+
+  setting_log_enemy_movement: "Kirjaa vihollisten sijainnit",
+  setting_game_language: "Pelin kieli",
 
   // Grades
   common: "Yleinen",
@@ -352,6 +382,11 @@ const finnish = {
 } as any;
 
 const english = {
+  // Identifier
+  language_id: "english",
+  finnish: "Suomi",
+  english: "English",
+
   // Technical stuff
   changeWordOrder: false,
   mana: "mana",
@@ -457,6 +492,8 @@ const english = {
   player_death_log: "YOU ARE DEAD...",
   cure_pl: "<c>yellow<c>You<c>white<c> cure yourself!",
   cure: "[ACTOR] cures themself.",
+  useConsumable: "<c>yellow<c>You<c>white<c> use a consumable item!",
+  moves_to: "moves to tile",
 
 
   // WORLD TEXTS
@@ -482,13 +519,33 @@ const english = {
   critChance: "Critical Hit Chance",
   critDamage: "Critical Hit Damage",
   resistAll: "All Resistances",
+  uses: "Uses Remaining",
+  item_name: "Item name",
+  item_type: "Type",
+  item_rarity: "Rarity",
+  item_weight_title: "Weight",
+  item_worth_title: "Worth",
+  weapon: "weapon",
+  armor: "armor",
+  consumable: "consumable",
 
-    // Grades
-    common: "Common",
-    uncommon: "Uncommon",
-    rare: "Rare",
-    mythical: "Mythical",
-    legendary: "Legendary",
+  /* MENU */
+
+  menu_resume: "Resume",
+  menu_options: "Options",
+  menu_main_screen: "Main Menu",
+  menu_new_game: "New Game",
+  menu_load_game: "Load Game",
+
+  setting_log_enemy_movement: "Log enemy movement",
+  setting_game_language: "Game language",
+
+  // Grades
+  common: "Common",
+  uncommon: "Uncommon",
+  rare: "Rare",
+  mythical: "Mythical",
+  legendary: "Legendary",
 
   // Statuses
   effect_poison_name: "Poison",
@@ -596,51 +653,51 @@ const english = {
   flame_wizard_fury_name: "The Flame Wizard's Fury",
   flame_wizard_fury_desc: "Your foes shall tremble at your flaming fury!",
 
-    // FIGHTER
-    battle_sense_name: "Battle Sense",
-    battle_sense_desc: "After numerous battles, you have developed a keen sense for danger",
-    fighters_vitality_name: "Fighter's Vitality",
-    fighters_vitality_desc: "Combat necessitates the sturdiest of bodies.",
-    patient_blow_name: "Patient Blow",
-    patient_blow_desc: "Careful observation is a fighter's greatest asset.",
-    strength_training_name: "Strength Training",
-    strength_training_desc: "When tactics fail, strength is relied upon.",
-    fighting_style_name: "Fighting Style",
-    fighting_style_desc: "I fear not the man who has practiced 10 000 blows once, \nbut I fear the man who has practiced one blow 10 000 times.",
-    furious_assault_name: "Furious Assault",
-    furious_assault_desc: "Nothing will be gained without a hearty offensive!",
-    tactical_genius_name: "Tactical Genius",
-    tactical_genius_desc: "Keeping a calm mind in the midst of battle grants one an immense advantage.",
-    resistant_in_melee_name: "Resistant in Melee",
-    resistant_in_melee_desc: "Developing keen sense of the melee allows you to avoid some blows.",
-    charging_bull_name: "Charging Bull",
-    charging_bull_desc: "The enemy will be disoriented by a sudden frontal charge!",
-    concentrated_warrior_name: "Balanced Warrior",
-    concentrated_warrior_desc: "Combining patience with unrelenting offense fells all evils.",
+  // FIGHTER
+  battle_sense_name: "Battle Sense",
+  battle_sense_desc: "After numerous battles, you have developed a keen sense for danger",
+  fighters_vitality_name: "Fighter's Vitality",
+  fighters_vitality_desc: "Combat necessitates the sturdiest of bodies.",
+  patient_blow_name: "Patient Blow",
+  patient_blow_desc: "Careful observation is a fighter's greatest asset.",
+  strength_training_name: "Strength Training",
+  strength_training_desc: "When tactics fail, strength is relied upon.",
+  fighting_style_name: "Fighting Style",
+  fighting_style_desc: "I fear not the man who has practiced 10 000 blows once, \nbut I fear the man who has practiced one blow 10 000 times.",
+  furious_assault_name: "Furious Assault",
+  furious_assault_desc: "Nothing will be gained without a hearty offensive!",
+  tactical_genius_name: "Tactical Genius",
+  tactical_genius_desc: "Keeping a calm mind in the midst of battle grants one an immense advantage.",
+  resistant_in_melee_name: "Resistant in Melee",
+  resistant_in_melee_desc: "Developing keen sense of the melee allows you to avoid some blows.",
+  charging_bull_name: "Charging Bull",
+  charging_bull_desc: "The enemy will be disoriented by a sudden frontal charge!",
+  concentrated_warrior_name: "Balanced Warrior",
+  concentrated_warrior_desc: "Combining patience with unrelenting offense fells all evils.",
 
-    // ROGUE
-    way_of_the_rogue_name: "Way of the Rogue",
-    way_of_the_rogue_desc: "Fight from the shadows, never risking your skin!",
-    weakpoint_spotter_name: "Weakpoint Spotter",
-    weakpoint_spotter_desc: "Strike only at the most opportune moment.",
-    shadow_warrior_name: "Shadow Warrior",
-    shadow_warrior_desc: "Keep your distance from the foe.",
-    fighting_dirty_name: "Fighting Dirty",
-    fighting_dirty_desc: "Honor and fairness are excellent ways to get killed.",
-    glass_cannon_name: "Glass Cannon",
-    glass_cannon_desc: "Make every blow count, for they could be the last.",
-    ranged_expert_name: "Ranged Expert",
-    ranged_expert_desc: "Pelt them with arrows.",
-    poison_specialist_name: "Poison Specialist",
-    poison_specialist_desc: "Poison can always be relied upon.",
-    simple_strokes_name: "Simple Strokes",
-    simple_strokes_desc: "Become a well tuned killing machine.",
-    dance_of_death_name: "Dance of Death",
-    dance_of_death_desc: "No amount of struggling will stop me!",
-    poison_from_afar_name: "Filthy Marksman",
-    poison_from_afar_desc: "I'll just stay safe here while you die over there.",
-    quicker_draw_name: "Quicker Draw",
-    quicker_draw_desc: "Faster, faster!",
+  // ROGUE
+  way_of_the_rogue_name: "Way of the Rogue",
+  way_of_the_rogue_desc: "Fight from the shadows, never risking your skin!",
+  weakpoint_spotter_name: "Weakpoint Spotter",
+  weakpoint_spotter_desc: "Strike only at the most opportune moment.",
+  shadow_warrior_name: "Shadow Warrior",
+  shadow_warrior_desc: "Keep your distance from the foe.",
+  fighting_dirty_name: "Fighting Dirty",
+  fighting_dirty_desc: "Honor and fairness are excellent ways to get killed.",
+  glass_cannon_name: "Glass Cannon",
+  glass_cannon_desc: "Make every blow count, for they could be the last.",
+  ranged_expert_name: "Ranged Expert",
+  ranged_expert_desc: "Pelt them with arrows.",
+  poison_specialist_name: "Poison Specialist",
+  poison_specialist_desc: "Poison can always be relied upon.",
+  simple_strokes_name: "Simple Strokes",
+  simple_strokes_desc: "Become a well tuned killing machine.",
+  dance_of_death_name: "Dance of Death",
+  dance_of_death_desc: "No amount of struggling will stop me!",
+  poison_from_afar_name: "Filthy Marksman",
+  poison_from_afar_desc: "I'll just stay safe here while you die over there.",
+  quicker_draw_name: "Quicker Draw",
+  quicker_draw_desc: "Faster, faster!",
 
   // NECROMANCER
   pursuit_of_undeath_name: "Pursuit of Undeath",

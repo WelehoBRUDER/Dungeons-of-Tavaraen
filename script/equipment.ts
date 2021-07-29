@@ -1,4 +1,5 @@
 const random = (max: number, min: number = -100) => (Math.random() * (max - min) + min);
+let invScroll = 0;
 
 interface itemClass {
   id: string;
@@ -144,11 +145,40 @@ const statWorths = {
   dexP: 7.5,
   intV: 10,
   intP: 7.5,
-  hpV: 2,
-  hpP: 3.5,
-  mpV: 5,
-  mpP: 3.5,
+  hpMaxV: 2,
+  hpMaxP: 3.5,
+  mpMaxV: 5,
+  mpMaxP: 3.5,
 } as any; 
+
+class Consumable extends Item {
+  status?: string;
+  ability?: string;
+  healValue?: number;
+  manaValue?: number;
+  usesTotal: number;
+  usesRemaining?: number;
+  equippedSlot?: number;
+  fullPrice?: Function;
+  stats?: any;
+  commands?: any;
+  constructor(base: Consumable) {
+    super(base);
+    const baseItem = { ...items[this.id] };
+    this.status = baseItem.status;
+    this.ability = baseItem.status;
+    this.healValue = baseItem.healValue;
+    this.manaValue = baseItem.manaValue;
+    this.usesTotal = baseItem.usesTotal;
+    this.usesRemaining = base.usesRemaining;
+    this.equippedSlot = base.equippedSlot ?? -1;
+    this.stats = {};
+    this.commands = {};
+    this.name = lang[this.id + "_name"] ?? baseItem.name;
+
+    this.fullPrice = () => { return this.price }
+  }
+}
 
 
 class Weapon extends Item {
@@ -165,7 +195,6 @@ class Weapon extends Item {
   fullPrice?: Function;
   constructor(base: weaponClass) {
     super(base);
-    // @ts-ignore
     const baseItem = { ...items[this.id] };
     this.range = baseItem.range;
     this.firesProjectile = baseItem.firesProjectile;
@@ -202,7 +231,9 @@ class Weapon extends Item {
         bonus += val * dmgWorths[key];
       });
       Object.entries(this.stats).forEach((stat: any)=>{
-        bonus += statWorths[stat[0]] * stat[1] ?? stat[1] * 0.5;
+        let _sw = statWorths[stat[0]] * stat[1];
+        if(isNaN(_sw)) _sw = stat[1] * 2; 
+        bonus += _sw;
       });
       bonus *= grades[this.grade]["worth"];
       let price = Math.floor(bonus + this.price)
@@ -317,7 +348,9 @@ class Armor extends Item {
         bonus += val * dmgWorths[key];
       });
       Object.entries(this.stats).forEach((stat: any)=>{
-        bonus += statWorths[stat[0]] * stat[1] ?? stat[1] * 0.5;
+        let _sw = statWorths[stat[0]] * stat[1];
+        if(isNaN(_sw)) _sw = stat[1] * 2; 
+        bonus += _sw;
       });
       bonus *= grades[this.grade]["worth"];
       let price = Math.floor(bonus + this.price)
@@ -383,6 +416,7 @@ const equipSlots = [
   "chest",
   "gloves",
   "boots",
+  "legs",
   "artifact1",
   "artifact2",
   "artifact3"
@@ -420,13 +454,18 @@ function renderInventory() {
   const itemsArea = inventory.querySelector<HTMLDivElement>(".items");
   itemsArea.textContent = "";
   itemsArea.append(createItems(player.inventory));
+  itemsArea.querySelector<HTMLDivElement>(".itemList").scrollBy(0, invScroll);
   invOpen = true;
 }
 
 function closeInventory() {
+  hideHover();
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
   inventory.style.transform = "scale(0)";
+  const _inv = document.querySelector<HTMLDivElement>(".defaultItemsArray");
+  _inv.textContent = "";
+  _inv.style.transform = "scale(0)";
   invOpen = false;
 }
 
@@ -443,24 +482,27 @@ function itemTT(item: any) {
   if (item.damages) {
     let total: number = 0;
     let txt: string = "";
-    Object.entries(item.damages).forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    Object.entries(item.damages)?.forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
   }
   if (item.resistances) {
     let total: number = 0;
     let txt: string = "";
-    Object.entries(item.resistances).forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    Object.entries(item.resistances)?.forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
   }
-  if (Object.values(item.stats).length > 0) {
+  if (Object.values(item?.stats)?.length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
     Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
   }
-  if (Object.values(item.commands).length > 0) {
+  if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
+  if (item.healValue)  text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
+  if (item.manaValue)  text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
+  if (item.usesRemaining)  text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   return text;
@@ -485,11 +527,11 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   topRarity.classList.add("topRarity");
   topWeight.classList.add("topWeight");
   topWorth.classList.add("topWorth");
-  topName.textContent = "Item name";
-  topType.textContent = "Type";
-  topRarity.textContent = "Rarity";
-  topWeight.textContent = "Weight";
-  topWorth.textContent = "Worth";
+  topName.textContent = lang["item_name"];
+  topType.textContent = lang["item_type"];
+  topRarity.textContent = lang["item_rarity"];
+  topWeight.textContent = lang["item_weight_title"];
+  topWorth.textContent = lang["item_worth_title"];
   topName.addEventListener("click", e => sortInventory("name", sortingReverse));
   topType.addEventListener("click", e => sortInventory("type", sortingReverse));
   topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
@@ -521,18 +563,25 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemWeight.style.color = grades[itm.grade].color;
     itemWorth.style.color = "gold";
     itemName.textContent = itm.name;
-    itemRarity.textContent = itm.grade;
-    itemType.textContent = itm.type;
+    itemRarity.textContent = lang[itm.grade].toLowerCase();
+    itemType.textContent = lang[itm.type];
     itemWeight.textContent = itm.weight;
     itemWorth.textContent = itm.fullPrice();
     if (context == "PLAYER_INVENTORY") {
       itemObject.addEventListener("mousedown", e => player.equip(e, itm));
       itemObject.addEventListener("dblclick", e => player.drop(itm));
     }
+    if (context == "PICK_LOOT") {
+      itemObject.addEventListener("mousedown", e => grabLoot(e, itm));
+    }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
     itemsList.append(itemObject);
   });
+  itemsList.addEventListener("wheel", deltaY=>{
+    invScroll = itemsList.scrollTop;
+  });
   container.append(itemsList, itemsListBar);
+  itemsList.scrollBy(invScroll, invScroll);
   return container;
 }

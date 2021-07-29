@@ -129,7 +129,7 @@ const items = {
         price: 60,
         weight: 2.4,
         type: "weapon",
-        grade: "uncommon",
+        grade: "common",
         slot: "weapon"
     },
     chippedAxe: {
@@ -194,16 +194,16 @@ const items = {
             { type: "crush", value: [2, 5], chance: 7 },
             { type: "dark", value: [1, 3], chance: 5 },
             { type: "divine", value: [1, 3], chance: 5 },
-            { type: "fire", value: [-1, -5], chance: 5 },
-            { type: "lightning", value: [-1, -5], chance: 5 },
+            { type: "fire", value: [-1, -3], chance: 5 },
+            { type: "lightning", value: [-1, -3], chance: 5 },
             { type: "ice", value: [2, 4], chance: 5 },
         ],
         statsTemplate: [
             { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [3, 5, 8], chance: 10 },
+            { type: "strP", value: [3, 5, 8], chance: 2.5 },
             { type: "dexV", value: [1, 2, 3], chance: 1.75 },
             { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 20 },
+            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
             { type: "vitP", value: [3, 6, 9], chance: 1.8 },
             { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
         ],
@@ -214,6 +214,36 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest"
+    },
+    raggedPants: {
+        id: "raggedPants",
+        name: "Ragged Pants",
+        resistances: { slash: 2, crush: 4, pierce: 2, fire: -1, ice: 1 },
+        resistancesTemplate: [
+            { type: "slash", value: [1, 3], chance: 5 },
+            { type: "crush", value: [1, 3], chance: 7 },
+            { type: "dark", value: [1, 3], chance: 5 },
+            { type: "divine", value: [1, 3], chance: 5 },
+            { type: "fire", value: [-1, -2], chance: 5 },
+            { type: "lightning", value: [-1, -2], chance: 5 },
+            { type: "ice", value: [2, 3], chance: 10 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3], chance: 1.25 },
+            { type: "strP", value: [3, 5, 8], chance: 2.5 },
+            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
+            { type: "vitP", value: [3, 6, 9], chance: 1.8 },
+            { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
+        ],
+        img: "resources/icons/ragged_pants.png",
+        sprite: "raggedPants",
+        price: 5,
+        weight: 0.8,
+        type: "armor",
+        grade: "common",
+        slot: "legs"
     },
     raggedBoots: {
         id: "raggedBoots",
@@ -299,6 +329,36 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet"
+    },
+    healingScrollI: {
+        id: "healingScrollI",
+        name: "Scroll of Healing I",
+        img: "resources/icons/healing_scroll.png",
+        sprite: "",
+        price: 75,
+        weight: 0.1,
+        type: "consumable",
+        grade: "common",
+        slot: "",
+        equippedSlot: -1,
+        healValue: 20,
+        usesTotal: 3,
+        usesRemaining: 3
+    },
+    manaScrollI: {
+        id: "manaScrollI",
+        name: "Scroll of Mana Recovery I",
+        img: "resources/icons/mana_scroll.png",
+        sprite: "",
+        price: 75,
+        weight: 0.1,
+        type: "consumable",
+        grade: "common",
+        slot: "",
+        equippedSlot: -1,
+        manaValue: 15,
+        usesTotal: 3,
+        usesRemaining: 3
     },
 };
 //# sourceMappingURL=items.js.map

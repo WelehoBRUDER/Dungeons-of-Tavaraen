@@ -83,6 +83,7 @@ function formPerks() {
     svg.setAttribute('height', "4000");
     points.textContent = lang["perk_points"] + ": " + player.pp.toString();
     points.classList.add("perkPoints");
+    staticBg.textContent = "";
     staticBg.append(points);
     perks.forEach((_perk) => {
         var _a;

@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -86,20 +86,21 @@ class PlayerCharacter extends Character {
         this.helmet = (_k = base.helmet) !== null && _k !== void 0 ? _k : {};
         this.gloves = (_l = base.gloves) !== null && _l !== void 0 ? _l : {};
         this.boots = (_m = base.boots) !== null && _m !== void 0 ? _m : {};
+        this.legs = (_o = base.legs) !== null && _o !== void 0 ? _o : {};
         this.raceEffect = raceEffects[this.race];
-        this.artifact1 = (_o = base.artifact1) !== null && _o !== void 0 ? _o : {};
-        this.artifact2 = (_p = base.artifact2) !== null && _p !== void 0 ? _p : {};
-        this.artifact3 = (_q = base.artifact3) !== null && _q !== void 0 ? _q : {};
-        this.inventory = (_r = base.inventory) !== null && _r !== void 0 ? _r : [];
-        this.isDead = (_s = base.isDead) !== null && _s !== void 0 ? _s : false;
-        this.grave = (_t = base.grave) !== null && _t !== void 0 ? _t : null;
-        this.respawnPoint = (_u = base.respawnPoint) !== null && _u !== void 0 ? _u : null; // need to add default point, or this might soft lock
-        this.gold = (_v = base.gold) !== null && _v !== void 0 ? _v : 0;
-        this.perks = (_w = base.perks) !== null && _w !== void 0 ? _w : [];
-        this.sp = (_x = base.sp) !== null && _x !== void 0 ? _x : 0;
-        this.pp = (_y = base.pp) !== null && _y !== void 0 ? _y : 0;
-        this.usedShrines = (_z = base.usedShrines) !== null && _z !== void 0 ? _z : [];
-        this.unarmedDamages = (_0 = base.unarmedDamages) !== null && _0 !== void 0 ? _0 : { crush: 5 };
+        this.artifact1 = (_p = base.artifact1) !== null && _p !== void 0 ? _p : {};
+        this.artifact2 = (_q = base.artifact2) !== null && _q !== void 0 ? _q : {};
+        this.artifact3 = (_r = base.artifact3) !== null && _r !== void 0 ? _r : {};
+        this.inventory = (_s = base.inventory) !== null && _s !== void 0 ? _s : [];
+        this.isDead = (_t = base.isDead) !== null && _t !== void 0 ? _t : false;
+        this.grave = (_u = base.grave) !== null && _u !== void 0 ? _u : null;
+        this.respawnPoint = (_v = base.respawnPoint) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
+        this.gold = (_w = base.gold) !== null && _w !== void 0 ? _w : 0;
+        this.perks = (_x = base.perks) !== null && _x !== void 0 ? _x : [];
+        this.sp = (_y = base.sp) !== null && _y !== void 0 ? _y : 0;
+        this.pp = (_z = base.pp) !== null && _z !== void 0 ? _z : 0;
+        this.usedShrines = (_0 = base.usedShrines) !== null && _0 !== void 0 ? _0 : [];
+        this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {

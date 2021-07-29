@@ -12,6 +12,7 @@ interface playerChar extends characterObject {
   helmet: armorClass | any;
   gloves: armorClass | any;
   boots: armorClass | any;
+  legs: armorClass | any;
   artifact1: any;
   artifact2: any;
   artifact3: any;
@@ -134,6 +135,7 @@ class PlayerCharacter extends Character {
   helmet: armorClass | any;
   gloves: armorClass | any;
   boots: armorClass | any;
+  legs: armorClass | any;
   artifact1: any;
   artifact2: any;
   artifact3: any;
@@ -170,6 +172,7 @@ class PlayerCharacter extends Character {
     this.helmet = base.helmet ?? {};
     this.gloves = base.gloves ?? {};
     this.boots = base.boots ?? {};
+    this.legs = base.legs ?? {};
     this.raceEffect = raceEffects[this.race];
     this.artifact1 = base.artifact1 ?? {};
     this.artifact2 = base.artifact2 ?? {};

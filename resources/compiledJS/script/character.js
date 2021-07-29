@@ -1,6 +1,6 @@
 "use strict";
 function getModifiers(char, stat) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
     let val = 0;
     let modif = 1;
     char.statModifiers.forEach((mod) => {
@@ -111,22 +111,38 @@ function getModifiers(char, stat) {
             }
         });
     }
+    if ((_j = char.legs) === null || _j === void 0 ? void 0 : _j.stats) {
+        Object.entries(char.legs.stats).forEach((eff) => {
+            if (eff[0].startsWith(stat)) {
+                if (eff[0] == stat + "P" && eff[1] < 0)
+                    modif *= (1 + eff[1] / 100);
+                else if (eff[0] == stat + "P")
+                    modif += (eff[1] / 100);
+                else if (eff[0] == stat + "V")
+                    val += eff[1];
+            }
+        });
+    }
     if (stat.includes("Resist")) {
-        if ((_j = char.chest) === null || _j === void 0 ? void 0 : _j.resistances) {
+        if ((_k = char.chest) === null || _k === void 0 ? void 0 : _k.resistances) {
             if (char.chest.resistances[stat.replace("Resist", '')])
                 val += char.chest.resistances[stat.replace("Resist", '')];
         }
-        if ((_k = char.helmet) === null || _k === void 0 ? void 0 : _k.resistances) {
+        if ((_l = char.helmet) === null || _l === void 0 ? void 0 : _l.resistances) {
             if (char.helmet.resistances[stat.replace("Resist", '')])
                 val += char.helmet.resistances[stat.replace("Resist", '')];
         }
-        if ((_l = char.gloves) === null || _l === void 0 ? void 0 : _l.resistances) {
+        if ((_m = char.gloves) === null || _m === void 0 ? void 0 : _m.resistances) {
             if (char.gloves.resistances[stat.replace("Resist", '')])
                 val += char.gloves.resistances[stat.replace("Resist", '')];
         }
-        if ((_m = char.boots) === null || _m === void 0 ? void 0 : _m.resistances) {
+        if ((_o = char.boots) === null || _o === void 0 ? void 0 : _o.resistances) {
             if (char.boots.resistances[stat.replace("Resist", '')])
                 val += char.boots.resistances[stat.replace("Resist", '')];
+        }
+        if ((_p = char.legs) === null || _p === void 0 ? void 0 : _p.resistances) {
+            if (char.legs.resistances[stat.replace("Resist", '')])
+                val += char.legs.resistances[stat.replace("Resist", '')];
         }
     }
     return { v: val, m: modif };
@@ -244,7 +260,7 @@ class Character {
             return (this.stats.hp / this.getStats().hpMax) * 100;
         };
         this.updateAbilities = () => {
-            var _a, _b;
+            var _a, _b, _c, _d, _e, _f, _g, _h;
             // @ts-ignore
             for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
                 // @ts-ignore
@@ -260,8 +276,23 @@ class Character {
                     // @ts-ignore
                     else if (this.inventory[i].type == "armor")
                         this.inventory[i] = new Armor(this.inventory[i]);
+                    // @ts-ignore
+                    else if (this.inventory[i].type == "consumable")
+                        this.inventory[i] = new Consumable(this.inventory[i]);
                 }
             }
+            if ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.type)
+                this.weapon = new Weapon(Object.assign({}, this.weapon));
+            if ((_d = this.chest) === null || _d === void 0 ? void 0 : _d.type)
+                this.chest = new Armor(Object.assign({}, this.chest));
+            if ((_e = this.legs) === null || _e === void 0 ? void 0 : _e.type)
+                this.legs = new Armor(Object.assign({}, this.legs));
+            if ((_f = this.helmet) === null || _f === void 0 ? void 0 : _f.type)
+                this.helmet = new Armor(Object.assign({}, this.helmet));
+            if ((_g = this.gloves) === null || _g === void 0 ? void 0 : _g.type)
+                this.gloves = new Armor(Object.assign({}, this.gloves));
+            if ((_h = this.boots) === null || _h === void 0 ? void 0 : _h.type)
+                this.boots = new Armor(Object.assign({}, this.boots));
         };
     }
 }

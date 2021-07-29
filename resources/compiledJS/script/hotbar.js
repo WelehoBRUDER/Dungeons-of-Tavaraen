@@ -4,11 +4,12 @@
 const tooltipBox = document.querySelector("#globalHover");
 const contextMenu = document.querySelector(".contextMenu");
 const assignContainer = document.querySelector(".assignContainer");
-var settings = {
+let windowOpen = false;
+let menuOpen = false;
+let settings = {
     log_enemy_movement: false
 };
 function generateHotbar() {
-    var _a;
     const hotbar = document.querySelector(".hotbar");
     hotbar.textContent = "";
     for (let i = 0; i < 20; i++) {
@@ -21,7 +22,8 @@ function generateHotbar() {
         frame.addEventListener("mouseup", e => rightClickHotBar(e, i));
         frame.append(bg, hotKey);
         hotbar.append(frame);
-        (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.map((abi) => {
+        const total = player.abilities.concat(player.inventory);
+        total === null || total === void 0 ? void 0 : total.map((abi) => {
             var _a;
             if (abi.equippedSlot == i && abi.id != "attack") {
                 const abiDiv = document.createElement("div");
@@ -30,17 +32,28 @@ function generateHotbar() {
                 if (abiSelected == abi && isSelected)
                     frame.style.border = "4px solid gold";
                 abiImg.src = abi.icon;
-                tooltip(abiDiv, abiTT(abi));
-                if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead)
-                    abiDiv.addEventListener("click", () => useAbi(abi));
+                if (!abi.icon) {
+                    abiImg.src = abi.img;
+                    tooltip(abiDiv, itemTT(abi));
+                    abiDiv.addEventListener("click", () => useConsumable(abi));
+                    const cdTxt = document.createElement("p");
+                    cdTxt.classList.add("usesHotbar");
+                    cdTxt.textContent = `${abi.usesRemaining}/${abi.usesTotal}`;
+                    frame.append(cdTxt);
+                }
                 else {
-                    abiDiv.style.filter = "brightness(0.25)";
-                    if (abi.onCooldown > 0) {
-                        const cdTxt = document.createElement("p");
-                        if (abi.recharge_only_in_combat && !state.inCombat)
-                            cdTxt.style.color = "red";
-                        cdTxt.textContent = ((_a = abi.onCooldown) === null || _a === void 0 ? void 0 : _a.toString()) || "0";
-                        frame.append(cdTxt);
+                    tooltip(abiDiv, abiTT(abi));
+                    if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead)
+                        abiDiv.addEventListener("click", () => useAbi(abi));
+                    else {
+                        abiDiv.style.filter = "brightness(0.25)";
+                        if (abi.onCooldown > 0) {
+                            const cdTxt = document.createElement("p");
+                            if (abi.recharge_only_in_combat && !state.inCombat)
+                                cdTxt.style.color = "red";
+                            cdTxt.textContent = ((_a = abi.onCooldown) === null || _a === void 0 ? void 0 : _a.toString()) || "0";
+                            frame.append(cdTxt);
+                        }
                     }
                 }
                 abiDiv.append(abiImg);
@@ -48,6 +61,25 @@ function generateHotbar() {
             }
         });
     }
+}
+function useConsumable(itm) {
+    player.effects();
+    if (itm.healValue) {
+        player.stats.hp += itm.healValue;
+        spawnFloatingText(player.cords, itm.healValue.toString(), "lime", 36, 1000, 200);
+    }
+    if (itm.manaValue) {
+        player.stats.mp += itm.manaValue;
+        spawnFloatingText(player.cords, itm.manaValue.toString(), "cyan", 36, 1000, 200);
+    }
+    displayText(`<c>cyan<c>[ACTION] <c>white<c>${lang["useConsumable"]}`);
+    itm.usesRemaining--;
+    if (itm.usesRemaining <= 0) {
+        player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+    }
+    hideHover();
+    advanceTurn();
+    updateUI();
 }
 function rightClickHotBar(Event, Index) {
     contextMenu.textContent = "";
@@ -73,11 +105,11 @@ function contextMenuButton(text, onClick) {
     contextMenu.append(but);
 }
 function mapToHotBar(index) {
-    var _a;
     contextMenu.textContent = "";
-    assignContainer.style.display = "block";
+    assignContainer.style.display = "grid";
     assignContainer.textContent = "";
-    (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.map((abi) => {
+    const total = player.abilities.concat(player.inventory);
+    total === null || total === void 0 ? void 0 : total.map((abi) => {
         const bg = document.createElement("img");
         const frame = document.createElement("div");
         frame.classList.add("assignFrame");
@@ -90,7 +122,12 @@ function mapToHotBar(index) {
             if (abiSelected == abi && isSelected)
                 frame.style.border = "4px solid gold";
             abiImg.src = abi.icon;
-            tooltip(abiDiv, abiTT(abi));
+            if (!abi.icon) {
+                abiImg.src = abi.img;
+                tooltip(abiDiv, itemTT(abi));
+            }
+            else
+                tooltip(abiDiv, abiTT(abi));
             abiDiv.append(abiImg);
             frame.append(abiDiv);
             frame.addEventListener("click", a => addToHotBar(index, abi));
@@ -99,17 +136,19 @@ function mapToHotBar(index) {
     });
 }
 function addToHotBar(index, abi) {
-    var _a;
+    var _a, _b;
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
     (_a = player.abilities.find(a => a.equippedSlot == index)) === null || _a === void 0 ? void 0 : _a.equippedSlot = -1;
+    (_b = player.inventory.find(i => i.equippedSlot == index)) === null || _b === void 0 ? void 0 : _b.equippedSlot = -1;
     abi.equippedSlot = index;
     updateUI();
 }
 function removeFromHotBar(index) {
-    var _a;
+    var _a, _b;
     contextMenu.textContent = "";
     (_a = player.abilities.find(a => a.equippedSlot == index)) === null || _a === void 0 ? void 0 : _a.equippedSlot = -1;
+    (_b = player.inventory.find(i => i.equippedSlot == index)) === null || _b === void 0 ? void 0 : _b.equippedSlot = -1;
     updateUI();
 }
 function generateEffects() {
@@ -412,6 +451,25 @@ function hideHover() {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "none";
 }
+function handleEscape() {
+    if (!isSelected && !invOpen && !windowOpen && !menuOpen) {
+        openGameMenu();
+        menuOpen = true;
+    }
+    else if (menuOpen) {
+        closeGameMenu();
+        menuOpen = false;
+    }
+    isSelected = false;
+    abiSelected = {};
+    closeInventory();
+    closeCharacter();
+    closeLeveling();
+    windowOpen = false;
+    updateUI();
+    contextMenu.textContent = "";
+    assignContainer.style.display = "none";
+}
 window.addEventListener("keyup", e => {
     if (e.key == "r") {
         if (player.isDead) {
@@ -434,40 +492,49 @@ window.addEventListener("keyup", e => {
     if (player.isDead)
         return;
     const number = parseInt(e.keyCode) - 48;
-    if (e.key == "i") {
+    if (e.key == "i" && !menuOpen) {
         renderInventory();
     }
-    else if (e.key == "c") {
+    else if (e.key == "c" && !menuOpen) {
+        windowOpen = true;
         renderCharacter();
     }
-    else if (e.key == "p") {
+    else if (e.key == "p" && !menuOpen) {
+        windowOpen = true;
         openLevelingScreen();
     }
     else if (e.key == "Escape") {
-        isSelected = false;
-        abiSelected = {};
-        closeInventory();
-        closeCharacter();
-        closeLeveling();
-        updateUI();
-        contextMenu.textContent = "";
-        assignContainer.style.display = "none";
+        handleEscape();
     }
+    else if (invOpen || windowOpen || menuOpen)
+        return;
     else if (number > -1 && e.shiftKey) {
         let abi = player.abilities.find(a => a.equippedSlot == number + 9);
         if (number == 0)
             abi = player.abilities.find(a => a.equippedSlot == 19);
-        if (!abi)
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number + 9);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 19);
+            if (itm)
+                useConsumable(itm);
             return;
-        if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
+        }
+        else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
             useAbi(abi);
     }
     else if (number > -1 && !e.shiftKey) {
         let abi = player.abilities.find(a => a.equippedSlot == number - 1);
         if (number == 0)
             abi = player.abilities.find(a => a.equippedSlot == 9);
-        if (!abi)
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number - 1);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 9);
+            if (itm)
+                useConsumable(itm);
             return;
+        }
         if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
             useAbi(abi);
     }

@@ -1,6 +1,10 @@
 "use strict";
 // /* NOTE - THIS WILL *NEVER* FULLY TRANSLATE THE GAME, BUT IT WILL ATLEAST PROVIDE YOU WITH FLAVOUR TEXTS IN YOUR PREFERRED LANGUAGE */ //
 const finnish = {
+    // identifier
+    language_id: "finnish",
+    finnish: "Suomi",
+    english: "English",
     // Technical stuff
     changeWordOrder: true,
     mana: "Taika",
@@ -125,6 +129,8 @@ const finnish = {
     ice_resistanceSub: "Sulattava",
     ice_resistanceMain: "Jäänmurtava",
     // Item names
+    healingScrollI_name: "Parannuksen Loitsukirja I",
+    manaScrollI_name: "Taianpalautuksen Loitsukirja I",
     dagger_name: "Tikari",
     stick_name: "Keppi",
     chippedBlade_name: "Kulunut Terä",
@@ -133,6 +139,7 @@ const finnish = {
     huntingBow_name: "Metsästys Jousi",
     raggedShirt_name: "Ryysyinen Paita",
     raggedBoots_name: "Ryysyiset Jalkimet",
+    raggedPants_name: "Ryysyiset Housut",
     raggedGloves_name: "Ryysyiset Hanskat",
     raggedHood_name: "Ryysyinen Huppu",
     // Enemy names
@@ -153,6 +160,8 @@ const finnish = {
     player_death_log: "OLET KUOLLUT...",
     cure_pl: "Parannat itsesi!",
     cure: "[ACTOR] parantaa itsensä.",
+    useConsumable: "Käytät taiallisen esineen!",
+    moves_to: "liikkuu ruutuun",
     // WORLD TEXTS
     gained_xp: "Sait [XP] XP!",
     player_death: "SINUT SURMATTIIN!",
@@ -174,6 +183,23 @@ const finnish = {
     critChance: "Kriittisen iskun mahdollisuus",
     critDamage: "Kriittisen iskun voima",
     resistAll: "Puolustusvoima",
+    uses: "Käyttökerrat",
+    item_name: "Tavaran Nimi",
+    item_type: "Tyyppi",
+    item_rarity: "Harvinaisuus",
+    item_weight_title: "Paino",
+    item_worth_title: "Arvo",
+    weapon: "ase",
+    armor: "panssari",
+    consumable: "käytettävä",
+    /* MENU */
+    menu_resume: "Takaisin",
+    menu_options: "Asetukset",
+    menu_main_screen: "Päämenu",
+    menu_new_game: "Uusi Peli",
+    menu_load_game: "Lataa Peli",
+    setting_log_enemy_movement: "Kirjaa vihollisten sijainnit",
+    setting_game_language: "Pelin kieli",
     // Grades
     common: "Yleinen",
     uncommon: "Epätavallinen",
@@ -336,6 +362,10 @@ const finnish = {
     pursuit_of_undeath_desc: "Kryptisin keinoin.",
 };
 const english = {
+    // Identifier
+    language_id: "english",
+    finnish: "Suomi",
+    english: "English",
     // Technical stuff
     changeWordOrder: false,
     mana: "mana",
@@ -439,6 +469,8 @@ const english = {
     player_death_log: "YOU ARE DEAD...",
     cure_pl: "<c>yellow<c>You<c>white<c> cure yourself!",
     cure: "[ACTOR] cures themself.",
+    useConsumable: "<c>yellow<c>You<c>white<c> use a consumable item!",
+    moves_to: "moves to tile",
     // WORLD TEXTS
     gained_xp: "Gained [XP] XP!",
     player_death: "YOU WERE KILLED!",
@@ -460,6 +492,23 @@ const english = {
     critChance: "Critical Hit Chance",
     critDamage: "Critical Hit Damage",
     resistAll: "All Resistances",
+    uses: "Uses Remaining",
+    item_name: "Item name",
+    item_type: "Type",
+    item_rarity: "Rarity",
+    item_weight_title: "Weight",
+    item_worth_title: "Worth",
+    weapon: "weapon",
+    armor: "armor",
+    consumable: "consumable",
+    /* MENU */
+    menu_resume: "Resume",
+    menu_options: "Options",
+    menu_main_screen: "Main Menu",
+    menu_new_game: "New Game",
+    menu_load_game: "Load Game",
+    setting_log_enemy_movement: "Log enemy movement",
+    setting_game_language: "Game language",
     // Grades
     common: "Common",
     uncommon: "Uncommon",
