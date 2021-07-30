@@ -188,7 +188,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
         target.stats.hp -= dmg;
-        spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+        if (critRolled)
+            spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+        else
+            spawnFloatingText(target.cords, dmg.toString(), "red", 36);
         if (isAoe) {
             let actionText = (_b = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
@@ -266,7 +269,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
         target.stats.hp -= dmg;
-        spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+        if (critRolled)
+            spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+        else
+            spawnFloatingText(target.cords, dmg.toString(), "red", 36);
         let actionText = (_d = lang[ability.id + "_action_desc"]) !== null && _d !== void 0 ? _d : "[TEXT NOT FOUND]";
         actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
         actionText = actionText.replace("[DMG]", `${dmg}`);

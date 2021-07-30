@@ -22,7 +22,7 @@ function enemyIndex(cords: tileObject) {
 
 function updateEnemiesTurn() {
   enemiesHadTurn++;
-  if(enemiesHadTurn == maps[currentMap].enemies.length) turnOver = true;
+  if (enemiesHadTurn == maps[currentMap].enemies.length) turnOver = true;
 }
 
 function attackTarget(attacker: characterObject, target: characterObject, attackDir: string) {
@@ -73,39 +73,39 @@ function buffOrHeal(character: characterObject, ability: ability) {
     else displayText(`<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`);
   }
   if (ability.status) {
-    if(!character.statusEffects.find((eff: statEffect)=>eff.id == ability.status)) {
+    if (!character.statusEffects.find((eff: statEffect) => eff.id == ability.status)) {
       // @ts-ignore
-      character.statusEffects.push(new statEffect({...statusEffects[ability.status]}, ability.statusModifiers));
-      if(character.id == player.id) character.statusEffects.find((eff: statEffect)=>eff.id == ability.status).last.current -= 1;
+      character.statusEffects.push(new statEffect({ ...statusEffects[ability.status] }, ability.statusModifiers));
+      if (character.id == player.id) character.statusEffects.find((eff: statEffect) => eff.id == ability.status).last.current -= 1;
     } else {
-      character.statusEffects.find((eff: statEffect)=>eff.id == ability.status).last.current += statusEffects[ability.status].last.total;
+      character.statusEffects.find((eff: statEffect) => eff.id == ability.status).last.current += statusEffects[ability.status].last.total;
     }
     // @ts-ignore
     statusEffects[ability.status].last.current = statusEffects[ability.status].last.total;
     spawnFloatingText(character.cords, ability.line, "crimson", 36);
     let string: string = "";
-    if(character.id == "player") string = lang[ability.id + "_action_desc_pl"];
-    else string = lang[ability.id + "_action_desc"];                     
+    if (character.id == "player") string = lang[ability.id + "_action_desc_pl"];
+    else string = lang[ability.id + "_action_desc"];
     if (character.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[character.id + "_name"]} <c>white<c>${string}`);
     else displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
   }
-  if(ability.remove_status) {
-    ability.remove_status.forEach(status=>{
-      character.statusEffects.forEach((effect: statusEffect, index: number)=>{
-        if(effect.id == status) {
+  if (ability.remove_status) {
+    ability.remove_status.forEach(status => {
+      character.statusEffects.forEach((effect: statusEffect, index: number) => {
+        if (effect.id == status) {
           character.statusEffects.splice(index, 1);
         }
-      })
+      });
     });
     let string: string = "";
-    if(character.id == "player") string = lang["cure_pl"];
+    if (character.id == "player") string = lang["cure_pl"];
     else string = lang["cure"];
     string.replace("[ACTOR]", `<c>yellow<c>${lang[character.id + "_name"]}<c>white<c>`);
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
   }
   character.stats.mp -= ability.mana_cost;
   ability.onCooldown = ability.cooldown;
-  if(character.id == "player") advanceTurn();
+  if (character.id == "player") advanceTurn();
   else updateEnemiesTurn();
 }
 
@@ -132,7 +132,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         if (attacker.weapon.firesProjectile) bonus += num * attacker.getStats().dex / 50;
         else bonus += num * attacker.getStats().str / 50;
-        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1 + (attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     } else {
       Object.entries(ability.damages).forEach((value: any) => {
@@ -145,14 +145,14 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
         // @ts-ignore
-        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     }
-    if(ability.status) {
-      target.statusEffects.push(new statEffect({...statusEffects[ability.status]}, s_def));
+    if (ability.status) {
+      target.statusEffects.push(new statEffect({ ...statusEffects[ability.status] }, s_def));
     }
-    setTimeout((paskaFixi: null)=>{
-      if(!enemyIndex(target.cords)) return;
+    setTimeout((paskaFixi: null) => {
+      if (!enemyIndex(target.cords)) return;
       const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
       layer.style.animation = 'none';
       // @ts-ignore
@@ -163,8 +163,9 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
-    spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-    if(isAoe) {
+    if(critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    if (isAoe) {
       let actionText: string = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
       actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
       actionText = actionText.replace("[DMG]", `${dmg}`);
@@ -188,7 +189,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   } else {
     let dmg: number = 0;
     // @ts-ignore
-    if(ability.damages) {
+    if (ability.damages) {
       Object.entries(ability.damages).forEach((value: any) => {
         const key: string = value[0];
         const num: number = value[1];
@@ -199,7 +200,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
         // @ts-ignore
-        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+        dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     }
     else {
@@ -218,14 +219,14 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         // @ts-ignore
         else bonus += num * attacker.getStats().str / 50;
         // @ts-ignore
-        dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * ( critRolled ? 1+(attacker.getStats().critDamage/100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
+        dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * (critRolled ? 1 + (attacker.getStats().critDamage / 100) : 1))) * (1 - (target.getResists()[key] - ability.resistance_penetration) / 100));
       });
     }
-    if(ability.status) {
-      target.statusEffects.push(new statEffect({...statusEffects[ability.status]}, s_def));
+    if (ability.status) {
+      target.statusEffects.push(new statEffect({ ...statusEffects[ability.status] }, s_def));
     }
     const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
-    setTimeout((paskaFixi: null)=>{
+    setTimeout((paskaFixi: null) => {
       layer.style.animation = 'none';
       // @ts-ignore
       layer.offsetHeight; /* trigger reflow */
@@ -235,7 +236,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
-    spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    if(critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
     let actionText = lang[ability.id + "_action_desc"] ?? "[TEXT NOT FOUND]";
     actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
     actionText = actionText.replace("[DMG]", `${dmg}`);
@@ -269,7 +271,7 @@ function spawnFloatingText(cords: tileObject, text: string, color: string = "gre
     floatingText.textContent = text;
     floatingText.style.fontSize = `${fontSize}px`;
     floatingText.style.color = color;
-    floatingText.style.left = `${x - spriteSize/2.5 + spriteSize / (random(2.5, 0.5))}px`;
+    floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (random(2.5, 0.5))}px`;
     floatingText.style.top = `${y + spriteSize / (random(4, 1))}px`;
     floatingText.classList.add("floatingText");
     floatingText.style.animationDuration = `${ms / 1000}s`;
@@ -290,7 +292,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   canvas.width = innerWidth;
   canvas.height = innerHeight;
   projectileLayers.append(canvas);
-  if(isPlayer) {
+  if (isPlayer) {
     const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
     layer.style.animation = 'none';
     // @ts-ignore
@@ -299,7 +301,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
   } else {
-    const layer = document.querySelector<HTMLCanvasElement>(`.enemy${maps[currentMap].enemies.findIndex(e=>e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+    const layer = document.querySelector<HTMLCanvasElement>(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
     layer.style.animation = 'none';
     // @ts-ignore
     layer.offsetHeight; /* trigger reflow */
@@ -315,7 +317,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       if (step.enemy) {
         collided = true;
         collision({ x: step.x, y: step.y }, ability, isPlayer, player);
-        if(isPlayer) setTimeout(advanceTurn, 50);
+        if (isPlayer) setTimeout(advanceTurn, 50);
         else updateEnemiesTurn();
         break;
       }
@@ -327,7 +329,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       }
       if (step.blocked) {
         collided = true;
-        if(isPlayer) setTimeout(advanceTurn, 50);
+        if (isPlayer) setTimeout(advanceTurn, 50);
         else updateEnemiesTurn();
         break;
       }
@@ -338,9 +340,9 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       ctx?.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
       ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
     }
-    if(!collided && ability.aoe_size > 0) {
-      if(isPlayer) setTimeout(advanceTurn, 50);
-      aoeCollision(createAOEMap(path[path.length-1], ability.aoe_size), attacker, ability);
+    if (!collided && ability.aoe_size > 0) {
+      if (isPlayer) setTimeout(advanceTurn, 50);
+      aoeCollision(createAOEMap(path[path.length - 1], ability.aoe_size), attacker, ability);
     }
     projectileLayers.removeChild(canvas);
   }
@@ -352,16 +354,16 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
 function collision(target: tileObject, ability: ability, isPlayer: boolean, attacker: characterObject, theme?: string) {
   if (isPlayer) {
     let targetEnemy = maps[currentMap].enemies.find((en: any) => en.cords.x == target.x && en.cords.y == target.y);
-    if(ability.aoe_size > 0) {
+    if (ability.aoe_size > 0) {
       aoeCollision(createAOEMap(targetEnemy?.cords, ability.aoe_size), attacker, ability);
     }
     else {
-    // @ts-ignore
-    regularAttack(player, targetEnemy, ability);
+      // @ts-ignore
+      regularAttack(player, targetEnemy, ability);
     }
 
   }
-  else if(player.cords.x == target.x && player.cords.y == target.y) {
+  else if (player.cords.x == target.x && player.cords.y == target.y) {
     regularAttack(attacker, player, ability);
   }
 }
@@ -378,8 +380,8 @@ function aoeCollision(area: Array<any>, attacker: characterObject, ability: abil
   }
   let actionText: string = lang[ability.id + "_action_desc_pl"] ?? ability.action_desc_pl;
   displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
-  maps[currentMap].enemies.forEach(en=>{
-    if(area[en.cords.y][en.cords.x] == "x") {
+  maps[currentMap].enemies.forEach(en => {
+    if (area[en.cords.y][en.cords.x] == "x") {
       regularAttack(attacker, en, ability, null, true);
     }
   });

@@ -369,22 +369,23 @@ function stringSort(a, b, string: string, reverse: boolean = false) {
 };
 
 const grade_vals = {
-  common: 0,
-  uncommon: 1,
-  rare: 2,
-  mythical: 3,
-  legendary: 4
+  common: 1,
+  uncommon: 2,
+  rare: 3,
+  mythical: 4,
+  legendary: 5
 }
 
 
 function gradeSort(a, b, string: string, reverse: boolean = false) {
-  var nameA = grade_vals[a[string]];
-  var nameB = grade_vals[b[string]];
+  var nameA = parseInt(grade_vals[a[string]]);
+  var nameB = parseInt(grade_vals[b[string]]);
+  console.log(nameA > nameB);
   if(reverse) {
-    if (nameA > nameB) {
+    if (+nameA > +nameB) {
       return -1;
     }
-    if (nameA < nameB) {
+    if (+nameA < +nameB) {
       return 1;
     }
   
@@ -392,10 +393,10 @@ function gradeSort(a, b, string: string, reverse: boolean = false) {
     return 0;
   } 
   else {
-    if (nameA < nameB) {
+    if (+nameA < +nameB) {
       return -1;
     }
-    if (nameA > nameB) {
+    if (+nameA > +nameB) {
       return 1;
     }
   

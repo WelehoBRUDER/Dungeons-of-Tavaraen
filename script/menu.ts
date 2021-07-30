@@ -297,6 +297,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       fallenEnemies = [...save.save.fallenEnemies];
       itemData = [...save.save.itemData];
       currentMap = save.save.currentMap;
+      purgeDeadEnemies();
       handleEscape();
       closeGameMenu();
       modifyCanvas();
@@ -470,11 +471,30 @@ function GetKey(key: string, table: any) {
   }
 }
 
+function purgeDeadEnemies() {
+  fallenEnemies.forEach(deadFoe=>{
+    maps.forEach((mp, index)=>{
+      if(deadFoe.spawnMap == index) {
+        let purgeList: Array<number> = [];
+        mp.enemies.forEach((en, _index)=>{
+          if(en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
+            purgeList.push(_index);
+          }
+        });
+        for(let __index of purgeList) {
+          maps[index].enemies.splice(__index, 1);
+        }
+      }
+    });
+  });
+}
+
 function LoadSlot(data: any) {
   player = new PlayerCharacter(GetKey("player", data).data);
   itemData = GetKey("itemData", data).data;
   fallenEnemies = GetKey("enemies", data).data;
   currentMap = GetKey("currentMap", data).data;
+  purgeDeadEnemies();
   handleEscape();
   closeGameMenu();
   modifyCanvas();

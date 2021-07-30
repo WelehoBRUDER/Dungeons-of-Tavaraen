@@ -582,7 +582,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.legs.sprite);
     ctx?.drawImage(leggingsModel, x, y, size, size);
   }
-  else {
+  else if (!playerModel.legs?.sprite) {
     const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
     ctx?.drawImage(leggings, x, y, size, size);
   }
@@ -644,7 +644,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite);
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  else {
+  else if(!player.legs?.sprite) {
     const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
     ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }

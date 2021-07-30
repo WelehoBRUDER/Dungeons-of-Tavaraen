@@ -83,7 +83,7 @@ const abilities = {
     first_aid: {
         id: "first_aid",
         name: "First Aid",
-        mana_cost: 0,
+        mana_cost: 10,
         cooldown: 10,
         base_heal: 25,
         damage_multiplier: 0,
