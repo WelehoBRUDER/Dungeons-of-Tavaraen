@@ -213,6 +213,7 @@ const abilities = {
       crush: 3,
       fire: 17
     },
+    status: "burning",
     stat_bonus: "int",
     damage_multiplier: 1,
     resistance_penetration: 0,

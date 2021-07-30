@@ -401,7 +401,7 @@ function cordsFromDir(cords: tileObject, dir: string) {
 }
 
 document.addEventListener("keyup", (keyPress) => {
-  if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen) return;
+  if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen) return;
   let dirs = { w: "up", s: "down", a: "left", d: "right" } as any;
   let shittyFix = JSON.parse(JSON.stringify(player));
   if (keyPress.key == "w" && canMove(player, "up")) { player.cords.y--; }
@@ -545,13 +545,13 @@ function canMoveTo(char: any, tile: tileObject) {
   return movable;
 }
 
-function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, side: string = "center") {
+function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, side: string = "center", playerModel: any = player) {
   canvas.width = canvas.width; // Clear canvas
-  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
-  const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
-  const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
-  const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
-  const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
+  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Model");
+  const earModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Ears");
+  const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + playerModel.hair);
+  const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + playerModel.eyes);
+  const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + playerModel.face);
   const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
   var x = 0;
   var y = 0;
@@ -561,33 +561,33 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
   ctx?.drawImage(eyeModel, x, y, size, size);
   ctx?.drawImage(faceModel, x, y, size, size);
   ctx?.drawImage(leggings, x, y, size, size);
-  if (!player.helmet?.coversHair) ctx?.drawImage(hairModel, x, y, size, size);
-  if (player.helmet?.sprite) {
-    const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite);
+  if (!playerModel.helmet?.coversHair) ctx?.drawImage(hairModel, x, y, size, size);
+  if (playerModel.helmet?.sprite) {
+    const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.helmet.sprite);
     ctx?.drawImage(helmetModel, x, y, size, size);
   }
-  if (player.gloves?.sprite) {
-    const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + player.gloves.sprite);
+  if (playerModel.gloves?.sprite) {
+    const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.gloves.sprite);
     ctx?.drawImage(glovesModel, x, y, size, size);
   }
-  if (player.boots?.sprite) {
-    const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite);
+  if (playerModel.boots?.sprite) {
+    const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.boots.sprite);
     ctx?.drawImage(bootsModel, x, y, size, size);
   }
-  if (player.weapon?.sprite) {
-    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
+  if (playerModel.weapon?.sprite) {
+    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.weapon.sprite);
     ctx?.drawImage(weaponModel, x, y, size, size);
   }
-  if (player.legs?.sprite) {
-    const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite);
+  if (playerModel.legs?.sprite) {
+    const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.legs.sprite);
     ctx?.drawImage(leggingsModel, x, y, size, size);
   }
   else {
     const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
     ctx?.drawImage(leggings, x, y, size, size);
   }
-  if (player.chest?.sprite) {
-    const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
+  if (playerModel.chest?.sprite) {
+    const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.chest.sprite);
     ctx?.drawImage(chestModel, x, y, size, size);
   }
 }

@@ -244,3 +244,21 @@
     left: 0%;
   }
 }
+
+@keyframes slideFromTop {
+  0% {
+    top: -90%;
+  }
+  100% {
+    top: 10%;
+  }
+}
+
+@keyframes slideToTop {
+  0% {
+    top: 10%;
+  }
+  100% {
+    top: -90%;
+  }
+}

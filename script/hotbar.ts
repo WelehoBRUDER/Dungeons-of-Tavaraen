@@ -7,9 +7,16 @@ const assignContainer = document.querySelector<HTMLDivElement>(".assignContainer
 let windowOpen = false;
 let menuOpen = false;
 
-let settings = {
+class gameSettings {
+  [log_enemy_movement: string]: boolean | any;
+  constructor(base: gameSettings) {
+    this.log_enemy_movement = base.log_enemy_movement || false;
+  }
+}
+
+let settings = new gameSettings({
   log_enemy_movement: false
-} as any;
+});
 
 function generateHotbar() {
   const hotbar = <HTMLDivElement>document.querySelector(".hotbar");
@@ -407,8 +414,11 @@ function handleEscape() {
     menuOpen = true;
   }
   else if(menuOpen) {
-    closeGameMenu();
+    closeGameMenu(false, false, true);
     menuOpen = false;
+  }
+  if(saveGamesOpen) {
+    closeSaveMenu();
   }
   isSelected = false;
   abiSelected = {};
@@ -422,7 +432,7 @@ function handleEscape() {
 }
 
 window.addEventListener("keyup", e => {
-  if (e.key == "r") {
+  if (e.key == "r" && !saveGamesOpen) {
     if (player.isDead) {
       player.cords.x = player.respawnPoint.cords.x;
       player.cords.y = player.respawnPoint.cords.y;
@@ -440,9 +450,12 @@ window.addEventListener("keyup", e => {
       spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
     }
   }
-  if (player.isDead) return;
+  else if (e.key == "Escape") {
+    handleEscape();
+  }
+  if (player.isDead || saveGamesOpen) return;
   const number = parseInt(e.keyCode) - 48;
-  if (e.key == "i" && !menuOpen) {
+  if (e.key == "i" && !menuOpen ) {
     renderInventory();
   }
   else if (e.key == "c" && !menuOpen) {
@@ -452,9 +465,6 @@ window.addEventListener("keyup", e => {
   else if (e.key == "p" && !menuOpen) {
     windowOpen = true;
     openLevelingScreen();
-  }
-  else if (e.key == "Escape") {
-    handleEscape();
   }
   else if(invOpen || windowOpen || menuOpen) return;
   else if (number > -1 && e.shiftKey) {
@@ -524,92 +534,6 @@ function closeCharacter() {
   const bg = document.querySelector<HTMLDivElement>(".playerWindow");
   bg.style.transform = "scale(0)";
 }
-
-function saveToFile() {
-  var saveData = (function () {
-    var a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
-    return function (data, fileName) {
-      var json = JSON.stringify(data),
-        blob = new Blob([json], { type: "octet/stream" }),
-        url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
-
-  }());
-  let saveArray = [
-    {
-      key: "player",
-      data: player
-    },
-    {
-      key: "itemData",
-      data: itemData
-    },
-    {
-      key: "enemies",
-      data: fallenEnemies
-    }
-  ];
-  let minutes = new Date().getMinutes();
-  if (minutes < 10) minutes = `0${new Date().getMinutes()}`;
-  saveData(saveArray, `TAVARAEN-${player.name}-save-${new Date().getHours()}.${minutes}.txt`);
-}
-
-function loadFromfile() {
-  let fileInput = document.createElement("input");
-  fileInput.setAttribute('type', 'file');
-  fileInput.click();
-  fileInput.addEventListener("change", () => HandleFile(fileInput.files[0]));
-}
-
-function HandleFile(file) {
-  let reader = new FileReader();
-  let text = "";
-
-  // file reading finished successfully
-  reader.addEventListener('load', function (e) {
-    // contents of file in variable     
-    text = e.target.result;
-    FinishRead();
-  });
-
-  // read as text file
-  reader.readAsText(file);
-
-  function FinishRead() {
-    let Table = JSON.parse(text);
-    LoadSlotPromptFile(file.name, Table);
-  }
-}
-
-function LoadSlotPromptFile(name, data) {
-  LoadSlot(data);
-}
-
-function GetKey(key, table) {
-  for (let object of table) {
-    if (object.key == key) {
-      return object;
-    }
-  }
-}
-
-function LoadSlot(data) {
-  player = new PlayerCharacter(GetKey("player", data).data);
-  itemData = GetKey("itemData", data).data;
-  fallenEnemies = GetKey("enemies", data).data;
-  modifyCanvas();
-  player.updateAbilities();
-  updateUI();
-}
-
-
-
 
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en: Enemy) => en.updateAbilities());

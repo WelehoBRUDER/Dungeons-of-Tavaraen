@@ -89,6 +89,8 @@ const icons = {
     sight_icon: "resources/icons/sight_icon.png",
     blight: "resources/icons/blighted.png",
     blight_icon: "resoures/icons/blighted_icon.png",
+    burning: "resources/icons/flame_of_passion.png",
+    burning_icon: "resources/icons/flame_of_passion_icon.png",
 };
 const tiles = [
     {

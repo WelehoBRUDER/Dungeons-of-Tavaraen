@@ -40,6 +40,26 @@ const statusEffects = {
     textIcon: icons.venom,
     icon: "resources/icons/venom.png"
   },
+  burning: {
+    id: "burning",
+    name: "Burning",
+    dot: {
+      damageType: "burning",
+      damageAmount: 3,
+      icon: icons.burning_icon
+    },
+    effects: {
+      iceResistV: 25,
+      resistAllV: -5
+    },
+    break_concentration: true,
+    last: {
+      total: 3,
+      current: 3
+    },
+    textIcon: icons.burning_icon,
+    icon: "resources/icons/flame_of_passion.png"
+  },
   blighted: {
     id: "blighted",
     name: "Blighted",

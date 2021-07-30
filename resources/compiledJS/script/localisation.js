@@ -167,6 +167,7 @@ const finnish = {
     player_death: "SINUT SURMATTIIN!",
     // Damage types
     poison_damage: "Myrkytys",
+    burning_damage: "Polttavaa",
     // Misc
     attack_name: "tavallisten iskujen vahinkoa",
     cures_statuses: "Parantaa efektit",
@@ -195,11 +196,18 @@ const finnish = {
     /* MENU */
     menu_resume: "Takaisin",
     menu_options: "Asetukset",
+    menu_save_games: "Tallennetut Pelit",
     menu_main_screen: "Päämenu",
     menu_new_game: "Uusi Peli",
     menu_load_game: "Lataa Peli",
     setting_log_enemy_movement: "Kirjaa vihollisten sijainnit",
     setting_game_language: "Pelin kieli",
+    save_over: "Tallenna peli",
+    load_game: "Jatka peliä",
+    delete_save: "Poista peli",
+    create_save: "Luo uusi tallennus",
+    create_file: "Tallenna tiedostoon",
+    load_file: "Jatka peliä tiedostosta",
     // Grades
     common: "Yleinen",
     uncommon: "Epätavallinen",
@@ -223,6 +231,8 @@ const finnish = {
     effect_ward_of_aurous_desc: "Kehosi on turvassa Aurouksen suojan alla.",
     effect_battle_fury_name: "Taistelun Riemu",
     effect_battle_fury_desc: "Riemuitse ja raivoa! Adrenaniili kiertää veressä ja veri lentää!",
+    effect_burning_name: "Palaa",
+    effect_burning_desc: "OLET TULESSA!",
     // Abilities and stuff
     attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
     attack_action_desc: "iskee hahmoa [TARGET], tehden [DMG] vahinkoa.",
@@ -476,6 +486,7 @@ const english = {
     player_death: "YOU WERE KILLED!",
     // Damage types
     poison_damage: "Poison",
+    burning_damage: "Burning",
     // Misc
     attack_name: "base attack damage",
     cures_statuses: "Cures",
@@ -504,11 +515,18 @@ const english = {
     /* MENU */
     menu_resume: "Resume",
     menu_options: "Options",
+    menu_save_games: "Save Games",
     menu_main_screen: "Main Menu",
     menu_new_game: "New Game",
     menu_load_game: "Load Game",
     setting_log_enemy_movement: "Log enemy movement",
     setting_game_language: "Game language",
+    save_over: "Save over file",
+    load_game: "Load game",
+    delete_save: "Delete save file",
+    create_save: "Create new save",
+    create_file: "Save to file (downloads a .txt file)",
+    load_file: "Load from file (opens prompt)",
     // Grades
     common: "Common",
     uncommon: "Uncommon",
@@ -526,8 +544,14 @@ const english = {
     effect_berserk_desc: "RRAAAAAGHH!!",
     efect_dazed_name: "Dazed",
     effect_dazed_desc: "A blow has left you dazed, \nmaking it much harder to perform any action.",
+    effect_blighted_name: "Blighted",
+    effect_blighted_desc: "Your very soul is weakened from a vile blight.",
+    effect_ward_of_aurous_name: "Ward of Aurous",
+    effect_ward_of_aurous_desc: "Feel at ease, Aurous himself is guaranteeing your safety.",
     effect_battle_fury_name: "Fury",
     effect_battle_fury_desc: "You are concentrating on physical might.",
+    effect_burning_name: "Burning",
+    effect_burning_desc: "YOU ARE ON FIRE!",
     // Abilities and stuff
     attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
     attack_action_desc: "attacks [TARGET], dealing [DMG] damage.",
