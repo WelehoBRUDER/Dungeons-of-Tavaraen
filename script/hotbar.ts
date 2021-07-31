@@ -9,13 +9,37 @@ let menuOpen = false;
 
 class gameSettings {
   [log_enemy_movement: string]: boolean | any;
+  hotkey_inv: string;
+  hotkey_char: string;
+  hotkey_perk: string;
+  hotkey_move_up: string;
+  hotkey_move_down: string;
+  hotkey_move_left: string;
+  hotkey_move_right: string;
+  hotkey_interact: string;
   constructor(base: gameSettings) {
     this.log_enemy_movement = base.log_enemy_movement || false;
+    this.hotkey_inv = base.hotkey_inv || "i";
+    this.hotkey_char = base.hotkey_char || "c";
+    this.hotkey_perk = base.hotkey_perk || "p";
+    this.hotkey_move_up = base.hotkey_move_up || "w";
+    this.hotkey_move_down = base.hotkey_move_down || "s";
+    this.hotkey_move_left = base.hotkey_move_left || "a";
+    this.hotkey_move_right = base.hotkey_move_right || "d";
+    this.hotkey_interact = base.hotkey_interact || " ";
   }
 }
 
 let settings = new gameSettings({
-  log_enemy_movement: false
+  log_enemy_movement: false,
+  hotkey_inv: "i",
+  hotkey_char: "c",
+  hotkey_perk: "p",
+  hotkey_move_up: "w",
+  hotkey_move_down: "s",
+  hotkey_move_left: "a",
+  hotkey_move_right: "d",
+  hotkey_interact: " ",
 });
 
 function generateHotbar() {
@@ -70,18 +94,18 @@ function generateHotbar() {
 
 function useConsumable(itm) {
   player.effects();
-  if(itm.healValue) {
+  if (itm.healValue) {
     player.stats.hp += itm.healValue;
     spawnFloatingText(player.cords, itm.healValue.toString(), "lime", 36, 1000, 200);
-  } 
-  if(itm.manaValue) {
+  }
+  if (itm.manaValue) {
     player.stats.mp += itm.manaValue;
     spawnFloatingText(player.cords, itm.manaValue.toString(), "cyan", 36, 1000, 200);
-  } 
+  }
   displayText(`<c>cyan<c>[ACTION] <c>white<c>${lang["useConsumable"]}`);
   itm.usesRemaining--;
-  if(itm.usesRemaining <= 0) {
-    player.inventory.splice(player.inventory.findIndex(item=>item.equippedSlot == itm.equippedSlot), 1);
+  if (itm.usesRemaining <= 0) {
+    player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
   }
   hideHover();
   advanceTurn();
@@ -409,15 +433,15 @@ function hideHover() {
 }
 
 function handleEscape() {
-  if(!isSelected && !invOpen && !windowOpen && !menuOpen) {
+  if (!isSelected && !invOpen && !windowOpen && !menuOpen) {
     openGameMenu();
     menuOpen = true;
   }
-  else if(menuOpen) {
+  else if (menuOpen) {
     closeGameMenu(false, false, true);
     menuOpen = false;
   }
-  if(saveGamesOpen) {
+  if (saveGamesOpen) {
     closeSaveMenu();
   }
   isSelected = false;
@@ -444,6 +468,8 @@ window.addEventListener("keyup", e => {
       abiSelected = {};
       enemiesHadTurn = 0;
       turnOver = true;
+      player.abilities.forEach(abi=>abi.cooldown = 0);
+      player.statusEffects = [];
       updateUI();
       modifyCanvas();
       displayText("HERÄSIT KUOLLEISTA!");
@@ -455,27 +481,25 @@ window.addEventListener("keyup", e => {
   }
   if (player.isDead || saveGamesOpen) return;
   const number = parseInt(e.keyCode) - 48;
-  if (e.key == "i" && !menuOpen ) {
+  if (e.key == settings.hotkey_inv && !menuOpen) {
     renderInventory();
   }
-  else if (e.key == "c" && !menuOpen) {
-    windowOpen = true;
+  else if (e.key == settings.hotkey_char && !menuOpen) {
     renderCharacter();
   }
-  else if (e.key == "p" && !menuOpen) {
-    windowOpen = true;
+  else if (e.key == settings.hotkey_perk && !menuOpen) {
     openLevelingScreen();
   }
-  else if(invOpen || windowOpen || menuOpen) return;
+  else if (invOpen || windowOpen || menuOpen) return;
   else if (number > -1 && e.shiftKey) {
     let abi = player.abilities.find(a => a.equippedSlot == number + 9);
     if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
     if (!abi) {
       let itm = player.inventory.find(a => a.equippedSlot == number + 9);
       if (number == 0) itm = player.inventory.find(a => a.equippedSlot == 19);
-      if(itm) useConsumable(itm);
+      if (itm) useConsumable(itm);
       return;
-    } 
+    }
     else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
   else if (number > -1 && !e.shiftKey) {
@@ -484,15 +508,16 @@ window.addEventListener("keyup", e => {
     if (!abi) {
       let itm = player.inventory.find(a => a.equippedSlot == number - 1);
       if (number == 0) itm = player.inventory.find(a => a.equippedSlot == 9);
-      if(itm) useConsumable(itm);
+      if (itm) useConsumable(itm);
       return;
-    } 
+    }
     if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
 });
 
 function renderCharacter() {
   hideHover();
+  windowOpen = true;
   const bg = document.querySelector<HTMLDivElement>(".playerWindow");
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";
   bg.style.transform = "scale(1)";
@@ -538,3 +563,9 @@ function closeCharacter() {
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en: Enemy) => en.updateAbilities());
 updateUI();
+
+
+tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);

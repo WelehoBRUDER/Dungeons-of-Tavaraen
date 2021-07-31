@@ -96,7 +96,25 @@ function getModifiers(char: any, stat: string) {
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
-  })
+  });
+  if (char.classes?.main?.statBonuses) {
+    Object.entries(char.classes.main.statBonuses).forEach((eff: any) => {
+      if (eff[0].startsWith(stat)) {
+        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+        else if (eff[0] == stat + "V") val += eff[1];
+      }
+    });
+  }
+  if (char.classes?.sub?.statBonuses) {
+    Object.entries(char.classes.sub.statBonuses).forEach((eff: any) => {
+      if (eff[0].startsWith(stat)) {
+        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+        else if (eff[0] == stat + "V") val += eff[1];
+      }
+    });
+  }
   char.perks?.forEach((mod: any) => {
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
@@ -106,7 +124,7 @@ function getModifiers(char: any, stat: string) {
       }
     });
   });
-  if(char.raceEffect?.modifiers) {
+  if (char.raceEffect?.modifiers) {
     Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
@@ -237,7 +255,7 @@ class Character {
       baseStats.forEach((stat: string) => {
         const { v: val, m: mod } = getModifiers(this, stat);
         stats[stat] = Math.floor((this.stats[stat] + val) * mod);
-        stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat]-100)/17) : "";
+        stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
       });
       // get hp
       const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax");
@@ -247,10 +265,10 @@ class Character {
       stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
       stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
       stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
-      const {v: critAtkVal, m: critAtkMulti} = getModifiers(this, "critDamage");
-      const {v: critHitVal, m: critHitMulti} = getModifiers(this, "critChance");
-      stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"]*1.5));
-      stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"]*0.4));
+      const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage");
+      const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance");
+      stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
+      stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
       return stats;
     };
 
@@ -261,7 +279,7 @@ class Character {
         const { v: _val, m: _mod } = getModifiers(this, "resistAll");
         let value = Math.floor((this.resistances[res] + val) * mod);
         resists[res] = Math.floor((value + _val) * _mod);
-        resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res]-85)/17) : "";
+        resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
       });
       return resists;
     };
@@ -273,16 +291,16 @@ class Character {
         resists[res] = Math.floor((this.statusResistances[res] + val) * mod);
       });
       return resists;
-    }
+    };
 
     this.statRemaining = (stat: string) => {
       return <number>((this.stats[stat] / this.getStats()[stat + "Max"]) * 100);
     };
 
     this.effects = () => {
-      this.statusEffects.forEach((status: statEffect, index: number)=>{
-        if(status.dot) {
-          const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType]/100));
+      this.statusEffects.forEach((status: statEffect, index: number) => {
+        if (status.dot) {
+          const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
           this.stats.hp -= dmg;
           spawnFloatingText(this.cords, dmg.toString(), "red", 32);
           let effectText: string = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
@@ -291,72 +309,72 @@ class Character {
           effectText = effectText?.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
           effectText = effectText?.replace("[DMG]", `${dmg}`);
           displayText(`<c>purple<c>[EFFECT] ${effectText}`);
-          if(this.stats.hp <= 0) {
+          if (this.stats.hp <= 0) {
             this.kill();
           }
         }
         status.last.current--;
-        if(status.last.current <= 0) {
+        if (status.last.current <= 0) {
           this.statusEffects.splice(index, 1);
         }
       });
       this.abilities?.forEach((abi: ability) => {
-        if(abi.onCooldown > 0) {
-          if(abi.recharge_only_in_combat) {
-            if(state.inCombat) abi.onCooldown--;
+        if (abi.onCooldown > 0) {
+          if (abi.recharge_only_in_combat) {
+            if (state.inCombat) abi.onCooldown--;
           }
           else abi.onCooldown--;
-        } 
+        }
       });
-    }
+    };
 
     this.abilities = base.abilities ?? [];
 
     this.silenced = () => {
       var result = false;
       this.statusEffects.forEach((eff: statEffect) => {
-        if(eff.silence) { result = true; return;}
+        if (eff.silence) { result = true; return; }
       });
       return result;
-    }
+    };
 
     this.concentration = () => {
       var result = true;
       this.statusEffects.forEach((eff: statEffect) => {
-        if(eff.break_concentration) { result = false; return;}
+        if (eff.break_concentration) { result = false; return; }
       });
       return result;
-    }
+    };
 
     this.hpRemain = () => {
       return (this.stats.hp / this.getStats().hpMax) * 100;
-    }
+    };
 
     this.updateAbilities = () => {
       // @ts-ignore
-      for(let i = 0; i < this.abilities?.length; i++) {
+      for (let i = 0; i < this.abilities?.length; i++) {
         // @ts-ignore
         this.abilities[i] = new Ability(this.abilities[i], this);
       }
       // @ts-ignore
-      if(this.inventory) {
+      if (this.inventory) {
         // @ts-ignore
-      for(let i = 0; i < this.inventory?.length; i++) {
-        // @ts-ignore
-        if(this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({...this.inventory[i]});
-        // @ts-ignore
-        else if(this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
-        // @ts-ignore
-        else if(this.inventory[i].type == "consumable") this.inventory[i] = new Consumable(this.inventory[i]);
+        for (let i = 0; i < this.inventory?.length; i++) {
+          // @ts-ignore
+          if (this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({ ...this.inventory[i] });
+          // @ts-ignore
+          else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
+          // @ts-ignore
+          else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable(this.inventory[i]);
         }
       }
-      if(this.weapon?.type) this.weapon = new Weapon({...this.weapon});
-      if(this.chest?.type) this.chest = new Armor({...this.chest});
-      if(this.legs?.type) this.legs = new Armor({...this.legs});
-      if(this.helmet?.type) this.helmet = new Armor({...this.helmet});
-      if(this.gloves?.type) this.gloves = new Armor({...this.gloves});
-      if(this.boots?.type) this.boots = new Armor({...this.boots});
-    }
+      if (this.weapon?.type) this.weapon = new Weapon({ ...this.weapon });
+      if (this.chest?.type) this.chest = new Armor({ ...this.chest });
+      if (this.legs?.type) this.legs = new Armor({ ...this.legs });
+      if (this.helmet?.type) this.helmet = new Armor({ ...this.helmet });
+      if (this.gloves?.type) this.gloves = new Armor({ ...this.gloves });
+      if (this.boots?.type) this.boots = new Armor({ ...this.boots });
+    };
   }
 }
 

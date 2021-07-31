@@ -90,6 +90,35 @@
     }
   }
 
+  .hotkeySelection {
+    transition: 0.03s;
+    padding: 4px;
+    display: flex;
+    margin: 0;
+    width: auto;
+    height: min-content;
+    animation-name: popIn;
+    animation-duration: 0.175s;
+
+    p {
+      width: auto;
+      height: 24px;
+      margin: 0;
+    }
+
+    div {
+      min-width: 18px;
+      width: auto;
+      height: 18px;
+      padding: 4px;
+      text-align: center;
+      border: 2px solid rgb(59, 59, 59);
+      background: rgb(22, 22, 22);
+      margin-left: 10px;
+      font-size: 16px;
+    }
+  }
+
   .languageSelection {
     transition: 0.03s;
     padding: 4px;
@@ -126,7 +155,7 @@
     }
   }
 
-  .toggle:hover {
+  .toggle:hover, .hotkeySelection:hover {
     background: rgba(25, 66, 100, 0.55);
   }
 }
@@ -135,7 +164,7 @@
   transition: 0.275s;
   width: 1280px;
   min-height: 720px;
-  max-height: 60vh;
+  max-height: 80vh;
   height: auto;
   position: absolute;
   top: 10%;

@@ -40,36 +40,36 @@ const menuSettings = [
         type: "toggle",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_inv",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_char",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_perk",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_move_up",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_move_down",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_move_left",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_move_right",
+        type: "hotkey",
     },
     {
-        id: "setting_test",
-        type: "toggle",
+        id: "setting_hotkey_interact",
+        type: "hotkey",
     },
     {
         id: "setting_game_language",
@@ -84,6 +84,10 @@ setTimeout(() => {
     }
     menuOpen = true;
     gotoMainMenu();
+    tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+    tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+    tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 }, 300);
 let saveGamesOpen = false;
 const languages = ["english", "finnish"];
@@ -131,8 +135,21 @@ async function closeGameMenu(noDim = false, escape = false, keepMainMenu = false
     if (escape)
         handleEscape();
 }
+let selectingHotkey = "";
+window.addEventListener("keyup", (e) => {
+    if (selectingHotkey != "") {
+        settings[selectingHotkey] = e.key;
+        document.querySelector(`.${selectingHotkey}`).childNodes[1].textContent = e.key.toUpperCase();
+        tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+        tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+        tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+        tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+        selectingHotkey = "";
+    }
+});
 async function gotoSettingsMenu(inMainMenu = false) {
-    var _a, _b;
+    var _a, _b, _c;
+    selectingHotkey = "";
     if (!inMainMenu)
         closeGameMenu(true);
     const settingsBackground = document.querySelector(".settingsMenu");
@@ -160,10 +177,29 @@ async function gotoSettingsMenu(inMainMenu = false) {
             container.append(text, toggleBox);
             settingsBackground.append(container);
         }
+        else if (setting.type == "hotkey") {
+            container.classList.add("hotkeySelection");
+            const text = document.createElement("p");
+            text.textContent = (_b = lang[setting.id]) !== null && _b !== void 0 ? _b : setting.id;
+            let _setting = setting.id.replace("setting_", "");
+            container.classList.add(_setting);
+            const keyButton = document.createElement("div");
+            keyButton.textContent = settings[_setting].toUpperCase();
+            if (settings[_setting] == " ")
+                keyButton.textContent = lang["space_key"];
+            container.addEventListener("click", () => {
+                if (selectingHotkey == "") {
+                    keyButton.textContent = "<>";
+                    selectingHotkey = _setting;
+                }
+            });
+            container.append(text, keyButton);
+            settingsBackground.append(container);
+        }
         else if (setting.type == "languageSelection") {
             container.classList.add("languageSelection");
             const text = document.createElement("p");
-            text.textContent = (_b = lang[setting.id]) !== null && _b !== void 0 ? _b : setting.id;
+            text.textContent = (_c = lang[setting.id]) !== null && _c !== void 0 ? _c : setting.id;
             container.append(text);
             languages.forEach((language) => {
                 const langButton = document.createElement("div");
@@ -178,6 +214,10 @@ async function gotoSettingsMenu(inMainMenu = false) {
                         catch (_a) { }
                     });
                     lang = eval(language);
+                    tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+                    tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+                    tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+                    tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
                     player.updateAbilities();
                     gotoSettingsMenu(true);
                 });
@@ -296,6 +336,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(false, false);
         });
         loadGame.addEventListener("click", () => {
+            reviveAllDeadEnemies();
             player = new PlayerCharacter(Object.assign({}, save.save.player));
             fallenEnemies = [...save.save.fallenEnemies];
             itemData = [...save.save.itemData];
@@ -477,7 +518,19 @@ function purgeDeadEnemies() {
         });
     });
 }
+function reviveAllDeadEnemies() {
+    fallenEnemies.forEach(deadFoe => {
+        maps.forEach((mp, index) => {
+            if (deadFoe.spawnMap == index) {
+                let foe = new Enemy(Object.assign({}, deadFoe));
+                foe.restore();
+                maps[index].enemies.push(new Enemy(Object.assign({}, foe)));
+            }
+        });
+    });
+}
 function LoadSlot(data) {
+    reviveAllDeadEnemies();
     player = new PlayerCharacter(GetKey("player", data).data);
     itemData = GetKey("itemData", data).data;
     fallenEnemies = GetKey("enemies", data).data;

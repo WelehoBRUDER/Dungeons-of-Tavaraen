@@ -27,6 +27,7 @@ interface playerChar extends characterObject {
   usedShrines: Array<any>;
   unarmedDamages?: any;
   fistDmg?: Function;
+  classes?: any;
 }
 
 interface levelObject {
@@ -157,6 +158,7 @@ class PlayerCharacter extends Character {
   lvlUp?: Function;
   unarmedDamages?: any;
   fistDmg?: Function;
+  classes?: any;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -187,6 +189,7 @@ class PlayerCharacter extends Character {
     this.pp = base.pp ?? 0;
     this.usedShrines = base.usedShrines ?? [];
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
+    this.classes = base.classes ?? {};
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -247,6 +250,16 @@ class PlayerCharacter extends Character {
     this.equip = (event: any, item: any) => {
       if(event.button !== 2) return;
       const itm = {...item};
+      let canEquip = true;
+      if(itm.requiresStats) {
+        const stats = this.getStats();
+        Object.entries(itm.requiresStats).forEach((stat: any) => {
+          const key = stat[0];
+          const val = stat[1];
+          if(stats[key] < val) canEquip = false;
+        })
+      }
+      if(!canEquip) return;
       player.inventory.splice(item.index, 1);
       this.unequip(event, itm.slot);
       this[itm.slot] = {...itm};
@@ -495,6 +508,10 @@ var player = new PlayerCharacter({
     xpNeed: 100,
     level: 1
   },
+  classes: {
+    main: new combatClass(combatClasses["sorcererClass"]),
+    sub: null
+  },
   sprite: ".player",
   race: "elf",
   hair: 4,
@@ -521,9 +538,7 @@ var player = new PlayerCharacter({
     }
   ],
   unarmed_damages: { crush: 5 },
-  statusEffects: [
-    new statEffect({...statusEffects.poison}, s_def)
-  ],
+  statusEffects: [],
   inventory: [],
   gold: 50,
   sp: 5,

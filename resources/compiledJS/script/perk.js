@@ -1,7 +1,7 @@
 "use strict";
 var perksData = [];
 var perks = [];
-var tree = "rogue"; // replace with player class when added
+var tree = player.classes.main.perkTree;
 const perkColors = {
     necromancer: "#20142e",
     sorcerer: "#183952",
@@ -179,6 +179,7 @@ function upStat(stat) {
 }
 function openLevelingScreen() {
     hideHover();
+    windowOpen = true;
     const lvling = document.querySelector(".playerLeveling");
     lvling.style.transform = "scale(1)";
     document.querySelector(".worldText").style.opacity = "0";

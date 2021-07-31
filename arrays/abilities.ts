@@ -155,6 +155,7 @@ const abilities = {
     cooldown: 12,
     damage_multiplier: 0,
     type: "buff",
+    remove_status: ["burning"],
     action_desc: "wards themself",
     action_desc_pl: "ward yourself",
     icon: "resources/icons/shield_of_aurous.png",

@@ -22,6 +22,7 @@ interface enemy extends characterObject {
   retreatIndex?: number;
   hasRetreated?: boolean;
   img?: string;
+  restore?: Function;
 }
 
 class Enemy extends Character {
@@ -49,6 +50,7 @@ class Enemy extends Character {
   hasRetreated?: boolean;
   chooseAbility?: Function;
   img?: string;
+  restore?: Function;
   constructor(base: enemy) {
     super(base);
     this.sprite = base.sprite;
@@ -187,6 +189,17 @@ class Enemy extends Character {
       this.alive = false;
       player.lvlUp();
     };
+
+    this.restore = () => {
+      this.stats.hp = this.getStats().hpMax;
+      this.stats.mp = this.getStats().mpMax;
+      this.statusEffects = [];
+      this.abilities.forEach(abi=>{
+        abi.onCooldown = 0;
+      });
+      this.cords.x = this.spawnCords.x;
+      this.cords.y = this.spawnCords.y;
+    }
 
     this.aggro = () => {
       // @ts-ignore

@@ -25,6 +25,20 @@
       <div class="barFill"></div>
     </div>
     <div class="hotbar"></div>
+    <div class="playerButtons">
+      <div class="screenButton invScrb" onclick="renderInventory()">
+        <img src="resources/icons/inventory.png" alt="">
+      </div>
+      <div class="screenButton chaScrb" onclick="renderCharacter()">
+        <img src="resources/icons/character.png" alt="">
+      </div>
+      <div class="screenButton perScrb" onclick="openLevelingScreen()">
+        <img src="resources/icons/perks.png" alt="">
+      </div>
+      <div class="screenButton escScrb" onclick="handleEscape()">
+        <img src="resources/icons/menu.png" alt="">
+      </div>
+    </div>
     <div class="playerUI">
       <div class="playerHpBg">
         <img src="resources/ui/health_bg.png" alt="" class="PlayerHpBgImg">
@@ -150,6 +164,7 @@
   <img src="resources/tiles/player/iron_gauntlets.png" alt="" onload="imgLoaded()" class="ironGauntlets sprite">
   <img src="resources/tiles/player/iron_helmet.png" alt="" onload="imgLoaded()" class="ironHelmet sprite">
   <img src="resources/tiles/player/crown_of_wisdom.png" alt="" onload="imgLoaded()" class="crownOfWisdom sprite">
+  <img src="resources/tiles/player/lich_robes.png" alt="" onload="imgLoaded()" class="lichRobes sprite">
 
   <!-- Weapons -->
   <img src="resources/tiles/player/dagger_model.png" alt="" onload="imgLoaded()" class="rustyDagger sprite">
@@ -158,6 +173,7 @@
   <img src="resources/tiles/player/blade_model.png" alt="" onload="imgLoaded()" class="blade sprite">
   <img src="resources/tiles/player/chipped_blade_model.png" alt="" onload="imgLoaded()" class="chippedBlade sprite">
   <img src="resources/tiles/player/chipped_axe_model.png" alt="" onload="imgLoaded()" class="chippedAxe sprite">
+  <img src="resources/tiles/player/apprentice_wand.png" alt="" onload="imgLoaded()" class="apprenticeWand sprite">
 
   <!-- Projectiles -->
   <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
@@ -168,6 +184,7 @@
   <img src="resources/tiles/projectiles/blight.png" alt="" onload="imgLoaded()" class="blightProjectile sprite">
   <img src="resources/tiles/projectiles/fireball.png" alt="" onload="imgLoaded()" class="fireballProjectile sprite">
   <img src="resources/tiles/projectiles/piercingManaBolt.png" alt="" onload="imgLoaded()" class="piercingManaBoltProjectile sprite">
+  <img src="resources/tiles/projectiles/magicBlast.png" alt="" onload="imgLoaded()" class="magicBlastProjectile sprite">
 
 
   <!-- Effects & AOEs -->
@@ -178,6 +195,7 @@
   <img src="resources/tiles/enemies/skeleton_warrior.png" alt="" onload="imgLoaded()" class="skeletonWarrior sprite">
   <img src="resources/tiles/enemies/skeleton_archer.png" alt="" onload="imgLoaded()" class="skeletonArcher sprite">
   <img src="resources/tiles/enemies/skeleton_mage.png" alt="" onload="imgLoaded()" class="skeletonMage sprite">
+  <img src="resources/tiles/enemies/skeleton_lich.png" alt="" onload="imgLoaded()" class="skeletonLich sprite">
   <img src="resources/tiles/enemies/norseman_berserk.png" alt="" onload="imgLoaded()" class="norsemanBerserk sprite">
   <img src="resources/tiles/enemies/norseman_hunter.png" alt="" onload="imgLoaded()" class="norsemanHunter sprite">
 
@@ -224,6 +242,7 @@
 <script src="resources/compiledJS/arrays/items.js"></script>
 <script src="resources/compiledJS/script/equipment.js"></script>
 <script src="resources/compiledJS/script/status.js"></script>
+<script src="resources/compiledJS/script/combatClasses.js"></script>
 <script src="resources/compiledJS/script/player.js"></script>
 <script src="resources/compiledJS/script/enemy.js"></script>
 <script src="resources/compiledJS/arrays/maps.js"></script>

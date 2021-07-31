@@ -7,7 +7,16 @@ function lootEnemy(enemy) {
             // @ts-ignore
             if (obj.type == "weapon")
                 itm = new Weapon(Object.assign({}, items[obj.item]));
+            else if (obj.type == "armor")
+                itm = new Armor(Object.assign({}, items[obj.item]));
             createDroppedItem(enemy.cords, itm);
+        }
+        else if (obj.type == "gold") {
+            let amount = random(obj.amount[1], obj.amount[0]);
+            amount *= 1 + (enemy.level / 4.9);
+            amount = Math.floor(amount);
+            player.gold += amount;
+            spawnFloatingText(enemy.cords, `${amount}G`, "gold");
         }
     });
 }

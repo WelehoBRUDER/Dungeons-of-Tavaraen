@@ -25,6 +25,7 @@ class Item {
   grade: string;
   index?: number;
   slot?: string;
+  requiresStats?: any;
   constructor(base: itemClass) {
     this.id = base.id;
     // @ts-ignore
@@ -38,6 +39,7 @@ class Item {
     this.grade = baseItem.grade;
     this.index = base.index ?? -1;
     this.slot = baseItem.slot;
+    this.requiresStats = baseItem.requiresStats ?? null;
   }
 }
 
@@ -212,6 +214,7 @@ class Weapon extends Item {
         if (random(100, 0) < template.chance) {
           this.rolledDamages[template.type] = Math.round(random(template.value[1], template.value[0]));
         }
+        else this.rolledDamages[template.type] = 0;
       });
     }
     if (Object.values(this.rolledStats).length == 0) {
@@ -220,6 +223,7 @@ class Weapon extends Item {
         if (random(100, 0) < template.chance) {
           this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
         }
+        else this.rolledStats[template.type] = 0;
       });
     }
 
@@ -329,6 +333,7 @@ class Armor extends Item {
         if (random(100, 0) < template.chance) {
           this.rolledResistances[template.type] = Math.round(random(template.value[1], template.value[0]));
         }
+        else this.rolledResistances[template.type] = 0;
       });
     }
     if (Object.values(this.rolledStats).length == 0) {
@@ -337,6 +342,7 @@ class Armor extends Item {
         if (random(100, 0) < template.chance) {
           this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
         }
+        else this.rolledStats[template.type] = 0;
       });
     }
 
@@ -482,20 +488,26 @@ function itemTT(item: any) {
   if (item.damages) {
     let total: number = 0;
     let txt: string = "";
-    Object.entries(item.damages)?.forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    Object.entries(item.damages)?.forEach((dmg: any) => { total += dmg[1]; if(dmg[1] !== 0) txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
   }
   if (item.resistances) {
     let total: number = 0;
     let txt: string = "";
-    Object.entries(item.resistances)?.forEach((dmg: any) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    Object.entries(item.resistances)?.forEach((dmg: any) => { total += dmg[1]; if(dmg[1] !== 0) txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
   }
+  if (item.requiresStats) {
+    let txt: string = "";
+    Object.entries(item.requiresStats)?.forEach((dmg: any) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+    txt = txt.substring(0, txt.length - 2);
+    text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
+  }
   if (Object.values(item?.stats)?.length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
-    Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
+    Object.entries(item.stats).forEach(eff => { if(eff[1] !== 0) text += effectSyntax(eff, true, "")});
   }
   if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);

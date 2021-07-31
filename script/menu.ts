@@ -41,36 +41,36 @@ const menuSettings = [
     type: "toggle",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_inv",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_char",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_perk",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_move_up",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_move_down",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_move_left",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_move_right",
+    type: "hotkey",
   },
   {
-    id: "setting_test",
-    type: "toggle",
+    id: "setting_hotkey_interact",
+    type: "hotkey",
   },
   {
     id: "setting_game_language",
@@ -78,14 +78,18 @@ const menuSettings = [
   }
 ];
 
-setTimeout(()=>{
-  let options = JSON.parse(localStorage.getItem(`DOT_game_settings`))
-  if(options) {
+setTimeout(() => {
+  let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
+  if (options) {
     settings = new gameSettings(options);
     lang = eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
   }
   menuOpen = true;
   gotoMainMenu();
+  tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+  tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+  tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+  tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 }, 300);
 
 let saveGamesOpen = false;
@@ -121,7 +125,7 @@ async function closeGameMenu(noDim = false, escape = false, keepMainMenu = false
     const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
     settingsBackground.textContent = "";
   }
-  if(!keepMainMenu) {
+  if (!keepMainMenu) {
     setTimeout(() => { mainMenu.style.display = "none"; }, 575);
     mainMenu.style.opacity = "0";
   }
@@ -137,7 +141,21 @@ async function closeGameMenu(noDim = false, escape = false, keepMainMenu = false
   if (escape) handleEscape();
 }
 
+let selectingHotkey = "";
+window.addEventListener("keyup", (e) => {
+  if (selectingHotkey != "") {
+    settings[selectingHotkey] = e.key;
+    document.querySelector(`.${selectingHotkey}`).childNodes[1].textContent = e.key.toUpperCase();
+    tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+    tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+    tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+    selectingHotkey = "";
+  }
+});
+
 async function gotoSettingsMenu(inMainMenu = false) {
+  selectingHotkey = "";
   if (!inMainMenu) closeGameMenu(true);
   const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
   settingsBackground.textContent = "";
@@ -160,6 +178,24 @@ async function gotoSettingsMenu(inMainMenu = false) {
       container.append(text, toggleBox);
       settingsBackground.append(container);
     }
+    else if (setting.type == "hotkey") {
+      container.classList.add("hotkeySelection");
+      const text = document.createElement("p");
+      text.textContent = lang[setting.id] ?? setting.id;
+      let _setting = setting.id.replace("setting_", "");
+      container.classList.add(_setting);
+      const keyButton = document.createElement("div");
+      keyButton.textContent = settings[_setting].toUpperCase();
+      if (settings[_setting] == " ") keyButton.textContent = lang["space_key"];
+      container.addEventListener("click", () => {
+        if (selectingHotkey == "") {
+          keyButton.textContent = "<>";
+          selectingHotkey = _setting;
+        }
+      });
+      container.append(text, keyButton);
+      settingsBackground.append(container);
+    }
     else if (setting.type == "languageSelection") {
       container.classList.add("languageSelection");
       const text = document.createElement("p");
@@ -175,6 +211,10 @@ async function gotoSettingsMenu(inMainMenu = false) {
             catch { }
           });
           lang = eval(language);
+          tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+          tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+          tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+          tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
           player.updateAbilities();
           gotoSettingsMenu(true);
         });
@@ -214,11 +254,11 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
   const savesArea = saveBg.querySelector<HTMLDivElement>(".saves");
   const saveNameInput = saveBg.querySelector<HTMLInputElement>(".saveName");
-  if(inMainMenu) {
+  if (inMainMenu) {
     saveNameInput.classList.add("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveGame").classList.add("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveFile").classList.add("unavailable");
-  } 
+  }
   else {
     saveNameInput.classList.remove("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveGame").classList.remove("unavailable");
@@ -227,11 +267,11 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   tooltip(saveBg.querySelector<HTMLDivElement>(".saveGame"), `<f>15px<f><c>white<c>${lang["create_save"]}`);
   tooltip(saveBg.querySelector<HTMLDivElement>(".saveFile"), `<f>15px<f><c>white<c>${lang["create_file"]}`);
   tooltip(saveBg.querySelector<HTMLDivElement>(".loadFile"), `<f>15px<f><c>white<c>${lang["load_file"]}`);
-  saveBg.querySelector<HTMLDivElement>(".saveGame").onclick = ()=>createNewSaveGame();
-  saveBg.querySelector<HTMLDivElement>(".saveFile").onclick = ()=>saveToFile(saveNameInput.value);
-  saveBg.querySelector<HTMLDivElement>(".loadFile").onclick = ()=>loadFromfile();
+  saveBg.querySelector<HTMLDivElement>(".saveGame").onclick = () => createNewSaveGame();
+  saveBg.querySelector<HTMLDivElement>(".saveFile").onclick = () => saveToFile(saveNameInput.value);
+  saveBg.querySelector<HTMLDivElement>(".loadFile").onclick = () => loadFromfile();
   savesArea.textContent = "";
-  if(animate) {
+  if (animate) {
     saveBg.style.display = "block";
     saveBg.style.animation = 'none';
     // @ts-ignore
@@ -240,12 +280,12 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     saveBg.style.animation = null;
     await sleep(5);
     saveBg.style.animationName = `slideFromTop`;
-    await sleep (375);
+    await sleep(375);
   }
   saveNameInput.value = player.name + "_save";
   saves = saves.sort((x1, x2) => x2.time - x1.time);
   resetIds();
-  for(let save of saves) {
+  for (let save of saves) {
     await sleep(100);
     const saveContainer = document.createElement("div");
     const saveCanvas = document.createElement("canvas");
@@ -272,12 +312,12 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     saveOverwrite.append(saveIcon);
     loadGame.append(loadIcon);
     deleteGame.append(deleteIcon);
-    if(inMainMenu) {
+    if (inMainMenu) {
       saveOverwrite.classList.add("unavailable");
     }
-    saveOverwrite.addEventListener("click", ()=>{
+    saveOverwrite.addEventListener("click", () => {
       let saveData = {} as any;
-      saveData.player = {...player};
+      saveData.player = { ...player };
       saveData.fallenEnemies = [...fallenEnemies];
       saveData.itemData = [...itemData];
       saveData.currentMap = currentMap;
@@ -292,8 +332,9 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
       gotoSaveMenu(false, false);
     });
-    loadGame.addEventListener("click", ()=> {
-      player = new PlayerCharacter({...save.save.player});
+    loadGame.addEventListener("click", () => {
+      reviveAllDeadEnemies();
+      player = new PlayerCharacter({ ...save.save.player });
       fallenEnemies = [...save.save.fallenEnemies];
       itemData = [...save.save.itemData];
       currentMap = save.save.currentMap;
@@ -303,8 +344,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       modifyCanvas();
       updateUI();
       player.updateAbilities();
-    })
-    deleteGame.addEventListener("click", ()=>{
+    });
+    deleteGame.addEventListener("click", () => {
       saves.splice(save.id, 1);
       resetIds();
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
@@ -312,8 +353,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     saveName.textContent = save.text;
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", save.save.player);
-    await sleep (25);
-    buttonsContainer.append(saveOverwrite, loadGame, deleteGame)
+    await sleep(25);
+    buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
     saveContainer.append(saveCanvas, saveName, buttonsContainer);
     savesArea.append(saveContainer);
   }
@@ -330,7 +371,7 @@ async function closeSaveMenu() {
   saveBg.style.animation = null;
   await sleep(5);
   saveBg.style.animationName = `slideToTop`;
-  await sleep (725);
+  await sleep(725);
   saveBg.style.display = "none";
 }
 
@@ -341,26 +382,26 @@ function generateKey(len: number) {
   const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var randomString = '';
   for (var i = 0; i < len; i++) {
-      var randomPoz = Math.floor(Math.random() * charSet.length);
-      randomString += charSet.substring(randomPoz,randomPoz+1);
+    var randomPoz = Math.floor(Math.random() * charSet.length);
+    randomString += charSet.substring(randomPoz, randomPoz + 1);
   }
   return randomString;
 }
 
 function keyExists(key: string) {
   let found = 0;
-  for(let save of saves) {
-    if(save.key === key) found++;
+  for (let save of saves) {
+    if (save.key === key) found++;
   }
   return found;
 }
 
 function findIDs() {
-  for(let save of saves) {
-    if(!save.key) {
+  for (let save of saves) {
+    if (!save.key) {
       save.key = generateKey(7);
-      while(keyExists(save.key) > 1) save.key = generateKey(7);
-    } else while(keyExists(save.key) > 1) save.key = generateKey(7);
+      while (keyExists(save.key) > 1) save.key = generateKey(7);
+    } else while (keyExists(save.key) > 1) save.key = generateKey(7);
   }
 }
 
@@ -378,13 +419,13 @@ function createNewSaveGame() {
   let sortTime = +(new Date());
   let saveTime = new Date();
   let gameSave = {} as any;
-  gameSave.player = {...player};
+  gameSave.player = { ...player };
   gameSave.fallenEnemies = [...fallenEnemies];
   gameSave.itemData = [...itemData];
   gameSave.currentMap = currentMap;
   let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
   let key = generateKey(7);
-  saves.push({ text: `${saveName} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`, save: gameSave, id: saves.length, time: sortTime, key: key});
+  saves.push({ text: `${saveName} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`, save: gameSave, id: saves.length, time: sortTime, key: key });
   findIDs();
   localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
   localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
@@ -411,7 +452,7 @@ function saveToFile(input: string) {
   let saveArray = [
     {
       key: "player",
-      data: {...player}
+      data: { ...player }
     },
     {
       key: "itemData",
@@ -466,22 +507,22 @@ function LoadSlotPromptFile(name: string, data: any) {
 function GetKey(key: string, table: any) {
   for (let object of table) {
     if (object.key == key) {
-      return {...object};
+      return { ...object };
     }
   }
 }
 
 function purgeDeadEnemies() {
-  fallenEnemies.forEach(deadFoe=>{
-    maps.forEach((mp, index)=>{
-      if(deadFoe.spawnMap == index) {
+  fallenEnemies.forEach(deadFoe => {
+    maps.forEach((mp, index) => {
+      if (deadFoe.spawnMap == index) {
         let purgeList: Array<number> = [];
-        mp.enemies.forEach((en, _index)=>{
-          if(en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
+        mp.enemies.forEach((en, _index) => {
+          if (en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
             purgeList.push(_index);
           }
         });
-        for(let __index of purgeList) {
+        for (let __index of purgeList) {
           maps[index].enemies.splice(__index, 1);
         }
       }
@@ -489,7 +530,20 @@ function purgeDeadEnemies() {
   });
 }
 
+function reviveAllDeadEnemies() {
+  fallenEnemies.forEach(deadFoe => {
+    maps.forEach((mp, index) => {
+      if (deadFoe.spawnMap == index) {
+        let foe = new Enemy({ ...deadFoe });
+        foe.restore();
+        maps[index].enemies.push(new Enemy({ ...foe }));
+      }
+    });
+  });
+}
+
 function LoadSlot(data: any) {
+  reviveAllDeadEnemies();
   player = new PlayerCharacter(GetKey("player", data).data);
   itemData = GetKey("itemData", data).data;
   fallenEnemies = GetKey("enemies", data).data;

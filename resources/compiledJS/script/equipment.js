@@ -3,7 +3,7 @@ const random = (max, min = -100) => (Math.random() * (max - min) + min);
 let invScroll = 0;
 class Item {
     constructor(base) {
-        var _a;
+        var _a, _b;
         this.id = base.id;
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
@@ -16,6 +16,7 @@ class Item {
         this.grade = baseItem.grade;
         this.index = (_a = base.index) !== null && _a !== void 0 ? _a : -1;
         this.slot = baseItem.slot;
+        this.requiresStats = (_b = baseItem.requiresStats) !== null && _b !== void 0 ? _b : null;
     }
 }
 const namePartsArmor = {
@@ -121,6 +122,8 @@ class Weapon extends Item {
                 if (random(100, 0) < template.chance) {
                     this.rolledDamages[template.type] = Math.round(random(template.value[1], template.value[0]));
                 }
+                else
+                    this.rolledDamages[template.type] = 0;
             });
         }
         if (Object.values(this.rolledStats).length == 0) {
@@ -129,6 +132,8 @@ class Weapon extends Item {
                 if (random(100, 0) < template.chance) {
                     this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
                 }
+                else
+                    this.rolledStats[template.type] = 0;
             });
         }
         this.fullPrice = () => {
@@ -223,6 +228,8 @@ class Armor extends Item {
                 if (random(100, 0) < template.chance) {
                     this.rolledResistances[template.type] = Math.round(random(template.value[1], template.value[0]));
                 }
+                else
+                    this.rolledResistances[template.type] = 0;
             });
         }
         if (Object.values(this.rolledStats).length == 0) {
@@ -231,6 +238,8 @@ class Armor extends Item {
                 if (random(100, 0) < template.chance) {
                     this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
                 }
+                else
+                    this.rolledStats[template.type] = 0;
             });
         }
         this.fullPrice = () => {
@@ -369,29 +378,38 @@ function closeLeveling() {
     lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     var text = "";
     text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
     text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
     if (item.damages) {
         let total = 0;
         let txt = "";
-        (_a = Object.entries(item.damages)) === null || _a === void 0 ? void 0 : _a.forEach((dmg) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        (_a = Object.entries(item.damages)) === null || _a === void 0 ? void 0 : _a.forEach((dmg) => { total += dmg[1]; if (dmg[1] !== 0)
+            txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
     }
     if (item.resistances) {
         let total = 0;
         let txt = "";
-        (_b = Object.entries(item.resistances)) === null || _b === void 0 ? void 0 : _b.forEach((dmg) => { total += dmg[1]; txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        (_b = Object.entries(item.resistances)) === null || _b === void 0 ? void 0 : _b.forEach((dmg) => { total += dmg[1]; if (dmg[1] !== 0)
+            txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
     }
-    if (((_c = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _c === void 0 ? void 0 : _c.length) > 0) {
-        text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
-        Object.entries(item.stats).forEach(eff => text += effectSyntax(eff, true, ""));
+    if (item.requiresStats) {
+        let txt = "";
+        (_c = Object.entries(item.requiresStats)) === null || _c === void 0 ? void 0 : _c.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+        txt = txt.substring(0, txt.length - 2);
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
     }
-    if (((_d = Object.values(item.commands)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+    if (((_d = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
+        Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0)
+            text += effectSyntax(eff, true, ""); });
+    }
+    if (((_e = Object.values(item.commands)) === null || _e === void 0 ? void 0 : _e.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
     if (item.healValue)

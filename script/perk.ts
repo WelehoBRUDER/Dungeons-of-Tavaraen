@@ -1,6 +1,6 @@
 var perksData: Array<any> = [];
 var perks: Array<any> = [];
-var tree = "rogue"; // replace with player class when added
+var tree = player.classes.main.perkTree;
 
 const perkColors = {
   necromancer: "#20142e",
@@ -184,6 +184,7 @@ function upStat(stat: string) {
 
 function openLevelingScreen() {
   hideHover();
+  windowOpen = true;
   const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
   lvling.style.transform = "scale(1)";
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";

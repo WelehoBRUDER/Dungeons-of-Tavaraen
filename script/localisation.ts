@@ -156,11 +156,13 @@ const finnish = {
   ironGauntlets_name: "Rautakäsineet",
   ironHelmet_name: "Rautakypärä",
   crownOfWisdom_name: "Viisauden Kruunu",
+  lichRobes_name: "Kuolema Maagin Kaapu",
 
   // Enemy names
   skeletonWarrior_name: "Luuranko Soturi",
   skeletonArcher_name: "Luuranko Jousimies",
   skeletonMage_name: "Luuranko Maagi",
+  skeletonLich_name: "Luuranko Kuolema Maagi",
   greySlime_name: "Harmaa Lima",
   norsemanBerserk_name: "Pohjoismies Berserkki",
   norsemanHunter_name: "Pohjoismies Metsästäjä",
@@ -212,6 +214,7 @@ const finnish = {
   weapon: "ase",
   armor: "panssari",
   consumable: "käytettävä",
+  required_stats: "Vaaditut kyvyt",
 
   /* MENU */
 
@@ -224,6 +227,18 @@ const finnish = {
 
   setting_log_enemy_movement: "Kirjaa vihollisten sijainnit",
   setting_game_language: "Pelin kieli",
+  setting_hotkey_inv: "Avaa inventaario",
+  setting_hotkey_char: "Avaa hahmo ruutu",
+  setting_hotkey_perk: "Avaa kehitys ruutu",
+  setting_hotkey_move_up: "Liiku ylöspäin",
+  setting_hotkey_move_down: "Liiku alaspäin",
+  setting_hotkey_move_left: "Liiku vasemmalle",
+  setting_hotkey_move_right: "Liiku oikealle",
+  setting_hotkey_interact: "Poimi esine / käytä",
+
+  open_menu: "Avaa valikko [Escape]",
+
+  space_key: "VÄLILYÖNTI",
 
   save_over: "Tallenna peli",
   load_game: "Jatka peliä",
@@ -499,6 +514,7 @@ const english = {
   skeletonWarrior_name: "Skeleton Warrior",
   skeletonArcher_name: "Skeleton Archer",
   skeletonMage_name: "Skeleton Mage",
+  skeletonLich_name: "Skeleton Lich",
   greySlime_name: "Grey Slime",
   norsemanBerserk_name: "Norseman Berserker",
   norsemanHunter_name: "Norseman Hunter",
@@ -551,6 +567,7 @@ const english = {
   weapon: "weapon",
   armor: "armor",
   consumable: "consumable",
+  required_stats: "Required stats",
 
   /* MENU */
 
@@ -563,6 +580,18 @@ const english = {
 
   setting_log_enemy_movement: "Log enemy movement",
   setting_game_language: "Game language",
+  setting_hotkey_inv: "Open inventory screen",
+  setting_hotkey_char: "Open character screen",
+  setting_hotkey_perk: "Open level up screen",
+  setting_hotkey_move_up: "Move up",
+  setting_hotkey_move_down: "Move down",
+  setting_hotkey_move_left: "Move left",
+  setting_hotkey_move_right: "Move right",
+  setting_hotkey_interact: "Interact",
+  
+  open_menu: "Open game menu [Escape]",
+
+  space_key: "SPACE",
 
   save_over: "Save over file",
   load_game: "Load game",
@@ -641,7 +670,8 @@ const english = {
   blight_action_desc: "blights [TARGET], dealing [DMG] damage and weakening them.",
   fireball_name: "Fireball",
   fireball_desc: "Incinerate your foes with a flaming ball of destruction.",
-  fireball_action_desc_pl: "You throw a fiery ball towards your foes!",
+  fireball_action_desc_pl: "<c>yellow<c>You<c>white<c> throw a fiery ball towards your foes!",
+  fireball_action_desc: "shoots a fireball at [TARGET], burning them for [DMG] damage.",
   fireball_action_desc_aoe_pl: "[TARGET] is burned by the blast, causing [DMG] damage!",
   piercing_mana_bolt_name: "Piercing Bolt of Magic",
   piercing_mana_bolt_desc: "Pierce your foe with pure magic.",

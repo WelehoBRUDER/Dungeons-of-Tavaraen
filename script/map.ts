@@ -402,13 +402,13 @@ function cordsFromDir(cords: tileObject, dir: string) {
 
 document.addEventListener("keyup", (keyPress) => {
   if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen) return;
-  let dirs = { w: "up", s: "down", a: "left", d: "right" } as any;
+  let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
   let shittyFix = JSON.parse(JSON.stringify(player));
-  if (keyPress.key == "w" && canMove(player, "up")) { player.cords.y--; }
-  else if (keyPress.key == "s" && canMove(player, "down")) { player.cords.y++; }
-  else if (keyPress.key == "a" && canMove(player, "left")) { player.cords.x--; }
-  else if (keyPress.key == "d" && canMove(player, "right")) { player.cords.x++; }
-  if (keyPress.key == "w" || keyPress.key == "s" || keyPress.key == "a" || keyPress.key == "d") {
+  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) { player.cords.y--; }
+  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down")) { player.cords.y++; }
+  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left")) { player.cords.x--; }
+  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right")) { player.cords.x++; }
+  if (keyPress.key == settings.hotkey_move_up || keyPress.key == settings.hotkey_move_down || keyPress.key == settings.hotkey_move_left || keyPress.key == settings.hotkey_move_right) {
 
     if (canMove(shittyFix, dirs[keyPress.key])) {
       // @ts-ignore
@@ -435,8 +435,7 @@ document.addEventListener("keyup", (keyPress) => {
 });
 
 document.addEventListener("keyup", (kbe: KeyboardEvent) => {
-  // Believe it or not, this is the space key!
-  if (kbe.key == " ") {
+  if (kbe.key == settings.hotkey_interact) {
     activateShrine();
     pickLoot();
   }
@@ -574,10 +573,6 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.boots.sprite);
     ctx?.drawImage(bootsModel, x, y, size, size);
   }
-  if (playerModel.weapon?.sprite) {
-    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.weapon.sprite);
-    ctx?.drawImage(weaponModel, x, y, size, size);
-  }
   if (playerModel.legs?.sprite) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.legs.sprite);
     ctx?.drawImage(leggingsModel, x, y, size, size);
@@ -589,6 +584,10 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
   if (playerModel.chest?.sprite) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.chest.sprite);
     ctx?.drawImage(chestModel, x, y, size, size);
+  }
+  if (playerModel.weapon?.sprite) {
+    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.weapon.sprite);
+    ctx?.drawImage(weaponModel, x, y, size, size);
   }
 }
 
@@ -636,10 +635,6 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite);
     ctx?.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  if (player.weapon?.sprite) {
-    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
-    ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  }
   if (player.legs?.sprite) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite);
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
@@ -651,6 +646,10 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   if (player.chest?.sprite) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite);
     ctx?.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  }
+  if (player.weapon?.sprite) {
+    const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
+    ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
 }
 

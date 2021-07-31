@@ -131,6 +131,9 @@ const items = {
       { type: "vitV", value: [1, 2, 4], chance: 1.25 },
       { type: "vitP", value: [3, 5, 7], chance: 1.25 },
     ],
+    requiresStats: {
+      str: 8
+    },
     range: 1,
     img: "resources/icons/weapon_blade.png",
     sprite: "blade",
@@ -183,6 +186,9 @@ const items = {
       { type: "strV", value: [1, 2, 3], chance: 1.25 },
       { type: "dexV", value: [1, 2, 3], chance: 1.75 },
     ],
+    requiresStats: {
+      dex: 5
+    },
     range: 7,
     img: "resources/icons/weapon_bow.png",
     sprite: "bow",
@@ -190,6 +196,35 @@ const items = {
     weight: 0.9,
     type: "weapon",
     firesProjectile: "arrowProjectile",
+    grade: "common",
+    slot: "weapon"
+  },
+  apprenticeWand: {
+    id: "apprenticeWand",
+    name: "Apprentice Wand",
+    damages: { magic: 5 },
+    damagesTemplate: [
+      { type: "magic", value: [1, 3], chance: 5 },
+      { type: "dark", value: [1, 2], chance: 4 },
+      { type: "divine", value: [1, 2], chance: 4 },
+    ],
+    statsTemplate: [
+      { type: "intV", value: [1, 2, 3], chance: 1.25 },
+      { type: "dexV", value: [1, 2, 3], chance: 1.75 },
+    ],
+    requiresStats: {
+      int: 5
+    },
+    stats: {
+      magicDamageP: 5
+    },
+    range: 6,
+    img: "resources/icons/apprentice_wand.png",
+    sprite: "apprenticeWand",
+    price: 25,
+    weight: 1.2,
+    type: "weapon",
+    firesProjectile: "magicBlastProjectile",
     grade: "common",
     slot: "weapon"
   },
@@ -362,6 +397,10 @@ const items = {
       { type: "vitP", value: [3, 6, 9, 12], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12, 16], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 5,
+      dex: 6
+    },
     img: "resources/icons/leather_chest.png",
     sprite: "leatherChest",
     price: 50,
@@ -394,6 +433,10 @@ const items = {
       { type: "vitP", value: [3, 6, 9, 12], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12, 16], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 5,
+      dex: 6
+    },
     img: "resources/icons/leather_leg_bracers.png",
     sprite: "leatherLeggings",
     price: 45,
@@ -426,6 +469,10 @@ const items = {
       { type: "vitP", value: [3, 6, 9], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 3,
+      dex: 4
+    },
     img: "resources/icons/leather_bracers.png",
     sprite: "leatherBracers",
     price: 25,
@@ -458,6 +505,10 @@ const items = {
       { type: "vitP", value: [3, 6, 9], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 3,
+      dex: 4
+    },
     coversHair: true,
     img: "resources/icons/leather_helmet.png",
     sprite: "leatherHelmet",
@@ -491,6 +542,10 @@ const items = {
       { type: "vitP", value: [3, 6, 9], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 3,
+      dex: 4
+    },
     img: "resources/icons/leather_boots.png",
     sprite: "leatherBoots",
     price: 25,
@@ -523,6 +578,10 @@ const items = {
       { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
       { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 10,
+      str: 10
+    },
     img: "resources/icons/iron_armor.png",
     sprite: "ironArmor",
     price: 200,
@@ -555,6 +614,10 @@ const items = {
       { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
       { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 10,
+      str: 10
+    },
     img: "resources/icons/iron_leg_plates.png",
     sprite: "ironLegplates",
     price: 150,
@@ -587,6 +650,10 @@ const items = {
       { type: "vitP", value: [5, 7, 11], chance: 2.45 },
       { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 8,
+      str: 8
+    },
     coversHair: true,
     img: "resources/icons/iron_helmet.png",
     sprite: "ironHelmet",
@@ -620,6 +687,10 @@ const items = {
       { type: "vitP", value: [5, 7, 11], chance: 2.45 },
       { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 8,
+      str: 8
+    },
     img: "resources/icons/iron_gauntlets.png",
     sprite: "ironGauntlets",
     price: 95,
@@ -652,6 +723,10 @@ const items = {
       { type: "vitP", value: [5, 7, 11], chance: 2.45 },
       { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
     ],
+    requiresStats: {
+      vit: 8,
+      str: 8
+    },
     img: "resources/icons/iron_boots.png",
     sprite: "ironBoots",
     price: 95,
@@ -684,6 +759,9 @@ const items = {
       { type: "vitP", value: [3, 6, 9], chance: 2.45 },
       { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
     ],
+    requiresStats: {
+      int: 15
+    },
     stats: {
       magicDamageP: 10
     },
@@ -694,6 +772,41 @@ const items = {
     type: "armor",
     grade: "rare",
     slot: "helmet"
+  },
+  lichRobes: {
+    id: "lichRobes",
+    name: "Lich Robes",
+    resistances: { slash: 5, crush: 4, pierce: 4, magic: 15,  ice: 8, lightning: 5, dark: 10, divine: 10, fire: 5 },
+    resistancesTemplate: [
+      { type: "slash", value: [3, 8], chance: 7 },
+      { type: "crush", value: [3, 8], chance: 7 },
+      { type: "pierce", value: [3, 8], chance: 7 },
+      { type: "magic", value: [3, 8], chance: 7 },
+      { type: "dark", value: [3, 8], chance: 7 },
+      { type: "divine", value: [3, 8], chance: 7 },
+      { type: "fire", value: [3, 8], chance: 7 },
+      { type: "lightning", value: [3, 8], chance: 7 },
+      { type: "ice", value: [3, 8], chance: 7 },
+    ],
+    statsTemplate: [
+      { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
+      { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
+      { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
+      { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
+      { type: "intV", value: [2, 4, 5, 7], chance: 2.25 },
+      { type: "intP", value: [5, 7, 11, 15], chance: 2.45 },
+      { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
+    ],
+    requiresStats: {
+      int: 12
+    },
+    img: "resources/icons/lich_robes.png",
+    sprite: "lichRobes",
+    price: 305,
+    weight: 4.5,
+    type: "armor",
+    grade: "uncommon",
+    slot: "chest"
   },
   healingScrollI: {
     id: "healingScrollI",

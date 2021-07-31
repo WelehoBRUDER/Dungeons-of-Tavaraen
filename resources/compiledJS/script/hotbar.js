@@ -9,10 +9,26 @@ let menuOpen = false;
 class gameSettings {
     constructor(base) {
         this.log_enemy_movement = base.log_enemy_movement || false;
+        this.hotkey_inv = base.hotkey_inv || "i";
+        this.hotkey_char = base.hotkey_char || "c";
+        this.hotkey_perk = base.hotkey_perk || "p";
+        this.hotkey_move_up = base.hotkey_move_up || "w";
+        this.hotkey_move_down = base.hotkey_move_down || "s";
+        this.hotkey_move_left = base.hotkey_move_left || "a";
+        this.hotkey_move_right = base.hotkey_move_right || "d";
+        this.hotkey_interact = base.hotkey_interact || " ";
     }
 }
 let settings = new gameSettings({
-    log_enemy_movement: false
+    log_enemy_movement: false,
+    hotkey_inv: "i",
+    hotkey_char: "c",
+    hotkey_perk: "p",
+    hotkey_move_up: "w",
+    hotkey_move_down: "s",
+    hotkey_move_left: "a",
+    hotkey_move_right: "d",
+    hotkey_interact: " ",
 });
 function generateHotbar() {
     const hotbar = document.querySelector(".hotbar");
@@ -491,6 +507,8 @@ window.addEventListener("keyup", e => {
             abiSelected = {};
             enemiesHadTurn = 0;
             turnOver = true;
+            player.abilities.forEach(abi => abi.cooldown = 0);
+            player.statusEffects = [];
             updateUI();
             modifyCanvas();
             displayText("HERÄSIT KUOLLEISTA!");
@@ -503,15 +521,13 @@ window.addEventListener("keyup", e => {
     if (player.isDead || saveGamesOpen)
         return;
     const number = parseInt(e.keyCode) - 48;
-    if (e.key == "i" && !menuOpen) {
+    if (e.key == settings.hotkey_inv && !menuOpen) {
         renderInventory();
     }
-    else if (e.key == "c" && !menuOpen) {
-        windowOpen = true;
+    else if (e.key == settings.hotkey_char && !menuOpen) {
         renderCharacter();
     }
-    else if (e.key == "p" && !menuOpen) {
-        windowOpen = true;
+    else if (e.key == settings.hotkey_perk && !menuOpen) {
         openLevelingScreen();
     }
     else if (invOpen || windowOpen || menuOpen)
@@ -549,6 +565,7 @@ window.addEventListener("keyup", e => {
 });
 function renderCharacter() {
     hideHover();
+    windowOpen = true;
     const bg = document.querySelector(".playerWindow");
     document.querySelector(".worldText").style.opacity = "0";
     bg.style.transform = "scale(1)";
@@ -592,4 +609,8 @@ function closeCharacter() {
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en) => en.updateAbilities());
 updateUI();
+tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 //# sourceMappingURL=hotbar.js.map

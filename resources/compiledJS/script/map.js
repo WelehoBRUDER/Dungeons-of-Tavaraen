@@ -402,21 +402,21 @@ document.addEventListener("keyup", (keyPress) => {
     var _a;
     if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen)
         return;
-    let dirs = { w: "up", s: "down", a: "left", d: "right" };
+    let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
     let shittyFix = JSON.parse(JSON.stringify(player));
-    if (keyPress.key == "w" && canMove(player, "up")) {
+    if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) {
         player.cords.y--;
     }
-    else if (keyPress.key == "s" && canMove(player, "down")) {
+    else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down")) {
         player.cords.y++;
     }
-    else if (keyPress.key == "a" && canMove(player, "left")) {
+    else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left")) {
         player.cords.x--;
     }
-    else if (keyPress.key == "d" && canMove(player, "right")) {
+    else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right")) {
         player.cords.x++;
     }
-    if (keyPress.key == "w" || keyPress.key == "s" || keyPress.key == "a" || keyPress.key == "d") {
+    if (keyPress.key == settings.hotkey_move_up || keyPress.key == settings.hotkey_move_down || keyPress.key == settings.hotkey_move_left || keyPress.key == settings.hotkey_move_right) {
         if (canMove(shittyFix, dirs[keyPress.key])) {
             // @ts-ignore
             renderMap(maps[currentMap]);
@@ -443,8 +443,7 @@ document.addEventListener("keyup", (keyPress) => {
     }
 });
 document.addEventListener("keyup", (kbe) => {
-    // Believe it or not, this is the space key!
-    if (kbe.key == " ") {
+    if (kbe.key == settings.hotkey_interact) {
         activateShrine();
         pickLoot();
     }
@@ -602,21 +601,21 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
         const bootsModel = document.querySelector(".sprites ." + playerModel.boots.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, x, y, size, size);
     }
-    if ((_e = playerModel.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
-        const weaponModel = document.querySelector(".sprites ." + playerModel.weapon.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
-    }
-    if ((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite) {
+    if ((_e = playerModel.legs) === null || _e === void 0 ? void 0 : _e.sprite) {
         const leggingsModel = document.querySelector(".sprites ." + playerModel.legs.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
     }
-    else if (!((_g = playerModel.legs) === null || _g === void 0 ? void 0 : _g.sprite)) {
+    else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
         const leggings = document.querySelector(".sprites .defaultPants");
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
     }
-    if ((_h = playerModel.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_g = playerModel.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
         const chestModel = document.querySelector(".sprites ." + playerModel.chest.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, x, y, size, size);
+    }
+    if ((_h = playerModel.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+        const weaponModel = document.querySelector(".sprites ." + playerModel.weapon.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
 }
 function renderPlayerPortrait() {
@@ -664,21 +663,21 @@ function renderPlayerModel(size, canvas, ctx) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_e = player.weapon) === null || _e === void 0 ? void 0 : _e.sprite) {
-        const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    }
-    if ((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite) {
+    if ((_e = player.legs) === null || _e === void 0 ? void 0 : _e.sprite) {
         const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    else if (!((_g = player.legs) === null || _g === void 0 ? void 0 : _g.sprite)) {
+    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
         const leggings = document.querySelector(".sprites .defaultPants");
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_h = player.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    }
+    if ((_h = player.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+        const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {

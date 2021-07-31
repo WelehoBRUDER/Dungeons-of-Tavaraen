@@ -133,6 +133,16 @@ class Enemy extends Character {
             this.alive = false;
             player.lvlUp();
         };
+        this.restore = () => {
+            this.stats.hp = this.getStats().hpMax;
+            this.stats.mp = this.getStats().mpMax;
+            this.statusEffects = [];
+            this.abilities.forEach(abi => {
+                abi.onCooldown = 0;
+            });
+            this.cords.x = this.spawnCords.x;
+            this.cords.y = this.spawnCords.y;
+        };
         this.aggro = () => {
             // @ts-ignore
             if (generatePath(this.cords, player.cords, this.canFly, true) <= this.aggroRange)

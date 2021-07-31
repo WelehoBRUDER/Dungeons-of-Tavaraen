@@ -840,6 +840,37 @@ body {
       }
     }
   }
+
+  .playerButtons {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    display: flex;
+    width: auto;
+    height: 75px;
+
+    .screenButton {
+      transition: 0.11s;
+      width: 60px;
+      height: 60px;
+      background:rgba(75, 20, 20, .95);
+      border-radius: 50%;
+      margin: 8px;
+      box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, .95), 0 0 6px 4px rgb(39, 39, 39);
+      border: 3px solid rgb(59, 59, 59);
+
+      img {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 6px rgb(14, 13, 13));
+      }
+    }
+
+    .screenButton:hover {
+      background:rgba(122, 33, 33, 0.95);
+      box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, .95), 0 0 10px 8px rgb(39, 39, 39);
+    }
+  }
   
 
   @media only screen and (max-width: 1500px) {

@@ -55,9 +55,9 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 60,
-      crush: 60,
-      pierce: 60,
+      slash: 30,
+      crush: 30,
+      pierce: 30,
       magic: 20,
       dark: 10,
       divine: 10,
@@ -90,7 +90,9 @@ const enemies = {
       str: 1,
       vit: 1
     },
-    loot: []
+    loot: [
+      {type: "gold", amount: [1, 5]}
+    ]
   },
   skeletonWarrior: {
     id: "skeletonWarrior",
@@ -142,7 +144,7 @@ const enemies = {
       {
         id: "magical_binding",
         effects: {
-          mpMaxP: -100
+          mpMaxP: -100,
         }
       }
     ],
@@ -153,9 +155,8 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20},
+      {type: "gold", amount: [4, 15]}
     ]
   },
   skeletonArcher: {
@@ -220,9 +221,8 @@ const enemies = {
     },
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+      {type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20},
+      {type: "gold", amount: [4, 15]}
     ]
   },
   skeletonMage: {
@@ -259,7 +259,8 @@ const enemies = {
       bleed: 100
     },
     damages: {
-      pierce: 4
+      pierce: 2,
+      magic: 3
     },
     alive: true,
     xp: 10,
@@ -268,10 +269,10 @@ const enemies = {
     aggroRange: 8,
     attackRange: 6,
     canFly: false,
-    shootsProjectile: "blightProjectile",
+    shootsProjectile: "piercingManaBoltProjectile",
     abilities: [
       new Ability(abilities.attack, dummy),
-      new Ability(abilities.blight, dummy)
+      new Ability(abilities.blight, dummy),
     ],
     statModifiers: [],
     statsPerLevel: {
@@ -281,9 +282,79 @@ const enemies = {
     },
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+      {type: "gold", amount: [4, 15]}
+    ]
+  },
+  skeletonLich: {
+    id: "skeletonLich",
+    name: "Skeleton Lich",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 3,
+      dex: 10,
+      int: 10,
+      vit: 0,
+      cun: 0,
+      hp: 30,
+      mp: 70,
+      hpMax: 30,
+      mpMax: 50
+    },
+    resistances: {
+      slash: 70,
+      crush: -15,
+      pierce: 60,
+      magic: 65,
+      dark: 75,
+      divine: -40,
+      fire: -25,
+      lightning: 20,
+      ice: 20
+    },
+    statusResistances: {
+      poison: 100,
+      burning: -25,
+      curse: 50,
+      stun: 0,
+      bleed: 100
+    },
+    damages: {
+      pierce: 2,
+      magic: 4,
+      dark: 3
+    },
+    alive: true,
+    xp: 50,
+    sprite: "skeletonLich",
+    img: "resources/tiles/enemies/skeleton_lich.png",
+    aggroRange: 10,
+    attackRange: 9,
+    canFly: false,
+    shootsProjectile: "piercingManaBoltProjectile",
+    abilities: [
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.blight, dummy),
+      new Ability(abilities.fireball, dummy)
+    ],
+    statModifiers: [
+      {
+        id: "dont_spam_abilities",
+        effects: {
+          blight_cooldownV: 3,
+          fireball_cooldownV: 5
+        }
+      }
+    ],
+    statsPerLevel: {
+      dex: 2,
+      int: 2,
+      vit: 1
+    },
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    loot: [
+      {type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5},
+      {type: "armor", amount: [1, 1], item: "lichRobes", chance: 10},
+      {type: "gold", amount: [24, 60]}
     ]
   },
   norsemanBerserk: {
@@ -335,16 +406,24 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.charge, dummy),
     ],
-    statModifiers: [],
+    statModifiers: [
+      {
+        id: "dont_spam_abilities",
+        effects: {
+          charge_cooldownV: 2,
+          charge_use_rangeV: -3
+        }
+      }
+    ],
     statsPerLevel: {
       str: 2,
       vit: 2,
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+      {type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 15},
+      {type: "weapon", amount: [1, 1], item: "stick", chance: 20},
+      {type: "gold", amount: [6, 18]}
     ]
   },
   norsemanHunter: {
@@ -402,9 +481,7 @@ const enemies = {
     },
     shootsProjectile: "hunterJavelinProjectile",
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 100},
-      {type: "weapon", amount: [1, 1], item: "longsword", chance: 100}
+      {type: "gold", amount: [6, 18]}
     ]
   },
 };

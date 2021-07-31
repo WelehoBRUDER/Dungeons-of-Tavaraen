@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -101,6 +101,7 @@ class PlayerCharacter extends Character {
         this.pp = (_z = base.pp) !== null && _z !== void 0 ? _z : 0;
         this.usedShrines = (_0 = base.usedShrines) !== null && _0 !== void 0 ? _0 : [];
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
+        this.classes = (_2 = base.classes) !== null && _2 !== void 0 ? _2 : {};
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -159,6 +160,18 @@ class PlayerCharacter extends Character {
             if (event.button !== 2)
                 return;
             const itm = Object.assign({}, item);
+            let canEquip = true;
+            if (itm.requiresStats) {
+                const stats = this.getStats();
+                Object.entries(itm.requiresStats).forEach((stat) => {
+                    const key = stat[0];
+                    const val = stat[1];
+                    if (stats[key] < val)
+                        canEquip = false;
+                });
+            }
+            if (!canEquip)
+                return;
             player.inventory.splice(item.index, 1);
             this.unequip(event, itm.slot);
             this[itm.slot] = Object.assign({}, itm);
@@ -393,6 +406,10 @@ var player = new PlayerCharacter({
         xpNeed: 100,
         level: 1
     },
+    classes: {
+        main: new combatClass(combatClasses["sorcererClass"]),
+        sub: null
+    },
     sprite: ".player",
     race: "elf",
     hair: 4,
@@ -419,9 +436,7 @@ var player = new PlayerCharacter({
         }
     ],
     unarmed_damages: { crush: 5 },
-    statusEffects: [
-        new statEffect(Object.assign({}, statusEffects.poison), s_def)
-    ],
+    statusEffects: [],
     inventory: [],
     gold: 50,
     sp: 5,
