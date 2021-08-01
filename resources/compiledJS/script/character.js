@@ -1,19 +1,43 @@
 "use strict";
-function getModifiers(char, stat) {
+function statConditions(conditions, char) {
+    let fulfilled = true;
+    Object.entries(conditions).forEach((condition) => {
+        const key = condition[0];
+        const val = condition[1];
+        if (key.includes("hp")) {
+            if (key.includes("more_than")) {
+                fulfilled = char.hpRemain() >= val;
+            }
+            else if (key.includes("less_than")) {
+                fulfilled = char.hpRemain() <= val;
+            }
+        }
+    });
+    return fulfilled;
+}
+function getModifiers(char, stat, withConditions = true) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
     let val = 0;
     let modif = 1;
     char.statModifiers.forEach((mod) => {
-        Object.entries(mod.effects).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
+        let apply = true;
+        if (mod.conditions && withConditions) {
+            apply = statConditions(mod.conditions, char);
+        }
+        if (mod.conditions && !withConditions)
+            apply = false;
+        if (apply) {
+            Object.entries(mod.effects).forEach((eff) => {
+                if (eff[0].startsWith(stat)) {
+                    if (eff[0] == stat + "P" && eff[1] < 0)
+                        modif *= (1 + eff[1] / 100);
+                    else if (eff[0] == stat + "P")
+                        modif += (eff[1] / 100);
+                    else if (eff[0] == stat + "V")
+                        val += eff[1];
+                }
+            });
+        }
     });
     char.statusEffects.forEach((mod) => {
         Object.entries(mod.effects).forEach((eff) => {
@@ -62,6 +86,28 @@ function getModifiers(char, stat) {
                     val += eff[1];
             }
         });
+        if (mod.statModifiers) {
+            mod.statModifiers.forEach((_mod) => {
+                let apply = true;
+                if (_mod.conditions && withConditions) {
+                    apply = statConditions(_mod.conditions, char);
+                }
+                if (_mod.conditions && !withConditions)
+                    apply = false;
+                if (apply) {
+                    Object.entries(_mod.effects).forEach((eff) => {
+                        if (eff[0].startsWith(stat)) {
+                            if (eff[0] == stat + "P" && eff[1] < 0)
+                                modif *= (1 + eff[1] / 100);
+                            else if (eff[0] == stat + "P")
+                                modif += (eff[1] / 100);
+                            else if (eff[0] == stat + "V")
+                                val += eff[1];
+                        }
+                    });
+                }
+            });
+        }
     });
     if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
         Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
@@ -182,24 +228,24 @@ class Character {
         this.statusResistances = Object.assign({}, base.statusResistances);
         this.statModifiers = (_c = base.statModifiers) !== null && _c !== void 0 ? _c : [];
         this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
-        this.getStats = () => {
+        this.getStats = (withConditions = true) => {
             var _a, _b, _c, _d;
             let stats = {};
             baseStats.forEach((stat) => {
-                const { v: val, m: mod } = getModifiers(this, stat);
+                const { v: val, m: mod } = getModifiers(this, stat, withConditions);
                 stats[stat] = Math.floor((this.stats[stat] + val) * mod);
                 stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
             });
             // get hp
-            const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax");
+            const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
             stats["hpMax"] = Math.floor((((_b = (_a = this.stats) === null || _a === void 0 ? void 0 : _a.hpMax) !== null && _b !== void 0 ? _b : 20) + hp_val + stats.vit * 5) * hp_mod);
             // get mp
-            const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax");
+            const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
             stats["mpMax"] = Math.floor((((_d = (_c = this.stats) === null || _c === void 0 ? void 0 : _c.mpMax) !== null && _d !== void 0 ? _d : 10) + mp_val + stats.int * 2) * mp_mod);
             stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
             stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
-            const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage");
-            const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance");
+            const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage", withConditions);
+            const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance", withConditions);
             stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
             stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
             return stats;
@@ -281,7 +327,7 @@ class Character {
             return result;
         };
         this.hpRemain = () => {
-            return (this.stats.hp / this.getStats().hpMax) * 100;
+            return (this.stats.hp / this.getStats(false).hpMax) * 100;
         };
         this.updateAbilities = () => {
             var _a, _b, _c, _d, _e, _f, _g, _h;

@@ -147,6 +147,14 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
+                // @ts-ignore
+                val += getModifiers(attacker, "damage_against_type_" + target.type).v;
+                // @ts-ignore
+                mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
+                // @ts-ignore
+                val += getModifiers(attacker, "damage_against_race_" + target.race).v;
+                // @ts-ignore
+                mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
                 let bonus = 0;
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
@@ -165,6 +173,14 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
+                // @ts-ignore
+                val += getModifiers(attacker, "damage_against_type_" + target.type).v;
+                // @ts-ignore
+                mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
+                // @ts-ignore
+                val += getModifiers(attacker, "damage_against_race_" + target.race).v;
+                // @ts-ignore
+                mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
                 let bonus = 0;
                 // @ts-ignore
                 bonus += num * attacker.getStats()[ability.stat_bonus] / 50;

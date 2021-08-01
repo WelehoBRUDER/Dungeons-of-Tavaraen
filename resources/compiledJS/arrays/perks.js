@@ -10,7 +10,7 @@ const perksArray = {
                 desc: "",
                 effects: {
                     mpMaxV: 5,
-                    intV: 1
+                    intV: 1,
                 },
                 commands: {
                     add_ability_piercing_mana_bolt: 1
@@ -39,9 +39,20 @@ const perksArray = {
                 name: "Might of Magic",
                 desc: "",
                 effects: {
-                    magicDamageP: 7,
+                    magicDamageP: 5,
                     mpMaxP: 3
                 },
+                statModifiers: [
+                    {
+                        id: "heightened_casting",
+                        conditions: {
+                            mp_more_than: 70
+                        },
+                        effects: {
+                            magicDamageP: 10
+                        }
+                    }
+                ],
                 tree: "sorcerer",
                 relative_to: "intent_studies",
                 requires: ["intent_studies"],
@@ -84,7 +95,7 @@ const perksArray = {
                 desc: "",
                 effects: {
                     fireResistV: 15,
-                    fireball_aoe_sizeV: 2,
+                    fireball_aoe_sizeV: 2.3,
                     iceResistV: -10,
                     fireball_mana_costV: 15
                 },
@@ -302,6 +313,17 @@ const perksArray = {
                     charge_resistance_penetrationV: 10,
                     charge_cooldownV: -3
                 },
+                statModifiers: [
+                    {
+                        id: "warrior_instinct",
+                        conditions: {
+                            hp_less_than: 50
+                        },
+                        effects: {
+                            resistAllV: 4
+                        }
+                    }
+                ],
                 relative_to: "tactical_genius",
                 requires: ["tactical_genius", "resistant_in_melee", "charging_bull"],
                 tree: "fighter",
@@ -403,6 +425,17 @@ const perksArray = {
                 effects: {
                     dexV: 5
                 },
+                statModifiers: [
+                    {
+                        id: "confident_shot",
+                        conditions: {
+                            hp_more_than: 80
+                        },
+                        effects: {
+                            pierceDamageP: 12
+                        }
+                    }
+                ],
                 tree: "rogue",
                 relative_to: "shadow_warrior",
                 requires: ["shadow_warrior", "fighting_dirty"],
@@ -567,4 +600,18 @@ const perksArray = {
     }
 };
 var lang = finnish;
+// This is an example of a passive ability
+// statModifiers: [
+//   {
+//     id: "frenzy",
+//     conditions: {
+//       hp_more_than: 50
+//     },
+//     effects: {
+//       damageP: 12,
+//       resistAllV: 2,
+//       strV: 50,
+//     }
+//   }
+// ],
 //# sourceMappingURL=perks.js.map

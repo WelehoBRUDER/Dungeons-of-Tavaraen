@@ -76,17 +76,41 @@ interface statusObject {
   cun: number;
 }
 
-function getModifiers(char: any, stat: string) {
+function statConditions(conditions: any, char: characterObject) {
+  let fulfilled = true;
+  Object.entries(conditions).forEach((condition: any) => {
+    const key = condition[0];
+    const val = condition[1];
+    if (key.includes("hp")) {
+      if (key.includes("more_than")) {
+        fulfilled = char.hpRemain() >= val;
+      }
+      else if (key.includes("less_than")) {
+        fulfilled = char.hpRemain() <= val;
+      }
+    }
+  });
+  return fulfilled;
+}
+
+function getModifiers(char: any, stat: string, withConditions = true) {
   let val = 0;
   let modif = 1;
   char.statModifiers.forEach((mod: any) => {
-    Object.entries(mod.effects).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
+    let apply = true;
+    if (mod.conditions && withConditions) {
+      apply = statConditions(mod.conditions, char);
+    }
+    if(mod.conditions && !withConditions) apply = false;
+    if (apply) {
+      Object.entries(mod.effects).forEach((eff: any) => {
+        if (eff[0].startsWith(stat)) {
+          if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+          else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+          else if (eff[0] == stat + "V") val += eff[1];
+        }
+      });
+    }
   });
   char.statusEffects.forEach((mod: any) => {
     Object.entries(mod.effects).forEach((eff: any) => {
@@ -123,6 +147,24 @@ function getModifiers(char: any, stat: string) {
         else if (eff[0] == stat + "V") val += eff[1];
       }
     });
+    if (mod.statModifiers) {
+      mod.statModifiers.forEach((_mod: any) => {
+        let apply = true;
+        if (_mod.conditions && withConditions) {
+          apply = statConditions(_mod.conditions, char);
+        }
+        if(_mod.conditions && !withConditions) apply = false;
+        if (apply) {
+          Object.entries(_mod.effects).forEach((eff: any) => {
+            if (eff[0].startsWith(stat)) {
+              if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+              else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+              else if (eff[0] == stat + "V") val += eff[1];
+            }
+          });
+        }
+      });
+    }
   });
   if (char.raceEffect?.modifiers) {
     Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
@@ -250,23 +292,23 @@ class Character {
     this.statModifiers = base.statModifiers ?? [];
     this.statusEffects = base.statusEffects ?? [];
 
-    this.getStats = () => {
+    this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
       baseStats.forEach((stat: string) => {
-        const { v: val, m: mod } = getModifiers(this, stat);
+        const { v: val, m: mod } = getModifiers(this, stat, withConditions);
         stats[stat] = Math.floor((this.stats[stat] + val) * mod);
         stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
       });
       // get hp
-      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax");
+      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
       stats["hpMax"] = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + stats.vit * 5) * hp_mod);
       // get mp
-      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax");
+      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
       stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
       stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
       stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
-      const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage");
-      const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance");
+      const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage", withConditions);
+      const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance", withConditions);
       stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
       stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
       return stats;
@@ -347,7 +389,7 @@ class Character {
     };
 
     this.hpRemain = () => {
-      return (this.stats.hp / this.getStats().hpMax) * 100;
+      return (this.stats.hp / this.getStats(false).hpMax) * 100;
     };
 
     this.updateAbilities = () => {

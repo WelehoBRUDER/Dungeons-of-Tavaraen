@@ -10,7 +10,7 @@ const perkColors = {
 };
 class perk {
     constructor(base) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         this.id = base.id;
         const basePerk = perksArray[tree]["perks"][this.id];
         if (!basePerk)
@@ -23,6 +23,7 @@ class perk {
         this.pos = basePerk.pos;
         this.relative_to = (_d = basePerk.relative_to) !== null && _d !== void 0 ? _d : "";
         this.requires = (_e = basePerk.requires) !== null && _e !== void 0 ? _e : [];
+        this.statModifiers = (_f = basePerk.statModifiers) !== null && _f !== void 0 ? _f : [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
         this.available = () => {
@@ -214,6 +215,26 @@ function perkTT(perk) {
         txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
         Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
     }
+    if (perk.statModifiers) {
+        perk.statModifiers.forEach((statModif) => {
+            txt += statModifTT(statModif);
+        });
+    }
+    return txt;
+}
+function statModifTT(statModif) {
+    var _a;
+    let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${(_a = lang[statModif.id + "_name"]) !== null && _a !== void 0 ? _a : statModif.id}<c>white<c>'\n`;
+    if (statModif.conditions) {
+        txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
+        Object.entries(statModif.conditions).forEach(cond => {
+            const key = cond[0];
+            const val = cond[1];
+            txt += `<c>white<c><f>13px<f>${lang[key]} ${val}%\n`;
+        });
+    }
+    txt += `<c>white<c><f>15px<f>${lang["status_effects"]}:\n`;
+    Object.entries(statModif.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
     return txt;
 }
 const zoomLevelsBG = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];

@@ -17,6 +17,7 @@ class perk {
   effects?: any;
   commandsExecuted?: boolean;
   pos: tileObject;
+  statModifiers?: Array<any>;
   relative_to?: any;
   requires: Array<string>;
   icon: string;
@@ -35,6 +36,7 @@ class perk {
     this.pos = basePerk.pos;
     this.relative_to = basePerk.relative_to ?? "";
     this.requires = basePerk.requires ?? [];
+    this.statModifiers = basePerk.statModifiers ?? [];
     this.icon = basePerk.icon;
     this.tree = basePerk.tree;
     this.available = () => {
@@ -218,6 +220,26 @@ function perkTT(perk: perk) {
     txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
     Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
   }
+  if (perk.statModifiers) {
+    perk.statModifiers.forEach((statModif: any)=>{
+      txt += statModifTT(statModif);
+    })
+  }
+  return txt;
+}
+
+function statModifTT(statModif: any) {
+  let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
+  if(statModif.conditions) {
+    txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
+    Object.entries(statModif.conditions).forEach(cond=>{
+      const key = cond[0];
+      const val = cond[1];
+      txt += `<c>white<c><f>13px<f>${lang[key]} ${val}%\n`;
+    })
+  }
+  txt += `<c>white<c><f>15px<f>${lang["status_effects"]}:\n`;
+  Object.entries(statModif.effects).forEach(eff=>txt += effectSyntax(eff, true, ""));
   return txt;
 }
 

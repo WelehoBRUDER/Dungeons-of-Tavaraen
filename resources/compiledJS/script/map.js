@@ -532,6 +532,12 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
     updateEnemiesTurn();
 }
 function canMove(char, dir) {
+    if (char.id == "player") {
+        if (player.carryingWeight() > player.maxCarryWeight()) {
+            displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+            return false;
+        }
+    }
     try {
         var tile = { x: char.cords.x, y: char.cords.y };
         if (dir == "up")
@@ -557,6 +563,12 @@ function canMove(char, dir) {
 }
 function canMoveTo(char, tile) {
     var movable = true;
+    if (char.id == "player") {
+        if (char.carryingWeight() > char.maxCarryWeight()) {
+            displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+            return false;
+        }
+    }
     if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly))
         movable = false;
     if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall)

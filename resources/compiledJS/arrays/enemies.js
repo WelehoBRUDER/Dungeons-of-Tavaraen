@@ -76,6 +76,8 @@ const enemies = {
         alive: true,
         xp: 5,
         sprite: "greySlime",
+        type: "slime",
+        race: "elemental",
         img: "resources/tiles/enemies/grey_slime.png",
         aggroRange: 6,
         attackRange: 1,
@@ -90,6 +92,120 @@ const enemies = {
         },
         loot: [
             { type: "gold", amount: [1, 5] }
+        ]
+    },
+    flamingSlime: {
+        id: "flamingSlime",
+        name: "Flaming Slime",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 1,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 0,
+            hp: 14,
+            mp: 0,
+            hpMax: 14,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 40,
+            crush: 40,
+            pierce: 40,
+            magic: 20,
+            dark: 10,
+            divine: 10,
+            fire: 80,
+            lightning: -30,
+            ice: -40
+        },
+        statusResistances: {
+            poison: 0,
+            burning: 0,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            fire: 6
+        },
+        alive: true,
+        xp: 10,
+        sprite: "fireSlime",
+        type: "slime",
+        race: "elemental",
+        img: "resources/tiles/enemies/flaming_slime.png",
+        aggroRange: 6,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 1,
+            vit: 1
+        },
+        loot: [
+            { type: "gold", amount: [4, 11] }
+        ]
+    },
+    electricSlime: {
+        id: "electricSlime",
+        name: "Electric Slime",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 1,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 0,
+            hp: 14,
+            mp: 0,
+            hpMax: 14,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 40,
+            crush: 40,
+            pierce: 40,
+            magic: 10,
+            dark: 10,
+            divine: 10,
+            fire: -30,
+            lightning: 80,
+            ice: -20
+        },
+        statusResistances: {
+            poison: 0,
+            burning: 0,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            lightning: 6
+        },
+        alive: true,
+        xp: 10,
+        sprite: "shockSlime",
+        type: "slime",
+        race: "elemental",
+        img: "resources/tiles/enemies/electric_slime.png",
+        aggroRange: 6,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 1,
+            vit: 1
+        },
+        loot: [
+            { type: "gold", amount: [4, 11] }
         ]
     },
     skeletonWarrior: {
@@ -131,6 +247,8 @@ const enemies = {
         alive: true,
         xp: 5,
         sprite: "skeletonWarrior",
+        type: "skeleton",
+        race: "undead",
         img: "resources/tiles/enemies/skeleton_warrior.png",
         aggroRange: 8,
         attackRange: 1,
@@ -196,6 +314,8 @@ const enemies = {
         alive: true,
         xp: 5,
         sprite: "skeletonArcher",
+        type: "skeleton",
+        race: "undead",
         img: "resources/tiles/enemies/skeleton_archer.png",
         aggroRange: 8,
         attackRange: 7,
@@ -263,6 +383,8 @@ const enemies = {
         alive: true,
         xp: 10,
         sprite: "skeletonMage",
+        type: "skeleton",
+        race: "undead",
         img: "resources/tiles/enemies/skeleton_mage.png",
         aggroRange: 8,
         attackRange: 6,
@@ -324,6 +446,8 @@ const enemies = {
         alive: true,
         xp: 50,
         sprite: "skeletonLich",
+        type: "skeleton",
+        race: "undead",
         img: "resources/tiles/enemies/skeleton_lich.png",
         aggroRange: 10,
         attackRange: 9,
@@ -396,6 +520,8 @@ const enemies = {
         alive: true,
         xp: 30,
         sprite: "norsemanBerserk",
+        type: "barbarian",
+        race: "human",
         img: "resources/tiles/enemies/norseman_berserk.png",
         aggroRange: 8,
         attackRange: 1,
@@ -464,6 +590,8 @@ const enemies = {
         alive: true,
         xp: 30,
         sprite: "norsemanHunter",
+        type: "barbarian",
+        race: "human",
         img: "resources/tiles/enemies/norseman_hunter.png",
         aggroRange: 8,
         attackRange: 7,
@@ -522,6 +650,8 @@ const enemies = {
         alive: true,
         xp: 45,
         sprite: "wildTroll",
+        type: "troll",
+        race: "monster",
         img: "resources/tiles/enemies/wild_troll.png",
         aggroRange: 10,
         attackRange: 1,
@@ -587,6 +717,8 @@ const enemies = {
         alive: true,
         xp: 75,
         sprite: "wildStoneTroll",
+        type: "troll",
+        race: "monster",
         img: "resources/tiles/enemies/wild_stone_troll.png",
         aggroRange: 11,
         attackRange: 1,
@@ -651,6 +783,8 @@ const enemies = {
         alive: true,
         xp: 60,
         sprite: "troll",
+        type: "troll",
+        race: "monster",
         img: "resources/tiles/enemies/troll.png",
         aggroRange: 11,
         attackRange: 1,
@@ -712,6 +846,8 @@ const enemies = {
         damages: {
             crush: 13,
         },
+        type: "troll",
+        race: "monster",
         alive: true,
         xp: 100,
         sprite: "stoneTroll",

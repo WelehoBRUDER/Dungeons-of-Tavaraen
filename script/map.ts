@@ -516,6 +516,12 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
 
 
 function canMove(char: any, dir: string) {
+  if(char.id == "player") {
+    if(player.carryingWeight() > player.maxCarryWeight()) {
+      displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+      return false;
+    }
+  }
   try {
     var tile = { x: char.cords.x, y: char.cords.y };
     if (dir == "up") tile.y--;
@@ -535,6 +541,12 @@ function canMove(char: any, dir: string) {
 
 function canMoveTo(char: any, tile: tileObject) {
   var movable = true;
+  if(char.id == "player") {
+    if(char.carryingWeight() > char.maxCarryWeight()) {
+      displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+      return false;
+    }
+  }
   if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly)) movable = false;
   if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) movable = false;
   for (let enemy of maps[currentMap].enemies) {

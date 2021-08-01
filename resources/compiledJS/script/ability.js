@@ -98,6 +98,30 @@ function getAbiModifiers(char, id) {
                     total[_key].modif += (value / 100);
             }
         });
+        if (prk.statModifiers) {
+            prk.statModifiers.forEach((mod) => {
+                let apply = true;
+                if (mod.conditions) {
+                    apply = statConditions(mod.conditions, char);
+                }
+                if (apply) {
+                    Object.entries(mod.effects).forEach((eff) => {
+                        let key = eff[0];
+                        let value = eff[1];
+                        if (key.includes(id) && !key.includes("status")) {
+                            key = key.replace(id + "_", "");
+                            const _key = key.substring(0, key.length - 1);
+                            if (key.endsWith("V"))
+                                total[_key].value += value;
+                            else if (key.endsWith("P") && value < 0)
+                                total[_key].modif *= (1 + value / 100);
+                            else if (key.endsWith("P"))
+                                total[_key].modif += (value / 100);
+                        }
+                    });
+                }
+            });
+        }
     });
     char.statusEffects.forEach((stat) => {
         Object.entries(stat.effects).forEach((eff) => {
@@ -116,20 +140,26 @@ function getAbiModifiers(char, id) {
         });
     });
     (_b = char.statModifiers) === null || _b === void 0 ? void 0 : _b.forEach((stat) => {
-        Object.entries(stat.effects).forEach((eff) => {
-            let key = eff[0];
-            let value = eff[1];
-            if (key.includes(id) && !key.includes("status")) {
-                key = key.replace(id + "_", "");
-                const _key = key.substring(0, key.length - 1);
-                if (key.endsWith("V"))
-                    total[_key].value += value;
-                else if (key.endsWith("P") && value < 0)
-                    total[_key].modif *= (1 + value / 100);
-                else if (key.endsWith("P"))
-                    total[_key].modif += (value / 100);
-            }
-        });
+        let apply = true;
+        if (stat.conditions) {
+            apply = statConditions(stat.conditions, char);
+        }
+        if (apply) {
+            Object.entries(stat.effects).forEach((eff) => {
+                let key = eff[0];
+                let value = eff[1];
+                if (key.includes(id) && !key.includes("status")) {
+                    key = key.replace(id + "_", "");
+                    const _key = key.substring(0, key.length - 1);
+                    if (key.endsWith("V"))
+                        total[_key].value += value;
+                    else if (key.endsWith("P") && value < 0)
+                        total[_key].modif *= (1 + value / 100);
+                    else if (key.endsWith("P"))
+                        total[_key].modif += (value / 100);
+                }
+            });
+        }
     });
     if ((_c = char.weapon) === null || _c === void 0 ? void 0 : _c.stats) {
         Object.entries(char.weapon.stats).forEach((eff) => {
@@ -317,34 +347,40 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
         });
     });
     (_a = char.statModifiers) === null || _a === void 0 ? void 0 : _a.forEach((stat) => {
-        // Go through stat modifiers
-        Object.entries(stat.effects).forEach((eff) => {
-            let key = eff[0];
-            let value = eff[1];
-            if (key.includes(abilityId) && key.includes("status")) {
-                key = key.replace(abilityId + "_", "");
-                if (key.includes("status_effect")) {
-                    const _key = key.replace("status_effect_", "");
-                    const __key = _key.substring(0, _key.length - 1);
-                    if (possible_stat_modifiers.find((m) => m == __key.toString())) {
-                        if (key.endsWith("V"))
-                            total["effects"][__key].value += value;
-                        else if (key.endsWith("P") && value < 0)
-                            total["effects"][__key].modif *= (1 + value / 100);
-                        else if (key.endsWith("P"))
-                            total["effects"][__key].modif += (1 + value / 100);
-                    }
-                    else {
-                        if (key.endsWith("V"))
-                            total[__key].value += value;
-                        else if (key.endsWith("P") && value < 0)
-                            total[__key].modif *= (1 + value / 100);
-                        else if (key.endsWith("P"))
-                            total[__key].modif += (1 + value / 100);
+        let apply = true;
+        if (stat.conditions) {
+            apply = statConditions(stat.conditions, char);
+        }
+        if (apply) {
+            // Go through stat modifiers
+            Object.entries(stat.effects).forEach((eff) => {
+                let key = eff[0];
+                let value = eff[1];
+                if (key.includes(abilityId) && key.includes("status")) {
+                    key = key.replace(abilityId + "_", "");
+                    if (key.includes("status_effect")) {
+                        const _key = key.replace("status_effect_", "");
+                        const __key = _key.substring(0, _key.length - 1);
+                        if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                            if (key.endsWith("V"))
+                                total["effects"][__key].value += value;
+                            else if (key.endsWith("P") && value < 0)
+                                total["effects"][__key].modif *= (1 + value / 100);
+                            else if (key.endsWith("P"))
+                                total["effects"][__key].modif += (1 + value / 100);
+                        }
+                        else {
+                            if (key.endsWith("V"))
+                                total[__key].value += value;
+                            else if (key.endsWith("P") && value < 0)
+                                total[__key].modif *= (1 + value / 100);
+                            else if (key.endsWith("P"))
+                                total[__key].modif += (1 + value / 100);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     });
     (_b = char.perks) === null || _b === void 0 ? void 0 : _b.forEach((prk) => {
         // Go through stat modifiers
@@ -375,6 +411,43 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                 }
             }
         });
+        if (prk.statModifiers) {
+            prk.statModifiers.forEach((mod) => {
+                let apply = true;
+                if (mod.conditions) {
+                    apply = statConditions(mod.conditions, char);
+                }
+                if (apply) {
+                    Object.entries(mod.effects).forEach((eff) => {
+                        let key = eff[0];
+                        let value = eff[1];
+                        if (key.includes(abilityId) && key.includes("status")) {
+                            key = key.replace(abilityId + "_", "");
+                            if (key.includes("status_effect")) {
+                                const _key = key.replace("status_effect_", "");
+                                const __key = _key.substring(0, _key.length - 1);
+                                if (possible_stat_modifiers.find((m) => m == __key.toString())) {
+                                    if (key.endsWith("V"))
+                                        total["effects"][__key].value += value;
+                                    else if (key.endsWith("P") && value < 0)
+                                        total["effects"][__key].modif *= (1 + value / 100);
+                                    else if (key.endsWith("P"))
+                                        total["effects"][__key].modif += (1 + value / 100);
+                                }
+                                else {
+                                    if (key.endsWith("V"))
+                                        total[__key].value += value;
+                                    else if (key.endsWith("P") && value < 0)
+                                        total[__key].modif *= (1 + value / 100);
+                                    else if (key.endsWith("P"))
+                                        total[__key].modif += (1 + value / 100);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
     });
     if ((_c = char.weapon) === null || _c === void 0 ? void 0 : _c.stats) {
         Object.entries(char.weapon.stats).forEach((eff) => {

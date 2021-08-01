@@ -178,3 +178,7 @@ const statusEffects = {
     icon: "resources/icons/dazed.png"
   }
 } as any;
+
+// this allows player to deal more damage to specific enemies.
+// extends to races too, but no TT
+//  damage_against_type_[TYPE]P: 15,

@@ -91,6 +91,10 @@ const icons = {
     blight_icon: "resoures/icons/blighted_icon.png",
     burning: "resources/icons/flame_of_passion.png",
     burning_icon: "resources/icons/flame_of_passion_icon.png",
+    slime_type_icon: "resources/icons/slime_type_icon.png",
+    skeleton_type_icon: "resources/icons/skull_icon.png",
+    barbarian_type_icon: "resources/icons/barbarian_type_icon.png",
+    troll_type_icon: "resources/icons/troll_type_icon.png",
 };
 const tiles = [
     {

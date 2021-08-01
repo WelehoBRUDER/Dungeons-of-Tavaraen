@@ -164,6 +164,8 @@ const finnish = {
   skeletonMage_name: "Luuranko Maagi",
   skeletonLich_name: "Luuranko Kuolema Maagi",
   greySlime_name: "Harmaa Lima",
+  flamingSlime_name: "Liekehtivä Lima",
+  electricSlime_name: "Sähköinen Lima",
   norsemanBerserk_name: "Pohjoismies Berserkki",
   norsemanHunter_name: "Pohjoismies Metsästäjä",
   wildTroll_name: "Villi Peikko",
@@ -219,6 +221,40 @@ const finnish = {
   armor: "panssari",
   consumable: "käytettävä",
   required_stats: "Vaaditut kyvyt",
+  active_if: "Aktivoituu kun",
+  hp_more_than: "Terveys yli",
+  hp_less_than: "Terveys alle",
+  mp_more_than: "Taika yli",
+  mp_less_than: "Taika alle",
+  passive: "Passiivinen kyky",
+  too_much_weight: "Kannat liikaa painoa! Pudota jotain!",
+
+  // Passive abilities
+  frenzy_name: "Kiihko",
+  heightened_casting_name: "Vahva Alku",
+  warrior_instinct_name: "Soturin Aisti",
+  confident_shot_name: "Varma Laukaisu",
+
+  // Enemy types
+  against_type_syntax: " vastaan",
+  singular_type_slime: "Lima",
+  plural_type_slime: "Limoja",
+  singular_type_skeleton: "Luuranko",
+  plural_type_skeleton: "Luurankoja",
+  singular_type_barbarian: "Barbaari",
+  plural_type_barbarian: "Barbaareja",
+  singular_type_troll: "Peikko",
+  plural_type_troll: "Peikkoja",
+
+  // Enemy races
+  singular_race_elemenal: "Elementtaali",
+  plural_race_elemental: "Elementtaaleja",
+  singular_race_undead: "Epäkuollut",
+  plural_race_undead: "Epäkuolleita",
+  singular_race_human: "Ihminen",
+  plural_race_human: "Ihmisiä",
+  singular_race_monster: "Hirviö",
+  plural_race_monster: "Hirviöitä",
 
   /* MENU */
 
@@ -275,7 +311,7 @@ const finnish = {
   effect_ward_of_aurous_desc: "Kehosi on turvassa Aurouksen suojan alla.",
   effect_battle_fury_name: "Taistelun Riemu",
   effect_battle_fury_desc: "Riemuitse ja raivoa! Adrenaniili kiertää veressä ja veri lentää!",
-  effect_burning_name: "Palaa",
+  effect_burning_name: "Tulessa",
   effect_burning_desc: "OLET TULESSA!",
 
   // Abilities and stuff
@@ -414,7 +450,7 @@ const finnish = {
   dance_of_death_desc: "Kiemurtelu ei pelasta tältä tarkkuudelta!",
   poison_from_afar_name: "Tarkka-Myrkyttäjä",
   poison_from_afar_desc: "Kaukaa turvasta on helpoin murhata.",
-  quicker_draw_name: "Nopeami Veto",
+  quicker_draw_name: "Nopeampi Veto",
   quicker_draw_desc: "Nopeammin, nopeammin!",
 
   // NECROMANCER
@@ -520,6 +556,8 @@ const english = {
   skeletonMage_name: "Skeleton Mage",
   skeletonLich_name: "Skeleton Lich",
   greySlime_name: "Grey Slime",
+  flamingSlime_name: "Flaming Slime",
+  electricSlime_name: "Electric Slime",
   norsemanBerserk_name: "Norseman Berserker",
   norsemanHunter_name: "Norseman Hunter",
   wildTroll_name: "Wild Troll",
@@ -576,6 +614,40 @@ const english = {
   armor: "armor",
   consumable: "consumable",
   required_stats: "Required stats",
+  active_if: "Active if",
+  hp_more_than: "Health more than",
+  hp_less_than: "Health less than",
+  mp_more_than: "Mana more than",
+  mp_less_than: "Mana less than",
+  passive: "Passive ability",
+  too_much_weight: "You're carrying too much to move! Drop something!",
+
+  // Passive abilities
+  frenzy_name: "Frenzy",
+  heightened_casting_name: "Heightened Casting",
+  warrior_instinct_name_name: "Warrior Instinct",
+  confident_shot_name: "Confident Shot",
+
+  // Enemy types
+  against_type_syntax: " against ",
+  singular_type_slime: "Slime",
+  plural_type_slime: "Slimes",
+  singular_type_skeleton: "Skeleton",
+  plural_type_skeleton: "Skeletons",
+  singular_type_barbarian: "Barbarian",
+  plural_type_barbarian: "Barbarians",
+  singular_type_troll: "Troll",
+  plural_type_troll: "Trolls",
+
+  // Enemy races
+  singular_race_elemenal: "Elemental",
+  plural_race_elemental: "Elementals",
+  singular_race_undead: "Undead",
+  plural_race_undead: "Undead",
+  singular_race_human: "Human",
+  plural_race_human: "Humans",
+  singular_race_monster: "Monster",
+  plural_race_monster: "Monsters",
 
   /* MENU */
 
@@ -596,7 +668,7 @@ const english = {
   setting_hotkey_move_left: "Move left",
   setting_hotkey_move_right: "Move right",
   setting_hotkey_interact: "Interact",
-  
+
   open_menu: "Open game menu [Escape]",
 
   space_key: "SPACE",
@@ -624,7 +696,7 @@ const english = {
   effect_rage_desc: "You are slighty upset.",
   effect_berserk_name: "Berserk",
   effect_berserk_desc: "RRAAAAAGHH!!",
-  efect_dazed_name: "Dazed",
+  effect_dazed_name: "Dazed",
   effect_dazed_desc: "A blow has left you dazed, \nmaking it much harder to perform any action.",
   effect_blighted_name: "Blighted",
   effect_blighted_desc: "Your very soul is weakened from a vile blight.",

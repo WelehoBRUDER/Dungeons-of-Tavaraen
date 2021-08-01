@@ -24,6 +24,8 @@ class Enemy extends Character {
         this.retreatIndex = 0;
         this.hasRetreated = false;
         this.img = base.img;
+        this.type = base.type;
+        this.race = base.race;
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {

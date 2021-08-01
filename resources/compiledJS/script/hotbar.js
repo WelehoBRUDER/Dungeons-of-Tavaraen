@@ -408,6 +408,19 @@ function effectSyntax(effect, embed = false, effectId = "") {
         }
         //if (tailEnd.includes("multiplier")) value = value * 100;
     }
+    if (key.includes("against_type")) {
+        key_ = key.replace("against_type", "");
+        let id1 = key_.split("_")[0];
+        let id2 = key_.split("_")[2];
+        frontImg = icons[id1];
+        key = lang[id1];
+        tailEnd = lang[`plural_type_${id2}`];
+        if (lang.changeWordOrder)
+            tailEnd += lang["against_type_syntax"];
+        else
+            key += lang["against_type_syntax"];
+        backImg = `<i>${icons[id2 + "_type_icon"]}<i>`;
+    }
     if (tailEnd == lang["resist"])
         key = lang[key + "_def"];
     else if (lang[key])

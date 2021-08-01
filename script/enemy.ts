@@ -23,6 +23,8 @@ interface enemy extends characterObject {
   hasRetreated?: boolean;
   img?: string;
   restore?: Function;
+  type?: string;
+  race?: string;
 }
 
 class Enemy extends Character {
@@ -51,6 +53,8 @@ class Enemy extends Character {
   chooseAbility?: Function;
   img?: string;
   restore?: Function;
+  type?: string;
+  race?: string;
   constructor(base: enemy) {
     super(base);
     this.sprite = base.sprite;
@@ -74,6 +78,8 @@ class Enemy extends Character {
     this.retreatIndex = 0;
     this.hasRetreated = false;
     this.img = base.img;
+    this.type = base.type;
+    this.race = base.race;
 
     if (!this.hasBeenLeveled && this.level > 1) {
       for (let i = 1; i < this.level; i++) {

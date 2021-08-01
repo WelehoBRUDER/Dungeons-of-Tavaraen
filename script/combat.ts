@@ -127,6 +127,14 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
         val += getModifiers(attacker, "damage").v;
         mod *= getModifiers(attacker, "damage").m;
+        // @ts-ignore
+        val += getModifiers(attacker, "damage_against_type_" + target.type).v;
+        // @ts-ignore
+        mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
+        // @ts-ignore
+        val += getModifiers(attacker, "damage_against_race_" + target.race).v;
+        // @ts-ignore
+        mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
         let bonus: number = 0;
         if (ability.damages?.[key]) bonus = ability.damages[key];
         // @ts-ignore
@@ -141,6 +149,14 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
         val += getModifiers(attacker, "damage").v;
         mod *= getModifiers(attacker, "damage").m;
+        // @ts-ignore
+        val += getModifiers(attacker, "damage_against_type_" + target.type).v;
+        // @ts-ignore
+        mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
+        // @ts-ignore
+        val += getModifiers(attacker, "damage_against_race_" + target.race).v;
+        // @ts-ignore
+        mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
         let bonus: number = 0;
         // @ts-ignore
         bonus += num * attacker.getStats()[ability.stat_bonus] / 50;
@@ -163,7 +179,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
-    if(critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
     if (isAoe) {
       let actionText: string = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
@@ -236,7 +252,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
     target.stats.hp -= dmg;
-    if(critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
     let actionText = lang[ability.id + "_action_desc"] ?? "[TEXT NOT FOUND]";
     actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
