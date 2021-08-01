@@ -482,5 +482,263 @@ const enemies = {
             { type: "gold", amount: [6, 18] }
         ]
     },
+    wildTroll: {
+        id: "wildTroll",
+        name: "Wild Troll",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 20,
+            dex: 0,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 60,
+            mp: 0,
+            hpMax: 60,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 10,
+            crush: 10,
+            pierce: 10,
+            magic: 15,
+            dark: -10,
+            divine: -10,
+            fire: -20,
+            lightning: 0,
+            ice: 0
+        },
+        statusResistances: {
+            poison: 50,
+            burning: -20,
+            curse: 0,
+            stun: 0,
+            bleed: 50
+        },
+        damages: {
+            crush: 4,
+            slash: 4
+        },
+        alive: true,
+        xp: 45,
+        sprite: "wildTroll",
+        img: "resources/tiles/enemies/wild_troll.png",
+        aggroRange: 10,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "anti_magic",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 3,
+            dex: 0,
+            vit: 3
+        },
+        loot: [
+            { type: "gold", amount: [22, 44] }
+        ]
+    },
+    wildStoneTroll: {
+        id: "wildStoneTroll",
+        name: "Wild Stone Troll",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 23,
+            dex: 0,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 80,
+            mp: 0,
+            hpMax: 80,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 40,
+            crush: 40,
+            pierce: 40,
+            magic: 5,
+            dark: -10,
+            divine: -10,
+            fire: -10,
+            lightning: 0,
+            ice: 0
+        },
+        statusResistances: {
+            poison: 50,
+            burning: -10,
+            curse: 0,
+            stun: 0,
+            bleed: 75
+        },
+        damages: {
+            crush: 6,
+            slash: 4
+        },
+        alive: true,
+        xp: 75,
+        sprite: "wildStoneTroll",
+        img: "resources/tiles/enemies/wild_stone_troll.png",
+        aggroRange: 11,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "anti_magic",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 3,
+            dex: 0,
+            vit: 4
+        },
+        loot: [
+            { type: "gold", amount: [22, 44] }
+        ]
+    },
+    troll: {
+        id: "troll",
+        name: "Troll",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 25,
+            dex: 0,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 75,
+            mp: 0,
+            hpMax: 75,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 5,
+            crush: 5,
+            pierce: 5,
+            magic: 5,
+            dark: -15,
+            divine: -15,
+            fire: -25,
+            lightning: 0,
+            ice: 0
+        },
+        statusResistances: {
+            poison: 50,
+            burning: -10,
+            curse: 0,
+            stun: 0,
+            bleed: 25
+        },
+        damages: {
+            crush: 11,
+        },
+        alive: true,
+        xp: 60,
+        sprite: "troll",
+        img: "resources/tiles/enemies/troll.png",
+        aggroRange: 11,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "anti_magic",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 4,
+            dex: 0,
+            vit: 3
+        },
+        loot: [
+            { type: "gold", amount: [26, 51] }
+        ]
+    },
+    stoneTroll: {
+        id: "stoneTroll",
+        name: "Stone Troll",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 28,
+            dex: 0,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 90,
+            mp: 0,
+            hpMax: 90,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 25,
+            crush: 25,
+            pierce: 25,
+            magic: 25,
+            dark: -5,
+            divine: -5,
+            fire: -5,
+            lightning: 5,
+            ice: 5
+        },
+        statusResistances: {
+            poison: 50,
+            burning: -10,
+            curse: 0,
+            stun: 0,
+            bleed: 65
+        },
+        damages: {
+            crush: 13,
+        },
+        alive: true,
+        xp: 100,
+        sprite: "stoneTroll",
+        img: "resources/tiles/enemies/stone_troll.png",
+        aggroRange: 11,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "anti_magic",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 4,
+            dex: 0,
+            vit: 4
+        },
+        loot: [
+            { type: "gold", amount: [53, 129] }
+        ]
+    },
 };
 //# sourceMappingURL=enemies.js.map

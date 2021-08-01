@@ -162,6 +162,10 @@ const finnish = {
     greySlime_name: "Harmaa Lima",
     norsemanBerserk_name: "Pohjoismies Berserkki",
     norsemanHunter_name: "Pohjoismies Metsästäjä",
+    wildTroll_name: "Villi Peikko",
+    wildStoneTroll_name: "Villi Kivipeikko",
+    troll_name: "Peikko",
+    stoneTroll_name: "Kivipeikko",
     // LOG TEXTS
     you: "",
     recovery_pl: "parantaen",
@@ -493,6 +497,10 @@ const english = {
     greySlime_name: "Grey Slime",
     norsemanBerserk_name: "Norseman Berserker",
     norsemanHunter_name: "Norseman Hunter",
+    wildTroll_name: "Wild Troll",
+    wildStoneTroll_name: "Wild Stone Troll",
+    troll_name: "Troll",
+    stoneTroll_name: "Stone Troll",
     // LOG TEXTS
     you: "You",
     recovery_pl: "recovering",
