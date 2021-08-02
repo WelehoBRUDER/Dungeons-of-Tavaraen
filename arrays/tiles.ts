@@ -170,5 +170,5 @@ const clutters = [
     img: "resources/tiles/tree_2.png",
     sprite: ".clutter2",
     isWall: true
-  }
+  },
 ];

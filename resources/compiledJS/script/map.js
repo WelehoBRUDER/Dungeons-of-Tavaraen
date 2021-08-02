@@ -106,6 +106,17 @@ function renderMap(map) {
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
         }
     });
+    map.treasureChests.forEach((chest) => {
+        var _a;
+        if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
+            if (chest.sinceOpened == -1) {
+                const chestSprite = document.querySelector(`.${chest.sprite}`);
+                var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+            }
+        }
+    });
     /* Render Enemies */
     enemyLayers.textContent = ""; // Delete enemy canvases
     map.enemies.forEach((enemy, index) => {
@@ -360,10 +371,19 @@ function clickMap(event) {
     if (abiSelected.type == "movement") {
         player.stats.mp -= abiSelected.mana_cost;
         abiSelected.onCooldown = abiSelected.cooldown;
+        console.log(statusEffects[abiSelected.status]);
+        if (abiSelected.status)
+            player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[abiSelected.status]), s_def));
         movePlayer({ x: x, y: y }, true, abiSelected.use_range);
     }
-    else if (move)
-        movePlayer({ x: x, y: y });
+    else if (move) {
+        if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight())) {
+            displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+        }
+        else {
+            movePlayer({ x: x, y: y });
+        }
+    }
 }
 const emptyMap = (base_tiles) => new Array(base_tiles.length).fill("0").map(e => new Array(base_tiles[0].length).fill("0"));
 function createSightMap(start, size) {
@@ -404,6 +424,10 @@ document.addEventListener("keyup", (keyPress) => {
         return;
     let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
     let shittyFix = JSON.parse(JSON.stringify(player));
+    if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
+        displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+        return;
+    }
     if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) {
         player.cords.y--;
     }
@@ -446,6 +470,10 @@ document.addEventListener("keyup", (kbe) => {
     if (kbe.key == settings.hotkey_interact) {
         activateShrine();
         pickLoot();
+        maps[currentMap].treasureChests.forEach((chest) => {
+            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1)
+                chest.lootChest();
+        });
     }
 });
 let isMovingCurrently = false;
@@ -532,12 +560,6 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
     updateEnemiesTurn();
 }
 function canMove(char, dir) {
-    if (char.id == "player") {
-        if (player.carryingWeight() > player.maxCarryWeight()) {
-            displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
-            return false;
-        }
-    }
     try {
         var tile = { x: char.cords.x, y: char.cords.y };
         if (dir == "up")
@@ -563,12 +585,6 @@ function canMove(char, dir) {
 }
 function canMoveTo(char, tile) {
     var movable = true;
-    if (char.id == "player") {
-        if (char.carryingWeight() > char.maxCarryWeight()) {
-            displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
-            return false;
-        }
-    }
     if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly))
         movable = false;
     if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall)
@@ -582,7 +598,7 @@ function canMoveTo(char, tile) {
     return movable;
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     canvas.width = canvas.width; // Clear canvas
     const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model");
     const earModel = document.querySelector(".sprites ." + playerModel.race + "Ears");
@@ -629,6 +645,10 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
         const weaponModel = document.querySelector(".sprites ." + playerModel.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
+    if ((_j = playerModel.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+        const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, x, y, size, size);
+    }
 }
 function renderPlayerPortrait() {
     const portrait = document.createElement("div");
@@ -642,7 +662,7 @@ function renderPlayerPortrait() {
     return portrait;
 }
 function renderPlayerModel(size, canvas, ctx) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     canvas.width = canvas.width; // Clear canvas
     if (player.isDead)
         return;
@@ -690,6 +710,10 @@ function renderPlayerModel(size, canvas, ctx) {
     if ((_h = player.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    }
+    if ((_j = player.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+        const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
@@ -940,6 +964,14 @@ function hoverEnemyShow(enemy) {
     mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemy.getStats().vit}\n`;
     mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemy.getStats().int}\n`;
     mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemy.getStats().cun}\n`;
+    let enTotalDmg = enemy.trueDamage();
+    mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
+    Object.entries(enTotalDmg.split).forEach((res) => {
+        const key = res[0];
+        const val = res[1];
+        mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
+    });
+    mainStatText += "<c>white<c>)\n";
     // @ts-expect-error
     const mainStats = textSyntax(mainStatText);
     var resists = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;

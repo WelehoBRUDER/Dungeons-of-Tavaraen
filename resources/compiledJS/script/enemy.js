@@ -124,6 +124,31 @@ class Enemy extends Character {
             // And done!
             return out[Math.floor(Math.random() * out.length)];
         };
+        this.trueDamage = () => {
+            let dmg = 0;
+            let dmgs = {};
+            // @ts-ignore
+            // @ts-ignore
+            Object.entries(this.damages).forEach((value) => {
+                const key = value[0];
+                const num = value[1];
+                let { v: val, m: mod } = getModifiers(this, key + "Damage");
+                val += getModifiers(this, "damage").v;
+                mod *= getModifiers(this, "damage").m;
+                let bonus = 0;
+                // @ts-ignore
+                // @ts-ignore
+                if (this.shootsProjectile)
+                    bonus += num * this.getStats().dex / 50;
+                // @ts-ignore
+                else
+                    bonus += num * this.getStats().str / 50;
+                // @ts-ignore
+                dmg += Math.floor((num + val + bonus) * mod);
+                dmgs[key] = Math.floor((num + val + bonus) * mod);
+            });
+            return { total: dmg, split: dmgs };
+        };
         this.kill = () => {
             player.level.xp += this.xp;
             this.spawnMap = currentMap;

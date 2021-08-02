@@ -25,6 +25,7 @@ interface enemy extends characterObject {
   restore?: Function;
   type?: string;
   race?: string;
+  trueDamage?: Function;
 }
 
 class Enemy extends Character {
@@ -55,6 +56,7 @@ class Enemy extends Character {
   restore?: Function;
   type?: string;
   race?: string;
+  trueDamage?: Function // Misleading, will just give the enemy's damage raw
   constructor(base: enemy) {
     super(base);
     this.sprite = base.sprite;
@@ -183,6 +185,30 @@ class Enemy extends Character {
       // And done!
       return out[Math.floor(Math.random() * out.length)];
     };
+
+    this.trueDamage = () => {
+      let dmg: number = 0;
+      let dmgs = {} as damageClass;
+      // @ts-ignore
+        // @ts-ignore
+        Object.entries(this.damages).forEach((value: any) => {
+          const key: string = value[0];
+          const num: number = value[1];
+          let { v: val, m: mod } = getModifiers(this, key + "Damage");
+          val += getModifiers(this, "damage").v;
+          mod *= getModifiers(this, "damage").m;
+          let bonus: number = 0;
+          // @ts-ignore
+          // @ts-ignore
+          if (this.shootsProjectile) bonus += num * this.getStats().dex / 50;
+          // @ts-ignore
+          else bonus += num * this.getStats().str / 50;
+          // @ts-ignore
+          dmg += Math.floor((num + val + bonus) * mod);
+          dmgs[key] = Math.floor((num + val + bonus) * mod);
+        });
+      return {total: dmg, split: dmgs};
+    }
 
     this.kill = () => {
       player.level.xp += this.xp;

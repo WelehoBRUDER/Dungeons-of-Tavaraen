@@ -30,7 +30,7 @@ interface statusResistances {
 }
 
 interface characterObject {
-  id: string;
+  [id: string]: string | any;
   name: string;
   cords: tileObject;
   stats: stats;
@@ -83,10 +83,10 @@ function statConditions(conditions: any, char: characterObject) {
     const val = condition[1];
     if (key.includes("hp")) {
       if (key.includes("more_than")) {
-        fulfilled = char.hpRemain() >= val;
+        if (char.hpRemain() <= val) fulfilled = false;
       }
       else if (key.includes("less_than")) {
-        fulfilled = char.hpRemain() <= val;
+        if (char.hpRemain() >= val) fulfilled = false;
       }
     }
   });
@@ -101,7 +101,7 @@ function getModifiers(char: any, stat: string, withConditions = true) {
     if (mod.conditions && withConditions) {
       apply = statConditions(mod.conditions, char);
     }
-    if(mod.conditions && !withConditions) apply = false;
+    if (mod.conditions && !withConditions) apply = false;
     if (apply) {
       Object.entries(mod.effects).forEach((eff: any) => {
         if (eff[0].startsWith(stat)) {
@@ -153,7 +153,7 @@ function getModifiers(char: any, stat: string, withConditions = true) {
         if (_mod.conditions && withConditions) {
           apply = statConditions(_mod.conditions, char);
         }
-        if(_mod.conditions && !withConditions) apply = false;
+        if (_mod.conditions && !withConditions) apply = false;
         if (apply) {
           Object.entries(_mod.effects).forEach((eff: any) => {
             if (eff[0].startsWith(stat)) {
@@ -175,77 +175,22 @@ function getModifiers(char: any, stat: string, withConditions = true) {
       }
     });
   }
-  if (char.weapon?.stats) {
-    Object.entries(char.weapon.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (char.chest?.stats) {
-    Object.entries(char.chest.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (char.helmet?.stats) {
-    Object.entries(char.helmet.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (char.gloves?.stats) {
-    Object.entries(char.gloves.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (char.boots?.stats) {
-    Object.entries(char.boots.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (char.legs?.stats) {
-    Object.entries(char.legs.stats).forEach((eff: any) => {
-      if (eff[0].startsWith(stat)) {
-        if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
-        else if (eff[0] == stat + "P") modif += (eff[1] / 100);
-        else if (eff[0] == stat + "V") val += eff[1];
-      }
-    });
-  }
-  if (stat.includes("Resist")) {
-    if (char.chest?.resistances) {
-      if (char.chest.resistances[stat.replace("Resist", '')]) val += char.chest.resistances[stat.replace("Resist", '')];
+  equipmentSlots.forEach((slot: string) => {
+    if (char[slot]?.stats) {
+      Object.entries(char[slot].stats).forEach((eff: any) => {
+        if (eff[0].startsWith(stat)) {
+          if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
+          else if (eff[0] == stat + "P") modif += (eff[1] / 100);
+          else if (eff[0] == stat + "V") val += eff[1];
+        }
+      });
     }
-    if (char.helmet?.resistances) {
-      if (char.helmet.resistances[stat.replace("Resist", '')]) val += char.helmet.resistances[stat.replace("Resist", '')];
+    if (stat.includes("Resist")) {
+      if (char[slot]?.resistances) {
+        if (char[slot].resistances[stat.replace("Resist", '')]) val += char[slot].resistances[stat.replace("Resist", '')];
+      }
     }
-    if (char.gloves?.resistances) {
-      if (char.gloves.resistances[stat.replace("Resist", '')]) val += char.gloves.resistances[stat.replace("Resist", '')];
-    }
-    if (char.boots?.resistances) {
-      if (char.boots.resistances[stat.replace("Resist", '')]) val += char.boots.resistances[stat.replace("Resist", '')];
-    }
-    if (char.legs?.resistances) {
-      if (char.legs.resistances[stat.replace("Resist", '')]) val += char.legs.resistances[stat.replace("Resist", '')];
-    }
-  }
+  });
   return { v: val, m: modif };
 }
 

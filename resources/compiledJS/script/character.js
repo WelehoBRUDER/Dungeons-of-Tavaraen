@@ -6,17 +6,19 @@ function statConditions(conditions, char) {
         const val = condition[1];
         if (key.includes("hp")) {
             if (key.includes("more_than")) {
-                fulfilled = char.hpRemain() >= val;
+                if (char.hpRemain() <= val)
+                    fulfilled = false;
             }
             else if (key.includes("less_than")) {
-                fulfilled = char.hpRemain() <= val;
+                if (char.hpRemain() >= val)
+                    fulfilled = false;
             }
         }
     });
     return fulfilled;
 }
 function getModifiers(char, stat, withConditions = true) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
+    var _a, _b, _c, _d, _e, _f, _g;
     let val = 0;
     let modif = 1;
     char.statModifiers.forEach((mod) => {
@@ -121,100 +123,27 @@ function getModifiers(char, stat, withConditions = true) {
             }
         });
     }
-    if ((_h = char.weapon) === null || _h === void 0 ? void 0 : _h.stats) {
-        Object.entries(char.weapon.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if ((_j = char.chest) === null || _j === void 0 ? void 0 : _j.stats) {
-        Object.entries(char.chest.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if ((_k = char.helmet) === null || _k === void 0 ? void 0 : _k.stats) {
-        Object.entries(char.helmet.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if ((_l = char.gloves) === null || _l === void 0 ? void 0 : _l.stats) {
-        Object.entries(char.gloves.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if ((_m = char.boots) === null || _m === void 0 ? void 0 : _m.stats) {
-        Object.entries(char.boots.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if ((_o = char.legs) === null || _o === void 0 ? void 0 : _o.stats) {
-        Object.entries(char.legs.stats).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= (1 + eff[1] / 100);
-                else if (eff[0] == stat + "P")
-                    modif += (eff[1] / 100);
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if (stat.includes("Resist")) {
-        if ((_p = char.chest) === null || _p === void 0 ? void 0 : _p.resistances) {
-            if (char.chest.resistances[stat.replace("Resist", '')])
-                val += char.chest.resistances[stat.replace("Resist", '')];
+    equipmentSlots.forEach((slot) => {
+        var _a, _b;
+        if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
+            Object.entries(char[slot].stats).forEach((eff) => {
+                if (eff[0].startsWith(stat)) {
+                    if (eff[0] == stat + "P" && eff[1] < 0)
+                        modif *= (1 + eff[1] / 100);
+                    else if (eff[0] == stat + "P")
+                        modif += (eff[1] / 100);
+                    else if (eff[0] == stat + "V")
+                        val += eff[1];
+                }
+            });
         }
-        if ((_q = char.helmet) === null || _q === void 0 ? void 0 : _q.resistances) {
-            if (char.helmet.resistances[stat.replace("Resist", '')])
-                val += char.helmet.resistances[stat.replace("Resist", '')];
+        if (stat.includes("Resist")) {
+            if ((_b = char[slot]) === null || _b === void 0 ? void 0 : _b.resistances) {
+                if (char[slot].resistances[stat.replace("Resist", '')])
+                    val += char[slot].resistances[stat.replace("Resist", '')];
+            }
         }
-        if ((_r = char.gloves) === null || _r === void 0 ? void 0 : _r.resistances) {
-            if (char.gloves.resistances[stat.replace("Resist", '')])
-                val += char.gloves.resistances[stat.replace("Resist", '')];
-        }
-        if ((_s = char.boots) === null || _s === void 0 ? void 0 : _s.resistances) {
-            if (char.boots.resistances[stat.replace("Resist", '')])
-                val += char.boots.resistances[stat.replace("Resist", '')];
-        }
-        if ((_t = char.legs) === null || _t === void 0 ? void 0 : _t.resistances) {
-            if (char.legs.resistances[stat.replace("Resist", '')])
-                val += char.legs.resistances[stat.replace("Resist", '')];
-        }
-    }
+    });
     return { v: val, m: modif };
 }
 class Character {

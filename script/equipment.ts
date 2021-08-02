@@ -522,7 +522,7 @@ function itemTT(item: any) {
 
 var sortingReverse = false;
 
-function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY") {
+function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY", chest: any = null) {
   const container = document.createElement("div");
   const itemsList = document.createElement("div");
   const itemsListBar = document.createElement("div");
@@ -585,6 +585,9 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     }
     if (context == "PICK_LOOT") {
       itemObject.addEventListener("mousedown", e => grabLoot(e, itm));
+    }
+    if(context == "PICK_TREASURE") {
+      itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);

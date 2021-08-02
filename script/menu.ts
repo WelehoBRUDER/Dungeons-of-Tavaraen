@@ -78,6 +78,8 @@ const menuSettings = [
   }
 ];
 
+const equipmentSlots = ["chest", "legs", "gloves", "boots", "helmet", "weapon", "offhand", "artifact1", "artifact2", "artifact3"] as Array<string>;
+
 setTimeout(() => {
   let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
   if (options) {

@@ -237,6 +237,20 @@ const abilities = {
         use_range: "4",
         ai_chance: 0
     },
+    retreat: {
+        id: "retreat",
+        name: "Retreat",
+        mana_cost: 0,
+        cooldown: 23,
+        type: "movement",
+        status: "dazed",
+        recharge_only_in_combat: true,
+        action_desc: "step into a shadow, moving rapidly.",
+        action_desc_pl: "steps into a shadow, moving rapidly.",
+        icon: "resources/icons/retreat.png",
+        use_range: "7",
+        ai_chance: 0
+    },
     charge: {
         id: "charge",
         name: "Charge",

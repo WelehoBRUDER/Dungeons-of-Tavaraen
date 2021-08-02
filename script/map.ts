@@ -40,6 +40,7 @@ interface mapObject {
   enemies: Array<[]>;
   playerGrave: any;
   shrines: Array<any>;
+  treasureChests: Array<any>;
 }
 interface tileObject {
   x: number;
@@ -125,6 +126,17 @@ function renderMap(map: mapObject) {
     }
   });
 
+  map.treasureChests.forEach((chest: treasureChest) => {
+    if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
+      if(chest.sinceOpened == -1) {
+        const chestSprite = document.querySelector<HTMLImageElement>(`.${chest.sprite}`);
+        var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        baseCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+      }
+    }
+  })
+
   /* Render Enemies */
   enemyLayers.textContent = ""; // Delete enemy canvases
   map.enemies.forEach((enemy: any, index) => {
@@ -188,7 +200,7 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
   var tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
 
   playerCanvas.width = playerCanvas.width;
-  if(dontMove) {
+  if (dontMove) {
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
     return;
   }
@@ -305,7 +317,7 @@ function clickMap(event: MouseEvent) {
     dontMove = true;
     return;
   }
-  if(dontMove) {
+  if (dontMove) {
     dontMove = false;
     return;
   }
@@ -364,9 +376,18 @@ function clickMap(event: MouseEvent) {
   if (abiSelected.type == "movement") {
     player.stats.mp -= abiSelected.mana_cost;
     abiSelected.onCooldown = abiSelected.cooldown;
+    console.log(statusEffects[abiSelected.status]);
+    if(abiSelected.status) player.statusEffects.push(new statEffect({...statusEffects[abiSelected.status]}, s_def));
     movePlayer({ x: x, y: y }, true, abiSelected.use_range);
   }
-  else if (move) movePlayer({ x: x, y: y });
+  else if (move) {
+    if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight())) {
+      displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+    }
+    else {
+      movePlayer({ x: x, y: y });
+    }
+  }
 }
 
 const emptyMap = (base_tiles: Array<number[]>) => new Array(base_tiles.length).fill("0").map(e => new Array(base_tiles[0].length).fill("0"));
@@ -404,6 +425,10 @@ document.addEventListener("keyup", (keyPress) => {
   if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
   let shittyFix = JSON.parse(JSON.stringify(player));
+  if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
+    displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
+    return;
+  }
   if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) { player.cords.y--; }
   else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down")) { player.cords.y++; }
   else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left")) { player.cords.x--; }
@@ -438,6 +463,9 @@ document.addEventListener("keyup", (kbe: KeyboardEvent) => {
   if (kbe.key == settings.hotkey_interact) {
     activateShrine();
     pickLoot();
+    maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
+      if(chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1) chest.lootChest();
+    })
   }
 });
 
@@ -516,12 +544,6 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
 
 
 function canMove(char: any, dir: string) {
-  if(char.id == "player") {
-    if(player.carryingWeight() > player.maxCarryWeight()) {
-      displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
-      return false;
-    }
-  }
   try {
     var tile = { x: char.cords.x, y: char.cords.y };
     if (dir == "up") tile.y--;
@@ -541,12 +563,6 @@ function canMove(char: any, dir: string) {
 
 function canMoveTo(char: any, tile: tileObject) {
   var movable = true;
-  if(char.id == "player") {
-    if(char.carryingWeight() > char.maxCarryWeight()) {
-      displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
-      return false;
-    }
-  }
   if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly)) movable = false;
   if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) movable = false;
   for (let enemy of maps[currentMap].enemies) {
@@ -601,6 +617,10 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.weapon.sprite);
     ctx?.drawImage(weaponModel, x, y, size, size);
   }
+  if(playerModel.offhand?.sprite) {
+    const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
+    ctx?.drawImage(offhandModel, x, y, size, size);
+  }
 }
 
 function renderPlayerPortrait() {
@@ -623,7 +643,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
   const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
- 
+
   player.statusEffects.forEach((eff: statEffect) => {
     if (eff.aura) {
       const aura = <HTMLImageElement>document.querySelector(".sprites ." + eff.aura);
@@ -651,7 +671,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite);
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  else if(!player.legs?.sprite) {
+  else if (!player.legs?.sprite) {
     const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
     ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
@@ -662,6 +682,10 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   if (player.weapon?.sprite) {
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
     ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  }
+  if(player.offhand?.sprite) {
+    const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
+    ctx?.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
 }
 
@@ -874,6 +898,14 @@ function hoverEnemyShow(enemy: enemy) {
   mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemy.getStats().vit}\n`;
   mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemy.getStats().int}\n`;
   mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemy.getStats().cun}\n`;
+  let enTotalDmg = enemy.trueDamage();
+  mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
+  Object.entries(enTotalDmg.split).forEach((res: any) => {
+    const key = res[0];
+    const val = res[1];
+    mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
+  });
+  mainStatText += "<c>white<c>)\n";
   // @ts-expect-error
   const mainStats = textSyntax(mainStatText);
   var resists: string = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;

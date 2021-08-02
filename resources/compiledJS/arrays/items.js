@@ -220,6 +220,36 @@ const items = {
         grade: "common",
         slot: "weapon"
     },
+    woodenShield: {
+        id: "woodenShield",
+        name: "Wooden Shield",
+        resistances: { slash: 5, crush: 5, pierce: 5, fire: -5, magic: 5, dark: 3, divine: 3, lightning: 2, ice: 1 },
+        resistancesTemplate: [
+            { type: "slash", value: [1, 2], chance: 5 },
+            { type: "crush", value: [2, 5], chance: 7 },
+            { type: "dark", value: [1, 3], chance: 5 },
+            { type: "divine", value: [1, 3], chance: 5 },
+            { type: "fire", value: [-1, -3], chance: 5 },
+            { type: "lightning", value: [-1, -3], chance: 5 },
+            { type: "ice", value: [2, 4], chance: 5 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3], chance: 1.25 },
+            { type: "strP", value: [3, 5, 8], chance: 2.5 },
+            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
+            { type: "vitP", value: [3, 6, 9], chance: 1.8 },
+            { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
+        ],
+        img: "resources/icons/wooden_shield.png",
+        sprite: "woodenShield",
+        price: 13,
+        weight: 1.2,
+        type: "armor",
+        grade: "common",
+        slot: "offhand"
+    },
     raggedShirt: {
         id: "raggedShirt",
         name: "Ragged Shirt",

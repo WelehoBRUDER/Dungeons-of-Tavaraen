@@ -407,12 +407,12 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["sorcererClass"]),
+        main: new combatClass(combatClasses["fighterClass"]),
         sub: null
     },
     sprite: ".player",
-    race: "elf",
-    hair: 4,
+    race: "orc",
+    hair: 3,
     eyes: 2,
     face: 1,
     weapon: new Weapon(Object.assign({}, items.longsword)),
@@ -424,14 +424,51 @@ var player = new PlayerCharacter({
     perks: [],
     abilities: [
         new Ability(Object.assign({}, abilities.attack), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 0 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
     ],
     statModifiers: [
         {
             name: "Resilience of the Lone Wanderer",
             effects: {
                 hpMaxV: 55,
-                mpMaxV: 10
+                mpMaxV: 10,
+                retreat_status_effect_lastV: 2,
+            }
+        },
+        {
+            id: "blood_rage_1",
+            conditions: {
+                hp_less_than: 70,
+                hp_more_than: 50
+            },
+            effects: {
+                strV: 3,
+                resistAllV: 2,
+                damageP: 8
+            }
+        },
+        {
+            id: "blood_rage_2",
+            conditions: {
+                hp_less_than: 50,
+                hp_more_than: 30
+            },
+            effects: {
+                strV: 5,
+                resistAllV: 3,
+                damageP: 10
+            }
+        },
+        {
+            id: "blood_rage_3",
+            conditions: {
+                hp_less_than: 30,
+            },
+            effects: {
+                strV: 8,
+                resistAllV: 5,
+                damageP: 14
             }
         }
     ],

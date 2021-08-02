@@ -213,7 +213,14 @@ const maps = [
         ],
         shrines: [
             { cords: { x: 4, y: 4 } }
-        ]
+        ],
+        treasureChests: [
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 4, y: 1 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 53, y: 2 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 21, y: 6 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 17, y: 28 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 13, y: 27 } })),
+        ],
     }
 ];
 //# sourceMappingURL=maps.js.map
