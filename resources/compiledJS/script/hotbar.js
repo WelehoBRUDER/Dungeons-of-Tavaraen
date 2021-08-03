@@ -231,6 +231,12 @@ function abiTT(abi) {
         txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
     if (abi.recharge_only_in_combat)
         txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+    if (abi.summon_unit)
+        txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
+    if (abi.summon_level)
+        txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
+    if (abi.summon_last)
+        txt += `<f>20px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
     if (abi.aoe_size > 0)
         txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)

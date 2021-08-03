@@ -7,6 +7,7 @@ const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = document.querySelector(".canvasLayers .playerSheet");
 const playerCtx = playerCanvas.getContext("2d");
 const enemyLayers = document.querySelector(".canvasLayers .enemyLayers");
+const summonLayers = document.querySelector(".canvasLayers .summonLayers");
 const projectileLayers = document.querySelector(".canvasLayers .projectileLayers");
 const staticHover = document.querySelector(".mapHover");
 baseCanvas.addEventListener("mousemove", mapHover);
@@ -155,6 +156,45 @@ function renderMap(map) {
             });
         }
         enemyLayers.append(canvas);
+    });
+    /* Render Summons */
+    summonLayers.textContent = ""; // Delete summon canvases
+    combatSummons.forEach((enemy, index) => {
+        var _a;
+        if (!enemy.alive)
+            return;
+        var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        const canvas = document.createElement("canvas");
+        // @ts-ignore
+        canvas.classList = `summon${index} layer`;
+        const ctx = canvas.getContext("2d");
+        const enemyImg = document.querySelector(`.${enemy.sprite}`);
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        if (enemyImg && (((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) == "x")) {
+            /* Render hp bar */
+            const hpbg = document.querySelector(".hpBg");
+            const hpbar = document.querySelector(".hpBarAlly");
+            const hpborder = document.querySelector(".hpBorder");
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.statRemaining("hp") * spriteSize / 100, spriteSize);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
+            /* Render enemy on top of hp bar */
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
+            let statCount = 0;
+            enemy.statusEffects.forEach((effect) => {
+                if (statCount > 4)
+                    return;
+                const img = new Image(32, 32);
+                img.src = effect.icon;
+                img.addEventListener("load", e => {
+                    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+                    statCount++;
+                });
+            });
+        }
+        summonLayers.append(canvas);
     });
     /* Render Items */
     mapDataCanvas.width = mapDataCanvas.width;
@@ -366,6 +406,14 @@ function clickMap(event) {
             fireProjectile(player.cords, { x: x, y: y }, abiSelected.shoots_projectile, abiSelected, true, player);
         }
     }
+    if (isSelected && abiSelected.summon_unit) {
+        if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= abiSelected.use_range) {
+            move = false;
+            summonUnit(abiSelected, { x: x, y: y });
+            player.effects();
+            advanceTurn();
+        }
+    }
     state.clicked = true;
     setTimeout(() => { state.clicked = false; }, 30);
     if (abiSelected.type == "movement") {
@@ -555,8 +603,8 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
         }
     }
     // @ts-expect-error
-    attackTarget(enemy, player, weaponReach(enemy, 1, player));
-    regularAttack(enemy, player, ability);
+    attackTarget(enemy, enemy.chosenTarget, weaponReach(enemy, 1, enemy.chosenTarget));
+    regularAttack(enemy, enemy.chosenTarget, ability);
     updateEnemiesTurn();
 }
 function canMove(char, dir) {
@@ -730,8 +778,13 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         if (clutters[xv].isWall)
             fieldMap[y][x] = 1;
     }));
-    if (start.x !== player.cords.x && start.y !== player.cords.y)
+    if (start.x !== player.cords.x && start.y !== player.cords.y) {
         fieldMap[player.cords.y][player.cords.x] = 1;
+        combatSummons.forEach(summon => {
+            if (summon.cords.x !== start.x && summon.cords.y !== start.y)
+                fieldMap[summon.cords.y][summon.cords.x] = 1;
+        });
+    }
     maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) {
         {
             fieldMap[enemy.cords.y][enemy.cords.x] = 1;
@@ -826,15 +879,19 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     }
     return cords;
 }
-function arrowHitsTarget(start, end) {
+function arrowHitsTarget(start, end, isSummon = false) {
     let path = generateArrowPath(start, end);
     let hits = true;
     path.forEach((step) => {
-        if (step.enemy) {
+        if (step.enemy && !isSummon) {
             hits = false;
             return;
         }
-        if (step.blocked && !step.player) {
+        if (step.blocked && !step.player && !isSummon && !step.summon) {
+            hits = false;
+            return;
+        }
+        if (step.blocked && !step.enemy && isSummon) {
             hits = false;
             return;
         }
@@ -855,7 +912,8 @@ function generateArrowPath(start, end, distanceOnly = false) {
         y: start.y,
         blocked: false,
         enemy: false,
-        player: false
+        player: false,
+        summon: false
     };
     if (distanceOnly)
         return distX + distY;
@@ -873,6 +931,13 @@ function generateArrowPath(start, end, distanceOnly = false) {
                 return;
             if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
                 arrow.enemy = true;
+                arrow.blocked = true;
+            }
+            ;
+        });
+        combatSummons.forEach(summon => {
+            if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
+                arrow.summon = true;
                 arrow.blocked = true;
             }
             ;
@@ -903,6 +968,7 @@ function modifyCanvas() {
     // @ts-ignore
     renderMap(maps[currentMap]);
 }
+var highestWaitTime = 0;
 /* Move to state file later */
 async function advanceTurn() {
     if (player.isDead)
@@ -913,6 +979,18 @@ async function advanceTurn() {
     enemiesHadTurn = 0;
     var map = maps[currentMap];
     hideMapHover();
+    combatSummons.forEach(summon => {
+        if (!summon.alive || player.isDead)
+            return;
+        summon.lastsFor--;
+        if (summon.lastsFor <= 0) {
+            summon.kill();
+            return;
+        }
+        summon.updateAbilities();
+        summon.decideAction();
+        summon.effects();
+    });
     map.enemies.forEach(enemy => {
         if (player.isDead)
             return;
@@ -931,6 +1009,7 @@ async function advanceTurn() {
             updateEnemiesTurn();
         enemy.effects();
     });
+    setTimeout(modifyCanvas, 500);
     if (map.enemies.length == 0)
         turnOver = true;
     if (state.inCombat) {

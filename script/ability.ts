@@ -20,6 +20,9 @@ interface ability {
   requires_ranged_weapon?: boolean;
   requires_concentration?: boolean;
   recharge_only_in_combat?: boolean;
+  summon_unit?: string;
+  summon_level?: number;
+  summon_last?: number;
   aoe_size?: number;
   aoe_effect?: string;
   self_target?: boolean;
@@ -37,6 +40,8 @@ const straight_modifiers = [
   "base_heal",
   "damage_multiplier",
   "use_range",
+  "summon_level",
+  "summon_last",
   "aoe_size",
 ];
 
@@ -94,6 +99,9 @@ class Ability {
   requires_ranged_weapon?: boolean;
   requires_concentration?: boolean;
   recharge_only_in_combat?: boolean;
+  summon_unit?: string;
+  summon_level?: number;
+  summon_last?: number;
   aoe_size?: number;
   aoe_effect?: string;
   self_target?: boolean;
@@ -128,6 +136,9 @@ class Ability {
     this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
     this.requires_concentration = baseAbility.requires_concentration ?? false;
     this.recharge_only_in_combat = baseAbility.recharge_only_in_combat ?? false;
+    this.summon_unit = baseAbility.summon_unit;
+    this.summon_level = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif) ?? 0;;
+    this.summon_last = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif) ?? 0;;
     this.aoe_size = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif ?? 0;
     this.aoe_effect = baseAbility.aoe_effect ?? "";
     this.self_target = baseAbility.self_target ?? false;

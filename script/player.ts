@@ -28,6 +28,7 @@ interface playerChar extends characterObject {
   unarmedDamages?: any;
   fistDmg?: Function;
   classes?: any;
+  oldCords?: tileObject;
 }
 
 interface levelObject {
@@ -159,6 +160,7 @@ class PlayerCharacter extends Character {
   unarmedDamages?: any;
   fistDmg?: Function;
   classes?: any;
+  oldCords?: tileObject;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -190,6 +192,7 @@ class PlayerCharacter extends Character {
     this.usedShrines = base.usedShrines ?? [];
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
     this.classes = base.classes ?? {};
+    this.oldCords = base.oldCords ?? this.cords;
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -299,6 +302,7 @@ class PlayerCharacter extends Character {
       if(this.isDead) return;
       // handle death logic once we get there ;)
       this.isDead = true;
+      spawnFloatingText(this.cords, lang["player_death"], "red", 32, 1800, 100);
       displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
       const xpLoss = Math.floor(random(this.level.xp * 0.5, this.level.xp * 0.07));
       const goldLoss = Math.floor(random(this.gold * 0.6, this.gold * 0.1));
@@ -528,6 +532,7 @@ var player = new PlayerCharacter({
     new Ability({...abilities.attack}, dummy),
     new Ability({...abilities.retreat, equippedSlot: 0}, dummy),
     new Ability({...abilities.first_aid, equippedSlot: 1}, dummy),
+    new Ability({...abilities.summon_skeleton_warrior, equippedSlot: 2}, dummy),
   ],
   statModifiers: [
     {
@@ -581,15 +586,17 @@ var player = new PlayerCharacter({
   sp: 5,
   pp: 1,
   respawnPoint: {cords: {x: 4, y: 4}},
-  usedShrines: []
+  usedShrines: [],
 });
+
+let combatSummons: Array<any> = [];
 
 var randomProperty = function (obj) {
   var keys = Object.keys(obj);
   return obj[keys[ keys.length * Math.random() << 0]];
 };
 
-for(let i = 0; i < 50; i++) {
+for(let i = 0; i < 10; i++) {
   player.inventory.push({...randomProperty(items)});
 }
 

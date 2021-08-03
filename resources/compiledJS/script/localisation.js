@@ -80,6 +80,7 @@ const finnish = {
     buff: "Tehoste/Buffi",
     movement: "Liikkuminen",
     charge: "Ryntäys",
+    summon: "Kutsuntaloitsu",
     turn: "Kierros",
     turns: "kierrosta",
     cooldown: "Latausaika",
@@ -170,6 +171,10 @@ const finnish = {
     wildStoneTroll_name: "Villi Kivipeikko",
     troll_name: "Peikko",
     stoneTroll_name: "Kivipeikko",
+    // Summon names
+    skeletonWarriorSummon_name: "Kutsuttu Luuranko Soturi",
+    skeletonLichSummon_name: "Kutsuttu Luuranko Kuolema Maagi",
+    stoneTrollSummon_name: "Kutsuttu Kivipeikko",
     // LOG TEXTS
     you: "",
     recovery_pl: "parantaen",
@@ -222,6 +227,9 @@ const finnish = {
     mp_less_than: "Taika alle",
     passive: "Passiivinen kyky",
     too_much_weight: "Kannat liikaa painoa! Pudota jotain!",
+    summons_unit: "Kutsuu hahmon",
+    summon_level: "Kutsutun hahmon taso",
+    summon_last: "Kutsuttu hahmo kestää",
     // Passive abilities
     frenzy_name: "Kiihko",
     heightened_casting_name: "Vahva Alku",
@@ -296,6 +304,8 @@ const finnish = {
     effect_battle_fury_desc: "Riemuitse ja raivoa! Adrenaniili kiertää veressä ja veri lentää!",
     effect_burning_name: "Tulessa",
     effect_burning_desc: "OLET TULESSA!",
+    effect_summoned_name: "Kutsuntaloitsu",
+    effect_summoned_desc: "Kutsuttu soturi katoaa tämän loputtua",
     // Abilities and stuff
     attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
     attack_action_desc: "iskee hahmoa [TARGET], tehden [DMG] vahinkoa.",
@@ -366,6 +376,9 @@ const finnish = {
     poisoned_arrow_desc: "Taistelu muuttuu metsästykseksi.",
     poisoned_arrow_action_desc_pl: "Ammut myrkyllisen nuolen kohti hahmoa [TARGET], tehden [DMG] vahinkoa!",
     poisoned_arrow_action_desc: "ampuu myrkyllisen nuolen kohti hahmoa [TARGET], aiheuttaen [DMG] vahinkoa.",
+    summon_skeleton_warrior_name: "Luo Luuranko Soturi",
+    summon_skeleton_warrior_desc: "Kutsuu luuranko soturin taistelemaan puolellasi.",
+    summon_skeleton_warrior_action_desc_pl: "Kutsut Luuranko Soturin kentälle!",
     // PERKS // 
     // SORCERER
     introduction_to_sorcery_name: "Maagin Alkukirja",
@@ -518,6 +531,7 @@ const english = {
     buff: "Buff",
     movement: "Movement",
     charge: "Charge",
+    summon: "Summon",
     turn: "Turn",
     turns: "turns",
     cooldown: "Cooldown",
@@ -542,6 +556,10 @@ const english = {
     wildStoneTroll_name: "Wild Stone Troll",
     troll_name: "Troll",
     stoneTroll_name: "Stone Troll",
+    // Summon names
+    skeletonWarriorSummon_name: "Conjured Skeleton Warrior",
+    skeletonLichSummon_name: "Conjured Skeleton Lich",
+    stoneTrollSummon_name: "Conjured Stone Troll",
     // LOG TEXTS
     you: "You",
     recovery_pl: "recovering",
@@ -594,6 +612,9 @@ const english = {
     mp_less_than: "Mana less than",
     passive: "Passive ability",
     too_much_weight: "You're carrying too much to move! Drop something!",
+    summons_unit: "Summons unit",
+    summon_level: "Summoned unit level",
+    summon_last: "Summoned unit last",
     // Passive abilities
     frenzy_name: "Frenzy",
     heightened_casting_name: "Heightened Casting",
@@ -668,6 +689,8 @@ const english = {
     effect_battle_fury_desc: "You are concentrating on physical might.",
     effect_burning_name: "Burning",
     effect_burning_desc: "YOU ARE ON FIRE!",
+    effect_summoned_name: "Summon",
+    effect_summoned_desc: "Your conjuration dies once this expires.",
     // Abilities and stuff
     attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
     attack_action_desc: "attacks [TARGET], dealing [DMG] damage.",
@@ -738,6 +761,9 @@ const english = {
     poisoned_arrow_desc: "Death from afar. Slow death.",
     poisoned_arrow_action_desc_pl: "<c>yellow<c>You<c>white<c> shoot a poisonous arrow at [TARGET], dealing [DMG] damage!",
     poisoned_arrow_action_desc: "shoots an arrow coated in poison at [TARGET], dealing [DMG] damage.",
+    summon_skeleton_warrior_name: "Summon Skeleton Warrior",
+    summon_skeleton_warrior_desc: "Conjure a Skeleton Warrior to protect you.",
+    summon_skeleton_warrior_action_desc_pl: "You call Skeleton Warrior to battle!",
     // PERKS //
     // SORCERER
     introduction_to_sorcery_name: "Introduction to Sorcery",

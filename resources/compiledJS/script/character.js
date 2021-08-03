@@ -148,7 +148,7 @@ function getModifiers(char, stat, withConditions = true) {
 }
 class Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
@@ -157,6 +157,7 @@ class Character {
         this.statusResistances = Object.assign({}, base.statusResistances);
         this.statModifiers = (_c = base.statModifiers) !== null && _c !== void 0 ? _c : [];
         this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
+        this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
         this.getStats = (withConditions = true) => {
             var _a, _b, _c, _d;
             let stats = {};
@@ -189,6 +190,11 @@ class Character {
                 resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
             });
             return resists;
+        };
+        this.getThreat = () => {
+            let threat = 0;
+            const { v: val, m: mod } = getModifiers(this, "threat");
+            return (this.threat + val) * mod;
         };
         this.getStatusResists = () => {
             let resists = {};
@@ -234,7 +240,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_e = base.abilities) !== null && _e !== void 0 ? _e : [];
+        this.abilities = (_f = base.abilities) !== null && _f !== void 0 ? _f : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {

@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -102,6 +102,7 @@ class PlayerCharacter extends Character {
         this.usedShrines = (_0 = base.usedShrines) !== null && _0 !== void 0 ? _0 : [];
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
         this.classes = (_2 = base.classes) !== null && _2 !== void 0 ? _2 : {};
+        this.oldCords = (_3 = base.oldCords) !== null && _3 !== void 0 ? _3 : this.cords;
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -208,6 +209,7 @@ class PlayerCharacter extends Character {
                 return;
             // handle death logic once we get there ;)
             this.isDead = true;
+            spawnFloatingText(this.cords, lang["player_death"], "red", 32, 1800, 100);
             displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
             const xpLoss = Math.floor(random(this.level.xp * 0.5, this.level.xp * 0.07));
             const goldLoss = Math.floor(random(this.gold * 0.6, this.gold * 0.1));
@@ -426,6 +428,7 @@ var player = new PlayerCharacter({
         new Ability(Object.assign({}, abilities.attack), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.summon_skeleton_warrior), { equippedSlot: 2 }), dummy),
     ],
     statModifiers: [
         {
@@ -479,13 +482,14 @@ var player = new PlayerCharacter({
     sp: 5,
     pp: 1,
     respawnPoint: { cords: { x: 4, y: 4 } },
-    usedShrines: []
+    usedShrines: [],
 });
+let combatSummons = [];
 var randomProperty = function (obj) {
     var keys = Object.keys(obj);
     return obj[keys[keys.length * Math.random() << 0]];
 };
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 10; i++) {
     player.inventory.push(Object.assign({}, randomProperty(items)));
 }
 //# sourceMappingURL=player.js.map

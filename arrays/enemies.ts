@@ -75,6 +75,7 @@ const enemies = {
     damages: {
       crush: 4
     },
+    threat: 10,
     alive: true,
     xp: 5,
     sprite: "greySlime",
@@ -132,6 +133,7 @@ const enemies = {
     damages: {
       fire: 6
     },
+    threat: 10,
     alive: true,
     xp: 10,
     sprite: "fireSlime",
@@ -189,6 +191,7 @@ const enemies = {
     damages: {
       lightning: 6
     },
+    threat: 10,
     alive: true,
     xp: 10,
     sprite: "shockSlime",
@@ -246,6 +249,7 @@ const enemies = {
     damages: {
       slash: 3
     },
+    threat: 20,
     alive: true,
     xp: 5,
     sprite: "skeletonWarrior",
@@ -313,6 +317,7 @@ const enemies = {
     damages: {
       pierce: 4
     },
+    threat: 20,
     alive: true,
     xp: 5,
     sprite: "skeletonArcher",
@@ -396,6 +401,7 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.blight, dummy),
     ],
+    threat: 20,
     statModifiers: [],
     statsPerLevel: {
       dex: 1,
@@ -445,6 +451,7 @@ const enemies = {
       magic: 4,
       dark: 3
     },
+    threat: 30,
     alive: true,
     xp: 50,
     sprite: "skeletonLich",
@@ -518,6 +525,7 @@ const enemies = {
       slash: 4,
       pierce: 3
     },
+    threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
     xp: 30,
@@ -588,6 +596,7 @@ const enemies = {
     damages: {
       pierce: 6
     },
+    threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
     xp: 30,
@@ -649,6 +658,7 @@ const enemies = {
       crush: 4,
       slash: 4
     },
+    threat: 30,
     alive: true,
     xp: 45,
     sprite: "wildTroll",
@@ -716,6 +726,7 @@ const enemies = {
       crush: 6,
       slash: 4
     },
+    threat: 35,
     alive: true,
     xp: 75,
     sprite: "wildStoneTroll",
@@ -782,6 +793,7 @@ const enemies = {
     damages: {
       crush: 11,
     },
+    threat: 35,
     alive: true,
     xp: 60,
     sprite: "troll",
@@ -848,6 +860,7 @@ const enemies = {
     damages: {
       crush: 13,
     },
+    threat: 40,
     type: "troll",
     race: "monster",
     alive: true,

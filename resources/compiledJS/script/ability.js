@@ -6,6 +6,8 @@ const straight_modifiers = [
     "base_heal",
     "damage_multiplier",
     "use_range",
+    "summon_level",
+    "summon_last",
     "aoe_size",
 ];
 const less_is_better = {
@@ -39,7 +41,7 @@ const possible_modifiers = [
 ];
 class Ability {
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
         // @ts-ignore
@@ -65,9 +67,14 @@ class Ability {
         this.requires_ranged_weapon = (_p = baseAbility.requires_ranged_weapon) !== null && _p !== void 0 ? _p : false;
         this.requires_concentration = (_q = baseAbility.requires_concentration) !== null && _q !== void 0 ? _q : false;
         this.recharge_only_in_combat = (_r = baseAbility.recharge_only_in_combat) !== null && _r !== void 0 ? _r : false;
-        this.aoe_size = (_s = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _s !== void 0 ? _s : 0;
-        this.aoe_effect = (_t = baseAbility.aoe_effect) !== null && _t !== void 0 ? _t : "";
-        this.self_target = (_u = baseAbility.self_target) !== null && _u !== void 0 ? _u : false;
+        this.summon_unit = baseAbility.summon_unit;
+        this.summon_level = (_s = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif)) !== null && _s !== void 0 ? _s : 0;
+        ;
+        this.summon_last = (_t = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _t !== void 0 ? _t : 0;
+        ;
+        this.aoe_size = (_u = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _u !== void 0 ? _u : 0;
+        this.aoe_effect = (_v = baseAbility.aoe_effect) !== null && _v !== void 0 ? _v : "";
+        this.self_target = (_w = baseAbility.self_target) !== null && _w !== void 0 ? _w : false;
         this.statusModifiers = statusModifiers;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;

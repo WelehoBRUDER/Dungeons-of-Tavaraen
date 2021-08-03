@@ -599,7 +599,7 @@ const perksArray = {
   }
 } as any;
 
-var lang = finnish;
+var lang = english;
 
 // This is an example of a passive ability
 // statModifiers: [

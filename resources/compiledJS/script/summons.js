@@ -1,7 +1,7 @@
 "use strict";
-class Enemy extends Character {
+class Summon extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
         this.sprite = base.sprite;
         this.aggroRange = (_a = base.aggroRange) !== null && _a !== void 0 ? _a : 5;
@@ -12,9 +12,6 @@ class Enemy extends Character {
         this.canFly = (_c = base.canFly) !== null && _c !== void 0 ? _c : false;
         this.alive = (_d = base.alive) !== null && _d !== void 0 ? _d : true;
         this.retreatLimit = (_e = base.retreatLimit) !== null && _e !== void 0 ? _e : 30;
-        this.spawnCords = Object.assign({}, base.spawnCords);
-        this.spawnMap = base.spawnMap;
-        this.loot = base.loot;
         this.shootsProjectile = base.shootsProjectile;
         this.hasBeenLeveled = (_f = base.hasBeenLeveled) !== null && _f !== void 0 ? _f : false;
         this.level = (_g = base.level) !== null && _g !== void 0 ? _g : 1;
@@ -29,7 +26,6 @@ class Enemy extends Character {
         this.targetInterval = 4;
         this.currentTargetInterval = (_j = base.currentTargetInterval) !== null && _j !== void 0 ? _j : 0;
         this.chosenTarget = (_k = base.chosenTarget) !== null && _k !== void 0 ? _k : null;
-        this.oldCords = (_l = Object.assign({}, base.oldCords)) !== null && _l !== void 0 ? _l : Object.assign({}, this.cords);
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -48,7 +44,7 @@ class Enemy extends Character {
             // Right now AI only randomly chooses an ability and checks if there's any point in using it,
             // Which is whether or not it'll actually hit the player.
             // This system already provides plenty of depht, but not truly intelligent foes.
-            var _a;
+            var _a, _b;
             // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
             // if(this.hpRemain() <= this.retreatLimit && !this.hasRetreated) {
@@ -68,69 +64,63 @@ class Enemy extends Character {
             //   if(this.retreatIndex + 1 == this.retreatPath.length) this.hasRetreated = true;
             //   updateEnemiesTurn();
             // }
-            if (this.currentTargetInterval <= 0 || this.chosenTarget == null || !this.chosenTarget.alive) {
-                // @ts-ignore
-                let targets = combatSummons.concat([player]);
+            if (this.currentTargetInterval <= 0 || !this.chosenTarget) {
+                let targets = maps[currentMap].enemies;
                 this.chosenTarget = threatDistance(targets, this);
                 this.currentTargetInterval = this.targetInterval;
             }
             else
                 this.currentTargetInterval--;
             // Choose a random ability
-            if (this.chosenTarget) {
-                let chosenAbility = this.chooseAbility();
-                // Check if it should be used
-                if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords))) || chosenAbility.self_target)) {
-                    if (chosenAbility.type == "charge") {
-                        moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
-                    }
-                    else if (chosenAbility.self_target) {
-                        buffOrHeal(this, chosenAbility);
-                    }
-                    else if (chosenAbility.shoots_projectile) {
-                        fireProjectile(this.cords, this.chosenTarget.cords, chosenAbility.shoots_projectile, chosenAbility, false, this);
-                    }
-                    else {
-                        regularAttack(this, this.chosenTarget, chosenAbility);
-                    }
+            let chosenAbility = this.chooseAbility();
+            // Check if it should be used
+            if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords))) || chosenAbility.self_target)) {
+                if (chosenAbility.type == "charge") {
+                    moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
                 }
-                // Check if enemy should shoot the this.chosenTarget
-                else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords)) {
-                    fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
+                else if (chosenAbility.self_target) {
+                    buffOrHeal(this, chosenAbility);
                 }
-                // Check if enemy should instead punch the this.chosenTarget (and is in range)
-                else if (!this.shootsProjectile && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
-                    // regular attack for now
-                    // @ts-ignore
-                    attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
-                    // @ts-ignore
-                    regularAttack(this, this.chosenTarget, this.abilities[0]);
-                    updateEnemiesTurn();
+                else if (chosenAbility.shoots_projectile) {
+                    fireProjectile(this.cords, this.chosenTarget.cords, chosenAbility.shoots_projectile, chosenAbility, false, this);
                 }
-                // If there's no offensive action to be taken, just move towards the this.chosenTarget.
                 else {
-                    var path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
-                    try {
-                        let willStack = false;
-                        if (path.length > 0) {
-                            combatSummons.forEach(summon => {
-                                if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
-                                    willStack = true;
-                                }
-                            });
-                        }
-                        this.oldCords.x = this.cords.x;
-                        this.oldCords.y = this.cords.y;
-                        if ((path[0].x != player.cords.x || path[0].y != player.cords.y) && !willStack) {
-                            this.cords.x = path[0].x;
-                            this.cords.y = path[0].y;
-                        }
-                        if (settings.log_enemy_movement)
-                            displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
-                    }
-                    catch (_b) { }
-                    updateEnemiesTurn();
+                    regularAttack(this, this.chosenTarget, chosenAbility);
                 }
+            }
+            // Check if enemy should shoot the this.chosenTarget
+            else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords)) {
+                fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
+            }
+            // Check if enemy should instead punch the this.chosenTarget (and is in range)
+            else if (!this.shootsProjectile && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
+                // regular attack for now
+                // @ts-ignore
+                attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
+                // @ts-ignore
+                regularAttack(this, this.chosenTarget, this.abilities[0]);
+                updateEnemiesTurn();
+            }
+            // If there's no offensive action to be taken, just move towards the this.chosenTarget.
+            else if (this.chosenTarget) {
+                var path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
+                try {
+                    this.cords.x = path[0].x;
+                    this.cords.y = path[0].y;
+                    if (settings.log_enemy_movement)
+                        displayText(`<c>lime<c>[ALLY] <c>yellow<c>${(_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
+                }
+                catch (_c) { }
+            }
+            else {
+                var path = generatePath(this.cords, player.cords, this.canFly);
+                try {
+                    this.cords.x = path[0].x;
+                    this.cords.y = path[0].y;
+                    if (settings.log_enemy_movement)
+                        displayText(`<c>lime<c>[ALLY] <c>yellow<c>${(_b = lang[this.id + "_name"]) !== null && _b !== void 0 ? _b : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
+                }
+                catch (_d) { }
             }
             setTimeout(modifyCanvas, 200);
         };
@@ -176,15 +166,8 @@ class Enemy extends Character {
             return { total: dmg, split: dmgs };
         };
         this.kill = () => {
-            player.level.xp += this.xp;
-            this.spawnMap = currentMap;
-            const index = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
-            lootEnemy(this);
-            fallenEnemies.push(Object.assign({}, this));
-            maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
-            player.lvlUp();
         };
         this.restore = () => {
             this.stats.hp = this.getStats().hpMax;
@@ -193,22 +176,13 @@ class Enemy extends Character {
             this.abilities.forEach(abi => {
                 abi.onCooldown = 0;
             });
-            this.cords.x = this.spawnCords.x;
-            this.cords.y = this.spawnCords.y;
         };
         this.aggro = () => {
             // @ts-ignore
-            let targets = combatSummons.concat([player]);
-            let target = threatDistance(targets, this);
-            // @ts-ignore
-            if (target) {
-                if (generatePath(this.cords, target.cords, this.canFly, true) <= this.aggroRange)
-                    return true;
-            }
+            if (generatePath(this.cords, player.cords, this.canFly, true) <= this.aggroRange)
+                return true;
             return false;
         };
     }
 }
-var fallenEnemies = [];
-var greySlime = new Enemy(enemies.greySlime);
-//# sourceMappingURL=enemy.js.map
+//# sourceMappingURL=summons.js.map

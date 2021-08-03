@@ -28,6 +28,12 @@ function enemyIndex(cords) {
             return i;
     }
 }
+function summonIndex(cords) {
+    for (let i = 0; i < combatSummons.length; i++) {
+        if (combatSummons[i].cords == cords)
+            return i;
+    }
+}
 function updateEnemiesTurn() {
     enemiesHadTurn++;
     if (enemiesHadTurn == maps[currentMap].enemies.length)
@@ -36,7 +42,11 @@ function updateEnemiesTurn() {
 function attackTarget(attacker, target, attackDir) {
     // @ts-ignore
     if (target.isFoe) {
-        const layer = document.querySelector(".playerSheet");
+        let layer = null;
+        if (attacker.id == "player")
+            layer = document.querySelector(".playerSheet");
+        else
+            layer = document.querySelector(".summonLayers").querySelector(`.summon${summonIndex(attacker.cords)}`);
         layer.style.animation = 'none';
         // @ts-ignore
         layer.offsetHeight; /* trigger reflow */
@@ -44,7 +54,7 @@ function attackTarget(attacker, target, attackDir) {
         layer.style.animation = null;
         layer.style.animationName = `attack${attackDir}`;
     }
-    else {
+    else if (attacker.isFoe) {
         // @ts-ignore
         const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
         layer.style.animation = 'none';
@@ -138,10 +148,12 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (!ability.damages) {
             // @ts-ignore
             let _damages = (_a = attacker.weapon) === null || _a === void 0 ? void 0 : _a.damages;
-            if (!_damages)
+            if (!_damages && attacker.id == "player")
                 _damages = attacker.fistDmg();
+            else if (!_damages)
+                _damages = attacker.damages;
             Object.entries(_damages).forEach((value) => {
-                var _a;
+                var _a, _b;
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
@@ -159,7 +171,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
                 // @ts-ignore
-                if (attacker.weapon.firesProjectile)
+                if ((_b = attacker.weapon) === null || _b === void 0 ? void 0 : _b.firesProjectile)
+                    bonus += num * attacker.getStats().dex / 50;
+                else if (attacker.firesProjectile)
                     bonus += num * attacker.getStats().dex / 50;
                 else
                     bonus += num * attacker.getStats().str / 50;
@@ -215,10 +229,16 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
         }
         else {
-            let actionText = (_c = lang[ability.id + "_action_desc_pl"]) !== null && _c !== void 0 ? _c : ability.action_desc_pl;
+            let ally = true;
+            let desc = "_action_desc";
+            if (attacker.id == "player") {
+                desc += "_pl";
+                ally = false;
+            }
+            let actionText = (_c = lang[ability.id + desc]) !== null && _c !== void 0 ? _c : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
-            displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
+            displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
             if (ability.cooldown)
                 ability.onCooldown = ability.cooldown;
             if (ability.mana_cost)
@@ -300,7 +320,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (target.stats.hp <= 0) {
             // @ts-ignore
             target.kill();
-            spawnFloatingText(target.cords, lang["player_death"], "red", 32, 1800, 100);
             setTimeout(modifyCanvas, 300);
         }
     }
@@ -350,7 +369,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         layer.style.animation = null;
         layer.style.animationName = `shakeObject`;
     }
-    else {
+    else if (attacker.isFoe) {
         const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
         layer.style.animation = 'none';
         // @ts-ignore
@@ -359,6 +378,17 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         layer.style.animation = null;
         layer.style.animationName = `shakeObject`;
     }
+    else {
+        const layer = document.querySelector(`.summon${combatSummons.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+        layer.style.animation = 'none';
+        // @ts-ignore
+        layer.offsetHeight; /* trigger reflow */
+        // @ts-ignore
+        layer.style.animation = null;
+        layer.style.animationName = `shakeObject`;
+    }
+    if (path.length * 50 > highestWaitTime)
+        highestWaitTime = path.length * 50;
     try {
         let collided = false;
         for (let step of path) {
@@ -366,24 +396,30 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
             const { screenX: x, screenY: y } = tileCordsToScreen(step);
             if (step.enemy) {
                 collided = true;
-                collision({ x: step.x, y: step.y }, ability, isPlayer, player);
+                collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
                 if (isPlayer)
                     setTimeout(advanceTurn, 50);
-                else
+                else if (attacker.isFoe)
                     updateEnemiesTurn();
                 break;
             }
-            if (step.player) {
+            if (step.player && attacker.isFoe) {
                 collided = true;
                 updateEnemiesTurn();
                 collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
+                break;
+            }
+            if (step.summon && attacker.isFoe) {
+                collided = true;
+                collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
+                updateEnemiesTurn();
                 break;
             }
             if (step.blocked) {
                 collided = true;
                 if (isPlayer)
                     setTimeout(advanceTurn, 50);
-                else
+                else if (attacker.isFoe)
                     updateEnemiesTurn();
                 break;
             }
@@ -406,18 +442,25 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     }
 }
 function collision(target, ability, isPlayer, attacker, theme) {
-    if (isPlayer) {
+    if (!attacker.isFoe || isPlayer) {
         let targetEnemy = maps[currentMap].enemies.find((en) => en.cords.x == target.x && en.cords.y == target.y);
+        if (!targetEnemy)
+            targetEnemy = maps[currentMap].enemies.find((en) => en.oldCords.x == target.x && en.oldCords.y == target.y);
         if (ability.aoe_size > 0) {
             aoeCollision(createAOEMap(targetEnemy === null || targetEnemy === void 0 ? void 0 : targetEnemy.cords, ability.aoe_size), attacker, ability);
         }
         else {
-            // @ts-ignore
-            regularAttack(player, targetEnemy, ability);
+            regularAttack(attacker, targetEnemy, ability);
         }
     }
-    else if (player.cords.x == target.x && player.cords.y == target.y) {
+    else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
+        console.log("attacked player");
         regularAttack(attacker, player, ability);
+    }
+    else if (attacker.isFoe) {
+        console.log("fucked up?");
+        let summonTarget = combatSummons.find(summon => summon.cords.x == target.x && summon.cords.y == target.y);
+        regularAttack(attacker, summonTarget, ability);
     }
 }
 function aoeCollision(area, attacker, ability) {
@@ -446,6 +489,34 @@ function aoeCollision(area, attacker, ability) {
     if (ability.mana_cost)
         attacker.stats.mp -= ability.mana_cost;
     updateUI();
+}
+function threatDistance(targets, from) {
+    let chosenTarget = null;
+    let highestThreat = -50;
+    targets.forEach(target => {
+        var _a;
+        let dist = +generatePath(from.cords, target.cords, from.canFly, true);
+        let threat = (target.getThreat() / dist) + random(18, -18);
+        if (threat > highestThreat && dist <= ((_a = from.aggroRange) !== null && _a !== void 0 ? _a : 14)) {
+            highestThreat = threat;
+            chosenTarget = target;
+        }
+    });
+    return chosenTarget;
+}
+function summonUnit(ability, cords) {
+    isSelected = false;
+    abiSelected = {};
+    if (ability.cooldown)
+        ability.onCooldown = ability.cooldown;
+    if (ability.mana_cost)
+        player.stats.mp -= ability.mana_cost;
+    // @ts-ignore
+    combatSummons.push(new Summon(Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
+    if (ability.status)
+        player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[ability.status]), { last: ability.summon_last - 1 }), s_def));
+    updateUI();
+    modifyCanvas();
 }
 function calcAngleDegrees(x, y) {
     return Math.atan2(y, x) * 180 / Math.PI;

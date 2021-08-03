@@ -280,6 +280,22 @@ const abilities = {
         self_target: true,
         ai_chance: 1
     },
+    summon_skeleton_warrior: {
+        id: "summon_skeleton_warrior",
+        name: "Summon Skeleton Warrior",
+        mana_cost: 20,
+        cooldown: 37,
+        type: "summon",
+        status: "summoned",
+        summon_unit: "skeletonWarriorSummon",
+        summon_level: 5,
+        summon_last: 26,
+        action_desc: "purifies theirself",
+        action_desc_pl: "you purify yourself",
+        icon: "resources/icons/summonSkelWarrior.png",
+        use_range: "8",
+        ai_chance: 1
+    },
     blight: {
         id: "blight",
         name: "Blight",

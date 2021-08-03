@@ -50,6 +50,7 @@ interface characterObject {
   isFoe?: boolean;
   kill?: Function;
   xp?: number;
+  threat: number;
   statModifiers?: any;
   statusEffects?: any;
   getStats?: Function;
@@ -64,6 +65,7 @@ interface characterObject {
   perks?: any;
   unarmedDamages?: any;
   fistDmg?: Function;
+  getThreat?: Function;
 }
 
 interface statusObject {
@@ -215,6 +217,7 @@ class Character {
   isFoe?: boolean;
   kill?: Function;
   xp?: number;
+  threat: number;
   statModifiers?: any;
   statusEffects?: any;
   getStats?: Function;
@@ -227,6 +230,7 @@ class Character {
   concentration?: Function;
   statRemaining?: Function;
   hpRemain?: Function;
+  getThreat?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -236,6 +240,7 @@ class Character {
     this.statusResistances = { ...base.statusResistances };
     this.statModifiers = base.statModifiers ?? [];
     this.statusEffects = base.statusEffects ?? [];
+    this.threat = base.threat ?? 25;
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
@@ -270,6 +275,12 @@ class Character {
       });
       return resists;
     };
+
+    this.getThreat = () => {
+      let threat = 0;
+      const { v: val, m: mod } = getModifiers(this, "threat");
+      return (this.threat + val) * mod;
+    }
 
     this.getStatusResists = () => {
       let resists = {} as statusResistances;

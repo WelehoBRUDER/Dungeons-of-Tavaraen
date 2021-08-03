@@ -177,6 +177,17 @@ const statusEffects = {
         },
         textIcon: icons.dazed,
         icon: "resources/icons/dazed.png"
+    },
+    summoned: {
+        id: "summoned",
+        name: "Summoned",
+        effects: {},
+        last: {
+            total: 25,
+            current: 25
+        },
+        textIcon: "resources/icons/portal.png",
+        icon: "resources/icons/portal.png"
     }
 };
 // this allows player to deal more damage to specific enemies.
