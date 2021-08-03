@@ -189,7 +189,7 @@ const maps = [
     enemies: [
       new Enemy({...enemies["norsemanHunter"], cords: { x: 61, y: 2 }, spawnCords: { x: 61, y: 2 }, level: 1 }), 
       new Enemy({...enemies["norsemanBerserk"], cords: { x: 55, y: 3 }, spawnCords: { x: 55, y: 3 }, level: 1 }), 
-      new Enemy({...enemies["skeletonLich"], cords: { x: 5, y: 5 }, spawnCords: { x: 5, y: 5 }, level: 1 }), 
+      new Enemy({...enemies["greySlime"], cords: { x: 5, y: 5 }, spawnCords: { x: 5, y: 5 }, level: 1 }), 
       new Enemy({...enemies["flamingSlime"], cords: { x: 13, y: 5 }, spawnCords: { x: 13, y: 5 }, level: 1 }), 
       new Enemy({...enemies["electricSlime"], cords: { x: 30, y: 5 }, spawnCords: { x: 30, y: 5 }, level: 1 }), 
       new Enemy({...enemies["troll"], cords: { x: 19, y: 8 }, spawnCords: { x: 19, y: 8 }, level: 1 }), 

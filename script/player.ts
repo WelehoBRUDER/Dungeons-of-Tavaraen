@@ -513,7 +513,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["fighterClass"]),
+    main: new combatClass(combatClasses["rogueClass"]),
     sub: null
   },
   sprite: ".player",

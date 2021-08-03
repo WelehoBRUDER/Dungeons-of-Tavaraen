@@ -249,6 +249,7 @@ class Enemy extends Character {
       const index: number = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
       displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
       lootEnemy(this);
+      this.chosenTarget = null;
       fallenEnemies.push({ ...this });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;
