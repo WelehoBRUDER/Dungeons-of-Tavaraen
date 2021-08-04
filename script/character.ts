@@ -62,10 +62,13 @@ interface characterObject {
   silenced?: Function;
   concentration?: Function;
   hpRemain?: Function;
+  mpRemain?: Function;
   perks?: any;
   unarmedDamages?: any;
   fistDmg?: Function;
   getThreat?: Function;
+  getHpMax?: Function;
+  getMpMax?: Function;
 }
 
 interface statusObject {
@@ -230,7 +233,10 @@ class Character {
   concentration?: Function;
   statRemaining?: Function;
   hpRemain?: Function;
+  mpRemain?: Function;
   getThreat?: Function;
+  getHpMax?: Function;
+  getMpMax?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -250,19 +256,38 @@ class Character {
         stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
       });
       // get hp
-      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
-      stats["hpMax"] = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + stats.vit * 5) * hp_mod);
+      // const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
+      // stats["hpMax"] = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + stats.vit * 5) * hp_mod);
       // get mp
-      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
-      stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
-      stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
-      stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
+      // const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
+      // stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
+      // stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
+      // stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
       const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage", withConditions);
       const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance", withConditions);
       stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
       stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
       return stats;
     };
+
+    this.getHpMax = (withConditions = true) => {
+      let hpMax: number = 0;
+      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
+      const { v: vitVal, m: vitMod } = getModifiers(this, "vit", withConditions);
+      let vit = Math.floor((this.stats.vit + vitVal)* vitMod);
+      hpMax = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + vit * 5) * hp_mod);
+      return hpMax < 0 ? 0 : hpMax;
+    }
+
+    this.getMpMax = (withConditions = true) => {
+      let mpMax: number = 0;
+      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
+      const { v: intVal, m: intMod } = getModifiers(this, "int", withConditions);
+      let int = Math.floor((this.stats.int + intVal)* intMod);
+      mpMax = Math.floor(((this.stats?.hpMax ?? 10) + mp_val + int * 2) * mp_mod);
+      return mpMax < 0 ? 0 : mpMax;
+    }
+
 
     this.getResists = () => {
       let resists = {} as resistances;
@@ -345,7 +370,11 @@ class Character {
     };
 
     this.hpRemain = () => {
-      return (this.stats.hp / this.getStats(false).hpMax) * 100;
+      return (this.stats.hp / this.getHpMax(false)) * 100;
+    };
+
+    this.mpRemain = () => {
+      return (this.stats.mp / this.getMpMax(false)) * 100;
     };
 
     this.updateAbilities = () => {

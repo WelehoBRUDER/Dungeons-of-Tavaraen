@@ -393,8 +393,8 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
 }
 
 
-tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>player.stats.mp<v>§/§<v>player.getStats().mpMax<v>§");
-tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>player.stats.hp<v>§/§<v>player.getStats().hpMax<v>§");
+tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>player.stats.mp<v>§/§<v>player.getMpMax()<v>§");
+tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>player.stats.hp<v>§/§<v>player.getHpMax()<v>§");
 tooltip(document.querySelector(".xpBar"), "<f>20px<f>Experience: <v>player.level.xp<v>§/§<v>player.level.xpNeed<v>§");
 
 function updateUI() {
@@ -404,9 +404,9 @@ function updateUI() {
   const hpImg = <HTMLImageElement>ui.querySelector(".PlayerHpFill");
   const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
   const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
-  hpText.textContent = `${player.stats.hp} / ${player.getStats().hpMax}`;
-  hpImg.style.setProperty("--value", (100 - player.statRemaining("hp")) + "%");
-  mpImg.style.setProperty("--value", (100 - player.statRemaining("mp")) + "%");
+  hpText.textContent = `${player.stats.hp} / ${player.getHpMax()}`;
+  hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
+  mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
   generateHotbar();
   generateEffects();
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
@@ -475,8 +475,8 @@ window.addEventListener("keyup", e => {
       player.cords.x = player.respawnPoint.cords.x;
       player.cords.y = player.respawnPoint.cords.y;
       player.isDead = false;
-      player.stats.hp = player.getStats().hpMax;
-      player.stats.mp = player.getStats().mpMax;
+      player.stats.hp = player.getHpMax();
+      player.stats.mp = player.getMpMax();
       state.inCombat = false;
       isSelected = false;
       abiSelected = {};
@@ -537,7 +537,7 @@ function renderCharacter() {
   bg.style.transform = "scale(1)";
   bg.textContent = "";
   const pc = renderPlayerPortrait();
-  const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>Level ${player.level.level} ${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getStats().hpMax} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getStats().mpMax} MP`);
+  const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>Level ${player.level.level} ${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getHpMax()} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getMpMax()} MP`);
   var statsText = `<bcss>position: absolute; left: 24px; top: 298px;<bcss><f>32px<f>Core stats§\n\n`;
   statsText += `<cl>strSpan<cl><i>${icons.str_icon}<i><f>24px<f>Strength: ${player.getStats().str}\n§<cl>dexSpan<cl><i>${icons.dex_icon}<i><f>24px<f>Dexterity: ${player.getStats().dex}\n§<cl>vitSpan<cl><i>${icons.vit_icon}<i><f>24px<f>Vitality: ${player.getStats().vit}\n§<cl>intSpan<cl><i>${icons.int_icon}<i><f>24px<f>Intelligence: ${player.getStats().int}\n§<cl>cunSpan<cl><i>${icons.cun_icon}<i><f>24px<f>Cunning: ${player.getStats().cun}`;
   const stats = textSyntax(statsText);

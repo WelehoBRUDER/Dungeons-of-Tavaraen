@@ -103,8 +103,8 @@ class Enemy extends Character {
       Object.entries(this.damages).forEach((dmg: any) => {
         this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 17)) + 1;
       });
-      this["stats"]["hp"] = this.getStats().hpMax;
-      this["stats"]["mp"] = this.getStats().mpMax;
+      this["stats"]["hp"] = this.getHpMax();
+      this["stats"]["mp"] = this.getMpMax();
       this.hasBeenLeveled = true;
     }
 
@@ -257,8 +257,8 @@ class Enemy extends Character {
     };
 
     this.restore = () => {
-      this.stats.hp = this.getStats().hpMax;
-      this.stats.mp = this.getStats().mpMax;
+      this.stats.hp = this.getHpMax();
+      this.stats.mp = this.getMpMax();
       this.statusEffects = [];
       this.abilities.forEach(abi => {
         abi.onCooldown = 0;

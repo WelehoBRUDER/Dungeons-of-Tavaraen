@@ -139,7 +139,7 @@ function renderMap(map) {
             const hpbar = document.querySelector(".hpBar");
             const hpborder = document.querySelector(".hpBorder");
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.statRemaining("hp") * spriteSize / 100, spriteSize);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
             /* Render enemy on top of hp bar */
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
@@ -178,7 +178,7 @@ function renderMap(map) {
             const hpbar = document.querySelector(".hpBarAlly");
             const hpborder = document.querySelector(".hpBorder");
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.statRemaining("hp") * spriteSize / 100, spriteSize);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
             /* Render enemy on top of hp bar */
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
@@ -766,9 +766,15 @@ function renderPlayerModel(size, canvas, ctx) {
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
+    var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
+    if (distanceOnly) {
+        let newDistance = distance;
+        if ((Math.abs(start.x - end.x) == Math.abs(start.y - end.y)) && distance < 3)
+            newDistance = Math.round(newDistance / 2);
+        return newDistance;
+    }
     if (end.x < 0 || end.x > maps[currentMap].base[0].length - 1 || end.y < 0 || end.y > maps[currentMap].base.length - 1)
         return;
-    var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
     var fieldMap = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
         if (tiles[xv].isWall || (tiles[xv].isLedge && !canFly))
             return 1;
@@ -791,14 +797,8 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         }
         ;
     } });
-    if (distanceOnly) {
-        let newDistance = distance;
-        if ((Math.abs(start.x - end.x) == Math.abs(start.y - end.y)) && distance < 3)
-            newDistance = Math.round(newDistance / 2);
-        return newDistance;
-    }
     fieldMap[end.y][end.x] = 5;
-    main: for (let i = 5; i < 500; i++) {
+    main: for (let i = 5; i < 250; i++) {
         for (let y = 0; y < maps[currentMap].base.length; y++) {
             for (let x = 0; x < maps[currentMap].base[y].length; x++) {
                 if (fieldMap[y][x] !== 0)
@@ -901,6 +901,8 @@ function arrowHitsTarget(start, end, isSummon = false) {
 function generateArrowPath(start, end, distanceOnly = false) {
     const distX = Math.abs(start.x - end.x) + 1;
     const distY = Math.abs(start.y - end.y) + 1;
+    if (distanceOnly)
+        return distX + distY;
     const ratioY = distY / distX;
     const ratioX = distX / distY;
     const negativeY = start.y - end.y > 0;
@@ -915,12 +917,10 @@ function generateArrowPath(start, end, distanceOnly = false) {
         player: false,
         summon: false
     };
-    if (distanceOnly)
-        return distX + distY;
     const finalPath = [Object.assign({}, arrow)];
     var rounderX = negativeX ? Math.ceil : Math.floor;
     var rounderY = negativeY ? Math.ceil : Math.floor;
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 250; i++) {
         arrow.x += ratioX2;
         arrow.y += ratioY2;
         var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
@@ -1014,17 +1014,17 @@ async function advanceTurn() {
         turnOver = true;
     if (state.inCombat) {
         // Combat regen = 50% of regen
-        if (Math.floor(player.hpRegen() * 0.5) > 0 && player.stats.hp < player.getStats().hpMax) {
+        if (Math.floor(player.hpRegen() * 0.5) > 0 && player.stats.hp < player.getHpMax()) {
             player.stats.hp += Math.floor(player.hpRegen() * 0.5);
         }
     }
     else {
-        if (player.hpRegen() > 0 && player.stats.hp < player.getStats().hpMax) {
+        if (player.hpRegen() > 0 && player.stats.hp < player.getHpMax()) {
             player.stats.hp += player.hpRegen();
         }
     }
-    if (player.stats.hp > player.getStats().hpMax) {
-        player.stats.hp = player.getStats().hpMax;
+    if (player.stats.hp > player.getHpMax()) {
+        player.stats.hp = player.getHpMax();
     }
 }
 /* Show enemy stats when hovering */
@@ -1035,14 +1035,15 @@ function hoverEnemyShow(enemy) {
     const name = document.createElement("p");
     name.classList.add("enemyName");
     name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
+    const enemyStats = enemy.getStats();
     var mainStatText = "";
-    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getStats().hpMax}\n`;
-    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getStats().mpMax}\n`;
-    mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemy.getStats().str}\n`;
-    mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemy.getStats().dex}\n`;
-    mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemy.getStats().vit}\n`;
-    mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemy.getStats().int}\n`;
-    mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemy.getStats().cun}\n`;
+    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getHpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getMpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemyStats.str}\n`;
+    mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
+    mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
+    mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemyStats.int}\n`;
+    mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
     let enTotalDmg = enemy.trueDamage();
     mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
     Object.entries(enTotalDmg.split).forEach((res) => {
@@ -1073,8 +1074,8 @@ function activateShrine() {
     maps[currentMap].shrines.forEach(shrine => {
         if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
             if (!(player.usedShrines.find((used) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
-                player.stats.hp = player.getStats().hpMax;
-                player.stats.mp = player.getStats().mpMax;
+                player.stats.hp = player.getHpMax();
+                player.stats.mp = player.getMpMax();
                 player.respawnPoint.cords = shrine.cords;
                 player.usedShrines.push({ cords: shrine.cords, map: currentMap });
                 spawnFloatingText(player.cords, lang["shrine_activated"], "lime", 30, 500, 75);
