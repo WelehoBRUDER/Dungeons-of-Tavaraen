@@ -550,8 +550,6 @@ document.addEventListener("keyup", (keyPress) => {
       player.effects();
       advanceTurn();
       updateUI();
-      if (Math.floor(player.hpRegen() * 0.5) > 0) player.stats.hp += Math.floor(player.hpRegen() * 0.5);
-      if (Math.floor(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
     }
     else {
       let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
@@ -566,10 +564,7 @@ document.addEventListener("keyup", (keyPress) => {
       }
     }
   }
-});
-
-document.addEventListener("keyup", (kbe: KeyboardEvent) => {
-  if (kbe.key == settings.hotkey_interact) {
+  else if (keyPress.key == settings.hotkey_interact) {
     activateShrine();
     pickLoot();
     maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
@@ -981,6 +976,9 @@ async function advanceTurn() {
   enemiesHadTurn = 0;
   var map = maps[currentMap];
   hideMapHover();
+  const pRegen = player.getRegen();
+  player.stats.hp += pRegen["hp"];
+  player.stats.mp += pRegen["mp"];
   combatSummons.forEach(summon => {
     if(!summon.alive || player.isDead) return;
     summon.lastsFor--;
@@ -1006,18 +1004,11 @@ async function advanceTurn() {
   });
   setTimeout(modifyCanvas, 500);
   if (map.enemies.length == 0) turnOver = true;
-  if (state.inCombat) {
-    // Combat regen = 50% of regen
-    if (Math.floor(player.hpRegen() * 0.5) > 0 && player.stats.hp < player.getHpMax()) {
-      player.stats.hp += Math.floor(player.hpRegen() * 0.5);
-    }
-  } else {
-    if (player.hpRegen() > 0 && player.stats.hp < player.getHpMax()) {
-      player.stats.hp += player.hpRegen();
-    }
-  }
   if (player.stats.hp > player.getHpMax()) {
     player.stats.hp = player.getHpMax();
+  }
+  if (player.stats.mp > player.getMpMax()) {
+    player.stats.mp = player.getMpMax();
   }
 }
 

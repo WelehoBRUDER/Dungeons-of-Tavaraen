@@ -52,7 +52,7 @@ const open_windows = {
 }
 
 // Hotkeys
-window.addEventListener("keyup", e => {
+document.addEventListener("keyup", e => {
   if (e.key == "r" && !saveGamesOpen) {
     if (player.isDead) {
       player.cords.x = player.respawnPoint.cords.x;
@@ -65,7 +65,8 @@ window.addEventListener("keyup", e => {
       abiSelected = {};
       enemiesHadTurn = 0;
       turnOver = true;
-      player.abilities.forEach(abi=>abi.cooldown = 0);
+      player.updateAbilities();
+      player.abilities.forEach(abi=>abi.onCooldown = 0);
       player.statusEffects = [];
       updateUI();
       modifyCanvas();
@@ -128,14 +129,15 @@ function generateHotbar() {
     frame.addEventListener("mouseup", e => rightClickHotBar(e, i));
     frame.append(bg, hotKey);
     hotbar.append(frame);
-    player.updateAbilities();
     const total = player.abilities.concat(player.inventory);
     total?.map((abi: ability) => {
       if (abi.equippedSlot == i && abi.id != "attack") {
         const abiDiv = document.createElement("div");
         const abiImg = document.createElement("img");
         abiDiv.classList.add("ability");
-        if (abiSelected == abi && isSelected) frame.style.border = "4px solid gold";
+        if (abiSelected == abi && isSelected) {
+          frame.style.border = "4px solid gold";
+        } 
         abiImg.src = abi.icon;
         if (!abi.icon) {
           abiImg.src = abi.img;
@@ -467,8 +469,8 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
 }
 
 
-tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>player.stats.mp<v>§/§<v>player.getMpMax()<v>§");
-tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>player.stats.hp<v>§/§<v>player.getHpMax()<v>§");
+tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>Math.round(player.stats.mp)<v>§/§<v>player.getMpMax()<v>§");
+tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>Math.round(player.stats.hp)<v>§/§<v>player.getHpMax()<v>§");
 tooltip(document.querySelector(".xpBar"), "<f>20px<f>Experience: <v>player.level.xp<v>§/§<v>player.level.xpNeed<v>§");
 
 function updateUI() {
@@ -478,7 +480,7 @@ function updateUI() {
   const hpImg = <HTMLImageElement>ui.querySelector(".PlayerHpFill");
   const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
   const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
-  hpText.textContent = `${player.stats.hp} / ${player.getHpMax()}`;
+  hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
   hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
   mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
   generateHotbar();

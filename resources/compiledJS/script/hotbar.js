@@ -38,7 +38,7 @@ const open_windows = {
     perk: false
 };
 // Hotkeys
-window.addEventListener("keyup", e => {
+document.addEventListener("keyup", e => {
     if (e.key == "r" && !saveGamesOpen) {
         if (player.isDead) {
             player.cords.x = player.respawnPoint.cords.x;
@@ -51,7 +51,8 @@ window.addEventListener("keyup", e => {
             abiSelected = {};
             enemiesHadTurn = 0;
             turnOver = true;
-            player.abilities.forEach(abi => abi.cooldown = 0);
+            player.updateAbilities();
+            player.abilities.forEach(abi => abi.onCooldown = 0);
             player.statusEffects = [];
             updateUI();
             modifyCanvas();
@@ -129,7 +130,6 @@ function generateHotbar() {
         frame.addEventListener("mouseup", e => rightClickHotBar(e, i));
         frame.append(bg, hotKey);
         hotbar.append(frame);
-        player.updateAbilities();
         const total = player.abilities.concat(player.inventory);
         total === null || total === void 0 ? void 0 : total.map((abi) => {
             var _a;
@@ -137,8 +137,9 @@ function generateHotbar() {
                 const abiDiv = document.createElement("div");
                 const abiImg = document.createElement("img");
                 abiDiv.classList.add("ability");
-                if (abiSelected == abi && isSelected)
+                if (abiSelected == abi && isSelected) {
                     frame.style.border = "4px solid gold";
+                }
                 abiImg.src = abi.icon;
                 if (!abi.icon) {
                     abiImg.src = abi.img;
@@ -530,8 +531,8 @@ function effectSyntax(effect, embed = false, effectId = "") {
         text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
     return text;
 }
-tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>player.stats.mp<v>§/§<v>player.getMpMax()<v>§");
-tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>player.stats.hp<v>§/§<v>player.getHpMax()<v>§");
+tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>Math.round(player.stats.mp)<v>§/§<v>player.getMpMax()<v>§");
+tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>Math.round(player.stats.hp)<v>§/§<v>player.getHpMax()<v>§");
 tooltip(document.querySelector(".xpBar"), "<f>20px<f>Experience: <v>player.level.xp<v>§/§<v>player.level.xpNeed<v>§");
 function updateUI() {
     const ui = document.querySelector(".playerUI");
@@ -541,7 +542,7 @@ function updateUI() {
     const hpImg = ui.querySelector(".PlayerHpFill");
     const mpImg = ui.querySelector(".PlayerMpFill");
     const xp = document.querySelector(".xpBar .barFill");
-    hpText.textContent = `${player.stats.hp} / ${player.getHpMax()}`;
+    hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
     hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
     mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
     generateHotbar();

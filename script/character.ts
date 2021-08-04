@@ -50,6 +50,7 @@ interface characterObject {
   isFoe?: boolean;
   kill?: Function;
   xp?: number;
+  regen?: any;
   threat: number;
   statModifiers?: any;
   statusEffects?: any;
@@ -69,6 +70,7 @@ interface characterObject {
   getThreat?: Function;
   getHpMax?: Function;
   getMpMax?: Function;
+  getRegen?: Function;
 }
 
 interface statusObject {
@@ -231,6 +233,7 @@ class Character {
   effects?: Function;
   updateAbilities?: Function;
   aura?: string;
+  regen?: any;
   silenced?: Function;
   concentration?: Function;
   statRemaining?: Function;
@@ -239,6 +242,7 @@ class Character {
   getThreat?: Function;
   getHpMax?: Function;
   getMpMax?: Function;
+  getRegen?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -249,6 +253,7 @@ class Character {
     this.statModifiers = base.statModifiers ?? [];
     this.statusEffects = base.statusEffects ?? [];
     this.threat = base.threat ?? 25;
+    this.regen = base.regen;
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
@@ -301,6 +306,14 @@ class Character {
       return (this.threat + val) * mod;
     }
 
+    this.getRegen = () => {
+      const { v: val, m: mod } = getModifiers(this, "regen");
+      let reg = { hp: 0, mp: 0 };
+      reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.005 + val) * mod;
+      reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.005 + val) * mod;
+      return reg;
+    }
+ 
     this.getStatusResists = () => {
       let resists = {} as statusResistances;
       Object.keys(this.statusResistances).forEach((res: string) => {

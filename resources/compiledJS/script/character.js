@@ -160,6 +160,7 @@ class Character {
         this.statModifiers = (_c = base.statModifiers) !== null && _c !== void 0 ? _c : [];
         this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
         this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
+        this.regen = base.regen;
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
@@ -206,6 +207,13 @@ class Character {
             let threat = 0;
             const { v: val, m: mod } = getModifiers(this, "threat");
             return (this.threat + val) * mod;
+        };
+        this.getRegen = () => {
+            const { v: val, m: mod } = getModifiers(this, "regen");
+            let reg = { hp: 0, mp: 0 };
+            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.005 + val) * mod;
+            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.005 + val) * mod;
+            return reg;
         };
         this.getStatusResists = () => {
             let resists = {};

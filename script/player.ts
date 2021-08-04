@@ -578,6 +578,10 @@ var player = new PlayerCharacter({
       }
     }
   ],
+  regen: {
+    hp: 0,
+    mp: 0,
+  },
   unarmed_damages: { crush: 5 },
   statusEffects: [],
   inventory: [],
