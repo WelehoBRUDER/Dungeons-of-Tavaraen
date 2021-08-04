@@ -301,7 +301,6 @@ const grade_vals = {
 function gradeSort(a, b, string, reverse = false) {
     var nameA = parseInt(grade_vals[a[string]]);
     var nameB = parseInt(grade_vals[b[string]]);
-    console.log(nameA > nameB);
     if (reverse) {
         if (+nameA > +nameB) {
             return -1;

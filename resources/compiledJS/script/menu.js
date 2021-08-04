@@ -40,6 +40,10 @@ const menuSettings = [
         type: "toggle",
     },
     {
+        id: "setting_toggle_minimap",
+        type: "toggle",
+    },
+    {
         id: "setting_hotkey_inv",
         type: "hotkey",
     },

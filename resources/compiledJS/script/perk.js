@@ -65,7 +65,7 @@ class perk {
         };
     }
 }
-function formPerks() {
+function formPerks(e = null) {
     perks = [];
     const bg = document.querySelector(".playerLeveling .perks");
     const staticBg = document.querySelector(".playerLeveling .perksStatic");
@@ -179,6 +179,7 @@ function upStat(stat) {
     }
 }
 function openLevelingScreen() {
+    open_windows.perk = true;
     hideHover();
     windowOpen = true;
     const lvling = document.querySelector(".playerLeveling");
@@ -251,15 +252,17 @@ function changeZoomLevelBG({ deltaY }) {
     else {
         currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) + 1] || zoomLevelsBG[zoomLevelsBG.length - 1];
     }
-    formPerks();
+    formPerks(eAction);
 }
 let mouseX = 0;
 let mouseY = 0;
 let bgPosX = 0;
 let bgPosY = 0;
+let eAction = null;
 function action1(e) {
     mouseX = e.x;
     mouseY = e.y;
+    eAction = e;
     bgPosX = background.scrollLeft;
     bgPosY = background.scrollTop;
 }

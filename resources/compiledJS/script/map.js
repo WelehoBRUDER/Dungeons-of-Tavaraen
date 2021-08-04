@@ -10,6 +10,9 @@ const enemyLayers = document.querySelector(".canvasLayers .enemyLayers");
 const summonLayers = document.querySelector(".canvasLayers .summonLayers");
 const projectileLayers = document.querySelector(".canvasLayers .projectileLayers");
 const staticHover = document.querySelector(".mapHover");
+const minimapContainer = document.querySelector(".rightTop .miniMap");
+const minimapCanvas = minimapContainer.querySelector(".minimapLayer");
+const minimapCtx = minimapCanvas.getContext("2d");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
@@ -57,6 +60,69 @@ function spriteVariables() {
     const mapOffsetStartX = player.cords.x - Math.floor(spriteLimitX / 2);
     const mapOffsetStartY = player.cords.y - Math.floor(spriteLimitY / 2);
     return { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY };
+}
+function renderMinimap(map) {
+    var _a, _b, _c, _d;
+    minimapCanvas.width = minimapCanvas.width;
+    if (!settings.toggle_minimap) {
+        minimapContainer.style.display = "none";
+        return;
+    }
+    else {
+        minimapContainer.style.display = "block";
+    }
+    const miniSpriteSize = 12;
+    // for (let y = 0; y < map.base.length; y++) {
+    //   for (let x = 0; x < map.base[y].length; x++) {
+    //     const imgId = map.base?.[y]?.[x];
+    //     const img = <HTMLImageElement>document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+    //     const clutterId = map.clutter?.[y]?.[x];
+    //     if (img) {
+    //       minimapCtx.drawImage(img, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
+    //       //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+    //     }
+    //     // @ts-expect-error
+    //     if (clutterId > 0) {
+    //       const clutterImg = <HTMLImageElement>document.querySelector(`.sprites .clutter${clutterId}`);
+    //       if (clutterImg) {
+    //         minimapCtx.drawImage(clutterImg, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
+    //       }
+    //     }
+    //   }
+    // }
+    let spriteLimitX = Math.ceil(minimapCanvas.width / miniSpriteSize);
+    let spriteLimitY = Math.ceil(minimapCanvas.height / miniSpriteSize);
+    if (spriteLimitX % 2 == 0)
+        spriteLimitX++;
+    if (spriteLimitY % 2 == 0)
+        spriteLimitY++;
+    const mapOffsetX = (spriteLimitX * miniSpriteSize - minimapCanvas.width) / 2;
+    const mapOffsetY = (spriteLimitY * miniSpriteSize - minimapCanvas.height) / 2;
+    const mapOffsetStartX = player.cords.x - Math.floor(spriteLimitX / 2);
+    const mapOffsetStartY = player.cords.y - Math.floor(spriteLimitY / 2);
+    /* Render the base layer */
+    for (let y = 0; y < spriteLimitY; y++) {
+        for (let x = 0; x < spriteLimitX; x++) {
+            const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x];
+            const img = document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+            const pImg = document.querySelector(".sprites .pMinimap");
+            const clutterId = (_d = (_c = map.clutter) === null || _c === void 0 ? void 0 : _c[mapOffsetStartY + y]) === null || _d === void 0 ? void 0 : _d[mapOffsetStartX + x];
+            if (img) {
+                minimapCtx.drawImage(img, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+                //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            }
+            // @ts-expect-error
+            if (clutterId > 0) {
+                const clutterImg = document.querySelector(`.sprites .clutter${clutterId}`);
+                if (clutterImg) {
+                    minimapCtx.drawImage(clutterImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+                }
+            }
+            if (player.cords.x == x + mapOffsetStartX && player.cords.y == y + mapOffsetStartY) {
+                minimapCtx.drawImage(pImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+            }
+        }
+    }
 }
 function renderMap(map) {
     var _a, _b, _c, _d, _e;
@@ -419,7 +485,6 @@ function clickMap(event) {
     if (abiSelected.type == "movement") {
         player.stats.mp -= abiSelected.mana_cost;
         abiSelected.onCooldown = abiSelected.cooldown;
-        console.log(statusEffects[abiSelected.status]);
         if (abiSelected.status)
             player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[abiSelected.status]), s_def));
         movePlayer({ x: x, y: y }, true, abiSelected.use_range);
@@ -798,7 +863,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         ;
     } });
     fieldMap[end.y][end.x] = 5;
-    main: for (let i = 5; i < 250; i++) {
+    main: for (let i = 5; i < 100; i++) {
         for (let y = 0; y < maps[currentMap].base.length; y++) {
             for (let x = 0; x < maps[currentMap].base[y].length; x++) {
                 if (fieldMap[y][x] !== 0)
@@ -920,7 +985,7 @@ function generateArrowPath(start, end, distanceOnly = false) {
     const finalPath = [Object.assign({}, arrow)];
     var rounderX = negativeX ? Math.ceil : Math.floor;
     var rounderY = negativeY ? Math.ceil : Math.floor;
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 100; i++) {
         arrow.x += ratioX2;
         arrow.y += ratioY2;
         var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
@@ -967,6 +1032,8 @@ function modifyCanvas() {
     }
     // @ts-ignore
     renderMap(maps[currentMap]);
+    // @ts-ignore
+    renderMinimap(maps[currentMap]);
 }
 var highestWaitTime = 0;
 /* Move to state file later */

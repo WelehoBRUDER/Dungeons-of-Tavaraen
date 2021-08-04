@@ -412,11 +412,9 @@ function collision(target: tileObject, ability: ability, isPlayer: boolean, atta
     }
   }
   else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
-    console.log("attacked player");
     regularAttack(attacker, player, ability);
   }
   else if(attacker.isFoe) {
-    console.log("fucked up?");
     let summonTarget = combatSummons.find(summon=>summon.cords.x == target.x && summon.cords.y == target.y);
     regularAttack(attacker, summonTarget, ability);
   }

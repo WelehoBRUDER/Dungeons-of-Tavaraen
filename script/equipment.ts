@@ -431,6 +431,7 @@ const equipSlots = [
 document.querySelector<HTMLDivElement>(".playerInventory").querySelectorAll<HTMLDivElement>(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 
 function renderInventory() {
+  open_windows.inventory = true;
   updatePlayerInventoryIndexes();
   hideHover();
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
@@ -465,6 +466,7 @@ function renderInventory() {
 }
 
 function closeInventory() {
+  open_windows.inventory = false;
   hideHover();
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
@@ -476,6 +478,7 @@ function closeInventory() {
 }
 
 function closeLeveling() {
+  open_windows.perk = false;
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
   lvling.style.transform = "scale(0)";
@@ -578,7 +581,7 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemRarity.textContent = lang[itm.grade].toLowerCase();
     itemType.textContent = lang[itm.type];
     itemWeight.textContent = itm.weight;
-    itemWorth.textContent = itm.fullPrice();
+    itemWorth.textContent = itm.fullPrice() ?? itm.price;
     if (context == "PLAYER_INVENTORY") {
       itemObject.addEventListener("mousedown", e => player.equip(e, itm));
       itemObject.addEventListener("dblclick", e => player.drop(itm));

@@ -8,6 +8,9 @@ const enemyLayers = <HTMLDivElement>document.querySelector(".canvasLayers .enemy
 const summonLayers = <HTMLDivElement>document.querySelector(".canvasLayers .summonLayers");
 const projectileLayers = <HTMLDivElement>document.querySelector(".canvasLayers .projectileLayers");
 const staticHover = <HTMLDivElement>document.querySelector(".mapHover");
+const minimapContainer = <HTMLDivElement>document.querySelector(".rightTop .miniMap");
+const minimapCanvas = <HTMLCanvasElement>minimapContainer.querySelector(".minimapLayer");
+const minimapCtx = minimapCanvas.getContext("2d");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
@@ -77,6 +80,68 @@ function spriteVariables() {
   return { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY };
 }
 
+function renderMinimap(map: mapObject) {
+  minimapCanvas.width = minimapCanvas.width;
+  if(!settings.toggle_minimap) {
+    minimapContainer.style.display = "none";
+    return;
+  }
+  else {
+    minimapContainer.style.display = "block";
+  }
+  const miniSpriteSize = 12;
+  // for (let y = 0; y < map.base.length; y++) {
+  //   for (let x = 0; x < map.base[y].length; x++) {
+  //     const imgId = map.base?.[y]?.[x];
+  //     const img = <HTMLImageElement>document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+  //     const clutterId = map.clutter?.[y]?.[x];
+  //     if (img) {
+  //       minimapCtx.drawImage(img, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
+  //       //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+  //     }
+  //     // @ts-expect-error
+  //     if (clutterId > 0) {
+  //       const clutterImg = <HTMLImageElement>document.querySelector(`.sprites .clutter${clutterId}`);
+  //       if (clutterImg) {
+  //         minimapCtx.drawImage(clutterImg, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
+  //       }
+  //     }
+  //   }
+  // }
+  let spriteLimitX = Math.ceil(minimapCanvas.width / miniSpriteSize);
+  let spriteLimitY = Math.ceil(minimapCanvas.height / miniSpriteSize);
+  if (spriteLimitX % 2 == 0) spriteLimitX++;
+  if (spriteLimitY % 2 == 0) spriteLimitY++;
+  const mapOffsetX = (spriteLimitX * miniSpriteSize - minimapCanvas.width) / 2;
+  const mapOffsetY = (spriteLimitY * miniSpriteSize - minimapCanvas.height) / 2;
+  const mapOffsetStartX = player.cords.x - Math.floor(spriteLimitX / 2);
+  const mapOffsetStartY = player.cords.y - Math.floor(spriteLimitY / 2);
+
+  /* Render the base layer */
+  for (let y = 0; y < spriteLimitY; y++) {
+    for (let x = 0; x < spriteLimitX; x++) {
+      const imgId = map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
+      const img = <HTMLImageElement>document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+      const pImg = <HTMLImageElement>document.querySelector(".sprites .pMinimap");
+      const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
+      if (img) {
+        minimapCtx.drawImage(img, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+        //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+      }
+      // @ts-expect-error
+      if (clutterId > 0) {
+        const clutterImg = <HTMLImageElement>document.querySelector(`.sprites .clutter${clutterId}`);
+        if (clutterImg) {
+          minimapCtx.drawImage(clutterImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+        }
+      }
+      if(player.cords.x == x + mapOffsetStartX && player.cords.y == y + mapOffsetStartY) {
+        minimapCtx.drawImage(pImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+      }
+    }
+  }
+}
+
 function renderMap(map: mapObject) {
 
   baseCanvas.width = baseCanvas.width; // Clears the canvas
@@ -109,7 +174,6 @@ function renderMap(map: mapObject) {
           baseCtx.drawImage(clutterImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
         }
       }
-
       if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
         baseCtx.drawImage(fog, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
       }
@@ -422,7 +486,6 @@ function clickMap(event: MouseEvent) {
   if (abiSelected.type == "movement") {
     player.stats.mp -= abiSelected.mana_cost;
     abiSelected.onCooldown = abiSelected.cooldown;
-    console.log(statusEffects[abiSelected.status]);
     if(abiSelected.status) player.statusEffects.push(new statEffect({...statusEffects[abiSelected.status]}, s_def));
     movePlayer({ x: x, y: y }, true, abiSelected.use_range);
   }
@@ -758,7 +821,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   } 
   maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
   fieldMap[end.y][end.x] = 5;
-  main: for (let i = 5; i < 250; i++) {
+  main: for (let i = 5; i < 100; i++) {
     for (let y = 0; y < maps[currentMap].base.length; y++) {
       for (let x = 0; x < maps[currentMap].base[y].length; x++) {
         if (fieldMap[y][x] !== 0) continue;
@@ -869,7 +932,7 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
   const finalPath: Array<any> = [{ ...arrow }];
   var rounderX = negativeX ? Math.ceil : Math.floor;
   var rounderY = negativeY ? Math.ceil : Math.floor;
-  for (let i = 0; i < 250; i++) {
+  for (let i = 0; i < 100; i++) {
     arrow.x += ratioX2;
     arrow.y += ratioY2;
     var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
@@ -903,6 +966,8 @@ function modifyCanvas() {
   }
   // @ts-ignore
   renderMap(maps[currentMap]);
+    // @ts-ignore
+  renderMinimap(maps[currentMap]);
 }
 
 var highestWaitTime = 0;

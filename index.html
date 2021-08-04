@@ -26,18 +26,23 @@
       <div class="barFill"></div>
     </div>
     <div class="hotbar"></div>
-    <div class="playerButtons">
-      <div class="screenButton invScrb" onclick="renderInventory()">
-        <img src="resources/icons/inventory.png" alt="">
+    <div class="rightTop">
+      <div class="miniMap">
+        <canvas class="minimapLayer" width="360" height="240"></canvas>
       </div>
-      <div class="screenButton chaScrb" onclick="renderCharacter()">
-        <img src="resources/icons/character.png" alt="">
-      </div>
-      <div class="screenButton perScrb" onclick="openLevelingScreen()">
-        <img src="resources/icons/perks.png" alt="">
-      </div>
-      <div class="screenButton escScrb" onclick="handleEscape()">
-        <img src="resources/icons/menu.png" alt="">
+      <div class="playerButtons">
+        <div class="screenButton invScrb" onclick="renderInventory()">
+          <img src="resources/icons/inventory.png" alt="">
+        </div>
+        <div class="screenButton chaScrb" onclick="renderCharacter()">
+          <img src="resources/icons/character.png" alt="">
+        </div>
+        <div class="screenButton perScrb" onclick="openLevelingScreen()">
+          <img src="resources/icons/perks.png" alt="">
+        </div>
+        <div class="screenButton escScrb" onclick="handleEscape()">
+          <img src="resources/icons/menu.png" alt="">
+        </div>
       </div>
     </div>
     <div class="playerUI">
@@ -216,6 +221,7 @@
   <img src="resources/tiles/enemies/healthBorder.png" alt="" onload="imgLoaded()" class="hpBorder sprite">
 
    <!-- Map Tiles  -->
+   <img src="resources/tiles/player/p_minimap.png" alt="" onload="imgLoaded()" class="pMinimap sprite">
    <img src="resources/tiles/hovering.png" alt="" onload="imgLoaded()" class="hoverTile sprite">
    <img src="resources/tiles/void.png" alt="" onload="imgLoaded()" class="tileVOID sprite">
    <img src="resources/tiles/fog_of_war_2.png" alt="" onload="imgLoaded()" class="tileNoVision sprite">

@@ -330,6 +330,7 @@ const equipSlots = [
 ];
 document.querySelector(".playerInventory").querySelectorAll(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 function renderInventory() {
+    open_windows.inventory = true;
     updatePlayerInventoryIndexes();
     hideHover();
     const inventory = document.querySelector(".playerInventory");
@@ -363,6 +364,7 @@ function renderInventory() {
     invOpen = true;
 }
 function closeInventory() {
+    open_windows.inventory = false;
     hideHover();
     document.querySelector(".worldText").style.opacity = "1";
     const inventory = document.querySelector(".playerInventory");
@@ -373,6 +375,7 @@ function closeInventory() {
     invOpen = false;
 }
 function closeLeveling() {
+    open_windows.perk = false;
     document.querySelector(".worldText").style.opacity = "1";
     const lvling = document.querySelector(".playerLeveling");
     lvling.style.transform = "scale(0)";
@@ -455,6 +458,7 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
     const items = [...inventory];
     items.forEach((itm) => {
+        var _a;
         const itemObject = document.createElement("div");
         const itemImage = document.createElement("img");
         const itemName = document.createElement("p");
@@ -479,7 +483,7 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
         itemRarity.textContent = lang[itm.grade].toLowerCase();
         itemType.textContent = lang[itm.type];
         itemWeight.textContent = itm.weight;
-        itemWorth.textContent = itm.fullPrice();
+        itemWorth.textContent = (_a = itm.fullPrice()) !== null && _a !== void 0 ? _a : itm.price;
         if (context == "PLAYER_INVENTORY") {
             itemObject.addEventListener("mousedown", e => player.equip(e, itm));
             itemObject.addEventListener("dblclick", e => player.drop(itm));

@@ -22,7 +22,7 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   background-size: cover;
   background-position: center;
 
@@ -90,7 +90,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     bottom: 100px;
-    background:rgb(10, 10, 10);
+    background: rgb(10, 10, 10);
     box-shadow: inset 0px 0px 8px 6px rgb(21, 21, 21);
     border: 4px solid rgb(0, 0, 0);
     border-radius: 8px;
@@ -200,7 +200,6 @@ body {
       left: 45px;
       top: 40px;
       z-index: 2;
-      
 
       img {
         width: 192px;
@@ -237,7 +236,6 @@ body {
       position: absolute;
       left: 8px;
       top: 8px;
-      
 
       img {
         width: 128px;
@@ -342,55 +340,70 @@ body {
       position: absolute;
     }
 
-    .weapon, .weaponBg {
+    .weapon,
+    .weaponBg {
       left: 3%;
       top: 21%;
     }
 
-    .offhand, .offhandBg {
+    .offhand,
+    .offhandBg {
       left: 3%;
       top: 38.5%;
     }
 
-    .gloves, .glovesBg {
+    .gloves,
+    .glovesBg {
       left: 3%;
       top: 56%;
     }
 
-    .helmet, .helmetBg {
+    .helmet,
+    .helmetBg {
       left: 26.5%;
       top: 21%;
     }
 
-    .chest, .chestBg {
+    .chest,
+    .chestBg {
       left: 26.5%;
       top: 38.5%;
     }
 
-    .boots, .bootsBg {
+    .boots,
+    .bootsBg {
       left: 26.5%;
       top: 56%;
     }
 
-    .legs, .legsBg {
+    .legs,
+    .legsBg {
       left: 15.5%;
       top: 67.5%;
     }
 
-    .artifact1, .artifact2, .artifact3, .artifact1Bg, .artifact2Bg, .artifact3Bg {
+    .artifact1,
+    .artifact2,
+    .artifact3,
+    .artifact1Bg,
+    .artifact2Bg,
+    .artifact3Bg {
       top: 3%;
     }
 
-    .artifact1, .artifact1Bg {
+    .artifact1,
+    .artifact1Bg {
       left: 5%;
     }
 
-    .artifact2, .artifact2Bg {
+    .artifact2,
+    .artifact2Bg {
       left: 15.5%;
       top: 82.5%;
     }
 
-    .artifact3, .artifact3Bg {
+    .artifact3,
+    .artifact3Bg {
       left: 24%;
     }
 
@@ -423,7 +436,6 @@ body {
     }
   }
 
-
   .playerWindow {
     transition: 0.275s;
     transition-timing-function: ease-in;
@@ -449,7 +461,7 @@ body {
         margin: 0;
         color: white;
         font-size: 22px;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
         line-height: 24px;
       }
@@ -517,7 +529,7 @@ body {
         margin: 0;
         color: white;
         font-size: 22px;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
         line-height: 16px;
       }
@@ -558,7 +570,7 @@ body {
         margin: 0;
         color: inherit;
         font-size: inherit;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
         line-height: inherit;
       }
@@ -595,7 +607,7 @@ body {
       span {
         color: white;
         font-size: 15px;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         white-space: normal;
         text-shadow: 0px 0px 8px black;
         margin: 0;
@@ -618,7 +630,6 @@ body {
     padding: 0;
     overflow: auto;
 
-      
     .itemListTop {
       width: 100%;
       height: 36px;
@@ -678,7 +689,7 @@ body {
       margin: 0;
       padding: 0;
       overflow: auto;
-  
+
       .itemListObject {
         transition: 0.07s;
         transition-timing-function: ease-in;
@@ -692,7 +703,7 @@ body {
         user-select: none;
         overflow: hidden;
         white-space: nowrap;
-  
+
         p {
           transition: 0.07s;
           transition-timing-function: ease-in;
@@ -705,7 +716,7 @@ body {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-  
+
         img {
           transition: 0.07s;
           transition-timing-function: ease-in;
@@ -718,12 +729,12 @@ body {
           border-radius: 8px;
           max-height: 36px;
         }
-  
+
         .itemName {
           width: calc(52% - 36px);
           padding-left: 1%;
         }
-  
+
         .itemType {
           width: 17%;
           padding-left: 1%;
@@ -733,7 +744,7 @@ body {
           width: 13%;
           padding-left: 1%;
         }
-  
+
         .itemWeight {
           width: 7%;
           padding-left: 2%;
@@ -744,9 +755,9 @@ body {
           padding-left: 2%;
         }
       }
-  
+
       .itemListObject:hover {
-        *{
+        * {
           background: rgba(192, 192, 43, 0.66);
         }
       }
@@ -850,37 +861,60 @@ body {
     }
   }
 
-  .playerButtons {
+  .rightTop {
     position: absolute;
-    right: 25px;
-    top: 25px;
-    display: flex;
-    width: auto;
-    height: 75px;
+    top: 10px;
+    right: 10px;
 
-    .screenButton {
-      transition: 0.11s;
-      width: 60px;
-      height: 60px;
-      background:rgba(75, 20, 20, .95);
-      border-radius: 50%;
-      margin: 8px;
-      box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, .95), 0 0 6px 4px rgb(39, 39, 39);
-      border: 3px solid rgb(59, 59, 59);
+    .miniMap {
+      position: relative;
+      background: black;
+      border: 4px solid gold;
+      pointer-events: none;
+      width: 360px;
+      height: 240px;
+      display: block;
+      top: 10px;
+      right: 10px;
 
-      img {
-        width: 100%;
-        height: 100%;
-        filter: drop-shadow(0 0 6px rgb(14, 13, 13));
+      .minimapLayer {
+        position: absolute;
+        left: 0;
+        top: 0;
       }
     }
 
-    .screenButton:hover {
-      background:rgba(122, 33, 33, 0.95);
-      box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, .95), 0 0 10px 8px rgb(39, 39, 39);
+    .playerButtons {
+      position: relative;
+      display: flex;
+      width: auto;
+      height: 75px;
+      top: 10px;
+      left: 20px;
+
+      .screenButton {
+        transition: 0.11s;
+        width: 60px;
+        height: 60px;
+        background: rgba(75, 20, 20, 0.95);
+        border-radius: 50%;
+        margin: 8px;
+        box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 6px 4px rgb(39, 39, 39);
+        border: 3px solid rgb(59, 59, 59);
+
+        img {
+          width: 100%;
+          height: 100%;
+          filter: drop-shadow(0 0 6px rgb(14, 13, 13));
+        }
+      }
+
+      .screenButton:hover {
+        background: rgba(122, 33, 33, 0.95);
+        box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 10px 8px rgb(39, 39, 39);
+      }
     }
   }
-  
 
   @media only screen and (max-width: 1500px) {
     .hotbar {
@@ -913,7 +947,9 @@ body {
       height: 41px;
     }
 
-    .playerInventory, .playerWindow, .playerImprovement {
+    .playerInventory,
+    .playerWindow,
+    .playerImprovement {
       width: 1610px;
       height: 920px;
       margin-left: -805px;

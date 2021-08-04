@@ -276,7 +276,8 @@ const finnish = {
   menu_new_game: "Uusi Peli",
   menu_load_game: "Lataa Peli",
 
-  setting_log_enemy_movement: "Kirjaa vihollisten sijainnit",
+  setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
+  setting_toggle_minimap: "Minikartta pois/päällä",
   setting_game_language: "Pelin kieli",
   setting_hotkey_inv: "Avaa inventaario",
   setting_hotkey_char: "Avaa hahmo ruutu",
@@ -687,7 +688,8 @@ const english = {
   menu_new_game: "New Game",
   menu_load_game: "Load Game",
 
-  setting_log_enemy_movement: "Log enemy movement",
+  setting_log_enemy_movement: "Log character movement",
+  setting_toggle_minimap: "Toggle minimap",
   setting_game_language: "Game language",
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",

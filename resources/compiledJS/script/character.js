@@ -123,27 +123,29 @@ function getModifiers(char, stat, withConditions = true) {
             }
         });
     }
-    equipmentSlots.forEach((slot) => {
-        var _a, _b;
-        if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
-            Object.entries(char[slot].stats).forEach((eff) => {
-                if (eff[0].startsWith(stat)) {
-                    if (eff[0] == stat + "P" && eff[1] < 0)
-                        modif *= (1 + eff[1] / 100);
-                    else if (eff[0] == stat + "P")
-                        modif += (eff[1] / 100);
-                    else if (eff[0] == stat + "V")
-                        val += eff[1];
-                }
-            });
-        }
-        if (stat.includes("Resist")) {
-            if ((_b = char[slot]) === null || _b === void 0 ? void 0 : _b.resistances) {
-                if (char[slot].resistances[stat.replace("Resist", '')])
-                    val += char[slot].resistances[stat.replace("Resist", '')];
+    if (char.id === "player") {
+        equipmentSlots.forEach((slot) => {
+            var _a, _b;
+            if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
+                Object.entries(char[slot].stats).forEach((eff) => {
+                    if (eff[0].startsWith(stat)) {
+                        if (eff[0] == stat + "P" && eff[1] < 0)
+                            modif *= (1 + eff[1] / 100);
+                        else if (eff[0] == stat + "P")
+                            modif += (eff[1] / 100);
+                        else if (eff[0] == stat + "V")
+                            val += eff[1];
+                    }
+                });
             }
-        }
-    });
+            if (stat.includes("Resist")) {
+                if ((_b = char[slot]) === null || _b === void 0 ? void 0 : _b.resistances) {
+                    if (char[slot].resistances[stat.replace("Resist", '')])
+                        val += char[slot].resistances[stat.replace("Resist", '')];
+                }
+            }
+        });
+    }
     return { v: val, m: modif };
 }
 class Character {
@@ -165,14 +167,6 @@ class Character {
                 stats[stat] = Math.floor((this.stats[stat] + val) * mod);
                 stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
             });
-            // get hp
-            // const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
-            // stats["hpMax"] = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + stats.vit * 5) * hp_mod);
-            // get mp
-            // const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
-            // stats["mpMax"] = Math.floor(((this.stats?.mpMax ?? 10) + mp_val + stats.int * 2) * mp_mod);
-            // stats["mpMax"] < 0 ? stats["mpMax"] = 0 : "";
-            // stats["hpMax"] < 0 ? stats["hpMax"] = 0 : "";
             const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage", withConditions);
             const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance", withConditions);
             stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));

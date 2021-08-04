@@ -9,6 +9,7 @@ let menuOpen = false;
 class gameSettings {
     constructor(base) {
         this.log_enemy_movement = base.log_enemy_movement || false;
+        this.toggle_minimap = base.toggle_minimap || true;
         this.hotkey_inv = base.hotkey_inv || "i";
         this.hotkey_char = base.hotkey_char || "c";
         this.hotkey_perk = base.hotkey_perk || "p";
@@ -21,6 +22,7 @@ class gameSettings {
 }
 let settings = new gameSettings({
     log_enemy_movement: false,
+    toggle_minimap: true,
     hotkey_inv: "i",
     hotkey_char: "c",
     hotkey_perk: "p",
@@ -29,6 +31,90 @@ let settings = new gameSettings({
     hotkey_move_left: "a",
     hotkey_move_right: "d",
     hotkey_interact: " ",
+});
+const open_windows = {
+    inventory: false,
+    character: false,
+    perk: false
+};
+// Hotkeys
+window.addEventListener("keyup", e => {
+    if (e.key == "r" && !saveGamesOpen) {
+        if (player.isDead) {
+            player.cords.x = player.respawnPoint.cords.x;
+            player.cords.y = player.respawnPoint.cords.y;
+            player.isDead = false;
+            player.stats.hp = player.getHpMax();
+            player.stats.mp = player.getMpMax();
+            state.inCombat = false;
+            isSelected = false;
+            abiSelected = {};
+            enemiesHadTurn = 0;
+            turnOver = true;
+            player.abilities.forEach(abi => abi.cooldown = 0);
+            player.statusEffects = [];
+            updateUI();
+            modifyCanvas();
+            displayText("HERÄSIT KUOLLEISTA!");
+            spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+        }
+    }
+    else if (e.key == "Escape") {
+        handleEscape();
+    }
+    if (player.isDead || saveGamesOpen)
+        return;
+    const number = parseInt(e.keyCode) - 48;
+    if (e.key == settings.hotkey_inv && !menuOpen) {
+        if (!open_windows.inventory)
+            renderInventory();
+        else
+            closeInventory();
+    }
+    else if (e.key == settings.hotkey_char && !menuOpen) {
+        if (!open_windows.character)
+            renderCharacter();
+        else
+            closeCharacter();
+    }
+    else if (e.key == settings.hotkey_perk && !menuOpen) {
+        if (!open_windows.perk)
+            openLevelingScreen();
+        else
+            closeLeveling();
+    }
+    else if (invOpen || windowOpen || menuOpen)
+        return;
+    else if (number > -1 && e.shiftKey) {
+        let abi = player.abilities.find(a => a.equippedSlot == number + 9);
+        if (number == 0)
+            abi = player.abilities.find(a => a.equippedSlot == 19);
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number + 9);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 19);
+            if (itm)
+                useConsumable(itm);
+            return;
+        }
+        else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
+            useAbi(abi);
+    }
+    else if (number > -1 && !e.shiftKey) {
+        let abi = player.abilities.find(a => a.equippedSlot == number - 1);
+        if (number == 0)
+            abi = player.abilities.find(a => a.equippedSlot == 9);
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number - 1);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 9);
+            if (itm)
+                useConsumable(itm);
+            return;
+        }
+        if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
+            useAbi(abi);
+    }
 });
 function generateHotbar() {
     const hotbar = document.querySelector(".hotbar");
@@ -43,6 +129,7 @@ function generateHotbar() {
         frame.addEventListener("mouseup", e => rightClickHotBar(e, i));
         frame.append(bg, hotKey);
         hotbar.append(frame);
+        player.updateAbilities();
         const total = player.abilities.concat(player.inventory);
         total === null || total === void 0 ? void 0 : total.map((abi) => {
             var _a;
@@ -513,76 +600,8 @@ function handleEscape() {
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
 }
-window.addEventListener("keyup", e => {
-    if (e.key == "r" && !saveGamesOpen) {
-        if (player.isDead) {
-            player.cords.x = player.respawnPoint.cords.x;
-            player.cords.y = player.respawnPoint.cords.y;
-            player.isDead = false;
-            player.stats.hp = player.getHpMax();
-            player.stats.mp = player.getMpMax();
-            state.inCombat = false;
-            isSelected = false;
-            abiSelected = {};
-            enemiesHadTurn = 0;
-            turnOver = true;
-            player.abilities.forEach(abi => abi.cooldown = 0);
-            player.statusEffects = [];
-            updateUI();
-            modifyCanvas();
-            displayText("HERÄSIT KUOLLEISTA!");
-            spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
-        }
-    }
-    else if (e.key == "Escape") {
-        handleEscape();
-    }
-    if (player.isDead || saveGamesOpen)
-        return;
-    const number = parseInt(e.keyCode) - 48;
-    if (e.key == settings.hotkey_inv && !menuOpen) {
-        renderInventory();
-    }
-    else if (e.key == settings.hotkey_char && !menuOpen) {
-        renderCharacter();
-    }
-    else if (e.key == settings.hotkey_perk && !menuOpen) {
-        openLevelingScreen();
-    }
-    else if (invOpen || windowOpen || menuOpen)
-        return;
-    else if (number > -1 && e.shiftKey) {
-        let abi = player.abilities.find(a => a.equippedSlot == number + 9);
-        if (number == 0)
-            abi = player.abilities.find(a => a.equippedSlot == 19);
-        if (!abi) {
-            let itm = player.inventory.find(a => a.equippedSlot == number + 9);
-            if (number == 0)
-                itm = player.inventory.find(a => a.equippedSlot == 19);
-            if (itm)
-                useConsumable(itm);
-            return;
-        }
-        else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
-            useAbi(abi);
-    }
-    else if (number > -1 && !e.shiftKey) {
-        let abi = player.abilities.find(a => a.equippedSlot == number - 1);
-        if (number == 0)
-            abi = player.abilities.find(a => a.equippedSlot == 9);
-        if (!abi) {
-            let itm = player.inventory.find(a => a.equippedSlot == number - 1);
-            if (number == 0)
-                itm = player.inventory.find(a => a.equippedSlot == 9);
-            if (itm)
-                useConsumable(itm);
-            return;
-        }
-        if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
-            useAbi(abi);
-    }
-});
 function renderCharacter() {
+    open_windows.character = true;
     hideHover();
     windowOpen = true;
     const bg = document.querySelector(".playerWindow");
@@ -620,6 +639,7 @@ function renderCharacter() {
     tooltip(bg.querySelector(".cunSpan"), `<i>${icons.cun_icon}<i>Cunning increases crit chance by 0.25% \nand crit dmg by 2% per level.`);
 }
 function closeCharacter() {
+    open_windows.character = false;
     hideHover();
     document.querySelector(".worldText").style.opacity = "1";
     const bg = document.querySelector(".playerWindow");
