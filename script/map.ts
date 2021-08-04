@@ -228,10 +228,11 @@ function renderMap(map: mapObject) {
       let statCount = 0;
       enemy.statusEffects.forEach((effect: statEffect) => {
         if (statCount > 4) return;
-        const img = new Image(32, 32);
+        let img = new Image(32, 32);
         img.src = effect.icon;
         img.addEventListener("load", e => {
           ctx?.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+          img = null;
           statCount++;
         });
       });
@@ -265,10 +266,11 @@ function renderMap(map: mapObject) {
       let statCount = 0;
       enemy.statusEffects.forEach((effect: statEffect) => {
         if (statCount > 4) return;
-        const img = new Image(32, 32);
+        let img = new Image(32, 32);
         img.src = effect.icon;
         img.addEventListener("load", e => {
           ctx?.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+          img = null;
           statCount++;
         });
       });
@@ -282,11 +284,12 @@ function renderMap(map: mapObject) {
     if (item.map != currentMap) return;
     var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
     var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    const itemImg = new Image();
+    let itemImg = new Image();
     itemImg.src = item.itm.img;
     itemImg.onload = function () {
       if (sightMap[item.cords.y]?.[item.cords.x] == "x") {
         mapDataCtx?.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+        itemImg = null;
       }
     };
   });
@@ -883,6 +886,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
     if (fieldMap[data.y][data.x] == v) cords.push({ ...data });
     if (data.y == end.y && data.x == end.x) break siksakki;
   }
+  fieldMap = null;
   return cords;
 }
 

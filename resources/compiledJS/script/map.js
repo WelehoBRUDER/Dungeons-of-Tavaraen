@@ -213,10 +213,11 @@ function renderMap(map) {
             enemy.statusEffects.forEach((effect) => {
                 if (statCount > 4)
                     return;
-                const img = new Image(32, 32);
+                let img = new Image(32, 32);
                 img.src = effect.icon;
                 img.addEventListener("load", e => {
                     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+                    img = null;
                     statCount++;
                 });
             });
@@ -252,10 +253,11 @@ function renderMap(map) {
             enemy.statusEffects.forEach((effect) => {
                 if (statCount > 4)
                     return;
-                const img = new Image(32, 32);
+                let img = new Image(32, 32);
                 img.src = effect.icon;
                 img.addEventListener("load", e => {
                     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+                    img = null;
                     statCount++;
                 });
             });
@@ -269,12 +271,13 @@ function renderMap(map) {
             return;
         var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        const itemImg = new Image();
+        let itemImg = new Image();
         itemImg.src = item.itm.img;
         itemImg.onload = function () {
             var _a;
             if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
                 mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+                itemImg = null;
             }
         };
     });
@@ -936,6 +939,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         if (data.y == end.y && data.x == end.x)
             break siksakki;
     }
+    fieldMap = null;
     return cords;
 }
 function arrowHitsTarget(start, end, isSummon = false) {
