@@ -13,6 +13,7 @@ interface ability {
   shoots_projectile?: string;
   stat_bonus?: string;
   status?: string;
+  status_power?: number;
   line?: string;
   icon: string;
   use_range: string;
@@ -92,6 +93,7 @@ class Ability {
   shoots_projectile?: string;
   stat_bonus?: string;
   status?: string;
+  status_power?: number;
   line?: string;
   icon: string;
   use_range: string;
@@ -128,6 +130,7 @@ class Ability {
     this.base_heal = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif) ?? 0;
     this.stat_bonus = baseAbility.stat_bonus ?? "";
     this.status = baseAbility.status ?? "";
+    this.status_power = baseAbility.status_power ?? 0;
     this.shoots_projectile = baseAbility.shoots_projectile ?? "";
     this.icon = baseAbility.icon;
     this.line = baseAbility.line ?? "";

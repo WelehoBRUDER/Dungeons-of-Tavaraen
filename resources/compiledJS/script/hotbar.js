@@ -549,10 +549,12 @@ function updateUI() {
     generateEffects();
     xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
+const worldTextContainer = document.querySelector(".worldText");
 function displayText(txt) {
-    var _a, _b;
-    (_a = document.querySelector(".worldText")) === null || _a === void 0 ? void 0 : _a.append(textSyntax(txt));
-    (_b = document.querySelector(".worldText")) === null || _b === void 0 ? void 0 : _b.scrollBy(0, 1000);
+    worldTextContainer.append(textSyntax(txt));
+    worldTextContainer.scrollBy(0, 1000);
+    if (worldTextContainer.childNodes.length > 49)
+        worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
 }
 function tooltip(element, text) {
     element.addEventListener("mouseover", e => { showHover(e, text); });

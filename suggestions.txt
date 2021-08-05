@@ -5,3 +5,5 @@ uus layer ja siihen opacity animaatio, 100-200ms?
 tehty, mutta fade in ei mahdollinen.
 
 perk treen pitäis keskittää hiireen zoomatessa
+
+vertaa kamoja equipattuun ja näytä statsit punasella tai vihreellä

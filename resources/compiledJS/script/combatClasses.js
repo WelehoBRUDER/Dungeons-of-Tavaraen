@@ -5,10 +5,20 @@ const combatClasses = {
         statBonuses: {
             vitV: 3,
             strV: 2,
-            hpMaxV: 10,
+            resistAllV: 2,
             attack_damage_multiplier: 5
         },
         perkTree: "fighter"
+    },
+    barbarianClass: {
+        id: "barbarianClass",
+        statBonuses: {
+            vitV: 1,
+            strV: 4,
+            hpMaxV: 10,
+            attack_damage_multiplier: 8,
+        },
+        perkTree: "barbarian"
     },
     sorcererClass: {
         id: "sorcererClass",
@@ -27,7 +37,8 @@ const combatClasses = {
             dexV: 2,
             hpMaxV: 5,
             mpMaxV: 2,
-            critChanceP: 2.5
+            critChanceP: 5,
+            critDamageP: 12
         },
         perkTree: "rogue"
     }

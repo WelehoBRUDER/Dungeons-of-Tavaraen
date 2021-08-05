@@ -150,7 +150,7 @@ function getModifiers(char, stat, withConditions = true) {
 }
 class Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
@@ -161,6 +161,7 @@ class Character {
         this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
         this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
         this.regen = base.regen;
+        this.hit = (_f = Object.assign({}, base.hit)) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
@@ -192,6 +193,18 @@ class Character {
             mpMax = Math.floor((((_b = (_a = this.stats) === null || _a === void 0 ? void 0 : _a.hpMax) !== null && _b !== void 0 ? _b : 10) + mp_val + int * 2) * mp_mod);
             return mpMax < 0 ? 0 : mpMax;
         };
+        this.getHitchance = () => {
+            var _a, _b;
+            const chances = {
+                chance: 0,
+                evasion: 0
+            };
+            const { v: hitVal, m: hitMod } = getModifiers(this, "hitChance");
+            const { v: evaVal, m: evaMod } = getModifiers(this, "evasion");
+            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + hitVal) * hitMod);
+            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + evaVal) * evaMod);
+            return chances;
+        };
         this.getResists = () => {
             let resists = {};
             Object.keys(this.resistances).forEach((res) => {
@@ -211,8 +224,8 @@ class Character {
         this.getRegen = () => {
             const { v: val, m: mod } = getModifiers(this, "regen");
             let reg = { hp: 0, mp: 0 };
-            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.005 + val) * mod;
-            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.005 + val) * mod;
+            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.0025 + val) * mod;
+            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.0025 + val) * mod;
             return reg;
         };
         this.getStatusResists = () => {
@@ -259,7 +272,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_f = base.abilities) !== null && _f !== void 0 ? _f : [];
+        this.abilities = (_g = base.abilities) !== null && _g !== void 0 ? _g : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {

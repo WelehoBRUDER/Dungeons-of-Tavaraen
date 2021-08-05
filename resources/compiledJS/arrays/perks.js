@@ -332,6 +332,48 @@ const perksArray = {
             },
         }
     },
+    barbarian: {
+        id: "barbarian_perks",
+        name: "Barbarian",
+        perks: {
+            thrill_of_battle: {
+                id: "thrill_of_battle",
+                name: "Thrill of Battle",
+                desc: "",
+                effects: {
+                    strV: 1,
+                    evasionV: 8
+                },
+                statModifiers: [
+                    {
+                        id: "blood_rage_1",
+                        conditions: {
+                            hp_less_than: 50,
+                            hp_more_than: 20
+                        },
+                        effects: {
+                            damageP: 10,
+                            strV: 2,
+                        }
+                    },
+                    {
+                        id: "blood_rage_2",
+                        conditions: {
+                            hp_less_than: 20
+                        },
+                        effects: {
+                            damageP: 15,
+                            strV: 5,
+                            attack_damage_multiplierP: 10,
+                        }
+                    }
+                ],
+                tree: "barbarian",
+                pos: { x: 7.5, y: 1 },
+                icon: "resources/icons/skull.png"
+            },
+        }
+    },
     rogue: {
         id: "rogue_perks",
         name: "Rogue",

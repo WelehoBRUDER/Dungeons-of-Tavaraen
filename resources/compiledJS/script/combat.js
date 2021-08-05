@@ -144,6 +144,30 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     const attackerStats = attacker.getStats();
     const targetResists = target.getResists();
     const critRolled = attackerStats.critChance >= random(100, 0);
+    const hitChance = attacker.getHitchance().chance;
+    const evasion = target.getHitchance().evasion;
+    const evade = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
+    if (ability.status) {
+        const _Effect = new statEffect(Object.assign({}, statusEffects[ability.status]), s_def);
+        const resist = target.getStatusResists()[_Effect.type];
+        const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
+        if (!evade && !resisted) {
+            let missing = true;
+            target.statusEffects.forEach((effect) => {
+                if (effect.id == ability.status) {
+                    effect.last.current += _Effect.last.total;
+                    missing = false;
+                    return;
+                }
+            });
+            if (missing) {
+                target.statusEffects.push(Object.assign({}, _Effect));
+            }
+        }
+        else {
+            spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
+        }
+    }
     // @ts-ignore
     if (target.isFoe) {
         let dmg = 0;
@@ -204,9 +228,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
-        if (ability.status) {
-            target.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.status]), s_def));
-        }
         setTimeout((paskaFixi) => {
             if (!enemyIndex(target.cords))
                 return;
@@ -219,11 +240,15 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             layer.style.animationName = `charHurt`;
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
+        if (evade)
+            dmg = 0;
         target.stats.hp -= dmg;
-        if (critRolled)
+        if (critRolled && !evade)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-        else
+        else if (!evade)
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+        else if (evade)
+            spawnFloatingText(target.cords, "EVADE!", "white", 36);
         if (isAoe) {
             let actionText = (_b = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
@@ -293,9 +318,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
-        if (ability.status) {
-            target.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.status]), s_def));
-        }
         const layer = document.querySelector(".playerSheet");
         setTimeout((paskaFixi) => {
             layer.style.animation = 'none';
@@ -306,11 +328,15 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             layer.style.animationName = `screenHurt`;
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
+        if (evade)
+            dmg = 0;
         target.stats.hp -= dmg;
-        if (critRolled)
+        if (critRolled && !evade)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-        else
+        else if (!evade)
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+        else if (evade)
+            spawnFloatingText(target.cords, "EVADE!", "white", 36);
         let actionText = (_d = lang[ability.id + "_action_desc"]) !== null && _d !== void 0 ? _d : "[TEXT NOT FOUND]";
         actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
         actionText = actionText.replace("[DMG]", `${dmg}`);

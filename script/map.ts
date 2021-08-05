@@ -293,7 +293,6 @@ function renderMap(map: mapObject) {
       }
     };
   });
-
   /* Render Player */
   renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }

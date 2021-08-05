@@ -21,38 +21,36 @@ const raceEffects = {
     elf: {
         modifiers: {
             strV: -3,
-            vitV: -3,
-            dexV: 5,
-            intV: 5,
-            cunV: 3,
+            vitV: -2,
+            dexV: 4,
+            intV: 6,
             sightV: 2,
-            mpMaxV: 20
+            mpMaxV: 10
         },
         name: "Elvish Blood",
         desc: "Snobby pricks can show a good dance, but not a good fight."
     },
     orc: {
         modifiers: {
-            strV: 5,
-            vit: 8,
-            dexV: -4,
-            intV: -4,
-            cunV: -1,
+            strV: 4,
+            vit: 6,
+            intV: -3,
+            cunV: -2,
             sightV: 1,
-            hpMaxV: 30
+            hpMaxV: 25
         },
         name: "Orcy Bod",
         desc: "Orcies not make gud thinkaz', but do good git smashaz."
     },
     ashen: {
         modifiers: {
-            strV: -1,
-            vitV: -1,
-            intV: -1,
-            dexV: 3,
-            cunV: 3,
-            sightV: 5,
-            hpMaxV: 15
+            strV: -3,
+            intV: -2,
+            dexV: 6,
+            cunV: 4,
+            sightV: 3,
+            mpMaxV: 5,
+            hpMaxV: 5
         },
         name: "Ashen Constitution",
         desc: "The Ashen are sly and slippery, not gifted in straight battle."
@@ -60,10 +58,12 @@ const raceEffects = {
     human: {
         modifiers: {
             strV: 1,
-            vitV: 2,
+            vitV: 1,
             dexV: 1,
-            intV: 3,
-            cunV: 2
+            intV: 1,
+            cunV: 1,
+            sightV: 1,
+            hpMaxV: 15
         },
         name: "Human Will",
         desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
@@ -408,11 +408,11 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["rogueClass"]),
+        main: new combatClass(combatClasses["barbarianClass"]),
         sub: null
     },
     sprite: ".player",
-    race: "orc",
+    race: "human",
     hair: 3,
     eyes: 2,
     face: 1,
@@ -477,6 +477,10 @@ var player = new PlayerCharacter({
     regen: {
         hp: 0,
         mp: 0,
+    },
+    hit: {
+        chance: 50,
+        evasion: 25
     },
     unarmed_damages: { crush: 5 },
     statusEffects: [],

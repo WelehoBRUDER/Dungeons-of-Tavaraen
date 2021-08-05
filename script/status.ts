@@ -15,6 +15,7 @@ interface statusEffect {
   dot?: DoT;
   effects?: statModifiers;
   last: statusTime;
+  type: string;
   onRemove?: Function;
   textIcon: string;
   icon: string;
@@ -29,6 +30,7 @@ class statEffect {
   dot?: DoT;
   effects?: statModifiers;
   last: statusTime;
+  type: string;
   onRemove?: Function;
   textIcon: string;
   icon: string;
@@ -43,6 +45,7 @@ class statEffect {
     this.dot = defaultEffect.dot;
     this.effects = effectsInit({...defaultEffect.effects});
     this.last = {total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif)};
+    this.type = defaultEffect.type;
     this.onRemove = defaultEffect.onRemove;
     this.textIcon = defaultEffect.textIcon;
     this.icon = defaultEffect.icon;

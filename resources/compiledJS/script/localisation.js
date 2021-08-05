@@ -235,6 +235,8 @@ const finnish = {
     heightened_casting_name: "Vahva Alku",
     warrior_instinct_name: "Soturin Aisti",
     confident_shot_name: "Varma Laukaisu",
+    blood_rage_1_name: "Taiston Hirmu I",
+    blood_rage_2_name: "Taiston Hirmu II",
     // Enemy types
     against_type_syntax: " vastaan",
     singular_type_slime: "Lima",
@@ -621,6 +623,8 @@ const english = {
     heightened_casting_name: "Heightened Casting",
     warrior_instinct_name_name: "Warrior Instinct",
     confident_shot_name: "Confident Shot",
+    blood_rage_1_name: "Blood Rage I",
+    blood_rage_2_name: "Blood Rage II",
     // Enemy types
     against_type_syntax: " against ",
     singular_type_slime: "Slime",

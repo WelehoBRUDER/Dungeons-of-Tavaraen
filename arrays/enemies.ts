@@ -75,6 +75,10 @@ const enemies = {
     damages: {
       crush: 4
     },
+    hit: {
+      chance: 30,
+      evasion: 0
+    },
     threat: 10,
     alive: true,
     xp: 5,
@@ -132,6 +136,10 @@ const enemies = {
     },
     damages: {
       fire: 6
+    },
+    hit: {
+      chance: 30,
+      evasion: 0
     },
     threat: 10,
     alive: true,
@@ -191,6 +199,10 @@ const enemies = {
     damages: {
       lightning: 6
     },
+    hit: {
+      chance: 30,
+      evasion: 0
+    },
     threat: 10,
     alive: true,
     xp: 10,
@@ -248,6 +260,10 @@ const enemies = {
     },
     damages: {
       slash: 3
+    },
+    hit: {
+      chance: 45,
+      evasion: 25
     },
     threat: 20,
     alive: true,
@@ -316,6 +332,10 @@ const enemies = {
     },
     damages: {
       pierce: 4
+    },
+    hit: {
+      chance: 45,
+      evasion: 25
     },
     threat: 20,
     alive: true,
@@ -387,6 +407,10 @@ const enemies = {
       pierce: 2,
       magic: 3
     },
+    hit: {
+      chance: 45,
+      evasion: 25
+    },
     alive: true,
     xp: 10,
     sprite: "skeletonMage",
@@ -450,6 +474,10 @@ const enemies = {
       pierce: 2,
       magic: 4,
       dark: 3
+    },
+    hit: {
+      chance: 55,
+      evasion: 30
     },
     threat: 30,
     alive: true,
@@ -525,6 +553,10 @@ const enemies = {
       slash: 4,
       pierce: 3
     },
+    hit: {
+      chance: 60,
+      evasion: 20
+    },
     threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
@@ -596,6 +628,10 @@ const enemies = {
     damages: {
       pierce: 6
     },
+    hit: {
+      chance: 60,
+      evasion: 20
+    },
     threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
@@ -657,6 +693,10 @@ const enemies = {
     damages: {
       crush: 4,
       slash: 4
+    },
+    hit: {
+      chance: 70,
+      evasion: 10
     },
     threat: 30,
     alive: true,
@@ -726,6 +766,10 @@ const enemies = {
       crush: 6,
       slash: 4
     },
+    hit: {
+      chance: 70,
+      evasion: 10
+    },
     threat: 35,
     alive: true,
     xp: 75,
@@ -793,6 +837,10 @@ const enemies = {
     damages: {
       crush: 11,
     },
+    hit: {
+      chance: 70,
+      evasion: 10
+    },
     threat: 35,
     alive: true,
     xp: 60,
@@ -859,6 +907,10 @@ const enemies = {
     },
     damages: {
       crush: 13,
+    },
+    hit: {
+      chance: 70,
+      evasion: 10
     },
     threat: 40,
     type: "troll",

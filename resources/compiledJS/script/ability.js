@@ -41,7 +41,7 @@ const possible_modifiers = [
 ];
 class Ability {
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
         // @ts-ignore
@@ -59,22 +59,23 @@ class Ability {
         this.base_heal = (_h = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif)) !== null && _h !== void 0 ? _h : 0;
         this.stat_bonus = (_j = baseAbility.stat_bonus) !== null && _j !== void 0 ? _j : "";
         this.status = (_k = baseAbility.status) !== null && _k !== void 0 ? _k : "";
-        this.shoots_projectile = (_l = baseAbility.shoots_projectile) !== null && _l !== void 0 ? _l : "";
+        this.status_power = (_l = baseAbility.status_power) !== null && _l !== void 0 ? _l : 0;
+        this.shoots_projectile = (_m = baseAbility.shoots_projectile) !== null && _m !== void 0 ? _m : "";
         this.icon = baseAbility.icon;
-        this.line = (_m = baseAbility.line) !== null && _m !== void 0 ? _m : "";
+        this.line = (_o = baseAbility.line) !== null && _o !== void 0 ? _o : "";
         this.use_range = typeof parseInt(baseAbility.use_range) === 'number' ? Math.floor(((parseInt(baseAbility.use_range) + values.use_range.value) * values.use_range.modif)).toString() : baseAbility.use_range;
-        this.requires_melee_weapon = (_o = baseAbility.requires_melee_weapon) !== null && _o !== void 0 ? _o : false;
-        this.requires_ranged_weapon = (_p = baseAbility.requires_ranged_weapon) !== null && _p !== void 0 ? _p : false;
-        this.requires_concentration = (_q = baseAbility.requires_concentration) !== null && _q !== void 0 ? _q : false;
-        this.recharge_only_in_combat = (_r = baseAbility.recharge_only_in_combat) !== null && _r !== void 0 ? _r : false;
+        this.requires_melee_weapon = (_p = baseAbility.requires_melee_weapon) !== null && _p !== void 0 ? _p : false;
+        this.requires_ranged_weapon = (_q = baseAbility.requires_ranged_weapon) !== null && _q !== void 0 ? _q : false;
+        this.requires_concentration = (_r = baseAbility.requires_concentration) !== null && _r !== void 0 ? _r : false;
+        this.recharge_only_in_combat = (_s = baseAbility.recharge_only_in_combat) !== null && _s !== void 0 ? _s : false;
         this.summon_unit = baseAbility.summon_unit;
-        this.summon_level = (_s = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif)) !== null && _s !== void 0 ? _s : 0;
+        this.summon_level = (_t = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif)) !== null && _t !== void 0 ? _t : 0;
         ;
-        this.summon_last = (_t = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _t !== void 0 ? _t : 0;
+        this.summon_last = (_u = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _u !== void 0 ? _u : 0;
         ;
-        this.aoe_size = (_u = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _u !== void 0 ? _u : 0;
-        this.aoe_effect = (_v = baseAbility.aoe_effect) !== null && _v !== void 0 ? _v : "";
-        this.self_target = (_w = baseAbility.self_target) !== null && _w !== void 0 ? _w : false;
+        this.aoe_size = (_v = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _v !== void 0 ? _v : 0;
+        this.aoe_effect = (_w = baseAbility.aoe_effect) !== null && _w !== void 0 ? _w : "";
+        this.self_target = (_x = baseAbility.self_target) !== null && _x !== void 0 ? _x : false;
         this.statusModifiers = statusModifiers;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;

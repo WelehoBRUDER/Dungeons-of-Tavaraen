@@ -51,6 +51,7 @@ interface characterObject {
   kill?: Function;
   xp?: number;
   regen?: any;
+  hit?: any;
   threat: number;
   statModifiers?: any;
   statusEffects?: any;
@@ -71,6 +72,7 @@ interface characterObject {
   getHpMax?: Function;
   getMpMax?: Function;
   getRegen?: Function;
+  getHitchance?: Function;
 }
 
 interface statusObject {
@@ -234,6 +236,7 @@ class Character {
   updateAbilities?: Function;
   aura?: string;
   regen?: any;
+  hit?: any;
   silenced?: Function;
   concentration?: Function;
   statRemaining?: Function;
@@ -243,6 +246,7 @@ class Character {
   getHpMax?: Function;
   getMpMax?: Function;
   getRegen?: Function;
+  getHitchance?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -254,6 +258,7 @@ class Character {
     this.statusEffects = base.statusEffects ?? [];
     this.threat = base.threat ?? 25;
     this.regen = base.regen;
+    this.hit = {...base.hit} ?? { chance: 10, evasion: 5 };
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
@@ -287,6 +292,17 @@ class Character {
       return mpMax < 0 ? 0 : mpMax;
     }
 
+    this.getHitchance = () => {
+      const chances = {
+        chance: 0,
+        evasion: 0
+      }
+      const { v: hitVal, m: hitMod } = getModifiers(this, "hitChance");
+      const { v: evaVal, m: evaMod } = getModifiers(this, "evasion");
+      chances["chance"] = Math.floor((this.hit?.chance + hitVal) * hitMod);
+      chances["evasion"] = Math.floor((this.hit?.evasion + evaVal) * evaMod);
+      return chances;
+    }
 
     this.getResists = () => {
       let resists = {} as resistances;
@@ -309,8 +325,8 @@ class Character {
     this.getRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "regen");
       let reg = { hp: 0, mp: 0 };
-      reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.005 + val) * mod;
-      reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.005 + val) * mod;
+      reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.0025 + val) * mod;
+      reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.0025 + val) * mod;
       return reg;
     }
  

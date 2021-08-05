@@ -488,9 +488,11 @@ function updateUI() {
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 
+const worldTextContainer = document.querySelector<HTMLDivElement>(".worldText");
 function displayText(txt: string) {
-  document.querySelector(".worldText")?.append(textSyntax(txt));
-  document.querySelector(".worldText")?.scrollBy(0, 1000);
+  worldTextContainer.append(textSyntax(txt));
+  worldTextContainer.scrollBy(0, 1000);
+  if(worldTextContainer.childNodes.length > 49) worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
 }
 
 function tooltip(element: HTMLElement, text: string) {

@@ -17,6 +17,7 @@ const statusEffects = {
             total: 5,
             current: 5
         },
+        type: "poison",
         textIcon: icons.poison,
         icon: "resources/icons/poison.png"
     },
@@ -38,6 +39,7 @@ const statusEffects = {
             total: 4,
             current: 4
         },
+        type: "poison",
         textIcon: icons.venom,
         icon: "resources/icons/venom.png"
     },
@@ -58,6 +60,7 @@ const statusEffects = {
             total: 3,
             current: 3
         },
+        type: "burning",
         textIcon: icons.burning_icon,
         icon: "resources/icons/flame_of_passion.png"
     },
@@ -74,6 +77,7 @@ const statusEffects = {
             total: 4,
             current: 4
         },
+        type: "curse",
         textIcon: icons.blight_icon,
         icon: "resources/icons/blighted.png"
     },
@@ -175,6 +179,7 @@ const statusEffects = {
             total: 1,
             current: 1
         },
+        type: "stun",
         textIcon: icons.dazed,
         icon: "resources/icons/dazed.png"
     },
