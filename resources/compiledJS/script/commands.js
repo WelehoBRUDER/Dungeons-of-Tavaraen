@@ -8,8 +8,31 @@ function command(cmd) {
             const id = _key.replace("ability_", "");
             var ability = new Ability(abilities[id], dummy);
             var foundId = player.abilities.find(abi => abi.id == id);
-            if (!foundId)
+            if (!foundId) {
+                let lowestAvailableSlot = 0;
+                for (let i = 0; i < 20; i++) {
+                    let _continue = true;
+                    player.abilities.forEach(abi => {
+                        if (abi.equippedSlot == lowestAvailableSlot) {
+                            lowestAvailableSlot++;
+                            _continue = false;
+                            return;
+                        }
+                    });
+                    if (_continue) {
+                        player.inventory.forEach(itm => {
+                            if (itm.equippedSlot == lowestAvailableSlot) {
+                                lowestAvailableSlot++;
+                                return;
+                            }
+                        });
+                    }
+                }
+                if (lowestAvailableSlot < 20)
+                    ability.equippedSlot = lowestAvailableSlot;
                 player.abilities.push(ability);
+                updateUI();
+            }
         }
     }
 }

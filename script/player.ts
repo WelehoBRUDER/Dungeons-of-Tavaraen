@@ -512,7 +512,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["barbarianClass"]),
+    main: new combatClass(combatClasses["fighterClass"]),
     sub: null
   },
   sprite: ".player",
@@ -539,7 +539,7 @@ var player = new PlayerCharacter({
       effects: {
         hpMaxV: 55,
         mpMaxV: 10,
-        retreat_status_effect_lastV: 2,
+        retreat_status_effect_lastV: 1,
       }
     },
     {

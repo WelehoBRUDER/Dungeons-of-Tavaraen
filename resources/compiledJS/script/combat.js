@@ -148,7 +148,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     const evasion = target.getHitchance().evasion;
     const evade = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
     if (ability.status) {
-        const _Effect = new statEffect(Object.assign({}, statusEffects[ability.status]), s_def);
+        const _Effect = new statEffect(Object.assign({}, statusEffects[ability.status]), ability.statusModifiers);
         const resist = target.getStatusResists()[_Effect.type];
         const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
         if (!evade && !resisted) {
@@ -540,7 +540,7 @@ function summonUnit(ability, cords) {
     // @ts-ignore
     combatSummons.push(new Summon(Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
     if (ability.status)
-        player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[ability.status]), { last: ability.summon_last - 1 }), s_def));
+        player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[ability.status]), { last: ability.summon_last - 1 }), ability.statusModifiers));
     updateUI();
     modifyCanvas();
 }

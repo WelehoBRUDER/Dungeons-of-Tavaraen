@@ -442,7 +442,7 @@ function clickMap(event) {
                             advanceTurn();
                     }
                 }
-                if (abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= abiSelected.use_range) {
+                if (abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= abiSelected.use_range && !player.isRooted()) {
                     player.stats.mp -= abiSelected.mana_cost;
                     abiSelected.onCooldown = abiSelected.cooldown;
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, abiSelected));
@@ -485,20 +485,38 @@ function clickMap(event) {
     }
     state.clicked = true;
     setTimeout(() => { state.clicked = false; }, 30);
-    if (abiSelected.type == "movement") {
+    if (abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= abiSelected.mana_cost;
         abiSelected.onCooldown = abiSelected.cooldown;
-        if (abiSelected.status)
-            player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[abiSelected.status]), s_def));
+        if (abiSelected.status) {
+            const _Effect = new statEffect(Object.assign({}, statusEffects[abiSelected.status]), abiSelected.statusModifiers);
+            let missing = true;
+            player.statusEffects.forEach((effect) => {
+                if (effect.id == abiSelected.status) {
+                    effect.last.current += _Effect.last.total;
+                    missing = false;
+                    return;
+                }
+            });
+            if (missing) {
+                player.statusEffects.push(Object.assign({}, _Effect));
+            }
+        }
         movePlayer({ x: x, y: y }, true, abiSelected.use_range);
     }
-    else if (move) {
+    else if (move && !player.isRooted()) {
         if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight())) {
             displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
         }
         else {
             movePlayer({ x: x, y: y });
         }
+    }
+    else if (player.isRooted()) {
+        player.effects();
+        advanceTurn();
+        updateUI();
+        abiSelected = {};
     }
 }
 const emptyMap = (base_tiles) => new Array(base_tiles.length).fill("0").map(e => new Array(base_tiles[0].length).fill("0"));
@@ -544,25 +562,31 @@ document.addEventListener("keyup", (keyPress) => {
         displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
         return;
     }
-    if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) {
+    if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !player.isRooted()) {
         player.cords.y--;
     }
-    else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down")) {
+    else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !player.isRooted()) {
         player.cords.y++;
     }
-    else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left")) {
+    else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !player.isRooted()) {
         player.cords.x--;
     }
-    else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right")) {
+    else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !player.isRooted()) {
         player.cords.x++;
     }
-    if (keyPress.key == settings.hotkey_move_up || keyPress.key == settings.hotkey_move_down || keyPress.key == settings.hotkey_move_left || keyPress.key == settings.hotkey_move_right) {
-        if (canMove(shittyFix, dirs[keyPress.key])) {
+    if (dirs[keyPress.key]) {
+        if (canMove(shittyFix, dirs[keyPress.key]) && !player.isRooted()) {
             // @ts-ignore
             renderMap(maps[currentMap]);
             player.effects();
             advanceTurn();
             updateUI();
+        }
+        else if (canMove(shittyFix, dirs[keyPress.key]) && player.isRooted()) {
+            player.effects();
+            advanceTurn();
+            updateUI();
+            abiSelected = {};
         }
         else {
             let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);

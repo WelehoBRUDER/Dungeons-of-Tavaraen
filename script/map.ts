@@ -82,7 +82,7 @@ function spriteVariables() {
 
 function renderMinimap(map: mapObject) {
   minimapCanvas.width = minimapCanvas.width;
-  if(!settings.toggle_minimap) {
+  if (!settings.toggle_minimap) {
     minimapContainer.style.display = "none";
     return;
   }
@@ -135,7 +135,7 @@ function renderMinimap(map: mapObject) {
           minimapCtx.drawImage(clutterImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
         }
       }
-      if(player.cords.x == x + mapOffsetStartX && player.cords.y == y + mapOffsetStartY) {
+      if (player.cords.x == x + mapOffsetStartX && player.cords.y == y + mapOffsetStartY) {
         minimapCtx.drawImage(pImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
       }
     }
@@ -193,14 +193,14 @@ function renderMap(map: mapObject) {
 
   map.treasureChests.forEach((chest: treasureChest) => {
     if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
-      if(chest.sinceOpened == -1) {
+      if (chest.sinceOpened == -1) {
         const chestSprite = document.querySelector<HTMLImageElement>(`.${chest.sprite}`);
         var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         baseCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
       }
     }
-  })
+  });
 
   /* Render Enemies */
   enemyLayers.textContent = ""; // Delete enemy canvases
@@ -444,7 +444,7 @@ function clickMap(event: MouseEvent) {
             if (!abiSelected.shoots_projectile) advanceTurn();
           }
         }
-        if (abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= abiSelected.use_range) {
+        if (abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= abiSelected.use_range && !player.isRooted()) {
           player.stats.mp -= abiSelected.mana_cost;
           abiSelected.onCooldown = abiSelected.cooldown;
           movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, abiSelected));
@@ -476,28 +476,47 @@ function clickMap(event: MouseEvent) {
     }
   }
   if (isSelected && abiSelected.summon_unit) {
-    if(generatePath(player.cords, {x: x, y: y}, player.canFly, true) <= abiSelected.use_range) {
+    if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= abiSelected.use_range) {
       move = false;
-      summonUnit(abiSelected, {x: x, y: y});
+      summonUnit(abiSelected, { x: x, y: y });
       player.effects();
       advanceTurn();
     }
   }
   state.clicked = true;
   setTimeout(() => { state.clicked = false; }, 30);
-  if (abiSelected.type == "movement") {
+  if (abiSelected.type == "movement" && !player.isRooted()) {
     player.stats.mp -= abiSelected.mana_cost;
     abiSelected.onCooldown = abiSelected.cooldown;
-    if(abiSelected.status) player.statusEffects.push(new statEffect({...statusEffects[abiSelected.status]}, s_def));
+    if (abiSelected.status) {
+      const _Effect = new statEffect({ ...statusEffects[abiSelected.status] }, abiSelected.statusModifiers);
+      let missing = true;
+      player.statusEffects.forEach((effect: statEffect) => {
+        if (effect.id == abiSelected.status) {
+          effect.last.current += _Effect.last.total;
+          missing = false;
+          return;
+        }
+      });
+      if (missing) {
+        player.statusEffects.push({ ..._Effect });
+      }
+    }
     movePlayer({ x: x, y: y }, true, abiSelected.use_range);
   }
-  else if (move) {
+  else if (move && !player.isRooted()) {
     if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight())) {
       displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
     }
     else {
       movePlayer({ x: x, y: y });
     }
+  }
+  else if (player.isRooted()) {
+    player.effects();
+    advanceTurn();
+    updateUI();
+    abiSelected = {};
   }
 }
 
@@ -531,7 +550,6 @@ function cordsFromDir(cords: tileObject, dir: string) {
   else if (dir == "right") cord.x++;
   return cord;
 }
-
 document.addEventListener("keyup", (keyPress) => {
   if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
@@ -540,18 +558,24 @@ document.addEventListener("keyup", (keyPress) => {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
     return;
   }
-  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up")) { player.cords.y--; }
-  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down")) { player.cords.y++; }
-  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left")) { player.cords.x--; }
-  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right")) { player.cords.x++; }
-  if (keyPress.key == settings.hotkey_move_up || keyPress.key == settings.hotkey_move_down || keyPress.key == settings.hotkey_move_left || keyPress.key == settings.hotkey_move_right) {
+  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !player.isRooted()) { player.cords.y--; }
+  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !player.isRooted()) { player.cords.y++; }
+  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !player.isRooted()) { player.cords.x--; }
+  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !player.isRooted()) { player.cords.x++; }
+  if (dirs[keyPress.key]) {
 
-    if (canMove(shittyFix, dirs[keyPress.key])) {
+    if (canMove(shittyFix, dirs[keyPress.key]) && !player.isRooted()) {
       // @ts-ignore
       renderMap(maps[currentMap]);
       player.effects();
       advanceTurn();
       updateUI();
+    }
+    else if(canMove(shittyFix, dirs[keyPress.key]) && player.isRooted()) {
+      player.effects();
+      advanceTurn();
+      updateUI();
+      abiSelected = {};
     }
     else {
       let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
@@ -570,8 +594,8 @@ document.addEventListener("keyup", (keyPress) => {
     activateShrine();
     pickLoot();
     maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
-      if(chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1) chest.lootChest();
-    })
+      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1) chest.lootChest();
+    });
   }
 });
 
@@ -723,7 +747,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.weapon.sprite);
     ctx?.drawImage(weaponModel, x, y, size, size);
   }
-  if(playerModel.offhand?.sprite) {
+  if (playerModel.offhand?.sprite) {
     const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
     ctx?.drawImage(offhandModel, x, y, size, size);
   }
@@ -789,7 +813,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
     ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  if(player.offhand?.sprite) {
+  if (player.offhand?.sprite) {
     const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
     ctx?.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
@@ -812,10 +836,10 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }));
   if (start.x !== player.cords.x && start.y !== player.cords.y) {
     fieldMap[player.cords.y][player.cords.x] = 1;
-    combatSummons.forEach(summon=>{
-      if(summon.cords.x !== start.x && summon.cords.y !== start.y) fieldMap[summon.cords.y][summon.cords.x] = 1;
-    })
-  } 
+    combatSummons.forEach(summon => {
+      if (summon.cords.x !== start.x && summon.cords.y !== start.y) fieldMap[summon.cords.y][summon.cords.x] = 1;
+    });
+  }
   maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
   fieldMap[end.y][end.x] = 5;
   main: for (let i = 5; i < 100; i++) {
@@ -901,7 +925,7 @@ function arrowHitsTarget(start: tileObject, end: tileObject, isSummon: boolean =
       hits = false;
       return;
     }
-    if(step.blocked && !step.enemy && isSummon) {
+    if (step.blocked && !step.enemy && isSummon) {
       hits = false;
       return;
     }
@@ -939,7 +963,7 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
       if (enemy.cords.x == start.x && enemy.cords.y == start.y) return;
       if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) { arrow.enemy = true; arrow.blocked = true; };
     });
-    combatSummons.forEach(summon=>{
+    combatSummons.forEach(summon => {
       if (summon.cords.x == tile.x && summon.cords.y == tile.y) { arrow.summon = true; arrow.blocked = true; };
     });
     if (player.cords.x == tile.x && player.cords.y == tile.y) { arrow.player = true; arrow.blocked = true; }
@@ -964,7 +988,7 @@ function modifyCanvas() {
   }
   // @ts-ignore
   renderMap(maps[currentMap]);
-    // @ts-ignore
+  // @ts-ignore
   renderMinimap(maps[currentMap]);
 }
 
@@ -983,9 +1007,9 @@ async function advanceTurn() {
   player.stats.hp += pRegen["hp"];
   player.stats.mp += pRegen["mp"];
   combatSummons.forEach(summon => {
-    if(!summon.alive || player.isDead) return;
+    if (!summon.alive || player.isDead) return;
     summon.lastsFor--;
-    if(summon.lastsFor <= 0) {
+    if (summon.lastsFor <= 0) {
       summon.kill();
       return;
     }

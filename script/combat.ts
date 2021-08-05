@@ -129,7 +129,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   const evade: boolean = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
 
   if (ability.status) {
-    const _Effect = new statEffect({ ...statusEffects[ability.status] }, s_def);
+    const _Effect = new statEffect({ ...statusEffects[ability.status] }, ability.statusModifiers);
     const resist = target.getStatusResists()[_Effect.type];
     const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
     if(!evade && !resisted) {
@@ -489,7 +489,7 @@ function summonUnit(ability: ability, cords: tileObject) {
   if (ability.mana_cost) player.stats.mp -= ability.mana_cost;
   // @ts-ignore
   combatSummons.push(new Summon({...summons[ability.summon_unit], level: ability.summon_level, lastsFor: ability.summon_last, cords: {...cords}}));
-  if(ability.status) player.statusEffects.push(new statEffect({...statusEffects[ability.status], last: ability.summon_last-1}, s_def));
+  if(ability.status) player.statusEffects.push(new statEffect({...statusEffects[ability.status], last: ability.summon_last-1}, ability.statusModifiers));
   updateUI();
   modifyCanvas();
 }

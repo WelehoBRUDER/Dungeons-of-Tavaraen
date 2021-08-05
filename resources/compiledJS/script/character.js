@@ -228,6 +228,16 @@ class Character {
             reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.0025 + val) * mod;
             return reg;
         };
+        this.isRooted = () => {
+            let rooted = false;
+            this.statusEffects.forEach((eff) => {
+                if (eff.rooted) {
+                    rooted = true;
+                    return;
+                }
+            });
+            return rooted;
+        };
         this.getStatusResists = () => {
             let resists = {};
             Object.keys(this.statusResistances).forEach((res) => {

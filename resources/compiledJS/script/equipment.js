@@ -381,38 +381,68 @@ function closeLeveling() {
     lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g;
     var text = "";
     text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
     text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
     if (item.damages) {
         let total = 0;
+        let totalCompare = 0;
         let txt = "";
-        (_a = Object.entries(item.damages)) === null || _a === void 0 ? void 0 : _a.forEach((dmg) => { total += dmg[1]; if (dmg[1] !== 0)
-            txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        if ((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.id)
+            Object.entries(player.weapon.damages).forEach((dmg) => { totalCompare += dmg[1]; });
+        (_b = Object.entries(item.damages)) === null || _b === void 0 ? void 0 : _b.forEach((dmg) => {
+            var _a, _b;
+            total += dmg[1];
+            if (dmg[1] !== 0) {
+                let color = "lime";
+                if ((_b = (_a = player.weapon) === null || _a === void 0 ? void 0 : _a.damages) === null || _b === void 0 ? void 0 : _b[dmg[0]]) {
+                    if (player.weapon.damages[dmg[0]] > dmg[1])
+                        color = "red";
+                    else if (player.weapon.damages[dmg[0]] == dmg[1])
+                        color = "white";
+                }
+                txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+            }
+        });
         txt = txt.substring(0, txt.length - 2);
-        text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
+        text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
     }
     if (item.resistances) {
         let total = 0;
+        let totalCompare = 0;
         let txt = "";
-        (_b = Object.entries(item.resistances)) === null || _b === void 0 ? void 0 : _b.forEach((dmg) => { total += dmg[1]; if (dmg[1] !== 0)
-            txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        if ((_c = player[item.slot]) === null || _c === void 0 ? void 0 : _c.resistances)
+            Object.entries(player[item.slot].resistances).forEach((dmg) => { totalCompare += dmg[1]; });
+        (_d = Object.entries(item.resistances)) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => {
+            var _a, _b, _c, _d;
+            total += dmg[1];
+            if (dmg[1] !== 0) {
+                let color = "lime";
+                if ((_b = (_a = player === null || player === void 0 ? void 0 : player[item.slot]) === null || _a === void 0 ? void 0 : _a.resistances) === null || _b === void 0 ? void 0 : _b[dmg[0]]) {
+                    if (((_c = player[item.slot]) === null || _c === void 0 ? void 0 : _c.resistances[dmg[0]]) > dmg[1])
+                        color = "red";
+                    else if (((_d = player[item.slot]) === null || _d === void 0 ? void 0 : _d.resistances[dmg[0]]) == dmg[1])
+                        color = "white";
+                }
+                txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+            }
+        });
         txt = txt.substring(0, txt.length - 2);
-        text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
+        text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
     }
     if (item.requiresStats) {
         let txt = "";
-        (_c = Object.entries(item.requiresStats)) === null || _c === void 0 ? void 0 : _c.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+        (_e = Object.entries(item.requiresStats)) === null || _e === void 0 ? void 0 : _e.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
     }
-    if (((_d = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+    if (((_f = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _f === void 0 ? void 0 : _f.length) > 0) {
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
         Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0)
             text += effectSyntax(eff, true, ""); });
     }
-    if (((_e = Object.values(item.commands)) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+    if (((_g = Object.values(item.commands)) === null || _g === void 0 ? void 0 : _g.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
     if (item.healValue)

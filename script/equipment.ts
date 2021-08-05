@@ -151,7 +151,7 @@ const statWorths = {
   hpMaxP: 3.5,
   mpMaxV: 5,
   mpMaxP: 3.5,
-} as any; 
+} as any;
 
 class Consumable extends Item {
   status?: string;
@@ -178,7 +178,7 @@ class Consumable extends Item {
     this.commands = {};
     this.name = lang[this.id + "_name"] ?? baseItem.name;
 
-    this.fullPrice = () => { return this.price }
+    this.fullPrice = () => { return this.price; };
   }
 }
 
@@ -234,13 +234,13 @@ class Weapon extends Item {
         const val = dmg[1];
         bonus += val * dmgWorths[key];
       });
-      Object.entries(this.stats).forEach((stat: any)=>{
+      Object.entries(this.stats).forEach((stat: any) => {
         let _sw = statWorths[stat[0]] * stat[1];
-        if(isNaN(_sw)) _sw = stat[1] * 2; 
+        if (isNaN(_sw)) _sw = stat[1] * 2;
         bonus += _sw;
       });
       bonus *= grades[this.grade]["worth"];
-      let price = Math.floor(bonus + this.price)
+      let price = Math.floor(bonus + this.price);
       return price < 1 ? 1 : price;
     };
 
@@ -353,13 +353,13 @@ class Armor extends Item {
         const val = dmg[1];
         bonus += val * dmgWorths[key];
       });
-      Object.entries(this.stats).forEach((stat: any)=>{
+      Object.entries(this.stats).forEach((stat: any) => {
         let _sw = statWorths[stat[0]] * stat[1];
-        if(isNaN(_sw)) _sw = stat[1] * 2; 
+        if (isNaN(_sw)) _sw = stat[1] * 2;
         bonus += _sw;
       });
       bonus *= grades[this.grade]["worth"];
-      let price = Math.floor(bonus + this.price)
+      let price = Math.floor(bonus + this.price);
       return price < 1 ? 1 : price;
     };
 
@@ -490,17 +490,41 @@ function itemTT(item: any) {
   text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
   if (item.damages) {
     let total: number = 0;
+    let totalCompare: number = 0;
     let txt: string = "";
-    Object.entries(item.damages)?.forEach((dmg: any) => { total += dmg[1]; if(dmg[1] !== 0) txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    if (player.weapon?.id) Object.entries(player.weapon.damages).forEach((dmg: any) => { totalCompare += dmg[1]; });
+    Object.entries(item.damages)?.forEach((dmg: any) => {
+      total += dmg[1];
+      if (dmg[1] !== 0) {
+        let color = "lime";
+        if (player.weapon?.damages?.[dmg[0]]) {
+          if (player.weapon.damages[dmg[0]] > dmg[1]) color = "red";
+          else if (player.weapon.damages[dmg[0]] == dmg[1]) color = "white";
+        }
+        txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+      }
+    });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.damage_icon}<i><f>18px<f>${lang["damage"]}: ${total} <f>17px<f>(${txt})\n`;
+    text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
   }
   if (item.resistances) {
     let total: number = 0;
+    let totalCompare: number = 0;
     let txt: string = "";
-    Object.entries(item.resistances)?.forEach((dmg: any) => { total += dmg[1]; if(dmg[1] !== 0) txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    if (player[item.slot]?.resistances) Object.entries(player[item.slot].resistances).forEach((dmg: any) => { totalCompare += dmg[1]; });
+    Object.entries(item.resistances)?.forEach((dmg: any) => {
+      total += dmg[1];
+      if (dmg[1] !== 0) {
+        let color = "lime";
+        if (player?.[item.slot]?.resistances?.[dmg[0]]) {
+          if (player[item.slot]?.resistances[dmg[0]] > dmg[1]) color = "red";
+          else if (player[item.slot]?.resistances[dmg[0]] == dmg[1]) color = "white";
+        }
+        txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+      }
+    });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.resistance}<i><f>18px<f>${lang["resistance"]}: ${total} <f>17px<f>(${txt})\n`;
+    text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
   }
   if (item.requiresStats) {
     let txt: string = "";
@@ -510,14 +534,14 @@ function itemTT(item: any) {
   }
   if (Object.values(item?.stats)?.length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
-    Object.entries(item.stats).forEach(eff => { if(eff[1] !== 0) text += effectSyntax(eff, true, "")});
+    Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0) text += effectSyntax(eff, true, ""); });
   }
   if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
-  if (item.healValue)  text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
-  if (item.manaValue)  text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
-  if (item.usesRemaining)  text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
+  if (item.healValue) text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
+  if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
+  if (item.usesRemaining) text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   return text;
@@ -589,14 +613,14 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     if (context == "PICK_LOOT") {
       itemObject.addEventListener("mousedown", e => grabLoot(e, itm));
     }
-    if(context == "PICK_TREASURE") {
+    if (context == "PICK_TREASURE") {
       itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
     itemsList.append(itemObject);
   });
-  itemsList.addEventListener("wheel", deltaY=>{
+  itemsList.addEventListener("wheel", deltaY => {
     invScroll = itemsList.scrollTop;
   });
   container.append(itemsList, itemsListBar);

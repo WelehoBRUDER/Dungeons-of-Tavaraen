@@ -32,8 +32,8 @@ const abilities = {
     true_shot: {
         id: "true_shot",
         name: "True Shot",
-        mana_cost: 5,
-        cooldown: 3,
+        mana_cost: 0,
+        cooldown: 7,
         damage_multiplier: 1.6,
         resistance_penetration: 0,
         type: "attack",
@@ -67,6 +67,7 @@ const abilities = {
     poisoned_arrow: {
         id: "poisoned_arrow",
         name: "Poisoned Arrow",
+        mana_cost: 0,
         cooldown: 15,
         damage_multiplier: 1.1,
         resistance_penetration: 0,
@@ -85,7 +86,7 @@ const abilities = {
     first_aid: {
         id: "first_aid",
         name: "First Aid",
-        mana_cost: 10,
+        mana_cost: 0,
         cooldown: 10,
         base_heal: 25,
         damage_multiplier: 0,

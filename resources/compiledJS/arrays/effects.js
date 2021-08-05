@@ -179,6 +179,7 @@ const statusEffects = {
             total: 1,
             current: 1
         },
+        rooted: true,
         type: "stun",
         textIcon: icons.dazed,
         icon: "resources/icons/dazed.png"

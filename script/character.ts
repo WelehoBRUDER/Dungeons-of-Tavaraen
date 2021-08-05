@@ -73,6 +73,7 @@ interface characterObject {
   getMpMax?: Function;
   getRegen?: Function;
   getHitchance?: Function;
+  isRooted?: Function;
 }
 
 interface statusObject {
@@ -247,6 +248,7 @@ class Character {
   getMpMax?: Function;
   getRegen?: Function;
   getHitchance?: Function;
+  isRooted?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -328,6 +330,14 @@ class Character {
       reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.0025 + val) * mod;
       reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.0025 + val) * mod;
       return reg;
+    }
+
+    this.isRooted = () => {
+      let rooted = false;
+      this.statusEffects.forEach((eff: any)=>{
+          if(eff.rooted) {rooted = true; return}
+      });
+      return rooted;
     }
  
     this.getStatusResists = () => {

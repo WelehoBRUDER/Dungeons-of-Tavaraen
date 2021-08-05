@@ -36,6 +36,7 @@ class statEffect {
   icon: string;
   aura?: string;
   silence?: boolean;
+  rooted?: boolean;
   break_concentration?: boolean;
   constructor(base: statusEffect, modifiers: any) {
     // @ts-ignore
@@ -45,6 +46,7 @@ class statEffect {
     this.dot = defaultEffect.dot;
     this.effects = effectsInit({...defaultEffect.effects});
     this.last = {total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif)};
+    this.rooted = defaultEffect.rooted;
     this.type = defaultEffect.type;
     this.onRemove = defaultEffect.onRemove;
     this.textIcon = defaultEffect.textIcon;
