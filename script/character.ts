@@ -259,7 +259,7 @@ class Character {
     this.statModifiers = base.statModifiers ?? [];
     this.statusEffects = base.statusEffects ?? [];
     this.threat = base.threat ?? 25;
-    this.regen = base.regen;
+    this.regen = base.regen ?? {hp: 0, mp: 0};
     this.hit = {...base.hit} ?? { chance: 10, evasion: 5 };
 
     this.getStats = (withConditions = true) => {
@@ -325,10 +325,13 @@ class Character {
     }
 
     this.getRegen = () => {
-      const { v: val, m: mod } = getModifiers(this, "regen");
+      const { v: valHp, m: modHp } = getModifiers(this, "regenHp");
+      const { v: valMp, m: modMp } = getModifiers(this, "regenMp");
       let reg = { hp: 0, mp: 0 };
-      reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.0025 + val) * mod;
-      reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.0025 + val) * mod;
+      reg["hp"] = (this.regen["hp"] + this.getHpMax()*0.0025 + valHp) * modHp;
+      reg["mp"] = (this.regen["mp"] + this.getMpMax()*0.0025 + valMp) * modMp;
+      if(reg["hp"] < 0) reg["hp"] = 0;
+      if(reg["mp"] < 0) reg["mp"] = 0;
       return reg;
     }
 

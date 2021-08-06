@@ -274,6 +274,23 @@ const abilities = {
     use_range: "8",
     ai_chance: 5
   },
+  barbarian_charge: {
+    id: "barbarian_charge",
+    name: "Raging Charge",
+    mana_cost: 0,
+    cooldown: 13,
+    type: "charge",
+    damage_multiplier: 1.1,
+    resistance_penetration: 0,
+    status: "disoriented",
+    status_power: 55,
+    action_desc: "charges at foe.",
+    action_desc_pl: "you charge at foe",
+    icon: "resources/icons/barbarian_charge.png",
+    recharge_only_in_combat: true,
+    use_range: "10",
+    ai_chance: 5
+  },
   purification: {
     id: "purification",
     name: "Purification",

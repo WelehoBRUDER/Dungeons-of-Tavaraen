@@ -82,6 +82,7 @@ interface weaponClass extends itemClass {
   rolledDamages?: any;
   statStrings?: any;
   fullPrice?: Function;
+  twoHanded?: boolean;
 }
 
 const namePartsArmor = {
@@ -195,6 +196,7 @@ class Weapon extends Item {
   rolledDamages?: any;
   statStrings?: any;
   fullPrice?: Function;
+  twoHanded?: boolean;
   constructor(base: weaponClass) {
     super(base);
     const baseItem = { ...items[this.id] };
@@ -202,6 +204,7 @@ class Weapon extends Item {
     this.firesProjectile = baseItem.firesProjectile;
     this.damagesTemplate = baseItem.damagesTemplate;
     this.statsTemplate = baseItem.statsTemplate;
+    this.twoHanded = baseItem.twoHanded ?? false;
     this.damages = { ...baseItem.damages } ?? {};
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
@@ -542,6 +545,7 @@ function itemTT(item: any) {
   if (item.healValue) text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
   if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
   if (item.usesRemaining) text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
+  if (item.twoHanded) text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   return text;

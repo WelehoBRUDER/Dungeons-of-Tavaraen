@@ -85,20 +85,16 @@ const statusEffects = {
         id: "rage",
         name: "Rage",
         effects: {
-            strP: 50,
-            fireDamageP: 50,
+            strV: 10,
             crushDamageP: 20,
             slashDamageP: 20,
             pierceDamageP: 20,
-            crushResistV: -10,
-            slashResistV: -10,
-            pierceResistV: -10,
-            iceResistV: 5,
+            resistAllV: 5
         },
         silence: true,
         last: {
-            total: 7,
-            current: 7
+            total: 12,
+            current: 12
         },
         textIcon: icons.rage,
         aura: "redMist",
@@ -183,6 +179,22 @@ const statusEffects = {
         type: "stun",
         textIcon: icons.dazed,
         icon: "resources/icons/dazed.png"
+    },
+    disoriented: {
+        id: "disoriented",
+        name: "Disoriented",
+        effects: {
+            damageP: -15,
+            resistAllV: -10
+        },
+        break_concentration: true,
+        last: {
+            total: 3,
+            current: 3
+        },
+        type: "stun",
+        textIcon: icons.disoriented,
+        icon: "resources/icons/disoriented.png"
     },
     summoned: {
         id: "summoned",

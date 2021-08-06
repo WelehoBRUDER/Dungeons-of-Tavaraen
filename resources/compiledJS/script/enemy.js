@@ -68,6 +68,10 @@ class Enemy extends Character {
             //   if(this.retreatIndex + 1 == this.retreatPath.length) this.hasRetreated = true;
             //   updateEnemiesTurn();
             // }
+            if (this.stats.hp > this.getHpMax())
+                this.stats.hp = this.getHpMax();
+            if (this.stats.mp > this.getMpMax())
+                this.stats.mp = this.getMpMax();
             if (this.currentTargetInterval <= 0 || this.chosenTarget == null || !this.chosenTarget.alive) {
                 // @ts-ignore
                 let targets = combatSummons.concat([player]);

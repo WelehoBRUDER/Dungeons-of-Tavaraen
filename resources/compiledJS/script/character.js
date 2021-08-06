@@ -150,7 +150,7 @@ function getModifiers(char, stat, withConditions = true) {
 }
 class Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
@@ -160,8 +160,8 @@ class Character {
         this.statModifiers = (_c = base.statModifiers) !== null && _c !== void 0 ? _c : [];
         this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
         this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
-        this.regen = base.regen;
-        this.hit = (_f = Object.assign({}, base.hit)) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
+        this.regen = (_f = base.regen) !== null && _f !== void 0 ? _f : { hp: 0, mp: 0 };
+        this.hit = (_g = Object.assign({}, base.hit)) !== null && _g !== void 0 ? _g : { chance: 10, evasion: 5 };
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
@@ -222,10 +222,15 @@ class Character {
             return (this.threat + val) * mod;
         };
         this.getRegen = () => {
-            const { v: val, m: mod } = getModifiers(this, "regen");
+            const { v: valHp, m: modHp } = getModifiers(this, "regenHp");
+            const { v: valMp, m: modMp } = getModifiers(this, "regenMp");
             let reg = { hp: 0, mp: 0 };
-            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.0025 + val) * mod;
-            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.0025 + val) * mod;
+            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.0025 + valHp) * modHp;
+            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.0025 + valMp) * modMp;
+            if (reg["hp"] < 0)
+                reg["hp"] = 0;
+            if (reg["mp"] < 0)
+                reg["mp"] = 0;
             return reg;
         };
         this.isRooted = () => {
@@ -282,7 +287,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_g = base.abilities) !== null && _g !== void 0 ? _g : [];
+        this.abilities = (_h = base.abilities) !== null && _h !== void 0 ? _h : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {

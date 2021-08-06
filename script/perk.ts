@@ -6,6 +6,7 @@ const perkColors = {
   necromancer: "#20142e",
   sorcerer: "#183952",
   fighter: "#5e2813",
+  barbarian: "#5c2323",
   rogue: "#2b2b2b",
 } as any;
 

@@ -7,7 +7,9 @@ const combatClasses = {
       resistAllV: 2,
       attack_damage_multiplier: 5
     },
-    perkTree: "fighter"
+    color: "#5e2813",
+    perkTree: "fighter",
+    icon: "resources/icons/fighter_symbol.png"
   },
   barbarianClass: {
     id: "barbarianClass",
@@ -17,7 +19,9 @@ const combatClasses = {
       hpMaxV: 10,
       attack_damage_multiplier: 8,
     },
-    perkTree: "barbarian"
+    color: "#5c2323",
+    perkTree: "barbarian",
+    icon: "resources/icons/barbarian_symbol.png"
   },
   sorcererClass: {
     id: "sorcererClass",
@@ -27,7 +31,9 @@ const combatClasses = {
       mpMaxV: 5,
       mpMaxP: 5
     },
-    perkTree: "sorcerer"
+    color: "#183952",
+    perkTree: "sorcerer",
+    icon: "resources/icons/sorcerer_symbol.png"
   },
   rogueClass: {
     id: "rogueClass",
@@ -39,18 +45,24 @@ const combatClasses = {
       critChanceP: 5,
       critDamageP: 12
     },
-    perkTree: "rogue"
+    color: "#2b2b2b",
+    perkTree: "rogue",
+    icon: "resources/icons/rogue_symbol.png"
   }
 } as any;
 
 class combatClass {
   [id: string]: string | any;
   statBonuses: statModifiers;
+  color: string;
+  icon: string;
   perkTree: string;
   constructor(base: combatClass) {
     this.id = base.id;
     const baseClass = combatClasses[this.id];
     this.statBonuses = baseClass.statBonuses;
+    this.color = baseClass.color;
+    this.icon = baseClass.icon;
     this.perkTree = baseClass.perkTree;
   }
 }

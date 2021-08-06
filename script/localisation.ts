@@ -35,6 +35,8 @@ const finnish = {
   lightning_def: "Sähkö",
   hpMax: "Terveyttä",
   mpMax: "Taikaa",
+  hitChance: "Iskujen tarkkuus",
+  evasion: "Väistely",
   sight: "Näköä",
   increases: "Nostaa",
   decreases: "Alentaa",
@@ -52,6 +54,12 @@ const finnish = {
   hpP: "Terveys%",
   mpV: "Taika",
   mpP: "Taika%",
+  resistAllV: "Puolustus",
+  resistAllP: "Puolusus%",
+  hitChanceAllV: "Iskujen tarkkuus",
+  hitChanceAllP: "Iskujen tarkkuus%",
+  evasionV: "Väistely",
+  evasionP: "Väistely%",
   status_effect: "Tila efekti",
   last: "Efektin kesto",
   lasts_for: "Efekti kestää",
@@ -203,6 +211,11 @@ const finnish = {
   poison_damage: "Myrkytys",
   burning_damage: "Polttavaa",
 
+  // Character Creation
+  choose_name: "Nimi",
+  choose_race: "Rotu",
+  choose_class: "Class",
+
   // Misc
   attack_name: "tavallisten iskujen vahinkoa",
   cures_statuses: "Parantaa efektit",
@@ -239,6 +252,7 @@ const finnish = {
   summons_unit: "Kutsuu hahmon",
   summon_level: "Kutsutun hahmon taso",
   summon_last: "Kutsuttu hahmo kestää",
+  two_handed_weapon: "Kahden käsen ase",
 
   // Passive abilities
   frenzy_name: "Kiihko",
@@ -247,6 +261,10 @@ const finnish = {
   confident_shot_name: "Varma Laukaisu",
   blood_rage_1_name: "Taiston Hirmu I",
   blood_rage_2_name: "Taiston Hirmu II",
+  reckless_1_name: "Hyökkääjä I",
+  reckless_2_name: "Hyökkääjä II",
+  sense_of_danger_1_name: "Kuudes Aisti I",
+  sense_of_danger_2_name: "Kuudes Aisti II",
 
   // Enemy types
   against_type_syntax: " vastaan",
@@ -329,6 +347,8 @@ const finnish = {
   effect_burning_desc: "OLET TULESSA!",
   effect_summoned_name: "Kutsuntaloitsu",
   effect_summoned_desc: "Kutsuttu soturi katoaa tämän loputtua",
+  effect_disoriented_name: "Sekaisin",
+  effect_disoriented_desc: "Maailma pyörii ja näet kaiken kahdesti.",
 
   // Abilities and stuff
   attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
@@ -403,6 +423,16 @@ const finnish = {
   summon_skeleton_warrior_name: "Luo Luuranko Soturi",
   summon_skeleton_warrior_desc: "Kutsuu luuranko soturin taistelemaan puolellasi.",
   summon_skeleton_warrior_action_desc_pl: "Kutsut Luuranko Soturin kentälle!",
+  barbarian_charge_name: "Barbaarin Rynnäkkö",
+  barbarian_charge_desc: "Törmää kohteeseesi villillä raivolla.",
+  barbarian_charge_action_desc_pl: "Karjut rajusti kuin villieläin ja ryntäät kohti hahmoa [TARGET], törmäys aiheuttaen [DMG] vahinkoa!",
+  barbarian_charge_action_desc: "raivoaa eläimellisesti ja ryntää päin hahmoa [TARGET], tehden [DMG] vahinkoa.",
+
+  // CLASSES
+  fighterClass_name: "Taistelija",
+  barbarianClass_name: "Barbaari",
+  sorcererClass_name: "Loitsija",
+  rogueClass_name: "Rogue",
 
   // PERKS // 
 
@@ -476,6 +506,28 @@ const finnish = {
   quicker_draw_name: "Nopeampi Veto",
   quicker_draw_desc: "Nopeammin, nopeammin!",
 
+  // BARBARIAN
+  thrill_of_battle_name: "Taiston Himo",
+  thrill_of_battle_desc: "Kamppailun kaipaus on pureutunut vereesi.",
+  weapon_mastery_name: "Harjoittelu",
+  weapon_mastery_desc: "Kykyjä täytyy hiota tai ne katoavat.",
+  raging_charge_name: "Raivokas Ryntäys",
+  raging_charge_desc: "Itsevarma hyökkäys suoraan vihollista päin on rohkeuden merkki!",
+  hardened_constitution_name: "Vahva Rakenne",
+  hardened_constitution_desc: "Kehosi on ase, täten siitä kuuluu pitää huolta.",
+  power_of_injuries_name: "Kivun Merkitys",
+  power_of_injuries_desc: "Niin kauan kun kipu sattuu elämä jatkuu!",
+  sharp_senses_name: "Kuudes Aisti",
+  sharp_senses_desc: "Sankariteot luonnistuvat häneltä, ken uskaltaa vaarantaa henkensä.",
+  perk_barbarian_rage_name: "Raivo",
+  perk_barbarian_rage_desc: "Raivo ja viha laittavat veren virtaamaan.",
+  impatient_name: "Kärsimätön",
+  impatient_desc: "Jatketaan jo!!!!",
+  ultimate_warrior_name: "Tuhon Soturi",
+  ultimate_warrior_desc: "Voitan sotani koska uskallan taistella!",
+  unyielding_rage_name: "Jatkuva Raivo",
+  unyielding_rage_desc: "Anna vihan hallita ja kaikki kärsivät.",
+
   // NECROMANCER
   pursuit_of_undeath_name: "Kuolemattomuuden Tavoittelu",
   pursuit_of_undeath_desc: "Kryptisin keinoin.",
@@ -516,6 +568,8 @@ const english = {
   lightning_def: "Lightning",
   hpMax: "Health",
   mpMax: "Mana",
+  hitChance: "Hit Chance",
+  evasion: "Evasion",
   sight: "Sight",
   increases: "Increases",
   decreases: "Decreases",
@@ -533,6 +587,12 @@ const english = {
   hpP: "Health%",
   mpV: "Mana",
   mpP: "Mana%",
+  resistAllV: "All Resistances",
+  resistAllP: "All Resistances%",
+  hitChanceAllV: "Hit Chance",
+  hitChanceAllP: "Hit Chance%",
+  evasionV: "Evasion",
+  evasionP: "Evasion%",
   status_effect: "Status effect",
   last: "Effect time",
   lasts_for: "Lasts for",
@@ -617,6 +677,11 @@ const english = {
   poison_damage: "Poison",
   burning_damage: "Burning",
 
+  // Character Creation
+  choose_name: "Name",
+  choose_race: "Race",
+  choose_class: "Class",
+
   // Misc
   attack_name: "base attack damage",
   cures_statuses: "Cures",
@@ -653,6 +718,7 @@ const english = {
   summons_unit: "Summons unit",
   summon_level: "Summoned unit level",
   summon_last: "Summoned unit last",
+  two_handed_weapon: "Two-handed",
 
   // Passive abilities
   frenzy_name: "Frenzy",
@@ -661,6 +727,10 @@ const english = {
   confident_shot_name: "Confident Shot",
   blood_rage_1_name: "Blood Rage I",
   blood_rage_2_name: "Blood Rage II",
+  reckless_1_name: "Reckless I",
+  reckless_2_name: "Reckless II",
+  sense_of_danger_1_name: "Danger Sense I",
+  sense_of_danger_2_name: "Danger Sense II",
 
   // Enemy types
   against_type_syntax: " against ",
@@ -743,6 +813,8 @@ const english = {
   effect_burning_desc: "YOU ARE ON FIRE!",
   effect_summoned_name: "Summon",
   effect_summoned_desc: "Your conjuration dies once this expires.",
+  effect_disoriented_name: "Disoriented",
+  effect_disoriented_desc: "Something has left you delirious, unable to grasp your surroundings properly.",
 
   // Abilities and stuff
   attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
@@ -817,6 +889,16 @@ const english = {
   summon_skeleton_warrior_name: "Summon Skeleton Warrior",
   summon_skeleton_warrior_desc: "Conjure a Skeleton Warrior to protect you.",
   summon_skeleton_warrior_action_desc_pl: "You call Skeleton Warrior to battle!",
+  barbarian_charge_name: "Barbarian Charge",
+  barbarian_charge_desc: "Recklessly close in on foes.",
+  barbarian_charge_action_desc_pl: "<c>yellow<c>You<c>white<c> unleash a fearsome warcry and charge towards [TARGET], dealing [DMG] damage and disorienting them!",
+  barbarian_charge_action_desc: "charges at [TARGET] with a ferocious cry, ramming into them for [DMG] damage.",
+
+  // CLASSES
+  fighterClass_name: "Fighter",
+  barbarianClass_name: "Barbarian",
+  sorcererClass_name: "Sorcerer",
+  rogueClass_name: "Rogue",
 
   // PERKS //
 
@@ -889,6 +971,28 @@ const english = {
   poison_from_afar_desc: "I'll just stay safe here while you die over there.",
   quicker_draw_name: "Quicker Draw",
   quicker_draw_desc: "Faster, faster!",
+
+  // BARBARIAN
+  thrill_of_battle_name: "Thrill of Battle",
+  thrill_of_battle_desc: "Revel in your lust for combat.",
+  weapon_mastery_name: "Weapon Mastery",
+  weapon_mastery_desc: "What good is strength if you can't use it?",
+  raging_charge_name: "Raging Charge",
+  raging_charge_desc: "Sometimes the deciding factor is a frontal assault.",
+  hardened_constitution_name: "Hardened Constitution",
+  hardened_constitution_desc: "Living in tribes toughens the body.",
+  power_of_injuries_name: "Power through Injury",
+  power_of_injuries_desc: "Pain is a reminder that you are still alive!",
+  sharp_senses_name: "Sixth Sense",
+  sharp_senses_desc: "Put your life in the line and you'll accomplish heroic deeds.",
+  perk_barbarian_rage_name: "Raging",
+  perk_barbarian_rage_desc: "Rage, fury and anger are all necessary emotions in the wild!",
+  impatient_name: "Impatient",
+  impatient_desc: "Hurry it up, I need to FIGHT!",
+  ultimate_warrior_name: "Ultimate Warrior",
+  ultimate_warrior_desc: "I win because I place victory before survival!",
+  unyielding_rage_name: "Continuous Rage",
+  unyielding_rage_desc: "This rage is unyielding, it consumes me!",
 
   // NECROMANCER
   pursuit_of_undeath_name: "Pursuit of Undeath",

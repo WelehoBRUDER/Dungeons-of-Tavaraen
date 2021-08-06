@@ -4,12 +4,12 @@ const raceTexts = {
         name: "Human",
         desc: ""
     },
-    elf: {
-        name: "Half-Elf",
-        desc: ""
-    },
     orc: {
         name: "Half-Orc",
+        desc: ""
+    },
+    elf: {
+        name: "Half-Elf",
         desc: ""
     },
     ashen: {
@@ -18,6 +18,19 @@ const raceTexts = {
     }
 };
 const raceEffects = {
+    human: {
+        modifiers: {
+            strV: 1,
+            vitV: 1,
+            dexV: 1,
+            intV: 1,
+            cunV: 1,
+            sightV: 1,
+            hpMaxV: 15
+        },
+        name: "Human Will",
+        desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
+    },
     elf: {
         modifiers: {
             strV: -3,
@@ -55,19 +68,6 @@ const raceEffects = {
         name: "Ashen Constitution",
         desc: "The Ashen are sly and slippery, not gifted in straight battle."
     },
-    human: {
-        modifiers: {
-            strV: 1,
-            vitV: 1,
-            dexV: 1,
-            intV: 1,
-            cunV: 1,
-            sightV: 1,
-            hpMaxV: 15
-        },
-        name: "Human Will",
-        desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
-    }
 };
 class PlayerCharacter extends Character {
     constructor(base) {
@@ -158,6 +158,7 @@ class PlayerCharacter extends Character {
             renderInventory();
         };
         this.equip = (event, item) => {
+            var _a;
             if (event.button !== 2)
                 return;
             const itm = Object.assign({}, item);
@@ -171,12 +172,18 @@ class PlayerCharacter extends Character {
                         canEquip = false;
                 });
             }
+            if (item.slot == "offhand" && ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.twoHanded)) {
+                this.unequip(event, "weapon");
+            }
             if (!canEquip)
                 return;
             player.inventory.splice(item.index, 1);
             this.unequip(event, itm.slot);
             this[itm.slot] = Object.assign({}, itm);
             Object.entries(item.commands).forEach(cmd => command(cmd));
+            if (item.twoHanded) {
+                this.unequip(event, "offhand");
+            }
             renderInventory();
         };
         this.carryingWeight = () => {
@@ -197,6 +204,8 @@ class PlayerCharacter extends Character {
                 this.sp += 3;
                 this.pp += 1;
                 this.level.xpNeed = nextLevel(this.level.level);
+                this.stats.hp = this.getHpMax();
+                this.stats.mp = this.getMpMax();
                 let lvlText = lang["lvl_up"];
                 lvlText = lvlText.replace("[LVL]", this.level.level.toString());
                 spawnFloatingText(this.cords, "LVL UP!", "lime", 50, 2000, 450);
@@ -408,7 +417,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["fighterClass"]),
+        main: new combatClass(combatClasses["barbarianClass"]),
         sub: null
     },
     sprite: ".player",
@@ -427,7 +436,6 @@ var player = new PlayerCharacter({
         new Ability(Object.assign({}, abilities.attack), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.summon_skeleton_warrior), { equippedSlot: 2 }), dummy),
     ],
     statModifiers: [
         {
@@ -438,41 +446,6 @@ var player = new PlayerCharacter({
                 retreat_status_effect_lastV: 1,
             }
         },
-        {
-            id: "blood_rage_1",
-            conditions: {
-                hp_less_than: 70,
-                hp_more_than: 50
-            },
-            effects: {
-                strV: 3,
-                resistAllV: 2,
-                damageP: 8
-            }
-        },
-        {
-            id: "blood_rage_2",
-            conditions: {
-                hp_less_than: 50,
-                hp_more_than: 30
-            },
-            effects: {
-                strV: 5,
-                resistAllV: 3,
-                damageP: 10
-            }
-        },
-        {
-            id: "blood_rage_3",
-            conditions: {
-                hp_less_than: 30,
-            },
-            effects: {
-                strV: 8,
-                resistAllV: 5,
-                damageP: 14
-            }
-        }
     ],
     regen: {
         hp: 0,
@@ -496,7 +469,9 @@ var randomProperty = function (obj) {
     var keys = Object.keys(obj);
     return obj[keys[keys.length * Math.random() << 0]];
 };
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 30; i++) {
     player.inventory.push(Object.assign({}, randomProperty(items)));
 }
+player.stats.hp = player.getHpMax();
+player.stats.mp = player.getMpMax();
 //# sourceMappingURL=player.js.map

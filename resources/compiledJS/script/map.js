@@ -71,7 +71,7 @@ function renderMinimap(map) {
     else {
         minimapContainer.style.display = "block";
     }
-    const miniSpriteSize = 12;
+    const miniSpriteSize = 10;
     // for (let y = 0; y < map.base.length; y++) {
     //   for (let x = 0; x < map.base[y].length; x++) {
     //     const imgId = map.base?.[y]?.[x];
@@ -271,13 +271,12 @@ function renderMap(map) {
             return;
         var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        let itemImg = new Image();
+        const itemImg = new Image();
         itemImg.src = item.itm.img;
         itemImg.onload = function () {
             var _a;
             if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
                 mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
-                itemImg = null;
             }
         };
     });
@@ -460,7 +459,7 @@ function clickMap(event) {
             }
             else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
                 // @ts-ignore
-                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true);
+                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true, player);
                 player.effects();
             }
             move = false;
@@ -1091,6 +1090,9 @@ async function advanceTurn() {
             return;
         }
         ;
+        const eRegen = enemy.getRegen();
+        enemy.stats.hp += eRegen["hp"];
+        enemy.stats.mp += eRegen["mp"];
         // @ts-ignore
         if (enemy.aggro()) {
             state.inCombat = true;
@@ -1121,8 +1123,8 @@ function hoverEnemyShow(enemy) {
     name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
     const enemyStats = enemy.getStats();
     var mainStatText = "";
-    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getHpMax()}\n`;
-    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getMpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
     mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemyStats.str}\n`;
     mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
     mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;

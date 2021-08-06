@@ -117,6 +117,29 @@
     </div>
     <div class="mainMenu">
       <div class="menuButtons"></div>
+      <div class="characterCreation">
+        <div class="playerRenderer">
+          <canvas class="layerRender" width="256" height="256"></canvas>
+        </div>
+        <div class="cosmetics">
+          <div class="hair" onclick="changeHair()">hair 1</div>
+          <div class="eyes" onclick="changeEyes()">eyes 1</div>
+          <div class="face" onclick="changeFace()">face 1</div>
+        </div>
+        <div class="nameContainer">
+          <p class="nameText">Name</p>
+          <input type="text" class="nameInput">
+        </div>
+        <div class="raceSelection">
+          <p class="raceText">Character Race</p>
+          <div class="racesContainer"></div>
+        </div>
+        <div class="classSelection">
+          <p class="classText">Character Class</p>
+          <div class="classesContainer"></div>
+        </div>
+        <div class="startGame" onclick="beginGame()">Start</div>
+      </div>
     </div>
   </div>
 </body>
@@ -150,8 +173,11 @@
    <!-- Eyes  -->
   <img src="resources/tiles/player/eyes_1.png" alt="" onload="imgLoaded()" class="eyes1 sprite">
   <img src="resources/tiles/player/eyes_2.png" alt="" onload="imgLoaded()" class="eyes2 sprite">
+  <img src="resources/tiles/player/eyes_3.png" alt="" onload="imgLoaded()" class="eyes3 sprite">
    <!-- Faces  -->
   <img src="resources/tiles/player/nose_mouth_1.png" alt="" onload="imgLoaded()" class="face1 sprite">
+  <img src="resources/tiles/player/nose_mouth_2.png" alt="" onload="imgLoaded()" class="face2 sprite">
+  <img src="resources/tiles/player/nose_mouth_3.png" alt="" onload="imgLoaded()" class="face3 sprite">
    <!-- Clothes  -->
   <img src="resources/tiles/player/generic_pants.png" alt="" onload="imgLoaded()" class="defaultPants sprite">
   <img src="resources/tiles/player/ragged_shirt.png" alt="" onload="imgLoaded()" class="raggedShirt sprite">
@@ -180,6 +206,7 @@
   <img src="resources/tiles/player/chipped_blade_model.png" alt="" onload="imgLoaded()" class="chippedBlade sprite">
   <img src="resources/tiles/player/chipped_axe_model.png" alt="" onload="imgLoaded()" class="chippedAxe sprite">
   <img src="resources/tiles/player/apprentice_wand.png" alt="" onload="imgLoaded()" class="apprenticeWand sprite">
+  <img src="resources/tiles/player/troll_club.png" alt="" onload="imgLoaded()" class="trollClub sprite">
 
   <!-- Offhands -->
   <img src="resources/tiles/player/wooden_shield.png" alt="" onload="imgLoaded()" class="woodenShield sprite">
@@ -272,3 +299,4 @@
 <script src="resources/compiledJS/script/combat.js"></script>
 <script src="resources/compiledJS/script/hotbar.js"></script>
 <script src="resources/compiledJS/script/perk.js"></script>
+<script src="resources/compiledJS/script/startGame.js"></script>

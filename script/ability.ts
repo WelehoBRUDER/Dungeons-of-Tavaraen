@@ -68,6 +68,12 @@ const possible_stat_modifiers = [
   "hpP",
   "mpV",
   "mpP",
+  "resistAllV",
+  "resistAllP",
+  "hitChanceV",
+  "hitChanceP",
+  "evasionV",
+  "evasionP"
 ];
 
 const possible_modifiers = [

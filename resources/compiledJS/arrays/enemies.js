@@ -77,6 +77,15 @@ const enemies = {
             chance: 30,
             evasion: 0
         },
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+        ],
         threat: 10,
         alive: true,
         xp: 5,
@@ -139,6 +148,15 @@ const enemies = {
             chance: 30,
             evasion: 0
         },
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+        ],
         threat: 10,
         alive: true,
         xp: 10,
@@ -201,6 +219,15 @@ const enemies = {
             chance: 30,
             evasion: 0
         },
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+        ],
         threat: 10,
         alive: true,
         xp: 10,
@@ -278,6 +305,13 @@ const enemies = {
         ],
         statModifiers: [
             {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
                 id: "magical_binding",
                 effects: {
                     mpMaxP: -100,
@@ -350,6 +384,13 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
             {
                 id: "magical_binding",
                 effects: {
@@ -424,7 +465,15 @@ const enemies = {
             new Ability(abilities.blight, dummy),
         ],
         threat: 20,
-        statModifiers: [],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: 25
+                }
+            },
+        ],
         statsPerLevel: {
             dex: 1,
             int: 2,
@@ -494,6 +543,13 @@ const enemies = {
             new Ability(abilities.fireball, dummy)
         ],
         statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: 50
+                }
+            },
             {
                 id: "dont_spam_abilities",
                 effects: {
@@ -572,10 +628,17 @@ const enemies = {
         ],
         statModifiers: [
             {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
                 id: "dont_spam_abilities",
                 effects: {
                     charge_cooldownV: 2,
-                    charge_use_rangeV: -3
+                    charge_use_rangeV: -1
                 }
             }
         ],
@@ -644,7 +707,15 @@ const enemies = {
         abilities: [
             new Ability(abilities.attack, dummy),
         ],
-        statModifiers: [],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+        ],
         statsPerLevel: {
             dex: 2,
             vit: 1,
@@ -710,6 +781,13 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: 50,
+                    regenMpP: -100
+                }
+            },
             {
                 id: "anti_magic",
                 effects: {
@@ -783,6 +861,13 @@ const enemies = {
         ],
         statModifiers: [
             {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: 50,
+                    regenMpP: -100
+                }
+            },
+            {
                 id: "anti_magic",
                 effects: {
                     mpMaxP: -100,
@@ -854,6 +939,13 @@ const enemies = {
         ],
         statModifiers: [
             {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: 50,
+                    regenMpP: -100
+                }
+            },
+            {
                 id: "anti_magic",
                 effects: {
                     mpMaxP: -100,
@@ -924,6 +1016,13 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: 50,
+                    regenMpP: -100
+                }
+            },
             {
                 id: "anti_magic",
                 effects: {

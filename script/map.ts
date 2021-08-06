@@ -89,7 +89,7 @@ function renderMinimap(map: mapObject) {
   else {
     minimapContainer.style.display = "block";
   }
-  const miniSpriteSize = 12;
+  const miniSpriteSize = 10;
   // for (let y = 0; y < map.base.length; y++) {
   //   for (let x = 0; x < map.base[y].length; x++) {
   //     const imgId = map.base?.[y]?.[x];
@@ -284,12 +284,11 @@ function renderMap(map: mapObject) {
     if (item.map != currentMap) return;
     var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
     var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    let itemImg = new Image();
+    const itemImg = new Image();
     itemImg.src = item.itm.img;
     itemImg.onload = function () {
       if (sightMap[item.cords.y]?.[item.cords.x] == "x") {
         mapDataCtx?.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
-        itemImg = null;
       }
     };
   });
@@ -461,7 +460,7 @@ function clickMap(event: MouseEvent) {
         // @ts-ignore
       } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
         // @ts-ignore
-        fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true);
+        fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true, player);
         player.effects();
       }
       move = false;
@@ -1020,6 +1019,9 @@ async function advanceTurn() {
   map.enemies.forEach(enemy => {
     if (player.isDead) return;
     if (!enemy.alive) { updateEnemiesTurn(); return; };
+    const eRegen = enemy.getRegen();
+    enemy.stats.hp += eRegen["hp"];
+    enemy.stats.mp += eRegen["mp"];
     // @ts-ignore
     if (enemy.aggro()) {
       state.inCombat = true;
@@ -1048,8 +1050,8 @@ function hoverEnemyShow(enemy: enemy) {
   name.textContent = `Lvl ${enemy.level} ${lang[enemy.id + "_name"] ?? enemy.id}`;
   const enemyStats = enemy.getStats();
   var mainStatText: string = "";
-  mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${enemy.stats.hp}/${enemy.getHpMax()}\n`;
-  mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${enemy.stats.mp}/${enemy.getMpMax()}\n`;
+  mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
+  mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
   mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemyStats.str}\n`;
   mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
   mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;

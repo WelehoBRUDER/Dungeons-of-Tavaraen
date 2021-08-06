@@ -464,6 +464,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
         let _value = 0;
         if (player.statusEffects.find((eff) => eff.id == effectId))
             _value = value;
+        console.log(id);
         frontImg = abilities[id].icon;
         if (value < 0)
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;

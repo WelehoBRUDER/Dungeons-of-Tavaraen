@@ -104,18 +104,19 @@ class Consumable extends Item {
 }
 class Weapon extends Item {
     constructor(base) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
         this.range = baseItem.range;
         this.firesProjectile = baseItem.firesProjectile;
         this.damagesTemplate = baseItem.damagesTemplate;
         this.statsTemplate = baseItem.statsTemplate;
-        this.damages = (_a = Object.assign({}, baseItem.damages)) !== null && _a !== void 0 ? _a : {};
-        this.stats = (_b = Object.assign({}, baseItem.stats)) !== null && _b !== void 0 ? _b : {};
-        this.commands = (_c = Object.assign({}, baseItem.commands)) !== null && _c !== void 0 ? _c : {};
-        this.rolledDamages = (_d = Object.assign({}, base.rolledDamages)) !== null && _d !== void 0 ? _d : {};
-        this.rolledStats = (_e = Object.assign({}, base.rolledStats)) !== null && _e !== void 0 ? _e : {};
+        this.twoHanded = (_a = baseItem.twoHanded) !== null && _a !== void 0 ? _a : false;
+        this.damages = (_b = Object.assign({}, baseItem.damages)) !== null && _b !== void 0 ? _b : {};
+        this.stats = (_c = Object.assign({}, baseItem.stats)) !== null && _c !== void 0 ? _c : {};
+        this.commands = (_d = Object.assign({}, baseItem.commands)) !== null && _d !== void 0 ? _d : {};
+        this.rolledDamages = (_e = Object.assign({}, base.rolledDamages)) !== null && _e !== void 0 ? _e : {};
+        this.rolledStats = (_f = Object.assign({}, base.rolledStats)) !== null && _f !== void 0 ? _f : {};
         if (Object.values(this.rolledDamages).length == 0) {
             /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
             this.damagesTemplate.forEach((template) => {
@@ -451,6 +452,8 @@ function itemTT(item) {
         text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
     if (item.usesRemaining)
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
+    if (item.twoHanded)
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
     text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
     return text;

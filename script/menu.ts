@@ -24,6 +24,7 @@ const mainButtons = [
   },
   {
     id: "menu_new_game",
+    action: () => characterCreation()
   },
   {
     id: "menu_load_game",

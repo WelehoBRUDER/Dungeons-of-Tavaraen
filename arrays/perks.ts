@@ -225,7 +225,8 @@ const perksArray = {
         name: "Resistant in Melee",
         desc: "",
         effects: {
-          resistAllV: 5
+          resistAllV: 5,
+          evasionV: 2
         },
         relative_to: "patient_blow",
         requires: ["patient_blow"],
@@ -253,6 +254,7 @@ const perksArray = {
         desc: "",
         effects: {
           attack_damage_multiplierP: 10,
+          hitChanceV: 5
         },
         relative_to: "fighters_vitality",
         requires: ["fighters_vitality"],
@@ -310,7 +312,8 @@ const perksArray = {
           battle_fury_status_effect_attack_damage_multiplierPP: 10,
           charge_damage_multiplierP: 25,
           charge_resistance_penetrationV: 10,
-          charge_cooldownV: -3
+          charge_cooldownV: -3,
+          hitChanceV: 7
         },
         statModifiers: [
           {
@@ -341,7 +344,6 @@ const perksArray = {
         desc: "",
         effects: {
           strV: 1,
-          evasionV: 8
         },
         statModifiers: [
           {
@@ -369,7 +371,187 @@ const perksArray = {
         ],
         tree: "barbarian",
         pos: { x: 7.5, y: 1 },
-        icon: "resources/icons/skull.png"
+        icon: "resources/icons/rage.png"
+      },
+      weapon_mastery: {
+        id: "weapon_mastery",
+        name: "Weapon Mastery",
+        desc: "",
+        effects: {
+          hitChanceV: 5,
+          strV: 2
+        },
+        tree: "barbarian",
+        pos: { x: 0, y: 2 },
+        relative_to: "thrill_of_battle",
+        requires: ["thrill_of_battle"],
+        icon: "resources/icons/barbarian_symbol.png"
+      },
+      raging_charge: {
+        id: "raging_charge",
+        name: "Raging Charge",
+        desc: "",
+        effects: {
+          hpMaxV: 10
+        },
+        commands: {
+          add_ability_barbarian_charge: 1
+        },
+        tree: "barbarian",
+        pos: { x: -4, y: 2 },
+        relative_to: "weapon_mastery",
+        requires: ["weapon_mastery"],
+        icon: "resources/icons/barbarian_charge.png"
+      },
+      impatient: {
+        id: "impatient",
+        name: "Impatient",
+        desc: "",
+        effects: {
+          evasionV: 1,
+          barbarian_charge_cooldownV: -3,
+          barbarian_charge_damage_multiplierP: 30
+        },
+        tree: "barbarian",
+        pos: { x: 0, y: 2 },
+        relative_to: "raging_charge",
+        requires: ["raging_charge"],
+        icon: "resources/icons/cooldown_flame.png"
+      },
+      hardened_constitution: {
+        id: "hardened_constitution",
+        name: "Hardenend  Constitution",
+        desc: "",
+        effects: {
+          vitV: 3,
+          hpMaxP: 5
+        },
+        tree: "barbarian",
+        pos: { x: -2, y: 2 },
+        relative_to: "weapon_mastery",
+        requires: ["weapon_mastery"],
+        icon: "resources/icons/vitality.png"
+      },
+      sharp_senses: {
+        id: "sharp_senses",
+        name: "Sharpened Senses",
+        desc: "",
+        effects: {
+          evasionV: 2
+        },
+        statModifiers: [
+          {
+            id: "sense_of_danger_1",
+            conditions: {
+              hp_less_than: 50,
+              hp_more_than: 20
+            },
+            effects: {
+              evasionV: 5,
+              resistAllV: 5
+            }
+          }
+        ],
+        tree: "barbarian",
+        pos: { x: 2, y: 2 },
+        relative_to: "weapon_mastery",
+        requires: ["weapon_mastery"],
+        icon: "resources/icons/glass_cannon.png"
+      },
+      power_of_injuries: {
+        id: "power_of_injuries",
+        name: "Power of Injuries",
+        desc: "",
+        effects: {
+          strV: 1
+        },
+        statModifiers: [
+          {
+            id: "reckless_1",
+            conditions: {
+              hp_less_than: 50,
+              hp_more_than: 20
+            },
+            effects: {
+              hitChanceV: 5,
+              attack_damage_multiplierP: 10
+            }
+          }
+        ],
+        tree: "barbarian",
+        pos: { x: 0, y: 2 },
+        relative_to: "weapon_mastery",
+        requires: ["weapon_mastery"],
+        icon: "resources/icons/barbarian_flame.png"
+      },
+      ultimate_warrior: {
+        id: "ultimate_warrior",
+        name: "Ultimate Warrior",
+        desc: "",
+        effects: {
+          vitV: 1,
+          strV: 1
+        },
+        statModifiers: [
+          {
+            id: "reckless_2",
+            conditions: {
+              hp_less_than: 20,
+            },
+            effects: {
+              hitChanceV: 10,
+              attack_damage_multiplierP: 20
+            }
+          },
+          {
+            id: "sense_of_danger_2",
+            conditions: {
+              hp_less_than: 20,
+            },
+            effects: {
+              evasionV: 10,
+              resistAllV: 10
+            }
+          },
+        ],
+        tree: "barbarian",
+        pos: { x: 0, y: 2 },
+        relative_to: "power_of_injuries",
+        requires: ["hardened_constitution", "power_of_injuries", "sharp_senses"],
+        icon: "resources/icons/skull_of_doom.png"
+      },
+      perk_barbarian_rage: {
+        id: "perk_barbarian_rage",
+        name: "Barbarian Rage",
+        desc: "",
+        effects: {
+          damageP: 2,
+          resistAllV: -2
+        },
+        commands: {
+          add_ability_barbarian_rage: 1
+        },
+        tree: "barbarian",
+        pos: { x: 4, y: 2 },
+        relative_to: "weapon_mastery",
+        requires: ["weapon_mastery"],
+        icon: "resources/icons/berserk.png"
+      },
+      unyielding_rage: {
+        id: "unyielding_rage",
+        name: "Unyielding Rage",
+        desc: "",
+        effects: {
+          damageP: 4,
+          barbarian_rage_cooldownV: -3,
+          barbarian_rage_status_effect_strVV: 5,
+          barbarian_rage_status_effect_resistAllVV: 5,
+        },
+        tree: "barbarian",
+        pos: { x: 0, y: 2 },
+        relative_to: "perk_barbarian_rage",
+        requires: ["perk_barbarian_rage"],
+        icon: "resources/icons/skull_bleeding_eyes_flame.png"
       },
     }
   },
@@ -410,7 +592,8 @@ const perksArray = {
         desc: "",
         effects: {
           shadow_step_use_rangeP: 50,
-          shadow_step_cooldownP: -22
+          shadow_step_cooldownP: -22,
+          evasionV: 3
         },
         tree: "rogue",
         relative_to: "weakpoint_spotter",
@@ -438,6 +621,7 @@ const perksArray = {
         effects: {
           damageP: 5,
           critDamageP: 25,
+          hitChanceV: 4,
           hpMaxP: -10,
         },
         tree: "rogue",
@@ -451,7 +635,8 @@ const perksArray = {
         name: "Simple Strokes",
         desc: "",
         effects: {
-          attack_damage_multiplierP: 13
+          attack_damage_multiplierP: 13,
+          hitChanceV: 3
         },
         tree: "rogue",
         relative_to: "glass_cannon",
@@ -519,7 +704,8 @@ const perksArray = {
         effects: {
           critChanceP: 5,
           critDamageP: 10,
-          pierceDamageP: 15
+          pierceDamageP: 15,
+          evasionV: 5
         },
         tree: "rogue",
         relative_to: "ranged_expert",

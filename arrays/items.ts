@@ -80,6 +80,35 @@ const items = {
     grade: "common",
     slot: "weapon"
   },
+  trollClub: {
+    id: "trollClub",
+    name: "Troll Club",
+    damages: { crush: 13 },
+    damagesTemplate: [
+      { type: "crush", value: [2, 6], chance: 7 },
+      { type: "dark", value: [4, 5], chance: 4 },
+      { type: "divine", value: [4, 5], chance: 4 },
+    ],
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 4, 7], chance: 1.25 },
+      { type: "dexV", value: [1, 2, 4, 7], chance: 1.75 },
+    ],
+    stats: {
+      hitChanceV: 5
+    },
+    requiresStats: {
+      str: 18
+    },
+    range: 1,
+    img: "resources/icons/troll_club.png",
+    sprite: "trollClub",
+    price: 75,
+    weight: 5.4,
+    type: "weapon",
+    twoHanded: true,
+    grade: "uncommon",
+    slot: "weapon"
+  },
   chippedBlade: {
     id: "chippedBlade",
     name: "Chipped Longsword",
