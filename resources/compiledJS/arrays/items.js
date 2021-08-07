@@ -279,6 +279,41 @@ const items = {
         grade: "common",
         slot: "offhand"
     },
+    ironShield: {
+        id: "ironShield",
+        name: "Iron Shield",
+        resistances: { slash: 13, crush: 9, pierce: 11, fire: 4, magic: 2, dark: 2, divine: 4, lightning: 1, ice: 5 },
+        resistancesTemplate: [
+            { type: "pierce", value: [2, 5], chance: 5 },
+            { type: "slash", value: [3, 7], chance: 5 },
+            { type: "crush", value: [2, 5], chance: 7 },
+            { type: "dark", value: [2, 5], chance: 5 },
+            { type: "divine", value: [2, 5], chance: 5 },
+            { type: "fire", value: [1, 3], chance: 5 },
+            { type: "lightning", value: [1, 2], chance: 5 },
+            { type: "ice", value: [2, 4], chance: 5 },
+        ],
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3, 4], chance: 1.25 },
+            { type: "strP", value: [3, 5, 8, 10], chance: 2.5 },
+            { type: "dexV", value: [1, 2, 3, 5], chance: 1.75 },
+            { type: "dexP", value: [3, 5, 7, 9], chance: 1.5 },
+            { type: "vitV", value: [1, 2, 4, 5], chance: 1.75 },
+            { type: "vitP", value: [3, 6, 9, 11], chance: 1.8 },
+            { type: "hpMaxV", value: [4, 8, 12, 15], chance: 3.5 },
+        ],
+        requiresStats: {
+            str: 6,
+            vit: 8
+        },
+        img: "resources/icons/iron_shield.png",
+        sprite: "ironShield",
+        price: 62,
+        weight: 3.1,
+        type: "armor",
+        grade: "uncommon",
+        slot: "offhand"
+    },
     raggedShirt: {
         id: "raggedShirt",
         name: "Ragged Shirt",

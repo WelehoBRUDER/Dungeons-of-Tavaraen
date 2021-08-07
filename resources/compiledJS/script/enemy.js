@@ -112,7 +112,7 @@ class Enemy extends Character {
                     updateEnemiesTurn();
                 }
                 // If there's no offensive action to be taken, just move towards the this.chosenTarget.
-                else {
+                else if (!this.isRooted()) {
                     var path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
                     try {
                         let willStack = false;
@@ -135,6 +135,8 @@ class Enemy extends Character {
                     catch (_b) { }
                     updateEnemiesTurn();
                 }
+                else
+                    updateEnemiesTurn();
             }
             setTimeout(modifyCanvas, 200);
         };

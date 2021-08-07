@@ -6,7 +6,7 @@ const combatClasses = {
             vitV: 3,
             strV: 2,
             resistAllV: 2,
-            attack_damage_multiplier: 5
+            attack_damage_multiplierP: 5
         },
         color: "#5e2813",
         perkTree: "fighter",
@@ -18,7 +18,7 @@ const combatClasses = {
             vitV: 1,
             strV: 4,
             hpMaxV: 10,
-            attack_damage_multiplier: 8,
+            attack_damage_multiplierP: 8,
         },
         color: "#5c2323",
         perkTree: "barbarian",

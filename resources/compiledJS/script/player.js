@@ -46,7 +46,7 @@ const raceEffects = {
     orc: {
         modifiers: {
             strV: 4,
-            vit: 6,
+            vitV: 6,
             intV: -3,
             cunV: -2,
             sightV: 1,

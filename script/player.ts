@@ -95,7 +95,7 @@ const raceEffects = {
   orc: {
     modifiers: {
       strV: 4,
-      vit: 6,
+      vitV: 6,
       intV: -3,
       cunV: -2,
       sightV: 1,
@@ -117,7 +117,7 @@ const raceEffects = {
     name: "Ashen Constitution",
     desc: "The Ashen are sly and slippery, not gifted in straight battle."
   },
-}
+} as any;
 
 class PlayerCharacter extends Character {
   [canFly: string]: any;

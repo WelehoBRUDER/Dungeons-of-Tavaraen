@@ -116,6 +116,7 @@ function characterCreation(withAnimations = true) {
         const btn = document.createElement("div");
         btn.textContent = content.name;
         btn.classList.add("raceButton");
+        tooltip(btn, raceTT(race[0]));
         if (player.race == race[0])
             btn.style.border = "4px solid gold";
         else {
@@ -132,6 +133,7 @@ function characterCreation(withAnimations = true) {
         bg.style.background = combatClass.color;
         title.textContent = lang[combatClass.id + "_name"];
         icon.src = combatClass.icon;
+        tooltip(bg, classTT(combatClass));
         if (((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.main) === null || _b === void 0 ? void 0 : _b.id) == combatClass.id)
             bg.style.border = "4px solid gold";
         else {
@@ -196,5 +198,31 @@ function changeRace(race) {
 function changeClass(_combatClass) {
     player.classes.main = new combatClass(_combatClass);
     characterCreation(false);
+}
+function raceTT(race) {
+    let txt = "";
+    // @ts-expect-error
+    let entries = Object.entries(raceEffects[race].modifiers).sort((a, b) => b[1] - a[1]);
+    let sortedTotal = {};
+    entries.forEach((entry) => {
+        sortedTotal[entry[0]] = entry[1];
+    });
+    Object.entries(sortedTotal).forEach(effect => {
+        txt += effectSyntax(effect);
+    });
+    return txt;
+}
+function classTT(data) {
+    let txt = `<c>white<c><f>24px<f>${lang[data.id + "_name"]}\n`;
+    // @ts-expect-error
+    let entries = Object.entries(data.statBonuses).sort((a, b) => b[1] - a[1]);
+    let sortedTotal = {};
+    entries.forEach((entry) => {
+        sortedTotal[entry[0]] = entry[1];
+    });
+    Object.entries(sortedTotal).forEach(effect => {
+        txt += effectSyntax(effect);
+    });
+    return txt;
 }
 //# sourceMappingURL=startGame.js.map

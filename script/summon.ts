@@ -130,7 +130,7 @@ class Summon extends Character {
           regularAttack(this, this.chosenTarget, this.abilities[0]);
         }
         // If there's no offensive action to be taken, just move towards the this.chosenTarget.
-        else {
+        else if(!this.isRooted()) {
           var path: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
           try {
             let willStack = false;
@@ -150,7 +150,7 @@ class Summon extends Character {
           catch { }
         }
       }
-      else {
+      else if(!this.isRooted()) {
         var path: any = generatePath(this.cords, player.cords, this.canFly);
         try {
           let willStack = false;

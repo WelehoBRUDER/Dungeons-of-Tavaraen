@@ -959,6 +959,7 @@ const enemies = {
             vit: 3
         },
         loot: [
+            { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
             { type: "gold", amount: [26, 51] }
         ]
     },
@@ -1037,6 +1038,7 @@ const enemies = {
             vit: 4
         },
         loot: [
+            { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
             { type: "gold", amount: [53, 129] }
         ]
     },

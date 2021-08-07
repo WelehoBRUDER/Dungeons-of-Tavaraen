@@ -7,10 +7,19 @@ const lootPools = {
         { type: "armor", amount: [1, 1], item: "raggedHood", chance: 5 },
         { type: "armor", amount: [1, 1], item: "raggedGloves", chance: 5 },
         { type: "armor", amount: [1, 1], item: "raggedBoots", chance: 5 },
+        { type: "armor", amount: [1, 1], item: "woodenShield", chance: 5 },
+        { type: "armor", amount: [1, 1], item: "leatherChest", chance: 5 },
+        { type: "armor", amount: [1, 1], item: "leatherLeggings", chance: 3 },
+        { type: "armor", amount: [1, 1], item: "leatherBracers", chance: 3 },
+        { type: "armor", amount: [1, 1], item: "leatherHelmet", chance: 3 },
+        { type: "armor", amount: [1, 1], item: "leatherBoots", chance: 3 },
+        { type: "armor", amount: [1, 1], item: "ironHelmet", chance: 1 },
         { type: "weapon", amount: [1, 1], item: "stick", chance: 10 },
         { type: "weapon", amount: [1, 1], item: "dagger", chance: 10 },
         { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 8 },
-        { type: "gold", amount: [9, 53] }
+        { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 8 },
+        { type: "weapon", amount: [1, 1], item: "apprencticeWand", chance: 8 },
+        { type: "gold", amount: [13, 76] }
     ]
 };
 const chestTemplates = {
