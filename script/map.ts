@@ -192,8 +192,9 @@ function renderMap(map: mapObject) {
   });
 
   map.treasureChests.forEach((chest: treasureChest) => {
+    const lootedChest = lootedChests.find(trs=>trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
     if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
-      if (chest.sinceOpened == -1) {
+      if (!lootedChest) {
         const chestSprite = document.querySelector<HTMLImageElement>(`.${chest.sprite}`);
         var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -220,11 +221,12 @@ function renderMap(map: mapObject) {
       const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
       const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
       const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-      ctx?.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-      ctx?.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
-      ctx?.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
+      ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+      ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (enemy.hpRemain() * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+      ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       /* Render enemy on top of hp bar */
-      ctx?.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
+      console.log(tileX);
+      ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       let statCount = 0;
       enemy.statusEffects.forEach((effect: statEffect) => {
         if (statCount > 4) return;
@@ -593,7 +595,8 @@ document.addEventListener("keyup", (keyPress) => {
     activateShrine();
     pickLoot();
     maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
-      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1) chest.lootChest();
+      const lootedChest = lootedChests.find(trs=>trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
     });
   }
 });
@@ -747,7 +750,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     ctx?.drawImage(weaponModel, x, y, size, size);
   }
   if (playerModel.offhand?.sprite) {
-    const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
+    const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.offhand.sprite);
     ctx?.drawImage(offhandModel, x, y, size, size);
   }
 }
@@ -1049,6 +1052,7 @@ function hoverEnemyShow(enemy: enemy) {
   name.classList.add("enemyName");
   name.textContent = `Lvl ${enemy.level} ${lang[enemy.id + "_name"] ?? enemy.id}`;
   const enemyStats = enemy.getStats();
+  const enemyMiscStats = enemy.getHitchance();
   var mainStatText: string = "";
   mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
   mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
@@ -1057,6 +1061,8 @@ function hoverEnemyShow(enemy: enemy) {
   mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
   mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemyStats.int}\n`;
   mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
+  mainStatText += `<f>20px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
+  mainStatText += `<f>20px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
   let enTotalDmg = enemy.trueDamage();
   mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
   Object.entries(enTotalDmg.split).forEach((res: any) => {

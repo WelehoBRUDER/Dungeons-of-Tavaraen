@@ -18,10 +18,11 @@ const lootPools = {
         { type: "weapon", amount: [1, 1], item: "dagger", chance: 10 },
         { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 8 },
         { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 8 },
-        { type: "weapon", amount: [1, 1], item: "apprencticeWand", chance: 8 },
+        { type: "weapon", amount: [1, 1], item: "apprenticeWand", chance: 8 },
         { type: "gold", amount: [13, 76] }
     ]
 };
+let lootedChests = [];
 const chestTemplates = {
     default: {
         id: "defaultChest",
@@ -80,7 +81,7 @@ class treasureChest {
                 _inv.append(createItems(this.loot, "PICK_TREASURE", this));
             }
             else {
-                this.sinceOpened = 0;
+                lootedChests.push({ cords: Object.assign({}, this.cords), sinceOpened: 0, map: this.map });
                 modifyCanvas();
                 closeInventory();
             }

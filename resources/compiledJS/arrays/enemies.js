@@ -250,6 +250,282 @@ const enemies = {
             { type: "gold", amount: [4, 11] }
         ]
     },
+    hiisi: {
+        id: "hiisi",
+        name: "Hiisi",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 4,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 0,
+            hp: 20,
+            mp: 0,
+            hpMax: 20,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 0,
+            crush: 0,
+            pierce: 0,
+            magic: 0,
+            dark: 0,
+            divine: 0,
+            fire: -10,
+            lightning: -10,
+            ice: -10
+        },
+        statusResistances: {
+            poison: 0,
+            burning: 0,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            slash: 6
+        },
+        hit: {
+            chance: 55,
+            evasion: 35
+        },
+        scale: 0.9,
+        threat: 25,
+        alive: true,
+        xp: 10,
+        sprite: "hiisi",
+        type: "hiisi",
+        race: "monster",
+        img: "resources/tiles/enemies/hiisi.png",
+        aggroRange: 9,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "magical_incompetence",
+                effects: {
+                    mpMaxP: -100,
+                }
+            },
+            {
+                id: "cornered_animal_frenzy",
+                conditions: {
+                    hp_less_than: 50
+                },
+                effects: {
+                    evasionV: 10,
+                    hitChanceV: 10,
+                    damageP: 5
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 1,
+            dex: 1,
+            vit: 2
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+            { type: "gold", amount: [2, 11] }
+        ]
+    },
+    hiisiWarrior: {
+        id: "hiisiWarrior",
+        name: "Hiisi Warrior",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 8,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 4,
+            hp: 30,
+            mp: 0,
+            hpMax: 30,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 5,
+            crush: 5,
+            pierce: 5,
+            magic: 5,
+            dark: 5,
+            divine: 5,
+            fire: -10,
+            lightning: -10,
+            ice: -10
+        },
+        statusResistances: {
+            poison: 0,
+            burning: 0,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            pierce: 8
+        },
+        hit: {
+            chance: 60,
+            evasion: 40
+        },
+        scale: 0.9,
+        threat: 25,
+        alive: true,
+        xp: 15,
+        sprite: "hiisiWarrior",
+        type: "hiisi",
+        race: "monster",
+        img: "resources/tiles/enemies/hiisi.png",
+        aggroRange: 9,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.battle_fury, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "magical_incompetence",
+                effects: {
+                    mpMaxP: -100,
+                }
+            },
+            {
+                id: "cornered_animal_frenzy",
+                conditions: {
+                    hp_less_than: 50
+                },
+                effects: {
+                    evasionV: 10,
+                    hitChanceV: 10,
+                    damageP: 5
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 2,
+            dex: 1,
+            vit: 1
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+            { type: "gold", amount: [2, 11] }
+        ]
+    },
+    hiisiHunter: {
+        id: "hiisiHunter",
+        name: "Hiisi Hunter",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 1,
+            dex: 8,
+            int: 1,
+            vit: 0,
+            cun: 4,
+            hp: 20,
+            mp: 0,
+            hpMax: 20,
+            mpMax: 0
+        },
+        resistances: {
+            slash: -5,
+            crush: -5,
+            pierce: -5,
+            magic: -5,
+            dark: -5,
+            divine: -5,
+            fire: -10,
+            lightning: -10,
+            ice: -10
+        },
+        statusResistances: {
+            poison: 0,
+            burning: 0,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            pierce: 7
+        },
+        hit: {
+            chance: 60,
+            evasion: 40
+        },
+        scale: 0.9,
+        threat: 20,
+        alive: true,
+        xp: 15,
+        sprite: "hiisiHunter",
+        type: "hiisi",
+        race: "monster",
+        img: "resources/tiles/enemies/hiisi_hunter.png",
+        shootsProjectile: "arrowProjectile",
+        aggroRange: 9,
+        attackRange: 6,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.poisoned_arrow, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "magical_incompetence",
+                effects: {
+                    mpMaxP: -100,
+                }
+            },
+            {
+                id: "cornered_animal_frenzy",
+                conditions: {
+                    hp_less_than: 50
+                },
+                effects: {
+                    evasionV: 10,
+                    hitChanceV: 10,
+                    damageP: 5
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 1,
+            dex: 2,
+            vit: 1
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+            { type: "gold", amount: [2, 11] }
+        ]
+    },
     skeletonWarrior: {
         id: "skeletonWarrior",
         name: "Skeleton Warrior",
@@ -292,7 +568,7 @@ const enemies = {
         },
         threat: 20,
         alive: true,
-        xp: 5,
+        xp: 15,
         sprite: "skeletonWarrior",
         type: "skeleton",
         race: "undead",
@@ -371,7 +647,7 @@ const enemies = {
         },
         threat: 20,
         alive: true,
-        xp: 5,
+        xp: 15,
         sprite: "skeletonArcher",
         type: "skeleton",
         race: "undead",
@@ -451,7 +727,7 @@ const enemies = {
             evasion: 25
         },
         alive: true,
-        xp: 10,
+        xp: 30,
         sprite: "skeletonMage",
         type: "skeleton",
         race: "undead",
@@ -780,6 +1056,7 @@ const enemies = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
+        scale: 1.2,
         statModifiers: [
             {
                 id: "enemy_regen_modifiers",
@@ -859,6 +1136,7 @@ const enemies = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
+        scale: 1.2,
         statModifiers: [
             {
                 id: "enemy_regen_modifiers",
@@ -937,6 +1215,7 @@ const enemies = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
+        scale: 1.2,
         statModifiers: [
             {
                 id: "enemy_regen_modifiers",
@@ -1016,6 +1295,7 @@ const enemies = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
+        scale: 1.2,
         statModifiers: [
             {
                 id: "enemy_regen_modifiers",
@@ -1040,6 +1320,91 @@ const enemies = {
         loot: [
             { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
             { type: "gold", amount: [53, 129] }
+        ]
+    },
+    soulWraith: {
+        id: "soulWraith",
+        name: "Soul Wraith",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 20,
+            dex: 10,
+            int: 20,
+            vit: 0,
+            cun: 10,
+            hp: 120,
+            mp: 60,
+            hpMax: 120,
+            mpMax: 60
+        },
+        resistances: {
+            slash: 60,
+            crush: 60,
+            pierce: 60,
+            magic: 30,
+            dark: 100,
+            divine: -75,
+            fire: -45,
+            lightning: 30,
+            ice: 75
+        },
+        statusResistances: {
+            poison: 100,
+            burning: -50,
+            curse: 100,
+            stun: 25,
+            bleed: 100
+        },
+        damages: {
+            slash: 8,
+            dark: 11,
+            magic: 3
+        },
+        hit: {
+            chance: 95,
+            evasion: 45
+        },
+        threat: 90,
+        alive: true,
+        xp: 350,
+        sprite: "soulWraith",
+        type: "skeleton",
+        race: "undead",
+        img: "resources/tiles/enemies/soul_wraith.png",
+        aggroRange: 17,
+        attackRange: 1,
+        canFly: false,
+        scale: 1.1,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.blight, dummy),
+            new Ability(abilities.piercing_mana_bolt, dummy),
+            new Ability(abilities.reap, dummy),
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -50,
+                    regenMpP: -50
+                }
+            },
+            {
+                id: "attack_normally_sometimes",
+                effects: {
+                    piercing_mana_bolt_cooldownV: 4
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 2,
+            dex: 1,
+            vit: 1
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+            { type: "gold", amount: [4, 15] }
         ]
     },
 };

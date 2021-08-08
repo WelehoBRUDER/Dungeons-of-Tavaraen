@@ -288,6 +288,22 @@ const abilities = {
         use_range: "10",
         ai_chance: 5
     },
+    reap: {
+        id: "reap",
+        name: "Reap",
+        mana_cost: 0,
+        cooldown: 13,
+        type: "charge",
+        damage_multiplier: 1.5,
+        resistance_penetration: 12,
+        status: "burning",
+        status_power: 62,
+        action_desc: "reaps foe.",
+        action_desc_pl: "you reap foe",
+        icon: "resources/icons/charge_ability.png",
+        use_range: "14",
+        ai_chance: 10
+    },
     purification: {
         id: "purification",
         name: "Purification",

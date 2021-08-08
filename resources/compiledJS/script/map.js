@@ -175,8 +175,9 @@ function renderMap(map) {
     });
     map.treasureChests.forEach((chest) => {
         var _a;
+        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
         if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
-            if (chest.sinceOpened == -1) {
+            if (!lootedChest) {
                 const chestSprite = document.querySelector(`.${chest.sprite}`);
                 var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -204,11 +205,12 @@ function renderMap(map) {
             const hpbg = document.querySelector(".hpBg");
             const hpbar = document.querySelector(".hpBar");
             const hpborder = document.querySelector(".hpBorder");
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (enemy.hpRemain() * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             /* Render enemy on top of hp bar */
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
+            console.log(tileX);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             let statCount = 0;
             enemy.statusEffects.forEach((effect) => {
                 if (statCount > 4)
@@ -604,7 +606,8 @@ document.addEventListener("keyup", (keyPress) => {
         activateShrine();
         pickLoot();
         maps[currentMap].treasureChests.forEach((chest) => {
-            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.sinceOpened == -1)
+            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
                 chest.lootChest();
         });
     }
@@ -779,7 +782,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
     if ((_j = playerModel.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
-        const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
+        const offhandModel = document.querySelector(".sprites ." + playerModel.offhand.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, x, y, size, size);
     }
 }
@@ -1122,6 +1125,7 @@ function hoverEnemyShow(enemy) {
     name.classList.add("enemyName");
     name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
     const enemyStats = enemy.getStats();
+    const enemyMiscStats = enemy.getHitchance();
     var mainStatText = "";
     mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
     mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
@@ -1130,6 +1134,8 @@ function hoverEnemyShow(enemy) {
     mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
     mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemyStats.int}\n`;
     mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
+    mainStatText += `<f>20px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
+    mainStatText += `<f>20px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
     let enTotalDmg = enemy.trueDamage();
     mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
     Object.entries(enTotalDmg.split).forEach((res) => {

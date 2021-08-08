@@ -330,6 +330,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             saveData.fallenEnemies = [...fallenEnemies];
             saveData.itemData = [...itemData];
             saveData.currentMap = currentMap;
+            saveData.lootedChests = [...lootedChests];
             let sortTime = +(new Date());
             let saveTime = new Date();
             let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -342,10 +343,14 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(false, false);
         });
         loadGame.addEventListener("click", () => {
+            var _a;
             reviveAllDeadEnemies();
+            console.log(save.save);
             player = new PlayerCharacter(Object.assign({}, save.save.player));
             fallenEnemies = [...save.save.fallenEnemies];
             itemData = [...save.save.itemData];
+            if (save.save.lootedChests)
+                lootedChests = (_a = [...save.save.lootedChests]) !== null && _a !== void 0 ? _a : [];
             currentMap = save.save.currentMap;
             purgeDeadEnemies();
             handleEscape();
@@ -361,7 +366,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(false, false);
         });
         saveName.textContent = save.text;
-        renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", save.save.player);
+        let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
+        renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
         await sleep(25);
         buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
         saveContainer.append(saveCanvas, saveName, buttonsContainer);
@@ -430,6 +436,7 @@ function createNewSaveGame() {
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
     gameSave.currentMap = currentMap;
+    gameSave.lootedChests = [...lootedChests];
     let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
     let key = generateKey(7);
     saves.push({ text: `${saveName} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`, save: gameSave, id: saves.length, time: sortTime, key: key });
@@ -460,6 +467,10 @@ function saveToFile(input) {
         {
             key: "itemData",
             data: [...itemData]
+        },
+        {
+            key: "lootedChests",
+            data: [...lootedChests]
         },
         {
             key: "enemies",
@@ -540,6 +551,7 @@ function LoadSlot(data) {
     player = new PlayerCharacter(GetKey("player", data).data);
     itemData = GetKey("itemData", data).data;
     fallenEnemies = GetKey("enemies", data).data;
+    lootedChests = GetKey("lootedChests", data).data;
     currentMap = GetKey("currentMap", data).data;
     purgeDeadEnemies();
     handleEscape();

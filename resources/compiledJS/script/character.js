@@ -150,7 +150,7 @@ function getModifiers(char, stat, withConditions = true) {
 }
 class Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
@@ -162,6 +162,7 @@ class Character {
         this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
         this.regen = (_f = base.regen) !== null && _f !== void 0 ? _f : { hp: 0, mp: 0 };
         this.hit = (_g = Object.assign({}, base.hit)) !== null && _g !== void 0 ? _g : { chance: 10, evasion: 5 };
+        this.scale = (_h = base.scale) !== null && _h !== void 0 ? _h : 1;
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
@@ -287,7 +288,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_h = base.abilities) !== null && _h !== void 0 ? _h : [];
+        this.abilities = (_j = base.abilities) !== null && _j !== void 0 ? _j : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {

@@ -249,6 +249,7 @@ class Character {
   getRegen?: Function;
   getHitchance?: Function;
   isRooted?: Function;
+  scale?: number;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -261,6 +262,7 @@ class Character {
     this.threat = base.threat ?? 25;
     this.regen = base.regen ?? {hp: 0, mp: 0};
     this.hit = {...base.hit} ?? { chance: 10, evasion: 5 };
+    this.scale = base.scale ?? 1;
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
