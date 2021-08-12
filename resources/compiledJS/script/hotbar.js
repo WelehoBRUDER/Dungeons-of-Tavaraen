@@ -611,11 +611,103 @@ function renderCharacter() {
     document.querySelector(".worldText").style.opacity = "0";
     bg.style.transform = "scale(1)";
     bg.textContent = "";
+    const playerStats = player.getStats();
+    const hitChances = player.getHitchance();
+    const playerCoreStats = Object.assign(Object.assign({}, playerStats), hitChances);
+    const playerResists = player.getResists();
+    const playerStatusResists = player.getStatusResists();
+    const generalInfo = document.createElement("div");
     const pc = renderPlayerPortrait();
-    const nameAndRace = textSyntax(`<bcss>position: absolute; left: 328px; top: 36px<bcss><f>42px<f><c>yellow<c>${player.name} \n\n§<f>32px<f><c>white<c>Level ${player.level.level} ${raceTexts[player.race].name}\n\n§<i>${icons.health_icon}<i><f>32px<f><c>red<c>${player.stats.hp}/${player.getHpMax()} HP\n§<i>${icons.mana_icon}<i><f>32px<f><c>blue<c>${player.stats.mp}/${player.getMpMax()} MP`);
-    var statsText = `<bcss>position: absolute; left: 24px; top: 298px;<bcss><f>32px<f>Core stats§\n\n`;
-    statsText += `<cl>strSpan<cl><i>${icons.str_icon}<i><f>24px<f>Strength: ${player.getStats().str}\n§<cl>dexSpan<cl><i>${icons.dex_icon}<i><f>24px<f>Dexterity: ${player.getStats().dex}\n§<cl>vitSpan<cl><i>${icons.vit_icon}<i><f>24px<f>Vitality: ${player.getStats().vit}\n§<cl>intSpan<cl><i>${icons.int_icon}<i><f>24px<f>Intelligence: ${player.getStats().int}\n§<cl>cunSpan<cl><i>${icons.cun_icon}<i><f>24px<f>Cunning: ${player.getStats().cun}`;
-    const stats = textSyntax(statsText);
+    generalInfo.classList.add("generalInfo");
+    const charName = document.createElement("p");
+    const charRaceLevel = document.createElement("p");
+    const charHealthContainer = document.createElement("div");
+    const charManaContainer = document.createElement("div");
+    const charHealth = document.createElement("p");
+    const charHealthImage = document.createElement("img");
+    const charMana = document.createElement("p");
+    const charManaImage = document.createElement("img");
+    charName.classList.add("charName");
+    charRaceLevel.classList.add("charRaceLevel");
+    charHealthContainer.classList.add("charHealthContainer");
+    charManaContainer.classList.add("charManaContainer");
+    charName.textContent = player.name;
+    charRaceLevel.textContent = `Lvl ${player.level.level}, ${lang[player.race + "_name"]}`;
+    charHealth.textContent = `${Math.round(player.stats.hp)}/${player.getHpMax()}`;
+    charMana.textContent = `${Math.round(player.stats.mp)}/${player.getMpMax()}`;
+    charHealthImage.src = "resources/icons/health.png";
+    charManaImage.src = "resources/icons/mana.png";
+    charHealthContainer.append(charHealthImage, charHealth);
+    charManaContainer.append(charManaImage, charMana);
+    generalInfo.append(charName, charRaceLevel, charHealthContainer, charManaContainer);
+    const coreStats = document.createElement("div");
+    const coreResistances = document.createElement("div");
+    const statusResistances = document.createElement("div");
+    const passiveAbilities = document.createElement("div");
+    const coreStatsTitle = document.createElement("p");
+    const coreResistancesTitle = document.createElement("p");
+    const statusResistancesTitle = document.createElement("p");
+    coreStatsTitle.classList.add("coreStatsTitle");
+    coreStatsTitle.textContent = lang["core_stats"];
+    coreResistancesTitle.classList.add("coreResistancesTitle");
+    coreResistancesTitle.textContent = lang["core_resistances"];
+    statusResistancesTitle.classList.add("statusResistancesTitle");
+    statusResistancesTitle.textContent = lang["status_resistances"];
+    coreStats.classList.add("coreStats");
+    coreResistances.classList.add("coreResistances");
+    statusResistances.classList.add("statusResistances");
+    passiveAbilities.classList.add("passiveAbilities");
+    Object.entries(playerCoreStats).forEach((stat) => {
+        var _a;
+        const key = stat[0] == "chance" ? "hitChance" : stat[0];
+        const val = stat[1];
+        const statContainer = document.createElement("div");
+        const statImage = document.createElement("img");
+        const statText = document.createElement("p");
+        const statValue = document.createElement("span");
+        statImage.src = icons[key];
+        statText.textContent = lang[key];
+        statValue.textContent = key.includes("crit") ? val + "%" : val;
+        tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+        statContainer.append(statImage, statText, statValue);
+        coreStats.append(statContainer);
+    });
+    Object.entries(playerResists).forEach((stat) => {
+        const key = stat[0] == "chance" ? "hitChance" : stat[0];
+        const val = stat[1];
+        const statContainer = document.createElement("div");
+        const statImage = document.createElement("img");
+        const statText = document.createElement("p");
+        const statValue = document.createElement("span");
+        statImage.src = icons[key];
+        statText.textContent = lang[key];
+        statValue.textContent = val + "%";
+        if (val > 0)
+            statValue.classList.add("positive");
+        else if (val < 0)
+            statValue.classList.add("negative");
+        statContainer.append(statImage, statText, statValue);
+        coreResistances.append(statContainer);
+    });
+    Object.entries(playerStatusResists).forEach((stat) => {
+        var _a;
+        const key = stat[0] == "chance" ? "hitChance" : stat[0];
+        const val = stat[1];
+        const statContainer = document.createElement("div");
+        const statImage = document.createElement("img");
+        const statText = document.createElement("p");
+        const statValue = document.createElement("span");
+        statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
+        statText.textContent = lang[key + "_status"];
+        statValue.textContent = val + "%";
+        if (val > 0)
+            statValue.classList.add("positive");
+        else if (val < 0)
+            statValue.classList.add("negative");
+        console.log(key);
+        statContainer.append(statImage, statText, statValue);
+        statusResistances.append(statContainer);
+    });
     var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
     Object.entries(player.getResists()).forEach(resistance => {
         const str = resistance[0];
@@ -634,12 +726,9 @@ function renderCharacter() {
     tooltip(effResistances, "Status resistance either decreases damage\n of its type by the indicated number\n or decreases the chance of the status effecting you.");
     pc.style.left = "24px";
     pc.style.top = "24px";
-    bg.append(pc, nameAndRace, stats, resistances, effResistances);
-    tooltip(bg.querySelector(".strSpan"), `<i>${icons.str_icon}<i>Strength increases <i>${icons.melee}<i>melee \ndamage by 5% per level. \nAlso increases carry weight by 0.5.`);
-    tooltip(bg.querySelector(".dexSpan"), `<i>${icons.dex_icon}<i>Dexterity increases <i>${icons.ranged}<i>ranged \ndamage by 5% per level.`);
-    tooltip(bg.querySelector(".vitSpan"), `<i>${icons.vit_icon}<i>Vitality increases <i>${icons.health_icon}<i>health by by 5 per level. \nAlso increases carry weight by 1.`);
-    tooltip(bg.querySelector(".intSpan"), `<i>${icons.int_icon}<i>Intelligence increases spell \ndamage by 5% per level. \nAlso increases mana by 2.`);
-    tooltip(bg.querySelector(".cunSpan"), `<i>${icons.cun_icon}<i>Cunning increases crit chance by 0.25% \nand crit dmg by 2% per level.`);
+    tooltip(coreResistances, lang["resistances_tt"]);
+    tooltip(statusResistances, lang["stat_resist_tt"]);
+    bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances);
 }
 function closeCharacter() {
     open_windows.character = false;

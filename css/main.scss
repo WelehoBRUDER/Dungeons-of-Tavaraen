@@ -443,9 +443,7 @@ body {
     height: 780px;
     background: rgba(5, 5, 5, 0.95);
     border: 6px solid rgb(50, 50, 50);
-    background-image: $greyBgFade;
-    background-size: inherit;
-    background-position: inherit;
+    box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
     border-radius: 4px;
     position: absolute;
     left: 50%;
@@ -454,6 +452,138 @@ body {
     margin-top: -390px;
     z-index: 8;
     transform: scale(0);
+    user-select: none;
+
+    .negative {
+      color: rgb(150, 58, 16);
+      text-shadow: -1px 1px 4px rgb(179, 72, 23);
+    }
+
+    .positive {
+      color: rgb(16, 150, 56);
+      text-shadow: -1px 1px 4px rgb(23, 179, 36);
+    }
+
+    .generalInfo {
+      width: max-content;
+      height: max-content;
+      position: absolute;
+      left: 325px;
+      top: 0px;
+      white-space: nowrap;
+
+      .charName {
+        font-size: 57px;
+        color: gold;
+        text-shadow: -1px 1px 4px rgb(240, 210, 40);
+        position: relative;
+        left: 0;
+        top: 10px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .charRaceLevel {
+        font-size: 39px;
+        color: silver;
+        text-shadow: -1px 1px 4px rgb(151, 151, 151);
+        position: relative;
+        left: 20px;
+        top: 0px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .charHealthContainer, .charManaContainer {
+        position: relative;
+        left: 25px;
+        top: 0px;
+        display: flex;
+        text-align: center;
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        height: 36px;
+        width: auto;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+
+        p {
+          color: white;
+          font-size: 28px;
+          vertical-align: middle;
+          margin-top: 0px;
+        }
+      }
+    }
+
+    .coreStatsTitle, .coreResistancesTitle, .statusResistancesTitle {
+      text-align: center;
+      width: 300px;
+      font-size: 32px;
+      white-space: nowrap;
+      color: gold;
+      text-shadow: -1px 1px 4px rgb(240, 210, 40);
+      border: 4px solid gold;
+      position: absolute;
+      left: 25px;
+      top: 240px;
+      margin: 0;
+      padding: 0;
+      text-transform: uppercase;
+      padding: 10px;
+    }
+
+    .coreStats, .coreResistances, .statusResistances {
+      position: absolute;
+      height: auto;
+      width: 300px;
+      left: 25px;
+      top: 315px;
+      padding: 10px;
+      border: 4px solid gold;
+
+      div {
+        width: 100%;
+        height: auto;
+        display: flex;
+        color: rgb(224, 224, 224);
+        text-shadow: -1px 1px 4px white;
+        margin: 0;
+        font-size: 24px;
+        white-space: nowrap;
+
+        img {
+          width: 42px;
+          height: 42px;
+          margin: 0;
+        }
+
+        p {
+          margin: 0;
+          margin-top: 6px;
+          overflow: hidden;
+        }
+
+        span {
+          position: absolute;
+          right: 10px;
+          margin: 0;
+          margin-top: 6px;
+        }
+      }
+    }
+
+    .coreResistances, .coreResistancesTitle {
+      left: 375px;
+    }
+
+    .statusResistances, .statusResistancesTitle {
+      left: 725px;
+    }
 
     pre {
       margin: 0;
