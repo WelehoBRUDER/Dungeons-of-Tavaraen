@@ -554,7 +554,7 @@ var player = new PlayerCharacter({
     chance: 50,
     evasion: 25
   },
-  unarmed_damages: { crush: 5 },
+  unarmed_damages: { crush: 1 },
   statusEffects: [],
   inventory: [],
   gold: 50,

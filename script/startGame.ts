@@ -1,7 +1,7 @@
 const emptyModel = {
   id: "player",
   name: "Player",
-  cords: { x: 1, y: 1 },
+  cords: { x: 19, y: 72 },
   stats: {
     str: 5,
     dex: 5,
@@ -80,13 +80,13 @@ const emptyModel = {
     chance: 50,
     evasion: 25
   },
-  unarmed_damages: { crush: 5 },
+  unarmed_damages: { crush: 1 },
   statusEffects: [],
   inventory: [],
   gold: 50,
   sp: 5,
   pp: 1,
-  respawnPoint: { cords: { x: 4, y: 4 } },
+  respawnPoint: {cords: {x: 20, y: 72}},
   usedShrines: [],
 } as playerChar;
 const creation = document.querySelector<HTMLDivElement>(".mainMenu .characterCreation");
