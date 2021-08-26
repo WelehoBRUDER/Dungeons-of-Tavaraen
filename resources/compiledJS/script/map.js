@@ -209,7 +209,6 @@ function renderMap(map) {
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (enemy.hpRemain() * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             /* Render enemy on top of hp bar */
-            console.log(tileX);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             let statCount = 0;
             enemy.statusEffects.forEach((effect) => {
@@ -555,6 +554,12 @@ function cordsFromDir(cords, dir) {
 }
 document.addEventListener("keyup", (keyPress) => {
     var _a;
+    if (player.isRooted() && !player.isDead) {
+        player.effects();
+        advanceTurn();
+        updateUI();
+        abiSelected = {};
+    }
     if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen)
         return;
     let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };

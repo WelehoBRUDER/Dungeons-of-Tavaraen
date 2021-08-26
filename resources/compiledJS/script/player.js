@@ -120,7 +120,7 @@ class PlayerCharacter extends Character {
         };
         this.sight = () => {
             const { v: val, m: mod } = getModifiers(this, "sight");
-            return Math.floor((5 + val) * mod);
+            return Math.floor((8 + val) * mod);
         };
         this.drop = (itm) => {
             const item = Object.assign({}, itm);
@@ -383,7 +383,7 @@ function worthSort(a, b, reverse = false) {
 var player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 1, y: 1 },
+    cords: { x: 19, y: 72 },
     stats: {
         str: 5,
         dex: 5,
@@ -461,7 +461,7 @@ var player = new PlayerCharacter({
     gold: 50,
     sp: 5,
     pp: 1,
-    respawnPoint: { cords: { x: 4, y: 4 } },
+    respawnPoint: { cords: { x: 20, y: 72 } },
     usedShrines: [],
 });
 let combatSummons = [];
@@ -469,7 +469,7 @@ var randomProperty = function (obj) {
     var keys = Object.keys(obj);
     return obj[keys[keys.length * Math.random() << 0]];
 };
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 10; i++) {
     player.inventory.push(Object.assign({}, randomProperty(items)));
 }
 player.stats.hp = player.getHpMax();

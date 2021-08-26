@@ -407,6 +407,8 @@ function statTT(status, embed = false) {
         txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
     if (status.break_concentration)
         txt += `§${embed ? " " : ""}<i>${icons.break_concentration_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
+    if (status.rooted)
+        txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "20px"}<f><c>red<c>${lang["rooted"]}\n`;
     if (!embed)
         txt += `§<i>${icons.cooldown_icon}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
     else
@@ -704,7 +706,6 @@ function renderCharacter() {
             statValue.classList.add("positive");
         else if (val < 0)
             statValue.classList.add("negative");
-        console.log(key);
         statContainer.append(statImage, statText, statValue);
         statusResistances.append(statContainer);
     });

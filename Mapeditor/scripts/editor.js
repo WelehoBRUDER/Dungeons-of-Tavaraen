@@ -337,14 +337,17 @@ console.log(`{
 function importMap() {
   let answer = prompt("Index of map");
   if(!maps[answer]) return;
-  editingMap = copy(maps[answer]);
+  editingMap = {...maps[answer]};
   editingMap.vihuMap = [];
-  editingMap.enemies.forEach(({x, y, ...vihu}) => {
+  editingMap.enemies.forEach(({...vihu}) => {
+    let y = vihu.cords.y;
+    let x = vihu.cords.x;
     if(!editingMap.vihuMap[y]) editingMap.vihuMap[y] = [];
+    console.log(x);
     editingMap.vihuMap[y][x] = vihu;
   });
-  cam.x = Math.ceil(editingMap.base[0].length  / 2);
-  cam.y = Math.ceil(editingMap.base.length / 2);
+  cam.x = Math.ceil(editingMap.map[0].length  / 2);
+  cam.y = Math.ceil(editingMap.map.length / 2);
   createMap();
   ctrlZArray = [];
   ctrlZIndex = -1;

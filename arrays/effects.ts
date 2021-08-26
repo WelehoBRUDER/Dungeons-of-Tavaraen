@@ -195,6 +195,23 @@ const statusEffects = {
     textIcon: icons.disoriented,
     icon: "resources/icons/disoriented.png"
   },
+  dueled: {
+    id: "dueled",
+    name: "Dueled",
+    effects: {
+      damageP: 10,
+      hitChanceV: 5,
+      evasionV: -5
+    },
+    last: {
+      total: 4,
+      current: 4
+    },
+    rooted: true,
+    type: "stun",
+    textIcon: icons.dueled,
+    icon: "resources/icons/dueled.png"
+  },
   summoned: {
     id: "summoned",
     name: "Summoned",

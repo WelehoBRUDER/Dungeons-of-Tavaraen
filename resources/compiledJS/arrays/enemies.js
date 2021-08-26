@@ -34,7 +34,8 @@ const dummy = new Character({
     xp: 5,
     abilities: []
 });
-// @ts-expect-error
+// 350 res == 100% / fully immune
+// -100 res == take double damage
 const s_def = getAbiStatusModifiers(dummy, "", "");
 const enemies = {
     greySlime: {
@@ -1322,6 +1323,182 @@ const enemies = {
             { type: "gold", amount: [53, 129] }
         ]
     },
+    enthralledKnight: {
+        id: "enthralledKnight",
+        name: "Enthralled Knight",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 23,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 0,
+            hp: 100,
+            mp: 0,
+            hpMax: 100,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 60,
+            crush: 60,
+            pierce: 60,
+            magic: 30,
+            dark: 45,
+            divine: 30,
+            fire: -25,
+            lightning: -50,
+            ice: -25
+        },
+        statusResistances: {
+            poison: 0,
+            burning: -25,
+            curse: 0,
+            stun: 0,
+            bleed: 50
+        },
+        damages: {
+            slash: 11
+        },
+        hit: {
+            chance: 75,
+            evasion: 15
+        },
+        scale: 1.1,
+        threat: 50,
+        alive: true,
+        xp: 200,
+        sprite: "knightSwordShield",
+        type: "human",
+        race: "human",
+        img: "resources/tiles/enemies/knight_sword_shield.png",
+        aggroRange: 14,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.challenge, dummy),
+            new Ability(abilities.chivalrious_blow, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -100,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "magical_binding",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 2,
+            vit: 2
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
+            { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "greathelm", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightArmor", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
+            { type: "gold", amount: [37, 123] }
+        ]
+    },
+    spectralKnight: {
+        id: "spectralKnight",
+        name: "Spectral Knight",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 14,
+            dex: 1,
+            int: 1,
+            vit: 0,
+            cun: 5,
+            hp: 60,
+            mp: 0,
+            hpMax: 60,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 90,
+            crush: 90,
+            pierce: 90,
+            magic: -15,
+            dark: 0,
+            divine: -15,
+            fire: 80,
+            lightning: 80,
+            ice: 80
+        },
+        statusResistances: {
+            poison: 100,
+            burning: 25,
+            curse: 50,
+            stun: 40,
+            bleed: 100
+        },
+        damages: {
+            slash: 6,
+            dark: 6
+        },
+        hit: {
+            chance: 60,
+            evasion: 0
+        },
+        scale: 1.1,
+        threat: 50,
+        alive: true,
+        xp: 220,
+        sprite: "spectralKnightSwordShield",
+        type: "wraith",
+        race: "undead",
+        img: "resources/tiles/enemies/spectral_knight_sword_shield.png",
+        aggroRange: 15,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.challenge, dummy),
+            new Ability(abilities.chivalrious_blow, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -50,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "magical_binding",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 2,
+            vit: 1,
+            cun: 1
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
+            { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "greathelm", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightArmor", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
+            { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
+            { type: "gold", amount: [37, 123] }
+        ]
+    },
     soulWraith: {
         id: "soulWraith",
         name: "Soul Wraith",
@@ -1398,13 +1575,12 @@ const enemies = {
         ],
         retreatLimit: 0,
         statsPerLevel: {
-            str: 2,
-            dex: 1,
+            str: 3,
             vit: 1
         },
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
-            { type: "gold", amount: [4, 15] }
+            { type: "gold", amount: [288, 541] }
         ]
     },
 };

@@ -1,4 +1,6 @@
 "use strict";
+const equipmentSlots = ["chest", "legs", "gloves", "boots", "helmet", "weapon", "offhand", "artifact1", "artifact2", "artifact3"];
+const random = (max, min = -100) => (Math.random() * (max - min) + min);
 const icons = {
     attack_damage_multiplier_icon: "resources/icons/atk.png",
     fighter_symbol_icon: "resources/icons/fighter_symbol_icon.png",
@@ -30,6 +32,7 @@ const icons = {
     battle_fury: "resources/icons/fighters_fury_icon.png",
     dazed: "resources/icons/dazed_icon.png",
     disoriented: "resources/icons/disoriented_icon.png",
+    dueled: "resources/icons/dueled_icon.png",
     ward: "resources/icons/ward_icon.png",
     ward_icon: "resources/icons/ward_icon.png",
     range: "resources/icons/use_range.png",

@@ -1,4 +1,3 @@
-const random = (max: number, min: number = -100) => (Math.random() * (max - min) + min);
 let invScroll = 0;
 
 interface itemClass {

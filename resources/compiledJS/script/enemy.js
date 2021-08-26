@@ -84,7 +84,7 @@ class Enemy extends Character {
             if (this.chosenTarget) {
                 let chosenAbility = this.chooseAbility();
                 // Check if it should be used
-                if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords))) || chosenAbility.self_target)) {
+                if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? parseInt(chosenAbility.use_range) >= generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) : (parseInt(chosenAbility.use_range) >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords))) || chosenAbility.self_target)) {
                     if (chosenAbility.type == "charge") {
                         moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
                     }
@@ -98,11 +98,16 @@ class Enemy extends Character {
                         regularAttack(this, this.chosenTarget, chosenAbility);
                     }
                 }
+                else if (chosenAbility && parseInt(chosenAbility.use_range) == 1 && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
+                    // @ts-ignore
+                    attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
+                    regularAttack(this, this.chosenTarget, chosenAbility);
+                }
                 // Check if enemy should shoot the this.chosenTarget
                 else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords)) {
                     fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
                 }
-                // Check if enemy should instead punch the this.chosenTarget (and is in range)
+                // Check if enemy should instead punch the chosenTarget (and is in range)
                 else if (!this.shootsProjectile && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
                     // regular attack for now
                     // @ts-ignore

@@ -94,9 +94,8 @@ const perksArray = {
                 name: "Molded by Flame",
                 desc: "",
                 effects: {
-                    fireResistV: 15,
+                    fireball_cooldownV: -1,
                     fireball_aoe_sizeV: 2.3,
-                    iceResistV: -10,
                     fireball_mana_costV: 15
                 },
                 tree: "sorcerer",

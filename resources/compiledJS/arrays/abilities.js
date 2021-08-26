@@ -29,6 +29,24 @@ const abilities = {
         use_range: "1",
         ai_chance: 3
     },
+    chivalrious_blow: {
+        id: "chivalrious_blow",
+        name: "Chivalrious Blow",
+        mana_cost: 0,
+        cooldown: 14,
+        damage_multiplier: 0.9,
+        resistance_penetration: 0,
+        type: "attack",
+        status: "dueled",
+        status_power: 55,
+        requires_melee_weapon: true,
+        action_desc: "gracefully strikes",
+        action_desc_pl: "gracefully strike",
+        requires_concentration: true,
+        icon: "resources/icons/focus_strike.png",
+        use_range: "1",
+        ai_chance: 15
+    },
     true_shot: {
         id: "true_shot",
         name: "True Shot",
@@ -303,6 +321,20 @@ const abilities = {
         icon: "resources/icons/charge_ability.png",
         use_range: "14",
         ai_chance: 10
+    },
+    challenge: {
+        id: "challenge",
+        name: "Challenge",
+        mana_cost: 0,
+        cooldown: 12,
+        type: "charge",
+        damage_multiplier: 1.15,
+        resistance_penetration: 0,
+        action_desc: "challenges",
+        action_desc_pl: "you challenge",
+        icon: "resources/icons/charge_ability.png",
+        use_range: "16",
+        ai_chance: 15
     },
     purification: {
         id: "purification",

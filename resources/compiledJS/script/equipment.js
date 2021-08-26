@@ -1,5 +1,4 @@
 "use strict";
-const random = (max, min = -100) => (Math.random() * (max - min) + min);
 let invScroll = 0;
 class Item {
     constructor(base) {
