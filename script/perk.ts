@@ -186,15 +186,13 @@ function upStat(stat: string) {
 }
 
 function openLevelingScreen() {
-  open_windows.perk = true;
   hideHover();
-  windowOpen = true;
   const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
   lvling.style.transform = "scale(1)";
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";
   formPerks();
   formStatUpgrades();
-  invOpen = true;
+  state.perkOpen = true;
 }
 
 function perkTT(perk: perk) {

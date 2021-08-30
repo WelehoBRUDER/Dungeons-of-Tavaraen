@@ -415,8 +415,6 @@ class Armor extends Item {
   }
 }
 
-var invOpen: boolean = false;
-
 const equipSlots = [
   "weapon",
   "offhand",
@@ -433,7 +431,7 @@ const equipSlots = [
 document.querySelector<HTMLDivElement>(".playerInventory").querySelectorAll<HTMLDivElement>(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 
 function renderInventory() {
-  open_windows.inventory = true;
+  state.invOpen = true;
   updatePlayerInventoryIndexes();
   hideHover();
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
@@ -464,11 +462,10 @@ function renderInventory() {
   itemsArea.textContent = "";
   itemsArea.append(createItems(player.inventory));
   itemsArea.querySelector<HTMLDivElement>(".itemList").scrollBy(0, invScroll);
-  invOpen = true;
 }
 
 function closeInventory() {
-  open_windows.inventory = false;
+  state.invOpen = false;
   hideHover();
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
@@ -476,11 +473,10 @@ function closeInventory() {
   const _inv = document.querySelector<HTMLDivElement>(".defaultItemsArray");
   _inv.textContent = "";
   _inv.style.transform = "scale(0)";
-  invOpen = false;
 }
 
 function closeLeveling() {
-  open_windows.perk = false;
+  state.perkOpen = false;
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
   lvling.style.transform = "scale(0)";

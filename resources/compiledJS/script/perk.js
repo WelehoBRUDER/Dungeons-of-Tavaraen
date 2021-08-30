@@ -180,15 +180,13 @@ function upStat(stat) {
     }
 }
 function openLevelingScreen() {
-    open_windows.perk = true;
     hideHover();
-    windowOpen = true;
     const lvling = document.querySelector(".playerLeveling");
     lvling.style.transform = "scale(1)";
     document.querySelector(".worldText").style.opacity = "0";
     formPerks();
     formStatUpgrades();
-    invOpen = true;
+    state.perkOpen = true;
 }
 function perkTT(perk) {
     var _a, _b, _c;

@@ -20,7 +20,7 @@ const menuOptions = [
 const mainButtons = [
     {
         id: "menu_resume",
-        action: () => closeGameMenu(false, true)
+        action: () => closeGameMenu(false, false)
     },
     {
         id: "menu_new_game",
@@ -81,59 +81,105 @@ const menuSettings = [
         type: "languageSelection"
     }
 ];
+const state = {
+    inCombat: false,
+    clicked: false,
+    isSelected: false,
+    abiSelected: {},
+    invOpen: false,
+    charOpen: false,
+    perkOpen: false,
+    menuOpen: false,
+    titleScreen: false,
+    optionsOpen: false,
+    savesOpen: false
+};
+function handleEscape() {
+    if (state.perkOpen) {
+        closeLeveling();
+        state.perkOpen = false;
+    }
+    else if (state.charOpen) {
+        closeCharacter();
+        state.charOpen = false;
+    }
+    else if (state.invOpen) {
+        closeInventory();
+        state.invOpen = false;
+    }
+    else if (state.savesOpen) {
+        closeSaveMenu();
+        state.savesOpen = false;
+    }
+    else if (state.optionsOpen) {
+        closeSettingsMenu();
+        state.optionsOpen = false;
+    }
+    else if (state.menuOpen && !state.titleScreen) {
+        closeGameMenu(false, false, false);
+        state.menuOpen = false;
+    }
+    else if (!state.isSelected) {
+        openGameMenu();
+        state.menuOpen = true;
+    }
+    state.isSelected = false;
+    state.abiSelected = {};
+    updateUI();
+    contextMenu.textContent = "";
+    assignContainer.style.display = "none";
+}
 setTimeout(() => {
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
     if (options) {
         settings = new gameSettings(options);
         lang = eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
     }
-    menuOpen = true;
+    state.menuOpen = true;
+    state.titleScreen = true;
     gotoMainMenu();
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-}, 300);
-let saveGamesOpen = false;
+}, 500);
 const languages = ["english", "finnish"];
 const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");
 const dim = document.querySelector(".dim");
 const mainMenuButtons = mainMenu.querySelector(".menuButtons");
-async function openGameMenu() {
+function openGameMenu() {
     var _a;
     menu.textContent = "";
-    setTimeout(() => { dim.style.height = "100%"; }, 150);
+    setTimeout(() => { dim.style.height = "100%"; }, 5);
     for (let button of menuOptions) {
-        await sleep(150);
         const frame = document.createElement("div");
         frame.textContent = (_a = lang[button.id]) !== null && _a !== void 0 ? _a : button.id;
         frame.classList.add("menuButton");
         frame.classList.add(button.id);
-        frame.style.animationName = "popIn";
         if (button.action) {
             frame.addEventListener("click", () => button.action());
         }
         menu.append(frame);
     }
 }
-async function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
+function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     const reverseOptions = [...menuOptions].reverse();
     if (!noDim) {
-        setTimeout(() => { dim.style.height = "0%"; }, 150);
+        setTimeout(() => { dim.style.height = "0%"; }, 5);
         const settingsBackground = document.querySelector(".settingsMenu");
         settingsBackground.textContent = "";
     }
     if (!keepMainMenu) {
         setTimeout(() => { mainMenu.style.display = "none"; }, 575);
+        state.menuOpen = false;
+        state.titleScreen = false;
         mainMenu.style.opacity = "0";
     }
     for (let button of reverseOptions) {
         try {
-            await sleep(150);
             const frame = menu.querySelector(`.${button.id}`);
-            frame.style.animationName = "popOut";
-            setTimeout(() => { frame.remove(); }, 175);
+            setTimeout(() => { frame.remove(); }, 15);
         }
         catch (_a) { }
     }
@@ -152,15 +198,21 @@ window.addEventListener("keyup", (e) => {
         selectingHotkey = "";
     }
 });
-async function gotoSettingsMenu(inMainMenu = false) {
+async function closeSettingsMenu() {
+    const settingsBackground = document.querySelector(".settingsMenu");
+    settingsBackground.textContent = "";
+    state.optionsOpen = false;
+    setTimeout(() => { dim.style.height = "0%"; }, 5);
+}
+function gotoSettingsMenu(inMainMenu = false) {
     var _a, _b, _c;
     selectingHotkey = "";
+    state.optionsOpen = true;
     if (!inMainMenu)
         closeGameMenu(true);
     const settingsBackground = document.querySelector(".settingsMenu");
     settingsBackground.textContent = "";
     for (let setting of menuSettings) {
-        await sleep(75);
         const container = document.createElement("div");
         if (setting.type == "toggle") {
             container.classList.add("toggle");
@@ -237,16 +289,14 @@ async function gotoMainMenu() {
     menu.textContent = "";
     setTimeout(() => { dim.style.height = "0%"; }, 150);
     mainMenu.style.display = "block";
-    await sleep(20);
+    await sleep(10);
     mainMenu.style.opacity = "1";
     mainMenuButtons.textContent = "";
     for (let button of mainButtons) {
-        await sleep(200);
         const frame = document.createElement("div");
         frame.textContent = (_a = lang[button.id]) !== null && _a !== void 0 ? _a : button.id;
         frame.classList.add("menuButton");
         frame.classList.add(button.id);
-        frame.style.animationName = "slideFromRight";
         if (button.action) {
             frame.addEventListener("click", () => button.action());
         }
@@ -254,9 +304,9 @@ async function gotoMainMenu() {
     }
 }
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
-    saveGamesOpen = true;
     hideHover();
     saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
+    state.savesOpen = true;
     if (!inMainMenu)
         closeGameMenu(true);
     const saveBg = document.querySelector(".savesMenu");
@@ -287,14 +337,14 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         // @ts-ignore
         saveBg.style.animation = null;
         await sleep(5);
-        saveBg.style.animationName = `slideFromTop`;
-        await sleep(375);
     }
     saveNameInput.value = player.name + "_save";
     saves = saves.sort((x1, x2) => x2.time - x1.time);
     resetIds();
+    let renderedSaves = 1;
     for (let save of saves) {
-        await sleep(100);
+        if (renderedSaves < 15)
+            await sleep(100);
         const saveContainer = document.createElement("div");
         const saveCanvas = document.createElement("canvas");
         const saveName = document.createElement("p");
@@ -320,6 +370,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         saveOverwrite.append(saveIcon);
         loadGame.append(loadIcon);
         deleteGame.append(deleteIcon);
+        renderedSaves++;
         if (inMainMenu) {
             saveOverwrite.classList.add("unavailable");
         }
@@ -367,14 +418,13 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         saveName.textContent = save.text;
         let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
         renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
-        await sleep(25);
+        await sleep(5);
         buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
         saveContainer.append(saveCanvas, saveName, buttonsContainer);
         savesArea.append(saveContainer);
     }
 }
 async function closeSaveMenu() {
-    saveGamesOpen = false;
     const saveBg = document.querySelector(".savesMenu");
     saveBg.style.display = "block";
     saveBg.style.animation = 'none';
@@ -384,8 +434,8 @@ async function closeSaveMenu() {
     saveBg.style.animation = null;
     await sleep(5);
     saveBg.style.animationName = `slideToTop`;
-    await sleep(725);
     saveBg.style.display = "none";
+    setTimeout(() => { dim.style.height = "0%"; }, 5);
 }
 let saves = [];
 let input = "";

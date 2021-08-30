@@ -87,7 +87,7 @@ class treasureChest {
       }
       this.loot.forEach((loot: any, index)=>{loot.dataIndex = index;})
       if(this.loot.length > 0) {
-        invOpen = true;
+        state.invOpen = true;
         const _inv = document.querySelector<HTMLDivElement>(".defaultItemsArray");
         _inv.textContent = "";
         _inv.style.transform = "scale(1)";
@@ -135,7 +135,7 @@ function pickLoot() {
     }
   });
   if(totalArray.length > 0) {
-    invOpen = true;
+    state.invOpen = true;
     const _inv = document.querySelector<HTMLDivElement>(".defaultItemsArray");
     _inv.textContent = "";
     _inv.style.transform = "scale(1)";

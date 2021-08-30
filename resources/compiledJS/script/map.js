@@ -24,11 +24,6 @@ var currentZoom = 1;
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-/* Move this to a state file later */
-const state = {
-    inCombat: false,
-    clicked: false
-};
 /* temporarily store highlight variables here */
 const highlight = {
     x: 0,
@@ -285,7 +280,7 @@ function renderMap(map) {
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 function renderTileHover(tile, event) {
-    var _a, _b;
+    var _a, _b, _c;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -294,6 +289,7 @@ function renderTileHover(tile, event) {
     playerCanvas.width = playerCanvas.width;
     if (dontMove) {
         renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+        dontMove = false;
         return;
     }
     try {
@@ -310,11 +306,11 @@ function renderTileHover(tile, event) {
         if (!hoveredEnemy) {
             hideMapHover();
         }
-        if (abiSelected.type == "movement" || abiSelected.type == "charge") {
+        if (state.abiSelected.type == "movement" || state.abiSelected.type == "charge") {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, false, false);
             var highlight2Img = document.querySelector(".sprites .tileHIGHLIGHT2");
             var highlight2RedImg = document.querySelector(".sprites .tileHIGHLIGHT2_RED");
-            let distance = isSelected ? abiSelected.use_range : player.weapon.range;
+            let distance = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
             let iteration = 0;
             path.forEach((step) => {
                 iteration++;
@@ -330,11 +326,11 @@ function renderTileHover(tile, event) {
             });
         }
         /* Render highlight test */
-        else if ((((abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.shoots_projectile) && isSelected) || (((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.firesProjectile) && !isSelected)) && event.buttons !== 1) {
+        else if (((((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.shoots_projectile) && state.isSelected) && event.buttons !== 1)) {
             const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
             var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
             var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
-            let distance = isSelected ? abiSelected.use_range : player.weapon.range;
+            let distance = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
             let iteration = 0;
             let lastStep = 0;
             path.forEach((step) => {
@@ -351,18 +347,18 @@ function renderTileHover(tile, event) {
                 else
                     playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
             });
-            if ((abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.aoe_size) > 0) {
-                let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], abiSelected.aoe_size);
+            if (((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.aoe_size) > 0) {
+                let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
                 for (let y = 0; y < spriteLimitY; y++) {
                     for (let x = 0; x < spriteLimitX; x++) {
-                        if (((_b = aoeMap[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]) == "x") {
+                        if (((_c = aoeMap[mapOffsetStartY + y]) === null || _c === void 0 ? void 0 : _c[mapOffsetStartX + x]) == "x") {
                             playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
                         }
                     }
                 }
             }
         }
-        if (event.buttons == 1 && !isSelected) {
+        if (event.buttons == 1 && !state.isSelected) {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
             var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
             var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
@@ -380,7 +376,7 @@ function renderTileHover(tile, event) {
         }
         playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
     }
-    catch (_c) { }
+    catch (_d) { }
 }
 function mapHover(event) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -393,10 +389,10 @@ function mapHover(event) {
     renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
-    var _a, _b;
+    var _a, _b, _c;
     if (state.clicked || player.isDead)
         return;
-    if (invOpen || (event.button != 0 && event.button != 2)) {
+    if (state.invOpen || (event.button != 0 && event.button != 2)) {
         closeInventory();
         return;
     }
@@ -406,8 +402,8 @@ function clickMap(event) {
     const x = lX + player.cords.x;
     const y = lY + player.cords.y;
     if (event.button == 2) {
-        isSelected = false;
-        abiSelected = {};
+        state.isSelected = false;
+        state.abiSelected = {};
         updateUI();
         renderTileHover({ x: x, y: y }, event);
         dontMove = true;
@@ -424,28 +420,28 @@ function clickMap(event) {
             if (!enemy.alive)
                 break;
             targetingEnemy = true;
-            if (isSelected) {
+            if (state.isSelected) {
                 // @ts-expect-error
-                if (generateArrowPath(player.cords, enemy.cords).length <= abiSelected.use_range || weaponReach(player, abiSelected.use_range, enemy)) {
-                    if ((abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
+                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
+                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
-                    if (abiSelected.type == "attack") {
-                        if (abiSelected.shoots_projectile)
-                            fireProjectile(player.cords, enemy.cords, abiSelected.shoots_projectile, abiSelected, true, player);
+                    if (state.abiSelected.type == "attack") {
+                        if (state.abiSelected.shoots_projectile)
+                            fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
                         else
-                            regularAttack(player, enemy, abiSelected);
+                            regularAttack(player, enemy, state.abiSelected);
                         // @ts-expect-error
-                        if (weaponReach(player, abiSelected.use_range, enemy))
-                            attackTarget(player, enemy, weaponReach(player, abiSelected.use_range, enemy));
+                        if (weaponReach(player, state.abiSelected.use_range, enemy))
+                            attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
                         player.effects();
-                        if (!abiSelected.shoots_projectile)
+                        if (!state.abiSelected.shoots_projectile)
                             advanceTurn();
                     }
                 }
-                if (abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= abiSelected.use_range && !player.isRooted()) {
-                    player.stats.mp -= abiSelected.mana_cost;
-                    abiSelected.onCooldown = abiSelected.cooldown;
-                    movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, abiSelected));
+                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= state.abiSelected.use_range && !player.isRooted()) {
+                    player.stats.mp -= state.abiSelected.mana_cost;
+                    state.abiSelected.onCooldown = state.abiSelected.cooldown;
+                    movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
                 }
             }
             else if (weaponReach(player, player.weapon.range, enemy)) {
@@ -468,31 +464,31 @@ function clickMap(event) {
         }
     }
     ;
-    if (isSelected && (abiSelected === null || abiSelected === void 0 ? void 0 : abiSelected.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && ((_c = state.abiSelected) === null || _c === void 0 ? void 0 : _c.aoe_size) > 0 && !targetingEnemy) {
         // @ts-expect-error
-        if (generateArrowPath(player.cords, { x: x, y: y }).length <= abiSelected.use_range) {
+        if (generateArrowPath(player.cords, { x: x, y: y }).length <= state.abiSelected.use_range) {
             move = false;
-            fireProjectile(player.cords, { x: x, y: y }, abiSelected.shoots_projectile, abiSelected, true, player);
+            fireProjectile(player.cords, { x: x, y: y }, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
         }
     }
-    if (isSelected && abiSelected.summon_unit) {
-        if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= abiSelected.use_range) {
+    if (state.isSelected && state.abiSelected.summon_unit) {
+        if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= state.abiSelected.use_range) {
             move = false;
-            summonUnit(abiSelected, { x: x, y: y });
+            summonUnit(state.abiSelected, { x: x, y: y });
             player.effects();
             advanceTurn();
         }
     }
     state.clicked = true;
     setTimeout(() => { state.clicked = false; }, 30);
-    if (abiSelected.type == "movement" && !player.isRooted()) {
-        player.stats.mp -= abiSelected.mana_cost;
-        abiSelected.onCooldown = abiSelected.cooldown;
-        if (abiSelected.status) {
-            const _Effect = new statEffect(Object.assign({}, statusEffects[abiSelected.status]), abiSelected.statusModifiers);
+    if (state.abiSelected.type == "movement" && !player.isRooted()) {
+        player.stats.mp -= state.abiSelected.mana_cost;
+        state.abiSelected.onCooldown = state.abiSelected.cooldown;
+        if (state.abiSelected.status) {
+            const _Effect = new statEffect(Object.assign({}, statusEffects[state.abiSelected.status]), state.abiSelected.statusModifiers);
             let missing = true;
             player.statusEffects.forEach((effect) => {
-                if (effect.id == abiSelected.status) {
+                if (effect.id == state.abiSelected.status) {
                     effect.last.current += _Effect.last.total;
                     missing = false;
                     return;
@@ -502,7 +498,7 @@ function clickMap(event) {
                 player.statusEffects.push(Object.assign({}, _Effect));
             }
         }
-        movePlayer({ x: x, y: y }, true, abiSelected.use_range);
+        movePlayer({ x: x, y: y }, true, state.abiSelected.use_range);
     }
     else if (move && !player.isRooted()) {
         if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight())) {
@@ -516,7 +512,7 @@ function clickMap(event) {
         player.effects();
         advanceTurn();
         updateUI();
-        abiSelected = {};
+        state.abiSelected = {};
     }
 }
 const emptyMap = (base_tiles) => new Array(base_tiles.length).fill("0").map(e => new Array(base_tiles[0].length).fill("0"));
@@ -554,15 +550,15 @@ function cordsFromDir(cords, dir) {
 }
 document.addEventListener("keyup", (keyPress) => {
     var _a;
-    if (player.isRooted() && !player.isDead) {
+    let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
+    if (player.isRooted() && !player.isDead && dirs[keyPress.key]) {
         player.effects();
         advanceTurn();
         updateUI();
-        abiSelected = {};
+        state.abiSelected = {};
     }
-    if (!turnOver || player.isDead || menuOpen || invOpen || windowOpen || saveGamesOpen)
+    if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen)
         return;
-    let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
     let shittyFix = JSON.parse(JSON.stringify(player));
     if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
         displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
@@ -592,7 +588,7 @@ document.addEventListener("keyup", (keyPress) => {
             player.effects();
             advanceTurn();
             updateUI();
-            abiSelected = {};
+            state.abiSelected = {};
         }
         else {
             let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
@@ -626,7 +622,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         return;
     const path = generatePath(player.cords, goal, false);
     let count = 0;
-    isSelected = false;
+    state.isSelected = false;
     if (isMovingCurrently)
         breakMoving = true;
     moving: for (let step of path) {
@@ -670,14 +666,14 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         player.effects();
         advanceTurn();
         updateUI();
-        abiSelected = {};
+        state.abiSelected = {};
     }
     else if (action) {
         player.effects();
         action();
         advanceTurn();
         updateUI();
-        abiSelected = {};
+        state.abiSelected = {};
     }
 }
 async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {

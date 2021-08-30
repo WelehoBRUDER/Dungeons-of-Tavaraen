@@ -65,19 +65,17 @@ function attackTarget(attacker, target, attackDir) {
         layer.style.animationName = `attack${attackDir}`;
     }
 }
-var abiSelected = {};
-var isSelected = false;
 function useAbi(abi) {
-    abiSelected = abi;
-    isSelected = true;
+    state.abiSelected = abi;
+    state.isSelected = true;
     if (abi.self_target) {
         // @ts-ignore
-        buffOrHeal(player, abiSelected);
+        buffOrHeal(player, state.abiSelected);
     }
     updateUI();
 }
 function buffOrHeal(character, ability) {
-    isSelected = false;
+    state.isSelected = false;
     player.effects();
     if (ability.base_heal) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
@@ -351,7 +349,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             setTimeout(modifyCanvas, 300);
         }
     }
-    isSelected = false;
+    state.isSelected = false;
     updateUI();
 }
 function tileCordsToScreen(cords) {
@@ -508,8 +506,8 @@ function aoeCollision(area, attacker, ability) {
         }
     });
     setTimeout(modifyCanvas, 150);
-    isSelected = false;
-    abiSelected = {};
+    state.isSelected = false;
+    state.abiSelected = {};
     if (ability.cooldown)
         ability.onCooldown = ability.cooldown;
     if (ability.mana_cost)
@@ -531,8 +529,8 @@ function threatDistance(targets, from) {
     return chosenTarget;
 }
 function summonUnit(ability, cords) {
-    isSelected = false;
-    abiSelected = {};
+    state.isSelected = false;
+    state.abiSelected = {};
     if (ability.cooldown)
         ability.onCooldown = ability.cooldown;
     if (ability.mana_cost)

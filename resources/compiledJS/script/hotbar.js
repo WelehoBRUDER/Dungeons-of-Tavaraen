@@ -4,8 +4,6 @@
 const tooltipBox = document.querySelector("#globalHover");
 const contextMenu = document.querySelector(".contextMenu");
 const assignContainer = document.querySelector(".assignContainer");
-let windowOpen = false;
-let menuOpen = false;
 class gameSettings {
     constructor(base) {
         this.log_enemy_movement = base.log_enemy_movement || false;
@@ -32,11 +30,6 @@ let settings = new gameSettings({
     hotkey_move_right: "d",
     hotkey_interact: " ",
 });
-const open_windows = {
-    inventory: false,
-    character: false,
-    perk: false
-};
 // Hotkeys
 document.addEventListener("keyup", e => {
     if (e.key == "r" && !saveGamesOpen) {
@@ -47,8 +40,8 @@ document.addEventListener("keyup", e => {
             player.stats.hp = player.getHpMax();
             player.stats.mp = player.getMpMax();
             state.inCombat = false;
-            isSelected = false;
-            abiSelected = {};
+            state.isSelected = false;
+            state.abiSelected = {};
             enemiesHadTurn = 0;
             turnOver = true;
             player.updateAbilities();
@@ -63,28 +56,28 @@ document.addEventListener("keyup", e => {
     else if (e.key == "Escape") {
         handleEscape();
     }
-    if (player.isDead || saveGamesOpen)
+    if (player.isDead || state.savesOpen)
         return;
     const number = parseInt(e.keyCode) - 48;
-    if (e.key == settings.hotkey_inv && !menuOpen) {
-        if (!open_windows.inventory)
+    if (e.key == settings.hotkey_inv && !state.menuOpen) {
+        if (!state.invOpen)
             renderInventory();
         else
             closeInventory();
     }
-    else if (e.key == settings.hotkey_char && !menuOpen) {
-        if (!open_windows.character)
+    else if (e.key == settings.hotkey_char && !state.menuOpen) {
+        if (!state.charOpen)
             renderCharacter();
         else
             closeCharacter();
     }
-    else if (e.key == settings.hotkey_perk && !menuOpen) {
-        if (!open_windows.perk)
+    else if (e.key == settings.hotkey_perk && !state.menuOpen) {
+        if (!state.perkOpen)
             openLevelingScreen();
         else
             closeLeveling();
     }
-    else if (invOpen || windowOpen || menuOpen)
+    else if (state.invOpen || state.menuOpen)
         return;
     else if (number > -1 && e.shiftKey) {
         let abi = player.abilities.find(a => a.equippedSlot == number + 9);
@@ -137,7 +130,7 @@ function generateHotbar() {
                 const abiDiv = document.createElement("div");
                 const abiImg = document.createElement("img");
                 abiDiv.classList.add("ability");
-                if (abiSelected == abi && isSelected) {
+                if (state.abiSelected == abi && state.isSelected) {
                     frame.style.border = "4px solid gold";
                 }
                 abiImg.src = abi.icon;
@@ -228,7 +221,7 @@ function mapToHotBar(index) {
             const abiDiv = document.createElement("div");
             const abiImg = document.createElement("img");
             abiDiv.classList.add("ability");
-            if (abiSelected == abi && isSelected)
+            if (state.abiSelected == abi && state.isSelected)
                 frame.style.border = "4px solid gold";
             abiImg.src = abi.icon;
             if (!abi.icon) {
@@ -583,32 +576,9 @@ function hideHover() {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "none";
 }
-function handleEscape() {
-    if (!isSelected && !invOpen && !windowOpen && !menuOpen) {
-        openGameMenu();
-        menuOpen = true;
-    }
-    else if (menuOpen) {
-        closeGameMenu(false, false, true);
-        menuOpen = false;
-    }
-    if (saveGamesOpen) {
-        closeSaveMenu();
-    }
-    isSelected = false;
-    abiSelected = {};
-    closeInventory();
-    closeCharacter();
-    closeLeveling();
-    windowOpen = false;
-    updateUI();
-    contextMenu.textContent = "";
-    assignContainer.style.display = "none";
-}
 function renderCharacter() {
-    open_windows.character = true;
+    state.charOpen = true;
     hideHover();
-    windowOpen = true;
     const bg = document.querySelector(".playerWindow");
     document.querySelector(".worldText").style.opacity = "0";
     bg.style.transform = "scale(1)";
@@ -732,7 +702,7 @@ function renderCharacter() {
     bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances);
 }
 function closeCharacter() {
-    open_windows.character = false;
+    state.charOpen = false;
     hideHover();
     document.querySelector(".worldText").style.opacity = "1";
     const bg = document.querySelector(".playerWindow");

@@ -315,7 +315,6 @@ class Armor extends Item {
         }
     }
 }
-var invOpen = false;
 const equipSlots = [
     "weapon",
     "offhand",
@@ -330,7 +329,7 @@ const equipSlots = [
 ];
 document.querySelector(".playerInventory").querySelectorAll(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 function renderInventory() {
-    open_windows.inventory = true;
+    state.invOpen = true;
     updatePlayerInventoryIndexes();
     hideHover();
     const inventory = document.querySelector(".playerInventory");
@@ -361,10 +360,9 @@ function renderInventory() {
     itemsArea.textContent = "";
     itemsArea.append(createItems(player.inventory));
     itemsArea.querySelector(".itemList").scrollBy(0, invScroll);
-    invOpen = true;
 }
 function closeInventory() {
-    open_windows.inventory = false;
+    state.invOpen = false;
     hideHover();
     document.querySelector(".worldText").style.opacity = "1";
     const inventory = document.querySelector(".playerInventory");
@@ -372,10 +370,9 @@ function closeInventory() {
     const _inv = document.querySelector(".defaultItemsArray");
     _inv.textContent = "";
     _inv.style.transform = "scale(0)";
-    invOpen = false;
 }
 function closeLeveling() {
-    open_windows.perk = false;
+    state.perkOpen = false;
     document.querySelector(".worldText").style.opacity = "1";
     const lvling = document.querySelector(".playerLeveling");
     lvling.style.transform = "scale(0)";
