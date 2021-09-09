@@ -192,11 +192,11 @@ const abilities = {
     mana_cost: 15,
     cooldown: 1,
     damages: {
-      pierce: 5,
-      ice: 10
+      pierce: 33,
+      ice: 67
     },
     stat_bonus: "int",
-    damage_multiplier: 0.9,
+    damage_multiplier: 1.3,
     resistance_penetration: 10,
     type: "attack",
     action_desc: "shoots a javelin made of ice at",
@@ -212,8 +212,8 @@ const abilities = {
     mana_cost: 10,
     cooldown: 0,
     damages: {
-      pierce: 3,
-      magic: 10
+      pierce: 25,
+      magic: 75
     },
     stat_bonus: "int",
     damage_multiplier: 1,
@@ -232,13 +232,13 @@ const abilities = {
     mana_cost: 15,
     cooldown: 5,
     damages: {
-      crush: 3,
-      fire: 17
+      crush: 15,
+      fire: 85
     },
     status: "burning",
     status_power: 50,
     stat_bonus: "int",
-    damage_multiplier: 1,
+    damage_multiplier: 1.1,
     resistance_penetration: 0,
     type: "attack",
     action_desc: "shoots a ball made of fire at",
@@ -375,12 +375,12 @@ const abilities = {
     mana_cost: 4,
     cooldown: 5,
     damages: {
-      dark: 3
+      dark: 100
     },
     status: "blighted",
     status_power: 50,
     stat_bonus: "int",
-    damage_multiplier: 1,
+    damage_multiplier: 0.75,
     resistance_penetration: 0,
     type: "attack",
     action_desc: "blights",

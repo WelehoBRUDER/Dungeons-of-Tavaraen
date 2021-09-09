@@ -136,6 +136,8 @@
       overflow: auto;
       user-select: none;
       -webkit-user-drag: none;
+      align-content: center;
+      text-align: center;
 
       svg {
         filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.97));

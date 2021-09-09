@@ -19,6 +19,9 @@ const lootPools = {
         { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 8 },
         { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 8 },
         { type: "weapon", amount: [1, 1], item: "apprenticeWand", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "talismanOfProtection", chance: 4 },
+        { type: "artifact", amount: [1, 1], item: "ringOfProtection", chance: 4 },
+        { type: "artifact", amount: [1, 1], item: "emblemOfProtection", chance: 4 },
         { type: "gold", amount: [13, 76] }
     ]
 };
@@ -32,6 +35,7 @@ const chestTemplates = {
         isUnique: false,
         respawnTime: 750,
         lootPool: "default",
+        itemsGenerate: [1, 7],
         sinceOpened: -1
     }
 };
@@ -46,9 +50,12 @@ class treasureChest {
         this.respawnTime = (_d = base.respawnTime) !== null && _d !== void 0 ? _d : 500;
         this.lootPool = (_e = base.lootPool) !== null && _e !== void 0 ? _e : "default";
         this.loot = base.loot;
+        this.itemsGenerate = base.itemsGenerate;
         this.sinceOpened = (_f = base.sinceOpened) !== null && _f !== void 0 ? _f : -1;
         if (!this.loot) {
             const pool = [...lootPools[this.lootPool]];
+            const min = this.itemsGenerate[0];
+            const max = this.itemsGenerate[1];
             this.loot = [];
             pool.forEach((obj) => {
                 if (random(100, 0) <= obj.chance) {
@@ -58,13 +65,31 @@ class treasureChest {
                         itm = new Weapon(Object.assign({}, items[obj.item]));
                     else if (obj.type == "armor")
                         itm = new Armor(Object.assign({}, items[obj.item]));
-                    this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                    else if (obj.type == "artifact")
+                        itm = new Artifact(Object.assign({}, items[obj.item]));
+                    else if (obj.type == "consumable")
+                        itm = new Consumable(Object.assign({}, items[obj.item]));
+                    if (this.loot.length < max)
+                        this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
                 }
                 else if (obj.type == "gold") {
                     let amount = random(obj.amount[1], obj.amount[0]);
                     this.gold = Math.floor(amount);
                 }
             });
+            if (this.loot.length < min) {
+                let obj = pool[Math.floor(random(pool.length - 2, 0))];
+                let itm;
+                if (obj.type == "weapon")
+                    itm = new Weapon(Object.assign({}, items[obj.item]));
+                else if (obj.type == "armor")
+                    itm = new Armor(Object.assign({}, items[obj.item]));
+                else if (obj.type == "artifact")
+                    itm = new Artifact(Object.assign({}, items[obj.item]));
+                else if (obj.type == "consumable")
+                    itm = new Consumable(Object.assign({}, items[obj.item]));
+                this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+            }
         }
         this.lootChest = () => {
             if (this.gold > 0) {
@@ -97,6 +122,10 @@ function lootEnemy(enemy) {
                 itm = new Weapon(Object.assign({}, items[obj.item]));
             else if (obj.type == "armor")
                 itm = new Armor(Object.assign({}, items[obj.item]));
+            else if (obj.type == "artifact")
+                itm = new Artifact(Object.assign({}, items[obj.item]));
+            else if (obj.type == "consumable")
+                itm = new Consumable(Object.assign({}, items[obj.item]));
             createDroppedItem(enemy.cords, itm);
         }
         else if (obj.type == "gold") {

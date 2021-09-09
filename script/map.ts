@@ -435,7 +435,7 @@ function clickMap(event: MouseEvent) {
             else regularAttack(player, enemy, state.abiSelected);
             // @ts-expect-error
             if (weaponReach(player, state.abiSelected.use_range, enemy)) attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
-            player.effects();
+            
             if (!state.abiSelected.shoots_projectile) advanceTurn();
           }
         }
@@ -450,14 +450,14 @@ function clickMap(event: MouseEvent) {
         attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
         if (weaponReach(player, player.weapon.range, enemy)) {
           regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
-          player.effects();
+          
           advanceTurn();
         }
         // @ts-ignore
       } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
         // @ts-ignore
         fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true, player);
-        player.effects();
+        
       }
       move = false;
       break;
@@ -474,7 +474,7 @@ function clickMap(event: MouseEvent) {
     if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= state.abiSelected.use_range) {
       move = false;
       summonUnit(state.abiSelected, { x: x, y: y });
-      player.effects();
+      
       advanceTurn();
     }
   }
@@ -508,7 +508,7 @@ function clickMap(event: MouseEvent) {
     }
   }
   else if (player.isRooted()) {
-    player.effects();
+    
     advanceTurn();
     updateUI();
     state.abiSelected = {};
@@ -548,7 +548,7 @@ function cordsFromDir(cords: tileObject, dir: string) {
 document.addEventListener("keyup", (keyPress) => {
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
   if (player.isRooted() && !player.isDead && dirs[keyPress.key]) {
-    player.effects();
+    
     advanceTurn();
     updateUI();
     state.abiSelected = {};
@@ -568,12 +568,12 @@ document.addEventListener("keyup", (keyPress) => {
     if (canMove(shittyFix, dirs[keyPress.key]) && !player.isRooted()) {
       // @ts-ignore
       renderMap(maps[currentMap]);
-      player.effects();
+      
       advanceTurn();
       updateUI();
     }
     else if(canMove(shittyFix, dirs[keyPress.key]) && player.isRooted()) {
-      player.effects();
+      
       advanceTurn();
       updateUI();
       state.abiSelected = {};
@@ -585,7 +585,7 @@ document.addEventListener("keyup", (keyPress) => {
         attackTarget(player, target, weaponReach(player, player.weapon.range, target));
         if (weaponReach(player, player.weapon.range, target)) {
           regularAttack(player, target, player.abilities?.find(e => e.id == "attack"));
-          player.effects();
+          
           advanceTurn();
         }
       }
@@ -619,7 +619,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
       player.cords.y = step.y;
       modifyCanvas();
       if (!ability) {
-        player.effects();
+        
         advanceTurn();
         updateUI();
       }
@@ -642,9 +642,9 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
       if (Math.floor(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
     }
   }
-  else if (!action) { player.effects(); advanceTurn(); updateUI(); state.abiSelected = {}; }
+  else if (!action) {  advanceTurn(); updateUI(); state.abiSelected = {}; }
   else if (action) {
-    player.effects();
+    
     action();
     advanceTurn();
     updateUI();
@@ -999,6 +999,7 @@ var highestWaitTime = 0;
 /* Move to state file later */
 async function advanceTurn() {
   if (player.isDead) return;
+  player.effects();
   player.updateAbilities();
   state.inCombat = false;
   turnOver = false;

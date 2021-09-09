@@ -32,7 +32,7 @@ let settings = new gameSettings({
 });
 // Hotkeys
 document.addEventListener("keyup", e => {
-    if (e.key == "r" && !saveGamesOpen) {
+    if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
             player.cords.x = player.respawnPoint.cords.x;
             player.cords.y = player.respawnPoint.cords.y;
@@ -165,7 +165,6 @@ function generateHotbar() {
     }
 }
 function useConsumable(itm) {
-    player.effects();
     if (itm.healValue) {
         player.stats.hp += itm.healValue;
         spawnFloatingText(player.cords, itm.healValue.toString(), "lime", 36, 1000, 200);
@@ -279,7 +278,7 @@ function abiTT(abi) {
     if (abi.damages) {
         var total = 0;
         var text = "";
-        Object.entries(abi.damages).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        Object.entries(abi.get_true_damage(player)).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
@@ -342,7 +341,7 @@ function embedAbiTT(abi) {
     if (abi.damages) {
         var total = 0;
         var text = "";
-        Object.entries(abi.damages).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        Object.entries(abi.get_true_damage(player)).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }

@@ -288,7 +288,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_j = base.abilities) !== null && _j !== void 0 ? _j : [];
+        this.abilities = (_j = [...base.abilities]) !== null && _j !== void 0 ? _j : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {
@@ -335,6 +335,9 @@ class Character {
                     // @ts-ignore
                     else if (this.inventory[i].type == "consumable")
                         this.inventory[i] = new Consumable(this.inventory[i]);
+                    // @ts-ignore
+                    else if (this.inventory[i].type == "artifact")
+                        this.inventory[i] = new Artifact(this.inventory[i]);
                 }
             }
             if ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.type)

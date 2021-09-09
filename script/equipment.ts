@@ -196,6 +196,7 @@ class Weapon extends Item {
   statStrings?: any;
   fullPrice?: Function;
   twoHanded?: boolean;
+  statBonus: string;
   constructor(base: weaponClass) {
     super(base);
     const baseItem = { ...items[this.id] };
@@ -209,6 +210,7 @@ class Weapon extends Item {
     this.commands = { ...baseItem.commands } ?? {};
     this.rolledDamages = { ...base.rolledDamages } ?? {};
     this.rolledStats = { ...base.rolledStats } ?? {};
+    this.statBonus = baseItem.statBonus ?? "str";
 
     if (Object.values(this.rolledDamages).length == 0) {
       /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
@@ -410,8 +412,52 @@ class Armor extends Item {
       // @ts-expect-error
       this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
     }
+  }
+}
 
+class Artifact extends Item {
+  commands?: any;
+  statsTemplate: any;
+  stats: any;
+  artifactSet: string;
+  rolledStats?: any;
+  fullPrice?: Function;
+  constructor(base: Artifact) {
+    super(base);
+    const baseItem = { ...items[this.id] };
+    this.statsTemplate = baseItem.statsTemplate;
+    this.stats = baseItem.stats;
+    this.rolledStats = { ...base.rolledStats } ?? {};
+    this.commands = {};
 
+    if(lang.language_id !== "english") this.name = lang[this.id + "_name"];
+
+    if (Object.values(this.rolledStats).length == 0) {
+      /* RANDOMIZE STAT MODIFIERS */
+      this.statsTemplate.forEach((template: any) => {
+        if (random(100, 0) < template.chance) {
+          this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
+        }
+        else this.rolledStats[template.type] = 0;
+      });
+    }
+
+    Object.entries(this.rolledStats).forEach((stat: any) => {
+      if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
+      else this.stats[stat[0]] += stat[1];
+    });
+
+    this.fullPrice = () => {
+      let bonus = 0;
+      Object.entries(this.stats).forEach((stat: any) => {
+        let _sw = statWorths[stat[0]] * stat[1];
+        if (isNaN(_sw)) _sw = stat[1] * 2;
+        bonus += _sw * 1.5;
+      });
+      bonus *= grades[this.grade]["worth"];
+      let price = Math.floor(bonus + this.price);
+      return price < 1 ? 1 : price;
+    };
   }
 }
 
@@ -541,6 +587,7 @@ function itemTT(item: any) {
   if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
   if (item.usesRemaining) text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
   if (item.twoHanded) text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
+  if (item.statBonus) text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   return text;
@@ -595,6 +642,7 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemWeight.classList.add("itemWeight");
     itemWorth.classList.add("itemWorth");
     itemImage.src = itm.img;
+    console.log(itm);
     itemName.style.color = grades[itm.grade].color;
     itemType.style.color = grades[itm.grade].color;
     itemRarity.style.color = grades[itm.grade].color;

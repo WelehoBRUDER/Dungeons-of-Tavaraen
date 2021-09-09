@@ -417,7 +417,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["barbarianClass"]),
+        main: new combatClass(combatClasses["sorcererClass"]),
         sub: null
     },
     sprite: ".player",

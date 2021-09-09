@@ -103,7 +103,7 @@ class Consumable extends Item {
 }
 class Weapon extends Item {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
         this.range = baseItem.range;
@@ -116,6 +116,7 @@ class Weapon extends Item {
         this.commands = (_d = Object.assign({}, baseItem.commands)) !== null && _d !== void 0 ? _d : {};
         this.rolledDamages = (_e = Object.assign({}, base.rolledDamages)) !== null && _e !== void 0 ? _e : {};
         this.rolledStats = (_f = Object.assign({}, base.rolledStats)) !== null && _f !== void 0 ? _f : {};
+        this.statBonus = (_g = baseItem.statBonus) !== null && _g !== void 0 ? _g : "str";
         if (Object.values(this.rolledDamages).length == 0) {
             /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
             this.damagesTemplate.forEach((template) => {
@@ -315,6 +316,47 @@ class Armor extends Item {
         }
     }
 }
+class Artifact extends Item {
+    constructor(base) {
+        var _a;
+        super(base);
+        const baseItem = Object.assign({}, items[this.id]);
+        this.statsTemplate = baseItem.statsTemplate;
+        this.stats = baseItem.stats;
+        this.rolledStats = (_a = Object.assign({}, base.rolledStats)) !== null && _a !== void 0 ? _a : {};
+        this.commands = {};
+        if (lang.language_id !== "english")
+            this.name = lang[this.id + "_name"];
+        if (Object.values(this.rolledStats).length == 0) {
+            /* RANDOMIZE STAT MODIFIERS */
+            this.statsTemplate.forEach((template) => {
+                if (random(100, 0) < template.chance) {
+                    this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
+                }
+                else
+                    this.rolledStats[template.type] = 0;
+            });
+        }
+        Object.entries(this.rolledStats).forEach((stat) => {
+            if (!this.stats[stat[0]])
+                this.stats[stat[0]] = stat[1];
+            else
+                this.stats[stat[0]] += stat[1];
+        });
+        this.fullPrice = () => {
+            let bonus = 0;
+            Object.entries(this.stats).forEach((stat) => {
+                let _sw = statWorths[stat[0]] * stat[1];
+                if (isNaN(_sw))
+                    _sw = stat[1] * 2;
+                bonus += _sw * 1.5;
+            });
+            bonus *= grades[this.grade]["worth"];
+            let price = Math.floor(bonus + this.price);
+            return price < 1 ? 1 : price;
+        };
+    }
+}
 const equipSlots = [
     "weapon",
     "offhand",
@@ -450,6 +492,8 @@ function itemTT(item) {
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
     if (item.twoHanded)
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
+    if (item.statBonus)
+        text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
     text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
     return text;
@@ -503,6 +547,7 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
         itemWeight.classList.add("itemWeight");
         itemWorth.classList.add("itemWorth");
         itemImage.src = itm.img;
+        console.log(itm);
         itemName.style.color = grades[itm.grade].color;
         itemType.style.color = grades[itm.grade].color;
         itemRarity.style.color = grades[itm.grade].color;

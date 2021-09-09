@@ -32,6 +32,7 @@ interface ability {
   action_desc_pl: string;
   ai_chance?: number;
   remove_status: Array<string>;
+  get_true_damage?: Function;
 }
 
 const straight_modifiers = [
@@ -118,6 +119,7 @@ class Ability {
   action_desc_pl: string;
   ai_chance?: number;
   remove_status: Array<string>;
+  get_true_damage?: Function;
   constructor(base: ability, user: characterObject) {
     this.id = base.id;
     const values = getAbiModifiers(user, base.id);
@@ -158,6 +160,24 @@ class Ability {
     this.remove_status = baseAbility.remove_status;
 
     if (this.cooldown < 0) this.cooldown = 0;
+
+    this.get_true_damage = (_user: characterObject | PlayerCharacter) => {
+      let damages = {} as damageClass;
+      let takenValues: any;
+      let total: number = 0;
+      if(_user.weapon?.damages) takenValues = _user.weapon.damages;
+      else if(!_user.weapon?.damages && _user.unarmedDamages) takenValues = _user.unarmedDamages
+      else takenValues = _user.damages;
+      Object.entries(takenValues).forEach((dmg: any) => {
+          total += dmg[1];
+      });
+      Object.entries(this.damages).forEach((dmg: any) => {
+        const str = dmg[0];
+        const num = dmg[1] / 100;
+        damages[str] = Math.floor(total * num * this.damage_multiplier);
+      });
+      return damages;
+    }
   }
 }
 

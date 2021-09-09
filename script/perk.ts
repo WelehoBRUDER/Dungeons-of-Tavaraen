@@ -116,12 +116,12 @@ function formPerks(e: MouseEvent = null) {
     }
     if (_perk.relative_to) {
       let found = perkArea.querySelector<HTMLDivElement>(`.${_perk.relative_to}`);
-      perk.style.left = `${((_perk.pos.x * baseSize)) + found.offsetLeft}px`;
+      perk.style.left = `${(_perk.pos.x * baseSize) + found.offsetLeft}px`;
       perk.style.top = `${(_perk.pos.y * baseSize) + found.offsetTop}px`;
     }
     else {
-      perk.style.left = `${_perk.pos.x * baseSize}px`;
-      perk.style.top = `${_perk.pos.y * baseSize}px`;
+      perk.style.left = `${(_perk.pos.x * baseSize)}px`;
+      perk.style.top = `${(_perk.pos.y * baseSize)}px`;
     }
 
     perk.append(img, name);
@@ -146,6 +146,7 @@ function formPerks(e: MouseEvent = null) {
       });
     }
   });
+  background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
 }
 
 function formStatUpgrades() {

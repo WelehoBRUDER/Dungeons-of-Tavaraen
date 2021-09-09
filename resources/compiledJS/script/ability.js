@@ -89,6 +89,27 @@ class Ability {
         this.remove_status = baseAbility.remove_status;
         if (this.cooldown < 0)
             this.cooldown = 0;
+        this.get_true_damage = (_user) => {
+            var _a, _b;
+            let damages = {};
+            let takenValues;
+            let total = 0;
+            if ((_a = _user.weapon) === null || _a === void 0 ? void 0 : _a.damages)
+                takenValues = _user.weapon.damages;
+            else if (!((_b = _user.weapon) === null || _b === void 0 ? void 0 : _b.damages) && _user.unarmedDamages)
+                takenValues = _user.unarmedDamages;
+            else
+                takenValues = _user.damages;
+            Object.entries(takenValues).forEach((dmg) => {
+                total += dmg[1];
+            });
+            Object.entries(this.damages).forEach((dmg) => {
+                const str = dmg[0];
+                const num = dmg[1] / 100;
+                damages[str] = Math.floor(total * num * this.damage_multiplier);
+            });
+            return damages;
+        };
     }
 }
 function getAbiModifiers(char, id) {

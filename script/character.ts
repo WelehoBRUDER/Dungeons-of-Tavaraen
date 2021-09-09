@@ -389,7 +389,7 @@ class Character {
       });
     };
 
-    this.abilities = base.abilities ?? [];
+    this.abilities = [...base.abilities] ?? [];
 
     this.silenced = () => {
       var result = false;
@@ -431,6 +431,8 @@ class Character {
           else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
           // @ts-ignore
           else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable(this.inventory[i]);
+          // @ts-ignore
+          else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact(this.inventory[i]);
         }
       }
       if (this.weapon?.type) this.weapon = new Weapon({ ...this.weapon });

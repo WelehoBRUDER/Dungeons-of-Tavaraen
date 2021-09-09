@@ -433,7 +433,6 @@ function clickMap(event) {
                         // @ts-expect-error
                         if (weaponReach(player, state.abiSelected.use_range, enemy))
                             attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
-                        player.effects();
                         if (!state.abiSelected.shoots_projectile)
                             advanceTurn();
                     }
@@ -449,7 +448,6 @@ function clickMap(event) {
                 attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
                 if (weaponReach(player, player.weapon.range, enemy)) {
                     regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
-                    player.effects();
                     advanceTurn();
                 }
                 // @ts-ignore
@@ -457,7 +455,6 @@ function clickMap(event) {
             else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
                 // @ts-ignore
                 fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true, player);
-                player.effects();
             }
             move = false;
             break;
@@ -475,7 +472,6 @@ function clickMap(event) {
         if (generatePath(player.cords, { x: x, y: y }, player.canFly, true) <= state.abiSelected.use_range) {
             move = false;
             summonUnit(state.abiSelected, { x: x, y: y });
-            player.effects();
             advanceTurn();
         }
     }
@@ -509,7 +505,6 @@ function clickMap(event) {
         }
     }
     else if (player.isRooted()) {
-        player.effects();
         advanceTurn();
         updateUI();
         state.abiSelected = {};
@@ -552,7 +547,6 @@ document.addEventListener("keyup", (keyPress) => {
     var _a;
     let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
     if (player.isRooted() && !player.isDead && dirs[keyPress.key]) {
-        player.effects();
         advanceTurn();
         updateUI();
         state.abiSelected = {};
@@ -580,12 +574,10 @@ document.addEventListener("keyup", (keyPress) => {
         if (canMove(shittyFix, dirs[keyPress.key]) && !player.isRooted()) {
             // @ts-ignore
             renderMap(maps[currentMap]);
-            player.effects();
             advanceTurn();
             updateUI();
         }
         else if (canMove(shittyFix, dirs[keyPress.key]) && player.isRooted()) {
-            player.effects();
             advanceTurn();
             updateUI();
             state.abiSelected = {};
@@ -597,7 +589,6 @@ document.addEventListener("keyup", (keyPress) => {
                 attackTarget(player, target, weaponReach(player, player.weapon.range, target));
                 if (weaponReach(player, player.weapon.range, target)) {
                     regularAttack(player, target, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
-                    player.effects();
                     advanceTurn();
                 }
             }
@@ -633,7 +624,6 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
             player.cords.y = step.y;
             modifyCanvas();
             if (!ability) {
-                player.effects();
                 advanceTurn();
                 updateUI();
             }
@@ -663,13 +653,11 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         }
     }
     else if (!action) {
-        player.effects();
         advanceTurn();
         updateUI();
         state.abiSelected = {};
     }
     else if (action) {
-        player.effects();
         action();
         advanceTurn();
         updateUI();
@@ -1065,6 +1053,7 @@ var highestWaitTime = 0;
 async function advanceTurn() {
     if (player.isDead)
         return;
+    player.effects();
     player.updateAbilities();
     state.inCombat = false;
     turnOver = false;

@@ -64,8 +64,8 @@ const perksArray = {
                 name: "Spells of Battle",
                 desc: "",
                 effects: {
-                    piercing_mana_bolt_damage_multiplierP: 25,
-                    piercing_mana_bolt_resistance_penetrationV: 18
+                    piercing_mana_bolt_damage_multiplierP: 12,
+                    piercing_mana_bolt_resistance_penetrationV: 10
                 },
                 tree: "sorcerer",
                 relative_to: "might_of_magic",

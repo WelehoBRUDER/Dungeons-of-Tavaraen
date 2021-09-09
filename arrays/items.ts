@@ -55,6 +55,7 @@ const items = {
     price: 10,
     weight: 1.2,
     type: "weapon",
+    statBonus: "dex",
     grade: "common",
     slot: "weapon"
   },
@@ -77,6 +78,7 @@ const items = {
     price: 10,
     weight: 0.9,
     type: "weapon",
+    statBonus: "str",
     grade: "common",
     slot: "weapon"
   },
@@ -105,6 +107,7 @@ const items = {
     price: 75,
     weight: 5.4,
     type: "weapon",
+    statBonus: "str",
     twoHanded: true,
     grade: "uncommon",
     slot: "weapon"
@@ -136,6 +139,7 @@ const items = {
     price: 18,
     weight: 2.1,
     type: "weapon",
+    statBonus: "str",
     grade: "common",
     slot: "weapon"
   },
@@ -169,6 +173,7 @@ const items = {
     price: 60,
     weight: 2.4,
     type: "weapon",
+    statBonus: "str",
     grade: "common",
     slot: "weapon"
   },
@@ -204,6 +209,7 @@ const items = {
     price: 500,
     weight: 2.4,
     type: "weapon",
+    statBonus: "str",
     grade: "rare",
     slot: "weapon"
   },
@@ -234,6 +240,7 @@ const items = {
     price: 35,
     weight: 2.9,
     type: "weapon",
+    statBonus: "str",
     grade: "common",
     slot: "weapon"
   },
@@ -260,6 +267,7 @@ const items = {
     weight: 0.9,
     type: "weapon",
     firesProjectile: "arrowProjectile",
+    statBonus: "dex",
     grade: "common",
     slot: "weapon"
   },
@@ -289,6 +297,7 @@ const items = {
     weight: 1.2,
     type: "weapon",
     firesProjectile: "magicBlastProjectile",
+    statBonus: "int",
     grade: "common",
     slot: "weapon"
   },
@@ -1189,6 +1198,102 @@ const items = {
     type: "armor",
     grade: "rare",
     slot: "boots"
+  },
+  /* ARTIFACTS */
+  talismanOfProtection: {
+    id: "talismanOfProtection",
+    name: "Talisman of Protection",
+    stats: {
+      hpMaxV: 10,
+      resistAllV: 3
+    },
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 3], chance: 3.75 },
+      { type: "strP", value: [3, 6, 9], chance: 3.75 },
+      { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+      { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+      { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+      { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+      { type: "intV", value: [1, 2, 3], chance: 3.75 },
+      { type: "intP", value: [3, 6, 9], chance: 3.75 },
+      { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+      { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+      { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+      { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+      { type: "hpMaxV", value: [5, 7, 10], chance: 20 },
+      { type: "hpMaxP", value: [3, 6, 9], chance: 20 },
+      { type: "resistAllV", value: [2, 4, 5], chance: 8 },
+    ],
+    img: "resources/icons/knight_sabatons.png",
+    price: 60,
+    weight: 0.25,
+    artifactSet: "defender",
+    type: "artifact",
+    grade: "uncommon",
+    slot: "artifact1"
+  },
+  emblemOfProtection: {
+    id: "emblemOfProtection",
+    name: "Emblem of Protection",
+    stats: {
+      hpMaxV: 5,
+      evasionV: 3
+    },
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 3], chance: 3.75 },
+      { type: "strP", value: [3, 6, 9], chance: 3.75 },
+      { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+      { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+      { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+      { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+      { type: "intV", value: [1, 2, 3], chance: 3.75 },
+      { type: "intP", value: [3, 6, 9], chance: 3.75 },
+      { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+      { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+      { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+      { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+      { type: "hpMaxV", value: [3, 5, 7], chance: 20 },
+      { type: "hpMaxP", value: [2, 5, 7], chance: 20 },
+      { type: "evasionV", value: [2, 3, 4], chance: 8 },
+    ],
+    img: "resources/icons/knight_sabatons.png",
+    price: 60,
+    weight: 0.25,
+    artifactSet: "defender",
+    type: "artifact",
+    grade: "uncommon",
+    slot: "artifact2"
+  },
+  ringOfProtection: {
+    id: "ringOfProtection",
+    name: "Ring of Protection",
+    stats: {
+      resistAllV: 5
+    },
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 3], chance: 3.75 },
+      { type: "strP", value: [3, 6, 9], chance: 3.75 },
+      { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+      { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+      { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+      { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+      { type: "intV", value: [1, 2, 3], chance: 3.75 },
+      { type: "intP", value: [3, 6, 9], chance: 3.75 },
+      { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+      { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+      { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+      { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+      { type: "hpMaxV", value: [3, 5, 7], chance: 20 },
+      { type: "hpMaxP", value: [2, 5, 7], chance: 20 },
+      { type: "evasionV", value: [2, 3, 4], chance: 8 },
+    ],
+    img: "resources/icons/knight_sabatons.png",
+    price: 60,
+    weight: 0.25,
+    artifactSet: "defender",
+    type: "artifact",
+    grade: "uncommon",
+    slot: "artifact3"
   },
   healingScrollI: {
     id: "healingScrollI",

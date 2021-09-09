@@ -76,7 +76,6 @@ function useAbi(abi) {
 }
 function buffOrHeal(character, ability) {
     state.isSelected = false;
-    player.effects();
     if (ability.base_heal) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
         const heal = Math.floor((ability.base_heal + val) * mod);
@@ -166,63 +165,45 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
         }
     }
-    // @ts-ignore
     if (target.isFoe) {
         let dmg = 0;
         if (!ability.damages) {
-            // @ts-ignore
             let _damages = (_a = attacker.weapon) === null || _a === void 0 ? void 0 : _a.damages;
             if (!_damages && attacker.id == "player")
                 _damages = attacker.fistDmg();
             else if (!_damages)
                 _damages = attacker.damages;
             Object.entries(_damages).forEach((value) => {
-                var _a, _b;
+                var _a, _b, _c;
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
-                // @ts-ignore
                 val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-                // @ts-ignore
                 mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-                // @ts-ignore
                 val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-                // @ts-ignore
                 mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
                 let bonus = 0;
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
-                // @ts-ignore
-                if ((_b = attacker.weapon) === null || _b === void 0 ? void 0 : _b.firesProjectile)
-                    bonus += num * attackerStats.dex / 50;
-                else if (attacker.firesProjectile)
-                    bonus += num * attackerStats.dex / 50;
-                else
-                    bonus += num * attackerStats.str / 50;
+                bonus += num * attackerStats[((_c = (_b = attacker.weapon) === null || _b === void 0 ? void 0 : _b.statBonus) !== null && _c !== void 0 ? _c : attacker.firesProjectile) ? "dex" : "str"] / 50;
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
         else {
-            Object.entries(ability.damages).forEach((value) => {
+            Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
-                // @ts-ignore
                 val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-                // @ts-ignore
                 mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-                // @ts-ignore
                 val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-                // @ts-ignore
                 mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
                 let bonus = 0;
-                // @ts-ignore
                 bonus += num * attackerStats[ability.stat_bonus] / 50;
-                // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
@@ -231,9 +212,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 return;
             const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
             layer.style.animation = 'none';
-            // @ts-ignore
             layer.offsetHeight; /* trigger reflow */
-            // @ts-ignore
             layer.style.animation = null;
             layer.style.animationName = `charHurt`;
         }, 110);
@@ -270,7 +249,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 attacker.stats.mp -= ability.mana_cost;
         }
         if (target.stats.hp <= 0) {
-            // @ts-ignore
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", target.xp), "lime", 32, 1800, 100);
             setTimeout(modifyCanvas, 100);
@@ -278,23 +256,19 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     }
     else {
         let dmg = 0;
-        // @ts-ignore
         if (ability.damages) {
-            Object.entries(ability.damages).forEach((value) => {
+            Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
-                // @ts-ignore
                 bonus += num * attackerStats[ability.stat_bonus] / 50;
-                // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
         else {
-            // @ts-ignore
             Object.entries(attacker.damages).forEach((value) => {
                 var _a;
                 const key = value[0];
@@ -303,25 +277,19 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 val += getModifiers(attacker, "damage").v;
                 mod *= getModifiers(attacker, "damage").m;
                 let bonus = 0;
-                // @ts-ignore
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
-                // @ts-ignore
                 if (attacker.shootsProjectile)
                     bonus += num * attackerStats.dex / 50;
-                // @ts-ignore
                 else
                     bonus += num * attackerStats.str / 50;
-                // @ts-ignore
                 dmg += Math.floor(((((num + val + bonus) * mod) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
             });
         }
         const layer = document.querySelector(".playerSheet");
         setTimeout((paskaFixi) => {
             layer.style.animation = 'none';
-            // @ts-ignore
             layer.offsetHeight; /* trigger reflow */
-            // @ts-ignore
             layer.style.animation = null;
             layer.style.animationName = `screenHurt`;
         }, 110);
@@ -344,7 +312,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (ability.mana_cost)
             attacker.stats.mp -= ability.mana_cost;
         if (target.stats.hp <= 0) {
-            // @ts-ignore
             target.kill();
             setTimeout(modifyCanvas, 300);
         }
