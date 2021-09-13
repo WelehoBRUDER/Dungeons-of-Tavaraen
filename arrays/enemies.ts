@@ -102,7 +102,6 @@ const enemies = {
     canFly: false,
     abilities: [
       new Ability(abilities.attack, dummy),
-      new Ability(abilities.charge, dummy),
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {

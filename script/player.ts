@@ -29,6 +29,7 @@ interface playerChar extends characterObject {
   fistDmg?: Function;
   classes?: any;
   oldCords?: tileObject;
+  getArtifactSetBonuses?: Function;
 }
 
 interface levelObject {
@@ -157,6 +158,7 @@ class PlayerCharacter extends Character {
   fistDmg?: Function;
   classes?: any;
   oldCords?: tileObject;
+  getArtifactSetBonuses?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -300,6 +302,45 @@ class PlayerCharacter extends Character {
         displayText(`<c>white<c>[WORLD] <c>gold<c>${lvlText}`);
         updateUI();
       }
+    }
+
+    this.getArtifactSetBonuses = (getOnlySetAmounts = false as boolean) => {
+      let sets = {} as any;
+      let effects = {} as any;
+      if(this.artifact1?.artifactSet) {
+        sets[this.artifact1.artifactSet] = 1;
+      }
+      if(this.artifact2?.artifactSet) {
+        if(sets[this.artifact2.artifactSet]) sets[this.artifact2.artifactSet]++;
+        else sets[this.artifact2.artifactSet] = 1;
+      }
+      if(this.artifact3?.artifactSet) {
+        if(sets[this.artifact3.artifactSet]) sets[this.artifact3.artifactSet]++;
+        else sets[this.artifact3.artifactSet] = 1;
+      }
+      Object.entries(sets).forEach((set: any) => {
+        const key = set[0];
+        const amnt = set[1];
+        if(amnt > 1) {
+          let curSet = {...artifactSets[key]};
+          Object.entries(curSet.twoPieceEffect).forEach(stat=>{
+            const statKey = stat[0];
+            const statVal = stat[1];
+            if(effects[statKey]) effects[statKey] += statVal;
+            else effects[statKey] = statVal;
+          });
+          if(amnt > 2) {
+            Object.entries(curSet.threePieceEffect).forEach(stat=>{
+              const statKey = stat[0];
+              const statVal = stat[1];
+              if(effects[statKey]) effects[statKey] += statVal;
+              else effects[statKey] = statVal;
+            });
+          }
+        }
+      })
+      if(getOnlySetAmounts) return sets;
+      return effects;
     }
 
     this.kill = () => {

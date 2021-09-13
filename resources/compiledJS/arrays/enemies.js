@@ -99,7 +99,6 @@ const enemies = {
         canFly: false,
         abilities: [
             new Ability(abilities.attack, dummy),
-            new Ability(abilities.charge, dummy),
         ],
         retreatLimit: 0,
         statsPerLevel: {

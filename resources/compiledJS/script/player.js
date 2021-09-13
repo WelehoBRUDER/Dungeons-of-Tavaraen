@@ -213,6 +213,54 @@ class PlayerCharacter extends Character {
                 updateUI();
             }
         };
+        this.getArtifactSetBonuses = (getOnlySetAmounts = false) => {
+            var _a, _b, _c;
+            let sets = {};
+            let effects = {};
+            if ((_a = this.artifact1) === null || _a === void 0 ? void 0 : _a.artifactSet) {
+                sets[this.artifact1.artifactSet] = 1;
+            }
+            if ((_b = this.artifact2) === null || _b === void 0 ? void 0 : _b.artifactSet) {
+                if (sets[this.artifact2.artifactSet])
+                    sets[this.artifact2.artifactSet]++;
+                else
+                    sets[this.artifact2.artifactSet] = 1;
+            }
+            if ((_c = this.artifact3) === null || _c === void 0 ? void 0 : _c.artifactSet) {
+                if (sets[this.artifact3.artifactSet])
+                    sets[this.artifact3.artifactSet]++;
+                else
+                    sets[this.artifact3.artifactSet] = 1;
+            }
+            Object.entries(sets).forEach((set) => {
+                const key = set[0];
+                const amnt = set[1];
+                if (amnt > 1) {
+                    let curSet = Object.assign({}, artifactSets[key]);
+                    Object.entries(curSet.twoPieceEffect).forEach(stat => {
+                        const statKey = stat[0];
+                        const statVal = stat[1];
+                        if (effects[statKey])
+                            effects[statKey] += statVal;
+                        else
+                            effects[statKey] = statVal;
+                    });
+                    if (amnt > 2) {
+                        Object.entries(curSet.threePieceEffect).forEach(stat => {
+                            const statKey = stat[0];
+                            const statVal = stat[1];
+                            if (effects[statKey])
+                                effects[statKey] += statVal;
+                            else
+                                effects[statKey] = statVal;
+                        });
+                    }
+                }
+            });
+            if (getOnlySetAmounts)
+                return sets;
+            return effects;
+        };
         this.kill = () => {
             if (this.isDead)
                 return;

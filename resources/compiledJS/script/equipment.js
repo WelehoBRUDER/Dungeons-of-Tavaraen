@@ -318,12 +318,13 @@ class Armor extends Item {
 }
 class Artifact extends Item {
     constructor(base) {
-        var _a;
+        var _a, _b;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
         this.statsTemplate = baseItem.statsTemplate;
-        this.stats = baseItem.stats;
-        this.rolledStats = (_a = Object.assign({}, base.rolledStats)) !== null && _a !== void 0 ? _a : {};
+        this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
+        this.artifactSet = baseItem.artifactSet;
+        this.rolledStats = (_b = Object.assign({}, base.rolledStats)) !== null && _b !== void 0 ? _b : {};
         this.commands = {};
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
@@ -420,7 +421,7 @@ function closeLeveling() {
     lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     var text = "";
     text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
     text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
@@ -496,6 +497,20 @@ function itemTT(item) {
         text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
     text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+    if (item.artifactSet) {
+        text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
+        let sets = player.getArtifactSetBonuses(true);
+        text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
+        Object.entries((_h = artifactSets[item.artifactSet]) === null || _h === void 0 ? void 0 : _h.twoPieceEffect).forEach((effect) => {
+            if (effect[1] !== 0)
+                text += effectSyntax(effect, true, "");
+        });
+        text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
+        Object.entries((_j = artifactSets[item.artifactSet]) === null || _j === void 0 ? void 0 : _j.threePieceEffect).forEach((effect) => {
+            if (effect[1] !== 0)
+                text += effectSyntax(effect, true, "");
+        });
+    }
     return text;
 }
 var sortingReverse = false;
@@ -579,4 +594,36 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsList.scrollBy(invScroll, invScroll);
     return container;
 }
+const artifactSets = {
+    defender: {
+        id: "defender",
+        twoPieceEffect: {
+            hpMaxP: 10
+        },
+        threePieceEffect: {
+            hpMaxV: 10,
+            resistAllV: 3
+        }
+    },
+    scholar: {
+        id: "scholar",
+        twoPieceEffect: {
+            mpMaxP: 10
+        },
+        threePieceEffect: {
+            intV: 5,
+            magicDamageP: 12
+        }
+    },
+    warrior: {
+        id: "warrior",
+        twoPieceEffect: {
+            attack_damage_multiplierP: 15
+        },
+        threePieceEffect: {
+            hitChanceV: 10,
+            hpMaxP: 5
+        }
+    }
+};
 //# sourceMappingURL=equipment.js.map

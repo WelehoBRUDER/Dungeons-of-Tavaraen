@@ -1,1 +1,1 @@
-respawnaanimen ei toimi: variable "saveGamesOpen" ei ole olemassa
+respawnaanimen ei toimi: variable "saveGamesOpen" ei ole olemassa // Korjattu

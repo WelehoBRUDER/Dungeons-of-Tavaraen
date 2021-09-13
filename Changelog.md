@@ -1,3 +1,34 @@
+# Indev Update 2 ~ 13.9.2021
+
+## New Features & Additions
+  * Expanded artifact system:
+    > Added working set bonuses, 2 and 3 piece variants.  
+    > Added tooltip for set bonuses, grey means inactive, green means active.  
+    > Added artwork for existing artifacts.  
+  * Added 2 new artifact sets:
+    - Scholar, granting mages great bonuses to wizardry.
+    - Warrior, granting melee characters great bonuses to fighting.
+
+## Tweaks
+
+  * Increased damage values of all weapons:
+    - Dagger total damage increased from **4** to **8**. (6 piercing, 2 slashing)
+    - Stick total damage increased from **3** to **9**. (9 crushing)
+    - Troll Club total damage increased from **13** to **24**. (24 crushing)
+    - Chipped Longsword total damage increased from **6** to **12**. (9 slashing, 3 piercing)
+    - Longsword total damage increased from **9** to **14**. (10 slashing, 4 piercing)
+    - Silver Sword total damage increased from **20** to **25**. (15 slashing, 5 piercing, 5 magic)
+    - Chipped Axe total damage increased from **7** to **11**. (6 piercing, 5 crushing)
+    - Hunting Bow total damage increased from **5** to **10**. (10 piercing)
+    - Apprentice Wand total damage increased from **5** to **10**. (10 magic)
+  * Doubled all item spawn chances in chests.
+  * Made save name input text light.
+
+## Bug fixes
+
+  * Removed the "charge" ability from slime type enemies.
+  * Fixed artifacts rolling stats on top of rolled stats, making them infinitely more powerful. This issue was caused by linked arrays.
+
 # Indev Update 1 ~ 9.9.2021
 
 ## New Features

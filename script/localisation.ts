@@ -207,6 +207,23 @@ const finnish = {
   talismanOfProtection_name: "Puolustava Talismaani",
   emblemOfProtection_name: "Puolustava Tunnus",
   ringOfProtection_name: "Puolustava Sormus",
+  scholarsTalisman_name: "Tieteilijän Onnekas Talismaani",
+  scholarsEmblem_name: "Tieteilijän Tunnus",
+  scholarsRing_name: "Tieteilijän Lumottu Sormus",
+  warriorsTalisman_name: "Ylistetyn Soturin Talismaani",
+  warriorsEmblem_name: "Soturin Arvostettu Tunnus",
+  warriorsRing_name: "Soturin Sormus",
+
+  // Artifacts
+  part_of_set: "Osa",
+  artifact_def: "Artefakti",
+  artifact_set: "Artefakti sarjaa",
+  artifact_two_piece: "2-palan sarja efekti",
+  artifact_three_piece: "3-palan sarja efekti",
+  defenderSet_name: "Puolustaja",
+  guardianSet_name: "Vartija",
+  scholarSet_name: "Tietelijä",
+  warriorSet_name: "Soturi",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -821,6 +838,17 @@ const english = {
   summon_last: "Summoned unit last",
   two_handed_weapon: "Two-handed",
   rooted: "Can't move!",
+
+  // Artifacts
+  part_of_set: "Part of",
+  artifact_def: "Artifact",
+  artifact_set: "Artifact Set",
+  artifact_two_piece: "2-piece set effect",
+  artifact_three_piece: "3-piece set effect",
+  defenderSet_name: "Defender",
+  guardianSet_name: "Guardian",
+  scholarSet_name: "Scholar",
+  warriorSet_name: "Warrior",
 
   // Passive abilities
   frenzy_name: "Frenzy",

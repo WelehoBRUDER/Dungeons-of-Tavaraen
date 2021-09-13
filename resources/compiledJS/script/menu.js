@@ -142,7 +142,7 @@ setTimeout(() => {
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-}, 500);
+}, 1200);
 const languages = ["english", "finnish"];
 const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");

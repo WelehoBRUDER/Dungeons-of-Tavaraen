@@ -145,6 +145,17 @@ function getModifiers(char, stat, withConditions = true) {
                 }
             }
         });
+        const artifactEffects = char.getArtifactSetBonuses();
+        Object.entries(artifactEffects).forEach((eff) => {
+            if (eff[0].startsWith(stat)) {
+                if (eff[0] == stat + "P" && eff[1] < 0)
+                    modif *= (1 + eff[1] / 100);
+                else if (eff[0] == stat + "P")
+                    modif += (eff[1] / 100);
+                else if (eff[0] == stat + "V")
+                    val += eff[1];
+            }
+        });
     }
     return { v: val, m: modif };
 }

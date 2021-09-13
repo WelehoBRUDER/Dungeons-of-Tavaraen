@@ -426,7 +426,8 @@ class Artifact extends Item {
     super(base);
     const baseItem = { ...items[this.id] };
     this.statsTemplate = baseItem.statsTemplate;
-    this.stats = baseItem.stats;
+    this.stats = { ...baseItem.stats } ?? {};
+    this.artifactSet = baseItem.artifactSet;
     this.rolledStats = { ...base.rolledStats } ?? {};
     this.commands = {};
 
@@ -590,6 +591,20 @@ function itemTT(item: any) {
   if (item.statBonus) text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+
+  if (item.artifactSet) {
+    text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
+    let sets = player.getArtifactSetBonuses(true);
+    text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
+    Object.entries(artifactSets[item.artifactSet]?.twoPieceEffect).forEach((effect: any)=>{
+      if (effect[1] !== 0) text += effectSyntax(effect, true, ""); 
+    });
+    text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
+    Object.entries(artifactSets[item.artifactSet]?.threePieceEffect).forEach((effect: any)=>{
+      if (effect[1] !== 0) text += effectSyntax(effect, true, ""); 
+    });
+  }
+
   return text;
 }
 
@@ -674,3 +689,36 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   itemsList.scrollBy(invScroll, invScroll);
   return container;
 }
+
+const artifactSets = {
+  defender: {
+    id: "defender",
+    twoPieceEffect: {
+      hpMaxP: 10
+    },
+    threePieceEffect: {
+      hpMaxV: 10,
+      resistAllV: 3
+    }
+  },
+  scholar: {
+    id: "scholar",
+    twoPieceEffect: {
+      mpMaxP: 10
+    },
+    threePieceEffect: {
+      intV: 5,
+      magicDamageP: 12
+    }
+  },
+  warrior: {
+    id: "warrior",
+    twoPieceEffect: {
+      attack_damage_multiplierP: 15
+    },
+    threePieceEffect: {
+      hitChanceV: 10,
+      hpMaxP: 5
+    }
+  }
+} as any;
