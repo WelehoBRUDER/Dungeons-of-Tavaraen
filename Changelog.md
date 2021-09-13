@@ -1,3 +1,7 @@
+## Hotfix
+  * Fixed an issue where item classes did not generate, causing a softlock.
+  * Fixed an issue where upon loading game the player's perk tree would display incorrectly.
+
 # Indev Update 2 ~ 13.9.2021
 
 ## New Features & Additions

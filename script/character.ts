@@ -436,19 +436,23 @@ class Character {
           // @ts-ignore
           if (this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({ ...this.inventory[i] });
           // @ts-ignore
-          else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor(this.inventory[i]);
+          else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor({...this.inventory[i]});
           // @ts-ignore
-          else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable(this.inventory[i]);
+          else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable({...this.inventory[i]});
           // @ts-ignore
-          else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact(this.inventory[i]);
+          else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact({...this.inventory[i]});
         }
       }
       if (this.weapon?.type) this.weapon = new Weapon({ ...this.weapon });
+      if (this.offhand?.type) this.offhand = new Armor({ ...this.offhand });
       if (this.chest?.type) this.chest = new Armor({ ...this.chest });
       if (this.legs?.type) this.legs = new Armor({ ...this.legs });
       if (this.helmet?.type) this.helmet = new Armor({ ...this.helmet });
       if (this.gloves?.type) this.gloves = new Armor({ ...this.gloves });
       if (this.boots?.type) this.boots = new Armor({ ...this.boots });
+      if (this.artifact1?.type) this.artifact1 = new Artifact({ ...this.artifact1 });
+      if (this.artifact2?.type) this.artifact2 = new Artifact({ ...this.artifact2 });
+      if (this.artifact3?.type) this.artifact3 = new Artifact({ ...this.artifact3 });
     };
   }
 }

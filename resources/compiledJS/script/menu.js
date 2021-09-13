@@ -395,13 +395,13 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         loadGame.addEventListener("click", () => {
             var _a;
             reviveAllDeadEnemies();
-            console.log(save.save);
             player = new PlayerCharacter(Object.assign({}, save.save.player));
             fallenEnemies = [...save.save.fallenEnemies];
             itemData = [...save.save.itemData];
             if (save.save.lootedChests)
                 lootedChests = (_a = [...save.save.lootedChests]) !== null && _a !== void 0 ? _a : [];
             currentMap = save.save.currentMap;
+            tree = player.classes.main.perkTree;
             purgeDeadEnemies();
             handleEscape();
             closeGameMenu();
@@ -602,6 +602,7 @@ function LoadSlot(data) {
     fallenEnemies = GetKey("enemies", data).data;
     lootedChests = GetKey("lootedChests", data).data;
     currentMap = GetKey("currentMap", data).data;
+    tree = player.classes.main.perkTree;
     purgeDeadEnemies();
     handleEscape();
     closeGameMenu();

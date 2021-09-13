@@ -280,6 +280,7 @@ function renderMap(map: mapObject) {
     var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
     var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const itemImg = new Image();
+    if(!item.itm) return;
     itemImg.src = item.itm.img;
     itemImg.onload = function () {
       if (sightMap[item.cords.y]?.[item.cords.x] == "x") {

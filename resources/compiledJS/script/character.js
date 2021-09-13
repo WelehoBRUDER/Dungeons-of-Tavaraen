@@ -327,7 +327,7 @@ class Character {
             return (this.stats.mp / this.getMpMax(false)) * 100;
         };
         this.updateAbilities = () => {
-            var _a, _b, _c, _d, _e, _f, _g, _h;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             // @ts-ignore
             for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
                 // @ts-ignore
@@ -342,27 +342,35 @@ class Character {
                         this.inventory[i] = new Weapon(Object.assign({}, this.inventory[i]));
                     // @ts-ignore
                     else if (this.inventory[i].type == "armor")
-                        this.inventory[i] = new Armor(this.inventory[i]);
+                        this.inventory[i] = new Armor(Object.assign({}, this.inventory[i]));
                     // @ts-ignore
                     else if (this.inventory[i].type == "consumable")
-                        this.inventory[i] = new Consumable(this.inventory[i]);
+                        this.inventory[i] = new Consumable(Object.assign({}, this.inventory[i]));
                     // @ts-ignore
                     else if (this.inventory[i].type == "artifact")
-                        this.inventory[i] = new Artifact(this.inventory[i]);
+                        this.inventory[i] = new Artifact(Object.assign({}, this.inventory[i]));
                 }
             }
             if ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.type)
                 this.weapon = new Weapon(Object.assign({}, this.weapon));
-            if ((_d = this.chest) === null || _d === void 0 ? void 0 : _d.type)
+            if ((_d = this.offhand) === null || _d === void 0 ? void 0 : _d.type)
+                this.offhand = new Armor(Object.assign({}, this.offhand));
+            if ((_e = this.chest) === null || _e === void 0 ? void 0 : _e.type)
                 this.chest = new Armor(Object.assign({}, this.chest));
-            if ((_e = this.legs) === null || _e === void 0 ? void 0 : _e.type)
+            if ((_f = this.legs) === null || _f === void 0 ? void 0 : _f.type)
                 this.legs = new Armor(Object.assign({}, this.legs));
-            if ((_f = this.helmet) === null || _f === void 0 ? void 0 : _f.type)
+            if ((_g = this.helmet) === null || _g === void 0 ? void 0 : _g.type)
                 this.helmet = new Armor(Object.assign({}, this.helmet));
-            if ((_g = this.gloves) === null || _g === void 0 ? void 0 : _g.type)
+            if ((_h = this.gloves) === null || _h === void 0 ? void 0 : _h.type)
                 this.gloves = new Armor(Object.assign({}, this.gloves));
-            if ((_h = this.boots) === null || _h === void 0 ? void 0 : _h.type)
+            if ((_j = this.boots) === null || _j === void 0 ? void 0 : _j.type)
                 this.boots = new Armor(Object.assign({}, this.boots));
+            if ((_k = this.artifact1) === null || _k === void 0 ? void 0 : _k.type)
+                this.artifact1 = new Artifact(Object.assign({}, this.artifact1));
+            if ((_l = this.artifact2) === null || _l === void 0 ? void 0 : _l.type)
+                this.artifact2 = new Artifact(Object.assign({}, this.artifact2));
+            if ((_m = this.artifact3) === null || _m === void 0 ? void 0 : _m.type)
+                this.artifact3 = new Artifact(Object.assign({}, this.artifact3));
         };
     }
 }

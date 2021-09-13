@@ -499,6 +499,7 @@ function renderInventory() {
       img.classList.add("slotItem");
       name.classList.add("slotText");
       name.style.color = grades[_item.grade].color;
+      console.log(_item);
       tooltip(img, itemTT(_item));
       inventory.querySelector<HTMLDivElement>("." + slot + "Bg").style.opacity = "0";
       inventory.querySelector<HTMLDivElement>("." + slot).append(img, name);
@@ -657,7 +658,6 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemWeight.classList.add("itemWeight");
     itemWorth.classList.add("itemWorth");
     itemImage.src = itm.img;
-    console.log(itm);
     itemName.style.color = grades[itm.grade].color;
     itemType.style.color = grades[itm.grade].color;
     itemRarity.style.color = grades[itm.grade].color;
