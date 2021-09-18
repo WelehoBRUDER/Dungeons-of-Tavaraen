@@ -434,7 +434,8 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
       if (value < 0) backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
       else backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
       tailEnd = lang[key_];
-      if (tailEnd.includes("undefined")) tailEnd = key_;
+      if(!tailEnd) tailEnd = key_;
+      else if (tailEnd.includes("undefined")) tailEnd = key_;
     }
     //if (tailEnd.includes("multiplier")) value = value * 100;
   }

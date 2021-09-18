@@ -291,8 +291,10 @@ class PlayerCharacter extends Character {
       while(this.level.xp >= this.level.xpNeed) {
         this.level.xp -= this.level.xpNeed;
         this.level.level++;
-        this.sp += 3;
-        this.pp += 1;
+        this.sp += 5;
+        if(this.level.level < 6) this.pp += 2;
+        else if (this.level.level % 10 == 0 ) this.pp += 3;
+        else this.pp++;
         this.level.xpNeed = nextLevel(this.level.level);
         this.stats.hp = this.getHpMax();
         this.stats.mp = this.getMpMax();
@@ -367,7 +369,7 @@ class PlayerCharacter extends Character {
 
 function nextLevel(level) {
   let base = 75;
-  let exponent = 1.35;
+  let exponent = 1.25;
   if(level >= 9) base = 100;
   if(level >= 29) base = 200;
   if(level >= 49) base = 375; 
@@ -557,7 +559,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["sorcererClass"]),
+    main: new combatClass(combatClasses["rogueClass"]),
     sub: null
   },
   sprite: ".player",

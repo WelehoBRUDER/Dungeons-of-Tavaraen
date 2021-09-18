@@ -166,6 +166,22 @@ const abilities = {
         self_target: true,
         ai_chance: 2
     },
+    sneaky_stabbing: {
+        id: "sneaky_stabbing",
+        name: "Sneaky Stabbing",
+        mana_cost: 0,
+        cooldown: 18,
+        damage_multiplier: 0,
+        type: "buff",
+        action_desc: "focuses on critical points.",
+        action_desc_pl: "focus on critical points!",
+        icon: "resources/icons/hand_gripping_knife.png",
+        line: "...",
+        status: "sneaky_stabbing",
+        use_range: "0",
+        self_target: true,
+        ai_chance: 2
+    },
     ward_of_aurous: {
         id: "ward_of_aurous",
         name: "Ward of Aurous",

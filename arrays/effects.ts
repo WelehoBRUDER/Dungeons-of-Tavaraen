@@ -163,6 +163,21 @@ const statusEffects = {
     aura: "redMist",
     icon: "resources/icons/berserk.png"
   },
+  sneaky_stabbing: {
+    id: "sneaky_stabbing",
+    name: "Sneaky Stabbing",
+    effects: {
+      critChanceP: 15,
+      critDamageP: 30,
+      damageP: 8
+    },
+    last: {
+      total: 7,
+      current: 7
+    },
+    textIcon: icons.hand_gripping_knife_icon,
+    icon: "resources/icons/hand_gripping_knife.png"
+  },
   dazed: {
     id: "dazed",
     name: "Dazed",

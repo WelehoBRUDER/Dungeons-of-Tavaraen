@@ -309,7 +309,6 @@ const perksArray = {
                 desc: "",
                 effects: {
                     focus_strike_damage_multiplierP: 15,
-                    battle_fury_status_effect_attack_damage_multiplierPP: 10,
                     charge_damage_multiplierP: 25,
                     charge_resistance_penetrationV: 10,
                     charge_cooldownV: -3,
@@ -567,7 +566,7 @@ const perksArray = {
                     cunV: 1,
                 },
                 commands: {
-                    add_ability_shadow_step: 1
+                    add_ability_shadow_step: 1,
                 },
                 tree: "rogue",
                 pos: { x: 7.5, y: 1 },
@@ -577,8 +576,8 @@ const perksArray = {
                 id: "weakpoint_spotter",
                 name: "Weakpoint Spotter",
                 desc: "",
-                effects: {
-                    critChanceP: 5
+                commands: {
+                    add_ability_sneaky_stabbing: 1
                 },
                 tree: "rogue",
                 relative_to: "way_of_the_rogue",
@@ -728,101 +727,116 @@ const perksArray = {
             },
         }
     },
-    necromancer: {
-        id: "necromancer_perks",
-        name: "Necromancer",
+    adventurer_shared: {
+        id: "adventurer_shared",
+        name: "Adventurer",
         perks: {
-            pursuit_of_undeath: {
-                id: "pursuit_of_undeath",
-                name: "Pursuit of Undeath",
+            hearty_adventurer_1: {
+                id: "hearty_adventurer_1",
+                name: "Hearty Adventurer 1",
                 desc: "",
                 effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
+                    hpMaxV: 10
+                },
+                tree: "adventurer_shared",
+                pos: { x: 3, y: 1 },
+                icon: "resources/icons/health.png"
+            },
+            hearty_adventurer_2: {
+                id: "hearty_adventurer_2",
+                name: "Hearty Adventurer 2",
+                desc: "",
+                effects: {
+                    hpMaxV: 15
+                },
+                relative_to: "hearty_adventurer_1",
+                requires: ["hearty_adventurer_1"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/health.png"
+            },
+            hearty_adventurer_3: {
+                id: "hearty_adventurer_3",
+                name: "Hearty Adventurer 3",
+                desc: "",
+                effects: {
+                    hpMaxV: 20
+                },
+                relative_to: "hearty_adventurer_2",
+                requires: ["hearty_adventurer_2"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/health.png"
+            },
+            hearty_adventurer_4: {
+                id: "hearty_adventurer_4",
+                name: "Hearty Adventurer 4",
+                desc: "",
+                effects: {
+                    hpMaxP: 10
+                },
+                relative_to: "hearty_adventurer_3",
+                requires: ["hearty_adventurer_3"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/health.png"
+            },
+            hearty_adventurer_5: {
+                id: "hearty_adventurer_5",
+                name: "Hearty Adventurer 5",
+                desc: "",
+                effects: {
+                    hpMaxP: 15
+                },
+                relative_to: "hearty_adventurer_4",
+                requires: ["hearty_adventurer_4"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/health.png"
+            },
+            first_aid_expert: {
+                id: "first_aid_expert",
+                name: "First Aid Expert",
+                desc: "",
+                effects: {
+                    regenHpP: 14,
+                    first_aid_base_healV: 5,
+                    first_aid_cooldownP: -20
+                },
+                tree: "adventurer_shared",
+                pos: { x: 6, y: 1 },
+                icon: "resources/icons/first_aid.png"
+            },
+            cleanser: {
+                id: "cleanser",
+                name: "Cleanser",
+                desc: "",
+                effects: {
+                    regenHpP: 6,
                 },
                 commands: {
-                    add_ability_focus_strike: 1
+                    add_ability_purification: 1
                 },
-                tree: "necromancer",
-                pos: { x: 7.5, y: 1 },
-                icon: "resources/icons/berserk.png"
+                relative_to: "first_aid_expert",
+                requires: ["first_aid_expert"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/purification.png"
             },
-            pursuit_of_undeath_2: {
-                id: "pursuit_of_undeath_2",
-                name: "Pursuit of Undeath II",
+            advancing_backwards: {
+                id: "advancing_backwards",
+                name: "Advancing Backwards",
                 desc: "",
                 effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
+                    retreat_cooldownP: -30,
+                    retreat_use_rangeV: 2
                 },
-                tree: "necromancer",
-                pos: { x: -2, y: 3 },
-                relative_to: "pursuit_of_undeath",
-                requires: ["pursuit_of_undeath"],
-                icon: "resources/icons/berserk.png"
+                relative_to: "cleanser",
+                requires: ["cleanser"],
+                tree: "adventurer_shared",
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/retreat.png"
             },
-            pursuit_of_undeath_3: {
-                id: "pursuit_of_undeath_3",
-                name: "Pursuit of Undeath III",
-                desc: "",
-                effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
-                },
-                tree: "necromancer",
-                pos: { x: 2, y: 3 },
-                relative_to: "pursuit_of_undeath",
-                requires: ["pursuit_of_undeath"],
-                icon: "resources/icons/berserk.png"
-            },
-            pursuit_of_undeath_4: {
-                id: "pursuit_of_undeath_4",
-                name: "Pursuit of Undeath IV",
-                desc: "",
-                effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
-                },
-                tree: "necromancer",
-                pos: { x: 2, y: 3 },
-                relative_to: "pursuit_of_undeath_2",
-                requires: ["pursuit_of_undeath_2", "pursuit_of_undeath_3"],
-                icon: "resources/icons/berserk.png"
-            },
-            pursuit_of_undeath_5: {
-                id: "pursuit_of_undeath_5",
-                name: "Pursuit of Undeath V",
-                desc: "",
-                effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
-                },
-                tree: "necromancer",
-                pos: { x: 3, y: 1 },
-                relative_to: "pursuit_of_undeath_4",
-                requires: ["pursuit_of_undeath_4"],
-                icon: "resources/icons/berserk.png"
-            },
-            pursuit_of_undeath_6: {
-                id: "pursuit_of_undeath_6",
-                name: "Pursuit of Undeath VI",
-                desc: "",
-                effects: {
-                    hpMaxV: 10,
-                    strV: 1,
-                    intV: 2
-                },
-                tree: "necromancer",
-                pos: { x: 1, y: -2 },
-                relative_to: "pursuit_of_undeath_5",
-                requires: ["pursuit_of_undeath_5"],
-                icon: "resources/icons/berserk.png"
-            }
         }
     }
 };

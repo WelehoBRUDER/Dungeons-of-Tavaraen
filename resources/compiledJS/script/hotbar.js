@@ -491,7 +491,9 @@ function effectSyntax(effect, embed = false, effectId = "") {
             else
                 backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
             tailEnd = lang[key_];
-            if (tailEnd.includes("undefined"))
+            if (!tailEnd)
+                tailEnd = key_;
+            else if (tailEnd.includes("undefined"))
                 tailEnd = key_;
         }
         //if (tailEnd.includes("multiplier")) value = value * 100;

@@ -165,11 +165,11 @@ class Ability {
       let damages = {} as damageClass;
       let takenValues: any;
       let total: number = 0;
-      if(_user.weapon?.damages) takenValues = _user.weapon.damages;
-      else if(!_user.weapon?.damages && _user.unarmedDamages) takenValues = _user.unarmedDamages
+      if (_user.weapon?.damages) takenValues = _user.weapon.damages;
+      else if (!_user.weapon?.damages && _user.unarmedDamages) takenValues = _user.unarmedDamages;
       else takenValues = _user.damages;
       Object.entries(takenValues).forEach((dmg: any) => {
-          total += dmg[1];
+        total += dmg[1];
       });
       Object.entries(this.damages).forEach((dmg: any) => {
         const str = dmg[0];
@@ -177,8 +177,20 @@ class Ability {
         damages[str] = Math.floor(total * num * this.damage_multiplier);
       });
       return damages;
-    }
+    };
   }
+}
+
+function getAbiKey(key: string) {
+  if (key.includes("status")) return key;
+  let newKey = key.substring(0, key.length - 1);
+  straight_modifiers.forEach((modifs: any) => {
+    if (newKey.includes(modifs)) {
+      newKey = newKey.replace(modifs, "");
+      newKey = newKey.substring(0, newKey.length - 1);
+    }
+  });
+  return newKey;
 }
 
 function getAbiModifiers(char: characterObject, id: string) {
@@ -190,7 +202,8 @@ function getAbiModifiers(char: characterObject, id: string) {
     Object.entries(prk.effects).forEach((eff: any) => {
       let key = eff[0];
       let value = eff[1];
-      if (key.includes(id) && !key.includes("status")) {
+      const comparisonKey = getAbiKey(key);
+      if (id == comparisonKey && !key.includes("status")) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
@@ -208,7 +221,8 @@ function getAbiModifiers(char: characterObject, id: string) {
           Object.entries(mod.effects).forEach((eff: any) => {
             let key = eff[0];
             let value = eff[1];
-            if (key.includes(id) && !key.includes("status")) {
+            const comparisonKey = getAbiKey(key);
+            if (id == comparisonKey && !key.includes("status")) {
               key = key.replace(id + "_", "");
               const _key = key.substring(0, key.length - 1);
               if (key.endsWith("V")) total[_key].value += value;
@@ -224,7 +238,8 @@ function getAbiModifiers(char: characterObject, id: string) {
     Object.entries(stat.effects).forEach((eff: any) => {
       let key = eff[0];
       let value = eff[1];
-      if (key.includes(id) && !key.includes("status")) {
+      const comparisonKey = getAbiKey(key);
+      if (id == comparisonKey && !key.includes("status")) {
         key = key.replace(id + "_", "");
         const _key = key.substring(0, key.length - 1);
         if (key.endsWith("V")) total[_key].value += value;
@@ -242,7 +257,8 @@ function getAbiModifiers(char: characterObject, id: string) {
       Object.entries(stat.effects).forEach((eff: any) => {
         let key = eff[0];
         let value = eff[1];
-        if (key.includes(id) && !key.includes("status")) {
+        const comparisonKey = getAbiKey(key);
+        if (id == comparisonKey && !key.includes("status")) {
           key = key.replace(id + "_", "");
           const _key = key.substring(0, key.length - 1);
           if (key.endsWith("V")) total[_key].value += value;
@@ -257,7 +273,8 @@ function getAbiModifiers(char: characterObject, id: string) {
       Object.entries(char[slot].stats).forEach((eff: any) => {
         let key = eff[0];
         let value = eff[1];
-        if (key.includes(id) && !key.includes("status")) {
+        const comparisonKey = getAbiKey(key);
+        if (id == comparisonKey && !key.includes("status")) {
           key = key.replace(id + "_", "");
           const _key = key.substring(0, key.length - 1);
           if (key.endsWith("V")) total[_key].value += value;

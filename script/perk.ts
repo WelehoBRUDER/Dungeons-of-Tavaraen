@@ -27,7 +27,7 @@ class perk {
   tree: string;
   constructor(base: perk) {
     this.id = base.id;
-    const basePerk = perksArray[tree]["perks"][this.id];
+    const basePerk = perksArray[base.tree || tree]["perks"][this.id];
     if (!basePerk) console.error("Perk invalid! Most likely id is wrong!");
     this.name = basePerk.name;
     this.desc = basePerk.desc;
@@ -65,6 +65,9 @@ class perk {
       if (this.available() && !this.bought()) {
         player.perks.push(new perk({ ...this }));
         player.pp--;
+        // if(this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree) {
+
+        // }
         player.updatePerks();
         formPerks();
         formStatUpgrades();
@@ -73,10 +76,16 @@ class perk {
   }
 }
 
+function changePerkTree(newTree: string) {
+  tree = newTree;
+  formPerks();
+}
+
 function formPerks(e: MouseEvent = null) {
   perks = [];
   const bg = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
   const staticBg = document.querySelector<HTMLDivElement>(".playerLeveling .perksStatic");
+  const perkTreesContainer = document.querySelector<HTMLDivElement>(".playerLeveling .perkTreesContainer");
   const perkArea = bg.querySelector<HTMLDivElement>(".container");
   perkArea.innerHTML = "";
   Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
@@ -93,6 +102,42 @@ function formPerks(e: MouseEvent = null) {
   points.textContent = lang["perk_points"] + ": " + player.pp.toString();
   points.classList.add("perkPoints");
   staticBg.textContent = "";
+  perkTreesContainer.textContent = "";
+  Object.entries(combatClasses).forEach((combatClassObject: any) => {
+    const combatClass = combatClassObject[1];
+    if(player.classes.main?.id && player.classes.sub?.id) {
+      if(combatClass.id != player.classes.main.id && combatClass.id != player.classes.sub.id) return;
+    }
+    const classButtonContainer = document.createElement("div");
+    const combatClassName = document.createElement("p");
+    const combatClassIcon = document.createElement("img");
+    if(combatClass.perkTree == tree) {
+      classButtonContainer.classList.add("goldenBorder");
+    }
+    else if(combatClass.id != player.classes.main.id && player.level.level < 10) {
+      classButtonContainer.classList.add("greyedOut");
+    }
+    classButtonContainer.addEventListener("click", a=>changePerkTree(combatClass.perkTree));
+    classButtonContainer.classList.add("classButtonContainer");
+    combatClassName.textContent = lang[combatClass.id + "_name"];
+    combatClassIcon.src = combatClass.icon;
+    classButtonContainer.style.background = combatClass.color;
+    classButtonContainer.append(combatClassIcon, combatClassName);
+    perkTreesContainer.append(classButtonContainer);
+  });
+  const classButtonContainer = document.createElement("div");
+  const combatClassName = document.createElement("p");
+  const combatClassIcon = document.createElement("img");
+  classButtonContainer.addEventListener("click", a=>changePerkTree("adventurer_shared"));
+  classButtonContainer.classList.add("classButtonContainer");
+  combatClassName.textContent = lang["adventurerPerks"];
+  combatClassIcon.src = "resources/icons/adventurer.png";
+  classButtonContainer.style.background = "rgb(100, 52, 5)";
+  if(tree == "adventurer_shared") {
+    classButtonContainer.classList.add("goldenBorder");
+  }
+  classButtonContainer.append(combatClassIcon, combatClassName);
+  perkTreesContainer.append(classButtonContainer);
   staticBg.append(points);
   perks.forEach((_perk: perk) => {
     const perk = document.createElement("div");

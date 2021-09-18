@@ -112,6 +112,18 @@ class Ability {
         };
     }
 }
+function getAbiKey(key) {
+    if (key.includes("status"))
+        return key;
+    let newKey = key.substring(0, key.length - 1);
+    straight_modifiers.forEach((modifs) => {
+        if (newKey.includes(modifs)) {
+            newKey = newKey.replace(modifs, "");
+            newKey = newKey.substring(0, newKey.length - 1);
+        }
+    });
+    return newKey;
+}
 function getAbiModifiers(char, id) {
     var _a, _b;
     const total = {};
@@ -122,7 +134,8 @@ function getAbiModifiers(char, id) {
         Object.entries(prk.effects).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
-            if (key.includes(id) && !key.includes("status")) {
+            const comparisonKey = getAbiKey(key);
+            if (id == comparisonKey && !key.includes("status")) {
                 key = key.replace(id + "_", "");
                 const _key = key.substring(0, key.length - 1);
                 if (key.endsWith("V"))
@@ -143,7 +156,8 @@ function getAbiModifiers(char, id) {
                     Object.entries(mod.effects).forEach((eff) => {
                         let key = eff[0];
                         let value = eff[1];
-                        if (key.includes(id) && !key.includes("status")) {
+                        const comparisonKey = getAbiKey(key);
+                        if (id == comparisonKey && !key.includes("status")) {
                             key = key.replace(id + "_", "");
                             const _key = key.substring(0, key.length - 1);
                             if (key.endsWith("V"))
@@ -162,7 +176,8 @@ function getAbiModifiers(char, id) {
         Object.entries(stat.effects).forEach((eff) => {
             let key = eff[0];
             let value = eff[1];
-            if (key.includes(id) && !key.includes("status")) {
+            const comparisonKey = getAbiKey(key);
+            if (id == comparisonKey && !key.includes("status")) {
                 key = key.replace(id + "_", "");
                 const _key = key.substring(0, key.length - 1);
                 if (key.endsWith("V"))
@@ -183,7 +198,8 @@ function getAbiModifiers(char, id) {
             Object.entries(stat.effects).forEach((eff) => {
                 let key = eff[0];
                 let value = eff[1];
-                if (key.includes(id) && !key.includes("status")) {
+                const comparisonKey = getAbiKey(key);
+                if (id == comparisonKey && !key.includes("status")) {
                     key = key.replace(id + "_", "");
                     const _key = key.substring(0, key.length - 1);
                     if (key.endsWith("V"))
@@ -202,7 +218,8 @@ function getAbiModifiers(char, id) {
             Object.entries(char[slot].stats).forEach((eff) => {
                 let key = eff[0];
                 let value = eff[1];
-                if (key.includes(id) && !key.includes("status")) {
+                const comparisonKey = getAbiKey(key);
+                if (id == comparisonKey && !key.includes("status")) {
                     key = key.replace(id + "_", "");
                     const _key = key.substring(0, key.length - 1);
                     if (key.endsWith("V"))

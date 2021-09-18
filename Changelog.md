@@ -1,6 +1,27 @@
-## Hotfix
-  * Fixed an issue where item classes did not generate, causing a softlock.
-  * Fixed an issue where upon loading game the player's perk tree would display incorrectly.
+# Indev Update 3 ~ 18.9.2021
+
+## New Features & Additions
+  * Added new perk tree: Adventurer
+    > Adventurer is a generic tree available to all classes.  
+    > It provides placeholder bonuses for when you max out your class.
+  * Added new abilities:
+    - Sneaky Stabbing, a Rogue ability that buffs your attack.
+
+## Tweaks
+
+  * Increased stat and perk point gains per level up:
+    - SP gain increased from 3 to 5.
+    - Up to level 5, gain 2 perk points per level up.
+    - On levels 10, 20, 30, 40 and 50, gain 3 perk points per level up, otherwise 1.
+  * Made each level take ~15% less xp.
+  * Increased the xp gained from killing most enemies.
+  * Changed the Rogue perk 'Weakpoint Spotter' from giving 5% crit chance to giving the ability 'Sneaky Stabbing'.
+
+## Bug fixes
+
+  * Fixed invalid comparison of ability keys:
+    > Previosly, two abilities that both had "charge" in the id, were conflicting.  
+    > Now the code checks for exact id, not close. 
 
 # Indev Update 2 ~ 13.9.2021
 
@@ -32,6 +53,8 @@
 
   * Removed the "charge" ability from slime type enemies.
   * Fixed artifacts rolling stats on top of rolled stats, making them infinitely more powerful. This issue was caused by linked arrays.
+  * Fixed an issue where item classes did not generate, causing a softlock.
+  * Fixed an issue where upon loading game the player's perk tree would display incorrectly.
 
 # Indev Update 1 ~ 9.9.2021
 

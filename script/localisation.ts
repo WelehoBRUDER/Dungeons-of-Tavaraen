@@ -122,13 +122,16 @@ const finnish = {
   turn: "Kierros",
   turns: "kierrosta",
   cooldown: "Latausaika",
+  base_heal: "Parannus voima",
   map_to_hotbar: "Lisää kyky/työkalu",
   remove_from_hotbar: "Poista kyky/työkalu",
   removed_in: "Kestää",
   deals: "Aiheuttaa",
   perk_points: "Perkki pisteet",
   stat_points: "Stat pisteet",
+  adventurerPerks: "Seikkailija",
   lvl_up: "Tasosi nousi! Se on nyt [LVL]!",
+  regenHp: "Terveyden palautuminen",
 
   // Item definitions
   slash_damageSub: "Viiltävä",
@@ -418,6 +421,8 @@ const finnish = {
   effect_disoriented_desc: "Maailma pyörii ja näet kaiken kahdesti.",
   effect_dueled_name: "Kaksintaistelu",
   effect_dueled_desc: "Et voi paeta haasteesta.",
+  effect_sneaky_stabbing_name: "Polttava Puukotus",
+  effect_sneaky_stabbing_desc: "Tämä tulee satuttamaan kohdettasi.",
 
   // Abilities and stuff
   attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
@@ -508,6 +513,10 @@ const finnish = {
   challenge_desc: "Pienennä välisi kamppailu kumppaniisi suoralla juoksulla!",
   challenge_action_desc_pl: "Rynnäköit pelottomasti kohti hahmoa [TARGET], lämähtäen häneen voimalla, aiheuttaen [DMG] vahinkoa!",
   challenge_action_desc: "Ryntää kohti hahmoa [TARGET] karjuen 'ÄLÄ LÄHDE KARKUUN!', pian törmäten häneen, tehden [DMG] vahinkoa.",
+  sneaky_stabbing_name: "Polttava Puukottaja",
+  sneaky_stabbing_desc: "Iske vihollista kivuliaimpiin kohtiin.",
+  sneaky_stabbing_action_desc_pl: "Vahvistat kykyäsi tunnistaa vihollisesi heikkoudet.",
+  sneaky_stabbing_action_desc: "alkaa tarkkailemaan muiden heikoimpia paikkoja.",
 
   // CLASSES
   fighterClass_name: "Taistelija",
@@ -608,6 +617,24 @@ const finnish = {
   ultimate_warrior_desc: "Voitan sotani koska uskallan taistella!",
   unyielding_rage_name: "Jatkuva Raivo",
   unyielding_rage_desc: "Anna vihan hallita ja kaikki kärsivät.",
+
+  // ADVENTURER
+  hearty_adventurer_1_name: "Kestävä Terveys I (Orion Pharma)",
+  hearty_adventurer_1_desc: "Hyvinvointia rakentamassa.",
+  hearty_adventurer_2_name: "Kestävä Terveys II (Orion Pharma)",
+  hearty_adventurer_2_desc: "Hyvinvointia rakentamassa.",
+  hearty_adventurer_3_name: "Kestävä Terveys III (Orion Pharma)",
+  hearty_adventurer_3_desc: "Hyvinvointia rakentamassa.",
+  hearty_adventurer_4_name: "Kestävä Terveys IV (Orion Pharma)",
+  hearty_adventurer_4_desc: "Hyvinvointia rakentamassa.",
+  hearty_adventurer_5_name: "Kestävä Terveys V (Orion Pharma)",
+  hearty_adventurer_5_desc: "Hyvinvointia rakentamassa.",
+  first_aid_expert_name: "Ensiavun Ekspertti",
+  first_aid_expert_desc: "Hyvinvointia ylläpitämässä.",
+  cleanser_name: "Puhdistaja",
+  cleanser_desc: "Keho pidetään puhtaana.",
+  advancing_backwards_name: "Rohkea Pakoreitti",
+  advancing_backwards_desc: "Edistymistä eri suuntaan.",
 
   // NECROMANCER
   pursuit_of_undeath_name: "Kuolemattomuuden Tavoittelu",
@@ -736,13 +763,16 @@ const english = {
   turn: "Turn",
   turns: "turns",
   cooldown: "Cooldown",
+  base_heal: "Base Heal",
   map_to_hotbar: "Map ability/item",
   remove_from_hotbar: "Remove ability/item",
   removed_in: "Removed in",
   deals: "Deals",
   perk_points: "Perk points",
   stat_points: "Stat points",
+  adventurerPerks: "Adventurer",
   lvl_up: "You levelled up! Your level is now [LVL]!",
+  regenHp: "Health regeneration",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -949,6 +979,8 @@ const english = {
   effect_disoriented_desc: "Something has left you delirious, unable to grasp your surroundings properly.",
   effect_dueled_name: "Dueled",
   effect_dueled_desc: "You have been dueled and can no longer back from the fight.",
+  effect_sneaky_stabbing_name: "Sneaky Stabbing",
+  effect_sneaky_stabbing_desc: "Your ability to hit critical points has been enhanced.",
 
   // Abilities and stuff
   attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
@@ -1039,6 +1071,10 @@ const english = {
   challenge_desc: "Rush towards your opponent, ready to battle them with honour!",
   challenge_action_desc_pl: "<c>yellow<c>You<c>white<c> rush forwards, looking at [TARGET] while doing so, soon slamming into them for [DMG] damage!",
   challenge_action_desc: "rushes towards [TARGET] while shouting 'I CHALLENGE YOU!', quickly slamming into them for [DMG] damage.",
+  sneaky_stabbing_name: "Sneaky Stabbing",
+  sneaky_stabbing_desc: "Carefully examine your enemy's body, looking for juicy stabbing targets.",
+  sneaky_stabbing_action_desc_pl: "<c>yellow<c>You<c>white<c> enhance your ability to detect weakpoints!",
+  sneaky_stabbing_action_desc: "enhances their ability to detect weakspots.",
 
   // CLASSES
   fighterClass_name: "Fighter",
@@ -1139,6 +1175,24 @@ const english = {
   ultimate_warrior_desc: "I win because I place victory before survival!",
   unyielding_rage_name: "Continuous Rage",
   unyielding_rage_desc: "This rage is unyielding, it consumes me!",
+
+  // ADVENTURER
+  hearty_adventurer_1_name: "Hearty Adventurer I",
+  hearty_adventurer_1_desc: "Toughening up.",
+  hearty_adventurer_2_name: "Hearty Adventurer II",
+  hearty_adventurer_2_desc: "Toughening up.",
+  hearty_adventurer_3_name: "Hearty Adventurer III",
+  hearty_adventurer_3_desc: "Toughening up.",
+  hearty_adventurer_4_name: "Hearty Adventurer IV",
+  hearty_adventurer_4_desc: "Toughening up.",
+  hearty_adventurer_5_name: "Hearty Adventurer V",
+  hearty_adventurer_5_desc: "Toughening up.",
+  first_aid_expert_name: "First Aid Expert",
+  first_aid_expert_desc: "Good vibes.",
+  cleanser_name: "Cleanser",
+  cleanser_desc: "Better vibes.",
+  advancing_backwards_name: "Advancing Backwards",
+  advancing_backwards_desc: "Bravely running away.",
 
   // NECROMANCER
   pursuit_of_undeath_name: "Pursuit of Undeath",
