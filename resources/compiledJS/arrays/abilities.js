@@ -263,6 +263,30 @@ const abilities = {
         use_range: "9",
         ai_chance: 2
     },
+    smoke_bomb: {
+        id: "smoke_bomb",
+        name: "Smoke Bomb",
+        mana_cost: 0,
+        cooldown: 17,
+        damages: {
+            crush: 60,
+            fire: 40
+        },
+        status: "smoke_bomb_effect",
+        status_power: 80,
+        stat_bonus: "dex",
+        damage_multiplier: 0.5,
+        resistance_penetration: 0,
+        type: "attack",
+        action_desc: "throws a smoke bomb at",
+        action_desc_pl: "throw a smoke bomb at",
+        icon: "resources/icons/smoke_bomb.png",
+        shoots_projectile: "smokeBombProjectile",
+        aoe_size: 1.7,
+        aoe_effect: "smokeAOE",
+        use_range: "7",
+        ai_chance: 2
+    },
     shadow_step: {
         id: "shadow_step",
         name: "Shadow Step",

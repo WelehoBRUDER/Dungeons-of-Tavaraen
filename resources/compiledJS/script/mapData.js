@@ -29,7 +29,22 @@ const lootPools = {
         { type: "artifact", amount: [1, 1], item: "warriorsRing", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "warriorsEmblem", chance: 8 },
         { type: "gold", amount: [13, 76] }
-    ]
+    ],
+    lichLoot: [
+        { type: "weapon", amount: [1, 1], item: "apprenticeWand", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "lichRobes", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 100 },
+        { type: "gold", amount: [180, 250] }
+    ],
+    knightLoot: [
+        { type: "armor", amount: [1, 1], item: "ironShield", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "ironHelmet", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "ironArmor", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "ironLegplates", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "ironGauntlets", chance: 100 },
+        { type: "armor", amount: [1, 1], item: "ironBoots", chance: 100 },
+        { type: "gold", amount: [300, 500] }
+    ],
 };
 let lootedChests = [];
 const chestTemplates = {
@@ -42,6 +57,28 @@ const chestTemplates = {
         respawnTime: 750,
         lootPool: "default",
         itemsGenerate: [1, 7],
+        sinceOpened: -1
+    },
+    lichChest: {
+        id: "lichChest",
+        cords: { x: 0, y: 0 },
+        map: 0,
+        sprite: "treasureChestMagical",
+        isUnique: false,
+        respawnTime: 1000,
+        lootPool: "lichLoot",
+        itemsGenerate: [2, 3],
+        sinceOpened: -1
+    },
+    knightChest: {
+        id: "knightChest",
+        cords: { x: 0, y: 0 },
+        map: 0,
+        sprite: "treasureChest2",
+        isUnique: false,
+        respawnTime: 1000,
+        lootPool: "knightLoot",
+        itemsGenerate: [5, 6],
         sinceOpened: -1
     }
 };

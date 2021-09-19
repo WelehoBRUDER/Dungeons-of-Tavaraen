@@ -603,6 +603,16 @@ body {
     }
   }
 
+  .closestEnemyDistance {
+    font-size: 30px;
+    color: white;
+    position: absolute;
+    left: 50%;
+    bottom: calc(10% + 30px);
+    transform: translateX(-50%);
+    text-shadow: -2px 2px 5px gold;
+  }
+
   .playerPortrait {
     width: auto;
     max-width: 272px;

@@ -393,7 +393,6 @@ function renderInventory() {
             img.classList.add("slotItem");
             name.classList.add("slotText");
             name.style.color = grades[_item.grade].color;
-            console.log(_item);
             tooltip(img, itemTT(_item));
             inventory.querySelector("." + slot + "Bg").style.opacity = "0";
             inventory.querySelector("." + slot).append(img, name);
@@ -548,6 +547,14 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     const items = [...inventory];
     items.forEach((itm) => {
         var _a;
+        if (itm.type == "weapon")
+            itm = new Weapon(Object.assign({}, itm));
+        else if (itm.type == "armor")
+            itm = new Armor(Object.assign({}, itm));
+        else if (itm.type == "artifact")
+            itm = new Artifact(Object.assign({}, itm));
+        else if (itm.type == "consumable")
+            itm = new Consumable(Object.assign({}, itm));
         const itemObject = document.createElement("div");
         const itemImage = document.createElement("img");
         const itemName = document.createElement("p");

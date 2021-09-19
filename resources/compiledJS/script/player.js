@@ -470,7 +470,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["rogueClass"]),
+        main: new combatClass(combatClasses["sorcererClass"]),
         sub: null
     },
     sprite: ".player",
@@ -502,11 +502,11 @@ var player = new PlayerCharacter({
     ],
     regen: {
         hp: 0,
-        mp: 0,
+        mp: 0.5,
     },
     hit: {
-        chance: 50,
-        evasion: 25
+        chance: 75,
+        evasion: 30
     },
     unarmed_damages: { crush: 1 },
     statusEffects: [],

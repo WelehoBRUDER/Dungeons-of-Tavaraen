@@ -178,6 +178,24 @@ const statusEffects = {
     textIcon: icons.hand_gripping_knife_icon,
     icon: "resources/icons/hand_gripping_knife.png"
   },
+  smoke_bomb_effect: {
+    id: "smoke_bomb_effect",
+    name: "Smoke Bomb",
+    effects: {
+      damageP: -10,
+      hitChanceV: -20,
+      evasionV: -20,
+      resistAllV: -5,
+      dexP: -25
+    },
+    last: {
+      total: 5,
+      current: 5
+    },
+    type: "stun",
+    textIcon: icons.smoke_bomb_effect,
+    icon: "resources/icons/smoke_bomb_effect.png"
+  },
   dazed: {
     id: "dazed",
     name: "Dazed",

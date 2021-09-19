@@ -34,6 +34,7 @@ const icons = {
   rage: "resources/icons/rage_icon.png",
   berserk: "resources/icons/berserk_icon.png",
   sneaky_stabbing: "resources/icons/hand_gripping_knife_icon.png",
+  smoke_bomb_effect: "resources/icons/smoke_bomb_effect.png",
   battle_fury: "resources/icons/fighters_fury_icon.png",
   dazed: "resources/icons/dazed_icon.png",
   disoriented: "resources/icons/disoriented_icon.png",
@@ -111,7 +112,8 @@ const icons = {
   skeleton_type_icon: "resources/icons/skull_icon.png",
   barbarian_type_icon: "resources/icons/barbarian_type_icon.png",
   troll_type_icon: "resources/icons/troll_type_icon.png",
-  regenHp_icon: "resources/icons/regen_icon.png"
+  regenHp_icon: "resources/icons/regen_icon.png",
+  regenMp_icon: "resources/icons/mana_regen.png"
 } as icons;
 
 const tiles = [

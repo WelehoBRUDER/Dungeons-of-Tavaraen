@@ -47,7 +47,7 @@ class Enemy extends Character {
             // Will make enemy take their turn
             // Right now AI only randomly chooses an ability and checks if there's any point in using it,
             // Which is whether or not it'll actually hit the player.
-            // This system already provides plenty of depht, but not truly intelligent foes.
+            // This system already provides plenty of depth, but not truly intelligent foes.
             var _a;
             // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
@@ -218,6 +218,9 @@ class Enemy extends Character {
                     return true;
             }
             return false;
+        };
+        this.distToPlayer = () => {
+            return generatePath(this.cords, player.cords, this.canFly, true);
         };
     }
 }

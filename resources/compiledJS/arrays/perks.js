@@ -15,6 +15,17 @@ const perksArray = {
                 commands: {
                     add_ability_piercing_mana_bolt: 1
                 },
+                statModifiers: [
+                    {
+                        id: "frantic_mana_recovery",
+                        conditions: {
+                            mp_less_than: 50
+                        },
+                        effects: {
+                            regenMpP: 300
+                        }
+                    }
+                ],
                 tree: "sorcerer",
                 pos: { x: 6.5, y: 1 },
                 icon: "resources/icons/wisdom.png"
@@ -46,10 +57,11 @@ const perksArray = {
                     {
                         id: "heightened_casting",
                         conditions: {
-                            mp_more_than: 70
+                            mp_more_than: 75
                         },
                         effects: {
-                            magicDamageP: 10
+                            magicDamageP: 10,
+                            hitChanceV: 25
                         }
                     }
                 ],
@@ -58,6 +70,38 @@ const perksArray = {
                 requires: ["intent_studies"],
                 pos: { x: 3, y: 2 },
                 icon: "resources/icons/damage.png"
+            },
+            makings_of_a_summoner: {
+                id: "makings_of_a_summoner",
+                name: "Makings of a Summoner",
+                desc: "",
+                effects: {
+                    regenMpP: 15
+                },
+                commands: {
+                    add_ability_summon_skeleton_warrior: 1
+                },
+                tree: "sorcerer",
+                relative_to: "might_of_magic",
+                requires: ["might_of_magic"],
+                pos: { x: 4.5, y: 1.5 },
+                icon: "resources/icons/portal.png"
+            },
+            magical_bonds: {
+                id: "magical_bonds",
+                name: "Magical Bonds",
+                desc: "",
+                effects: {
+                    hpMaxV: 10,
+                    summon_skeleton_warrior_mana_costV: -5,
+                    summon_skeleton_warrior_cooldownV: -7,
+                    summon_skeleton_warrior_use_rangeV: 2
+                },
+                tree: "sorcerer",
+                relative_to: "makings_of_a_summoner",
+                requires: ["makings_of_a_summoner"],
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/summonSkelWarrior.png"
             },
             spells_of_battle: {
                 id: "spells_of_battle",
@@ -152,7 +196,8 @@ const perksArray = {
                 desc: "",
                 tree: "sorcerer",
                 effects: {
-                    mpMaxV: 25
+                    mpMaxV: 25,
+                    regenMpP: 30
                 },
                 relative_to: "spells_of_battle",
                 requires: ["spells_of_battle", "shield_of_aurous"],
@@ -724,6 +769,52 @@ const perksArray = {
                 requires: ["poison_specialist", "ranged_expert"],
                 pos: { x: -1.75, y: 1.5 },
                 icon: "resources/icons/poison_arrow.png"
+            },
+            smoke_screen: {
+                id: "smoke_screen",
+                name: "Smoke Screen",
+                desc: "",
+                effects: {
+                    cunP: 3
+                },
+                commands: {
+                    add_ability_smoke_bomb: 1
+                },
+                tree: "rogue",
+                relative_to: "ranged_expert",
+                requires: ["ranged_expert"],
+                pos: { x: 0, y: 3 },
+                icon: "resources/icons/smoke_bomb.png"
+            },
+            sneakier_stabbing: {
+                id: "sneakier_stabbing",
+                name: "Sneakier Stabbing",
+                desc: "",
+                effects: {
+                    sneaky_stabbing_cooldownP: -20,
+                    sneaky_stabbing_status_effect_lastV: 3,
+                    sneaky_stabbing_status_effect_critChancePP: 5
+                },
+                tree: "rogue",
+                relative_to: "smoke_screen",
+                requires: ["smoke_screen"],
+                pos: { x: -1.5, y: 1.5 },
+                icon: "resources/icons/hand_gripping_knife.png"
+            },
+            smoke_and_mirrors: {
+                id: "smoke_and_mirrors",
+                name: "Smoke & Mirrors",
+                desc: "",
+                effects: {
+                    smoke_bomb_cooldownV: -2,
+                    smoke_bomb_status_effect_lastV: 3,
+                    smoke_bomb_damage_multiplierP: 25
+                },
+                tree: "rogue",
+                relative_to: "smoke_screen",
+                requires: ["smoke_screen"],
+                pos: { x: 1.5, y: 1.5 },
+                icon: "resources/icons/smoke_bomb_effect.png"
             },
         }
     },

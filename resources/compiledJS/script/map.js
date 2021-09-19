@@ -201,7 +201,7 @@ function renderMap(map) {
             const hpbar = document.querySelector(".hpBar");
             const hpborder = document.querySelector(".hpBorder");
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (enemy.hpRemain() * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             /* Render enemy on top of hp bar */
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
@@ -1068,6 +1068,11 @@ async function advanceTurn() {
     combatSummons.forEach(summon => {
         if (!summon.alive || player.isDead)
             return;
+        const sRegen = summon.getRegen();
+        if (summon.stats.hp < summon.getHpMax())
+            summon.stats.hp += sRegen["hp"];
+        if (summon.stats.mp < summon.getMpMax())
+            summon.stats.mp += sRegen["mp"];
         summon.lastsFor--;
         if (summon.lastsFor <= 0) {
             summon.kill();
@@ -1077,6 +1082,7 @@ async function advanceTurn() {
         summon.decideAction();
         summon.effects();
     });
+    let closestEnemyDistance = -1;
     map.enemies.forEach(enemy => {
         if (player.isDead)
             return;
@@ -1085,9 +1091,15 @@ async function advanceTurn() {
             return;
         }
         ;
+        if (closestEnemyDistance < 0)
+            closestEnemyDistance = enemy.distToPlayer();
+        else if (enemy.distToPlayer() < closestEnemyDistance)
+            closestEnemyDistance = enemy.distToPlayer();
         const eRegen = enemy.getRegen();
-        enemy.stats.hp += eRegen["hp"];
-        enemy.stats.mp += eRegen["mp"];
+        if (enemy.stats.hp < enemy.getHpMax())
+            enemy.stats.hp += eRegen["hp"];
+        if (enemy.stats.mp < enemy.getMpMax())
+            enemy.stats.mp += eRegen["mp"];
         // @ts-ignore
         if (enemy.aggro()) {
             state.inCombat = true;
@@ -1098,6 +1110,7 @@ async function advanceTurn() {
             updateEnemiesTurn();
         enemy.effects();
     });
+    document.querySelector(".closestEnemyDistance").textContent = lang["closest_enemy"] + closestEnemyDistance;
     setTimeout(modifyCanvas, 500);
     if (map.enemies.length == 0)
         turnOver = true;

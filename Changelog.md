@@ -1,3 +1,37 @@
+# Indev Update 4 ~ 19.9.2021
+
+## New Features & Additions
+  * Map has been updated:
+    - Added new dungeon area with unique loot and plenty of chests!
+    - Added roads and land marks to previosly desolate areas, making exploration easier and more fun!
+    - Added more enemies to empty areas.
+  * Added new abilities:
+    - ``Smoke Bomb``, a Rogue ability that debuffs enemies in an AOE.
+    - ``Summon Skeleton Warrior``, a Sorcerer spell that summons a Skeleton Warrior to fight for you.
+  * Added new perks:
+    - ``Smoke Screen``, a Rogue perk that grants the ability ``Smoke Bomb``.
+    - ``Sneakier Stabbing``, a Rogue perk that improves the ability ``Sneaky Stabbing``.
+    - ``Smoke & Mirrors``, a Rogue perk that improves the ability ``Smoke Bomb``.
+    - ``The Summoner King's Call``, a Sorcerer perk that grants the ability ``Summon Skeleton Warrior``.
+    - ``Bonds forged from Magic``, a Sorcerer perk that improves the ability ``Summon Skeleton Warrior``.
+  * Added tooltip marking the distance to closest enemy.
+## Tweaks 
+
+  * Lowered Hiisi Hunter's poison damage from **5** to **3**.
+  * English name of ``Retreat`` changed to ``Draw Back``.
+  * ``Introduction to Sorcery`` and ``Wisdoms of the Past`` perks now grant additional mana recovery.
+  * ``Heightened Casting`` passive ability now requires **75%** mp instead of **70%**, but grants additional **25** hit chance.
+  * Increased the player's base hit chance from **50** to **75**, and base evasion from **25** to **30**.
+  * Player now has a base mana regen, on top of bonus based on max mana. This translates to more regen in the early game.
+ 
+## Bug Fixes
+
+  * Fixed items in chests not displaying in correct language.
+  * Fixed enemy health bars becoming massive.
+  * Fixed slime that spawned inside a tree.
+  * Fixed path to area with 2 slimes and a chest.
+  * Fixed peninsula with trolls being an inaccessible island.
+
 # Indev Update 3 ~ 18.9.2021
 
 ## New Features & Additions
@@ -5,7 +39,7 @@
     > Adventurer is a generic tree available to all classes.  
     > It provides placeholder bonuses for when you max out your class.
   * Added new abilities:
-    - Sneaky Stabbing, a Rogue ability that buffs your attack.
+    - ``Sneaky Stabbing``, a Rogue ability that buffs your attack.
 
 ## Tweaks
 
@@ -15,8 +49,8 @@
     - On levels 10, 20, 30, 40 and 50, gain 3 perk points per level up, otherwise 1.
   * Made each level take ~15% less xp.
   * Increased the xp gained from killing most enemies.
-  * Changed the Rogue perk 'Weakpoint Spotter' from giving 5% crit chance to giving the ability 'Sneaky Stabbing'.
-
+  * Changed the Rogue perk ``Weakpoint Spotter`` from giving 5% crit chance to giving the ability ``Sneaky Stabbing``.
+  
 ## Bug fixes
 
   * Fixed invalid comparison of ability keys:

@@ -43,7 +43,7 @@ class statEffect {
     const defaultEffect: statusEffect = statusEffects[base.id];
     this.id = defaultEffect.id;
     this.name = defaultEffect.name;
-    this.dot = defaultEffect.dot;
+    this.dot = setDOT({...defaultEffect.dot});
     this.effects = effectsInit({...defaultEffect.effects});
     this.last = {total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif)};
     this.rooted = defaultEffect.rooted;
@@ -73,6 +73,15 @@ class statEffect {
         sortedTotal[entry[0]] = entry[1];
       });
       return sortedTotal;
+    }
+
+    function setDOT(defaultDot: any) {
+      let dot: any = defaultDot;
+      if(dot.damageAmount) {
+        dot.damageAmount = Math.floor((dot.damageAmount + modifiers.damageAmount.value )* modifiers.damageAmount.modif);
+      }
+      else return null;
+      return dot;
     }
   }
 }

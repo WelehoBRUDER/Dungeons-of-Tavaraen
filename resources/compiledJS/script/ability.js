@@ -36,14 +36,19 @@ const possible_stat_modifiers = [
     "hitChanceV",
     "hitChanceP",
     "evasionV",
-    "evasionP"
+    "evasionP",
+    "critChanceV",
+    "critDamageV",
+    "critChanceP",
+    "critDamageP",
 ];
 const possible_modifiers = [
     "last",
     "attack_damage_multiplierV",
     "attack_damage_multiplierP",
     "attack_resistance_penetrationV",
-    "attack_resistance_penetrationP"
+    "attack_resistance_penetrationP",
+    "damageAmount",
 ];
 class Ability {
     constructor(base, user) {

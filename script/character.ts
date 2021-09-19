@@ -99,6 +99,14 @@ function statConditions(conditions: any, char: characterObject) {
         if (char.hpRemain() >= val) fulfilled = false;
       }
     }
+    if (key.includes("mp")) {
+      if (key.includes("more_than")) {
+        if (char.mpRemain() <= val) fulfilled = false;
+      }
+      else if (key.includes("less_than")) {
+        if (char.mpRemain() >= val) fulfilled = false;
+      }
+    }
   });
   return fulfilled;
 }

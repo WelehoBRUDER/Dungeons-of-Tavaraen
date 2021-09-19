@@ -502,6 +502,7 @@ const enemies = {
                 id: "magical_incompetence",
                 effects: {
                     mpMaxP: -100,
+                    poisoned_arrow_status_effect_damageAmountV: -2
                 }
             },
             {

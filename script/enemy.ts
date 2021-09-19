@@ -29,6 +29,7 @@ interface enemy extends characterObject {
   targetInterval?: number; // How often, in turns, the AI should pick a target.
   currentTargetInterval?: number;
   chosenTarget?: characterObject;
+  distToPlayer?: Function;
 }
 
 class Enemy extends Character {
@@ -64,6 +65,7 @@ class Enemy extends Character {
   currentTargetInterval?: number;
   chosenTarget?: characterObject;
   oldCords?: tileObject; // Shitty hack to make summon shooting possible.
+  distToPlayer?: Function;
   constructor(base: enemy) {
     super(base);
     this.sprite = base.sprite;
@@ -112,7 +114,7 @@ class Enemy extends Character {
       // Will make enemy take their turn
       // Right now AI only randomly chooses an ability and checks if there's any point in using it,
       // Which is whether or not it'll actually hit the player.
-      // This system already provides plenty of depht, but not truly intelligent foes.
+      // This system already provides plenty of depth, but not truly intelligent foes.
 
       // Retreating does not work properly, so has been disabled for the time being.
       // @ts-ignore
@@ -285,6 +287,10 @@ class Enemy extends Character {
       }
       return false;
     };
+
+    this.distToPlayer = () => {
+      return generatePath(this.cords, player.cords, this.canFly, true);
+    }
   }
 }
 
