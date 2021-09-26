@@ -1,4 +1,4 @@
-# Index Update 5 ~ 26.9.2021
+# Indev Update 5 ~ 26.9.2021
 
 ## New Features & Additions
   * Added new abilities:  
