@@ -195,5 +195,66 @@ const summons = {
             vit: 4
         },
     },
+    dummyTarget: {
+        id: "dummyTarget",
+        name: "Target Dummy",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 0,
+            dex: 1,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 8,
+            mp: 0,
+            hpMax: 8,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 340,
+            crush: 340,
+            pierce: 340,
+            magic: 340,
+            dark: 340,
+            divine: -340,
+            fire: 340,
+            lightning: 340,
+            ice: 340
+        },
+        statusResistances: {
+            poison: 100,
+            burning: 100,
+            curse: 100,
+            stun: 100,
+            bleed: 100
+        },
+        damages: {
+            crush: 0
+        },
+        threat: 150,
+        alive: true,
+        sprite: "dummyModel",
+        type: "dummy",
+        race: "construct",
+        img: "resources/tiles/dummy.png",
+        aggroRange: 0,
+        attackRange: 1,
+        canFly: false,
+        abilities: [],
+        statModifiers: [
+            {
+                id: "inanimate_object",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 0,
+            dex: 0,
+            vit: 0
+        },
+    },
 };
 //# sourceMappingURL=summons.js.map

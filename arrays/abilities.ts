@@ -205,21 +205,23 @@ const abilities = {
   icy_javelin: {
     id: "icy_javelin",
     name: "Icy Javelin",
-    mana_cost: 15,
-    cooldown: 1,
+    mana_cost: 24,
+    cooldown: 7,
     damages: {
-      pierce: 33,
+      magic: 33,
       ice: 67
     },
     stat_bonus: "int",
-    damage_multiplier: 1.3,
-    resistance_penetration: 10,
+    damage_multiplier: 1.2,
+    resistance_penetration: 0,
+    status: "chilled",
+    status_power: 55,
     type: "attack",
     action_desc: "shoots a javelin made of ice at",
     action_desc_pl: "shoot a javelin made of ice at",
     icon: "resources/icons/ice_javelin.png",
     shoots_projectile: "iceSpikedProjectile",
-    use_range: "9",
+    use_range: "10",
     ai_chance: 2
   },
   piercing_mana_bolt: {
@@ -429,5 +431,22 @@ const abilities = {
     shoots_projectile: "blightProjectile",
     use_range: "6",
     ai_chance: 2
+  },
+  distraction: {
+    id: "distraction",
+    name: "Distraction",
+    mana_cost: 0,
+    cooldown: 25,
+    type: "summon",
+    status: "summoned",
+    summon_unit: "dummyTarget",
+    summon_level: 1,
+    summon_last: 10,
+    summon_status: "inanimate",
+    action_desc: "purifies theirself",
+    action_desc_pl: "you purify yourself",
+    icon: "resources/icons/dummy_ability.png",
+    use_range: "3",
+    ai_chance: 1
   },
 } as _abb;

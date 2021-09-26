@@ -55,14 +55,20 @@ function attackTarget(attacker, target, attackDir) {
         layer.style.animationName = `attack${attackDir}`;
     }
     else if (attacker.isFoe) {
-        // @ts-ignore
-        const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
-        layer.style.animation = 'none';
-        // @ts-ignore
-        layer.offsetHeight; /* trigger reflow */
-        // @ts-ignore
-        layer.style.animation = null;
-        layer.style.animationName = `attack${attackDir}`;
+        try {
+            // @ts-ignore
+            const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
+            layer.style.animation = 'none';
+            // @ts-ignore
+            layer.offsetHeight; /* trigger reflow */
+            // @ts-ignore
+            layer.style.animation = null;
+            layer.style.animationName = `attack${attackDir}`;
+        }
+        catch (_a) {
+            console.warn("Enemy layer not found");
+        }
+        ;
     }
 }
 function useAbi(abi) {
@@ -148,7 +154,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         const _Effect = new statEffect(Object.assign({}, statusEffects[ability.status]), ability.statusModifiers);
         const resist = target.getStatusResists()[_Effect.type];
         const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
-        if (!evade && !resisted) {
+        if (!resisted) {
             let missing = true;
             target.statusEffects.forEach((effect) => {
                 if (effect.id == ability.status) {
@@ -178,8 +184,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += getModifiers(attacker, "damage").v;
-                mod *= getModifiers(attacker, "damage").m;
+                val += attacker.allModifiers["damageV"];
+                mod *= attacker.allModifiers["damageP"];
                 val += getModifiers(attacker, "damage_against_type_" + target.type).v;
                 mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
                 val += getModifiers(attacker, "damage_against_race_" + target.race).v;
@@ -196,8 +202,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += getModifiers(attacker, "damage").v;
-                mod *= getModifiers(attacker, "damage").m;
+                val += attacker.allModifiers["damageV"];
+                mod *= attacker.allModifiers["damageP"];
                 val += getModifiers(attacker, "damage_against_type_" + target.type).v;
                 mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
                 val += getModifiers(attacker, "damage_against_race_" + target.race).v;
@@ -218,13 +224,15 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
         if (evade)
-            dmg = 0;
+            dmg = Math.floor(dmg / 2);
+        if (dmg < 1)
+            dmg = 1;
         target.stats.hp -= dmg;
-        if (critRolled && !evade)
+        if (critRolled)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-        else if (!evade)
+        else
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-        else if (evade)
+        if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
         if (isAoe) {
             let actionText = (_b = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
@@ -261,8 +269,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += getModifiers(attacker, "damage").v;
-                mod *= getModifiers(attacker, "damage").m;
+                val += attacker.allModifiers["damageV"];
+                mod *= attacker.allModifiers["damageP"];
                 let bonus = 0;
                 bonus += num * attackerStats[ability.stat_bonus] / 50;
                 dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
@@ -274,8 +282,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 const key = value[0];
                 const num = value[1];
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += getModifiers(attacker, "damage").v;
-                mod *= getModifiers(attacker, "damage").m;
+                val += attacker.allModifiers["damageV"];
+                mod *= attacker.allModifiers["damageP"];
                 let bonus = 0;
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
@@ -295,13 +303,15 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         }, 110);
         dmg = Math.floor(dmg * random(1.2, 0.8));
         if (evade)
-            dmg = 0;
+            dmg = Math.floor(dmg / 2);
+        if (dmg < 1)
+            dmg = 1;
         target.stats.hp -= dmg;
-        if (critRolled && !evade)
+        if (critRolled)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-        else if (!evade)
+        else
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-        else if (evade)
+        if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
         let actionText = (_d = lang[ability.id + "_action_desc"]) !== null && _d !== void 0 ? _d : "[TEXT NOT FOUND]";
         actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
@@ -363,13 +373,19 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         layer.style.animationName = `shakeObject`;
     }
     else if (attacker.isFoe) {
-        const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
-        layer.style.animation = 'none';
-        // @ts-ignore
-        layer.offsetHeight; /* trigger reflow */
-        // @ts-ignore
-        layer.style.animation = null;
-        layer.style.animationName = `shakeObject`;
+        try {
+            const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+            layer.style.animation = 'none';
+            // @ts-ignore
+            layer.offsetHeight; /* trigger reflow */
+            // @ts-ignore
+            layer.style.animation = null;
+            layer.style.animationName = `shakeObject`;
+        }
+        catch (_a) {
+            console.warn("Enemy layer not found");
+        }
+        ;
     }
     else {
         const layer = document.querySelector(`.summon${combatSummons.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
@@ -430,7 +446,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         }
         projectileLayers.removeChild(canvas);
     }
-    catch (_a) {
+    catch (_b) {
         projectileLayers.removeChild(canvas);
     }
 }
@@ -506,6 +522,8 @@ function summonUnit(ability, cords) {
     combatSummons.push(new Summon(Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
     if (ability.status)
         player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[ability.status]), { last: ability.summon_last - 1 }), ability.statusModifiers));
+    if (ability.summon_status)
+        combatSummons[0].statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.summon_status]), ability.statusModifiers));
     updateUI();
     modifyCanvas();
 }

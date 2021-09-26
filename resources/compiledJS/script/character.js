@@ -27,6 +27,191 @@ function statConditions(conditions, char) {
     });
     return fulfilled;
 }
+function getAllModifiersOnce(char, withConditions = true) {
+    var _a, _b, _c, _d, _e, _f, _g;
+    let obj = {};
+    char.statModifiers.forEach((mod) => {
+        let apply = true;
+        if (mod.conditions && withConditions) {
+            apply = statConditions(mod.conditions, char);
+        }
+        if (mod.conditions && !withConditions)
+            apply = false;
+        if (apply) {
+            Object.entries(mod.effects).forEach((eff) => {
+                if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                    obj[eff[0]] = eff[1];
+                    if (eff[0].endsWith("P")) {
+                        obj[eff[0]] = obj[eff[0]] / 100;
+                        obj[eff[0]]++;
+                    }
+                }
+                else if (eff[0].endsWith("P") && eff[1] < 0)
+                    obj[eff[0]] *= (1 + eff[1] / 100);
+                else if (eff[0].endsWith("P"))
+                    obj[eff[0]] += (eff[1] / 100);
+                else if (eff[0].endsWith("V"))
+                    obj[eff[0]] += eff[1];
+            });
+        }
+    });
+    char.statusEffects.forEach((mod) => {
+        Object.entries(mod.effects).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+    });
+    if ((_b = (_a = char.classes) === null || _a === void 0 ? void 0 : _a.main) === null || _b === void 0 ? void 0 : _b.statBonuses) {
+        Object.entries(char.classes.main.statBonuses).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+    }
+    if ((_d = (_c = char.classes) === null || _c === void 0 ? void 0 : _c.sub) === null || _d === void 0 ? void 0 : _d.statBonuses) {
+        Object.entries(char.classes.sub.statBonuses).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+    }
+    (_e = char.perks) === null || _e === void 0 ? void 0 : _e.forEach((mod) => {
+        Object.entries(mod.effects).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+        if (mod.statModifiers) {
+            mod.statModifiers.forEach((_mod) => {
+                let apply = true;
+                if (_mod.conditions && withConditions) {
+                    apply = statConditions(_mod.conditions, char);
+                }
+                if (_mod.conditions && !withConditions)
+                    apply = false;
+                if (apply) {
+                    Object.entries(_mod.effects).forEach((eff) => {
+                        if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                            obj[eff[0]] = eff[1];
+                            if (eff[0].endsWith("P")) {
+                                obj[eff[0]] = obj[eff[0]] / 100;
+                                obj[eff[0]]++;
+                            }
+                        }
+                        else if (eff[0].endsWith("P") && eff[1] < 0)
+                            obj[eff[0]] *= (1 + eff[1] / 100);
+                        else if (eff[0].endsWith("P"))
+                            obj[eff[0]] += (eff[1] / 100);
+                        else if (eff[0].endsWith("V"))
+                            obj[eff[0]] += eff[1];
+                    });
+                }
+            });
+        }
+    });
+    if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
+        Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+    }
+    if (char.id === "player") {
+        equipmentSlots.forEach((slot) => {
+            var _a;
+            if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
+                Object.entries(char[slot].stats).forEach((eff) => {
+                    if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                        obj[eff[0]] = eff[1];
+                        if (eff[0].endsWith("P")) {
+                            obj[eff[0]] = obj[eff[0]] / 100;
+                            obj[eff[0]]++;
+                        }
+                    }
+                    else if (eff[0].endsWith("P") && eff[1] < 0)
+                        obj[eff[0]] *= (1 + eff[1] / 100);
+                    else if (eff[0].endsWith("P"))
+                        obj[eff[0]] += (eff[1] / 100);
+                    else if (eff[0].endsWith("V"))
+                        obj[eff[0]] += eff[1];
+                });
+            }
+            // if (stat.includes("Resist")) {
+            //   if (char[slot]?.resistances) {
+            //     if (char[slot].resistances[stat.replace("Resist", '')]) val += char[slot].resistances[stat.replace("Resist", '')];
+            //   }
+            // }
+        });
+        const artifactEffects = char.getArtifactSetBonuses();
+        Object.entries(artifactEffects).forEach((eff) => {
+            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+                obj[eff[0]] = eff[1];
+                if (eff[0].endsWith("P")) {
+                    obj[eff[0]] = obj[eff[0]] / 100;
+                    obj[eff[0]]++;
+                }
+            }
+            else if (eff[0].endsWith("P") && eff[1] < 0)
+                obj[eff[0]] *= (1 + eff[1] / 100);
+            else if (eff[0].endsWith("P"))
+                obj[eff[0]] += (eff[1] / 100);
+            else if (eff[0].endsWith("V"))
+                obj[eff[0]] += eff[1];
+        });
+    }
+    return obj;
+}
 function getModifiers(char, stat, withConditions = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     let val = 0;
@@ -184,17 +369,27 @@ class Character {
         this.regen = (_f = base.regen) !== null && _f !== void 0 ? _f : { hp: 0, mp: 0 };
         this.hit = (_g = Object.assign({}, base.hit)) !== null && _g !== void 0 ? _g : { chance: 10, evasion: 5 };
         this.scale = (_h = base.scale) !== null && _h !== void 0 ? _h : 1;
+        this.allModifiers = {};
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
-                const { v: val, m: mod } = getModifiers(this, stat, withConditions);
-                stats[stat] = Math.floor((this.stats[stat] + val) * mod);
+                if (!this.allModifiers[stat + "V"])
+                    this.allModifiers[stat + "V"] = 0;
+                if (!this.allModifiers[stat + "P"])
+                    this.allModifiers[stat + "P"] = 1;
+                stats[stat] = Math.floor((this.stats[stat] + this.allModifiers[stat + "V"]) * this.allModifiers[stat + "P"]);
                 stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
             });
-            const { v: critAtkVal, m: critAtkMulti } = getModifiers(this, "critDamage", withConditions);
-            const { v: critHitVal, m: critHitMulti } = getModifiers(this, "critChance", withConditions);
-            stats["critDamage"] = Math.floor(critAtkVal + (critAtkMulti - 1) * 100 + (stats["cun"] * 1.5));
-            stats["critChance"] = Math.floor(critHitVal + (critHitMulti - 1) * 100 + (stats["cun"] * 0.4));
+            if (!this.allModifiers["critDamageV"])
+                this.allModifiers["critDamageV"] = 0;
+            if (!this.allModifiers["critDamageP"])
+                this.allModifiers["critDamageP"] = 1;
+            if (!this.allModifiers["critChanceV"])
+                this.allModifiers["critChanceV"] = 0;
+            if (!this.allModifiers["critChanceP"])
+                this.allModifiers["critChanceP"] = 1;
+            stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5));
+            stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4));
             return stats;
         };
         this.getHpMax = (withConditions = true) => {
@@ -221,10 +416,16 @@ class Character {
                 chance: 0,
                 evasion: 0
             };
-            const { v: hitVal, m: hitMod } = getModifiers(this, "hitChance");
-            const { v: evaVal, m: evaMod } = getModifiers(this, "evasion");
-            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + hitVal) * hitMod);
-            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + evaVal) * evaMod);
+            if (!this.allModifiers["hitChanceV"])
+                this.allModifiers["hitChanceV"] = 0;
+            if (!this.allModifiers["hitChanceP"])
+                this.allModifiers["hitChanceP"] = 1;
+            if (!this.allModifiers["evasionV"])
+                this.allModifiers["evasionV"] = 0;
+            if (!this.allModifiers["evasionP"])
+                this.allModifiers["evasionP"] = 1;
+            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"]) * this.allModifiers["hitChanceP"]);
+            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"]) * this.allModifiers["evasionP"]);
             return chances;
         };
         this.getResists = () => {
@@ -239,16 +440,25 @@ class Character {
             return resists;
         };
         this.getThreat = () => {
-            let threat = 0;
-            const { v: val, m: mod } = getModifiers(this, "threat");
-            return (this.threat + val) * mod;
+            if (!this.allModifiers["threatV"])
+                this.allModifiers["threatV"] = 0;
+            if (!this.allModifiers["threatP"])
+                this.allModifiers["threatP"] = 1;
+            return (this.threat + this.allModifiers["threatV"]) * this.allModifiers["threatP"];
         };
         this.getRegen = () => {
-            const { v: valHp, m: modHp } = getModifiers(this, "regenHp");
-            const { v: valMp, m: modMp } = getModifiers(this, "regenMp");
+            let stats = this.getStats();
+            if (!this.allModifiers["regenHpV"])
+                this.allModifiers["regenHpV"] = 0;
+            if (!this.allModifiers["regenHpP"])
+                this.allModifiers["regenHpP"] = 1;
+            if (!this.allModifiers["regenMpV"])
+                this.allModifiers["regenMpV"] = 0;
+            if (!this.allModifiers["regenMpP"])
+                this.allModifiers["regenMpP"] = 1;
             let reg = { hp: 0, mp: 0 };
-            reg["hp"] = (this.regen["hp"] + this.getHpMax() * 0.0025 + valHp) * modHp;
-            reg["mp"] = (this.regen["mp"] + this.getMpMax() * 0.0025 + valMp) * modMp;
+            reg["hp"] = ((this.regen["hp"] + this.getHpMax() * 0.0025 + this.allModifiers["regenHpV"]) * this.allModifiers["regenHpP"]) * (1 + stats.vit / 100);
+            reg["mp"] = ((this.regen["mp"] + this.getMpMax() * 0.0025 + this.allModifiers["regenMpV"]) * this.allModifiers["regenMpP"]) * (1 + stats.int / 100);
             if (reg["hp"] < 0)
                 reg["hp"] = 0;
             if (reg["mp"] < 0)
@@ -268,8 +478,11 @@ class Character {
         this.getStatusResists = () => {
             let resists = {};
             Object.keys(this.statusResistances).forEach((res) => {
-                const { v: val, m: mod } = getModifiers(this, res + "Resist");
-                resists[res] = Math.floor((this.statusResistances[res] + val) * mod);
+                if (!this.allModifiers[res + "DefenseV"])
+                    this.allModifiers[res + "DefenseV"] = 0;
+                if (!this.allModifiers[res + "DefenseP"])
+                    this.allModifiers[res + "DefenseP"] = 1;
+                resists[res] = Math.floor((this.statusResistances[res] + this.allModifiers[res + "DefenseV"]) * this.allModifiers[res + "DefenseP"]);
             });
             return resists;
         };
@@ -343,6 +556,11 @@ class Character {
                 // @ts-ignore
                 this.abilities[i] = new Ability(this.abilities[i], this);
             }
+            this.allModifiers = getAllModifiersOnce(this);
+            if (!this.allModifiers["damageV"])
+                this.allModifiers["damageV"] = 0;
+            if (!this.allModifiers["damageP"])
+                this.allModifiers["damageP"] = 1;
             // @ts-ignore
             if (this.inventory) {
                 // @ts-ignore

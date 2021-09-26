@@ -116,7 +116,7 @@ class Enemy extends Character {
                     regularAttack(this, this.chosenTarget, this.abilities[0]);
                     updateEnemiesTurn();
                 }
-                // If there's no offensive action to be taken, just move towards the this.chosenTarget.
+                // If there's no offensive action to be taken, just move towards the target.
                 else if (!this.isRooted()) {
                     var path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
                     try {

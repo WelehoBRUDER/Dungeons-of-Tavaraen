@@ -545,8 +545,9 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsListBar.classList.add("itemListTop");
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
     const items = [...inventory];
-    items.forEach((itm) => {
+    items.forEach((item) => {
         var _a;
+        let itm = Object.assign({}, item);
         if (itm.type == "weapon")
             itm = new Weapon(Object.assign({}, itm));
         else if (itm.type == "armor")
@@ -585,10 +586,10 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
             itemObject.addEventListener("dblclick", e => player.drop(itm));
         }
         if (context == "PICK_LOOT") {
-            itemObject.addEventListener("mousedown", e => grabLoot(e, itm));
+            itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
         }
         if (context == "PICK_TREASURE") {
-            itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest));
+            itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
         }
         tooltip(itemObject, itemTT(itm));
         itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);

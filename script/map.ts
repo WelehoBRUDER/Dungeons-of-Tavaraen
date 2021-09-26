@@ -200,7 +200,7 @@ function renderMap(map: mapObject) {
   /* Render Enemies */
   enemyLayers.textContent = ""; // Delete enemy canvases
   map.enemies.forEach((enemy: any, index) => {
-    if (!enemy.alive) return;
+    if (!enemy.alive || sightMap[enemy.cords.y]?.[enemy.cords.x] != "x") return;
     var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
     var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const canvas = document.createElement("canvas");
@@ -210,7 +210,7 @@ function renderMap(map: mapObject) {
     const enemyImg = <HTMLImageElement>document.querySelector(`.${enemy.sprite}`);
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    if (enemyImg && (sightMap[enemy.cords.y]?.[enemy.cords.x] == "x")) {
+    if (enemyImg) {
       /* Render hp bar */
       const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
       const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
@@ -547,9 +547,10 @@ function cordsFromDir(cords: tileObject, dir: string) {
   return cord;
 }
 document.addEventListener("keyup", (keyPress) => {
+  const rooted = player.isRooted();
+  if(!turnOver) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
-  if (player.isRooted() && !player.isDead && dirs[keyPress.key]) {
-    
+  if (rooted && !player.isDead && dirs[keyPress.key]) {
     advanceTurn();
     updateUI();
     state.abiSelected = {};
@@ -560,21 +561,18 @@ document.addEventListener("keyup", (keyPress) => {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
     return;
   }
-  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !player.isRooted()) { player.cords.y--; }
-  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !player.isRooted()) { player.cords.y++; }
-  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !player.isRooted()) { player.cords.x--; }
-  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !player.isRooted()) { player.cords.x++; }
+  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !rooted) { player.cords.y--; }
+  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !rooted) { player.cords.y++; }
+  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !rooted) { player.cords.x--; }
+  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !rooted) { player.cords.x++; }
   if (dirs[keyPress.key]) {
-
-    if (canMove(shittyFix, dirs[keyPress.key]) && !player.isRooted()) {
+    if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
       // @ts-ignore
       renderMap(maps[currentMap]);
-      
       advanceTurn();
       updateUI();
     }
-    else if(canMove(shittyFix, dirs[keyPress.key]) && player.isRooted()) {
-      
+    else if(canMove(shittyFix, dirs[keyPress.key]) && rooted) {
       advanceTurn();
       updateUI();
       state.abiSelected = {};
@@ -586,7 +584,6 @@ document.addEventListener("keyup", (keyPress) => {
         attackTarget(player, target, weaponReach(player, player.weapon.range, target));
         if (weaponReach(player, player.weapon.range, target)) {
           regularAttack(player, target, player.abilities?.find(e => e.id == "attack"));
-          
           advanceTurn();
         }
       }
@@ -845,7 +842,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }
   maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
   fieldMap[end.y][end.x] = 5;
-  main: for (let i = 5; i < 100; i++) {
+  main: for (let i = 5; i < 80; i++) {
     for (let y = 0; y < maps[currentMap].base.length; y++) {
       for (let x = 0; x < maps[currentMap].base[y].length; x++) {
         if (fieldMap[y][x] !== 0) continue;
@@ -898,7 +895,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   };
   if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
   const cords = [];
-  siksakki: for (let i = 0; i < 500; i++) {
+  siksakki: for (let i = 0; i < 375; i++) {
     const v = fieldMap[data.y][data.x] - 1;
 
     if (i % 2 == 0) {
@@ -1026,10 +1023,11 @@ async function advanceTurn() {
   });
   let closestEnemyDistance = -1;
   map.enemies.forEach(enemy => {
+    let distToPlayer = enemy.distToPlayer();
     if (player.isDead) return;
-    if (!enemy.alive) { updateEnemiesTurn(); return; };
+    if (!enemy.alive ) { updateEnemiesTurn(); return; };
     if(closestEnemyDistance < 0) closestEnemyDistance = enemy.distToPlayer();
-    else if(enemy.distToPlayer() < closestEnemyDistance) closestEnemyDistance = enemy.distToPlayer();
+    else if(distToPlayer < closestEnemyDistance) closestEnemyDistance = enemy.distToPlayer();
     const eRegen = enemy.getRegen();
     if(enemy.stats.hp < enemy.getHpMax()) enemy.stats.hp += eRegen["hp"];
     if(enemy.stats.mp < enemy.getMpMax()) enemy.stats.mp += eRegen["mp"];

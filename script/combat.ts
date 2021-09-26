@@ -35,7 +35,7 @@ function attackTarget(attacker: characterObject, target: characterObject, attack
   // @ts-ignore
   if (target.isFoe) {
     let layer = <HTMLCanvasElement>null;
-    if(attacker.id == "player") layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
+    if (attacker.id == "player") layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
     else layer = <HTMLCanvasElement>document.querySelector(".summonLayers").querySelector(`.summon${summonIndex(attacker.cords)}`);
     layer.style.animation = 'none';
     // @ts-ignore
@@ -44,15 +44,18 @@ function attackTarget(attacker: characterObject, target: characterObject, attack
     layer.style.animation = null;
     layer.style.animationName = `attack${attackDir}`;
   }
-  else if(attacker.isFoe) {
-    // @ts-ignore
-    const layer = <HTMLCanvasElement>document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
-    layer.style.animation = 'none';
-    // @ts-ignore
-    layer.offsetHeight; /* trigger reflow */
-    // @ts-ignore
-    layer.style.animation = null;
-    layer.style.animationName = `attack${attackDir}`;
+  else if (attacker.isFoe) {
+    try {
+      // @ts-ignore
+      const layer = <HTMLCanvasElement>document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
+      layer.style.animation = 'none';
+      // @ts-ignore
+      layer.offsetHeight; /* trigger reflow */
+      // @ts-ignore
+      layer.style.animation = null;
+      layer.style.animationName = `attack${attackDir}`;
+    }
+    catch { console.warn("Enemy layer not found"); };
   }
 }
 
@@ -68,7 +71,7 @@ function useAbi(abi: ability) {
 
 function buffOrHeal(character: characterObject, ability: ability) {
   state.isSelected = false;
-  
+
   if (ability.base_heal) {
     const { v: val, m: mod } = getModifiers(character, "healPower");
     const heal: number = Math.floor((ability.base_heal + val) * mod);
@@ -129,17 +132,17 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     const _Effect = new statEffect({ ...statusEffects[ability.status] }, ability.statusModifiers);
     const resist = target.getStatusResists()[_Effect.type];
     const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
-    if(!evade && !resisted) {
+    if (!resisted) {
       let missing = true;
-      target.statusEffects.forEach((effect: statEffect)=>{
-        if(effect.id == ability.status) {
+      target.statusEffects.forEach((effect: statEffect) => {
+        if (effect.id == ability.status) {
           effect.last.current += _Effect.last.total;
           missing = false;
           return;
         }
       });
-      if(missing) {
-        target.statusEffects.push({..._Effect});
+      if (missing) {
+        target.statusEffects.push({ ..._Effect });
       }
     }
     else {
@@ -156,8 +159,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         const key: string = value[0];
         const num: number = value[1];
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += getModifiers(attacker, "damage").v;
-        mod *= getModifiers(attacker, "damage").m;
+        val += attacker.allModifiers["damageV"];
+        mod *= attacker.allModifiers["damageP"];
         val += getModifiers(attacker, "damage_against_type_" + target.type).v;
         mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
         val += getModifiers(attacker, "damage_against_race_" + target.race).v;
@@ -172,8 +175,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         const key: string = value[0];
         const num: number = value[1];
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += getModifiers(attacker, "damage").v;
-        mod *= getModifiers(attacker, "damage").m;
+        val += attacker.allModifiers["damageV"];
+        mod *= attacker.allModifiers["damageP"];
         val += getModifiers(attacker, "damage_against_type_" + target.type).v;
         mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
         val += getModifiers(attacker, "damage_against_race_" + target.race).v;
@@ -192,11 +195,12 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       layer.style.animationName = `charHurt`;
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
-    if(evade) dmg = 0;
+    if (evade) dmg = Math.floor(dmg / 2);
+    if (dmg < 1) dmg = 1;
     target.stats.hp -= dmg;
-    if (critRolled && !evade) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-    else if(!evade) spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-    else if(evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    if (evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
     if (isAoe) {
       let actionText: string = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
       actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
@@ -206,10 +210,10 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     else {
       let ally = true;
       let desc = "_action_desc";
-      if(attacker.id == "player") {
+      if (attacker.id == "player") {
         desc += "_pl";
         ally = false;
-      } 
+      }
       let actionText: string = lang[ability.id + desc] ?? ability.action_desc_pl;
       actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
       actionText = actionText.replace("[DMG]", `${dmg}`);
@@ -230,8 +234,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         const key: string = value[0];
         const num: number = value[1];
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += getModifiers(attacker, "damage").v;
-        mod *= getModifiers(attacker, "damage").m;
+        val += attacker.allModifiers["damageV"];
+        mod *= attacker.allModifiers["damageP"];
         let bonus: number = 0;
         bonus += num * attackerStats[ability.stat_bonus] / 50;
         dmg += Math.floor(((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1))) * (1 - (targetResists[key] - ability.resistance_penetration) / 100));
@@ -242,8 +246,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         const key: string = value[0];
         const num: number = value[1];
         let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += getModifiers(attacker, "damage").v;
-        mod *= getModifiers(attacker, "damage").m;
+        val += attacker.allModifiers["damageV"];
+        mod *= attacker.allModifiers["damageP"];
         let bonus: number = 0;
         if (ability.damages?.[key]) bonus = ability.damages[key];
         if (attacker.shootsProjectile) bonus += num * attackerStats.dex / 50;
@@ -259,11 +263,12 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       layer.style.animationName = `screenHurt`;
     }, 110);
     dmg = Math.floor(dmg * random(1.2, 0.8));
-    if(evade) dmg = 0;
+    if (evade) dmg = Math.floor(dmg / 2);
+    if (dmg < 1) dmg = 1;
     target.stats.hp -= dmg;
-    if (critRolled && !evade) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
-    else if(!evade) spawnFloatingText(target.cords, dmg.toString(), "red", 36);
-    else if(evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
+    if (evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
     let actionText = lang[ability.id + "_action_desc"] ?? "[TEXT NOT FOUND]";
     actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
     actionText = actionText.replace("[DMG]", `${dmg}`);
@@ -324,14 +329,17 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     // @ts-ignore
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
-  } else if(attacker.isFoe) {
-    const layer = document.querySelector<HTMLCanvasElement>(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
-    layer.style.animation = 'none';
-    // @ts-ignore
-    layer.offsetHeight; /* trigger reflow */
-    // @ts-ignore
-    layer.style.animation = null;
-    layer.style.animationName = `shakeObject`;
+  } else if (attacker.isFoe) {
+    try {
+      const layer = document.querySelector<HTMLCanvasElement>(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+      layer.style.animation = 'none';
+      // @ts-ignore
+      layer.offsetHeight; /* trigger reflow */
+      // @ts-ignore
+      layer.style.animation = null;
+      layer.style.animationName = `shakeObject`;
+    }
+    catch { console.warn("Enemy layer not found"); };
   }
   else {
     const layer = document.querySelector<HTMLCanvasElement>(`.summon${combatSummons.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
@@ -342,7 +350,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
   }
-  if(path.length * 50 > highestWaitTime) highestWaitTime = path.length * 50; 
+  if (path.length * 50 > highestWaitTime) highestWaitTime = path.length * 50;
   try {
     let collided = false;
     for (let step of path) {
@@ -352,7 +360,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
         collided = true;
         collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
         if (isPlayer) setTimeout(advanceTurn, 50);
-        else if(attacker.isFoe) updateEnemiesTurn();
+        else if (attacker.isFoe) updateEnemiesTurn();
         break;
       }
       if (step.player && attacker.isFoe) {
@@ -370,7 +378,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       if (step.blocked) {
         collided = true;
         if (isPlayer) setTimeout(advanceTurn, 50);
-        else if(attacker.isFoe) updateEnemiesTurn();
+        else if (attacker.isFoe) updateEnemiesTurn();
         break;
       }
       canvas.width = canvas.width;
@@ -394,7 +402,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
 function collision(target: tileObject, ability: ability, isPlayer: boolean, attacker: characterObject, theme?: string) {
   if (!attacker.isFoe || isPlayer) {
     let targetEnemy = maps[currentMap].enemies.find((en: any) => en.cords.x == target.x && en.cords.y == target.y);
-    if(!targetEnemy) targetEnemy = maps[currentMap].enemies.find((en: any) => en.oldCords.x == target.x && en.oldCords.y == target.y);
+    if (!targetEnemy) targetEnemy = maps[currentMap].enemies.find((en: any) => en.oldCords.x == target.x && en.oldCords.y == target.y);
     if (ability.aoe_size > 0) {
       aoeCollision(createAOEMap(targetEnemy?.cords, ability.aoe_size), attacker, ability);
     }
@@ -405,8 +413,8 @@ function collision(target: tileObject, ability: ability, isPlayer: boolean, atta
   else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
     regularAttack(attacker, player, ability);
   }
-  else if(attacker.isFoe) {
-    let summonTarget = combatSummons.find(summon=>summon.cords.x == target.x && summon.cords.y == target.y);
+  else if (attacker.isFoe) {
+    let summonTarget = combatSummons.find(summon => summon.cords.x == target.x && summon.cords.y == target.y);
     regularAttack(attacker, summonTarget, ability);
   }
 }
@@ -439,10 +447,10 @@ function aoeCollision(area: Array<any>, attacker: characterObject, ability: abil
 function threatDistance(targets: Array<any>, from: characterObject) {
   let chosenTarget: any = null;
   let highestThreat = -50;
-  targets.forEach(target=>{
+  targets.forEach(target => {
     let dist = +generatePath(from.cords, target.cords, from.canFly, true);
     let threat = (target.getThreat() / dist) + random(18, -18);
-    if(threat > highestThreat && dist <= (from.aggroRange ?? 14)) {
+    if (threat > highestThreat && dist <= (from.aggroRange ?? 14)) {
       highestThreat = threat;
       chosenTarget = target;
     }
@@ -456,8 +464,9 @@ function summonUnit(ability: ability, cords: tileObject) {
   if (ability.cooldown) ability.onCooldown = ability.cooldown;
   if (ability.mana_cost) player.stats.mp -= ability.mana_cost;
   // @ts-ignore
-  combatSummons.push(new Summon({...summons[ability.summon_unit], level: ability.summon_level, lastsFor: ability.summon_last, cords: {...cords}}));
-  if(ability.status) player.statusEffects.push(new statEffect({...statusEffects[ability.status], last: ability.summon_last-1}, ability.statusModifiers));
+  combatSummons.push(new Summon({ ...summons[ability.summon_unit], level: ability.summon_level, lastsFor: ability.summon_last, cords: { ...cords } }));
+  if (ability.status) player.statusEffects.push(new statEffect({ ...statusEffects[ability.status], last: ability.summon_last - 1 }, ability.statusModifiers));
+  if (ability.summon_status) combatSummons[0].statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status]}, ability.statusModifiers));
   updateUI();
   modifyCanvas();
 }

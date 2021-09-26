@@ -147,7 +147,7 @@ class treasureChest {
         spawnFloatingText(this.cords, `${this.gold}G`, "gold");
         this.gold = 0;
       }
-      this.loot.forEach((loot: any, index)=>{loot.dataIndex = index;})
+      this.loot.forEach((loot: any, index)=>{loot.dataIndex = index;});
       if(this.loot.length > 0) {
         state.invOpen = true;
         const _inv = document.querySelector<HTMLDivElement>(".defaultItemsArray");
@@ -208,17 +208,18 @@ function pickLoot() {
   else closeInventory();
 }
 
-function grabLoot(e: MouseEvent, item: any) {
+function grabLoot(e: MouseEvent, item: any, index: number) {
   if(e.button !== 2) return;
-  itemData.splice(item.dataIndex, 1);
+  itemData.splice(index, 1);
   player.inventory.push(item);
   pickLoot();
   modifyCanvas();
 }
 
-function grabTreasure(e: MouseEvent, item: any, chest: treasureChest) {
+function grabTreasure(e: MouseEvent, item: any, chest: treasureChest, index: number) {
   if(e.button !== 2) return;
-  chest.loot.splice(item.dataIndex, 1);
+  console.log(index);
+  chest.loot.splice(index, 1);
   player.inventory.push(item);
   chest.lootChest();
   modifyCanvas();

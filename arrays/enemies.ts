@@ -134,13 +134,13 @@ const enemies = {
       magic: 20,
       dark: 10,
       divine: 10,
-      fire: 80,
+      fire: 340,
       lightning: -30,
       ice: -40
     },
     statusResistances: {
       poison: 0,
-      burning: 0,
+      burning: 100,
       curse: 0,
       stun: 0,
       bleed: 0
@@ -206,14 +206,14 @@ const enemies = {
       dark: 10,
       divine: 10,
       fire: -30,
-      lightning: 80,
+      lightning: 340,
       ice: -20
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
-      stun: 0,
+      stun: 50,
       bleed: 0
     },
     damages: {

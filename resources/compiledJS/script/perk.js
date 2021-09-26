@@ -187,7 +187,8 @@ function formPerks(e = null) {
             });
         }
     });
-    background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
+    //background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
+    background.scrollTo(perksArray[tree].startPos, 0);
 }
 function formStatUpgrades() {
     const bg = document.querySelector(".playerLeveling .stats");

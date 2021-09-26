@@ -47,11 +47,12 @@ const statusEffects = {
     name: "Burning",
     dot: {
       damageType: "burning",
-      damageAmount: 3,
+      damageAmount: 4,
       icon: icons.burning_icon
     },
     effects: {
-      iceResistV: 25,
+      fireResistV: 10,
+      iceResistV: -10,
       resistAllV: -5
     },
     break_concentration: true,
@@ -62,6 +63,23 @@ const statusEffects = {
     type: "burning",
     textIcon: icons.burning_icon,
     icon: "resources/icons/flame_of_passion.png"
+  },
+  chilled: {
+    id: "chilled",
+    name: "Chilled",
+    effects: {
+      damageP: -15,
+      hitChanceV: -10,
+      evasionV: -10,
+      fireResistV: -10
+    },
+    last: {
+      total: 4,
+      current: 4
+    },
+    type: "curse",
+    textIcon: icons.chilled_icon,
+    icon: "resources/icons/chilled.png"
   },
   blighted: {
     id: "blighted",
@@ -206,6 +224,22 @@ const statusEffects = {
     last: {
       total: 1,
       current: 1
+    },
+    rooted: true,
+    type: "stun",
+    textIcon: icons.dazed,
+    icon: "resources/icons/dazed.png"
+  },
+  inanimate: {
+    id: "inanimate",
+    name: "Inanimate",
+    effects: {
+      damageP: -100
+    },
+    break_concentration: true,
+    last: {
+      total: 100,
+      current: 100
     },
     rooted: true,
     type: "stun",

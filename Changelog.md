@@ -1,3 +1,30 @@
+# Index Update 5 ~ 26.9.2021
+
+## New Features & Additions
+  * Added new abilities:  
+    - ``Hasty Distraction``, a Rogue ability that summons a dummy that distracts enemies.
+      > The dummy has 8 hp and takes 1 damage per hit.  
+      > The dummy can not move or attack.
+    - ``Icy Javelin``, a Sorcerer spell. High damage single target spell with a nasty debuff.
+  * Added new perks:
+    - ``Tricky Distraction``, a Rogue perk that grants the ability ``Hasty Distraction``. 
+    - ``Poison Taster``, a Rogue perk that improves poison resistances.
+    - ``Elemental Mage``, a Sorcerer perk that grants the ability ``Icy Javelin`` and increases elemental damge.
+    - ``Armour Piercing Javelin``, a Sorcerer perk that buffs the ability ``Icy Javelin``.
+
+## Tweaks
+  * Reworked evasion, it no longer grants immunity to damage and statuses, instead it halves incoming damage.
+    > Lowered the player's base hit chance from the previous **75** to **60**.
+  * Performance increase, made offscreen enemies not even try to render. 
+  * Removed some error messages, this has no impact on gameplay.
+  * Modified the Ashen model.
+  * Burning status effect damage increased **3** --> **4**, stats modified to: **+10** Fire Res, **-10** Ice Res, **-5** All Res.
+  * Vitality and intelligence now increase hp and mana regen by 1%.
+
+## Fixes
+  * Optimised modifier reading, performance should be improved slightly.
+  * Fixed chest indexing issue allowing the player to dupe items down the list.
+
 # Indev Update 4 ~ 19.9.2021
 
 ## New Features & Additions

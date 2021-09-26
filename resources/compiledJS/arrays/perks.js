@@ -3,6 +3,7 @@ const perksArray = {
     sorcerer: {
         id: "sorcerer_perks",
         name: "Sorcerer",
+        startPos: 550,
         perks: {
             introduction_to_sorcery: {
                 id: "introduction_to_sorcery",
@@ -27,7 +28,7 @@ const perksArray = {
                     }
                 ],
                 tree: "sorcerer",
-                pos: { x: 6.5, y: 1 },
+                pos: { x: 11, y: 1 },
                 icon: "resources/icons/wisdom.png"
             },
             intent_studies: {
@@ -84,7 +85,7 @@ const perksArray = {
                 tree: "sorcerer",
                 relative_to: "might_of_magic",
                 requires: ["might_of_magic"],
-                pos: { x: 4.5, y: 1.5 },
+                pos: { x: 4, y: 1.5 },
                 icon: "resources/icons/portal.png"
             },
             magical_bonds: {
@@ -140,13 +141,47 @@ const perksArray = {
                 effects: {
                     fireball_cooldownV: -1,
                     fireball_aoe_sizeV: 2.3,
-                    fireball_mana_costV: 15
+                    fireball_mana_costP: 100
                 },
                 tree: "sorcerer",
                 relative_to: "school_of_fire",
                 requires: ["school_of_fire"],
                 pos: { x: 0, y: 1.5 },
                 icon: "resources/icons/flame_icon.png"
+            },
+            elemental_mage: {
+                id: "elemental_mage",
+                name: "Elemental Mage",
+                desc: "",
+                commands: {
+                    add_ability_icy_javelin: 1,
+                },
+                effects: {
+                    iceDamageP: 3,
+                    fireDamageP: 3,
+                    lightningDamageP: 3
+                },
+                tree: "sorcerer",
+                relative_to: "school_of_fire",
+                requires: ["school_of_fire"],
+                pos: { x: -4, y: 1.5 },
+                icon: "resources/icons/elementalist.png"
+            },
+            piercing_javelin: {
+                id: "piercing_javelin",
+                name: "Armor Piercing Javelin",
+                desc: "",
+                effects: {
+                    icy_javelin_resistance_penetrationV: 25,
+                    icy_javelin_damage_multiplierP: 20,
+                    icy_javelin_cooldownP: -20,
+                    icy_javelin_mana_costP: 50
+                },
+                tree: "sorcerer",
+                relative_to: "elemental_mage",
+                requires: ["elemental_mage"],
+                pos: { x: 0, y: 1.5 },
+                icon: "resources/icons/ice_javelin.png"
             },
             shield_of_ages: {
                 id: "shield_of_ages",
@@ -223,6 +258,7 @@ const perksArray = {
     fighter: {
         id: "fighter_perks",
         name: "Fighter",
+        startPos: 50,
         perks: {
             battle_sense: {
                 id: "battle_sense",
@@ -381,6 +417,7 @@ const perksArray = {
     barbarian: {
         id: "barbarian_perks",
         name: "Barbarian",
+        startPos: 50,
         perks: {
             thrill_of_battle: {
                 id: "thrill_of_battle",
@@ -602,6 +639,7 @@ const perksArray = {
     rogue: {
         id: "rogue_perks",
         name: "Rogue",
+        startPos: 50,
         perks: {
             way_of_the_rogue: {
                 id: "way_of_the_rogue",
@@ -674,6 +712,22 @@ const perksArray = {
                 pos: { x: -2, y: 1.5 },
                 icon: "resources/icons/glass_cannon.png"
             },
+            tricky_distraction: {
+                id: "tricky_distraction",
+                name: "Tricky Distraction",
+                desc: "",
+                effects: {
+                    evasionV: 2
+                },
+                commands: {
+                    add_ability_distraction: 1
+                },
+                tree: "rogue",
+                relative_to: "glass_cannon",
+                requires: ["glass_cannon"],
+                pos: { x: 0, y: 3 },
+                icon: "resources/icons/dummy_ability.png"
+            },
             simple_strokes: {
                 id: "simple_strokes",
                 name: "Simple Strokes",
@@ -725,6 +779,19 @@ const perksArray = {
                 requires: ["fighting_dirty"],
                 pos: { x: 2, y: 1.5 },
                 icon: "resources/icons/venom.png"
+            },
+            poison_taster: {
+                id: "poison_taster",
+                name: "Poison Taster",
+                desc: "",
+                effects: {
+                    poisonDefenseV: 50
+                },
+                tree: "rogue",
+                relative_to: "poison_specialist",
+                requires: ["poison_specialist"],
+                pos: { x: 0, y: 3 },
+                icon: "resources/icons/poison_taster.png"
             },
             quicker_draw: {
                 id: "quicker_draw",
@@ -821,6 +888,7 @@ const perksArray = {
     adventurer_shared: {
         id: "adventurer_shared",
         name: "Adventurer",
+        startPos: 50,
         perks: {
             hearty_adventurer_1: {
                 id: "hearty_adventurer_1",

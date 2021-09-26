@@ -446,6 +446,7 @@ var player = new PlayerCharacter({
         hp: 100,
         mp: 30
     },
+    // 340 resistance equals to 100% damage negation, meaning 1 damage taken.
     resistances: {
         slash: 0,
         crush: 0,
@@ -505,7 +506,7 @@ var player = new PlayerCharacter({
         mp: 0.5,
     },
     hit: {
-        chance: 75,
+        chance: 60,
         evasion: 30
     },
     unarmed_damages: { crush: 1 },

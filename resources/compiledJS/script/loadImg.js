@@ -1,7 +1,9 @@
 function imgLoaded() {
   if(imgLoaded.num) imgLoaded.num += 1;
   else imgLoaded.num = 1;
-  if(imgLoaded.num == document.querySelector(".sprites").querySelectorAll("img").length) modifyCanvas();
+  if(imgLoaded.num == document.querySelector(".sprites").querySelectorAll("img").length) {
+    setTimeout(modifyCanvas, 500);
+  } 
 }
 
 (() => {

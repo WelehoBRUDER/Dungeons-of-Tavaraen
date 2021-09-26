@@ -186,9 +186,9 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
   for (let button of reverseOptions) {
     try {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
-      setTimeout(() => { frame.remove(); }, 15);
+      frame.remove();
     }
-    catch { }
+    catch { console.log("This doesn't affect anything") }
   }
   if (escape) handleEscape();
 }
@@ -398,12 +398,12 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       if(save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
       currentMap = save.save.currentMap;
       tree = player.classes.main.perkTree;
+      player.updateAbilities();
       purgeDeadEnemies();
       handleEscape();
       closeGameMenu();
       modifyCanvas();
       updateUI();
-      player.updateAbilities();
     });
     deleteGame.addEventListener("click", () => {
       saves.splice(save.id, 1);

@@ -641,7 +641,8 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   itemsListBar.classList.add("itemListTop");
   itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
   const items: Array<any> = [...inventory];
-  items.forEach((itm: any) => {
+  items.forEach((item: any) => {
+    let itm = {...item};
     if (itm.type == "weapon") itm = new Weapon({ ...itm });
     else if (itm.type == "armor") itm = new Armor({ ...itm });
     else if (itm.type == "artifact") itm = new Artifact({ ...itm });
@@ -676,10 +677,10 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
       itemObject.addEventListener("dblclick", e => player.drop(itm));
     }
     if (context == "PICK_LOOT") {
-      itemObject.addEventListener("mousedown", e => grabLoot(e, itm));
+      itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
     }
     if (context == "PICK_TREASURE") {
-      itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest));
+      itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);

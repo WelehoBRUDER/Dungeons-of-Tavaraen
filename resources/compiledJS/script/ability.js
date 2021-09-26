@@ -84,6 +84,7 @@ class Ability {
         ;
         this.summon_last = (_u = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _u !== void 0 ? _u : 0;
         ;
+        this.summon_status = baseAbility.summon_status;
         this.aoe_size = (_v = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _v !== void 0 ? _v : 0;
         this.aoe_effect = (_w = baseAbility.aoe_effect) !== null && _w !== void 0 ? _w : "";
         this.self_target = (_x = baseAbility.self_target) !== null && _x !== void 0 ? _x : false;

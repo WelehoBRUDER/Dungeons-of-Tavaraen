@@ -78,8 +78,8 @@ const emptyModel = {
         mp: 0,
     },
     hit: {
-        chance: 50,
-        evasion: 25
+        chance: 60,
+        evasion: 30
     },
     unarmed_damages: { crush: 1 },
     statusEffects: [],
@@ -146,6 +146,7 @@ function characterCreation(withAnimations = true) {
 function beginGame() {
     if (player.classes.main) {
         player.name = creation.querySelector(".nameInput").value;
+        player.updateAbilities();
         creation.style.opacity = "0";
         setTimeout(() => { creation.style.display = "none"; }, 750);
         tree = player.classes.main.perkTree;

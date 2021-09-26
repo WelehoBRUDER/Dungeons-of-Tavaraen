@@ -318,14 +318,9 @@ function printMap() {
   editingMap.vihuMap?.forEach((rivi, y) => {
     rivi.forEach((vihu, x) => {
       let text = `cords: { x: ${x}, y: ${y} }, spawnCords: { x: ${x}, y: ${y} }, level: 1 `;
-      console.log("\t\t" + `new Enemy({...enemies["${vihu.id}"], ${text}})` + ", \n");
-      // for(const nimi in vihu) {
-      //   if(nimi !== "id") text += ", " + nimi + ": " + JSON.stringify(vihu[nimi]);
-      // } 
       vihutArray += "\t\t" + `new Enemy({...enemies["${vihu.id}"], ${text}})` + ", \n";
     });
   }); vihutArray += "\t]";
-  console.log(editingMap.vihuMap);
   let teleportsArray = `[\n`;
   editingMap.teleports?.forEach(rivi => {
     teleportsArray += "\t\t" + JSON.stringify(rivi) + ", \n";

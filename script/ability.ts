@@ -24,6 +24,7 @@ interface ability {
   summon_unit?: string;
   summon_level?: number;
   summon_last?: number;
+  summon_status?: string;
   aoe_size?: number;
   aoe_effect?: string;
   self_target?: boolean;
@@ -116,6 +117,7 @@ class Ability {
   summon_unit?: string;
   summon_level?: number;
   summon_last?: number;
+  summon_status?: string;
   aoe_size?: number;
   aoe_effect?: string;
   self_target?: boolean;
@@ -155,6 +157,7 @@ class Ability {
     this.summon_unit = baseAbility.summon_unit;
     this.summon_level = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif) ?? 0;;
     this.summon_last = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif) ?? 0;;
+    this.summon_status = baseAbility.summon_status;
     this.aoe_size = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif ?? 0;
     this.aoe_effect = baseAbility.aoe_effect ?? "";
     this.self_target = baseAbility.self_target ?? false;

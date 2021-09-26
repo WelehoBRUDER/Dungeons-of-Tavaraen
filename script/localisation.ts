@@ -24,8 +24,8 @@ const finnish = {
 
   str_tt: `<i>${icons["str"]}<i>Voima parantaa <i>${icons["melee"]}<i>voima aseiden vahinkoa 2%,\n ja parantaa maksimi taakkaa 0.5`,
   dex_tt: `<i>${icons["dex"]}<i>Taito parantaa <i>${icons["ranged"]}<i>taito aseiden vahinkoa 2%`,
-  vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n ja parantaa maksimi taakkaa 1`,
-  int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n ja parantaa <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
+  vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n<i>${icons["regenHp_icon"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
+  int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n<i>${icons["regenMp_icon"]}<i>taian palautimista 1%\n ja <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Oveluus parantaa <i>${icons["critDamage"]}<i>krit vahinkoa 1.5%,\n ja <i>${icons["critDamage"]}<i>krit mahdollisuutta 0.4%`,
   critDamage_tt: `<i>${icons["critDamage"]}<i>Krit vahinko on kertoja joka parantaa kriittisiä iskuja.`,
   critChance_tt: `<i>${icons["critDamage"]}<i>Krit mahdollisuus kertoo millä todennäköisyydellä iskusi on kriittinen.`,
@@ -34,6 +34,13 @@ const finnish = {
 
   resistances_tt: "Vahinko tyypin puolustus vähentää saman tyyppistä tulevaa vahinkoa mainitulla prosentilla.",
   stat_resist_tt: `Efektin vastustus laskee sen tekemää vahinkoa mainitulla prosentilla. \n\nSe myös antaa mahdollisuuden kokonaan vastustaa efekti. \n\nKun efekti on täysin vastustettu, se ei tee mitään.`,
+
+  // Status Resists
+  poisonDefense: "Myrkytyksen vastustus",
+  burningDefense: "Palamisen vastustus",
+  curseDefense: "Kirouksen vastustus",
+  stunDefense: "Tainnuttamisen vastustus",
+  bleedDefense: "Verenvuodon vastustus",
 
   // Technical stuff
   changeWordOrder: true,
@@ -258,6 +265,7 @@ const finnish = {
   skeletonWarriorSummon_name: "Kutsuttu Luuranko Soturi",
   skeletonLichSummon_name: "Kutsuttu Luuranko Kuolema Maagi",
   stoneTrollSummon_name: "Kutsuttu Kivipeikko",
+  dummyTarget_name: "Harhautus Nukke",
 
   // LOG TEXTS
   you: "",
@@ -422,6 +430,8 @@ const finnish = {
   effect_battle_fury_desc: "Riemuitse ja raivoa! Adrenaniili kiertää veressä ja veri lentää!",
   effect_burning_name: "Tulessa",
   effect_burning_desc: "OLET TULESSA!",
+  effect_chilled_name: "Jäinen",
+  effect_chilled_desc: "Kylmyys hidastaa ja heikentää..",
   effect_summoned_name: "Kutsuntaloitsu",
   effect_summoned_desc: "Kutsuttu soturi katoaa tämän loputtua",
   effect_disoriented_name: "Sekaisin",
@@ -530,6 +540,9 @@ const finnish = {
   smoke_bomb_desc: "Harhauta vastustajiasi savuisella räjähdyksellä.",
   smoke_bomb_action_desc_pl: "Heität pommin maahan, täyttäen pieneen alueen savulla!",
   smoke_bomb_action_desc_aoe_pl: "[TARGET] ottaa pommin täräyksen suoraan vastaan, ottaen [DMG] vahinkoa!",
+  distraction_name: "Hätäinen Hämy",
+  distraction_desc: "Heitä rähjäinen nukke maahan harhauttamaan pahantekijöitä.",
+  distraction_action_desc_pl: "Asetat nuken maahan hämäämään vihollisiasi!",
 
   // CLASSES
   fighterClass_name: "Taistelija",
@@ -566,6 +579,10 @@ const finnish = {
   makings_of_a_summoner_desc: "Taian mestarin ei tarvitse taistella yksin, kuninkaalla on aina palvelioita.",
   magical_bonds_name: "Maaginen Yhteys",
   magical_bonds_desc: "Kun kuningas komentaa, kaikki tottelevat.",
+  elemental_mage_name: "Alkuaineiden Mestari",
+  elemental_mage_desc: "Luonnon voimat ovat käytettävissäsi.",
+  piercing_javelin_name: "Lävistävä Keihäs",
+  piercing_javelin_desc: "Panssari ei pelasta tarpeeksi vahvalta iskulta.",
 
   // FIGHTER
   battle_sense_name: "Kamppailun Aistit",
@@ -618,6 +635,10 @@ const finnish = {
   sneakier_stabbing_desc: "Tästä tempusta eivät puukotukselle allergiset pidä!",
   smoke_and_mirrors_name: "Taika Temppu",
   smoke_and_mirrors_desc: "Savua ja peilejä...",
+  tricky_distraction_name: "Harhautusliike",
+  tricky_distraction_desc: "Laita vastustajasi läiskimään väärää kohdetta.",
+  poison_taster_name: "Myrkyn Maistelija",
+  poison_taster_desc: "Ammattilainen tuntee tuotteensa tarkasti.",
 
   // BARBARIAN
   thrill_of_battle_name: "Taiston Himo",
@@ -688,8 +709,8 @@ const english = {
 
   str_tt: `<i>${icons["str"]}<i>Strength increases <i>${icons["melee"]}<i>damage with strength scaling weapons by 2%,\n and encumbrance by 0.5`,
   dex_tt: `<i>${icons["dex"]}<i>Dexterity increases <i>${icons["ranged"]}<i>damage with dexterity scaling weapons by 2%`,
-  vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n and encumbrance by 1`,
-  int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n and <i>${icons["damage"]}<i>magical damage by 2%`,
+  vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n<i>${icons["regenHp_icon"]}<i>health regeneration by 1%\n and encumbrance by 1`,
+  int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n<i>${icons["regenMp_icon"]}<i>mana recovery by 1%\n and <i>${icons["damage"]}<i>magical damage by 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Cunning increases <i>${icons["critDamage"]}<i>crit damage by 1.5%,\n and <i>${icons["critDamage"]}<i>crit chance by 0.4%`,
   critDamage_tt: `<i>${icons["critDamage"]}<i>Crit damage is the multiplier that improves crit hits.`,
   critChance_tt: `<i>${icons["critDamage"]}<i>Crit chance increases your chances of achieving critical hits.`,
@@ -698,6 +719,13 @@ const english = {
 
   resistances_tt: "Resistance decreases incoming damage of its type by the indicated %.",
   stat_resist_tt: `Status resistance decreases any damage caused by effects by the indicated %. \n\nIt also gives a chance of completely resisting the effect. \n\nWhen effect is resisted, it is not applied at all.`,
+
+  // Status Resists
+  poisonDefense: "Poison resistance",
+  burningDefense: "Burning resistance",
+  curseDefense: "Curse resistance",
+  stunDefense: "Stun resistance",
+  bleedDefense: "Bleed resistance",
 
   // Technical stuff
   changeWordOrder: false,
@@ -827,6 +855,7 @@ const english = {
   skeletonWarriorSummon_name: "Conjured Skeleton Warrior",
   skeletonLichSummon_name: "Conjured Skeleton Lich",
   stoneTrollSummon_name: "Conjured Stone Troll",
+  dummyTarget_name: "Dummy Target",
 
   // LOG TEXTS
   you: "You",
@@ -1003,6 +1032,8 @@ const english = {
   effect_battle_fury_desc: "You are concentrating on physical might.",
   effect_burning_name: "Burning",
   effect_burning_desc: "YOU ARE ON FIRE!",
+  effect_chilled_name: "Chilled",
+  effect_chilled_desc: "Your body is cooling down, getting slower, weakening...",
   effect_summoned_name: "Summon",
   effect_summoned_desc: "Your conjuration dies once this expires.",
   effect_disoriented_name: "Disoriented",
@@ -1111,6 +1142,9 @@ const english = {
   smoke_bomb_desc: "Distract your targets with a well placed smoke screen.",
   smoke_bomb_action_desc_pl: "<c>yellow<c>You<c>white<c> throw a bomb on the ground, quickly filling the area with smoke!",
   smoke_bomb_action_desc_aoe_pl: "[TARGET] is caught in the smoky explosion, taking [DMG] damage!",
+  distraction_name: "Hasty Distraction",
+  distraction_desc: "Plant a dummy nearby for enemies to target.",
+  distraction_action_desc_pl: "You prop a dummy target on the ground!",
 
   // CLASSES
   fighterClass_name: "Fighter",
@@ -1147,6 +1181,10 @@ const english = {
   makings_of_a_summoner_desc: "In order to become a king of magic, one must have servants.",
   magical_bonds_name: "Bonds forged from Magic",
   magical_bonds_desc: "Steel, faith nor gunpowder will stop my puppets!",
+  elemental_mage_name: "Master of the Elements",
+  elemental_mage_desc: "Elements of nature bend to your will.",
+  piercing_javelin_name: "Armour Piercing Javelin",
+  piercing_javelin_desc: "This one packs a ton of punch.",
 
   // FIGHTER
   battle_sense_name: "Battle Sense",
@@ -1199,6 +1237,10 @@ const english = {
   sneakier_stabbing_desc: "Exploit your opponents allergy to multiple stab wounds.",
   smoke_and_mirrors_name: "Smoke & Mirrors",
   smoke_and_mirrors_desc: "That's all it takes to fool even the sane.",
+  tricky_distraction_name: "Tricky Distraction",
+  tricky_distraction_desc: "Make your foes go after the wrong target.",
+  poison_taster_name: "Poison Taster",
+  poison_taster_desc: "Can't accidentally poison yourself if you do it intentionally!",
 
   // BARBARIAN
   thrill_of_battle_name: "Thrill of Battle",

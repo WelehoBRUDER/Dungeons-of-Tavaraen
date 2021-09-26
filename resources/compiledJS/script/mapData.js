@@ -202,18 +202,19 @@ function pickLoot() {
     else
         closeInventory();
 }
-function grabLoot(e, item) {
+function grabLoot(e, item, index) {
     if (e.button !== 2)
         return;
-    itemData.splice(item.dataIndex, 1);
+    itemData.splice(index, 1);
     player.inventory.push(item);
     pickLoot();
     modifyCanvas();
 }
-function grabTreasure(e, item, chest) {
+function grabTreasure(e, item, chest, index) {
     if (e.button !== 2)
         return;
-    chest.loot.splice(item.dataIndex, 1);
+    console.log(index);
+    chest.loot.splice(index, 1);
     player.inventory.push(item);
     chest.lootChest();
     modifyCanvas();

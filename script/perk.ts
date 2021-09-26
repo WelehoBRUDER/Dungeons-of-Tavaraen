@@ -191,7 +191,8 @@ function formPerks(e: MouseEvent = null) {
       });
     }
   });
-  background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
+  //background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
+  background.scrollTo(perksArray[tree].startPos, 0);
 }
 
 function formStatUpgrades() {
