@@ -599,24 +599,18 @@ function reviveAllDeadEnemies() {
 }
 function LoadSlot(data) {
     reviveAllDeadEnemies();
-    player = new PlayerCharacter(GetKey("player", data).data);
+    player = new PlayerCharacter(Object.assign({}, GetKey("player", data).data));
     itemData = GetKey("itemData", data).data;
     fallenEnemies = GetKey("enemies", data).data;
     lootedChests = GetKey("lootedChests", data).data;
     currentMap = GetKey("currentMap", data).data;
     tree = player.classes.main.perkTree;
+    player.updateAbilities();
+    player.updatePerks();
     purgeDeadEnemies();
     handleEscape();
     closeGameMenu();
     modifyCanvas();
-    player.updateAbilities();
     updateUI();
 }
-// const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
-// layer.style.animation = 'none';
-// // @ts-ignore
-// layer.offsetHeight; /* trigger reflow */
-// // @ts-ignore
-// layer.style.animation = null;
-// layer.style.animationName = `charHurt`;
 //# sourceMappingURL=menu.js.map

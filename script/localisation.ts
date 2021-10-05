@@ -192,8 +192,11 @@ const finnish = {
   chippedBlade_name: "Kulunut Terä",
   longsword_name: "Pitkämiekkä",
   chippedAxe_name: "Kulunut Kirves",
+  orcishAxe_name: "Örkkimäinen Kirves",
   huntingBow_name: "Metsästys Jousi",
   apprenticeWand_name: "Oppilaan Sauva",
+  galadorSpear_name: "Galadorin Keihäs",
+  pikeMore_name: "Murhahauki",
   raggedShirt_name: "Ryysyinen Paita",
   raggedBoots_name: "Ryysyiset Jalkimet",
   raggedPants_name: "Ryysyiset Housut",
@@ -254,6 +257,7 @@ const finnish = {
   electricSlime_name: "Sähköinen Lima",
   norsemanBerserk_name: "Pohjoismies Berserkki",
   norsemanHunter_name: "Pohjoismies Metsästäjä",
+  femaleOrcRaider_name: "Örkki Hyökkääjä",
   wildTroll_name: "Villi Peikko",
   wildStoneTroll_name: "Villi Kivipeikko",
   troll_name: "Peikko",
@@ -301,6 +305,7 @@ const finnish = {
   item_worth: "Arvo",
   item_grade: "Taso",
   item_stat_bonus: "Vaikuttava kyky",
+  weapon_has_great_reach: "Normaalia suurempi ase",
   resistance: "Puolustus",
   status_effects: "Tila efektit",
   encumbrance: "Taakka",
@@ -335,6 +340,7 @@ const finnish = {
   two_handed_weapon: "Kahden käsen ase",
   rooted: "Et voi liikkua!",
   closest_enemy: "Etäisyys lähimpään viholliseen: ",
+  expGain: "Kokemuspisteiden saanti",
 
   // Passive abilities
   frenzy_name: "Kiihko",
@@ -363,6 +369,7 @@ const finnish = {
   plural_type_hiisi: "Hiisiä",
 
   // Enemy races
+  against_race_syntax: " vastaan",
   singular_race_elemenal: "Elementtaali",
   plural_race_elemental: "Elementtaaleja",
   singular_race_undead: "Epäkuollut",
@@ -844,6 +851,7 @@ const english = {
   electricSlime_name: "Electric Slime",
   norsemanBerserk_name: "Norseman Berserker",
   norsemanHunter_name: "Norseman Hunter",
+  femaleOrcRaider_name: "Orc Raider",
   wildTroll_name: "Wild Troll",
   wildStoneTroll_name: "Wild Stone Troll",
   troll_name: "Troll",
@@ -893,6 +901,7 @@ const english = {
   item_worth: "Worth",
   item_grade: "Grade",
   item_stat_bonus: "Scales with",
+  weapon_has_great_reach: "Greater reach than most weapons",
   status_effects: "Status effects",
   encumbrance: "Encumbrance",
   shrine_activated: "Shrine activated!",
@@ -926,6 +935,7 @@ const english = {
   two_handed_weapon: "Two-handed",
   rooted: "Can't move!",
   closest_enemy: "Distance to closest enemy: ",
+  expGain: "Experience gain",
 
   // Artifacts
   part_of_set: "Part of",
@@ -965,6 +975,7 @@ const english = {
   plural_type_hiisi: "Hiisi creatures",
 
   // Enemy races
+  against_race_syntax: " against ",
   singular_race_elemenal: "Elemental",
   plural_race_elemental: "Elementals",
   singular_race_undead: "Undead",

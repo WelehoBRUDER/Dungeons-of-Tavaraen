@@ -284,6 +284,10 @@ function renderMap(map: mapObject) {
     itemImg.src = item.itm.img;
     itemImg.onload = function () {
       if (sightMap[item.cords.y]?.[item.cords.x] == "x") {
+        mapDataCtx.shadowColor = "#ffd900";
+        mapDataCtx.shadowBlur = 12;
+        mapDataCtx.shadowOffsetX = 0;
+        mapDataCtx.shadowOffsetY = 0;
         mapDataCtx?.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
       }
     };
@@ -550,10 +554,12 @@ document.addEventListener("keyup", (keyPress) => {
   const rooted = player.isRooted();
   if(!turnOver) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
-  if (rooted && !player.isDead && dirs[keyPress.key]) {
+  let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+  if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
     advanceTurn();
     updateUI();
     state.abiSelected = {};
+    return;
   }
   if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen) return;
   let shittyFix = JSON.parse(JSON.stringify(player));
@@ -578,7 +584,6 @@ document.addEventListener("keyup", (keyPress) => {
       state.abiSelected = {};
     }
     else {
-      let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
       if (target) {
         // @ts-expect-error
         attackTarget(player, target, weaponReach(player, player.weapon.range, target));
@@ -842,7 +847,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }
   maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
   fieldMap[end.y][end.x] = 5;
-  main: for (let i = 5; i < 80; i++) {
+  main: for (let i = 5; i < 100; i++) {
     for (let y = 0; y < maps[currentMap].base.length; y++) {
       for (let x = 0; x < maps[currentMap].base[y].length; x++) {
         if (fieldMap[y][x] !== 0) continue;
@@ -856,45 +861,45 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }
   const maxValueCords = { x: null as any, y: null as any, v: 0 as any };
   const maxNum = fieldMap[start.y][start.x];
-  if (retreatPath > 0) fieldMap[start.y][start.x] = 0;
-  if (retreatPath > 0) {
-    const arr = [...new Array(retreatPath)].map(_ => []);
+  // if (retreatPath > 0) fieldMap[start.y][start.x] = 0;
+  // if (retreatPath > 0) {
+  //   const arr = [...new Array(retreatPath)].map(_ => []);
 
-    arr[0].push({ x: start.x, y: start.y });
-    for (let i = 0; i < arr.length; i++) {
-      for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
-        for (const value of arr[i]) {
-          if (fieldMap[value.y][value.x] !== 0) continue;
+  //   arr[0].push({ x: start.x, y: start.y });
+  //   for (let i = 0; i < arr.length; i++) {
+  //     for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
+  //       for (const value of arr[i]) {
+  //         if (fieldMap[value.y][value.x] !== 0) continue;
 
-          const left = fieldMap[value.y]?.[value.x - 1] ?? null;
-          const right = fieldMap[value.y]?.[value.x + 1] ?? null;
-          const top = fieldMap[value.y - 1]?.[value.x] ?? null;
-          const bottom = fieldMap[value.y + 1]?.[value.x] ?? null;
+  //         const left = fieldMap[value.y]?.[value.x - 1] ?? null;
+  //         const right = fieldMap[value.y]?.[value.x + 1] ?? null;
+  //         const top = fieldMap[value.y - 1]?.[value.x] ?? null;
+  //         const bottom = fieldMap[value.y + 1]?.[value.x] ?? null;
 
-          // if(i != 0) map[value.y][value.x] = min + 1;
-          if ([left, right, top, bottom].find(e => e == i2)) {
-            fieldMap[value.y][value.x] = i2 + 1;
+  //         // if(i != 0) map[value.y][value.x] = min + 1;
+  //         if ([left, right, top, bottom].find(e => e == i2)) {
+  //           fieldMap[value.y][value.x] = i2 + 1;
 
-            if (left == 0) arr[i + 1]?.push({ y: value.y, x: value.x - 1 });
-            if (right == 0) arr[i + 1]?.push({ y: value.y, x: value.x + 1 });
-            if (top == 0) arr[i + 1]?.push({ y: value.y - 1, x: value.x });
-            if (bottom == 0) arr[i + 1]?.push({ y: value.y + 1, x: value.x });
-          }
+  //           if (left == 0) arr[i + 1]?.push({ y: value.y, x: value.x - 1 });
+  //           if (right == 0) arr[i + 1]?.push({ y: value.y, x: value.x + 1 });
+  //           if (top == 0) arr[i + 1]?.push({ y: value.y - 1, x: value.x });
+  //           if (bottom == 0) arr[i + 1]?.push({ y: value.y + 1, x: value.x });
+  //         }
 
 
-          if (i2 >= maxValueCords.v - 1) {
-            Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
-          }
-        }
-      }
-    }
-  }
+  //         if (i2 >= maxValueCords.v - 1) {
+  //           Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   const data = {
     x: start.x,
     y: start.y
   };
-  if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
-  const cords = [];
+  // if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
+  const cords: Array<any> = [];
   siksakki: for (let i = 0; i < 375; i++) {
     const v = fieldMap[data.y][data.x] - 1;
 

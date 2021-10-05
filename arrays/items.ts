@@ -213,6 +213,79 @@ const items = {
     grade: "rare",
     slot: "weapon"
   },
+  galadorSpear: {
+    id: "galadorSpear",
+    name: "Spear of Galador",
+    damages: { slash: 2, pierce: 16, divine: 8 },
+    damagesTemplate: [
+      { type: "slash", value: [1, 2], chance: 4 },
+      { type: "pierce", value: [3, 6], chance: 6 },
+      { type: "divine", value: [2, 5], chance: 9 },
+      { type: "fire", value: [3, 5], chance: 2 },
+      { type: "lightning", value: [3, 5], chance: 2 },
+      { type: "ice", value: [2, 4], chance: 2 },
+    ],
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 4], chance: 1.25 },
+      { type: "strP", value: [3, 5, 9], chance: 1 },
+      { type: "dexV", value: [1, 2, 4], chance: 3.25 },
+      { type: "dexP", value: [3, 5, 7], chance: 2 },
+      { type: "vitV", value: [1, 2, 4], chance: 1.25 },
+      { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+    ],
+    requiresStats: {
+      dex: 23,
+      cun: 8
+    },
+    stats: {
+      evasionV: 5,
+      damage_against_race_undeadP: 20
+    },
+    range: 2,
+    img: "resources/icons/spear_of_galador.png",
+    sprite: "galadorSpear",
+    price: 3000,
+    weight: 1.9,
+    type: "weapon",
+    statBonus: "dex",
+    grade: "mythical",
+    slot: "weapon",
+    mainTitle: false
+  },
+  pikeMore: {
+    id: "pikeMore",
+    name: "Pikemore",
+    damages: { crush: 16, lightning: 10 },
+    damagesTemplate: [
+      { type: "crush", value: [3, 8], chance: 10 },
+      { type: "lightning", value: [3, 6], chance: 7 },
+      { type: "ice", value: [2, 4], chance: 5 },
+    ],
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 4], chance: 2.8 },
+      { type: "strP", value: [3, 5, 9], chance: 1.6 },
+      { type: "dexV", value: [1, 2, 4], chance: 1.5 },
+      { type: "dexP", value: [3, 5, 7], chance: 1.25 },
+      { type: "vitV", value: [1, 2, 4], chance: 1.25 },
+      { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+    ],
+    requiresStats: {
+      str: 14,
+    },
+    stats: {
+      hitChanceV: 10
+    },
+    range: 2,
+    img: "resources/icons/pikemore.png",
+    sprite: "pikeMore",
+    price: 680,
+    weight: 4.5,
+    type: "weapon",
+    statBonus: "str",
+    grade: "rare",
+    twoHanded: true,
+    slot: "weapon",
+  },
   chippedAxe: {
     id: "chippedAxe",
     name: "Chipped Axe",
@@ -242,6 +315,37 @@ const items = {
     type: "weapon",
     statBonus: "str",
     grade: "common",
+    slot: "weapon"
+  },
+  orcishAxe: {
+    id: "orcishAxe",
+    name: "Orcish Axe",
+    damages: { crush: 9, pierce: 8 },
+    damagesTemplate: [
+      { type: "crush", value: [2, 3], chance: 6 },
+      { type: "pierce", value: [1, 3], chance: 6 },
+      { type: "dark", value: [2, 5], chance: 6 },
+      { type: "divine", value: [2, 5], chance: 5 },
+      { type: "fire", value: [2, 4], chance: 10 },
+      { type: "lightning", value: [2, 5], chance: 7 },
+      { type: "ice", value: [2, 4], chance: 5 },
+    ],
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 4], chance: 1.75 },
+      { type: "strP", value: [3, 5, 9], chance: 1 },
+      { type: "dexV", value: [1, 2, 4], chance: 1.75 },
+      { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+      { type: "vitV", value: [1, 2, 4], chance: 1.25 },
+      { type: "vitP", value: [3, 5, 7], chance: 1.25 },
+    ],
+    range: 1,
+    img: "resources/icons/orcish_axe.png",
+    sprite: "orcishAxe",
+    price: 130,
+    weight: 2.6,
+    type: "weapon",
+    statBonus: "str",
+    grade: "uncommon",
     slot: "weapon"
   },
   huntingBow: {
@@ -579,6 +683,35 @@ const items = {
     sprite: "raggedHood",
     price: 5,
     weight: 0.2,
+    type: "armor",
+    grade: "common",
+    slot: "helmet"
+  },
+  woolHat: {
+    id: "woolHat",
+    name: "Wool Hat",
+    resistances: { slash: 1, crush: 4, pierce: 2, fire: -1, ice: 5, dark: 2, divine: 1 },
+    resistancesTemplate: [
+      { type: "slash", value: [1, 1], chance: 5 },
+      { type: "crush", value: [1, 3], chance: 7 },
+      { type: "pierce", value: [1, 2], chance: 5 },
+      { type: "dark", value: [1, 2], chance: 5 },
+      { type: "divine", value: [1, 2], chance: 5 },
+      { type: "fire", value: [-1, -2], chance: 5 },
+      { type: "lightning", value: [-1, -2], chance: 5 },
+      { type: "ice", value: [2, 5], chance: 10 },
+    ],
+    statsTemplate: [
+      { type: "strV", value: [1, 2, 3], chance: 1.25 },
+      { type: "strP", value: [2, 4, 6], chance: 1.5 },
+      { type: "dexV", value: [1, 2, 3], chance: 1.75 },
+      { type: "dexP", value: [3, 5, 7], chance: 1.5 },
+    ],
+    coversHair: false,
+    img: "resources/icons/wool_hat.png",
+    sprite: "woolHat",
+    price: 10,
+    weight: 0.15,
     type: "armor",
     grade: "common",
     slot: "helmet"

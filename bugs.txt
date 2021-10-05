@@ -1,1 +1,1 @@
-respawnaanimen ei toimi: variable "saveGamesOpen" ei ole olemassa // Korjattu
+vihu ai voi käyttää chargea seinien läpi --> ei liiku mutta tekee vahinkoa. / KORJATTU

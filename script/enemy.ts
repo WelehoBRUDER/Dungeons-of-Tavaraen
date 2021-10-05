@@ -68,29 +68,30 @@ class Enemy extends Character {
   distToPlayer?: Function;
   constructor(base: enemy) {
     super(base);
-    this.sprite = base.sprite;
-    this.aggroRange = base.aggroRange ?? 5;
-    this.attackRange = base.attackRange ?? 1;
-    this.damages = { ...base.damages };
+    const defaultModel: any = {...enemies[base.id]};
+    this.sprite = defaultModel.sprite;
+    this.aggroRange = defaultModel.aggroRange ?? base.aggroRange ?? 5;
+    this.attackRange = defaultModel.attackRange ?? 1;
+    this.damages = { ...defaultModel.damages };
     this.isFoe = true;
-    this.firesProjectile = base.firesProjectile;
-    this.canFly = base.canFly ?? false;
+    this.firesProjectile = defaultModel.firesProjectile;
+    this.canFly = defaultModel.canFly ?? false;
     this.alive = base.alive ?? true;
     this.retreatLimit = base.retreatLimit ?? 30;
     this.spawnCords = { ...base.spawnCords };
     this.spawnMap = base.spawnMap;
-    this.loot = base.loot;
-    this.shootsProjectile = base.shootsProjectile;
+    this.loot = defaultModel.loot;
+    this.shootsProjectile = defaultModel.shootsProjectile;
     this.hasBeenLeveled = base.hasBeenLeveled ?? false;
     this.level = base.level ?? 1;
-    this.xp = this.level > 1 ? Math.floor(base.xp + (base.xp * this.level / 2.9)) : base.xp;
-    this.statsPerLevel = { ...base.statsPerLevel } ?? { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+    this.xp = this.level > 1 ? Math.floor(defaultModel.xp + (defaultModel.xp * this.level / 2.9)) : defaultModel.xp;
+    this.statsPerLevel = { ...defaultModel.statsPerLevel } ?? { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
     this.retreatPath = [];
     this.retreatIndex = 0;
     this.hasRetreated = false;
-    this.img = base.img;
-    this.type = base.type;
-    this.race = base.race;
+    this.img = defaultModel.img;
+    this.type = defaultModel.type;
+    this.race = defaultModel.race;
     this.targetInterval = 4;
     this.currentTargetInterval = base.currentTargetInterval ?? 0;
     this.chosenTarget = base.chosenTarget ?? null;
@@ -148,8 +149,16 @@ class Enemy extends Character {
       // Choose a random ability
       if (this.chosenTarget) {
         let chosenAbility = this.chooseAbility();
+        let pathToTarget: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
+        let arrowPathToTarget: any = generateArrowPath(this.cords, this.chosenTarget.cords, false);
+        let missileWillLand = arrowHitsTarget(this.cords, this.chosenTarget.cords);
+        let punchingDistance: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, true);
+        let pathDistance: number = pathToTarget.length;
+        let arrowPathDistance: number = arrowPathToTarget.length;
+        if(pathDistance < 1) pathDistance = 9999;
+        if(arrowPathDistance < 1) arrowPathDistance = 9999;
         // Check if it should be used
-        if (chosenAbility && ((chosenAbility?.type == "charge" ? parseInt(chosenAbility.use_range) >= generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) : (parseInt(chosenAbility.use_range) >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords))) || chosenAbility.self_target)) {
+        if (chosenAbility && ((chosenAbility?.type == "charge" ? parseInt(chosenAbility.use_range) >= pathDistance : (parseInt(chosenAbility.use_range) >= arrowPathDistance && missileWillLand)) || chosenAbility.self_target)) {
           if (chosenAbility.type == "charge") {
             moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
           }
@@ -163,17 +172,17 @@ class Enemy extends Character {
             regularAttack(this, this.chosenTarget, chosenAbility);
           }
         }
-        else if (chosenAbility && parseInt(chosenAbility.use_range) == 1 && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
+        else if (chosenAbility && parseInt(chosenAbility.use_range) == 1 && pathDistance <= this.attackRange) {
           // @ts-ignore
           attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
           regularAttack(this, this.chosenTarget, chosenAbility);
         }
-        // Check if enemy should shoot the this.chosenTarget
-        else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords)) {
+        // Check if enemy should shoot the target
+        else if (this.shootsProjectile && arrowPathDistance <= this.attackRange && missileWillLand) {
           fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
         }
-        // Check if enemy should instead punch the chosenTarget (and is in range)
-        else if (!this.shootsProjectile && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
+        // Check if enemy should instead punch the target (and is in range)
+        else if (!this.shootsProjectile && punchingDistance <= this.attackRange) {
           // regular attack for now
           // @ts-ignore
           attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
@@ -183,7 +192,7 @@ class Enemy extends Character {
         }
         // If there's no offensive action to be taken, just move towards the target.
         else if (!this.isRooted()) {
-          var path: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
+          var path: any = pathToTarget;
 
           try {
             let willStack = false;
@@ -254,7 +263,7 @@ class Enemy extends Character {
     };
 
     this.kill = () => {
-      player.level.xp += this.xp;
+      player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
       this.spawnMap = currentMap;
       const index: number = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
       displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);

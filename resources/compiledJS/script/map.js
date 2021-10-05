@@ -274,6 +274,10 @@ function renderMap(map) {
         itemImg.onload = function () {
             var _a;
             if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
+                mapDataCtx.shadowColor = "#ffd900";
+                mapDataCtx.shadowBlur = 12;
+                mapDataCtx.shadowOffsetX = 0;
+                mapDataCtx.shadowOffsetY = 0;
                 mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
             }
         };
@@ -551,10 +555,12 @@ document.addEventListener("keyup", (keyPress) => {
     if (!turnOver)
         return;
     let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
-    if (rooted && !player.isDead && dirs[keyPress.key]) {
+    let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+    if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
         advanceTurn();
         updateUI();
         state.abiSelected = {};
+        return;
     }
     if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen)
         return;
@@ -588,7 +594,6 @@ document.addEventListener("keyup", (keyPress) => {
             state.abiSelected = {};
         }
         else {
-            let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
             if (target) {
                 // @ts-expect-error
                 attackTarget(player, target, weaponReach(player, player.weapon.range, target));
@@ -847,7 +852,7 @@ function renderPlayerModel(size, canvas, ctx) {
     }
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
     if (distanceOnly) {
         let newDistance = distance;
@@ -880,7 +885,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         ;
     } });
     fieldMap[end.y][end.x] = 5;
-    main: for (let i = 5; i < 80; i++) {
+    main: for (let i = 5; i < 100; i++) {
         for (let y = 0; y < maps[currentMap].base.length; y++) {
             for (let x = 0; x < maps[currentMap].base[y].length; x++) {
                 if (fieldMap[y][x] !== 0)
@@ -900,58 +905,51 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     }
     const maxValueCords = { x: null, y: null, v: 0 };
     const maxNum = fieldMap[start.y][start.x];
-    if (retreatPath > 0)
-        fieldMap[start.y][start.x] = 0;
-    if (retreatPath > 0) {
-        const arr = [...new Array(retreatPath)].map(_ => []);
-        arr[0].push({ x: start.x, y: start.y });
-        for (let i = 0; i < arr.length; i++) {
-            for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
-                for (const value of arr[i]) {
-                    if (fieldMap[value.y][value.x] !== 0)
-                        continue;
-                    const left = (_f = (_e = fieldMap[value.y]) === null || _e === void 0 ? void 0 : _e[value.x - 1]) !== null && _f !== void 0 ? _f : null;
-                    const right = (_h = (_g = fieldMap[value.y]) === null || _g === void 0 ? void 0 : _g[value.x + 1]) !== null && _h !== void 0 ? _h : null;
-                    const top = (_k = (_j = fieldMap[value.y - 1]) === null || _j === void 0 ? void 0 : _j[value.x]) !== null && _k !== void 0 ? _k : null;
-                    const bottom = (_m = (_l = fieldMap[value.y + 1]) === null || _l === void 0 ? void 0 : _l[value.x]) !== null && _m !== void 0 ? _m : null;
-                    // if(i != 0) map[value.y][value.x] = min + 1;
-                    if ([left, right, top, bottom].find(e => e == i2)) {
-                        fieldMap[value.y][value.x] = i2 + 1;
-                        if (left == 0)
-                            (_o = arr[i + 1]) === null || _o === void 0 ? void 0 : _o.push({ y: value.y, x: value.x - 1 });
-                        if (right == 0)
-                            (_p = arr[i + 1]) === null || _p === void 0 ? void 0 : _p.push({ y: value.y, x: value.x + 1 });
-                        if (top == 0)
-                            (_q = arr[i + 1]) === null || _q === void 0 ? void 0 : _q.push({ y: value.y - 1, x: value.x });
-                        if (bottom == 0)
-                            (_r = arr[i + 1]) === null || _r === void 0 ? void 0 : _r.push({ y: value.y + 1, x: value.x });
-                    }
-                    if (i2 >= maxValueCords.v - 1) {
-                        Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
-                    }
-                }
-            }
-        }
-    }
+    // if (retreatPath > 0) fieldMap[start.y][start.x] = 0;
+    // if (retreatPath > 0) {
+    //   const arr = [...new Array(retreatPath)].map(_ => []);
+    //   arr[0].push({ x: start.x, y: start.y });
+    //   for (let i = 0; i < arr.length; i++) {
+    //     for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
+    //       for (const value of arr[i]) {
+    //         if (fieldMap[value.y][value.x] !== 0) continue;
+    //         const left = fieldMap[value.y]?.[value.x - 1] ?? null;
+    //         const right = fieldMap[value.y]?.[value.x + 1] ?? null;
+    //         const top = fieldMap[value.y - 1]?.[value.x] ?? null;
+    //         const bottom = fieldMap[value.y + 1]?.[value.x] ?? null;
+    //         // if(i != 0) map[value.y][value.x] = min + 1;
+    //         if ([left, right, top, bottom].find(e => e == i2)) {
+    //           fieldMap[value.y][value.x] = i2 + 1;
+    //           if (left == 0) arr[i + 1]?.push({ y: value.y, x: value.x - 1 });
+    //           if (right == 0) arr[i + 1]?.push({ y: value.y, x: value.x + 1 });
+    //           if (top == 0) arr[i + 1]?.push({ y: value.y - 1, x: value.x });
+    //           if (bottom == 0) arr[i + 1]?.push({ y: value.y + 1, x: value.x });
+    //         }
+    //         if (i2 >= maxValueCords.v - 1) {
+    //           Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     const data = {
         x: start.x,
         y: start.y
     };
-    if (retreatPath > 0)
-        Object.assign(data, Object.assign({}, maxValueCords));
+    // if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
     const cords = [];
     siksakki: for (let i = 0; i < 375; i++) {
         const v = fieldMap[data.y][data.x] - 1;
         if (i % 2 == 0) {
-            if (((_s = fieldMap[data.y]) === null || _s === void 0 ? void 0 : _s[data.x - 1]) == v)
+            if (((_e = fieldMap[data.y]) === null || _e === void 0 ? void 0 : _e[data.x - 1]) == v)
                 data.x -= 1;
-            if (((_t = fieldMap[data.y]) === null || _t === void 0 ? void 0 : _t[data.x + 1]) == v)
+            if (((_f = fieldMap[data.y]) === null || _f === void 0 ? void 0 : _f[data.x + 1]) == v)
                 data.x += 1;
         }
         else {
-            if (((_u = fieldMap[data.y - 1]) === null || _u === void 0 ? void 0 : _u[data.x]) == v)
+            if (((_g = fieldMap[data.y - 1]) === null || _g === void 0 ? void 0 : _g[data.x]) == v)
                 data.y -= 1;
-            if (((_v = fieldMap[data.y + 1]) === null || _v === void 0 ? void 0 : _v[data.x]) == v)
+            if (((_h = fieldMap[data.y + 1]) === null || _h === void 0 ? void 0 : _h[data.x]) == v)
                 data.y += 1;
         }
         if (fieldMap[data.y][data.x] == v)

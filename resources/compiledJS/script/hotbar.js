@@ -265,7 +265,7 @@ function generateEffects() {
 }
 // Tooltip for ability
 function abiTT(abi) {
-    var _a, _b;
+    var _a, _b, _c;
     var txt = "";
     txt += `\t<f>26px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>19px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
@@ -278,7 +278,7 @@ function abiTT(abi) {
     if (abi.damages) {
         var total = 0;
         var text = "";
-        Object.entries(abi.get_true_damage(player)).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        (_c = Object.entries(abi.get_true_damage(player))) === null || _c === void 0 ? void 0 : _c.forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
@@ -510,6 +510,19 @@ function effectSyntax(effect, embed = false, effectId = "") {
         else
             key += lang["against_type_syntax"];
         backImg = `<i>${icons[id2 + "_type_icon"]}<i>`;
+    }
+    else if (key.includes("against_race")) {
+        key_ = key.replace("against_race", "");
+        let id1 = key_.split("_")[0];
+        let id2 = key_.split("_")[2];
+        frontImg = icons[id1];
+        key = lang[id1];
+        tailEnd = lang[`plural_race_${id2}`];
+        if (lang.changeWordOrder)
+            tailEnd += lang["against_race_syntax"];
+        else
+            key += lang["against_race_syntax"];
+        backImg = `<i>${icons[id2 + "_race_icon"]}<i>`;
     }
     if (tailEnd == lang["resist"])
         key = lang[key + "_def"];

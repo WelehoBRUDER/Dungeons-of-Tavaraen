@@ -113,6 +113,7 @@ function statConditions(conditions: any, char: characterObject) {
 
 function getAllModifiersOnce(char: any, withConditions = true) {
   let obj = {} as any;
+  obj["expGainP"] = 1;
   char.statModifiers.forEach((mod: any) => {
     let apply = true;
     if (mod.conditions && withConditions) {

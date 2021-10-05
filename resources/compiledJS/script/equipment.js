@@ -2,7 +2,7 @@
 let invScroll = 0;
 class Item {
     constructor(base) {
-        var _a, _b;
+        var _a, _b, _c;
         this.id = base.id;
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
@@ -13,11 +13,20 @@ class Item {
         this.img = baseItem.img;
         this.sprite = baseItem.sprite;
         this.grade = baseItem.grade;
+        this.gradeValue = grade_vals[this.grade];
         this.index = (_a = base.index) !== null && _a !== void 0 ? _a : -1;
         this.slot = baseItem.slot;
         this.requiresStats = (_b = baseItem.requiresStats) !== null && _b !== void 0 ? _b : null;
+        this.mainTitle = (_c = baseItem.mainTitle) !== null && _c !== void 0 ? _c : true;
     }
 }
+const grade_vals = {
+    common: 10,
+    uncommon: 20,
+    rare: 30,
+    mythical: 40,
+    legendary: 50
+};
 const namePartsArmor = {
     slashSub: "Protective ",
     slashMain: " of Slash Protection",
@@ -202,11 +211,11 @@ class Weapon extends Item {
             sub: subDamage
         };
         if (lang["changeWordOrder"]) {
-            this.name = `${lang[this.statStrings["main"] + "_damageMain"]} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
+            this.name = `${this.mainTitle ? lang[this.statStrings["main"] + "_damageMain"] : ""} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
         }
         // @ts-expect-error
         else
-            this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${nameParts[mainDamage + "Main"]}`;
+            this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${this.mainTitle ? nameParts[mainDamage + "Main"] : ""}`;
     }
 }
 class Armor extends Item {
@@ -308,11 +317,11 @@ class Armor extends Item {
             sub: subResistance
         };
         if (lang["changeWordOrder"]) {
-            this.name = `${lang[this.resStrings["main"] + "_resistanceMain"]} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
+            this.name = `${this.mainTitle ? lang[this.resStrings["main"] + "_resistanceMain"] : ""} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
         }
         else {
             // @ts-expect-error
-            this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${namePartsArmor[mainResistance + "Main"]}`;
+            this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${this.mainTitle ? namePartsArmor[mainResistance + "Main"] : ""}`;
         }
     }
 }
@@ -485,6 +494,8 @@ function itemTT(item) {
     if (((_g = Object.values(item.commands)) === null || _g === void 0 ? void 0 : _g.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
+    if (item.range > 1)
+        text += `<f>18px<f><c>lime<c>${lang["weapon_has_great_reach"]}\n`;
     if (item.healValue)
         text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
     if (item.manaValue)

@@ -1004,6 +1004,113 @@ const enemies = {
             { type: "gold", amount: [6, 18] }
         ]
     },
+    femaleOrcRaider: {
+        id: "femaleOrcRaider",
+        name: "Orc Raider",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 18,
+            dex: 10,
+            int: 3,
+            vit: 5,
+            cun: 0,
+            hp: 80,
+            mp: 0,
+            hpMax: 55,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 0,
+            crush: 0,
+            pierce: 0,
+            magic: 30,
+            dark: 30,
+            divine: 0,
+            fire: 0,
+            lightning: 0,
+            ice: 0
+        },
+        statusResistances: {
+            poison: 50,
+            burning: 0,
+            curse: 0,
+            stun: 30,
+            bleed: 0
+        },
+        damages: {
+            crush: 6,
+            pierce: 4
+        },
+        hit: {
+            chance: 60,
+            evasion: 25
+        },
+        threat: 30,
+        retreatLimit: 25,
+        alive: true,
+        xp: 75,
+        sprite: "femaleOrcRaider",
+        type: "barbarian",
+        race: "orc",
+        img: "resources/tiles/enemies/female_orc_raider.png",
+        aggroRange: 11,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+            new Ability(abilities.charge, dummy),
+            new Ability(abilities.barbarian_rage, dummy),
+        ],
+        statModifiers: [
+            {
+                id: "enemy_regen_modifiers",
+                effects: {
+                    regenHpP: -60,
+                    regenMpP: -100
+                }
+            },
+            {
+                id: "dont_spam_abilities",
+                effects: {
+                    charge_cooldownV: 2,
+                    charge_use_rangeV: -1,
+                    rage_cooldownV: 5
+                }
+            },
+            {
+                id: "orc_frenzy",
+                conditions: {
+                    hp_more_than: 50
+                },
+                effects: {
+                    evasionV: -5,
+                    hitChanceV: 5,
+                    damageP: 8
+                }
+            },
+            {
+                id: "orc_resilience",
+                conditions: {
+                    hp_less_than: 50
+                },
+                effects: {
+                    evasionV: 5,
+                    hitChanceV: -5,
+                    regenHpP: 90
+                }
+            }
+        ],
+        statsPerLevel: {
+            str: 2,
+            vit: 2,
+            cun: 1
+        },
+        loot: [
+            { type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15 },
+            { type: "armor", amount: [1, 1], item: "ironShield", chance: 10 },
+            { type: "gold", amount: [15, 33] }
+        ]
+    },
     wildTroll: {
         id: "wildTroll",
         name: "Wild Troll",

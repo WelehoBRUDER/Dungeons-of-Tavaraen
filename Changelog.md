@@ -1,3 +1,25 @@
+# Indev Update 6 ~ 5.10.2021
+
+## New Features & Additions
+  * Added 3 new weapons.
+  * Added 1 new armour piece.
+  * Added 2 new hair styles.
+  * Added new enemies:
+    - Orc Raider, heavy hitting melee beast.
+
+## Tweaks
+  * Items on the ground are now highlighted with a golden shadow.
+  * Pressing the interact key will now pick items from the top of the loot pool.
+  * Increased rogue dummy's hit points from **8**-->**10**, but halved its aggro pulling (threat).
+  * Lowered all starting stats from **5**-->**1** and modified race stats.
+  * Upon starting a new game, the leveling screen will open automatically.
+
+## Fixes
+  * Fixed an issue with enemies charging from too far away and not moving. Also slightly improved lag from enemy AI.
+  * Fixed an issue with enemies attacking twice when player is stunned.
+  * Fixed an issue with loading from file causing multiple errors.
+  * Fixed item rarity sorting in the inventory. Items are now sorted in order of grade properly.
+
 # Indev Update 5 ~ 26.9.2021
 
 ## New Features & Additions
@@ -9,7 +31,7 @@
   * Added new perks:
     - ``Tricky Distraction``, a Rogue perk that grants the ability ``Hasty Distraction``. 
     - ``Poison Taster``, a Rogue perk that improves poison resistances.
-    - ``Elemental Mage``, a Sorcerer perk that grants the ability ``Icy Javelin`` and increases elemental damge.
+    - ``Elemental Mage``, a Sorcerer perk that grants the ability ``Icy Javelin`` and increases elemental damage.
     - ``Armour Piercing Javelin``, a Sorcerer perk that buffs the ability ``Icy Javelin``.
 
 ## Tweaks

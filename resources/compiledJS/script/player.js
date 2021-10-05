@@ -22,48 +22,48 @@ const raceEffects = {
         modifiers: {
             strV: 1,
             vitV: 1,
-            dexV: 1,
-            intV: 1,
-            cunV: 1,
-            sightV: 1,
-            hpMaxV: 15
+            dexV: 2,
+            intV: 3,
+            cunV: 2,
+            expGainP: 20
         },
         name: "Human Will",
         desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
     },
     elf: {
         modifiers: {
-            strV: -3,
-            vitV: -2,
+            strV: 1,
             dexV: 4,
-            intV: 6,
-            sightV: 2,
-            mpMaxV: 10
+            intV: 5,
+            sightV: 3,
+            mpMaxV: 10,
+            intP: 5,
+            dexP: 5
         },
         name: "Elvish Blood",
         desc: "Snobby pricks can show a good dance, but not a good fight."
     },
     orc: {
         modifiers: {
-            strV: 4,
-            vitV: 6,
-            intV: -3,
-            cunV: -2,
-            sightV: 1,
-            hpMaxV: 25
+            strV: 5,
+            vitV: 5,
+            hpMaxV: 30,
+            strP: 5,
+            vitP: 5
         },
         name: "Orcy Bod",
         desc: "Orcies not make gud thinkaz', but do good git smashaz."
     },
     ashen: {
         modifiers: {
-            strV: -3,
-            intV: -2,
-            dexV: 6,
+            intV: 1,
+            dexV: 5,
             cunV: 4,
-            sightV: 3,
+            sightV: 1,
             mpMaxV: 5,
-            hpMaxV: 5
+            hpMaxV: 10,
+            cunP: 5,
+            dexP: 5
         },
         name: "Ashen Constitution",
         desc: "The Ashen are sly and slippery, not gifted in straight battle."
@@ -71,7 +71,7 @@ const raceEffects = {
 };
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -103,6 +103,7 @@ class PlayerCharacter extends Character {
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
         this.classes = (_2 = base.classes) !== null && _2 !== void 0 ? _2 : {};
         this.oldCords = (_3 = base.oldCords) !== null && _3 !== void 0 ? _3 : this.cords;
+        this.flags = (_4 = base.flags) !== null && _4 !== void 0 ? _4 : {};
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -310,10 +311,10 @@ function sortInventory(category, reverse) {
     if (category == "name" || category == "type") {
         player.inventory.sort((a, b) => stringSort(a, b, category, reverse));
     }
-    if (category == "grade") {
-        player.inventory.sort((a, b) => gradeSort(a, b, "grade", reverse));
+    else if (category == "grade") {
+        player.inventory.sort((a, b) => gradeSort(a, b, reverse));
     }
-    if (category == "worth") {
+    else if (category == "worth") {
         player.inventory.sort((a, b) => worthSort(a, b, reverse));
     }
     else
@@ -353,38 +354,30 @@ function stringSort(a, b, string, reverse = false) {
     }
 }
 ;
-const grade_vals = {
-    common: 1,
-    uncommon: 2,
-    rare: 3,
-    mythical: 4,
-    legendary: 5
-};
-function gradeSort(a, b, string, reverse = false) {
-    var nameA = parseInt(grade_vals[a[string]]);
-    var nameB = parseInt(grade_vals[b[string]]);
-    if (reverse) {
-        if (+nameA > +nameB) {
+function gradeSort(a, b, reverse = false) {
+    var numA = parseInt(a.gradeValue);
+    var numB = parseInt(b.gradeValue);
+    if (!reverse) {
+        if (numA > numB) {
             return -1;
         }
-        if (+nameA < +nameB) {
+        if (numA < numB) {
             return 1;
         }
         // names must be equal
         return 0;
     }
     else {
-        if (+nameA < +nameB) {
+        if (numA < numB) {
             return -1;
         }
-        if (+nameA > +nameB) {
+        if (numA > numB) {
             return 1;
         }
         // names must be equal
         return 0;
     }
 }
-;
 function numberSort(a, b, string, reverse = false) {
     var numA = a[string];
     var numB = b[string];
@@ -438,11 +431,11 @@ var player = new PlayerCharacter({
     name: "Varien Loreanus",
     cords: { x: 19, y: 72 },
     stats: {
-        str: 5,
-        dex: 5,
-        int: 5,
-        vit: 5,
-        cun: 5,
+        str: 1,
+        dex: 1,
+        int: 1,
+        vit: 1,
+        cun: 1,
         hp: 100,
         mp: 30
     },
@@ -481,8 +474,13 @@ var player = new PlayerCharacter({
     face: 1,
     weapon: new Weapon(Object.assign({}, items.longsword)),
     chest: new Armor(Object.assign({}, items.raggedShirt)),
+    offhand: {},
     helmet: {},
     gloves: {},
+    legs: {},
+    artifact1: {},
+    artifact2: {},
+    artifact3: {},
     boots: new Armor(Object.assign({}, items.raggedBoots)),
     canFly: false,
     perks: [],
@@ -509,6 +507,7 @@ var player = new PlayerCharacter({
         chance: 60,
         evasion: 30
     },
+    threat: 25,
     unarmed_damages: { crush: 1 },
     statusEffects: [],
     inventory: [],
@@ -517,6 +516,8 @@ var player = new PlayerCharacter({
     pp: 1,
     respawnPoint: { cords: { x: 20, y: 72 } },
     usedShrines: [],
+    grave: null,
+    flags: {},
 });
 let combatSummons = [];
 var randomProperty = function (obj) {

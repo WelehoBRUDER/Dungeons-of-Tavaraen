@@ -271,7 +271,7 @@ function abiTT(abi: ability) {
   if (abi.damages) {
     var total: number = 0;
     var text: string = "";
-    Object.entries(abi.get_true_damage(player)).forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    Object.entries(abi.get_true_damage(player))?.forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
     text = text.substring(0, text.length - 2);
     txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
   }
@@ -449,6 +449,17 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     if(lang.changeWordOrder) tailEnd += lang["against_type_syntax"];
     else key += lang["against_type_syntax"];
     backImg = `<i>${icons[id2 + "_type_icon"]}<i>`;
+  }
+  else if(key.includes("against_race")) {
+    key_ = key.replace("against_race", "");
+    let id1 = key_.split("_")[0];
+    let id2 = key_.split("_")[2];
+    frontImg = icons[id1];
+    key = lang[id1];
+    tailEnd = lang[`plural_race_${id2}`];
+    if(lang.changeWordOrder) tailEnd += lang["against_race_syntax"];
+    else key += lang["against_race_syntax"];
+    backImg = `<i>${icons[id2 + "_race_icon"]}<i>`;
   }
   if (tailEnd == lang["resist"]) key = lang[key + "_def"];
   else if (lang[key]) key = lang[key];

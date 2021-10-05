@@ -1,16 +1,16 @@
 function weaponReach(attacker: characterObject, reach: number = 1, target: characterObject) {
-  const main = { x: attacker.cords.x, y: attacker.cords.y };
-  const goal = { x: target.cords.x, y: target.cords.y };
-  if (reach == 1) {
-    if (main.x + 1 == goal.x && main.y == goal.y) return "East";
-    if (main.x + 1 == goal.x && main.y - 1 == goal.y) return "NorthEast";
-    if (main.x == goal.x && main.y - 1 == goal.y) return "North";
-    if (main.x - 1 == goal.x && main.y - 1 == goal.y) return "NorthWest";
-    if (main.x - 1 == goal.x && main.y == goal.y) return "West";
-    if (main.x - 1 == goal.x && main.y + 1 == goal.y) return "SouthWest";
-    if (main.x == goal.x && main.y + 1 == goal.y) return "South";
-    if (main.x + 1 == goal.x && main.y + 1 == goal.y) return "SouthEast";
-  }
+  const rotation = calcAngleDegrees(target.cords.x - attacker.cords.x, target.cords.y - attacker.cords.y);
+  // @ts-expect-error
+  const distance = generateArrowPath(attacker.cords, target.cords).length - 1;
+  if(distance > reach) return false;
+  if(rotation < -90) return "NorthWest";
+  else if(rotation >= -90 && rotation < -45) return "North";
+  else if(rotation >= -45 && rotation < 0) return "NorthEast";
+  else if(rotation >= 0 && rotation < 45) return "East";
+  else if(rotation >= 45 && rotation < 90) return "SouthEast";
+  else if(rotation >= 90 && rotation < 135) return "South"; 
+  else if(rotation >= 135 && rotation < 180) return "SouthWest"; 
+  else if(rotation >= 180) return "West";
   return false;
 }
 
@@ -224,7 +224,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
 
     if (target.stats.hp <= 0) {
       target.kill();
-      spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", target.xp), "lime", 32, 1800, 100);
+      spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);
       setTimeout(modifyCanvas, 100);
     }
   } else {

@@ -1,5 +1,8 @@
 "use strict";
 var itemData = [];
+const once = {
+    once: true
+};
 const lootPools = {
     default: [
         { type: "armor", amount: [1, 1], item: "raggedShirt", chance: 10 },
@@ -7,6 +10,7 @@ const lootPools = {
         { type: "armor", amount: [1, 1], item: "raggedHood", chance: 10 },
         { type: "armor", amount: [1, 1], item: "raggedGloves", chance: 10 },
         { type: "armor", amount: [1, 1], item: "raggedBoots", chance: 10 },
+        { type: "armor", amount: [1, 1], item: "woolHat", chance: 10 },
         { type: "armor", amount: [1, 1], item: "woodenShield", chance: 10 },
         { type: "armor", amount: [1, 1], item: "leatherChest", chance: 10 },
         { type: "armor", amount: [1, 1], item: "leatherLeggings", chance: 6 },
@@ -147,6 +151,7 @@ class treasureChest {
                 _inv.textContent = "";
                 _inv.style.transform = "scale(1)";
                 _inv.append(createItems(this.loot, "PICK_TREASURE", this));
+                document.body.addEventListener("keyup", e => fastGrabTreasure(e, this), once);
             }
             else {
                 lootedChests.push({ cords: Object.assign({}, this.cords), sinceOpened: 0, map: this.map });
@@ -198,6 +203,7 @@ function pickLoot() {
         _inv.textContent = "";
         _inv.style.transform = "scale(1)";
         _inv.append(createItems(totalArray, "PICK_LOOT"));
+        document.body.addEventListener("keyup", e => fastGrabLoot(e, totalArray), once);
     }
     else
         closeInventory();
@@ -210,12 +216,28 @@ function grabLoot(e, item, index) {
     pickLoot();
     modifyCanvas();
 }
+function fastGrabLoot(e, totalArray) {
+    if (e.key !== settings.hotkey_interact)
+        return;
+    let item = totalArray[0];
+    itemData.splice(item.dataIndex, 1);
+    player.inventory.push(item);
+    pickLoot();
+    modifyCanvas();
+}
 function grabTreasure(e, item, chest, index) {
     if (e.button !== 2)
         return;
-    console.log(index);
     chest.loot.splice(index, 1);
     player.inventory.push(item);
+    chest.lootChest();
+    modifyCanvas();
+}
+function fastGrabTreasure(e, chest) {
+    if (e.key !== settings.hotkey_interact)
+        return;
+    player.inventory.push(Object.assign({}, chest.loot[0]));
+    chest.loot.splice(0, 1);
     chest.lootChest();
     modifyCanvas();
 }

@@ -4,11 +4,11 @@ const emptyModel = {
     name: "Player",
     cords: { x: 19, y: 72 },
     stats: {
-        str: 5,
-        dex: 5,
-        int: 5,
-        vit: 5,
-        cun: 5,
+        str: 1,
+        dex: 1,
+        int: 1,
+        vit: 1,
+        cun: 1,
         hp: 100,
         mp: 30
     },
@@ -89,11 +89,12 @@ const emptyModel = {
     pp: 1,
     respawnPoint: { cords: { x: 20, y: 72 } },
     usedShrines: [],
+    flags: {}
 };
 const creation = document.querySelector(".mainMenu .characterCreation");
 const creationCanvas = creation.querySelector(".layerRender");
 const creationCtx = creationCanvas.getContext("2d");
-const hairs = [1, 4];
+const hairs = [1, 6];
 const eyes = [1, 3];
 const faces = [1, 3];
 function characterCreation(withAnimations = true) {
@@ -151,7 +152,11 @@ function beginGame() {
         setTimeout(() => { creation.style.display = "none"; }, 750);
         tree = player.classes.main.perkTree;
         closeGameMenu(false, true);
+        handleEscape();
         modifyCanvas();
+        setTimeout(() => {
+            openLevelingScreen();
+        }, 100);
     }
 }
 function changeHair() {

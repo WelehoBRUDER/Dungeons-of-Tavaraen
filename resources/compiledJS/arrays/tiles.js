@@ -110,12 +110,15 @@ const icons = {
     skeleton_type_icon: "resources/icons/skull_icon.png",
     barbarian_type_icon: "resources/icons/barbarian_type_icon.png",
     troll_type_icon: "resources/icons/troll_type_icon.png",
+    undead_race_icon: "resources/icons/skull_icon.png",
     regenHp_icon: "resources/icons/regen_icon.png",
     regenMp_icon: "resources/icons/mana_regen.png",
     poisonDefense: "resources/icons/poison.png",
     poisonDefense_icon: "resources/icons/poison_icon.png",
     burningDefense: "resources/icons/flame_of_passion.png",
     burningDefense_icon: "resources/icons/flame_of_passion_icon.png",
+    exp_icon: "resources/icons/EXP.png",
+    expGain_icon: "resources/icons/EXP.png",
 };
 const tiles = [
     {

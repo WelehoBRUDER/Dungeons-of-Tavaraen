@@ -98,31 +98,31 @@ const state = {
 };
 
 function handleEscape() {
-  if(state.perkOpen) {
+  if (state.perkOpen) {
     closeLeveling();
     state.perkOpen = false;
   }
-  else if(state.charOpen) {
+  else if (state.charOpen) {
     closeCharacter();
     state.charOpen = false;
   }
-  else if(state.invOpen) {
+  else if (state.invOpen) {
     closeInventory();
     state.invOpen = false;
   }
-  else if(state.savesOpen) {
+  else if (state.savesOpen) {
     closeSaveMenu();
     state.savesOpen = false;
   }
-  else if(state.optionsOpen) {
+  else if (state.optionsOpen) {
     closeSettingsMenu();
     state.optionsOpen = false;
   }
-  else if(state.menuOpen && !state.titleScreen) {
-    closeGameMenu(false, false, false)
+  else if (state.menuOpen && !state.titleScreen) {
+    closeGameMenu(false, false, false);
     state.menuOpen = false;
   }
-  else if(!state.isSelected) {
+  else if (!state.isSelected) {
     openGameMenu();
     state.menuOpen = true;
   }
@@ -188,7 +188,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
     }
-    catch { console.log("This doesn't affect anything") }
+    catch { console.log("This doesn't affect anything"); }
   }
   if (escape) handleEscape();
 }
@@ -342,7 +342,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   resetIds();
   let renderedSaves = 1;
   for (let save of saves) {
-    if(renderedSaves < 15) await sleep(100);
+    if (renderedSaves < 15) await sleep(100);
     const saveContainer = document.createElement("div");
     const saveCanvas = document.createElement("canvas");
     const saveName = document.createElement("p");
@@ -395,7 +395,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player = new PlayerCharacter({ ...save.save.player });
       fallenEnemies = [...save.save.fallenEnemies];
       itemData = [...save.save.itemData];
-      if(save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
+      if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
       currentMap = save.save.currentMap;
       tree = player.classes.main.perkTree;
       player.updateAbilities();
@@ -412,7 +412,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       gotoSaveMenu(false, false);
     });
     saveName.textContent = save.text;
-    let renderedPlayer = new PlayerCharacter({...save.save.player});
+    let renderedPlayer = new PlayerCharacter({ ...save.save.player });
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
     await sleep(5);
     buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
@@ -609,24 +609,17 @@ function reviveAllDeadEnemies() {
 
 function LoadSlot(data: any) {
   reviveAllDeadEnemies();
-  player = new PlayerCharacter(GetKey("player", data).data);
+  player = new PlayerCharacter({ ...GetKey("player", data).data });
   itemData = GetKey("itemData", data).data;
   fallenEnemies = GetKey("enemies", data).data;
   lootedChests = GetKey("lootedChests", data).data;
   currentMap = GetKey("currentMap", data).data;
   tree = player.classes.main.perkTree;
+  player.updateAbilities();
+  player.updatePerks();
   purgeDeadEnemies();
   handleEscape();
   closeGameMenu();
   modifyCanvas();
-  player.updateAbilities();
   updateUI();
 }
-
-// const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
-// layer.style.animation = 'none';
-// // @ts-ignore
-// layer.offsetHeight; /* trigger reflow */
-// // @ts-ignore
-// layer.style.animation = null;
-// layer.style.animationName = `charHurt`;

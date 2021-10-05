@@ -200,13 +200,13 @@ const summons = {
     cords: { x: 0, y: 0 },
     stats: {
       str: 0,
-      dex: 1,
+      dex: 0,
       int: 0,
       vit: 0,
       cun: 0,
-      hp: 8,
+      hp: 10,
       mp: 0,
-      hpMax: 8,
+      hpMax: 10,
       mpMax: 0
     },
     resistances: {
@@ -230,7 +230,7 @@ const summons = {
     damages: {
       crush: 0
     },
-    threat: 150,
+    threat: 75,
     alive: true,
     sprite: "dummyModel",
     type: "dummy",
