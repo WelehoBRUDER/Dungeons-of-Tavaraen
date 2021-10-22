@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CANVAS HOMMA</title>
+</head>
+<body>
+  <canvas class="canvas" width="3072" height="3072"></canvas>
+</body>
+</html>
+
+<script src="resources/compiledJS/arrays/items.js"></script>
+
+<script>
+  const canvas = document.querySelector(".canvas");
+  const ctx = canvas.getContext("2d");
+  const onRow = 24;
+  Object.entries(items).forEach((itm, index)=> {
+    const item = itm[1];
+    const img = new Image();
+    img.src = item.img;
+    img.addEventListener("load", ()=>{
+      const x = (index % onRow) * 128;
+      const y = Math.floor(index / onRow) * 128;
+      ctx.drawImage(img, x, y, 128, 128);
+      console.log(`Item: ${item.id}, spriteMap: {x: ${x}, y: ${y}}`);
+    });
+  });
+</script>

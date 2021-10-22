@@ -1,9 +1,1 @@
-liikkumiselle highlight:
-hiiri pohjassa näkyis reitti jota hahmo tulee kulkemaan
-koitetaan tehdä fade in reitille
-uus layer ja siihen opacity animaatio, 100-200ms?
-tehty, mutta fade in ei mahdollinen.
-
 perk treen pitäis keskittää hiireen zoomatessa
-
-vertaa kamoja equipattuun ja näytä statsit punasella tai vihreellä

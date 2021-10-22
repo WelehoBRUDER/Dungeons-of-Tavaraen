@@ -13,6 +13,8 @@ const staticHover = document.querySelector(".mapHover");
 const minimapContainer = document.querySelector(".rightTop .miniMap");
 const minimapCanvas = minimapContainer.querySelector(".minimapLayer");
 const minimapCtx = minimapCanvas.getContext("2d");
+const spriteMap_tiles = document.querySelector(".spriteMap_tiles");
+const spriteMap_items = document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
 var currentMap = 0;
@@ -57,8 +59,10 @@ function spriteVariables() {
     return { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY };
 }
 function renderMinimap(map) {
-    var _a, _b, _c, _d;
-    minimapCanvas.width = minimapCanvas.width;
+    var _a, _b, _c, _d, _e, _f, _g;
+    const miniSpriteSize = 8;
+    minimapCanvas.width = map.base[0].length * miniSpriteSize;
+    minimapCanvas.height = map.base.length * miniSpriteSize;
     if (!settings.toggle_minimap) {
         minimapContainer.style.display = "none";
         return;
@@ -66,61 +70,37 @@ function renderMinimap(map) {
     else {
         minimapContainer.style.display = "block";
     }
-    const miniSpriteSize = 10;
-    // for (let y = 0; y < map.base.length; y++) {
-    //   for (let x = 0; x < map.base[y].length; x++) {
-    //     const imgId = map.base?.[y]?.[x];
-    //     const img = <HTMLImageElement>document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
-    //     const clutterId = map.clutter?.[y]?.[x];
-    //     if (img) {
-    //       minimapCtx.drawImage(img, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
-    //       //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
-    //     }
-    //     // @ts-expect-error
-    //     if (clutterId > 0) {
-    //       const clutterImg = <HTMLImageElement>document.querySelector(`.sprites .clutter${clutterId}`);
-    //       if (clutterImg) {
-    //         minimapCtx.drawImage(clutterImg, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize, miniSpriteSize);
-    //       }
-    //     }
-    //   }
-    // }
-    let spriteLimitX = Math.ceil(minimapCanvas.width / miniSpriteSize);
-    let spriteLimitY = Math.ceil(minimapCanvas.height / miniSpriteSize);
-    if (spriteLimitX % 2 == 0)
-        spriteLimitX++;
-    if (spriteLimitY % 2 == 0)
-        spriteLimitY++;
-    const mapOffsetX = (spriteLimitX * miniSpriteSize - minimapCanvas.width) / 2;
-    const mapOffsetY = (spriteLimitY * miniSpriteSize - minimapCanvas.height) / 2;
-    const mapOffsetStartX = player.cords.x - Math.floor(spriteLimitX / 2);
-    const mapOffsetStartY = player.cords.y - Math.floor(spriteLimitY / 2);
-    /* Render the base layer */
-    for (let y = 0; y < spriteLimitY; y++) {
-        for (let x = 0; x < spriteLimitX; x++) {
-            const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x];
-            const img = document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
-            const pImg = document.querySelector(".sprites .pMinimap");
-            const clutterId = (_d = (_c = map.clutter) === null || _c === void 0 ? void 0 : _c[mapOffsetStartY + y]) === null || _d === void 0 ? void 0 : _d[mapOffsetStartX + x];
-            if (img) {
-                minimapCtx.drawImage(img, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+    for (let y = 0; y < map.base.length; y++) {
+        for (let x = 0; x < map.base[y].length; x++) {
+            const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b[x];
+            // @ts-expect-error
+            const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
+            const clutterId = (_f = (_e = map.clutter) === null || _e === void 0 ? void 0 : _e[y]) === null || _f === void 0 ? void 0 : _f[x];
+            // @ts-expect-error
+            const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
+            if (sprite) {
+                minimapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
                 //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
-            // @ts-expect-error
-            if (clutterId > 0) {
-                const clutterImg = document.querySelector(`.sprites .clutter${clutterId}`);
-                if (clutterImg) {
-                    minimapCtx.drawImage(clutterImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
-                }
-            }
-            if (player.cords.x == x + mapOffsetStartX && player.cords.y == y + mapOffsetStartY) {
-                minimapCtx.drawImage(pImg, x * miniSpriteSize - mapOffsetX, y * miniSpriteSize - mapOffsetY, miniSpriteSize, miniSpriteSize);
+            if (clutterSprite) {
+                minimapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
             }
         }
     }
 }
+function moveMinimap() {
+    if (!settings.toggle_minimap) {
+        minimapContainer.style.display = "none";
+        return;
+    }
+    else {
+        minimapContainer.style.display = "block";
+    }
+    minimapCanvas.style.left = `${player.cords.x * -8 + 172}px`;
+    minimapCanvas.style.top = `${player.cords.y * -8 + 112}px`;
+}
 function renderMap(map) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     baseCanvas.width = baseCanvas.width; // Clears the canvas
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
@@ -130,12 +110,15 @@ function renderMap(map) {
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
             const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x];
-            const img = document.querySelector(`.sprites .tile${imgId !== undefined ? imgId : "VOID"}`);
+            // @ts-expect-error
+            const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
             const grave = document.querySelector(`.sprites .deadModel`);
-            const clutterId = (_d = (_c = map.clutter) === null || _c === void 0 ? void 0 : _c[mapOffsetStartY + y]) === null || _d === void 0 ? void 0 : _d[mapOffsetStartX + x];
-            const fog = document.querySelector(".tileNoVision");
-            if (img) {
-                baseCtx.drawImage(img, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            const clutterId = (_f = (_e = map.clutter) === null || _e === void 0 ? void 0 : _e[mapOffsetStartY + y]) === null || _f === void 0 ? void 0 : _f[mapOffsetStartX + x];
+            // @ts-expect-error
+            const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
+            const fog = { x: 256, y: 0 };
+            if (sprite) {
+                baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
                 //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
             if (player.grave) {
@@ -143,15 +126,11 @@ function renderMap(map) {
                     baseCtx.drawImage(grave, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
                 }
             }
-            // @ts-expect-error
-            if (clutterId > 0) {
-                const clutterImg = document.querySelector(`.sprites .clutter${clutterId}`);
-                if (clutterImg) {
-                    baseCtx.drawImage(clutterImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
-                }
+            if (clutterSprite) {
+                baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
             }
-            if (((_e = sightMap[mapOffsetStartY + y]) === null || _e === void 0 ? void 0 : _e[mapOffsetStartX + x]) != "x" && imgId) {
-                baseCtx.drawImage(fog, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            if (((_h = sightMap[mapOffsetStartY + y]) === null || _h === void 0 ? void 0 : _h[mapOffsetStartX + x]) != "x" && imgId) {
+                baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 2, spriteSize + 2);
             }
         }
     }
@@ -263,24 +242,21 @@ function renderMap(map) {
     /* Render Items */
     mapDataCanvas.width = mapDataCanvas.width;
     itemData.forEach((item) => {
+        var _a;
         if (item.map != currentMap)
+            return;
+        if (!item.itm)
             return;
         var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        const itemImg = new Image();
-        if (!item.itm)
-            return;
-        itemImg.src = item.itm.img;
-        itemImg.onload = function () {
-            var _a;
-            if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
-                mapDataCtx.shadowColor = "#ffd900";
-                mapDataCtx.shadowBlur = 12;
-                mapDataCtx.shadowOffsetX = 0;
-                mapDataCtx.shadowOffsetY = 0;
-                mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(itemImg, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
-            }
-        };
+        const itemSprite = item.itm.spriteMap;
+        if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
+            mapDataCtx.shadowColor = "#ffd900";
+            mapDataCtx.shadowBlur = 6;
+            mapDataCtx.shadowOffsetX = 0;
+            mapDataCtx.shadowOffsetY = 0;
+            mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(spriteMap_items, itemSprite.x, itemSprite.y, 128, 128, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+        }
     });
     /* Render Player */
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
@@ -512,7 +488,6 @@ function clickMap(event) {
     }
     else if (player.isRooted()) {
         advanceTurn();
-        updateUI();
         state.abiSelected = {};
     }
 }
@@ -558,7 +533,6 @@ document.addEventListener("keyup", (keyPress) => {
     let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
     if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
         advanceTurn();
-        updateUI();
         state.abiSelected = {};
         return;
     }
@@ -586,11 +560,9 @@ document.addEventListener("keyup", (keyPress) => {
             // @ts-ignore
             renderMap(maps[currentMap]);
             advanceTurn();
-            updateUI();
         }
         else if (canMove(shittyFix, dirs[keyPress.key]) && rooted) {
             advanceTurn();
-            updateUI();
             state.abiSelected = {};
         }
         else {
@@ -635,7 +607,6 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
             modifyCanvas();
             if (!ability) {
                 advanceTurn();
-                updateUI();
             }
             count++;
             if (state.inCombat && !ability || count > maxRange && ability || breakMoving)
@@ -664,13 +635,11 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
     }
     else if (!action) {
         advanceTurn();
-        updateUI();
         state.abiSelected = {};
     }
     else if (action) {
         action();
         advanceTurn();
-        updateUI();
         state.abiSelected = {};
     }
 }
@@ -692,6 +661,7 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
     // @ts-expect-error
     attackTarget(enemy, enemy.chosenTarget, weaponReach(enemy, 1, enemy.chosenTarget));
     regularAttack(enemy, enemy.chosenTarget, ability);
+    updateUI();
     updateEnemiesTurn();
 }
 function canMove(char, dir) {
@@ -1046,10 +1016,9 @@ function modifyCanvas() {
         // @ts-ignore
         canvas.height = innerHeight;
     }
+    moveMinimap();
     // @ts-ignore
     renderMap(maps[currentMap]);
-    // @ts-ignore
-    renderMinimap(maps[currentMap]);
 }
 var highestWaitTime = 0;
 /* Move to state file later */
@@ -1058,6 +1027,7 @@ async function advanceTurn() {
         return;
     player.effects();
     player.updateAbilities();
+    updateUI();
     state.inCombat = false;
     turnOver = false;
     enemiesHadTurn = 0;
@@ -1114,6 +1084,7 @@ async function advanceTurn() {
     });
     document.querySelector(".closestEnemyDistance").textContent = lang["closest_enemy"] + closestEnemyDistance;
     setTimeout(modifyCanvas, 500);
+    updateUI();
     if (map.enemies.length == 0)
         turnOver = true;
     if (player.stats.hp > player.getHpMax()) {

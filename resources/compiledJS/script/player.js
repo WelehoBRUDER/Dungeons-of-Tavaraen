@@ -20,25 +20,23 @@ const raceTexts = {
 const raceEffects = {
     human: {
         modifiers: {
-            strV: 1,
-            vitV: 1,
+            strV: 2,
+            vitV: 2,
             dexV: 2,
-            intV: 3,
+            intV: 2,
             cunV: 2,
-            expGainP: 20
+            expGainP: 10
         },
         name: "Human Will",
         desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
     },
     elf: {
         modifiers: {
-            strV: 1,
-            dexV: 4,
+            dexV: 5,
             intV: 5,
             sightV: 3,
-            mpMaxV: 10,
-            intP: 5,
-            dexP: 5
+            mpMaxP: 10,
+            expGainP: -5
         },
         name: "Elvish Blood",
         desc: "Snobby pricks can show a good dance, but not a good fight."
@@ -47,23 +45,18 @@ const raceEffects = {
         modifiers: {
             strV: 5,
             vitV: 5,
-            hpMaxV: 30,
-            strP: 5,
-            vitP: 5
+            sightV: 1,
+            hpMaxP: 10,
         },
         name: "Orcy Bod",
         desc: "Orcies not make gud thinkaz', but do good git smashaz."
     },
     ashen: {
         modifiers: {
-            intV: 1,
             dexV: 5,
-            cunV: 4,
-            sightV: 1,
-            mpMaxV: 5,
-            hpMaxV: 10,
-            cunP: 5,
-            dexP: 5
+            cunV: 5,
+            evasionV: 5,
+            critDamageP: 20
         },
         name: "Ashen Constitution",
         desc: "The Ashen are sly and slippery, not gifted in straight battle."
@@ -91,19 +84,19 @@ class PlayerCharacter extends Character {
         this.artifact1 = (_p = base.artifact1) !== null && _p !== void 0 ? _p : {};
         this.artifact2 = (_q = base.artifact2) !== null && _q !== void 0 ? _q : {};
         this.artifact3 = (_r = base.artifact3) !== null && _r !== void 0 ? _r : {};
-        this.inventory = (_s = base.inventory) !== null && _s !== void 0 ? _s : [];
+        this.inventory = (_s = [...base.inventory]) !== null && _s !== void 0 ? _s : [];
         this.isDead = (_t = base.isDead) !== null && _t !== void 0 ? _t : false;
         this.grave = (_u = base.grave) !== null && _u !== void 0 ? _u : null;
-        this.respawnPoint = (_v = base.respawnPoint) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
+        this.respawnPoint = (_v = Object.assign({}, base.respawnPoint)) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
         this.gold = (_w = base.gold) !== null && _w !== void 0 ? _w : 0;
-        this.perks = (_x = base.perks) !== null && _x !== void 0 ? _x : [];
+        this.perks = (_x = [...base.perks]) !== null && _x !== void 0 ? _x : [];
         this.sp = (_y = base.sp) !== null && _y !== void 0 ? _y : 0;
         this.pp = (_z = base.pp) !== null && _z !== void 0 ? _z : 0;
-        this.usedShrines = (_0 = base.usedShrines) !== null && _0 !== void 0 ? _0 : [];
+        this.usedShrines = (_0 = [...base.usedShrines]) !== null && _0 !== void 0 ? _0 : [];
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
-        this.classes = (_2 = base.classes) !== null && _2 !== void 0 ? _2 : {};
-        this.oldCords = (_3 = base.oldCords) !== null && _3 !== void 0 ? _3 : this.cords;
-        this.flags = (_4 = base.flags) !== null && _4 !== void 0 ? _4 : {};
+        this.classes = (_2 = Object.assign({}, base.classes)) !== null && _2 !== void 0 ? _2 : {};
+        this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
+        this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : {};
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -287,6 +280,46 @@ class PlayerCharacter extends Character {
             setTimeout(modifyCanvas, 300);
             displayText("PAINA [R] JA RESPAWNAAT");
             updateUI();
+        };
+        this.getBaseStats = () => {
+            var _a, _b, _c, _d, _e, _f;
+            const vals = Object.assign({}, this.stats);
+            const mods = {};
+            if ((_a = this.raceEffect) === null || _a === void 0 ? void 0 : _a.modifiers) {
+                Object.entries((_b = this.raceEffect) === null || _b === void 0 ? void 0 : _b.modifiers).forEach((eff) => {
+                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+                        mods[eff[0]] = eff[1];
+                    }
+                    else if (eff[0].endsWith("V"))
+                        mods[eff[0]] += eff[1];
+                });
+            }
+            if ((_d = (_c = this.classes) === null || _c === void 0 ? void 0 : _c.main) === null || _d === void 0 ? void 0 : _d.statBonuses) {
+                Object.entries(this.classes.main.statBonuses).forEach((eff) => {
+                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+                        mods[eff[0]] = eff[1];
+                    }
+                    else if (eff[0].endsWith("V"))
+                        mods[eff[0]] += eff[1];
+                });
+            }
+            if ((_f = (_e = this.classes) === null || _e === void 0 ? void 0 : _e.sub) === null || _f === void 0 ? void 0 : _f.statBonuses) {
+                Object.entries(this.classes.sub.statBonuses).forEach((eff) => {
+                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+                        mods[eff[0]] = eff[1];
+                    }
+                    else if (eff[0].endsWith("V"))
+                        mods[eff[0]] += eff[1];
+                });
+            }
+            baseStats.forEach((stat) => {
+                if (!mods[stat + "V"])
+                    mods[stat + "V"] = 0;
+                if (!mods[stat + "P"])
+                    mods[stat + "P"] = 1;
+                vals[stat] = Math.floor(this.stats[stat] + mods[stat + "V"]);
+            });
+            return vals;
         };
     }
 }
@@ -520,9 +553,9 @@ var player = new PlayerCharacter({
     flags: {},
 });
 let combatSummons = [];
-var randomProperty = function (obj) {
-    var keys = Object.keys(obj);
-    return obj[keys[keys.length * Math.random() << 0]];
+var randomProperty = function (mods) {
+    var keys = Object.keys(mods);
+    return mods[keys[keys.length * Math.random() << 0]];
 };
 for (let i = 0; i < 10; i++) {
     player.inventory.push(Object.assign({}, randomProperty(items)));

@@ -389,8 +389,8 @@ class Character {
                 this.allModifiers["critChanceV"] = 0;
             if (!this.allModifiers["critChanceP"])
                 this.allModifiers["critChanceP"] = 1;
-            stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5));
-            stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4));
+            stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5) + 18.5);
+            stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4) + 4.6);
             return stats;
         };
         this.getHpMax = (withConditions = true) => {
@@ -552,16 +552,14 @@ class Character {
         };
         this.updateAbilities = () => {
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-            // @ts-ignore
-            for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
-                // @ts-ignore
-                this.abilities[i] = new Ability(this.abilities[i], this);
-            }
             this.allModifiers = getAllModifiersOnce(this);
             if (!this.allModifiers["damageV"])
                 this.allModifiers["damageV"] = 0;
             if (!this.allModifiers["damageP"])
                 this.allModifiers["damageP"] = 1;
+            for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
+                this.abilities[i] = new Ability(this.abilities[i], this);
+            }
             // @ts-ignore
             if (this.inventory) {
                 // @ts-ignore

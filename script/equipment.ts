@@ -11,6 +11,7 @@ interface itemClass {
   grade: string;
   index?: number;
   slot?: string;
+  spriteMap?: any;
 }
 
 class Item {
@@ -25,6 +26,7 @@ class Item {
   gradeValue?: number;
   index?: number;
   slot?: string;
+  spriteMap?: any;
   requiresStats?: any;
   mainTitle?: boolean;
   constructor(base: itemClass) {
@@ -41,6 +43,7 @@ class Item {
     this.gradeValue = grade_vals[this.grade];
     this.index = base.index ?? -1;
     this.slot = baseItem.slot;
+    this.spriteMap = baseItem.spriteMap;
     this.requiresStats = baseItem.requiresStats ?? null;
     this.mainTitle = baseItem.mainTitle ?? true;
   }
@@ -731,11 +734,26 @@ const artifactSets = {
   warrior: {
     id: "warrior",
     twoPieceEffect: {
-      attack_damage_multiplierP: 15
+      attack_damage_multiplierP: 10
     },
     threePieceEffect: {
       hitChanceV: 10,
       hpMaxP: 5
     }
-  }
+  },
+  loneShade: {
+    id: "loneShade",
+    twoPieceEffect: {
+      evasionV: 3,
+      hitChanceV: 3,
+      critDamageP: 2.5
+    },
+    threePieceEffect: {
+      evasionV: 2,
+      hitChanceV: 2,
+      critChanceP: 5,
+      critDamageP: 7.5,
+      dexV: 2
+    }
+  },
 } as any;

@@ -32,6 +32,9 @@ const lootPools = {
         { type: "artifact", amount: [1, 1], item: "warriorsTalisman", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "warriorsRing", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "warriorsEmblem", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "loneShadesTalisman", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "loneShadesRing", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "loneShadesEmblem", chance: 8 },
         { type: "gold", amount: [13, 76] }
     ],
     lichLoot: [

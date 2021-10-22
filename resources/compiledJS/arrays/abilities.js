@@ -202,7 +202,7 @@ const abilities = {
     icy_javelin: {
         id: "icy_javelin",
         name: "Icy Javelin",
-        mana_cost: 24,
+        mana_cost: 16,
         cooldown: 7,
         damages: {
             magic: 33,

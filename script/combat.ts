@@ -112,9 +112,11 @@ function buffOrHeal(character: characterObject, ability: ability) {
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
   }
   character.stats.mp -= ability.mana_cost;
-  ability.onCooldown = ability.cooldown;
+  ability.onCooldown = ability.cooldown+1;
   if (character.id == "player") advanceTurn();
-  else updateEnemiesTurn();
+  else {
+    updateEnemiesTurn();
+  } 
 }
 
 function regularAttack(attacker: characterObject, target: characterObject, ability: ability, targetCords?: any, isAoe: boolean = false) {
@@ -218,7 +220,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
       actionText = actionText.replace("[DMG]", `${dmg}`);
       displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
-      if (ability.cooldown) ability.onCooldown = ability.cooldown;
+      if (ability.cooldown) ability.onCooldown = ability.cooldown+1;
       if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
     }
 
@@ -273,15 +275,15 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${player.name}<c>white<c>'`);
     actionText = actionText.replace("[DMG]", `${dmg}`);
     displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${actionText}`);
-    if (ability.cooldown) ability.onCooldown = ability.cooldown;
+    if (ability.cooldown) ability.onCooldown = ability.cooldown+1;
     if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
     if (target.stats.hp <= 0) {
       target.kill();
       setTimeout(modifyCanvas, 300);
     }
+    updateUI();
   }
   state.isSelected = false;
-  updateUI();
 }
 
 function tileCordsToScreen(cords: tileObject) {
@@ -439,9 +441,8 @@ function aoeCollision(area: Array<any>, attacker: characterObject, ability: abil
   setTimeout(modifyCanvas, 150);
   state.isSelected = false;
   state.abiSelected = {};
-  if (ability.cooldown) ability.onCooldown = ability.cooldown;
+  if (ability.cooldown) ability.onCooldown = ability.cooldown+1;
   if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
-  updateUI();
 }
 
 function threatDistance(targets: Array<any>, from: characterObject) {
@@ -461,13 +462,12 @@ function threatDistance(targets: Array<any>, from: characterObject) {
 function summonUnit(ability: ability, cords: tileObject) {
   state.isSelected = false;
   state.abiSelected = {};
-  if (ability.cooldown) ability.onCooldown = ability.cooldown;
+  if (ability.cooldown) ability.onCooldown = ability.cooldown+1;
   if (ability.mana_cost) player.stats.mp -= ability.mana_cost;
   // @ts-ignore
   combatSummons.push(new Summon({ ...summons[ability.summon_unit], level: ability.summon_level, lastsFor: ability.summon_last, cords: { ...cords } }));
   if (ability.status) player.statusEffects.push(new statEffect({ ...statusEffects[ability.status], last: ability.summon_last - 1 }, ability.statusModifiers));
   if (ability.summon_status) combatSummons[0].statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status]}, ability.statusModifiers));
-  updateUI();
   modifyCanvas();
 }
 

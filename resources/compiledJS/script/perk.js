@@ -62,6 +62,7 @@ class perk {
                 // if(this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree) {
                 // }
                 player.updatePerks();
+                player.updateAbilities();
                 formPerks();
                 formStatUpgrades();
             }
@@ -70,14 +71,16 @@ class perk {
 }
 function changePerkTree(newTree) {
     tree = newTree;
-    formPerks();
+    formPerks(null, true);
 }
-function formPerks(e = null) {
+function formPerks(e = null, scrollDefault = false) {
     perks = [];
     const bg = document.querySelector(".playerLeveling .perks");
     const staticBg = document.querySelector(".playerLeveling .perksStatic");
     const perkTreesContainer = document.querySelector(".playerLeveling .perkTreesContainer");
     const perkArea = bg.querySelector(".container");
+    const leftScroll = perkArea.scrollLeft;
+    const topScroll = perkArea.scrollTop;
     perkArea.innerHTML = "";
     Object.entries(perksArray[tree].perks).forEach((_perk) => {
         perks.push(new perk(_perk[1]));
@@ -187,8 +190,10 @@ function formPerks(e = null) {
             });
         }
     });
-    //background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
-    background.scrollTo(perksArray[tree].startPos, 0);
+    if (!scrollDefault)
+        perkArea.scrollTo(leftScroll, topScroll);
+    else
+        background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
 }
 function formStatUpgrades() {
     const bg = document.querySelector(".playerLeveling .stats");
@@ -209,7 +214,7 @@ function formStatUpgrades() {
         base.classList.add("statUp");
         baseImg.src = icons[stat];
         baseText.textContent = lang[stat];
-        baseNumber.textContent = player.getStats()[stat].toString();
+        baseNumber.textContent = player.getBaseStats()[stat].toString();
         upgrade.textContent = "+";
         upgrade.addEventListener("click", a => upStat(stat));
         if (player.sp <= 0)

@@ -100,7 +100,8 @@ const faces = [1, 3];
 function characterCreation(withAnimations = true) {
     var _a, _b, _c;
     if (withAnimations) {
-        player = new PlayerCharacter(Object.assign({}, emptyModel));
+        const copiedModel = JSON.parse(JSON.stringify(Object.assign({}, emptyModel)));
+        player = new PlayerCharacter(Object.assign({}, copiedModel));
         creation.style.display = "block";
         setTimeout(() => { creation.style.opacity = "1"; }, 5);
     }

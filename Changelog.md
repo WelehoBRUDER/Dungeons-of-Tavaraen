@@ -1,3 +1,21 @@
+# Indev Update 7 ~ 22.10.2021
+
+## New Features & Additions
+  * Added new artifact set ``Lone Shade``, designed for rogues.
+
+## Tweaks
+  * Reworked map rendering, added spritemap containing all tiles.
+  * Reworked minimap rendering, it should no longer slow the game down.
+  * Lowered base mana cost of ``Icy Javelin`` from **24** --> **16**.
+  * Perk screen now shows base stats with no modifiers, giving you a clearer picture of what you're upgrading.
+  * All race and class stats have been modified, hopefully making each one more balanced.
+
+## Fixes
+  * Fixed perk screen jumping back when purchasing new perks.
+  * Fixed cooldowns not displaying properly.
+  * Fixed a bug that made perks persist when creating new characters without refreshing page.
+  * Items on the ground no longer flicker.
+
 # Indev Update 6 ~ 5.10.2021
 
 ## New Features & Additions

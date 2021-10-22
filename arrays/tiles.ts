@@ -29,7 +29,13 @@ const icons = {
   lightning: "resources/icons/lightning.png",
   lightning_icon: "resources/icons/lightning_icon.png",
   lightningResist_icon: "resources/icons/resistance_shock_icon.png",
-  poison: "resources/icons/poison_icon.png",
+  stun: "resources/icons/dazed.png",
+  stun_icon: "resources/icons/dazed_icon.png",
+  curse: "resources/icons/curse.png",
+  curse_icon: "resources/icons/curse.png",
+  bleed: "resources/icons/bleed.png",
+  bleed_icon: "resources/icons/bleed.png",
+  poison: "resources/icons/poison.png",
   venom: "resources/icons/venom_icon.png",
   rage: "resources/icons/rage_icon.png",
   berserk: "resources/icons/berserk_icon.png",
@@ -121,6 +127,12 @@ const icons = {
   poisonDefense_icon: "resources/icons/poison_icon.png",
   burningDefense: "resources/icons/flame_of_passion.png",
   burningDefense_icon: "resources/icons/flame_of_passion_icon.png",
+  stunDefense: "resources/icons/dazed.png",
+  stunDefense_icon: "resources/icons/dazed_icon.png",
+  curseDefense: "resources/icons/curse.png",
+  curseDefense_icon: "resources/icons/curse.png",
+  bleedDefense: "resources/icons/bleed.png",
+  bleedDefense_icon: "resources/icons/bleed.png",
   exp_icon: "resources/icons/EXP.png",
   expGain_icon: "resources/icons/EXP.png",
 } as icons;
@@ -131,49 +143,64 @@ const tiles = [
     img: "resources/tiles/water.png",
     sprite: ".tile0",
     isLedge: true,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1152, y: 0}
   },
   {
     name: "Grass",
     img: "resources/tiles/grass.png",
     sprite: ".tile1",
     isLedge: false,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1280, y: 0}
   },
   {
     name: "Dirt",
     img: "resources/tiles/dirt.png",
     sprite: ".tile2",
     isLedge: false,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1408, y: 0}
   },
   {
     name: "Pond",
     img: "resources/tiles/pond_water.png",
     sprite: ".tile3",
     isLedge: false,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1536, y: 0}
   },
   {
     name: "Gravel",
     img: "resources/tiles/gravel.png",
     sprite: ".tile4",
     isLedge: false,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1664, y: 0}
   },
   {
     name: "Cobble",
     img: "resources/tiles/cobble_flooring.png",
     sprite: ".tile5",
     isLedge: false,
-    isWall: false
+    isWall: false,
+    spriteMap: {x: 1792, y: 0}
   },
   {
     name: "Dungeon Wall",
     img: "resources/tiles/dungeon_wall.png",
     sprite: ".tile6",
     isLedge: false,
-    isWall: true
+    isWall: true,
+    spriteMap: {x: 1920, y: 0}
+  },
+  {
+    name: "Sand",
+    img: "resources/tiles/sand.png",
+    sprite: ".tile7",
+    isLedge: false,
+    isWall: false,
+    spriteMap: {x: 2048, y: 0}
   },
 ];
 
@@ -182,18 +209,21 @@ const clutters = [
     name: "Nothing",
     img: "resources/tiles/void.png",
     sprite: ".tileVOID",
-    isWall: false
+    isWall: false,
+    spriteMap: null
   },
   {
     name: "Tree 1",
     img: "resources/tiles/tree_1.png",
     sprite: ".clutter1",
     isWall: true,
+    spriteMap: {x: 0, y: 128}
   },
   {
     name: "Tree 2",
     img: "resources/tiles/tree_2.png",
     sprite: ".clutter2",
-    isWall: true
+    isWall: true,
+    spriteMap: {x: 128, y: 128}
   },
 ];

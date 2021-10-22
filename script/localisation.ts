@@ -231,6 +231,9 @@ const finnish = {
   warriorsTalisman_name: "Ylistetyn Soturin Talismaani",
   warriorsEmblem_name: "Soturin Arvostettu Tunnus",
   warriorsRing_name: "Soturin Sormus",
+  loneShadesTalisman_name: "Yön Haamun Tähti Talismaani",
+  loneShadesEmblem_name: "Yön Haamun Pimeä Tunnus",
+  loneShadesRing_name: "Yön Haamun Kolkko Sormus",
 
   // Artifacts
   part_of_set: "Osa",
@@ -242,6 +245,7 @@ const finnish = {
   guardianSet_name: "Vartija",
   scholarSet_name: "Tietelijä",
   warriorSet_name: "Soturi",
+  loneShadeSet_name: "Yön Haamu",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -690,6 +694,10 @@ const finnish = {
   // NECROMANCER
   pursuit_of_undeath_name: "Kuolemattomuuden Tavoittelu",
   pursuit_of_undeath_desc: "Kryptisin keinoin.",
+
+  // Settings tooltips
+  log_char_movement: "<f>16px<f>Kirjaa teksti ruutuun vihollisten sijainnin joka kierroksella. \nVoi täyttää ruudun nopeasti.",
+  toggle_minimap: "<f>16px<f>Minikartta auttaa suunnistamaan eri alueissa. \nVoi hidastaa peliä.",
 } as any;
 
 const english = {
@@ -947,11 +955,12 @@ const english = {
   guardianSet_name: "Guardian",
   scholarSet_name: "Scholar",
   warriorSet_name: "Warrior",
+  loneShadeSet_name: "Lone Shade",
 
   // Passive abilities
   frenzy_name: "Frenzy",
   heightened_casting_name: "Heightened Casting",
-  warrior_instinct_name_name: "Warrior Instinct",
+  warrior_instinct_name: "Warrior Instinct",
   confident_shot_name: "Confident Shot",
   blood_rage_1_name: "Blood Rage I",
   blood_rage_2_name: "Blood Rage II",
@@ -1296,4 +1305,8 @@ const english = {
   // NECROMANCER
   pursuit_of_undeath_name: "Pursuit of Undeath",
   pursuit_of_undeath_desc: "Pursuing undeath.",
+
+  // Settings tooltips
+  log_char_movement: "<f>16px<f>Logs enemy movement in the text area every turn. \nCan clutter the text screen.",
+  toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
 } as any;

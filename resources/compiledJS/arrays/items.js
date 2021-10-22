@@ -49,7 +49,8 @@ const items = {
         type: "weapon",
         statBonus: "dex",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 0, y: 0 }
     },
     stick: {
         id: "stick",
@@ -72,7 +73,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 128, y: 0 }
     },
     trollClub: {
         id: "trollClub",
@@ -102,7 +104,8 @@ const items = {
         statBonus: "str",
         twoHanded: true,
         grade: "uncommon",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 256, y: 0 }
     },
     chippedBlade: {
         id: "chippedBlade",
@@ -133,7 +136,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 384, y: 0 }
     },
     longsword: {
         id: "longsword",
@@ -167,7 +171,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 512, y: 0 }
     },
     silverSword: {
         id: "silverSword",
@@ -203,7 +208,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "rare",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 640, y: 0 }
     },
     galadorSpear: {
         id: "galadorSpear",
@@ -242,7 +248,8 @@ const items = {
         statBonus: "dex",
         grade: "mythical",
         slot: "weapon",
-        mainTitle: false
+        mainTitle: false,
+        spriteMap: { x: 768, y: 0 }
     },
     pikeMore: {
         id: "pikeMore",
@@ -277,6 +284,7 @@ const items = {
         grade: "rare",
         twoHanded: true,
         slot: "weapon",
+        spriteMap: { x: 896, y: 0 }
     },
     chippedAxe: {
         id: "chippedAxe",
@@ -307,7 +315,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 1024, y: 0 }
     },
     orcishAxe: {
         id: "orcishAxe",
@@ -338,7 +347,8 @@ const items = {
         type: "weapon",
         statBonus: "str",
         grade: "uncommon",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 1152, y: 0 }
     },
     huntingBow: {
         id: "huntingBow",
@@ -365,7 +375,8 @@ const items = {
         firesProjectile: "arrowProjectile",
         statBonus: "dex",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 1280, y: 0 }
     },
     apprenticeWand: {
         id: "apprenticeWand",
@@ -395,7 +406,8 @@ const items = {
         firesProjectile: "magicBlastProjectile",
         statBonus: "int",
         grade: "common",
-        slot: "weapon"
+        slot: "weapon",
+        spriteMap: { x: 1408, y: 0 }
     },
     woodenShield: {
         id: "woodenShield",
@@ -425,7 +437,8 @@ const items = {
         weight: 1.2,
         type: "armor",
         grade: "common",
-        slot: "offhand"
+        slot: "offhand",
+        spriteMap: { x: 1536, y: 0 }
     },
     ironShield: {
         id: "ironShield",
@@ -460,7 +473,8 @@ const items = {
         weight: 3.1,
         type: "armor",
         grade: "uncommon",
-        slot: "offhand"
+        slot: "offhand",
+        spriteMap: { x: 1664, y: 0 }
     },
     silverShield: {
         id: "silverShield",
@@ -496,7 +510,8 @@ const items = {
         weight: 4.5,
         type: "armor",
         grade: "rare",
-        slot: "offhand"
+        slot: "offhand",
+        spriteMap: { x: 1792, y: 0 }
     },
     raggedShirt: {
         id: "raggedShirt",
@@ -520,13 +535,21 @@ const items = {
             { type: "vitP", value: [3, 6, 9], chance: 1.8 },
             { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
         ],
+        stats: {
+            poisonDefenseV: 25,
+            burningDefenseV: 25,
+            curseDefenseV: 25,
+            stunDefenseV: 25,
+            bleedDefenseV: 25
+        },
         img: "resources/icons/ragged_shirt.png",
         sprite: "raggedShirt",
         price: 6,
         weight: 0.8,
         type: "armor",
         grade: "common",
-        slot: "chest"
+        slot: "chest",
+        spriteMap: { x: 1920, y: 0 }
     },
     raggedPants: {
         id: "raggedPants",
@@ -556,7 +579,8 @@ const items = {
         weight: 0.8,
         type: "armor",
         grade: "common",
-        slot: "legs"
+        slot: "legs",
+        spriteMap: { x: 2048, y: 0 }
     },
     raggedBoots: {
         id: "raggedBoots",
@@ -584,7 +608,8 @@ const items = {
         weight: 0.2,
         type: "armor",
         grade: "common",
-        slot: "boots"
+        slot: "boots",
+        spriteMap: { x: 2176, y: 0 }
     },
     raggedGloves: {
         id: "raggedGloves",
@@ -612,7 +637,8 @@ const items = {
         weight: 0.15,
         type: "armor",
         grade: "common",
-        slot: "gloves"
+        slot: "gloves",
+        spriteMap: { x: 2304, y: 0 }
     },
     enchantedCap: {
         id: "enchantedCap",
@@ -648,7 +674,8 @@ const items = {
         weight: 0.1,
         type: "armor",
         grade: "legendary",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 2432, y: 0 }
     },
     raggedHood: {
         id: "raggedHood",
@@ -677,7 +704,8 @@ const items = {
         weight: 0.2,
         type: "armor",
         grade: "common",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 2560, y: 0 }
     },
     woolHat: {
         id: "woolHat",
@@ -706,7 +734,8 @@ const items = {
         weight: 0.15,
         type: "armor",
         grade: "common",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 2688, y: 0 }
     },
     leatherChest: {
         id: "leatherChest",
@@ -742,7 +771,8 @@ const items = {
         weight: 1.7,
         type: "armor",
         grade: "common",
-        slot: "chest"
+        slot: "chest",
+        spriteMap: { x: 2816, y: 0 }
     },
     leatherLeggings: {
         id: "leatherLeggings",
@@ -778,7 +808,8 @@ const items = {
         weight: 1.5,
         type: "armor",
         grade: "common",
-        slot: "legs"
+        slot: "legs",
+        spriteMap: { x: 2944, y: 0 }
     },
     leatherBracers: {
         id: "leatherBracers",
@@ -814,7 +845,8 @@ const items = {
         weight: 0.65,
         type: "armor",
         grade: "common",
-        slot: "gloves"
+        slot: "gloves",
+        spriteMap: { x: 0, y: 128 }
     },
     leatherHelmet: {
         id: "leatherHelmet",
@@ -851,7 +883,8 @@ const items = {
         weight: 0.5,
         type: "armor",
         grade: "common",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 128, y: 128 }
     },
     leatherBoots: {
         id: "leatherBoots",
@@ -887,7 +920,8 @@ const items = {
         weight: 0.75,
         type: "armor",
         grade: "common",
-        slot: "boots"
+        slot: "boots",
+        spriteMap: { x: 256, y: 128 }
     },
     ironArmor: {
         id: "ironArmor",
@@ -923,7 +957,8 @@ const items = {
         weight: 10.5,
         type: "armor",
         grade: "uncommon",
-        slot: "chest"
+        slot: "chest",
+        spriteMap: { x: 384, y: 128 }
     },
     ironLegplates: {
         id: "ironLegplates",
@@ -959,7 +994,8 @@ const items = {
         weight: 5.25,
         type: "armor",
         grade: "uncommon",
-        slot: "legs"
+        slot: "legs",
+        spriteMap: { x: 512, y: 128 }
     },
     ironHelmet: {
         id: "ironHelmet",
@@ -996,7 +1032,8 @@ const items = {
         weight: 3,
         type: "armor",
         grade: "uncommon",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 640, y: 128 }
     },
     ironGauntlets: {
         id: "ironGauntlets",
@@ -1032,7 +1069,8 @@ const items = {
         weight: 3.5,
         type: "armor",
         grade: "uncommon",
-        slot: "gloves"
+        slot: "gloves",
+        spriteMap: { x: 768, y: 128 }
     },
     ironBoots: {
         id: "ironBoots",
@@ -1068,7 +1106,8 @@ const items = {
         weight: 4.5,
         type: "armor",
         grade: "uncommon",
-        slot: "boots"
+        slot: "boots",
+        spriteMap: { x: 896, y: 128 }
     },
     crownOfWisdom: {
         id: "crownOfWisdom",
@@ -1106,7 +1145,8 @@ const items = {
         weight: 0.5,
         type: "armor",
         grade: "rare",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 1024, y: 128 }
     },
     lichRobes: {
         id: "lichRobes",
@@ -1141,7 +1181,8 @@ const items = {
         weight: 4.5,
         type: "armor",
         grade: "uncommon",
-        slot: "chest"
+        slot: "chest",
+        spriteMap: { x: 1152, y: 128 }
     },
     knightArmor: {
         id: "knightArmor",
@@ -1177,7 +1218,8 @@ const items = {
         weight: 14.5,
         type: "armor",
         grade: "rare",
-        slot: "chest"
+        slot: "chest",
+        spriteMap: { x: 1280, y: 128 }
     },
     knightGreaves: {
         id: "knightGreaves",
@@ -1213,7 +1255,8 @@ const items = {
         weight: 7.5,
         type: "armor",
         grade: "rare",
-        slot: "legs"
+        slot: "legs",
+        spriteMap: { x: 1408, y: 128 }
     },
     greathelm: {
         id: "greathelm",
@@ -1250,7 +1293,8 @@ const items = {
         weight: 4.5,
         type: "armor",
         grade: "rare",
-        slot: "helmet"
+        slot: "helmet",
+        spriteMap: { x: 1536, y: 128 }
     },
     knightGauntlets: {
         id: "knightGauntlets",
@@ -1286,7 +1330,8 @@ const items = {
         weight: 3.75,
         type: "armor",
         grade: "rare",
-        slot: "gloves"
+        slot: "gloves",
+        spriteMap: { x: 1664, y: 128 }
     },
     knightSabatons: {
         id: "knightSabatons",
@@ -1322,7 +1367,8 @@ const items = {
         weight: 5,
         type: "armor",
         grade: "rare",
-        slot: "boots"
+        slot: "boots",
+        spriteMap: { x: 1792, y: 128 }
     },
     /* ARTIFACTS */
     talismanOfProtection: {
@@ -1355,7 +1401,8 @@ const items = {
         artifactSet: "defender",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact1"
+        slot: "artifact1",
+        spriteMap: { x: 1920, y: 128 }
     },
     emblemOfProtection: {
         id: "emblemOfProtection",
@@ -1387,7 +1434,8 @@ const items = {
         artifactSet: "defender",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact2"
+        slot: "artifact2",
+        spriteMap: { x: 2048, y: 128 }
     },
     ringOfProtection: {
         id: "ringOfProtection",
@@ -1418,7 +1466,8 @@ const items = {
         artifactSet: "defender",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact3"
+        slot: "artifact3",
+        spriteMap: { x: 2176, y: 128 }
     },
     scholarsTalisman: {
         id: "scholarsTalisman",
@@ -1452,7 +1501,8 @@ const items = {
         artifactSet: "scholar",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact1"
+        slot: "artifact1",
+        spriteMap: { x: 2304, y: 128 }
     },
     scholarsEmblem: {
         id: "scholarsEmblem",
@@ -1486,7 +1536,8 @@ const items = {
         artifactSet: "scholar",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact2"
+        slot: "artifact2",
+        spriteMap: { x: 2432, y: 128 }
     },
     scholarsRing: {
         id: "scholarsRing",
@@ -1520,7 +1571,8 @@ const items = {
         artifactSet: "scholar",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact3"
+        slot: "artifact3",
+        spriteMap: { x: 2560, y: 128 }
     },
     warriorsTalisman: {
         id: "warriorsTalisman",
@@ -1554,7 +1606,8 @@ const items = {
         artifactSet: "warrior",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact1"
+        slot: "artifact1",
+        spriteMap: { x: 2688, y: 128 }
     },
     warriorsEmblem: {
         id: "warriorsEmblem",
@@ -1588,7 +1641,8 @@ const items = {
         artifactSet: "warrior",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact2"
+        slot: "artifact2",
+        spriteMap: { x: 2816, y: 128 }
     },
     warriorsRing: {
         id: "warriorsRing",
@@ -1623,7 +1677,113 @@ const items = {
         artifactSet: "warrior",
         type: "artifact",
         grade: "uncommon",
-        slot: "artifact3"
+        slot: "artifact3",
+        spriteMap: { x: 2944, y: 128 }
+    },
+    loneShadesTalisman: {
+        id: "loneShadesTalisman",
+        name: "Lone Shade's Star Talisman",
+        stats: {
+            dexV: 3,
+            hpMaxV: 2
+        },
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3], chance: 3.75 },
+            { type: "strP", value: [3, 6, 9], chance: 3.75 },
+            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+            { type: "intV", value: [1, 2, 3], chance: 3.75 },
+            { type: "intP", value: [3, 6, 9], chance: 3.75 },
+            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "evasionV", value: [2, 3, 4], chance: 8 },
+        ],
+        img: "resources/icons/lone_shades_star_talisman.png",
+        price: 60,
+        weight: 0.25,
+        artifactSet: "loneShade",
+        type: "artifact",
+        grade: "uncommon",
+        slot: "artifact1",
+        spriteMap: { x: 0, y: 256 }
+    },
+    loneShadesEmblem: {
+        id: "loneShadesEmblem",
+        name: "Emblem of the Lone Shade",
+        stats: {
+            cunV: 3,
+            evasionV: 2
+        },
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3], chance: 3.75 },
+            { type: "strP", value: [3, 6, 9], chance: 3.75 },
+            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+            { type: "intV", value: [1, 2, 3], chance: 3.75 },
+            { type: "intP", value: [3, 6, 9], chance: 3.75 },
+            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "evasionV", value: [2, 3, 4], chance: 8 },
+        ],
+        img: "resources/icons/emblem_of_the_lone_shade.png",
+        price: 60,
+        weight: 0.25,
+        artifactSet: "loneShade",
+        type: "artifact",
+        grade: "uncommon",
+        slot: "artifact2",
+        spriteMap: { x: 128, y: 256 }
+    },
+    loneShadesRing: {
+        id: "loneShadesRing",
+        name: "Creeping Ring of the Lone Shade",
+        stats: {
+            damageP: 6,
+            vitV: 2
+        },
+        statsTemplate: [
+            { type: "strV", value: [1, 2, 3], chance: 3.75 },
+            { type: "strP", value: [3, 6, 9], chance: 3.75 },
+            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
+            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
+            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
+            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
+            { type: "intV", value: [1, 2, 3], chance: 3.75 },
+            { type: "intP", value: [3, 6, 9], chance: 3.75 },
+            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
+            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
+            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
+            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
+            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
+            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
+            { type: "evasionV", value: [2, 3, 4], chance: 8 },
+        ],
+        img: "resources/icons/creeping_ring_of_the_lone_shade.png",
+        price: 60,
+        weight: 0.25,
+        artifactSet: "loneShade",
+        type: "artifact",
+        grade: "uncommon",
+        slot: "artifact3",
+        spriteMap: { x: 256, y: 256 }
     },
     healingScrollI: {
         id: "healingScrollI",
@@ -1638,7 +1798,8 @@ const items = {
         equippedSlot: -1,
         healValue: 20,
         usesTotal: 3,
-        usesRemaining: 3
+        usesRemaining: 3,
+        spriteMap: { x: 384, y: 256 }
     },
     manaScrollI: {
         id: "manaScrollI",
@@ -1653,7 +1814,8 @@ const items = {
         equippedSlot: -1,
         manaValue: 15,
         usesTotal: 3,
-        usesRemaining: 3
+        usesRemaining: 3,
+        spriteMap: { x: 512, y: 256 }
     },
 };
 //# sourceMappingURL=items.js.map

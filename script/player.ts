@@ -31,6 +31,7 @@ interface playerChar extends characterObject {
   oldCords?: tileObject;
   getArtifactSetBonuses?: Function;
   flags?: {};
+  getBaseStats?: Function;
 }
 
 interface levelObject {
@@ -71,25 +72,23 @@ interface RaceEffect {
 const raceEffects = {
   human: {
     modifiers: {
-      strV: 1,
-      vitV: 1,
+      strV: 2,
+      vitV: 2,
       dexV: 2,
-      intV: 3,
+      intV: 2,
       cunV: 2,
-      expGainP: 20
+      expGainP: 10
     },
     name: "Human Will",
     desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
   },
   elf: {
     modifiers: {
-      strV: 1,
-      dexV: 4,
+      dexV: 5,
       intV: 5,
       sightV: 3,
-      mpMaxV: 10,
-      intP: 5,
-      dexP: 5
+      mpMaxP: 10,
+      expGainP: -5
     },
     name: "Elvish Blood",
     desc: "Snobby pricks can show a good dance, but not a good fight."
@@ -98,23 +97,18 @@ const raceEffects = {
     modifiers: {
       strV: 5,
       vitV: 5,
-      hpMaxV: 30,
-      strP: 5,
-      vitP: 5
+      sightV: 1,
+      hpMaxP: 10,
     },
     name: "Orcy Bod",
     desc: "Orcies not make gud thinkaz', but do good git smashaz."
   },
   ashen: {
     modifiers: {
-      intV: 1,
       dexV: 5,
-      cunV: 4,
-      sightV: 1,
-      mpMaxV: 5,
-      hpMaxV: 10,
-      cunP: 5,
-      dexP: 5
+      cunV: 5,
+      evasionV: 5,
+      critDamageP: 20
     },
     name: "Ashen Constitution",
     desc: "The Ashen are sly and slippery, not gifted in straight battle."
@@ -181,19 +175,19 @@ class PlayerCharacter extends Character {
     this.artifact1 = base.artifact1 ?? {};
     this.artifact2 = base.artifact2 ?? {};
     this.artifact3 = base.artifact3 ?? {};
-    this.inventory = base.inventory ?? [];
+    this.inventory = [...base.inventory] ?? [];
     this.isDead = base.isDead ?? false;
     this.grave = base.grave ?? null;
-    this.respawnPoint = base.respawnPoint ?? null; // need to add default point, or this might soft lock
+    this.respawnPoint = {...base.respawnPoint} ?? null; // need to add default point, or this might soft lock
     this.gold = base.gold ?? 0;
-    this.perks = base.perks ?? [];
+    this.perks = [...base.perks] ?? [];
     this.sp = base.sp ?? 0;
     this.pp = base.pp ?? 0;
-    this.usedShrines = base.usedShrines ?? [];
+    this.usedShrines = [...base.usedShrines] ?? [];
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
-    this.classes = base.classes ?? {};
-    this.oldCords = base.oldCords ?? this.cords;
-    this.flags = base.flags ?? {};
+    this.classes = {...base.classes} ?? {};
+    this.oldCords = {...base.oldCords} ?? this.cords;
+    this.flags = {...base.flags} ?? {};
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -366,6 +360,41 @@ class PlayerCharacter extends Character {
       displayText("PAINA [R] JA RESPAWNAAT");
       updateUI();
     };
+
+    this.getBaseStats = () => {
+      const vals: any = {...this.stats};
+      const mods: any = {};
+      if (this.raceEffect?.modifiers) {
+        Object.entries(this.raceEffect?.modifiers).forEach((eff: any) => {
+          if (!mods?.[eff[0]]) {
+            mods[eff[0]] = eff[1];
+          }
+          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+        });
+      }
+      if (this.classes?.main?.statBonuses) {
+        Object.entries(this.classes.main.statBonuses).forEach((eff: any) => {
+          if (!mods?.[eff[0]]) {
+            mods[eff[0]] = eff[1];
+          }
+          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+        });
+      }
+      if (this.classes?.sub?.statBonuses) {
+        Object.entries(this.classes.sub.statBonuses).forEach((eff: any) => {
+          if (!mods?.[eff[0]]) {
+            mods[eff[0]] = eff[1];
+          }
+          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+        });
+      }
+      baseStats.forEach((stat: string) => {
+        if (!mods[stat + "V"]) mods[stat + "V"] = 0;
+        if (!mods[stat + "P"]) mods[stat + "P"] = 1;
+        vals[stat] = Math.floor(this.stats[stat] + mods[stat + "V"]);
+      });
+      return vals;
+    }
   }
 }
 
@@ -612,9 +641,9 @@ var player = new PlayerCharacter({
 
 let combatSummons: Array<any> = [];
 
-var randomProperty = function (obj: any) {
-  var keys = Object.keys(obj);
-  return obj[keys[keys.length * Math.random() << 0]];
+var randomProperty = function (mods: any) {
+  var keys = Object.keys(mods);
+  return mods[keys[keys.length * Math.random() << 0]];
 };
 
 for (let i = 0; i < 10; i++) {

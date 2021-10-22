@@ -683,6 +683,7 @@ function renderCharacter() {
         const statImage = document.createElement("img");
         const statText = document.createElement("p");
         const statValue = document.createElement("span");
+        console.log(key);
         statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
         statText.textContent = lang[key + "_status"];
         statValue.textContent = val + "%";

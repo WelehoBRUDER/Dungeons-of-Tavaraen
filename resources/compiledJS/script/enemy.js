@@ -204,7 +204,7 @@ class Enemy extends Character {
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
             lootEnemy(this);
             this.chosenTarget = null;
-            fallenEnemies.push(Object.assign({}, this));
+            fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap });
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
             player.lvlUp();

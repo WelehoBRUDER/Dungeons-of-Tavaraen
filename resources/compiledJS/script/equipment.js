@@ -16,6 +16,7 @@ class Item {
         this.gradeValue = grade_vals[this.grade];
         this.index = (_a = base.index) !== null && _a !== void 0 ? _a : -1;
         this.slot = baseItem.slot;
+        this.spriteMap = baseItem.spriteMap;
         this.requiresStats = (_b = baseItem.requiresStats) !== null && _b !== void 0 ? _b : null;
         this.mainTitle = (_c = baseItem.mainTitle) !== null && _c !== void 0 ? _c : true;
     }
@@ -637,12 +638,27 @@ const artifactSets = {
     warrior: {
         id: "warrior",
         twoPieceEffect: {
-            attack_damage_multiplierP: 15
+            attack_damage_multiplierP: 10
         },
         threePieceEffect: {
             hitChanceV: 10,
             hpMaxP: 5
         }
-    }
+    },
+    loneShade: {
+        id: "loneShade",
+        twoPieceEffect: {
+            evasionV: 3,
+            hitChanceV: 3,
+            critDamageP: 2.5
+        },
+        threePieceEffect: {
+            evasionV: 2,
+            hitChanceV: 2,
+            critChanceP: 5,
+            critDamageP: 7.5,
+            dexV: 2
+        }
+    },
 };
 //# sourceMappingURL=equipment.js.map

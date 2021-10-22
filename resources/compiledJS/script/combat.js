@@ -133,11 +133,12 @@ function buffOrHeal(character, ability) {
         displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
     }
     character.stats.mp -= ability.mana_cost;
-    ability.onCooldown = ability.cooldown;
+    ability.onCooldown = ability.cooldown + 1;
     if (character.id == "player")
         advanceTurn();
-    else
+    else {
         updateEnemiesTurn();
+    }
 }
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     var _a, _b, _c, _d;
@@ -253,7 +254,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
             if (ability.cooldown)
-                ability.onCooldown = ability.cooldown;
+                ability.onCooldown = ability.cooldown + 1;
             if (ability.mana_cost)
                 attacker.stats.mp -= ability.mana_cost;
         }
@@ -319,16 +320,16 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         actionText = actionText.replace("[DMG]", `${dmg}`);
         displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${actionText}`);
         if (ability.cooldown)
-            ability.onCooldown = ability.cooldown;
+            ability.onCooldown = ability.cooldown + 1;
         if (ability.mana_cost)
             attacker.stats.mp -= ability.mana_cost;
         if (target.stats.hp <= 0) {
             target.kill();
             setTimeout(modifyCanvas, 300);
         }
+        updateUI();
     }
     state.isSelected = false;
-    updateUI();
 }
 function tileCordsToScreen(cords) {
     // This function returns screen pixel values from cords.
@@ -493,10 +494,9 @@ function aoeCollision(area, attacker, ability) {
     state.isSelected = false;
     state.abiSelected = {};
     if (ability.cooldown)
-        ability.onCooldown = ability.cooldown;
+        ability.onCooldown = ability.cooldown + 1;
     if (ability.mana_cost)
         attacker.stats.mp -= ability.mana_cost;
-    updateUI();
 }
 function threatDistance(targets, from) {
     let chosenTarget = null;
@@ -516,7 +516,7 @@ function summonUnit(ability, cords) {
     state.isSelected = false;
     state.abiSelected = {};
     if (ability.cooldown)
-        ability.onCooldown = ability.cooldown;
+        ability.onCooldown = ability.cooldown + 1;
     if (ability.mana_cost)
         player.stats.mp -= ability.mana_cost;
     // @ts-ignore
@@ -525,7 +525,6 @@ function summonUnit(ability, cords) {
         player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[ability.status]), { last: ability.summon_last - 1 }), ability.statusModifiers));
     if (ability.summon_status)
         combatSummons[0].statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.summon_status]), ability.statusModifiers));
-    updateUI();
     modifyCanvas();
 }
 function calcAngleDegrees(x, y) {

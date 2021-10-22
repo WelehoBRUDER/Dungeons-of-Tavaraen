@@ -69,6 +69,7 @@ class perk {
 
         // }
         player.updatePerks();
+        player.updateAbilities();
         formPerks();
         formStatUpgrades();
       }
@@ -78,15 +79,17 @@ class perk {
 
 function changePerkTree(newTree: string) {
   tree = newTree;
-  formPerks();
+  formPerks(null, true);
 }
 
-function formPerks(e: MouseEvent = null) {
+function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   perks = [];
   const bg = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
   const staticBg = document.querySelector<HTMLDivElement>(".playerLeveling .perksStatic");
   const perkTreesContainer = document.querySelector<HTMLDivElement>(".playerLeveling .perkTreesContainer");
   const perkArea = bg.querySelector<HTMLDivElement>(".container");
+  const leftScroll = perkArea.scrollLeft;
+  const topScroll = perkArea.scrollTop;
   perkArea.innerHTML = "";
   Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
     perks.push(new perk(_perk[1]));
@@ -191,8 +194,8 @@ function formPerks(e: MouseEvent = null) {
       });
     }
   });
-  //background.scrollTo(bgPosX - mouseX, bgPosY - mouseY);
-  background.scrollTo(perksArray[tree].startPos, 0);
+  if(!scrollDefault) perkArea.scrollTo(leftScroll, topScroll);
+  else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
 }
 
 function formStatUpgrades() {
@@ -214,7 +217,7 @@ function formStatUpgrades() {
     base.classList.add("statUp");
     baseImg.src = icons[stat];
     baseText.textContent = lang[stat];
-    baseNumber.textContent = player.getStats()[stat].toString();
+    baseNumber.textContent = player.getBaseStats()[stat].toString();
     upgrade.textContent = "+";
     upgrade.addEventListener("click", a => upStat(stat));
     if (player.sp <= 0) upgrade.style.transform = "scale(0)";

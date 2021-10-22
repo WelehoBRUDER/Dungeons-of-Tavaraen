@@ -39,10 +39,12 @@ const mainButtons = [
 const menuSettings = [
   {
     id: "setting_log_enemy_movement",
+    tooltip: "log_char_movement",
     type: "toggle",
   },
   {
     id: "setting_toggle_minimap",
+    tooltip: "toggle_minimap",
     type: "toggle",
   },
   {
@@ -142,6 +144,8 @@ setTimeout(() => {
   state.menuOpen = true;
   state.titleScreen = true;
   gotoMainMenu();
+  // @ts-expect-error
+  renderMinimap(maps[currentMap]);
   tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -231,9 +235,13 @@ function gotoSettingsMenu(inMainMenu = false) {
       else toggleBox.textContent = "";
       container.addEventListener("click", tog => {
         settings[_setting] = !settings[_setting];
+        moveMinimap();
         if (settings[_setting]) toggleBox.textContent = "X";
         else toggleBox.textContent = "";
       });
+      if (setting.tooltip) {
+        tooltip(container, lang[setting.tooltip]);
+      }
       container.append(text, toggleBox);
       settingsBackground.append(container);
     }
@@ -599,7 +607,7 @@ function reviveAllDeadEnemies() {
   fallenEnemies.forEach(deadFoe => {
     maps.forEach((mp, index) => {
       if (deadFoe.spawnMap == index) {
-        let foe = new Enemy({ ...deadFoe });
+        let foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
         foe.restore();
         maps[index].enemies.push(new Enemy({ ...foe }));
       }
