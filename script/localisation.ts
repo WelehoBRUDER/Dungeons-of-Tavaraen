@@ -32,6 +32,10 @@ const finnish = {
   hitChance_tt: `<i>${icons["hitChance"]}<i>Iskujen tarkkuus parantaa mahdollisuuttasi osua viholliseesi. \nVerrataan vastustajan <i>${icons["evasion"]}<i>väistelyyn.`,
   evasion_tt: `<i>${icons["evasion"]}<i>Väistely parantaa mahdollisuuttasi välttää vahinkoa. \nVerrataan vastustajan <i>${icons["hitChance"]}<i>iskujen tarkkuuteen.`,
 
+  physical_tt: `<i>${icons["physical_armor"]}<i>Fyysinen Panssari nostaa puolustusta fyysisiä iskuja vastaan. \n<i>${icons["slash_icon"]}<i>Viilto, <i>${icons["crush_icon"]}<i>Murskaus ja <i>${icons["pierce_icon"]}<i>Lävistys vahinko alennettu 0.4% joka tasolla. \nPanssarin maksimi arvo on 200.`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Maaginen Suojaus nostaa puolustusta maagisia iskuja vastaan. \n<i>${icons["magic_icon"]}<i>Taika, <i>${icons["dark_icon"]}<i>Pimeä ja <i>${icons["divine_icon"]}<i>Pyhä vahinko alennettu 0.4% joka tasolla. \nPanssarin maksimi arvo on 200.`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elementaalinen Suojaus nostaa puolustusta elementaalisia iskuja vastaan. \n<i>${icons["fire_icon"]}<i>Tuli, <i>${icons["lightning_icon"]}<i>Sähkö ja <i>${icons["ice_icon"]}<i>Jää vahinko alennettu 0.4% joka tasolla. \nPanssarin maksimi arvo on 200.`,
+
   resistances_tt: "Vahinko tyypin puolustus vähentää saman tyyppistä tulevaa vahinkoa mainitulla prosentilla.",
   stat_resist_tt: `Efektin vastustus laskee sen tekemää vahinkoa mainitulla prosentilla. \n\nSe myös antaa mahdollisuuden kokonaan vastustaa efekti. \n\nKun efekti on täysin vastustettu, se ei tee mitään.`,
 
@@ -41,6 +45,9 @@ const finnish = {
   curseDefense: "Kirouksen vastustus",
   stunDefense: "Tainnuttamisen vastustus",
   bleedDefense: "Verenvuodon vastustus",
+
+  // Messages
+  test_message: "<c>white<c>Tervetuloa <c>gold<c>Dungeons of Tavaraeniin<c>white<c>!",
 
   // Technical stuff
   changeWordOrder: true,
@@ -58,7 +65,7 @@ const finnish = {
   fire: "Tuli",
   ice: "Jää",
   dark: "Pimeä",
-  divine: "Jumalallinen",
+  divine: "Pyhä",
   lightning: "Sähkö",
   crush_def: "Murskaus",
   slash_def: "Viilto",
@@ -67,7 +74,7 @@ const finnish = {
   fire_def: "Tuli",
   ice_def: "Jää",
   dark_def: "Pimeä",
-  divine_def: "Jumalallinen",
+  divine_def: "Pyhä",
   lightning_def: "Sähkö",
   hpMax: "Terveyttä",
   mpMax: "Taikaa",
@@ -101,6 +108,7 @@ const finnish = {
   critDamageV: "Krit Vahinko",
   critDamageP: "Krit Vahinko",
   status_effect: "Tila efekti",
+  status_effects: "Tila efektit",
   last: "Efektin kesto",
   lasts_for: "Efekti kestää",
   resist: "Puolustus",
@@ -117,13 +125,14 @@ const finnish = {
   recharge_only_in_combat: "Latautuu vain taistelussa",
   targets_self: "Kohde on oma hahmo",
   mana_cost: "Taian käyttö",
+  health_cost: "Terveyden käyttö",
   use_range: "Käyttö matka",
   damage_multiplier: "Vahingon kerroin",
   resistance_penetration: "Puolustuksen läpäisy",
   aoe_size: "Vahinkoalueen koko",
   yes: "kyllä",
   no: "ei",
-  tiles: "tiiliä",
+  tiles: "ruutua",
   attack: "Hyökkäys",
   heal: "Parannus",
   buff: "Tehoste/Buffi",
@@ -132,6 +141,7 @@ const finnish = {
   summon: "Kutsuntaloitsu",
   turn: "Kierros",
   turns: "kierrosta",
+  turns_alt: "kierroksella",
   cooldown: "Latausaika",
   base_heal: "Parannus voima",
   map_to_hotbar: "Lisää kyky/työkalu",
@@ -144,6 +154,11 @@ const finnish = {
   lvl_up: "Tasosi nousi! Se on nyt [LVL]!",
   regenHp: "Terveyden palautuminen",
   regenMp: "Taian palautuminen",
+  of_max_hp: "Maksimi terveydestä",
+  life_steal: "Terveyden riisto",
+  life_steal_on_kill_1: "Kun tämä isku tappaa vihollisen, \nparannat terveyttäsi",
+  life_steal_on_kill_2: "vihollisen maksimi terveydestä.",
+  for_each_enemy_hit: "Jokainen vihollinen johon tämä isku osuu nostaa efektin kestoa ",
 
   // Item definitions
   slash_damageSub: "Viiltävä",
@@ -187,6 +202,8 @@ const finnish = {
   // Item names
   healingScrollI_name: "Parannuksen Loitsukirja I",
   manaScrollI_name: "Taianpalautuksen Loitsukirja I",
+  healingPotion_weak_name: "Parantava Eliksiiri (Heikko)",
+  manaPotion_weak_name: "Taikaapalauttava Eliksiiri (Heikko)",
   dagger_name: "Tikari",
   stick_name: "Keppi",
   chippedBlade_name: "Kulunut Terä",
@@ -194,6 +211,7 @@ const finnish = {
   chippedAxe_name: "Kulunut Kirves",
   orcishAxe_name: "Örkkimäinen Kirves",
   huntingBow_name: "Metsästys Jousi",
+  hiisiBow_name: "Hiiden Jousi",
   apprenticeWand_name: "Oppilaan Sauva",
   galadorSpear_name: "Galadorin Keihäs",
   pikeMore_name: "Murhahauki",
@@ -274,6 +292,8 @@ const finnish = {
   skeletonLichSummon_name: "Kutsuttu Luuranko Kuolema Maagi",
   stoneTrollSummon_name: "Kutsuttu Kivipeikko",
   dummyTarget_name: "Harhautus Nukke",
+  arrowTotem_name: "Nuoli Toteemi",
+  rangerWolf_name: "Susi Kumppani",
 
   // LOG TEXTS
   you: "",
@@ -311,7 +331,11 @@ const finnish = {
   item_stat_bonus: "Vaikuttava kyky",
   weapon_has_great_reach: "Normaalia suurempi ase",
   resistance: "Puolustus",
-  status_effects: "Tila efektit",
+  physical: "Fyysinen Panssari",
+  magical: "Maaginen Suojaus",
+  elemental: "Elementaalinen Suojaus",
+  status_effects_enemy: "<c>white<c>Tila efektit <c>red<c><f>22px<f>viholliselle",
+  status_effects_you: "<c>white<c>Tila efektit <c>lime<c><f>22px<f>sinulle",
   encumbrance: "Taakka",
   shrine_activated: "Pyhäkkö aktivoitu!",
   shrine_used: "Pyhäkön voimat ovat jo kulutettu...",
@@ -321,6 +345,7 @@ const finnish = {
   critDamage: "Krit voima",
   resistAll: "Puolustusvoima",
   uses: "Käyttökerrat",
+  amount: "Määrä",
   item_name: "Tavaran Nimi",
   item_type: "Tyyppi",
   item_rarity: "Harvinaisuus",
@@ -341,10 +366,26 @@ const finnish = {
   summons_unit: "Kutsuu hahmon",
   summon_level: "Kutsutun hahmon taso",
   summon_last: "Kutsuttu hahmo kestää",
+  total_summon_limit: "Kutsuttujen hahmojen max määrä",
+  all_summons_damage: "Kutsuttujen hahmojen vahinko",
+  all_summons_regenHp: "Kutsuttujen hahmojen terveyden palautuminen",
   two_handed_weapon: "Kahden käsen ase",
   rooted: "Et voi liikkua!",
   closest_enemy: "Etäisyys lähimpään viholliseen: ",
   expGain: "Kokemuspisteiden saanti",
+  pick_item: "Poimi esine",
+  pick_chest: "Avaa arkku",
+  read_msg: "Lue viesti",
+  item_slot: "Varuste paikka",
+  artifact1: "Talismaani",
+  artifact2: "Tunnus",
+  artifact3: "Sormus",
+  chest: "Haarniska",
+  head: "Kypärä",
+  gloves: "Hanskat",
+  legs: "Jalkasuojukset",
+  boots: "Kengät",
+  offhand: "Kilpi",
 
   // Passive abilities
   frenzy_name: "Kiihko",
@@ -358,6 +399,7 @@ const finnish = {
   sense_of_danger_1_name: "Kuudes Aisti I",
   sense_of_danger_2_name: "Kuudes Aisti II",
   frantic_mana_recovery_name: "Hätäinen Taian Palautus",
+  mark_of_hunter_name: "Suojelijan Merkki",
 
   // Enemy types
   against_type_syntax: " vastaan",
@@ -396,15 +438,17 @@ const finnish = {
   setting_toggle_minimap: "Minikartta pois/päällä",
   setting_game_language: "Pelin kieli",
   setting_hotkey_inv: "Avaa inventaario",
-  setting_hotkey_char: "Avaa hahmo ruutu",
-  setting_hotkey_perk: "Avaa kehitys ruutu",
+  setting_hotkey_char: "Avaa hahmoruutu",
+  setting_hotkey_perk: "Avaa kehitysruutu",
+  setting_hotkey_ranged: "Vaihda 'Ammunta Tila'",
   setting_hotkey_move_up: "Liiku ylöspäin",
   setting_hotkey_move_down: "Liiku alaspäin",
   setting_hotkey_move_left: "Liiku vasemmalle",
   setting_hotkey_move_right: "Liiku oikealle",
   setting_hotkey_interact: "Poimi esine / käytä",
+  setting_hotkey_open_world_messages: "Avaa teksti ikkuna",
 
-  open_menu: "Avaa valikko [Escape]",
+  open_menu: "Avaa valikko",
 
   space_key: "VÄLILYÖNTI",
 
@@ -423,6 +467,7 @@ const finnish = {
   legendary: "Legendaarinen",
 
   // Statuses
+  effect_defend_name: "Puolustaa",
   effect_poison_name: "Myrkky",
   effect_poison_desc: "Myrkky kiertää veressäsi, \nsyöden voimasi ja terveytesi.",
   effect_venom_name: "Syvä myrkky",
@@ -453,10 +498,22 @@ const finnish = {
   effect_sneaky_stabbing_desc: "Tämä tulee satuttamaan kohdettasi.",
   effect_smoke_bomb_effect_name: "Savu Pommi",
   effect_smoke_bomb_effect_desc: "Savu tukkii keuhkosi ja heikentää näköäsi!",
+  effect_smoke_evasion_name: "Savuverhon Peite",
+  effect_smoke_evasion_desc: "Käytät savua hyväksesi ja väistelet vastustajiesi iskuja paremmin!",
+  effect_encouraged_warrior_shout_name: "Rohkaistunut!",
+  effect_encouraged_warrior_shout_desc: "Rohkeus virtaa veressäsi ja motivaatio menee katosta läpi!",
+  effect_disheartened_warrior_shout_name: "Lannistunut",
+  effect_disheartened_warrior_shout_desc: "Pelko syö voimiasi...",
+  effect_heightened_senses_name: "Kärjistyneet Aistit",
+  effect_heightened_senses_desc: "Aistisi kiehuvat rajoillaan ja tunnet ympäristösi kuin omat taskusi.",
 
   // Abilities and stuff
   attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
   attack_action_desc: "iskee hahmoa [TARGET], tehden [DMG] vahinkoa.",
+  defend_name: "Puolusta",
+  defend_desc: "Keskity suojaamaan itseäsi tällä kierroksella.",
+  defend_action_desc_pl: "Keskityt puolustautumiseen.",
+  defend_action_desc: "keskittyy puolustautumiseen.",
   focus_strike_name: "Tarkka Isku",
   focus_strike_desc: "Silmäile kohteesi liikettä tarkasti,\niskien sopivimmalla hetkellä.",
   focus_strike_action_desc_pl: "Isket hahmoa [TARGET] tarkasti koko voimallasi, ja teet [DMG] vahinkoa.",
@@ -554,12 +611,30 @@ const finnish = {
   distraction_name: "Hätäinen Hämy",
   distraction_desc: "Heitä rähjäinen nukke maahan harhauttamaan pahantekijöitä.",
   distraction_action_desc_pl: "Asetat nuken maahan hämäämään vihollisiasi!",
+  invigorating_finish_name: "Voimistava Viimeistely Isku",
+  invigorating_finish_desc: "Laita kaikkesi tähän iskuun ja yritä tuhota vihollisesi omasta ruumistasi välittämättä!",
+  invigorating_finish_action_desc_pl: "Isket hahmoa [TARGET] viimeistelevällä hyökkäyksellä, tehden [DMG] vahinkoa!",
+  invigorating_finish_action_desc: "Täräyttää hahmoa [TARGET] viimeistelevällä hyökkäyksellä, aiheuttaen [DMG] vahinkoa.",
+  warrior_shout_name: "Soturin Karjaisu!",
+  warrior_shout_desc: "Rohkaise itseäsi ja kauhistuta vihollisesi \nhyytävällä huudolla!",
+  warrior_shout_action_desc_pl: "Karjaiset niin kovaa että pelkkä äänesi riittää tuhoamaan heikoimmat vastustajasi!",
+  warrior_shout_action_desc_aoe_pl: "[TARGET] vastaanottaa ääniaallosta kovan iskun, ottaen [DMG] vahinkoa!",
+  totem_of_arrows_name: "Nuoli Toteemi",
+  totem_of_arrows_desc: "Patsas joka ampuu nuolia.",
+  totem_of_arrows_action_desc_pl: "Asetat nuoli toteemin kentälle.",
+  ranger_wolf_name: "Metsästäjän Susi",
+  ranger_wolf_desc: "Ihmisen paras ystävä.",
+  ranger_wolf_action_desc_pl: "Vihellät sudellesi, ja se ilmestyy puolellesi silmänräpäyksessä.",
+  awaken_name: "Havahdus",
+  awaken_desc: "Pystyt erottamaan pienimmätkin liikkeet vahvalla näölläsi.",
+  awaken_action_desc_pl: "Keskität vaistosi parantamaan katsettasi.",
 
   // CLASSES
   fighterClass_name: "Taistelija",
   barbarianClass_name: "Barbaari",
   sorcererClass_name: "Loitsija",
   rogueClass_name: "Rogue",
+  rangerClass_name: "Metsästäjä",
 
   // PERKS // 
 
@@ -616,6 +691,10 @@ const finnish = {
   charging_bull_desc: "Ottaen mallia karmeasta eläimestä, murskaa esteesi rajulla voimalla!",
   concentrated_warrior_name: "Taistelun Tasapaino",
   concentrated_warrior_desc: "Voiton voi taata vain yhdistämällä julman raivon ja lempeän kärsivällisyyden.",
+  absorber_of_life_force_name: "Elinvoima Soturi",
+  absorber_of_life_force_desc: "Kuolleiden voiman vienti pitää kehosi taistelu kunnossa, tarvitsematta lepoa.",
+  fighting_with_your_voice_name: "Veteraanin Iltahuuto",
+  fighting_with_your_voice_desc: "Välillä kaikki mitä tarvitset on kannustava huuto.",
 
   // ROGUE
   way_of_the_rogue_name: "Varjoinen Tie",
@@ -673,6 +752,30 @@ const finnish = {
   unyielding_rage_name: "Jatkuva Raivo",
   unyielding_rage_desc: "Anna vihan hallita ja kaikki kärsivät.",
 
+  // RANGER
+  target_practice_name: "Ammunta Harjoittelu",
+  target_practice_desc: "Mestarina ei synnytä.",
+  call_of_the_forest_name: "Metsän Kutsu",
+  call_of_the_forest_desc: "Kehosi on kuin luotu villiä luontoa varten.",
+  rangers_totem_name: "Toteemi",
+  rangers_totem_desc: "Puolustukset ovat ensimmäinen askel metsän suojeluun.",
+  extra_totem_name: "Kaksi on parempi kuin yksi",
+  extra_totem_desc: "Lisää voimaa!",
+  lasting_totem_name: "Paremmat materiaalit",
+  lasting_totem_desc: "Parempi materiaali pitää toteemit kunnossa pidempään.",
+  rangers_call_name: "Metsästäjän Kutsu",
+  rangers_call_desc: "Luonto kutsuu villiä puoltasi!",
+  awakening_name: "Luonnon Avautuminen",
+  awakening_desc: "Alat päästä ymmärrykseen.",
+  hunter_mark_name: "Suojelijan Symboli",
+  hunter_mark_desc: "Onnittelut, aloitat nyt urasi luonnonsuojelijana.",
+  wild_call_name: "Elämänkumppani",
+  wild_call_desc: "Matkan ei tarvitse olla yksinäinen.",
+  trusted_companion_name: "Luotettava Ystävä",
+  trusted_companion_desc: "Kumppanisi ei sinua pettäisi.",
+  fierce_beast_name: "Villi Peto",
+  fierce_beast_desc: "Tämä susi ei ole mikään terrieri.",
+
   // ADVENTURER
   hearty_adventurer_1_name: "Kestävä Terveys I (Orion Pharma)",
   hearty_adventurer_1_desc: "Hyvinvointia rakentamassa.",
@@ -698,6 +801,9 @@ const finnish = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Kirjaa teksti ruutuun vihollisten sijainnin joka kierroksella. \nVoi täyttää ruudun nopeasti.",
   toggle_minimap: "<f>16px<f>Minikartta auttaa suunnistamaan eri alueissa. \nVoi hidastaa peliä.",
+  interact_help: "<f>16px<f>Avaa arkkuja ja poimi tavaroita seisomalla niiden päällä. \nMyös mahdollistaa hahmoille puhumisen.",
+  world_messages: "<f>16px<f>Näe lisää viestejä teksti ruudussa.",
+  toggle_rangedMode: "<f>16p<f>Ammunta tila näyttää ammunta aseiden kantomatkan.",
 } as any;
 
 const english = {
@@ -732,6 +838,10 @@ const english = {
   hitChance_tt: `<i>${icons["hitChance"]}<i>Hit chance increases the chance of hitting your target. \nCompared to enemy's <i>${icons["evasion"]}<i>evasion.`,
   evasion_tt: `<i>${icons["evasion"]}<i>Evasion increases your chance of avoiding damage. \nCompared to enemy's <i>${icons["hitChance"]}<i>hit chance.`,
 
+  physical_tt: `<i>${icons["physical_armor"]}<i>Physical Armor increases resistance against physical attacks. \n<i>${icons["slash_icon"]}<i>Slashing, <i>${icons["crush_icon"]}<i>Crushing and <i>${icons["pierce_icon"]}<i>Piercing damage reduced by 0.4% per point. \nArmor has a maximum value of 200.`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Magical Armor increases resistance against magical attacks. \n<i>${icons["magic_icon"]}<i>Magical, <i>${icons["dark_icon"]}<i>Dark and <i>${icons["divine_icon"]}<i>Divine damage reduced by 0.4% per point. \nArmor has a maximum value of 200.`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elemental Armor increases resistance against elemental attacks. \n<i>${icons["fire_icon"]}<i>Fire, <i>${icons["lightning_icon"]}<i>Lightning and <i>${icons["ice_icon"]}<i>Ice damage reduced by 0.4% per point. \nArmor has a maximum value of 200.`,
+
   resistances_tt: "Resistance decreases incoming damage of its type by the indicated %.",
   stat_resist_tt: `Status resistance decreases any damage caused by effects by the indicated %. \n\nIt also gives a chance of completely resisting the effect. \n\nWhen effect is resisted, it is not applied at all.`,
 
@@ -741,6 +851,9 @@ const english = {
   curseDefense: "Curse resistance",
   stunDefense: "Stun resistance",
   bleedDefense: "Bleed resistance",
+  
+  // Messages
+  test_message: "<c>white<c>Welcome to <c>gold<c>Dungeons of Tavaraen<c>white<c>!",
 
   // Technical stuff
   changeWordOrder: false,
@@ -801,6 +914,7 @@ const english = {
   critDamageV: "Crit Damage",
   critDamageP: "Crit Damage",
   status_effect: "Status effect",
+  status_effects: "Status effects",
   last: "Effect time",
   lasts_for: "Lasts for",
   resist: "Resist",
@@ -817,6 +931,7 @@ const english = {
   recharge_only_in_combat: "Recharge Only In Combat",
   targets_self: "Targets Self",
   mana_cost: "Mana Cost",
+  health_cost: "Health Cost",
   use_range: "Use Range",
   damage_multiplier: "Damage Multiplier",
   resistance_penetration: "Resistance Penetration",
@@ -832,6 +947,7 @@ const english = {
   summon: "Summon",
   turn: "Turn",
   turns: "turns",
+  turns_alt: "turns",
   cooldown: "Cooldown",
   base_heal: "Base Heal",
   map_to_hotbar: "Map ability/item",
@@ -841,9 +957,14 @@ const english = {
   perk_points: "Perk points",
   stat_points: "Stat points",
   adventurerPerks: "Adventurer",
-  lvl_up: "You levelled up! Your level is now [LVL]!",
+  lvl_up: "You leveled up! Your level is now [LVL]!",
   regenHp: "Health regeneration",
   regenMp: "Mana recovery",
+  of_max_hp: "MAX HP",
+  life_steal: "Lifesteal",
+  life_steal_on_kill_1: "When this attack kills an enemy, \nyou recover",
+  life_steal_on_kill_2: "of the enemy's maximum health.",
+  for_each_enemy_hit: "Each enemy hit by this ability increases buff duration by",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -872,6 +993,8 @@ const english = {
   skeletonLichSummon_name: "Conjured Skeleton Lich",
   stoneTrollSummon_name: "Conjured Stone Troll",
   dummyTarget_name: "Dummy Target",
+  arrowTotem_name: "Arrow Totem",
+  rangerWolf_name: "Wolf Companion",
 
   // LOG TEXTS
   you: "You",
@@ -905,12 +1028,16 @@ const english = {
   attack_name: "base attack damage",
   cures_statuses: "Cures",
   resistance: "Resistances",
+  physical: "Physical Armor",
+  magical: "Magical Warding",
+  elemental: "Elemental Shielding",
   item_weight: "Weight",
   item_worth: "Worth",
   item_grade: "Grade",
   item_stat_bonus: "Scales with",
   weapon_has_great_reach: "Greater reach than most weapons",
-  status_effects: "Status effects",
+  status_effects_enemy: "<c>white<c>Status effects to <c>red<c><f>22px<f>enemy",
+  status_effects_you: "<c>white<c>Status effects to <c>lime<c><f>22px<f>you",
   encumbrance: "Encumbrance",
   shrine_activated: "Shrine activated!",
   shrine_used: "Shrine's power has already been spent...",
@@ -920,6 +1047,7 @@ const english = {
   critDamage: "Crit Damage",
   resistAll: "All Resistances",
   uses: "Uses Remaining",
+  amount: "Amount",
   item_name: "Item name",
   item_type: "Type",
   item_rarity: "Rarity",
@@ -940,10 +1068,26 @@ const english = {
   summons_unit: "Summons unit",
   summon_level: "Summoned unit level",
   summon_last: "Summoned unit last",
+  total_summon_limit: "Summon limit",
+  all_summons_damage: "All summoned units' damage",
+  all_summons_regenHp: "All summoned units' hp regen",
   two_handed_weapon: "Two-handed",
   rooted: "Can't move!",
   closest_enemy: "Distance to closest enemy: ",
   expGain: "Experience gain",
+  pick_item: "Pick up item",
+  pick_chest: "Open chest",
+  read_msg: "Read message",
+  item_slot: "Slot",
+  artifact1: "Talisman",
+  artifact2: "Emblem",
+  artifact3: "Ring",
+  chest: "Torso",
+  head: "Head",
+  gloves: "Hands",
+  legs: "Legs",
+  boots: "Feet",
+  offhand: "Offhand",
 
   // Artifacts
   part_of_set: "Part of",
@@ -969,6 +1113,7 @@ const english = {
   sense_of_danger_1_name: "Danger Sense I",
   sense_of_danger_2_name: "Danger Sense II",
   frantic_mana_recovery_name: "Frantic Mana Recovery",
+  mark_of_hunter_name: "Mark of the Hunter",
 
   // Enemy types
   against_type_syntax: " against ",
@@ -1009,13 +1154,15 @@ const english = {
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",
   setting_hotkey_perk: "Open level up screen",
+  setting_hotkey_ranged: "Toggle 'Ranged Mode'",
   setting_hotkey_move_up: "Move up",
   setting_hotkey_move_down: "Move down",
   setting_hotkey_move_left: "Move left",
   setting_hotkey_move_right: "Move right",
   setting_hotkey_interact: "Interact",
+  setting_hotkey_open_world_messages: "Open text box",
 
-  open_menu: "Open game menu [Escape]",
+  open_menu: "Open game menu",
 
   space_key: "SPACE",
 
@@ -1034,6 +1181,7 @@ const english = {
   legendary: "Legendary",
 
   // Statuses
+  effect_defend_name: "Defending",
   effect_poison_name: "Poison",
   effect_poison_desc: "Poison courses through your body, \nweakening and harming you.",
   effect_venom_name: "Venom",
@@ -1064,10 +1212,22 @@ const english = {
   effect_sneaky_stabbing_desc: "Your ability to hit critical points has been enhanced.",
   effect_smoke_bomb_effect_name: "Smoke Bomb",
   effect_smoke_bomb_effect_desc: "Your sight and power have been compromised by a hazy smoke screen.",
+  effect_smoke_evasion_name: "Smoke Screen Evasion",
+  effect_smoke_evasion_desc: "You exploit the smoke screen you've planted to evade attacks more easily.",
+  effect_encouraged_warrior_shout_name: "Encouraged!",
+  effect_encouraged_warrior_shout_desc: "You're feeling brave after receiving some motivation!",
+  effect_disheartened_warrior_shout_name: "Disheartened",
+  effect_disheartened_warrior_shout_desc: "Your courage has failed you.",
+  effect_heightened_senses_name: "Heightened Senses",
+  effect_heightened_senses_desc: "Your senses have peaked, making you more aware",
 
   // Abilities and stuff
   attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
   attack_action_desc: "attacks [TARGET], dealing [DMG] damage.",
+  defend_name: "Defend",
+  defend_desc: "Focus on protecting yourself this turn.",
+  defend_action_desc_pl: "<c>yellow<c>You<c>white<c> focus on defending.",
+  defend_action_desc: "focuses on defending.",
   focus_strike_name: "Focus Strike",
   focus_strike_desc: "Observe your opponent with precision,\nstriking only at the greatest opening.",
   focus_strike_action_desc_pl: "<c>yellow<c>You<c>white<c> focus on your opponents' mistakes, punishing [TARGET] with [DMG] damage.",
@@ -1165,12 +1325,30 @@ const english = {
   distraction_name: "Hasty Distraction",
   distraction_desc: "Plant a dummy nearby for enemies to target.",
   distraction_action_desc_pl: "You prop a dummy target on the ground!",
+  invigorating_finish_name: "Invigorating Finish",
+  invigorating_finish_desc: "Put your all into a blow with the intent to finish your foe.",
+  invigorating_finish_action_desc_pl: "<c>yellow<c>You<c>white<c> attempt to land a finishing blow on [TARGET], dealing [DMG] damage!",
+  invigorating_finish_action_desc: "attemps to land a finishing blow on [TARGET], dealing [DMG] damage.",
+  warrior_shout_name: "Warrior Shout!",
+  warrior_shout_desc: "Encourage yourself and horrify opponents \nwith a bloodcurdling scream!",
+  warrior_shout_action_desc_pl: "<c>yellow<c>You<c>white<c> shout so loudly that the noise itself becomes harmful to others!",
+  warrior_shout_action_desc_aoe_pl: "[TARGET] is struck by the sonic blast, taking [DMG] damage!",
+  totem_of_arrows_name: "Totem of Arrows",
+  totem_of_arrows_desc: "Totem that fires arrows at your enemies. Immobile.",
+  totem_of_arrows_action_desc_pl: "You place an arrow totem on the field.",
+  ranger_wolf_name: "Ranger's Wolf",
+  ranger_wolf_desc: "Man's best friend.",
+  ranger_wolf_action_desc_pl: "You whistle for your Wolf, and it appears before you in the blink of an eye.",
+  awaken_name: "Awaken",
+  awaken_desc: "Focus your senses to see further and be more accurate.",
+  awaken_action_desc_pl: "You focus your senses to your sight.",
 
   // CLASSES
   fighterClass_name: "Fighter",
   barbarianClass_name: "Barbarian",
   sorcererClass_name: "Sorcerer",
   rogueClass_name: "Rogue",
+  rangerClass_name: "Ranger",
 
   // PERKS //
 
@@ -1227,6 +1405,10 @@ const english = {
   charging_bull_desc: "The enemy will be disoriented by a sudden frontal charge!",
   concentrated_warrior_name: "Balanced Warrior",
   concentrated_warrior_desc: "Combining patience with unrelenting offense fells all evils.",
+  absorber_of_life_force_name: "Absorber of Life Force",
+  absorber_of_life_force_desc: "When there's no chance for rest between combats, \none must reinvigorate oneself from combat itself.",
+  fighting_with_your_voice_name: "A Helping Voice",
+  fighting_with_your_voice_desc: "Sometimes all you need to push forward is an encouraging shout.",
 
   // ROGUE
   way_of_the_rogue_name: "Way of the Rogue",
@@ -1283,6 +1465,30 @@ const english = {
   ultimate_warrior_desc: "I win because I place victory before survival!",
   unyielding_rage_name: "Continuous Rage",
   unyielding_rage_desc: "This rage is unyielding, it consumes me!",
+  
+  // RANGER
+  target_practice_name: "Target Practice",
+  target_practice_desc: "Practice makes perfect.",
+  call_of_the_forest_name: "Call of the Forest",
+  call_of_the_forest_desc: "Your very body itself is made for the wilds.",
+  rangers_totem_name: "Ranger's Totem",
+  rangers_totem_desc: "Setting up defenses is crucial to protect the forest.",
+  extra_totem_name: "Better in a Pair",
+  extra_totem_desc: "What's better than a turret? More turrets!",
+  lasting_totem_name: "Better material",
+  lasting_totem_desc: "Making defenses last is as important as having them.",
+  rangers_call_name: "Call of the Ranger",
+  rangers_call_desc: "The Wilds themselves are calling to you!",
+  awakening_name: "Awakening of the Wild",
+  awakening_desc: "Your true purpose is making itself known.",
+  hunter_mark_name: "The Hunter's Mark",
+  hunter_mark_desc: "The Wilds have recognized you as a true ranger.",
+  wild_call_name: "Ranger's Companion",
+  wild_call_desc: "You need not be alone on this journey.",
+  trusted_companion_name: "Trusted Companion",
+  trusted_companion_desc: "You can trust everything to your friend.",
+  fierce_beast_name: "Fierce Beast",
+  fierce_beast_desc: "The Wild molds its servants.",
 
   // ADVENTURER
   hearty_adventurer_1_name: "Hearty Adventurer I",
@@ -1309,4 +1515,7 @@ const english = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Logs enemy movement in the text area every turn. \nCan clutter the text screen.",
   toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
+  interact_help: "<f>16px<f>Open chests or pick loot when standing on the same tile. \nAlso used to talk to NPCs and interact with world.",
+  world_messages: "<f>16px<f>View more action messages displayed in the bottom left.",
+  toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach."
 } as any;

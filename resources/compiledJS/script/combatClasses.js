@@ -43,6 +43,17 @@ const combatClasses = {
         color: "#2b2b2b",
         perkTree: "rogue",
         icon: "resources/icons/rogue_symbol.png"
+    },
+    rangerClass: {
+        id: "rangerClass",
+        statBonuses: {
+            dexV: 3,
+            vitV: 2,
+            dexP: 10
+        },
+        color: "#19400a",
+        perkTree: "ranger",
+        icon: "resources/icons/ornate_ranger_bow.png"
     }
 };
 class combatClass {

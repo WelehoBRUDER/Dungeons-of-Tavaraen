@@ -1,26 +1,28 @@
 "use strict";
 class Enemy extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         super(base);
         const defaultModel = Object.assign({}, enemies[base.id]);
         this.sprite = defaultModel.sprite;
         this.aggroRange = (_b = (_a = defaultModel.aggroRange) !== null && _a !== void 0 ? _a : base.aggroRange) !== null && _b !== void 0 ? _b : 5;
-        this.attackRange = (_c = defaultModel.attackRange) !== null && _c !== void 0 ? _c : 1;
+        this.tempAggro = (_c = base.tempAggro) !== null && _c !== void 0 ? _c : 0;
+        this.tempAggroLast = (_d = base.tempAggroLast) !== null && _d !== void 0 ? _d : 0;
+        this.attackRange = (_e = defaultModel.attackRange) !== null && _e !== void 0 ? _e : 1;
         this.damages = Object.assign({}, defaultModel.damages);
         this.isFoe = true;
         this.firesProjectile = defaultModel.firesProjectile;
-        this.canFly = (_d = defaultModel.canFly) !== null && _d !== void 0 ? _d : false;
-        this.alive = (_e = base.alive) !== null && _e !== void 0 ? _e : true;
-        this.retreatLimit = (_f = base.retreatLimit) !== null && _f !== void 0 ? _f : 30;
+        this.canFly = (_f = defaultModel.canFly) !== null && _f !== void 0 ? _f : false;
+        this.alive = (_g = base.alive) !== null && _g !== void 0 ? _g : true;
+        this.retreatLimit = (_h = base.retreatLimit) !== null && _h !== void 0 ? _h : 30;
         this.spawnCords = Object.assign({}, base.spawnCords);
         this.spawnMap = base.spawnMap;
         this.loot = defaultModel.loot;
         this.shootsProjectile = defaultModel.shootsProjectile;
-        this.hasBeenLeveled = (_g = base.hasBeenLeveled) !== null && _g !== void 0 ? _g : false;
-        this.level = (_h = base.level) !== null && _h !== void 0 ? _h : 1;
+        this.hasBeenLeveled = (_j = base.hasBeenLeveled) !== null && _j !== void 0 ? _j : false;
+        this.level = (_k = base.level) !== null && _k !== void 0 ? _k : 1;
         this.xp = this.level > 1 ? Math.floor(defaultModel.xp + (defaultModel.xp * this.level / 2.9)) : defaultModel.xp;
-        this.statsPerLevel = (_j = Object.assign({}, defaultModel.statsPerLevel)) !== null && _j !== void 0 ? _j : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+        this.statsPerLevel = (_l = Object.assign({}, defaultModel.statsPerLevel)) !== null && _l !== void 0 ? _l : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;
@@ -28,9 +30,9 @@ class Enemy extends Character {
         this.type = defaultModel.type;
         this.race = defaultModel.race;
         this.targetInterval = 4;
-        this.currentTargetInterval = (_k = base.currentTargetInterval) !== null && _k !== void 0 ? _k : 0;
-        this.chosenTarget = (_l = base.chosenTarget) !== null && _l !== void 0 ? _l : null;
-        this.oldCords = (_m = Object.assign({}, base.oldCords)) !== null && _m !== void 0 ? _m : Object.assign({}, this.cords);
+        this.currentTargetInterval = (_m = base.currentTargetInterval) !== null && _m !== void 0 ? _m : 0;
+        this.chosenTarget = (_o = base.chosenTarget) !== null && _o !== void 0 ? _o : null;
+        this.oldCords = (_p = Object.assign({}, base.oldCords)) !== null && _p !== void 0 ? _p : Object.assign({}, this.cords);
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -45,11 +47,16 @@ class Enemy extends Character {
             this.hasBeenLeveled = true;
         }
         this.decideAction = async () => {
+            var _a;
+            if (this.tempAggroLast > 0) {
+                this.tempAggroLast--;
+                if (this.tempAggroLast <= 0)
+                    this.tempAggro = 0;
+            }
             // Will make enemy take their turn
             // Right now AI only randomly chooses an ability and checks if there's any point in using it,
             // Which is whether or not it'll actually hit the player.
             // This system already provides plenty of depth, but not truly intelligent foes.
-            var _a;
             // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
             // if(this.hpRemain() <= this.retreatLimit && !this.hasRetreated) {
@@ -154,6 +161,8 @@ class Enemy extends Character {
                 else
                     updateEnemiesTurn();
             }
+            else
+                updateEnemiesTurn();
             setTimeout(modifyCanvas, 200);
         };
         this.chooseAbility = () => {
@@ -223,9 +232,10 @@ class Enemy extends Character {
             // @ts-ignore
             let targets = combatSummons.concat([player]);
             let target = threatDistance(targets, this);
+            let range = this.aggroRange + this.tempAggro;
             // @ts-ignore
             if (target) {
-                if (generatePath(this.cords, target.cords, this.canFly, true) <= this.aggroRange)
+                if (generatePath(this.cords, target.cords, this.canFly, true) <= range)
                     return true;
             }
             return false;

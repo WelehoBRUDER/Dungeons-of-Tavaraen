@@ -21,7 +21,7 @@ var currentMap = 0;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
-const zoomLevels = [0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8];
+const zoomLevels = [0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8, 2];
 var currentZoom = 1;
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -159,6 +159,15 @@ function renderMap(map) {
             }
         }
     });
+    map.messages.forEach((msg) => {
+        var _a;
+        if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
+            const message = document.querySelector(".messageTile");
+            var tileX = (msg.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (msg.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
+        }
+    });
     /* Render Enemies */
     enemyLayers.textContent = ""; // Delete enemy canvases
     map.enemies.forEach((enemy, index) => {
@@ -191,7 +200,7 @@ function renderMap(map) {
                 let img = new Image(32, 32);
                 img.src = effect.icon;
                 img.addEventListener("load", e => {
-                    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+                    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
                     img = null;
                     statCount++;
                 });
@@ -285,7 +294,14 @@ function renderTileHover(tile, event) {
                 hoveredEnemy = true;
             }
         });
-        if (!hoveredEnemy) {
+        let hoveredSummon = false;
+        combatSummons.forEach((summon) => {
+            if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
+                hoverEnemyShow(summon);
+                hoveredSummon = true;
+            }
+        });
+        if (!hoveredEnemy && !hoveredSummon) {
             hideMapHover();
         }
         if (state.abiSelected.type == "movement" || state.abiSelected.type == "charge") {
@@ -308,7 +324,7 @@ function renderTileHover(tile, event) {
             });
         }
         /* Render highlight test */
-        else if (((((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.shoots_projectile) && state.isSelected) && event.buttons !== 1)) {
+        else if ((((((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.shoots_projectile) && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
             const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
             var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
             var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
@@ -360,6 +376,23 @@ function renderTileHover(tile, event) {
     }
     catch (_d) { }
 }
+function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
+    var _a;
+    if (!baseCtx)
+        throw new Error("2D context from base canvas is missing!");
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    playerCanvas.width = playerCanvas.width;
+    renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+    var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
+    let aoeMap = createAOEMap(player.cords, aoeSize, ignoreLedge);
+    for (let y = 0; y < spriteLimitY; y++) {
+        for (let x = 0; x < spriteLimitX; x++) {
+            if (((_a = aoeMap[mapOffsetStartY + y]) === null || _a === void 0 ? void 0 : _a[mapOffsetStartX + x]) == "x" && !(player.cords.x == x && player.cords.y == y)) {
+                playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            }
+        }
+    }
+}
 function mapHover(event) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
@@ -368,10 +401,15 @@ function mapHover(event) {
     const y = lY + player.cords.y;
     if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1)
         return;
+    if (DEVMODE) {
+        CURSOR_LOCATION.x = x;
+        CURSOR_LOCATION.y = y;
+        updateDeveloperInformation();
+    }
     renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (state.clicked || player.isDead)
         return;
     if (state.invOpen || (event.button != 0 && event.button != 2)) {
@@ -419,16 +457,16 @@ function clickMap(event) {
                             advanceTurn();
                     }
                 }
-                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false, true) <= state.abiSelected.use_range && !player.isRooted()) {
+                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
                     player.stats.mp -= state.abiSelected.mana_cost;
                     state.abiSelected.onCooldown = state.abiSelected.cooldown;
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
                 }
             }
-            else if (weaponReach(player, player.weapon.range, enemy)) {
+            else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
                 // @ts-expect-error
                 attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-                if (weaponReach(player, player.weapon.range, enemy)) {
+                if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
                     regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
                     advanceTurn();
                 }
@@ -462,19 +500,22 @@ function clickMap(event) {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (state.abiSelected.status) {
-            const _Effect = new statEffect(Object.assign({}, statusEffects[state.abiSelected.status]), state.abiSelected.statusModifiers);
-            let missing = true;
-            player.statusEffects.forEach((effect) => {
-                if (effect.id == state.abiSelected.status) {
-                    effect.last.current += _Effect.last.total;
-                    missing = false;
-                    return;
+        if (((_d = state.abiSelected.statusesUser) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+            state.abiSelected.statusesUser.forEach((status) => {
+                if (!player.statusEffects.find((eff) => eff.id == status)) {
+                    // @ts-ignore
+                    player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[status]), state.abiSelected.statusModifiers));
                 }
+                else {
+                    player.statusEffects.find((eff) => eff.id == status).last.current += statusEffects[status].last.total;
+                }
+                // @ts-ignore
+                statusEffects[status].last.current = statusEffects[status].last.total;
+                spawnFloatingText(player.cords, state.abiSelected.line, "crimson", 36);
+                let string = "";
+                string = lang[state.abiSelected.id + "_action_desc_pl"];
+                displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
             });
-            if (missing) {
-                player.statusEffects.push(Object.assign({}, _Effect));
-            }
         }
         movePlayer({ x: x, y: y }, true, state.abiSelected.use_range);
     }
@@ -501,11 +542,14 @@ function createSightMap(start, size) {
         return "0";
     }));
 }
-function createAOEMap(start, size) {
+function createAOEMap(start, size, ignoreLedge = false) {
     let aoeMap = emptyMap(maps[currentMap].base);
     let testiIsonnus = size ** 2;
     return aoeMap.map((rivi, y) => rivi.map((_, x) => {
-        if (!tiles[maps[currentMap].base[y][x]].isLedge && !tiles[maps[currentMap].base[y][x]].isWall && !clutters[maps[currentMap].clutter[y][x]].isWall) {
+        let pass = true;
+        if (tiles[maps[currentMap].base[y][x]].isLedge && !ignoreLedge)
+            pass = false;
+        if (pass && !tiles[maps[currentMap].base[y][x]].isWall && !clutters[maps[currentMap].clutter[y][x]].isWall) {
             if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus)
                 return "x";
         }
@@ -557,6 +601,7 @@ document.addEventListener("keyup", (keyPress) => {
     }
     if (dirs[keyPress.key]) {
         if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
+            moveMinimap();
             // @ts-ignore
             renderMap(maps[currentMap]);
             advanceTurn();
@@ -574,11 +619,16 @@ document.addEventListener("keyup", (keyPress) => {
                     advanceTurn();
                 }
             }
+            else {
+                state.abiSelected = {};
+                advanceTurn();
+            }
         }
     }
     else if (keyPress.key == settings.hotkey_interact) {
         activateShrine();
         pickLoot();
+        readMessage();
         maps[currentMap].treasureChests.forEach((chest) => {
             const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
@@ -697,6 +747,12 @@ function canMoveTo(char, tile) {
     for (let enemy of maps[currentMap].enemies) {
         if (enemy.cords.x == tile.x && enemy.cords.y == tile.y)
             movable = false;
+    }
+    if (char.id !== "player") {
+        for (let summon of combatSummons) {
+            if (summon.cords.x == tile.x && summon.cords.y == tile.y)
+                movable = false;
+        }
     }
     if (player.cords.x == tile.x && player.cords.y == tile.y)
         movable = false;
@@ -844,8 +900,9 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     if (start.x !== player.cords.x && start.y !== player.cords.y) {
         fieldMap[player.cords.y][player.cords.x] = 1;
         combatSummons.forEach(summon => {
-            if (summon.cords.x !== start.x && summon.cords.y !== start.y)
+            if (summon.cords.x !== start.x && summon.cords.y !== start.y) {
                 fieldMap[summon.cords.y][summon.cords.x] = 1;
+            }
         });
     }
     maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) {
@@ -987,6 +1044,8 @@ function generateArrowPath(start, end, distanceOnly = false) {
             ;
         });
         combatSummons.forEach(summon => {
+            if (summon.cords.x == start.x && summon.cords.y == start.y)
+                return;
             if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
                 arrow.summon = true;
                 arrow.blocked = true;
@@ -1010,13 +1069,13 @@ function generateArrowPath(start, end, distanceOnly = false) {
 }
 function modifyCanvas() {
     const layers = Array.from(document.querySelectorAll("canvas.layer"));
+    moveMinimap();
     for (let canvas of layers) {
         // @ts-ignore
         canvas.width = innerWidth;
         // @ts-ignore
         canvas.height = innerHeight;
     }
-    moveMinimap();
     // @ts-ignore
     renderMap(maps[currentMap]);
 }
@@ -1025,9 +1084,8 @@ var highestWaitTime = 0;
 async function advanceTurn() {
     if (player.isDead)
         return;
-    player.effects();
-    player.updateAbilities();
-    updateUI();
+    if (DEVMODE)
+        updateDeveloperInformation();
     state.inCombat = false;
     turnOver = false;
     enemiesHadTurn = 0;
@@ -1082,7 +1140,11 @@ async function advanceTurn() {
             updateEnemiesTurn();
         enemy.effects();
     });
+    player.effects();
+    player.updateAbilities();
+    updateUI();
     document.querySelector(".closestEnemyDistance").textContent = lang["closest_enemy"] + closestEnemyDistance;
+    showInteractPrompt();
     setTimeout(modifyCanvas, 500);
     updateUI();
     if (map.enemies.length == 0)
@@ -1092,6 +1154,37 @@ async function advanceTurn() {
     }
     if (player.stats.mp > player.getMpMax()) {
         player.stats.mp = player.getMpMax();
+    }
+}
+function showInteractPrompt() {
+    const interactPrompt = document.querySelector(".interactPrompt");
+    let foundPrompt = false;
+    let interactKey = settings["hotkey_interact"] == " " ? lang["space_key"] : settings["hotkey_interact"].toUpperCase();
+    interactPrompt.textContent = "";
+    itemData.some((itm) => {
+        if (itm.cords.x == player.cords.x && itm.cords.y == player.cords.y) {
+            foundPrompt = true;
+            interactPrompt.textContent = `[${interactKey}] ` + lang["pick_item"];
+            return;
+        }
+    });
+    if (!foundPrompt) {
+        maps[currentMap].treasureChests.some((chest) => {
+            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.loot.length > 0) {
+                foundPrompt = true;
+                interactPrompt.textContent = `[${interactKey}] ` + lang["pick_chest"];
+                return;
+            }
+        });
+    }
+    if (!foundPrompt) {
+        maps[currentMap].messages.some((msg) => {
+            if (msg.cords.x == player.cords.x && msg.cords.y == player.cords.y) {
+                foundPrompt = true;
+                interactPrompt.textContent = `[${interactKey}] ` + lang["read_msg"];
+                return;
+            }
+        });
     }
 }
 /* Show enemy stats when hovering */
@@ -1156,6 +1249,13 @@ function activateShrine() {
                 spawnFloatingText(player.cords, lang["shrine_used"], "cyan", 30, 500, 75);
             }
         }
+    });
+}
+function resetAllLivingEnemiesInAllMaps() {
+    maps.forEach((map) => {
+        map.enemies.forEach((enemy) => {
+            enemy.restore();
+        });
     });
 }
 //# sourceMappingURL=map.js.map

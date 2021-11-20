@@ -705,6 +705,9 @@ const maps = [
             new treasureChest(Object.assign(Object.assign({}, chestTemplates["default"]), { cords: { x: 153, y: 71 } })),
             new treasureChest(Object.assign(Object.assign({}, chestTemplates["knightChest"]), { cords: { x: 142, y: 75 } })),
         ],
+        messages: [
+            { cords: { x: 20, y: 70 }, id: "test_message" }
+        ],
     },
     {
         name: "Testing Dungeon",

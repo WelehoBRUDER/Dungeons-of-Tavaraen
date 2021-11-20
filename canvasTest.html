@@ -25,7 +25,23 @@
       const x = (index % onRow) * 128;
       const y = Math.floor(index / onRow) * 128;
       ctx.drawImage(img, x, y, 128, 128);
-      console.log(`Item: ${item.id}, spriteMap: {x: ${x}, y: ${y}}`);
+      //console.log(`Item: ${item.id}, spriteMap: {x: ${x}, y: ${y}}`);
     });
   });
+  const _items = {...items};
+  Object.entries(_items).forEach((itm, index) => {
+    const item = itm[1];
+    const x = (index % onRow) * 128;
+    const y = Math.floor(index / onRow) * 128;
+    item.spriteMap = {x: x, y: y};
+  });
+  let rawITEMS = JSON.stringify(_items, (key, value) => {
+    if(key == "value") return `§'[` + value.join(`, `) + `]'§`;
+    if(parseInt(key) >= 0 || key == "spriteMap" || key == "damages" || key == "resistances" || key == "requiresStats") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
+    if(key == "damagesTemplate" || key == "statsTemplate" || key == "resistancesTemplate") return;
+    return value;
+  } , 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
+  rawITEMS.replace(/\\"/g,"\uFFFF");
+  let unquoted = rawITEMS.replace(/"([^"]+)":/g, '$1:').replace(/\uFFFF/g, '\\\"');
+  console.log("const items = " + unquoted + " as any;");
 </script>

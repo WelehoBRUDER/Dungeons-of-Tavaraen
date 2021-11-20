@@ -1,5 +1,19 @@
 "use strict";
 const statusEffects = {
+    defend: {
+        id: "defend",
+        name: "Defend",
+        effects: {
+            resistAllV: 20,
+            evasionV: 10
+        },
+        last: {
+            total: 1,
+            current: 1
+        },
+        textIcon: "resources/icons/defend_skill.png",
+        icon: "resources/icons/defend_skill.png"
+    },
     poison: {
         id: "poison",
         name: "Poison",
@@ -137,6 +151,21 @@ const statusEffects = {
         aura: "redMist",
         icon: "resources/icons/fighters_rage.png"
     },
+    encouraged_warrior_shout: {
+        id: "encouraged_warrior_shout",
+        name: "Encouraged",
+        effects: {
+            damageP: 25,
+            evasionV: 10
+        },
+        last: {
+            total: 2,
+            current: 2
+        },
+        textIcon: icons.thumbs_up_white_skin,
+        aura: "redMist",
+        icon: "resources/icons/thumbs_up_white_skin.png"
+    },
     ward_of_aurous: {
         id: "ward_of_aurous",
         name: "WoA",
@@ -194,8 +223,23 @@ const statusEffects = {
             total: 7,
             current: 7
         },
-        textIcon: icons.hand_gripping_knife_icon,
+        textIcon: icons.sneaky_stabbing,
         icon: "resources/icons/hand_gripping_knife.png"
+    },
+    heightened_senses: {
+        id: "heightened_senses",
+        name: "Heightened Senses",
+        effects: {
+            critChanceP: 10,
+            damageP: 10,
+            sightV: 5
+        },
+        last: {
+            total: 10,
+            current: 10
+        },
+        textIcon: icons.heightened_senses,
+        icon: "resources/icons/eye_green.png"
     },
     smoke_bomb_effect: {
         id: "smoke_bomb_effect",
@@ -214,6 +258,19 @@ const statusEffects = {
         type: "stun",
         textIcon: icons.smoke_bomb_effect,
         icon: "resources/icons/smoke_bomb_effect.png"
+    },
+    smoke_evasion: {
+        id: "smoke_evasion",
+        name: "Smoke Screen Evasion",
+        effects: {
+            evasionV: 10,
+        },
+        last: {
+            total: 5,
+            current: 5
+        },
+        textIcon: "resources/icons/portal.png",
+        icon: "resources/icons/portal.png"
     },
     dazed: {
         id: "dazed",
@@ -244,8 +301,20 @@ const statusEffects = {
         },
         rooted: true,
         type: "stun",
-        textIcon: icons.dazed,
-        icon: "resources/icons/dazed.png"
+        textIcon: icons.hiddenIcon,
+        icon: "resources/icons/hiddenIcon.png"
+    },
+    rootedConstruct: {
+        id: "rootedConstruct",
+        name: "Rooted Construct",
+        last: {
+            total: 100,
+            current: 100
+        },
+        rooted: true,
+        type: "stun",
+        textIcon: icons.hiddenIcon,
+        icon: "resources/icons/hiddenIcon.png"
     },
     disoriented: {
         id: "disoriented",
@@ -279,6 +348,22 @@ const statusEffects = {
         type: "stun",
         textIcon: icons.dueled,
         icon: "resources/icons/dueled.png"
+    },
+    disheartened_warrior_shout: {
+        id: "disheartened_warrior_shout",
+        name: "Disheartened",
+        effects: {
+            damageP: -10,
+            hitChanceV: -3,
+            evasionV: -2
+        },
+        last: {
+            total: 5,
+            current: 5
+        },
+        type: "stun",
+        textIcon: icons.health_cost_icon,
+        icon: "resources/icons/health_cost.png"
     },
     summoned: {
         id: "summoned",

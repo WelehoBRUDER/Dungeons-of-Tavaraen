@@ -45,7 +45,6 @@ const raceEffects = {
         modifiers: {
             strV: 5,
             vitV: 5,
-            sightV: 1,
             hpMaxP: 10,
         },
         name: "Orcy Bod",
@@ -55,6 +54,7 @@ const raceEffects = {
         modifiers: {
             dexV: 5,
             cunV: 5,
+            sightV: 1,
             evasionV: 5,
             critDamageP: 20
         },
@@ -114,7 +114,7 @@ class PlayerCharacter extends Character {
         };
         this.sight = () => {
             const { v: val, m: mod } = getModifiers(this, "sight");
-            return Math.floor((8 + val) * mod);
+            return Math.floor((10 + val) * mod);
         };
         this.drop = (itm) => {
             const item = Object.assign({}, itm);
@@ -123,16 +123,19 @@ class PlayerCharacter extends Character {
             renderInventory();
             modifyCanvas();
         };
-        this.updatePerks = () => {
-            this.perks.forEach(prk => {
+        this.updatePerks = (dontUpdateUI = false, dontExecuteCommands = false) => {
+            this.perks.forEach((prk, index) => {
                 var _a;
                 let cmdsEx = prk.commandsExecuted;
                 prk = new perk(Object.assign({}, perksArray[prk.tree]["perks"][prk.id]));
-                if (!cmdsEx) {
+                if (!cmdsEx && !dontExecuteCommands) {
                     (_a = Object.entries(prk.commands)) === null || _a === void 0 ? void 0 : _a.forEach(cmd => { command(cmd); });
                 }
                 prk.commandsExecuted = cmdsEx;
+                this.perks[index] = Object.assign({}, prk);
             });
+            if (dontUpdateUI)
+                return;
             updateUI();
         };
         this.unequip = (event, slot) => {
@@ -321,6 +324,22 @@ class PlayerCharacter extends Character {
             });
             return vals;
         };
+        this.addItem = (itm) => {
+            if (itm.stacks) {
+                let wasAdded = false;
+                this.inventory.forEach((item) => {
+                    if (itm.id == item.id) {
+                        wasAdded = true;
+                        item.amount += itm.amount;
+                    }
+                });
+                if (!wasAdded)
+                    this.inventory.push(Object.assign({}, itm));
+            }
+            else {
+                this.inventory.push(Object.assign({}, itm));
+            }
+        };
     }
 }
 function nextLevel(level) {
@@ -472,6 +491,11 @@ var player = new PlayerCharacter({
         hp: 100,
         mp: 30
     },
+    armor: {
+        physical: 0,
+        magical: 0,
+        elemental: 0
+    },
     // 340 resistance equals to 100% damage negation, meaning 1 damage taken.
     resistances: {
         slash: 0,
@@ -497,7 +521,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["sorcererClass"]),
+        main: new combatClass(combatClasses["rangerClass"]),
         sub: null
     },
     sprite: ".player",
@@ -505,7 +529,7 @@ var player = new PlayerCharacter({
     hair: 3,
     eyes: 2,
     face: 1,
-    weapon: new Weapon(Object.assign({}, items.longsword)),
+    weapon: new Weapon(Object.assign({}, items.huntingBow)),
     chest: new Armor(Object.assign({}, items.raggedShirt)),
     offhand: {},
     helmet: {},
@@ -521,6 +545,7 @@ var player = new PlayerCharacter({
         new Ability(Object.assign({}, abilities.attack), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
     ],
     statModifiers: [
         {
@@ -557,9 +582,12 @@ var randomProperty = function (mods) {
     var keys = Object.keys(mods);
     return mods[keys[keys.length * Math.random() << 0]];
 };
-for (let i = 0; i < 10; i++) {
-    player.inventory.push(Object.assign({}, randomProperty(items)));
-}
+// for (let i = 0; i < 20; i++) {
+//   player.addItem({ ...randomProperty(items) });
+// }
+// for (let itm of Object.entries(items)) {
+//   player.addItem({...itm[1], level: 5});
+// }
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 //# sourceMappingURL=player.js.map

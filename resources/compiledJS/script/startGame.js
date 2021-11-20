@@ -62,6 +62,7 @@ const emptyModel = {
         new Ability(Object.assign({}, abilities.attack), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
+        new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
     ],
     statModifiers: [
         {

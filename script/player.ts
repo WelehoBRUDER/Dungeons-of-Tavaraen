@@ -32,6 +32,7 @@ interface playerChar extends characterObject {
   getArtifactSetBonuses?: Function;
   flags?: {};
   getBaseStats?: Function;
+  addItem?: Function;
 }
 
 interface levelObject {
@@ -97,7 +98,6 @@ const raceEffects = {
     modifiers: {
       strV: 5,
       vitV: 5,
-      sightV: 1,
       hpMaxP: 10,
     },
     name: "Orcy Bod",
@@ -107,6 +107,7 @@ const raceEffects = {
     modifiers: {
       dexV: 5,
       cunV: 5,
+      sightV: 1,
       evasionV: 5,
       critDamageP: 20
     },
@@ -155,6 +156,7 @@ class PlayerCharacter extends Character {
   oldCords?: tileObject;
   getArtifactSetBonuses?: Function;
   flags?: {};
+  addItem?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -208,7 +210,7 @@ class PlayerCharacter extends Character {
 
     this.sight = () => {
       const { v: val, m: mod } = getModifiers(this, "sight");
-      return Math.floor((8 + val) * mod);
+      return Math.floor((10 + val) * mod);
     };
 
     this.drop = (itm: any) => {
@@ -219,15 +221,17 @@ class PlayerCharacter extends Character {
       modifyCanvas();
     };
 
-    this.updatePerks = () => {
-      this.perks.forEach(prk => {
+    this.updatePerks = (dontUpdateUI: boolean = false, dontExecuteCommands: boolean = false) => {
+      this.perks.forEach((prk: any, index: number) => {
         let cmdsEx = prk.commandsExecuted;
         prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
-        if (!cmdsEx) {
+        if (!cmdsEx && !dontExecuteCommands) {
           Object.entries(prk.commands)?.forEach(cmd => { command(cmd); });
         }
         prk.commandsExecuted = cmdsEx;
+        this.perks[index] = {...prk};
       });
+      if(dontUpdateUI) return;
       updateUI();
     };
 
@@ -395,6 +399,22 @@ class PlayerCharacter extends Character {
       });
       return vals;
     }
+
+    this.addItem = (itm: any) => {
+      if(itm.stacks) {
+        let wasAdded = false;
+        this.inventory.forEach((item: any) => {
+          if(itm.id == item.id) {
+            wasAdded = true;
+            item.amount += itm.amount;
+          }
+        });
+        if(!wasAdded) this.inventory.push({...itm});
+      }
+      else {
+        this.inventory.push({...itm});
+      }
+    }
   }
 }
 
@@ -558,6 +578,11 @@ var player = new PlayerCharacter({
     hp: 100,
     mp: 30
   },
+  armor: {
+    physical: 0,
+    magical: 0,
+    elemental: 0
+  },
   // 340 resistance equals to 100% damage negation, meaning 1 damage taken.
   resistances: {
     slash: 0,
@@ -583,7 +608,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["sorcererClass"]),
+    main: new combatClass(combatClasses["rangerClass"]),
     sub: null
   },
   sprite: ".player",
@@ -591,7 +616,7 @@ var player = new PlayerCharacter({
   hair: 3,
   eyes: 2,
   face: 1,
-  weapon: new Weapon({ ...items.longsword }),
+  weapon: new Weapon({ ...items.huntingBow }),
   chest: new Armor({ ...items.raggedShirt }),
   offhand: {},
   helmet: {},
@@ -607,6 +632,7 @@ var player = new PlayerCharacter({
     new Ability({ ...abilities.attack }, dummy),
     new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
+    new Ability({ ...abilities.defend,  equippedSlot: 2}, dummy),
   ],
   statModifiers: [
     {
@@ -646,9 +672,13 @@ var randomProperty = function (mods: any) {
   return mods[keys[keys.length * Math.random() << 0]];
 };
 
-for (let i = 0; i < 10; i++) {
-  player.inventory.push({ ...randomProperty(items) });
-}
+// for (let i = 0; i < 20; i++) {
+//   player.addItem({ ...randomProperty(items) });
+// }
+
+// for (let itm of Object.entries(items)) {
+//   player.addItem({...itm[1], level: 5});
+// }
 
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();

@@ -40,11 +40,12 @@ class statEffect {
   break_concentration?: boolean;
   constructor(base: statusEffect, modifiers: any) {
     // @ts-ignore
+    if(!base) throw new Error("BASE EFFECT INVALID!");
     const defaultEffect: statusEffect = statusEffects[base.id];
     this.id = defaultEffect.id;
     this.name = defaultEffect.name;
     this.dot = setDOT({...defaultEffect.dot});
-    this.effects = effectsInit({...defaultEffect.effects});
+    this.effects = effectsInit({...defaultEffect.effects}, this.id);
     this.last = {total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif)};
     this.rooted = defaultEffect.rooted;
     this.type = defaultEffect.type;
@@ -54,13 +55,14 @@ class statEffect {
     this.aura = defaultEffect.aura ?? "";
     this.silence = defaultEffect.silence ?? false;
     this.break_concentration = defaultEffect.break_concentration ?? false;
-    function effectsInit(effects: any) {
+    function effectsInit(effects: any, id: string) {
       let total: any = effects;
       Object.entries(modifiers.effects).forEach((eff: any) => {
         const key = eff[0];
         const val = eff[1].value;
         const mod = eff[1].modif;
-        if(val !== 0 || mod !== 1) {
+        const statusId = eff[1].status;
+        if((val !== 0 || mod !== 1) && statusId == id) {
           var num = total[key];
           if(!num) num = 0;
           total[key] = Math.floor(((num + val) * mod));

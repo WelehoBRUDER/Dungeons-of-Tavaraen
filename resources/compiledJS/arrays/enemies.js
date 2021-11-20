@@ -524,7 +524,7 @@ const enemies = {
             vit: 1
         },
         loot: [
-            { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+            { type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25 },
             { type: "gold", amount: [2, 11] }
         ]
     },

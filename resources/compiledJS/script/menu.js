@@ -35,6 +35,28 @@ const mainButtons = [
         action: () => gotoSettingsMenu(true)
     },
 ];
+const grades = {
+    common: {
+        color: "#e0e0e0",
+        worth: 1
+    },
+    uncommon: {
+        color: "#7ccf63",
+        worth: 2
+    },
+    rare: {
+        color: "#4287f5",
+        worth: 3.25
+    },
+    mythical: {
+        color: "#5e18a3",
+        worth: 5
+    },
+    legendary: {
+        color: "#cfcf32",
+        worth: 8
+    }
+};
 const menuSettings = [
     {
         id: "setting_log_enemy_movement",
@@ -59,6 +81,11 @@ const menuSettings = [
         type: "hotkey",
     },
     {
+        id: "setting_hotkey_ranged",
+        tooltip: "toggle_rangedMode",
+        type: "hotkey",
+    },
+    {
         id: "setting_hotkey_move_up",
         type: "hotkey",
     },
@@ -76,6 +103,12 @@ const menuSettings = [
     },
     {
         id: "setting_hotkey_interact",
+        tooltip: "interact_help",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_open_world_messages",
+        tooltip: "world_messages",
         type: "hotkey",
     },
     {
@@ -94,7 +127,10 @@ const state = {
     menuOpen: false,
     titleScreen: false,
     optionsOpen: false,
-    savesOpen: false
+    savesOpen: false,
+    displayingTextHistory: false,
+    rangedMode: false,
+    textWindowOpen: false
 };
 function handleEscape() {
     if (state.perkOpen) {
@@ -117,6 +153,14 @@ function handleEscape() {
         closeSettingsMenu();
         state.optionsOpen = false;
     }
+    else if (state.displayingTextHistory) {
+        state.displayingTextHistory = false;
+        displayAllTextHistory();
+    }
+    else if (state.rangedMode) {
+        state.rangedMode = false;
+        renderTileHover(player.cords, null);
+    }
     else if (state.menuOpen && !state.titleScreen) {
         closeGameMenu(false, false, false);
         state.menuOpen = false;
@@ -127,6 +171,7 @@ function handleEscape() {
     }
     state.isSelected = false;
     state.abiSelected = {};
+    closeTextWindow();
     updateUI();
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
@@ -260,6 +305,9 @@ function gotoSettingsMenu(inMainMenu = false) {
                     selectingHotkey = _setting;
                 }
             });
+            if (setting.tooltip) {
+                tooltip(container, lang[setting.tooltip]);
+            }
             container.append(text, keyButton);
             settingsBackground.append(container);
         }
@@ -312,6 +360,32 @@ async function gotoMainMenu() {
         }
         mainMenuButtons.append(frame);
     }
+}
+function trimPlayerObjectForSaveFile(playerObject) {
+    const trimmed = Object.assign({}, playerObject);
+    trimmed.inventory.forEach((itm, index) => {
+        if (itm.stackable)
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount };
+        else if (itm.level)
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
+        else
+            trimmed.inventory[index] = { id: itm.id, type: itm.type };
+    });
+    trimmed.abilities.forEach((abi, index) => {
+        // @ts-ignore
+        trimmed.abilities[index] = { id: abi.id, equippedSlot: abi.equippedSlot };
+    });
+    trimmed.allModifiers = {};
+    equipSlots.forEach((slot) => {
+        var _a, _b;
+        if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
+            trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: (_b = trimmed[slot].level) !== null && _b !== void 0 ? _b : 0 };
+        }
+    });
+    trimmed.perks.forEach((perk, index) => {
+        trimmed.perks[index] = { id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted };
+    });
+    return trimmed;
 }
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     hideHover();
@@ -386,7 +460,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         }
         saveOverwrite.addEventListener("click", () => {
             let saveData = {};
-            saveData.player = Object.assign({}, player);
+            saveData.player = trimPlayerObjectForSaveFile(player);
             saveData.fallenEnemies = [...fallenEnemies];
             saveData.itemData = [...itemData];
             saveData.currentMap = currentMap;
@@ -412,6 +486,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 lootedChests = (_a = [...save.save.lootedChests]) !== null && _a !== void 0 ? _a : [];
             currentMap = save.save.currentMap;
             tree = player.classes.main.perkTree;
+            player.updatePerks(true);
             player.updateAbilities();
             purgeDeadEnemies();
             handleEscape();
@@ -427,6 +502,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         });
         saveName.textContent = save.text;
         let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
+        renderedPlayer.updatePerks(false, true);
+        renderedPlayer.updateAbilities();
         renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
         await sleep(5);
         buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
@@ -491,7 +568,7 @@ function createNewSaveGame() {
     let sortTime = +(new Date());
     let saveTime = new Date();
     let gameSave = {};
-    gameSave.player = Object.assign({}, player);
+    gameSave.player = trimPlayerObjectForSaveFile(player);
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
     gameSave.currentMap = currentMap;
@@ -521,7 +598,7 @@ function saveToFile(input) {
     let saveArray = [
         {
             key: "player",
-            data: Object.assign({}, player)
+            data: trimPlayerObjectForSaveFile(player)
         },
         {
             key: "itemData",
@@ -613,12 +690,26 @@ function LoadSlot(data) {
     lootedChests = GetKey("lootedChests", data).data;
     currentMap = GetKey("currentMap", data).data;
     tree = player.classes.main.perkTree;
+    player.updatePerks(true);
     player.updateAbilities();
-    player.updatePerks();
     purgeDeadEnemies();
     handleEscape();
     closeGameMenu();
     modifyCanvas();
     updateUI();
+}
+function openTextWindow(txt) {
+    state.textWindowOpen = true;
+    const textWindow = document.querySelector(".textWindow");
+    textWindow.style.transform = "scale(1)";
+    textWindow.textContent = "";
+    // @ts-ignore
+    textWindow.append(textSyntax(txt));
+}
+function closeTextWindow() {
+    state.textWindowOpen = false;
+    const textWindow = document.querySelector(".textWindow");
+    textWindow.style.transform = "scale(0)";
+    textWindow.textContent = "";
 }
 //# sourceMappingURL=menu.js.map

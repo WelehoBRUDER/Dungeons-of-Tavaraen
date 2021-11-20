@@ -11,10 +11,12 @@ class gameSettings {
         this.hotkey_inv = base.hotkey_inv || "i";
         this.hotkey_char = base.hotkey_char || "c";
         this.hotkey_perk = base.hotkey_perk || "p";
+        this.hotkey_ranged = base.hotkey_ranged || "g";
         this.hotkey_move_up = base.hotkey_move_up || "w";
         this.hotkey_move_down = base.hotkey_move_down || "s";
         this.hotkey_move_left = base.hotkey_move_left || "a";
         this.hotkey_move_right = base.hotkey_move_right || "d";
+        this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
         this.hotkey_interact = base.hotkey_interact || " ";
     }
 }
@@ -24,11 +26,13 @@ let settings = new gameSettings({
     hotkey_inv: "i",
     hotkey_char: "c",
     hotkey_perk: "p",
+    hotkey_ranged: "g",
     hotkey_move_up: "w",
     hotkey_move_down: "s",
     hotkey_move_left: "a",
     hotkey_move_right: "d",
     hotkey_interact: " ",
+    hotkey_open_world_messages: "Enter"
 });
 // Hotkeys
 document.addEventListener("keyup", e => {
@@ -48,13 +52,27 @@ document.addEventListener("keyup", e => {
             player.abilities.forEach(abi => abi.onCooldown = 0);
             player.statusEffects = [];
             updateUI();
+            resetAllLivingEnemiesInAllMaps();
             modifyCanvas();
             displayText("HERÄSIT KUOLLEISTA!");
             spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+            return;
         }
     }
     else if (e.key == "Escape") {
         handleEscape();
+        return;
+    }
+    if (e.key == settings["hotkey_open_world_messages"]) {
+        if (state.displayingTextHistory)
+            state.displayingTextHistory = false;
+        else
+            state.displayingTextHistory = true;
+        displayAllTextHistory();
+        return;
+    }
+    if (e.key == settings["hotkey_ranged"]) {
+        state.rangedMode = !state.rangedMode;
     }
     if (player.isDead || state.savesOpen)
         return;
@@ -139,8 +157,14 @@ function generateHotbar() {
                     tooltip(abiDiv, itemTT(abi));
                     abiDiv.addEventListener("click", () => useConsumable(abi));
                     const cdTxt = document.createElement("p");
-                    cdTxt.classList.add("usesHotbar");
-                    cdTxt.textContent = `${abi.usesRemaining}/${abi.usesTotal}`;
+                    if (abi.stacks) {
+                        cdTxt.classList.add("amountHotbar");
+                        cdTxt.textContent = `${abi.amount}`;
+                    }
+                    else {
+                        cdTxt.classList.add("usesHotbar");
+                        cdTxt.textContent = `${abi.usesRemaining}/${abi.usesTotal}`;
+                    }
                     frame.append(cdTxt);
                 }
                 else {
@@ -156,6 +180,10 @@ function generateHotbar() {
                             cdTxt.textContent = ((_a = abi.onCooldown) === null || _a === void 0 ? void 0 : _a.toString()) || "0";
                             frame.append(cdTxt);
                         }
+                    }
+                    if (abi.instant_aoe) {
+                        abiDiv.addEventListener("mouseover", e => renderAOEHoverOnPlayer(abi.aoe_size, abi.aoe_ignore_ledge));
+                        abiDiv.addEventListener("mouseleave", e => renderTileHover(player.cords, e));
                     }
                 }
                 abiDiv.append(abiImg);
@@ -174,9 +202,17 @@ function useConsumable(itm) {
         spawnFloatingText(player.cords, itm.manaValue.toString(), "cyan", 36, 1000, 200);
     }
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${lang["useConsumable"]}`);
-    itm.usesRemaining--;
-    if (itm.usesRemaining <= 0) {
-        player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+    if (itm.stacks) {
+        itm.amount--;
+        if (itm.amount <= 0) {
+            player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+        }
+    }
+    else {
+        itm.usesRemaining--;
+        if (itm.usesRemaining <= 0) {
+            player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+        }
     }
     hideHover();
     advanceTurn();
@@ -265,7 +301,7 @@ function generateEffects() {
 }
 // Tooltip for ability
 function abiTT(abi) {
-    var _a, _b, _c;
+    var _a, _b, _c, _e, _f, _g, _h;
     var txt = "";
     txt += `\t<f>26px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>19px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
@@ -273,12 +309,20 @@ function abiTT(abi) {
         txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
     if (abi.requires_concentration && !player.concentration())
         txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
-    if (abi.base_heal)
-        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
+    if (abi.base_heal) {
+        let healFromHP = (_c = Math.floor(player.getHpMax() * abi.heal_percentage / 100)) !== null && _c !== void 0 ? _c : 0;
+        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
+        if (abi.heal_percentage) {
+            txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
+        }
+    }
+    else if (abi.heal_percentage) {
+        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(player.getHpMax() * abi.heal_percentage / 100)})\n`;
+    }
     if (abi.damages) {
         var total = 0;
         var text = "";
-        (_c = Object.entries(abi.get_true_damage(player))) === null || _c === void 0 ? void 0 : _c.forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        (_e = Object.entries(abi.get_true_damage(player))) === null || _e === void 0 ? void 0 : _e.forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
@@ -295,9 +339,32 @@ function abiTT(abi) {
         txt += `<i>${icons.rp_icon}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
         txt += `<i>${icons.range_icon}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
-    if (abi.status) {
-        txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
-        txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
+    // if (abi.status) {
+    //   txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
+    //   txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
+    // }
+    if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
+        txt += `<f>20px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
+    }
+    else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
+        txt += `<f>20px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
+    }
+    if (((_f = abi.statusesEnemy) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+        txt += `<f>20px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
+        abi.statusesEnemy.forEach((status) => {
+            txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+        });
+    }
+    if (((_g = abi.statusesUser) === null || _g === void 0 ? void 0 : _g.length) > 0) {
+        txt += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
+        abi.statusesUser.forEach((status) => {
+            txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+        });
+    }
+    if (((_h = abi.statusesUser) === null || _h === void 0 ? void 0 : _h.length) > 0 && abi.aoe_size > 0) {
+        txt += `<f>20px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
     }
     if (abi.type)
         txt += `<f>20px<f>${lang["type"]}: ${lang[abi.type]}\n`;
@@ -317,18 +384,26 @@ function abiTT(abi) {
         txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
     if (abi.summon_last)
         txt += `<f>20px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+    if (abi.total_summon_limit)
+        txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
         txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)
         txt += `<i>${icons.mana_icon}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+    if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
+        if (abi.health_cost > 0)
+            txt += `<f>20px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost}`;
+        else
+            txt += `<f>20px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
+    }
     if (abi.cooldown > 0)
         txt += `<i>${icons.cooldown_icon}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
 }
 function embedAbiTT(abi) {
-    var _a, _b;
+    var _a, _b, _c, _e, _f, _g;
     var txt = "";
     txt += `\t<f>17px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>14px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
@@ -358,9 +433,28 @@ function embedAbiTT(abi) {
         txt += `<i>${icons.rp_icon}<i><f>15px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
         txt += `<i>${icons.range_icon}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
-    if (abi.status) {
-        txt += `<f>15px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
-        txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
+    if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
+        txt += `<f>15px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
+    }
+    else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
+        txt += `<f>15px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
+    }
+    if (((_c = abi.statusesEnemy) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+        txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
+        abi.statusesEnemy.forEach((status) => {
+            txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+        });
+    }
+    if (((_e = abi.statusesUser) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+        txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
+        abi.statusesUser.forEach((status) => {
+            txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+        });
+    }
+    if (((_f = abi.statusesUser) === null || _f === void 0 ? void 0 : _f.length) > 0 && abi.aoe_size > 0) {
+        txt += `<f>14px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
     }
     if (abi.type)
         txt += `<f>15px<f>${lang["type"]}: ${lang[abi.type]}\n`;
@@ -374,12 +468,26 @@ function embedAbiTT(abi) {
         txt += `<i>${icons.concentration_icon}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
     if (abi.recharge_only_in_combat)
         txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+    if (abi.summon_unit)
+        txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${(_g = lang[abi.summon_unit + "_name"]) !== null && _g !== void 0 ? _g : abi.summon_unit}<c>white<c>\n`;
+    if (abi.summon_level)
+        txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
+    if (abi.summon_last)
+        txt += `<f>15px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+    if (abi.total_summon_limit)
+        txt += `<f>15px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
         txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)
         txt += `<i>${icons.mana_icon}<i><f>15px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+    if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
+        if (abi.health_cost > 0)
+            txt += `<f>15px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost}`;
+        else
+            txt += `<f>15px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
+    }
     if (abi.cooldown > 0)
         txt += `<i>${icons.cooldown_icon}<i><f>15px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
@@ -454,6 +562,13 @@ function effectSyntax(effect, embed = false, effectId = "") {
                 _d = modi;
             }
         });
+        let statusId = "";
+        Object.keys(statusEffects).forEach((keyStr) => {
+            if (id.endsWith(keyStr)) {
+                statusId = keyStr;
+                id = id.replace("_" + keyStr, "");
+            }
+        });
         key = id + "_name";
         let _value = 0;
         if (player.statusEffects.find((eff) => eff.id == effectId))
@@ -469,7 +584,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
         catch (_e) { }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);
-        let status = new statEffect(statusEffects[_abi.status], _abi.statusModifiers);
+        let status = new statEffect(statusEffects[statusId], _abi.statusModifiers);
         if (_d.includes("attack_damage_multiplier")) {
             tailEnd = lang["attack_name"];
         }
@@ -558,12 +673,87 @@ function updateUI() {
     generateEffects();
     xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
+const worldTextHistoryArray = [];
+const worldTextHistoryMaximumSize = 200;
+const worldTextHistoryDisplayAutoSize = 12; // Display 12 latest messages without player input. Active for 15s every time a new message appears.
+const worldTextDisplayTime = 15000; // 15 seconds
 const worldTextContainer = document.querySelector(".worldText");
+let worldTextScroll = -1; // Current scroll
 function displayText(txt) {
-    worldTextContainer.append(textSyntax(txt));
-    worldTextContainer.scrollBy(0, 1000);
-    if (worldTextContainer.childNodes.length > 49)
+    worldTextContainer.style.transition = `0.25s`;
+    worldTextContainer.style.opacity = 1;
+    if (!state.displayingTextHistory) {
+        worldTextContainer.textContent = "";
+        worldTextContainer.style.pointerEvents = "none";
+    }
+    displayLatestWorldHistoryMessages();
+    const textElement = textSyntax(txt);
+    worldTextHistoryArray.push(textElement);
+    worldTextContainer.append(textElement);
+    if (!state.displayingTextHistory)
+        worldTextContainer.scrollBy(0, 1000);
+    if (worldTextContainer.childNodes.length > 199)
         worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
+    if (worldTextHistoryArray.length > worldTextHistoryMaximumSize)
+        worldTextHistoryArray.splice(0, 1);
+    if (state.displayingTextHistory)
+        return;
+    setTimeout(() => {
+        if (state.displayingTextHistory)
+            return;
+        worldTextContainer.style.transition = `${worldTextDisplayTime / 3000}s`;
+        worldTextContainer.style.opacity = 0;
+    }, worldTextDisplayTime * 0.6);
+    setTimeout(() => {
+        if (state.displayingTextHistory)
+            return;
+        try {
+            worldTextContainer.removeChild(textElement);
+        }
+        catch (_a) { }
+    }, worldTextDisplayTime);
+}
+function displayLatestWorldHistoryMessages() {
+    if (state.displayingTextHistory)
+        return;
+    for (let i = startIndexOfWorldTextHistory(); i < worldTextHistoryArray.length; i++) {
+        worldTextContainer.append(worldTextHistoryArray[i]);
+    }
+}
+worldTextContainer.addEventListener("wheel", () => {
+    worldTextScroll = worldTextContainer.scrollTop;
+});
+function displayAllTextHistory() {
+    worldTextContainer.style.transition = `0.25s`;
+    worldTextContainer.style.opacity = 1;
+    worldTextContainer.textContent = "";
+    if (!state.displayingTextHistory) {
+        worldTextContainer.style.opacity = 0;
+        worldTextContainer.style.pointerEvents = "none";
+        return;
+    }
+    worldTextContainer.style.pointerEvents = "all";
+    worldTextContainer.innerHTML = `
+  <img src="resources/icons/triangleUp.png" class="scrollUp" onclick="scrollWorldText(-100)">
+  <img src="resources/icons/triangleDown.png" class="scrollDown" onclick="scrollWorldText(100)">
+  `;
+    worldTextHistoryArray.forEach((txt) => {
+        worldTextContainer.append(txt);
+        worldTextContainer.scrollBy(0, 1000);
+    });
+    if (worldTextScroll < 0)
+        worldTextScroll = worldTextContainer.scrollTop;
+    worldTextContainer.scrollTo(0, worldTextScroll);
+}
+function startIndexOfWorldTextHistory() {
+    if (worldTextHistoryArray.length - worldTextHistoryDisplayAutoSize > 1)
+        return worldTextHistoryArray.length - worldTextHistoryDisplayAutoSize;
+    else
+        return 0;
+}
+function scrollWorldText(num) {
+    worldTextContainer.scrollBy(0, num);
+    worldTextScroll = worldTextContainer.scrollTop;
 }
 function tooltip(element, text) {
     element.addEventListener("mouseover", e => { showHover(e, text); });
@@ -600,6 +790,7 @@ function renderCharacter() {
     const playerStats = player.getStats();
     const hitChances = player.getHitchance();
     const playerCoreStats = Object.assign(Object.assign({}, playerStats), hitChances);
+    const playerArmor = player.getArmor();
     const playerResists = player.getResists();
     const playerStatusResists = player.getStatusResists();
     const generalInfo = document.createElement("div");
@@ -658,6 +849,25 @@ function renderCharacter() {
         statContainer.append(statImage, statText, statValue);
         coreStats.append(statContainer);
     });
+    Object.entries(playerArmor).forEach((stat) => {
+        var _a;
+        const key = stat[0] == "chance" ? "hitChance" : stat[0];
+        const val = stat[1];
+        const statContainer = document.createElement("div");
+        const statImage = document.createElement("img");
+        const statText = document.createElement("p");
+        const statValue = document.createElement("span");
+        statImage.src = icons[key + "_armor"];
+        statText.textContent = lang[key];
+        statValue.textContent = val;
+        if (val > 0)
+            statValue.classList.add("positive");
+        else if (val < 0)
+            statValue.classList.add("negative");
+        tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+        statContainer.append(statImage, statText, statValue);
+        coreResistances.append(statContainer);
+    });
     Object.entries(playerResists).forEach((stat) => {
         const key = stat[0] == "chance" ? "hitChance" : stat[0];
         const val = stat[1];
@@ -672,6 +882,7 @@ function renderCharacter() {
             statValue.classList.add("positive");
         else if (val < 0)
             statValue.classList.add("negative");
+        tooltip(statContainer, lang["resistances_tt"]);
         statContainer.append(statImage, statText, statValue);
         coreResistances.append(statContainer);
     });
@@ -683,7 +894,6 @@ function renderCharacter() {
         const statImage = document.createElement("img");
         const statText = document.createElement("p");
         const statValue = document.createElement("span");
-        console.log(key);
         statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
         statText.textContent = lang[key + "_status"];
         statValue.textContent = val + "%";
@@ -712,7 +922,6 @@ function renderCharacter() {
     tooltip(effResistances, "Status resistance either decreases damage\n of its type by the indicated number\n or decreases the chance of the status effecting you.");
     pc.style.left = "24px";
     pc.style.top = "24px";
-    tooltip(coreResistances, lang["resistances_tt"]);
     tooltip(statusResistances, lang["stat_resist_tt"]);
     bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances);
 }

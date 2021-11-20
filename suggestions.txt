@@ -1,1 +1,5 @@
 perk treen pitäis keskittää hiireen zoomatessa
+nosta base näkökenttää // TEHTY
+lisää ranged aseita hassulles
+kokeilu: charge effect on jos saat vihun tapettua 1-3 vuorossa tai chargella, cooldown lähtee.
+aseiden päivitys tapahtuu kopioil, esim. +3 ase vaatii, 2x +2 asetta, joka vaatii 2x +1 asetta jne

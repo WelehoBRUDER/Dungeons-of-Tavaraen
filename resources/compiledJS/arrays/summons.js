@@ -13,7 +13,7 @@ const summons = {
             hp: 20,
             mp: 0,
             hpMax: 20,
-            mpMax: 0
+            mpMax: 0,
         },
         resistances: {
             slash: 70,
@@ -35,6 +35,10 @@ const summons = {
         },
         damages: {
             slash: 4
+        },
+        hit: {
+            chance: 45,
+            evasion: 25
         },
         threat: 30,
         alive: true,
@@ -216,7 +220,7 @@ const summons = {
             pierce: 340,
             magic: 340,
             dark: 340,
-            divine: -340,
+            divine: 340,
             fire: 340,
             lightning: 340,
             ice: 340
@@ -230,6 +234,10 @@ const summons = {
         },
         damages: {
             crush: 0
+        },
+        hit: {
+            chance: 0,
+            evasion: 0
         },
         threat: 75,
         alive: true,
@@ -254,6 +262,134 @@ const summons = {
             str: 0,
             dex: 0,
             vit: 0
+        },
+    },
+    arrowTotem: {
+        id: "arrowTotem",
+        name: "Arrow Totem",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 0,
+            dex: 0,
+            int: 0,
+            vit: 0,
+            cun: 0,
+            hp: 25,
+            mp: 0,
+            hpMax: 25,
+            mpMax: 0
+        },
+        resistances: {
+            slash: 50,
+            crush: 50,
+            pierce: 50,
+            magic: 50,
+            dark: 50,
+            divine: 50,
+            fire: -100,
+            lightning: 50,
+            ice: 50
+        },
+        statusResistances: {
+            poison: 100,
+            burning: -100,
+            curse: 100,
+            stun: 100,
+            bleed: 100
+        },
+        damages: {
+            pierce: 5
+        },
+        hit: {
+            chance: 50,
+            evasion: 0
+        },
+        threat: 12,
+        alive: true,
+        sprite: "arrowTotem",
+        type: "totem",
+        race: "construct",
+        img: "resources/tiles/totem_sample.png",
+        aggroRange: 12,
+        attackRange: 12,
+        shootsProjectile: "arrowProjectile",
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy),
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            dex: 3,
+            vit: 2
+        },
+    },
+    rangerWolf: {
+        id: "rangerWolf",
+        name: "Ranger's Wolf Companion",
+        cords: { x: 0, y: 0 },
+        stats: {
+            str: 8,
+            dex: 6,
+            int: 3,
+            vit: 2,
+            cun: 5,
+            hp: 30,
+            mp: 0,
+            hpMax: 30,
+            mpMax: 0,
+        },
+        resistances: {
+            slash: 15,
+            crush: 20,
+            pierce: 15,
+            magic: 0,
+            dark: 0,
+            divine: 0,
+            fire: -20,
+            lightning: 0,
+            ice: 30
+        },
+        statusResistances: {
+            poison: 0,
+            burning: -20,
+            curse: 0,
+            stun: 0,
+            bleed: 0
+        },
+        damages: {
+            pierce: 4,
+            crush: 2
+        },
+        hit: {
+            chance: 60,
+            evasion: 30
+        },
+        threat: 20,
+        alive: true,
+        sprite: "wolfGrey",
+        type: "canine",
+        race: "animal",
+        img: "resources/tiles/enemies/wolf.png",
+        aggroRange: 11,
+        attackRange: 1,
+        canFly: false,
+        abilities: [
+            new Ability(abilities.attack, dummy)
+        ],
+        statModifiers: [
+            {
+                id: "magical_binding",
+                effects: {
+                    mpMaxP: -100,
+                }
+            }
+        ],
+        retreatLimit: 0,
+        statsPerLevel: {
+            str: 2,
+            dex: 1,
+            vit: 1,
+            cun: 1
         },
     },
 };

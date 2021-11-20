@@ -704,6 +704,9 @@ const maps = [
       new treasureChest({...chestTemplates["default"], cords: {x: 153, y: 71}}),
       new treasureChest({...chestTemplates["knightChest"], cords: {x: 142, y: 75}}),
     ],
+    messages: [
+      {cords: {x: 20, y: 70}, id: "test_message"}
+    ],
   },
   {
     name: "Testing Dungeon",

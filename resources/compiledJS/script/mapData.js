@@ -35,6 +35,8 @@ const lootPools = {
         { type: "artifact", amount: [1, 1], item: "loneShadesTalisman", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "loneShadesRing", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "loneShadesEmblem", chance: 8 },
+        { type: "consumable", amount: [1, 3], item: "healingPotion_weak", chance: 5 },
+        { type: "consumable", amount: [1, 3], item: "manaPotion_weak", chance: 5 },
         { type: "gold", amount: [13, 76] }
     ],
     lichLoot: [
@@ -119,6 +121,8 @@ class treasureChest {
                         itm = new Artifact(Object.assign({}, items[obj.item]));
                     else if (obj.type == "consumable")
                         itm = new Consumable(Object.assign({}, items[obj.item]));
+                    if (itm.stacks)
+                        itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
                     if (this.loot.length < max)
                         this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
                 }
@@ -138,6 +142,8 @@ class treasureChest {
                     itm = new Artifact(Object.assign({}, items[obj.item]));
                 else if (obj.type == "consumable")
                     itm = new Consumable(Object.assign({}, items[obj.item]));
+                if (itm.stacks)
+                    itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
                 this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
             }
         }
@@ -211,11 +217,19 @@ function pickLoot() {
     else
         closeInventory();
 }
+function readMessage() {
+    maps[currentMap].messages.forEach((msg) => {
+        if (player.cords.x == msg.cords.x && player.cords.y == msg.cords.y && !state.textWindowOpen)
+            openTextWindow(lang[msg.id]);
+        else
+            closeTextWindow();
+    });
+}
 function grabLoot(e, item, index) {
     if (e.button !== 2)
         return;
     itemData.splice(index, 1);
-    player.inventory.push(item);
+    player.addItem(item);
     pickLoot();
     modifyCanvas();
 }
@@ -224,7 +238,7 @@ function fastGrabLoot(e, totalArray) {
         return;
     let item = totalArray[0];
     itemData.splice(item.dataIndex, 1);
-    player.inventory.push(item);
+    player.addItem(item);
     pickLoot();
     modifyCanvas();
 }
@@ -232,14 +246,14 @@ function grabTreasure(e, item, chest, index) {
     if (e.button !== 2)
         return;
     chest.loot.splice(index, 1);
-    player.inventory.push(item);
+    player.addItem(item);
     chest.lootChest();
     modifyCanvas();
 }
 function fastGrabTreasure(e, chest) {
     if (e.key !== settings.hotkey_interact)
         return;
-    player.inventory.push(Object.assign({}, chest.loot[0]));
+    player.addItem(Object.assign({}, chest.loot[0]));
     chest.loot.splice(0, 1);
     chest.lootChest();
     modifyCanvas();

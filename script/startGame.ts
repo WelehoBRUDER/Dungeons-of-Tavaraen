@@ -61,6 +61,7 @@ const emptyModel = {
     new Ability({ ...abilities.attack }, dummy),
     new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
+    new Ability({ ...abilities.defend,  equippedSlot: 2}, dummy),
   ],
   statModifiers: [
     {

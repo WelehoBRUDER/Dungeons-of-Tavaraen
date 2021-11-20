@@ -57,6 +57,7 @@ interface characterObject {
   statusEffects?: any;
   getStats?: Function;
   getResists?: Function;
+  getArmor?: Function;
   getStatusResists?: Function;
   effects?: Function;
   updateAbilities?: Function;
@@ -365,6 +366,11 @@ function getModifiers(char: any, stat: string, withConditions = true) {
           if (char[slot].resistances[stat.replace("Resist", '')]) val += char[slot].resistances[stat.replace("Resist", '')];
         }
       }
+      if (stat.includes("Def")) {
+        if (char[slot]?.armor) {
+          if (char[slot].armor[stat.replace("Def", '')]) val += char[slot].armor[stat.replace("Def", '')];
+        }
+      }
     });
     const artifactEffects = char.getArtifactSetBonuses();
     Object.entries(artifactEffects).forEach((eff: any) => {
@@ -383,6 +389,7 @@ class Character {
   name: string;
   cords: tileObject;
   stats: stats;
+  armor: defenseClass;
   resistances: resistances;
   statusResistances: statusResistances;
   abilities: ability[];
@@ -404,6 +411,7 @@ class Character {
   statusEffects?: any;
   getStats?: Function;
   getResists?: Function;
+  getArmor?: Function;
   getStatusResists?: Function;
   effects?: Function;
   updateAbilities?: Function;
@@ -428,15 +436,18 @@ class Character {
     this.name = base.name ?? "name_404";
     this.cords = base.cords ?? { x: 0, y: 0 };
     this.stats = { ...base.stats };
+    this.armor = { ...base.armor } ?? { physical: 0, magical: 0, elemental: 0 };
     this.resistances = { ...base.resistances };
     this.statusResistances = { ...base.statusResistances };
-    this.statModifiers = base.statModifiers ?? [];
-    this.statusEffects = base.statusEffects ?? [];
+    this.statModifiers = base.statModifiers ? [...base.statModifiers] : [];
+    this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
     this.threat = base.threat ?? 25;
     this.regen = base.regen ?? { hp: 0, mp: 0 };
     this.hit = { ...base.hit } ?? { chance: 10, evasion: 5 };
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
+
+    if(Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
@@ -494,10 +505,21 @@ class Character {
         const { v: _val, m: _mod } = getModifiers(this, "resistAll");
         let value = Math.floor((this.resistances[res] + val) * mod);
         resists[res] = Math.floor((value + _val) * _mod);
-        resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
+        if(resists[res] >= 320) resists[res] = 100;
+        else if(resists[res] > 80) resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
       });
       return resists;
     };
+
+    this.getArmor = () => {
+      let armors = {} as defenseClass;
+      Object.keys(this.armor).forEach((armor: string) => {
+        const { v: val, m: mod } = getModifiers(this, armor + "Def");
+        armors[armor] = Math.floor((this.armor[armor] + val) * mod);
+        if(armors[armor] > 200) armors[armor] = 200;
+      });
+      return armors;
+    }
 
     this.getThreat = () => {
       if (!this.allModifiers["threatV"]) this.allModifiers["threatV"] = 0;

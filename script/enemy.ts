@@ -1,6 +1,8 @@
 interface enemy extends characterObject {
   sprite: string,
   aggroRange: number,
+  tempAggro?: number,
+  tempAggroLast?: number,
   attackRange: number,
   isFoe?: boolean,
   xp: number,
@@ -35,6 +37,8 @@ interface enemy extends characterObject {
 class Enemy extends Character {
   sprite: string;
   aggroRange: number;
+  tempAggro?: number;
+  tempAggroLast?: number;
   attackRange: number;
   isFoe?: boolean;
   xp: number;
@@ -71,6 +75,8 @@ class Enemy extends Character {
     const defaultModel: any = {...enemies[base.id]};
     this.sprite = defaultModel.sprite;
     this.aggroRange = defaultModel.aggroRange ?? base.aggroRange ?? 5;
+    this.tempAggro = base.tempAggro ?? 0;
+    this.tempAggroLast = base.tempAggroLast ?? 0;
     this.attackRange = defaultModel.attackRange ?? 1;
     this.damages = { ...defaultModel.damages };
     this.isFoe = true;
@@ -112,6 +118,10 @@ class Enemy extends Character {
     }
 
     this.decideAction = async () => {
+      if(this.tempAggroLast > 0) {
+        this.tempAggroLast--;
+        if(this.tempAggroLast <= 0) this.tempAggro = 0;
+      }
       // Will make enemy take their turn
       // Right now AI only randomly chooses an ability and checks if there's any point in using it,
       // Which is whether or not it'll actually hit the player.
@@ -217,6 +227,7 @@ class Enemy extends Character {
         }
         else updateEnemiesTurn();
       }
+      else updateEnemiesTurn();
       setTimeout(modifyCanvas, 200);
     };
     this.chooseAbility = () => {
@@ -290,9 +301,10 @@ class Enemy extends Character {
       // @ts-ignore
       let targets = combatSummons.concat([player]);
       let target = threatDistance(targets, this);
+      let range = this.aggroRange + this.tempAggro;
       // @ts-ignore
       if (target) {
-        if (generatePath(this.cords, target.cords, this.canFly, true) <= this.aggroRange) return true;
+        if (generatePath(this.cords, target.cords, this.canFly, true) <= range) return true;
       }
       return false;
     };

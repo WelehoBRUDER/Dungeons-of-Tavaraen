@@ -1,3 +1,56 @@
+# Indev Update 8 ~ 20.11.2021 
+
+## New Features & Additions
+  * ***`Equipment has been completely reworked:`***
+    > Items no longer generate random stats, but instead can be upgraded from +0 to +5.  
+    Upgrades increase an item's base stats by 10% per level, max 50%.  
+    **NOTE: Upgades are not yet implemented.** 
+
+     Armor now has three new values:  
+        - Physical Armor that governs Slash, Crush and Pierce.  
+        - Magical Warding that governs Magic, Dark and Divine.  
+        - Elemental Shielding that govers Fire, Lightning and Ice.  
+    >Each point of armor reduces received damage of the governed attribute by 0.4%.  
+    Resistances are still a thing, but have been drastically lowered due to armor.    
+  * Reworked how status effects work with abilities. Abilities can now give multiple status effects to user and target.
+  * Added new class:
+    ``Ranger``
+    > Rangers focus on dealing damage with ranged attacks and setting up totems to aid them.  
+    > Can summon a wolf companion to aid in combat.
+  * Added new abilities:
+    - ``Invigorating Finish``, a fighter skill that allows you to steal 50% of the defeated enemy's hp to heal yourself.'
+    - ``Warrior Shout``, a fighter skill for dealing AOE damage.
+    - ``Defend``, default skill for all classes, improves your defense for the turn it's picked on. No cooldown.
+    - ``Totem of Arrows``, a ranger skill that summons an immobile totem to shoot arrows at enemies.
+    - ``Ranger's Wolf``, a ranger skill that summons your wolf companion.
+    - ``Awaken``, a ranger skill that improves damage and sight.
+  * Added new items:
+    - ``Hiisi Bow``, slightly stronger ranged weapon.
+    - ``Healing & Mana Potions``, restorative items that stack.
+  * Added 2 new fighter perks.
+  * Added message system:
+    - Messages are interactable entities that pop up to give the player a text to read.
+
+## Tweaks
+  * Healing abilities can recover health based on % of max hp.
+  * Increased base sight by 2, allowing you to see a bit farther away.
+  * Enemies now reset their position and health when the player respawns.
+  * Enemies now have their aggro range increased when taking damage,
+    making distant enemies chase the player for a limited time after being damaged.
+  * Reworked the text box, it now displays 13 messages by default, and can be expanded by pressing "Enter".
+  * When wielding a ranged weapon, pressing "G" will toggle ranged mode, allowing the player to see the arrow path.
+  * Added prompt when standing on interactable object.
+  * Minor text reworks and typo fixes.
+  * Vastly reduced save file size, allowing for more slots.
+
+## Fixes
+  * Fixed minimap lagging behind while moving with keyboard.
+  * Fixed ``Barbarian Charge`` having infinite use range.
+  * Fixed summons being counted as player when displaying effects.
+  * Fixed "Distance to closest enemy" text getting in the way.
+  * Fixed ranged weapons not firing projectiles.
+  * Fixed enemies charging inside summons.
+
 # Indev Update 7 ~ 22.10.2021
 
 ## New Features & Additions

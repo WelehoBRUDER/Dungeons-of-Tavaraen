@@ -14,6 +14,9 @@
 </head>
 <body>
   <div class="main">
+    <div class="devTools">
+      <div class="devInfo"></div>
+    </div>
     <div class="canvasLayers">
       <canvas class="baseSheet layer" width="1920" height="1344"></canvas>
       <canvas class="mapData layer" width="1920" height="1344"></canvas>
@@ -83,6 +86,8 @@
       <div class="items"></div>
     </div>
     <p class="closestEnemyDistance"></p>
+    <p class="interactPrompt"></p>
+    <div class="textWindow"></div>
     <div class="playerWindow"></div>
     <div class="playerEffects"></div>
     <div class="playerLeveling">
@@ -218,6 +223,7 @@
   <img src="resources/tiles/player/dagger_model.png" alt="" onload="imgLoaded()" class="rustyDagger sprite">
   <img src="resources/tiles/player/stick_model.png" alt="" onload="imgLoaded()" class="stick sprite">
   <img src="resources/tiles/player/bow_model.png" alt="" onload="imgLoaded()" class="bow sprite">
+  <img src="resources/tiles/player/hiisi_bow.png" alt="" onload="imgLoaded()" class="hiisiBow sprite">
   <img src="resources/tiles/player/blade_model.png" alt="" onload="imgLoaded()" class="blade sprite">
   <img src="resources/tiles/player/silver_sword.png" alt="" onload="imgLoaded()" class="silverSword sprite">
   <img src="resources/tiles/player/chipped_blade_model.png" alt="" onload="imgLoaded()" class="chippedBlade sprite">
@@ -250,6 +256,7 @@
   <!-- Effects & AOEs -->
   <img src="resources/tiles/fireAOE.png" alt="" onload="imgLoaded()" class="fireAOE sprite">
   <img src="resources/tiles/smokeAOE.png" alt="" onload="imgLoaded()" class="smokeAOE sprite">
+  <img src="resources/tiles/shoutAOE.png" alt="" onload="imgLoaded()" class="shoutAOE sprite">
 
   <!-- Enemies -->
   <img src="resources/tiles/enemies/grey_slime.png" alt="" onload="imgLoaded()" class="greySlime sprite">
@@ -264,6 +271,7 @@
   <img src="resources/tiles/enemies/skeleton_lich.png" alt="" onload="imgLoaded()" class="skeletonLich sprite">
   <img src="resources/tiles/enemies/norseman_berserk.png" alt="" onload="imgLoaded()" class="norsemanBerserk sprite">
   <img src="resources/tiles/enemies/norseman_hunter.png" alt="" onload="imgLoaded()" class="norsemanHunter sprite">
+  <img src="resources/tiles/enemies/wolf.png" alt="" onload="imgLoaded()" class="wolfGrey sprite">
   <img src="resources/tiles/enemies/female_orc_raider.png" alt="" onload="imgLoaded()" class="femaleOrcRaider sprite">
   <img src="resources/tiles/enemies/wild_troll.png" alt="" onload="imgLoaded()" class="wildTroll sprite">
   <img src="resources/tiles/enemies/wild_stone_troll.png" alt="" onload="imgLoaded()" class="wildStoneTroll sprite">
@@ -291,6 +299,7 @@
    <img src="resources/tiles/highlight2_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT2_RED sprite">
    <img src="resources/tiles/shrine.png" alt="" onload="imgLoaded()" class="shrineTile sprite">
    <img src="resources/tiles/shrine_lit.png" alt="" onload="imgLoaded()" class="shrineLitTile sprite">
+   <img src="resources/tiles/message.png" alt="" onload="imgLoaded()" class="messageTile sprite">
    <img src="resources/tiles/water.png" alt="" onload="imgLoaded()" class="tile0 sprite">
    <img src="resources/tiles/grass.png" alt="" onload="imgLoaded()" class="tile1 sprite">
    <img src="resources/tiles/dirt.png" alt="" onload="imgLoaded()" class="tile2 sprite">
@@ -309,6 +318,7 @@
 
   <!-- Misc -->
   <img src="resources/tiles/dummy.png" alt="" onload="imgLoaded()" class="dummyModel sprite">
+  <img src="resources/tiles/totem_sample.png" alt="" onload="imgLoaded()" class="arrowTotem sprite">
 </div>
 
 </html>
@@ -317,6 +327,7 @@
 <script src="resources/compiledJS/arrays/tiles.js"></script>
 <script src="resources/compiledJS/script/localisation.js"></script>
 <script src="resources/compiledJS/script/menu.js"></script>
+<script src="resources/compiledJS/script/dev.js"></script>
 <script src="resources/compiledJS/arrays/perks.js"></script>
 <script src="resources/compiledJS/arrays/effects.js"></script>
 <script src="resources/compiledJS/arrays/abilities.js"></script>

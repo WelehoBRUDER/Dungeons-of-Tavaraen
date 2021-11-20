@@ -6,6 +6,7 @@ class Summon extends Character {
         this.sprite = base.sprite;
         this.aggroRange = (_a = base.aggroRange) !== null && _a !== void 0 ? _a : 5;
         this.attackRange = (_b = base.attackRange) !== null && _b !== void 0 ? _b : 1;
+        this.tempAggro = 0;
         this.damages = Object.assign({}, base.damages);
         this.firesProjectile = base.firesProjectile;
         this.canFly = (_c = base.canFly) !== null && _c !== void 0 ? _c : false;
@@ -76,7 +77,6 @@ class Summon extends Character {
                 // Choose a random ability
                 let chosenAbility = this.chooseAbility();
                 // Check if it should be used
-                // @ts-expect-error
                 if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords, true))) || chosenAbility.self_target)) {
                     if (chosenAbility.type == "charge") {
                         moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
@@ -196,10 +196,11 @@ class Summon extends Character {
             let index = combatSummons.findIndex(sm => sm.cords.x == this.cords.x && sm.cords.y == this.cords.y);
             combatSummons.splice(index, 1);
         };
-        this.restore = () => {
+        this.restore = (keepEffects = false) => {
             this.stats.hp = this.getHpMax();
             this.stats.mp = this.getMpMax();
-            this.statusEffects = [];
+            if (!keepEffects)
+                this.statusEffects = [];
             this.abilities.forEach(abi => {
                 abi.onCooldown = 0;
             });

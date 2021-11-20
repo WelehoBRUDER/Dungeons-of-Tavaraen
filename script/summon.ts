@@ -2,6 +2,7 @@ class Summon extends Character {
   sprite: string;
   aggroRange: number;
   attackRange: number;
+  tempAggro?: number;
   alive: boolean;
   damages: damageClass;
   firesProjectile?: string;
@@ -32,6 +33,7 @@ class Summon extends Character {
     this.sprite = base.sprite;
     this.aggroRange = base.aggroRange ?? 5;
     this.attackRange = base.attackRange ?? 1;
+    this.tempAggro = 0;
     this.damages = { ...base.damages };
     this.firesProjectile = base.firesProjectile;
     this.canFly = base.canFly ?? false;
@@ -103,7 +105,6 @@ class Summon extends Character {
         // Choose a random ability
         let chosenAbility = this.chooseAbility();
         // Check if it should be used
-        // @ts-expect-error
         if (chosenAbility && ((chosenAbility?.type == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords, true))) || chosenAbility.self_target)) {
           if (chosenAbility.type == "charge") {
             moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
@@ -224,10 +225,10 @@ class Summon extends Character {
       combatSummons.splice(index, 1);
     };
 
-    this.restore = () => {
+    this.restore = (keepEffects: boolean = false) => {
       this.stats.hp = this.getHpMax();
       this.stats.mp = this.getMpMax();
-      this.statusEffects = [];
+      if(!keepEffects) this.statusEffects = [];
       this.abilities.forEach(abi => {
         abi.onCooldown = 0;
       });

@@ -1,46 +1,9 @@
 "use strict";
-const grades = {
-    common: {
-        color: "#e0e0e0",
-        worth: 1
-    },
-    uncommon: {
-        color: "#7ccf63",
-        worth: 2
-    },
-    rare: {
-        color: "#4287f5",
-        worth: 3.25
-    },
-    mythical: {
-        color: "#5e18a3",
-        worth: 5
-    },
-    legendary: {
-        color: "#cfcf32",
-        worth: 8
-    }
-};
 const items = {
     dagger: {
         id: "dagger",
         name: "Dagger",
         damages: { slash: 2, pierce: 6 },
-        damagesTemplate: [
-            { type: "slash", value: [1, 2], chance: 10 },
-            { type: "dark", value: [1, 5], chance: 4 },
-            { type: "divine", value: [1, 5], chance: 4 },
-            { type: "fire", value: [1, 5], chance: 7 },
-            { type: "lightning", value: [1, 5], chance: 5 },
-            { type: "ice", value: [1, 5], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 3], chance: 1.25 },
-        ],
         range: 1,
         img: "resources/icons/weapon_dagger.png",
         sprite: "rustyDagger",
@@ -56,15 +19,6 @@ const items = {
         id: "stick",
         name: "Stick",
         damages: { crush: 9 },
-        damagesTemplate: [
-            { type: "crush", value: [1, 1], chance: 8 },
-            { type: "dark", value: [1, 2], chance: 4 },
-            { type: "divine", value: [1, 2], chance: 4 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2], chance: 1.25 },
-            { type: "dexV", value: [1, 2], chance: 1.75 },
-        ],
         range: 1,
         img: "resources/icons/weapon_club.png",
         sprite: "stick",
@@ -80,21 +34,10 @@ const items = {
         id: "trollClub",
         name: "Troll Club",
         damages: { crush: 24 },
-        damagesTemplate: [
-            { type: "crush", value: [2, 6], chance: 7 },
-            { type: "dark", value: [4, 5], chance: 4 },
-            { type: "divine", value: [4, 5], chance: 4 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4, 7], chance: 1.25 },
-            { type: "dexV", value: [1, 2, 4, 7], chance: 1.75 },
-        ],
         stats: {
             hitChanceV: 5
         },
-        requiresStats: {
-            str: 18
-        },
+        requiresStats: { str: 18 },
         range: 1,
         img: "resources/icons/troll_club.png",
         sprite: "trollClub",
@@ -111,23 +54,6 @@ const items = {
         id: "chippedBlade",
         name: "Chipped Longsword",
         damages: { slash: 9, pierce: 3 },
-        damagesTemplate: [
-            { type: "slash", value: [2, 4], chance: 10 },
-            { type: "pierce", value: [1, 2], chance: 10 },
-            { type: "dark", value: [2, 5], chance: 4 },
-            { type: "divine", value: [2, 5], chance: 4 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 5 },
-            { type: "ice", value: [2, 5], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 1.25 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 3], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
         range: 1,
         img: "resources/icons/weapon_chipped_blade.png",
         sprite: "chippedBlade",
@@ -143,26 +69,7 @@ const items = {
         id: "longsword",
         name: "Longsword",
         damages: { slash: 10, pierce: 4 },
-        damagesTemplate: [
-            { type: "slash", value: [1, 2], chance: 4 },
-            { type: "pierce", value: [1, 2], chance: 4 },
-            { type: "dark", value: [2, 5], chance: 4 },
-            { type: "divine", value: [2, 5], chance: 4 },
-            { type: "fire", value: [4, 6], chance: 6 },
-            { type: "lightning", value: [4, 6], chance: 6 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 1.75 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 4], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
-        requiresStats: {
-            str: 8
-        },
+        requiresStats: { str: 8 },
         range: 1,
         img: "resources/icons/weapon_blade.png",
         sprite: "blade",
@@ -178,28 +85,7 @@ const items = {
         id: "silverSword",
         name: "Silver Sword",
         damages: { slash: 15, pierce: 5, magic: 5 },
-        damagesTemplate: [
-            { type: "slash", value: [3, 7], chance: 4 },
-            { type: "pierce", value: [3, 6], chance: 4 },
-            { type: "magic", value: [3, 6], chance: 4 },
-            { type: "dark", value: [3, 6], chance: 4 },
-            { type: "divine", value: [2, 5], chance: 4 },
-            { type: "fire", value: [4, 6], chance: 6 },
-            { type: "lightning", value: [4, 6], chance: 6 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 3.25 },
-            { type: "strP", value: [3, 5, 9], chance: 4 },
-            { type: "dexV", value: [1, 2, 4], chance: 3.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 4 },
-            { type: "vitV", value: [1, 2, 4], chance: 3.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 4 },
-        ],
-        requiresStats: {
-            str: 10,
-            dex: 4
-        },
+        requiresStats: { str: 10, dex: 4 },
         range: 1,
         img: "resources/icons/silver_sword.png",
         sprite: "silverSword",
@@ -215,26 +101,7 @@ const items = {
         id: "galadorSpear",
         name: "Spear of Galador",
         damages: { slash: 2, pierce: 16, divine: 8 },
-        damagesTemplate: [
-            { type: "slash", value: [1, 2], chance: 4 },
-            { type: "pierce", value: [3, 6], chance: 6 },
-            { type: "divine", value: [2, 5], chance: 9 },
-            { type: "fire", value: [3, 5], chance: 2 },
-            { type: "lightning", value: [3, 5], chance: 2 },
-            { type: "ice", value: [2, 4], chance: 2 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 1.25 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 4], chance: 3.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 2 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
-        requiresStats: {
-            dex: 23,
-            cun: 8
-        },
+        requiresStats: { dex: 23, cun: 8 },
         stats: {
             evasionV: 5,
             damage_against_race_undeadP: 20
@@ -255,22 +122,7 @@ const items = {
         id: "pikeMore",
         name: "Pikemore",
         damages: { crush: 16, lightning: 10 },
-        damagesTemplate: [
-            { type: "crush", value: [3, 8], chance: 10 },
-            { type: "lightning", value: [3, 6], chance: 7 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 2.8 },
-            { type: "strP", value: [3, 5, 9], chance: 1.6 },
-            { type: "dexV", value: [1, 2, 4], chance: 1.5 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.25 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
-        requiresStats: {
-            str: 14,
-        },
+        requiresStats: { str: 14 },
         stats: {
             hitChanceV: 10
         },
@@ -290,23 +142,6 @@ const items = {
         id: "chippedAxe",
         name: "Chipped Axe",
         damages: { crush: 5, pierce: 6 },
-        damagesTemplate: [
-            { type: "crush", value: [2, 3], chance: 4 },
-            { type: "pierce", value: [1, 3], chance: 4 },
-            { type: "dark", value: [2, 5], chance: 4 },
-            { type: "divine", value: [2, 5], chance: 5 },
-            { type: "fire", value: [2, 4], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.75 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 3], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
         range: 1,
         img: "resources/icons/chipped_axe.png",
         sprite: "chippedAxe",
@@ -322,23 +157,6 @@ const items = {
         id: "orcishAxe",
         name: "Orcish Axe",
         damages: { crush: 9, pierce: 8 },
-        damagesTemplate: [
-            { type: "crush", value: [2, 3], chance: 6 },
-            { type: "pierce", value: [1, 3], chance: 6 },
-            { type: "dark", value: [2, 5], chance: 6 },
-            { type: "divine", value: [2, 5], chance: 5 },
-            { type: "fire", value: [2, 4], chance: 10 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 4], chance: 1.75 },
-            { type: "strP", value: [3, 5, 9], chance: 1 },
-            { type: "dexV", value: [1, 2, 4], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.25 },
-            { type: "vitP", value: [3, 5, 7], chance: 1.25 },
-        ],
         range: 1,
         img: "resources/icons/orcish_axe.png",
         sprite: "orcishAxe",
@@ -354,18 +172,7 @@ const items = {
         id: "huntingBow",
         name: "Hunting Bow",
         damages: { pierce: 10 },
-        damagesTemplate: [
-            { type: "pierce", value: [1, 2], chance: 8 },
-            { type: "dark", value: [1, 2], chance: 4 },
-            { type: "divine", value: [1, 2], chance: 4 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-        ],
-        requiresStats: {
-            dex: 5
-        },
+        requiresStats: { dex: 5 },
         range: 7,
         img: "resources/icons/weapon_bow.png",
         sprite: "bow",
@@ -378,22 +185,28 @@ const items = {
         slot: "weapon",
         spriteMap: { x: 1280, y: 0 }
     },
+    hiisiBow: {
+        id: "hiisiBow",
+        name: "Hiisi Bow",
+        damages: { pierce: 11 },
+        requiresStats: { dex: 10 },
+        range: 8,
+        img: "resources/icons/hiisi_bow.png",
+        sprite: "hiisiBow",
+        price: 30,
+        weight: 0.8,
+        type: "weapon",
+        firesProjectile: "arrowProjectile",
+        statBonus: "dex",
+        grade: "common",
+        slot: "weapon",
+        spriteMap: { x: 1408, y: 0 }
+    },
     apprenticeWand: {
         id: "apprenticeWand",
         name: "Apprentice Wand",
         damages: { magic: 10 },
-        damagesTemplate: [
-            { type: "magic", value: [1, 3], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 4 },
-            { type: "divine", value: [1, 2], chance: 4 },
-        ],
-        statsTemplate: [
-            { type: "intV", value: [1, 2, 3], chance: 1.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-        ],
-        requiresStats: {
-            int: 5
-        },
+        requiresStats: { int: 5 },
         stats: {
             magicDamageP: 5
         },
@@ -407,30 +220,13 @@ const items = {
         statBonus: "int",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 1408, y: 0 }
+        spriteMap: { x: 1536, y: 0 }
     },
     woodenShield: {
         id: "woodenShield",
         name: "Wooden Shield",
-        resistances: { slash: 5, crush: 5, pierce: 5, fire: -5, magic: 5, dark: 3, divine: 3, lightning: 2, ice: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 5 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "dark", value: [1, 3], chance: 5 },
-            { type: "divine", value: [1, 3], chance: 5 },
-            { type: "fire", value: [-1, -3], chance: 5 },
-            { type: "lightning", value: [-1, -3], chance: 5 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [3, 5, 8], chance: 2.5 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 1.8 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
-        ],
+        armor: { physical: 10, magical: 7, elemental: 3 },
+        resistances: { fire: -5 },
         img: "resources/icons/wooden_shield.png",
         sprite: "woodenShield",
         price: 13,
@@ -438,35 +234,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "offhand",
-        spriteMap: { x: 1536, y: 0 }
+        spriteMap: { x: 1664, y: 0 }
     },
     ironShield: {
         id: "ironShield",
         name: "Iron Shield",
-        resistances: { slash: 13, crush: 9, pierce: 11, fire: 4, magic: 2, dark: 2, divine: 4, lightning: 1, ice: 5 },
-        resistancesTemplate: [
-            { type: "pierce", value: [2, 5], chance: 5 },
-            { type: "slash", value: [3, 7], chance: 5 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "dark", value: [2, 5], chance: 5 },
-            { type: "divine", value: [2, 5], chance: 5 },
-            { type: "fire", value: [1, 3], chance: 5 },
-            { type: "lightning", value: [1, 2], chance: 5 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3, 4], chance: 1.25 },
-            { type: "strP", value: [3, 5, 8, 10], chance: 2.5 },
-            { type: "dexV", value: [1, 2, 3, 5], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7, 9], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4, 5], chance: 1.75 },
-            { type: "vitP", value: [3, 6, 9, 11], chance: 1.8 },
-            { type: "hpMaxV", value: [4, 8, 12, 15], chance: 3.5 },
-        ],
-        requiresStats: {
-            str: 6,
-            vit: 8
-        },
+        armor: { physical: 20, magical: 10, elemental: 10 },
+        resistances: { slash: 5, pierce: 2, crush: -3 },
+        requiresStats: { str: 6, vit: 8 },
         img: "resources/icons/iron_shield.png",
         sprite: "ironShield",
         price: 62,
@@ -474,36 +249,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "offhand",
-        spriteMap: { x: 1664, y: 0 }
+        spriteMap: { x: 1792, y: 0 }
     },
     silverShield: {
         id: "silverShield",
         name: "Silver Shield",
-        resistances: { slash: 18, crush: 12, pierce: 14, fire: 9, magic: 7, dark: 5, divine: 8, lightning: 0, ice: 2 },
-        resistancesTemplate: [
-            { type: "pierce", value: [3, 6], chance: 5 },
-            { type: "slash", value: [4, 8], chance: 5 },
-            { type: "crush", value: [3, 6], chance: 7 },
-            { type: "dark", value: [3, 6], chance: 5 },
-            { type: "divine", value: [3, 6], chance: 5 },
-            { type: "fire", value: [1, 2], chance: 5 },
-            { type: "lightning", value: [1, 2], chance: 5 },
-            { type: "ice", value: [1, 2], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3, 4], chance: 3 },
-            { type: "strP", value: [3, 5, 8, 10], chance: 4.5 },
-            { type: "dexV", value: [1, 2, 3, 5], chance: 3.25 },
-            { type: "dexP", value: [3, 5, 7, 9], chance: 2.75 },
-            { type: "vitV", value: [1, 2, 4, 5], chance: 3.25 },
-            { type: "vitP", value: [3, 6, 9, 11], chance: 3.4 },
-            { type: "hpMaxV", value: [4, 8, 12, 15], chance: 5.75 },
-        ],
-        requiresStats: {
-            str: 7,
-            dex: 7,
-            vit: 7
-        },
+        armor: { physical: 25, magical: 15, elemental: 15 },
+        resistances: { slash: 5, crush: -4, pierce: 5, lightning: -5 },
+        requiresStats: { str: 7, dex: 7, vit: 7 },
         img: "resources/icons/silver_shield.png",
         sprite: "silverShield",
         price: 255,
@@ -511,30 +264,13 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "offhand",
-        spriteMap: { x: 1792, y: 0 }
+        spriteMap: { x: 1920, y: 0 }
     },
     raggedShirt: {
         id: "raggedShirt",
         name: "Ragged Shirt",
-        resistances: { slash: 1, crush: 5, pierce: 2, fire: -2, ice: 2 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 5 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "dark", value: [1, 3], chance: 5 },
-            { type: "divine", value: [1, 3], chance: 5 },
-            { type: "fire", value: [-1, -3], chance: 5 },
-            { type: "lightning", value: [-1, -3], chance: 5 },
-            { type: "ice", value: [2, 4], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [3, 5, 8], chance: 2.5 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 1.8 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
-        ],
+        armor: { physical: 5, magical: 5, elemental: 5 },
+        resistances: { crush: 3, fire: -2, ice: 2 },
         stats: {
             poisonDefenseV: 25,
             burningDefenseV: 25,
@@ -549,30 +285,13 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest",
-        spriteMap: { x: 1920, y: 0 }
+        spriteMap: { x: 2048, y: 0 }
     },
     raggedPants: {
         id: "raggedPants",
         name: "Ragged Pants",
-        resistances: { slash: 2, crush: 4, pierce: 2, fire: -1, ice: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 3], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "dark", value: [1, 3], chance: 5 },
-            { type: "divine", value: [1, 3], chance: 5 },
-            { type: "fire", value: [-1, -2], chance: 5 },
-            { type: "lightning", value: [-1, -2], chance: 5 },
-            { type: "ice", value: [2, 3], chance: 10 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [3, 5, 8], chance: 2.5 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-            { type: "vitV", value: [1, 2, 4], chance: 1.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 1.8 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 3.5 },
-        ],
+        armor: { physical: 3, magical: 3, elemental: 3 },
+        resistances: { crush: 2, fire: -1, ice: 1 },
         img: "resources/icons/ragged_pants.png",
         sprite: "raggedPants",
         price: 5,
@@ -580,28 +299,13 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "legs",
-        spriteMap: { x: 2048, y: 0 }
+        spriteMap: { x: 2176, y: 0 }
     },
     raggedBoots: {
         id: "raggedBoots",
         name: "Ragged Boots",
-        resistances: { slash: 1, crush: 3, pierce: 2, fire: -1, ice: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 1], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 5 },
-            { type: "divine", value: [1, 2], chance: 5 },
-            { type: "fire", value: [-1, -3], chance: 5 },
-            { type: "lightning", value: [-1, -3], chance: 5 },
-            { type: "ice", value: [2, 3], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [2, 4, 6], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-        ],
+        armor: { physical: 2, magical: 2, elemental: 2 },
+        resistances: { crush: 1, fire: -1, ice: 1 },
         img: "resources/icons/ragged_boots.png",
         sprite: "raggedBoots",
         price: 4,
@@ -609,28 +313,13 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "boots",
-        spriteMap: { x: 2176, y: 0 }
+        spriteMap: { x: 2304, y: 0 }
     },
     raggedGloves: {
         id: "raggedGloves",
         name: "Ragged Gloves",
-        resistances: { slash: 1, crush: 2, pierce: 2, fire: -1, ice: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 1], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 5 },
-            { type: "divine", value: [1, 2], chance: 5 },
-            { type: "fire", value: [-1, -2], chance: 5 },
-            { type: "lightning", value: [-1, -2], chance: 5 },
-            { type: "ice", value: [2, 3], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [2, 4, 6], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-        ],
+        armor: { physical: 2, magical: 2, elemental: 2 },
+        resistances: { crush: 1, fire: -1, ice: 1 },
         img: "resources/icons/gloves.png",
         sprite: "raggedGloves",
         price: 3,
@@ -638,28 +327,13 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "gloves",
-        spriteMap: { x: 2304, y: 0 }
+        spriteMap: { x: 2432, y: 0 }
     },
     enchantedCap: {
         id: "enchantedCap",
         name: "Enchanted Cap of Untold Skeletal Might",
+        armor: { physical: 100, magical: 100, elemental: 100 },
         resistances: { slash: 70, crush: 70, pierce: 70, magic: 70, fire: 70, ice: 70, dark: 70, divine: 70, lightning: 70 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 1], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 5 },
-            { type: "divine", value: [1, 2], chance: 5 },
-            { type: "fire", value: [-1, -2], chance: 5 },
-            { type: "lightning", value: [-1, -2], chance: 5 },
-            { type: "ice", value: [2, 3], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [2, 4, 6], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-        ],
         stats: {
             dexP: 200,
             strP: 200,
@@ -675,28 +349,13 @@ const items = {
         type: "armor",
         grade: "legendary",
         slot: "helmet",
-        spriteMap: { x: 2432, y: 0 }
+        spriteMap: { x: 2560, y: 0 }
     },
     raggedHood: {
         id: "raggedHood",
         name: "Ragged Hood",
-        resistances: { slash: 2, crush: 3, pierce: 3, fire: -2, ice: 1, dark: 1, divine: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 1], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 5 },
-            { type: "divine", value: [1, 2], chance: 5 },
-            { type: "fire", value: [-1, -2], chance: 5 },
-            { type: "lightning", value: [-1, -2], chance: 5 },
-            { type: "ice", value: [2, 3], chance: 5 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [2, 4, 6], chance: 1 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-        ],
+        armor: { physical: 2, magical: 2, elemental: 2 },
+        resistances: { crush: 1, fire: -2, ice: 1 },
         coversHair: true,
         img: "resources/icons/ragged_hood.png",
         sprite: "raggedHood",
@@ -705,28 +364,13 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 2560, y: 0 }
+        spriteMap: { x: 2688, y: 0 }
     },
     woolHat: {
         id: "woolHat",
         name: "Wool Hat",
-        resistances: { slash: 1, crush: 4, pierce: 2, fire: -1, ice: 5, dark: 2, divine: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 1], chance: 5 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 5 },
-            { type: "dark", value: [1, 2], chance: 5 },
-            { type: "divine", value: [1, 2], chance: 5 },
-            { type: "fire", value: [-1, -2], chance: 5 },
-            { type: "lightning", value: [-1, -2], chance: 5 },
-            { type: "ice", value: [2, 5], chance: 10 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.25 },
-            { type: "strP", value: [2, 4, 6], chance: 1.5 },
-            { type: "dexV", value: [1, 2, 3], chance: 1.75 },
-            { type: "dexP", value: [3, 5, 7], chance: 1.5 },
-        ],
+        armor: { physical: 3, magical: 2, elemental: 2 },
+        resistances: { crush: 2, fire: -1, ice: 5 },
         coversHair: false,
         img: "resources/icons/wool_hat.png",
         sprite: "woolHat",
@@ -735,36 +379,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 2688, y: 0 }
+        spriteMap: { x: 2816, y: 0 }
     },
     leatherChest: {
         id: "leatherChest",
         name: "Leather Chest",
-        resistances: { slash: 4, crush: 7, pierce: 5, magic: 5, ice: 2, lightning: 3, dark: 1, divine: 1, fire: 2 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 4], chance: 7 },
-            { type: "crush", value: [1, 4], chance: 7 },
-            { type: "pierce", value: [1, 4], chance: 7 },
-            { type: "magic", value: [1, 4], chance: 7 },
-            { type: "dark", value: [1, 4], chance: 7 },
-            { type: "divine", value: [1, 4], chance: 7 },
-            { type: "fire", value: [1, 4], chance: 7 },
-            { type: "lightning", value: [1, 4], chance: 7 },
-            { type: "ice", value: [1, 4], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3, 4], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8, 10], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3, 4], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7, 9], chance: 2 },
-            { type: "vitV", value: [1, 2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9, 12], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12, 16], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 5,
-            dex: 6
-        },
+        armor: { physical: 15, magical: 10, elemental: 10 },
+        resistances: { crush: 4 },
+        requiresStats: { vit: 5, dex: 6 },
         img: "resources/icons/leather_chest.png",
         sprite: "leatherChest",
         price: 50,
@@ -772,36 +394,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest",
-        spriteMap: { x: 2816, y: 0 }
+        spriteMap: { x: 2944, y: 0 }
     },
     leatherLeggings: {
         id: "leatherLeggings",
         name: "Leather Leggings",
-        resistances: { slash: 3, crush: 5, pierce: 4, magic: 4, ice: 2, lightning: 2, dark: 1, divine: 1, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 3], chance: 7 },
-            { type: "crush", value: [1, 3], chance: 7 },
-            { type: "pierce", value: [1, 3], chance: 7 },
-            { type: "magic", value: [1, 3], chance: 7 },
-            { type: "dark", value: [1, 3], chance: 7 },
-            { type: "divine", value: [1, 3], chance: 7 },
-            { type: "fire", value: [1, 3], chance: 7 },
-            { type: "lightning", value: [1, 3], chance: 7 },
-            { type: "ice", value: [1, 3], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3, 4], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8, 10], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3, 4], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7, 9], chance: 2 },
-            { type: "vitV", value: [1, 2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9, 12], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12, 16], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 5,
-            dex: 6
-        },
+        armor: { physical: 10, magical: 7, elemental: 7 },
+        resistances: { crush: 3 },
+        requiresStats: { vit: 5, dex: 6 },
         img: "resources/icons/leather_leg_bracers.png",
         sprite: "leatherLeggings",
         price: 45,
@@ -809,36 +409,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "legs",
-        spriteMap: { x: 2944, y: 0 }
+        spriteMap: { x: 0, y: 128 }
     },
     leatherBracers: {
         id: "leatherBracers",
         name: "Leather Bracers",
-        resistances: { slash: 2, crush: 3, pierce: 2, magic: 2, ice: 1, lightning: 1, dark: 1, divine: 1, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 7 },
-            { type: "crush", value: [1, 2], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 7 },
-            { type: "magic", value: [1, 2], chance: 7 },
-            { type: "dark", value: [1, 2], chance: 7 },
-            { type: "divine", value: [1, 2], chance: 7 },
-            { type: "fire", value: [1, 2], chance: 7 },
-            { type: "lightning", value: [1, 2], chance: 7 },
-            { type: "ice", value: [1, 2], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 2 },
-            { type: "vitV", value: [1, 2, 4], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 3,
-            dex: 4
-        },
+        armor: { physical: 5, magical: 4, elemental: 4 },
+        resistances: { crush: 2 },
+        requiresStats: { vit: 3, dex: 4 },
         img: "resources/icons/leather_bracers.png",
         sprite: "leatherBracers",
         price: 25,
@@ -846,36 +424,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "gloves",
-        spriteMap: { x: 0, y: 128 }
+        spriteMap: { x: 128, y: 128 }
     },
     leatherHelmet: {
         id: "leatherHelmet",
         name: "Leather Helmet",
-        resistances: { slash: 2, crush: 4, pierce: 2, magic: 2, ice: 2, lightning: 2, dark: 2, divine: 2, fire: 2 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 7 },
-            { type: "crush", value: [1, 2], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 7 },
-            { type: "magic", value: [1, 2], chance: 7 },
-            { type: "dark", value: [1, 2], chance: 7 },
-            { type: "divine", value: [1, 2], chance: 7 },
-            { type: "fire", value: [1, 2], chance: 7 },
-            { type: "lightning", value: [1, 2], chance: 7 },
-            { type: "ice", value: [1, 2], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 2 },
-            { type: "vitV", value: [1, 2, 4], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 3,
-            dex: 4
-        },
+        armor: { physical: 5, magical: 4, elemental: 4 },
+        resistances: { crush: 2 },
+        requiresStats: { vit: 3, dex: 4 },
         coversHair: true,
         img: "resources/icons/leather_helmet.png",
         sprite: "leatherHelmet",
@@ -884,36 +440,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 128, y: 128 }
+        spriteMap: { x: 256, y: 128 }
     },
     leatherBoots: {
         id: "leatherBoots",
         name: "Leather Booots",
-        resistances: { slash: 2, crush: 3, pierce: 2, magic: 1, ice: 1, lightning: 1, dark: 1, divine: 1, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 7 },
-            { type: "crush", value: [1, 2], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 7 },
-            { type: "magic", value: [1, 2], chance: 7 },
-            { type: "dark", value: [1, 2], chance: 7 },
-            { type: "divine", value: [1, 2], chance: 7 },
-            { type: "fire", value: [1, 2], chance: 7 },
-            { type: "lightning", value: [1, 2], chance: 7 },
-            { type: "ice", value: [1, 2], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 2 },
-            { type: "vitV", value: [1, 2, 4], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 3,
-            dex: 4
-        },
+        armor: { physical: 5, magical: 4, elemental: 4 },
+        resistances: { crush: 2 },
+        requiresStats: { vit: 3, dex: 4 },
         img: "resources/icons/leather_boots.png",
         sprite: "leatherBoots",
         price: 25,
@@ -921,36 +455,14 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "boots",
-        spriteMap: { x: 256, y: 128 }
+        spriteMap: { x: 384, y: 128 }
     },
     ironArmor: {
         id: "ironArmor",
         name: "Iron Armour",
-        resistances: { slash: 15, crush: 10, pierce: 14, magic: 8, ice: 5, lightning: 3, dark: 6, divine: 6, fire: 7 },
-        resistancesTemplate: [
-            { type: "slash", value: [3, 8], chance: 7 },
-            { type: "crush", value: [3, 8], chance: 7 },
-            { type: "pierce", value: [3, 8], chance: 7 },
-            { type: "magic", value: [3, 8], chance: 7 },
-            { type: "dark", value: [3, 8], chance: 7 },
-            { type: "divine", value: [3, 8], chance: 7 },
-            { type: "fire", value: [3, 8], chance: 7 },
-            { type: "lightning", value: [3, 8], chance: 7 },
-            { type: "ice", value: [3, 8], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6, 8], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12, 15], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
-            { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 10,
-            str: 10
-        },
+        armor: { physical: 30, magical: 15, elemental: 12 },
+        resistances: { slash: 5, crush: -5, lightning: -5 },
+        requiresStats: { vit: 10, str: 10 },
         img: "resources/icons/iron_armor.png",
         sprite: "ironArmor",
         price: 200,
@@ -958,36 +470,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 384, y: 128 }
+        spriteMap: { x: 512, y: 128 }
     },
     ironLegplates: {
         id: "ironLegplates",
         name: "Iron Legplates",
-        resistances: { slash: 11, crush: 8, pierce: 10, magic: 6, ice: 5, lightning: 3, dark: 5, divine: 5, fire: 5 },
-        resistancesTemplate: [
-            { type: "slash", value: [3, 7], chance: 7 },
-            { type: "crush", value: [3, 7], chance: 7 },
-            { type: "pierce", value: [3, 7], chance: 7 },
-            { type: "magic", value: [3, 7], chance: 7 },
-            { type: "dark", value: [3, 7], chance: 7 },
-            { type: "divine", value: [3, 7], chance: 7 },
-            { type: "fire", value: [3, 7], chance: 7 },
-            { type: "lightning", value: [3, 7], chance: 7 },
-            { type: "ice", value: [3, 7], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6, 8], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12, 15], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
-            { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 10,
-            str: 10
-        },
+        armor: { physical: 24, magical: 12, elemental: 10 },
+        resistances: { slash: 4, crush: -4, lightning: -4, },
+        requiresStats: { vit: 10, str: 10 },
         img: "resources/icons/iron_leg_plates.png",
         sprite: "ironLegplates",
         price: 150,
@@ -995,36 +485,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "legs",
-        spriteMap: { x: 512, y: 128 }
+        spriteMap: { x: 640, y: 128 }
     },
     ironHelmet: {
         id: "ironHelmet",
         name: "Iron Helmet",
-        resistances: { slash: 6, crush: 4, pierce: 5, magic: 4, ice: 4, lightning: 1, dark: 3, divine: 3, fire: 4 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 7 },
-            { type: "dark", value: [2, 5], chance: 7 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 8,
-            str: 8
-        },
+        armor: { physical: 15, magical: 10, elemental: 8 },
+        resistances: { slash: 3, crush: -3, lightning: -3 },
+        requiresStats: { vit: 8, str: 8 },
         coversHair: true,
         img: "resources/icons/iron_helmet.png",
         sprite: "ironHelmet",
@@ -1033,36 +501,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "helmet",
-        spriteMap: { x: 640, y: 128 }
+        spriteMap: { x: 768, y: 128 }
     },
     ironGauntlets: {
         id: "ironGauntlets",
         name: "Iron Gauntlets",
-        resistances: { slash: 5, crush: 4, pierce: 4, magic: 4, ice: 4, lightning: 1, dark: 3, divine: 3, fire: 4 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 7 },
-            { type: "dark", value: [2, 5], chance: 7 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 8,
-            str: 8
-        },
+        armor: { physical: 15, magical: 10, elemental: 8 },
+        resistances: { slash: 3, crush: -3, lightning: -3 },
+        requiresStats: { vit: 8, str: 8 },
         img: "resources/icons/iron_gauntlets.png",
         sprite: "ironGauntlets",
         price: 95,
@@ -1070,36 +516,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "gloves",
-        spriteMap: { x: 768, y: 128 }
+        spriteMap: { x: 896, y: 128 }
     },
     ironBoots: {
         id: "ironBoots",
         name: "Iron Boots",
-        resistances: { slash: 5, crush: 4, pierce: 4, magic: 4, ice: 4, lightning: 1, dark: 3, divine: 3, fire: 4 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 7 },
-            { type: "dark", value: [2, 5], chance: 7 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 8,
-            str: 8
-        },
+        armor: { physical: 15, magical: 10, elemental: 8 },
+        resistances: { slash: 3, crush: -3, lightning: -3 },
+        requiresStats: { vit: 8, str: 8 },
         img: "resources/icons/iron_boots.png",
         sprite: "ironBoots",
         price: 95,
@@ -1107,35 +531,13 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "boots",
-        spriteMap: { x: 896, y: 128 }
+        spriteMap: { x: 1024, y: 128 }
     },
     crownOfWisdom: {
         id: "crownOfWisdom",
         name: "Crown of Wisdom",
-        resistances: { magic: 20, dark: 10, divine: 10 },
-        resistancesTemplate: [
-            { type: "slash", value: [1, 2], chance: 7 },
-            { type: "crush", value: [1, 2], chance: 7 },
-            { type: "pierce", value: [1, 2], chance: 7 },
-            { type: "magic", value: [1, 2], chance: 7 },
-            { type: "dark", value: [1, 2], chance: 7 },
-            { type: "divine", value: [1, 2], chance: 7 },
-            { type: "fire", value: [1, 2], chance: 7 },
-            { type: "lightning", value: [1, 2], chance: 7 },
-            { type: "ice", value: [1, 2], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 1.75 },
-            { type: "strP", value: [3, 5, 8], chance: 3.25 },
-            { type: "dexV", value: [1, 2, 3], chance: 2.25 },
-            { type: "dexP", value: [3, 5, 7], chance: 2 },
-            { type: "vitV", value: [1, 2, 4], chance: 2.25 },
-            { type: "vitP", value: [3, 6, 9], chance: 2.45 },
-            { type: "hpMaxV", value: [4, 8, 12], chance: 4.5 },
-        ],
-        requiresStats: {
-            int: 15
-        },
+        armor: { physical: 0, magical: 30, elemental: 0 },
+        requiresStats: { int: 15 },
         stats: {
             magicDamageP: 10
         },
@@ -1146,35 +548,13 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "helmet",
-        spriteMap: { x: 1024, y: 128 }
+        spriteMap: { x: 1152, y: 128 }
     },
     lichRobes: {
         id: "lichRobes",
         name: "Lich Robes",
-        resistances: { slash: 5, crush: 4, pierce: 4, magic: 15, ice: 8, lightning: 5, dark: 10, divine: 10, fire: 5 },
-        resistancesTemplate: [
-            { type: "slash", value: [3, 8], chance: 7 },
-            { type: "crush", value: [3, 8], chance: 7 },
-            { type: "pierce", value: [3, 8], chance: 7 },
-            { type: "magic", value: [3, 8], chance: 7 },
-            { type: "dark", value: [3, 8], chance: 7 },
-            { type: "divine", value: [3, 8], chance: 7 },
-            { type: "fire", value: [3, 8], chance: 7 },
-            { type: "lightning", value: [3, 8], chance: 7 },
-            { type: "ice", value: [3, 8], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
-            { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "intV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "intP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
-        ],
-        requiresStats: {
-            int: 12
-        },
+        armor: { physical: 5, magical: 25, elemental: 10 },
+        requiresStats: { int: 12 },
         img: "resources/icons/lich_robes.png",
         sprite: "lichRobes",
         price: 305,
@@ -1182,36 +562,14 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 1152, y: 128 }
+        spriteMap: { x: 1280, y: 128 }
     },
     knightArmor: {
         id: "knightArmor",
         name: "Knight Armour",
-        resistances: { slash: 25, crush: 15, pierce: 21, magic: 14, ice: 2, lightning: 3, dark: 17, divine: 13, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [3, 8], chance: 7 },
-            { type: "crush", value: [3, 8], chance: 7 },
-            { type: "pierce", value: [3, 8], chance: 7 },
-            { type: "magic", value: [3, 8], chance: 7 },
-            { type: "dark", value: [3, 8], chance: 18 },
-            { type: "divine", value: [3, 8], chance: 7 },
-            { type: "fire", value: [3, 8], chance: 7 },
-            { type: "lightning", value: [3, 8], chance: 7 },
-            { type: "ice", value: [3, 8], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6, 8], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12, 15], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
-            { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 15,
-            str: 12
-        },
+        armor: { physical: 40, magical: 10, elemental: 20 },
+        resistances: { slash: 5, crush: -10 },
+        requiresStats: { vit: 15, str: 12 },
         img: "resources/icons/knight_armor.png",
         sprite: "knightArmor",
         price: 800,
@@ -1219,36 +577,14 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "chest",
-        spriteMap: { x: 1280, y: 128 }
+        spriteMap: { x: 1408, y: 128 }
     },
     knightGreaves: {
         id: "knightGreaves",
         name: "Knight Greaves",
-        resistances: { slash: 17, crush: 11, pierce: 12, magic: 10, ice: 2, lightning: 3, dark: 11, divine: 7, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [3, 7], chance: 7 },
-            { type: "crush", value: [3, 7], chance: 7 },
-            { type: "pierce", value: [3, 7], chance: 7 },
-            { type: "magic", value: [3, 7], chance: 13 },
-            { type: "dark", value: [3, 7], chance: 18 },
-            { type: "divine", value: [3, 7], chance: 7 },
-            { type: "fire", value: [3, 7], chance: 7 },
-            { type: "lightning", value: [3, 7], chance: 7 },
-            { type: "ice", value: [3, 7], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6, 8], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12, 15], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6, 8], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11, 14], chance: 2 },
-            { type: "vitV", value: [2, 4, 5, 7], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11, 15], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20, 25], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 15,
-            str: 12
-        },
+        armor: { physical: 25, magical: 10, elemental: 15 },
+        resistances: { slash: 5, crush: -5 },
+        requiresStats: { vit: 15, str: 12 },
         img: "resources/icons/knight_greaves.png",
         sprite: "knightGreaves",
         price: 525,
@@ -1256,36 +592,13 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "legs",
-        spriteMap: { x: 1408, y: 128 }
+        spriteMap: { x: 1536, y: 128 }
     },
     greathelm: {
         id: "greathelm",
         name: "Greathelm",
-        resistances: { slash: 9, crush: 6, pierce: 8, magic: 8, ice: 2, lightning: 1, dark: 9, divine: 5, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 13 },
-            { type: "dark", value: [2, 5], chance: 17 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 10,
-            str: 8
-        },
+        armor: { physical: 20, magical: 5, elemental: 10 },
+        requiresStats: { vit: 10, str: 8 },
         coversHair: true,
         img: "resources/icons/great_helm.png",
         sprite: "greatHelm",
@@ -1294,36 +607,13 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "helmet",
-        spriteMap: { x: 1536, y: 128 }
+        spriteMap: { x: 1664, y: 128 }
     },
     knightGauntlets: {
         id: "knightGauntlets",
         name: "Knight Gauntlets",
-        resistances: { slash: 8, crush: 5, pierce: 7, magic: 7, ice: 1, lightning: 1, dark: 8, divine: 4, fire: 1 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 12 },
-            { type: "dark", value: [2, 5], chance: 15 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 10,
-            str: 8
-        },
+        armor: { physical: 20, magical: 5, elemental: 10 },
+        requiresStats: { vit: 10, str: 8 },
         img: "resources/icons/knight_gloves.png",
         sprite: "knightGauntlets",
         price: 250,
@@ -1331,36 +621,13 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "gloves",
-        spriteMap: { x: 1664, y: 128 }
+        spriteMap: { x: 1792, y: 128 }
     },
     knightSabatons: {
         id: "knightSabatons",
         name: "Knight Sabatons",
-        resistances: { slash: 8, crush: 5, pierce: 7, magic: 7, ice: 1, lightning: 1, dark: 6, divine: 4, fire: 0 },
-        resistancesTemplate: [
-            { type: "slash", value: [2, 5], chance: 7 },
-            { type: "crush", value: [2, 5], chance: 7 },
-            { type: "pierce", value: [2, 5], chance: 7 },
-            { type: "magic", value: [2, 5], chance: 15 },
-            { type: "dark", value: [2, 5], chance: 21 },
-            { type: "divine", value: [2, 5], chance: 7 },
-            { type: "fire", value: [2, 5], chance: 7 },
-            { type: "lightning", value: [2, 5], chance: 7 },
-            { type: "ice", value: [2, 5], chance: 7 },
-        ],
-        statsTemplate: [
-            { type: "strV", value: [2, 4, 6], chance: 1.75 },
-            { type: "strP", value: [5, 8, 12], chance: 3.25 },
-            { type: "dexV", value: [2, 4, 6], chance: 2.25 },
-            { type: "dexP", value: [5, 8, 11], chance: 2 },
-            { type: "vitV", value: [2, 4, 5], chance: 2.25 },
-            { type: "vitP", value: [5, 7, 11], chance: 2.45 },
-            { type: "hpMaxV", value: [10, 15, 20], chance: 4.5 },
-        ],
-        requiresStats: {
-            vit: 10,
-            str: 8
-        },
+        armor: { physical: 20, magical: 5, elemental: 10 },
+        requiresStats: { vit: 10, str: 8 },
         img: "resources/icons/knight_sabatons.png",
         sprite: "knightSabatons",
         price: 250,
@@ -1368,9 +635,8 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "boots",
-        spriteMap: { x: 1792, y: 128 }
+        spriteMap: { x: 1920, y: 128 }
     },
-    /* ARTIFACTS */
     talismanOfProtection: {
         id: "talismanOfProtection",
         name: "Talisman of Protection",
@@ -1378,23 +644,6 @@ const items = {
             hpMaxV: 10,
             resistAllV: 3
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [5, 7, 10], chance: 20 },
-            { type: "hpMaxP", value: [3, 6, 9], chance: 20 },
-            { type: "resistAllV", value: [2, 4, 5], chance: 8 },
-        ],
         img: "resources/icons/talisman_of_protection.png",
         price: 60,
         weight: 0.25,
@@ -1402,7 +651,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 1920, y: 128 }
+        spriteMap: { x: 2048, y: 128 }
     },
     emblemOfProtection: {
         id: "emblemOfProtection",
@@ -1411,23 +660,6 @@ const items = {
             hpMaxV: 5,
             evasionV: 3
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 20 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 20 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/emblem_of_protection.png",
         price: 60,
         weight: 0.25,
@@ -1435,7 +667,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2048, y: 128 }
+        spriteMap: { x: 2176, y: 128 }
     },
     ringOfProtection: {
         id: "ringOfProtection",
@@ -1443,23 +675,6 @@ const items = {
         stats: {
             resistAllV: 5
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 20 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 20 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/ring_of_protection.png",
         price: 60,
         weight: 0.25,
@@ -1467,34 +682,15 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 2176, y: 128 }
+        spriteMap: { x: 2304, y: 128 }
     },
     scholarsTalisman: {
         id: "scholarsTalisman",
-        name: "Scholar's Lucky Talisman",
+        name: "Scholars Lucky Talisman",
         stats: {
             mpMaxV: 5,
             magicDamageP: 3
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 4 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 4 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 20 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 20 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/scholars_talisman.png",
         price: 60,
         weight: 0.25,
@@ -1502,7 +698,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 2304, y: 128 }
+        spriteMap: { x: 2432, y: 128 }
     },
     scholarsEmblem: {
         id: "scholarsEmblem",
@@ -1511,25 +707,6 @@ const items = {
             mpMaxP: 6,
             hpMaxV: 3
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 4 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 4 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 20 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 20 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/emblem_of_scholar.png",
         price: 60,
         weight: 0.25,
@@ -1537,34 +714,15 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2432, y: 128 }
+        spriteMap: { x: 2560, y: 128 }
     },
     scholarsRing: {
         id: "scholarsRing",
-        name: "Scholar's Enchanted Ring",
+        name: "Scholars Enchanted Ring",
         stats: {
             mpMaxV: 5,
             magicResistV: 8
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 4 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 4 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 20 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 20 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/scholars_ring.png",
         price: 60,
         weight: 0.25,
@@ -1572,7 +730,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 2560, y: 128 }
+        spriteMap: { x: 2688, y: 128 }
     },
     warriorsTalisman: {
         id: "warriorsTalisman",
@@ -1581,25 +739,6 @@ const items = {
             damageP: 3,
             strV: 3
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/warrior_talisman.png",
         price: 60,
         weight: 0.25,
@@ -1607,34 +746,15 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 2688, y: 128 }
+        spriteMap: { x: 2816, y: 128 }
     },
     warriorsEmblem: {
         id: "warriorsEmblem",
-        name: "Exalted Warrior's Emblem",
+        name: "Exalted Warriors Emblem",
         stats: {
             hpMaxV: 8,
             cunV: 2
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/warrior_emblem.png",
         price: 60,
         weight: 0.25,
@@ -1642,7 +762,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2816, y: 128 }
+        spriteMap: { x: 2944, y: 128 }
     },
     warriorsRing: {
         id: "warriorsRing",
@@ -1652,25 +772,6 @@ const items = {
             strV: 1,
             vitV: 1
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/warrior_ring.png",
         price: 60,
         weight: 0.25,
@@ -1678,34 +779,15 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 2944, y: 128 }
+        spriteMap: { x: 0, y: 256 }
     },
     loneShadesTalisman: {
         id: "loneShadesTalisman",
-        name: "Lone Shade's Star Talisman",
+        name: "Lone Shades Star Talisman",
         stats: {
             dexV: 3,
             hpMaxV: 2
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/lone_shades_star_talisman.png",
         price: 60,
         weight: 0.25,
@@ -1713,7 +795,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 0, y: 256 }
+        spriteMap: { x: 128, y: 256 }
     },
     loneShadesEmblem: {
         id: "loneShadesEmblem",
@@ -1722,25 +804,6 @@ const items = {
             cunV: 3,
             evasionV: 2
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/emblem_of_the_lone_shade.png",
         price: 60,
         weight: 0.25,
@@ -1748,7 +811,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 128, y: 256 }
+        spriteMap: { x: 256, y: 256 }
     },
     loneShadesRing: {
         id: "loneShadesRing",
@@ -1757,25 +820,6 @@ const items = {
             damageP: 6,
             vitV: 2
         },
-        statsTemplate: [
-            { type: "strV", value: [1, 2, 3], chance: 3.75 },
-            { type: "strP", value: [3, 6, 9], chance: 3.75 },
-            { type: "dexV", value: [1, 2, 3], chance: 3.75 },
-            { type: "dexP", value: [3, 6, 9], chance: 3.75 },
-            { type: "vitV", value: [1, 2, 3], chance: 3.75 },
-            { type: "vitP", value: [3, 6, 9], chance: 3.75 },
-            { type: "intV", value: [1, 2, 3], chance: 3.75 },
-            { type: "intP", value: [3, 6, 9], chance: 3.75 },
-            { type: "cunV", value: [1, 2, 3], chance: 3.75 },
-            { type: "cunP", value: [3, 6, 9], chance: 3.75 },
-            { type: "critChanceV", value: [1, 2, 3], chance: 6 },
-            { type: "critDamageV", value: [3, 6, 9], chance: 6 },
-            { type: "hpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "hpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "mpMaxV", value: [3, 5, 7], chance: 8 },
-            { type: "mpMaxP", value: [2, 5, 7], chance: 8 },
-            { type: "evasionV", value: [2, 3, 4], chance: 8 },
-        ],
         img: "resources/icons/creeping_ring_of_the_lone_shade.png",
         price: 60,
         weight: 0.25,
@@ -1783,7 +827,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 256, y: 256 }
+        spriteMap: { x: 384, y: 256 }
     },
     healingScrollI: {
         id: "healingScrollI",
@@ -1799,7 +843,7 @@ const items = {
         healValue: 20,
         usesTotal: 3,
         usesRemaining: 3,
-        spriteMap: { x: 384, y: 256 }
+        spriteMap: { x: 512, y: 256 }
     },
     manaScrollI: {
         id: "manaScrollI",
@@ -1815,7 +859,37 @@ const items = {
         manaValue: 15,
         usesTotal: 3,
         usesRemaining: 3,
-        spriteMap: { x: 512, y: 256 }
+        spriteMap: { x: 640, y: 256 }
     },
+    healingPotion_weak: {
+        id: "healingPotion_weak",
+        name: "Weak Healing Potion",
+        img: "resources/icons/healing_potion.png",
+        sprite: "",
+        price: 120,
+        weight: 0.15,
+        type: "consumable",
+        grade: "common",
+        slot: "",
+        equippedSlot: -1,
+        healValue: 50,
+        stacks: true,
+        spriteMap: { x: 768, y: 256 }
+    },
+    manaPotion_weak: {
+        id: "manaPotion_weak",
+        name: "Weak Mana Potion",
+        img: "resources/icons/mana_potion.png",
+        sprite: "",
+        price: 120,
+        weight: 0.15,
+        type: "consumable",
+        grade: "common",
+        slot: "",
+        equippedSlot: -1,
+        manaValue: 40,
+        stacks: true,
+        spriteMap: { x: 896, y: 256 }
+    }
 };
 //# sourceMappingURL=items.js.map

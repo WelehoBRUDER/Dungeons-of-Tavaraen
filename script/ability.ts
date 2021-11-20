@@ -2,6 +2,8 @@ interface ability {
   id: string;
   name: string;
   mana_cost: number;
+  health_cost?: number;
+  health_cost_percentage?: number;
   cooldown: number;
   type: string;
   onCooldown?: number;
@@ -9,10 +11,17 @@ interface ability {
   damages?: damageClass;
   resistance_penetration?: number;
   base_heal?: number;
+  heal_percentage?: number;
+  life_steal?: number;
+  life_steal_percentage?: number;
+  life_steal_trigger_only_when_killing_enemy?: boolean;
+  mana_steal?: number;
+  mana_steal_percentage?: number;
   damage_multiplier?: number;
   shoots_projectile?: string;
   stat_bonus?: string;
-  status?: string;
+  statusesUser?: Array<string>;
+  statusesEnemy?: Array<string>;
   status_power?: number;
   line?: string;
   icon: string;
@@ -25,8 +34,11 @@ interface ability {
   summon_level?: number;
   summon_last?: number;
   summon_status?: string;
+  total_summon_limit?: number;
+  instant_aoe?: boolean;
   aoe_size?: number;
   aoe_effect?: string;
+  aoe_ignore_ledge?: boolean;
   self_target?: boolean;
   statusModifiers?: any;
   action_desc: string;
@@ -38,13 +50,19 @@ interface ability {
 
 const straight_modifiers = [
   "mana_cost",
+  "health_cost",
+  "health_cost_percentage",
   "cooldown",
   "resistance_penetration",
   "base_heal",
+  "heal_percentage",
+  "life_steal",
+  "life_steal_percentage",
   "damage_multiplier",
   "use_range",
   "summon_level",
   "summon_last",
+  "total_summon_limit",
   "aoe_size",
 ];
 
@@ -80,6 +98,8 @@ const possible_stat_modifiers = [
   "critDamageV",
   "critChanceP",
   "critDamageP",
+  "damageV",
+  "damageP"
 ];
 
 const possible_modifiers = [
@@ -95,6 +115,8 @@ class Ability {
   id: string;
   name: string;
   mana_cost: number;
+  health_cost?: number;
+  health_cost_percentage?: number;
   cooldown: number;
   type: string;
   onCooldown?: number;
@@ -102,10 +124,17 @@ class Ability {
   damages?: damageClass;
   resistance_penetration?: number;
   base_heal?: number;
+  heal_percentage?: number;
+  life_steal?: number;
+  life_steal_percentage?: number;
+  life_steal_trigger_only_when_killing_enemy?: boolean;
+  mana_steal?: number;
+  mana_steal_percentage?: number;
   damage_multiplier?: number;
   shoots_projectile?: string;
   stat_bonus?: string;
-  status?: string;
+  statusesUser?: Array<string>;
+  statusesEnemy?: Array<string>;
   status_power?: number;
   line?: string;
   icon: string;
@@ -118,8 +147,11 @@ class Ability {
   summon_level?: number;
   summon_last?: number;
   summon_status?: string;
+  total_summon_limit?: number;
+  instant_aoe?: boolean;
   aoe_size?: number;
   aoe_effect?: string;
+  aoe_ignore_ledge?: boolean;
   self_target?: boolean;
   statusModifiers?: any;
   action_desc: string;
@@ -132,9 +164,14 @@ class Ability {
     const values = getAbiModifiers(user, base.id);
     // @ts-ignore
     const baseAbility = abilities[this.id];
-    const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
+    let statusModifiers: any = {}; 
+    baseAbility.statusesUser?.forEach((str: string) => statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, str)});
+    baseAbility.statusesEnemy?.forEach((str: string) => statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, str)});
+    if(baseAbility.summon_status) statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, baseAbility.summon_status)};
     this.name = baseAbility.name;
     this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;
+    this.health_cost = Math.floor((baseAbility.health_cost + values.health_cost.value) * values.health_cost.modif) ?? 0;
+    this.health_cost_percentage = Math.floor((baseAbility.health_cost_percentage + values.health_cost_percentage.value) * values.health_cost_percentage.modif) ?? 0;
     this.cooldown = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif) ?? 0;
     this.type = baseAbility.type ?? "none";
     this.onCooldown = base.onCooldown ?? 0;
@@ -143,8 +180,13 @@ class Ability {
     this.damage_multiplier = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1)) ?? 1;
     this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + (values.resistance_penetration.modif - 1))) ?? 0;
     this.base_heal = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif) ?? 0;
+    this.heal_percentage = Math.floor((baseAbility.heal_percentage + values.heal_percentage.value) * values.heal_percentage.modif) ?? 0;
+    this.life_steal = Math.floor((baseAbility.life_steal + values.life_steal.value) * values.life_steal.modif) ?? 0;
+    this.life_steal_percentage = Math.floor((baseAbility.life_steal_percentage + values.life_steal_percentage.value) * values.life_steal_percentage.modif) ?? 0;
+    this.life_steal_trigger_only_when_killing_enemy = baseAbility.life_steal_trigger_only_when_killing_enemy ?? false;
     this.stat_bonus = baseAbility.stat_bonus ?? "";
-    this.status = baseAbility.status ?? "";
+    this.statusesUser = baseAbility.statusesUser ?? [];
+    this.statusesEnemy = baseAbility.statusesEnemy ?? [];
     this.status_power = baseAbility.status_power ?? 0;
     this.shoots_projectile = baseAbility.shoots_projectile ?? "";
     this.icon = baseAbility.icon;
@@ -158,8 +200,11 @@ class Ability {
     this.summon_level = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif) ?? 0;;
     this.summon_last = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif) ?? 0;;
     this.summon_status = baseAbility.summon_status;
+    this.total_summon_limit = baseAbility.total_summon_limit + values.total_summon_limit.value;
+    this.instant_aoe = baseAbility.instant_aoe ?? false;
     this.aoe_size = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif ?? 0;
     this.aoe_effect = baseAbility.aoe_effect ?? "";
+    this.aoe_ignore_ledge = baseAbility.aoe_ignore_ledge ?? false;
     this.self_target = baseAbility.self_target ?? false;
     this.statusModifiers = statusModifiers;
     this.action_desc = baseAbility.action_desc;
@@ -317,6 +362,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
             if (key.endsWith("V")) total["effects"][__key].value += value;
             else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
             else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
+            total["effects"][__key].status = effectId;
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
@@ -346,6 +392,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
               if (key.endsWith("V")) total["effects"][__key].value += value;
               else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
               else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
+              total["effects"][__key].status = effectId;
             }
             else {
               if (key.endsWith("V")) total[__key].value += value;
@@ -366,11 +413,13 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
         key = key.replace(abilityId + "_", "");
         if (key.includes("status_effect")) {
           const _key = key.replace("status_effect_", "");
-          const __key = _key.substring(0, _key.length - 1);
+          const trueKey = _key.replace(effectId + "_", "");
+          const __key = trueKey.substring(0, trueKey.length - 1);
           if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
             if (key.endsWith("V")) total["effects"][__key].value += value;
             else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
             else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
+            total["effects"][__key].status = effectId;
           }
           else {
             if (key.endsWith("V")) total[__key].value += value;
@@ -399,6 +448,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
                   if (key.endsWith("V")) total["effects"][__key].value += value;
                   else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
                   else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
+                  total["effects"][__key].status = effectId;
                 }
                 else {
                   if (key.endsWith("V")) total[__key].value += value;
@@ -439,3 +489,14 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
   });
   return total;
 }
+
+
+
+// {
+//   const arr = [1, 2, 3];
+
+//   console.log(JSON.stringify(arr, (key: any, value: any) => {
+//     console.log(key);
+//     return value;
+//   }, "\t"));
+// }

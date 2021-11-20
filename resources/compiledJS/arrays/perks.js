@@ -315,6 +315,22 @@ const perksArray = {
                 pos: { x: 0, y: 2 },
                 icon: "resources/icons/resistance_default.png"
             },
+            absorber_of_life_force: {
+                id: "absorber_of_life_force",
+                name: "Absorber of Life Force",
+                desc: "",
+                effects: {
+                    vitP: 3
+                },
+                commands: {
+                    add_ability_invigorating_finish: 1
+                },
+                relative_to: "resistant_in_melee",
+                requires: ["resistant_in_melee"],
+                tree: "fighter",
+                pos: { x: 0, y: 2 },
+                icon: "resources/icons/invigorating_finish.png"
+            },
             strength_training: {
                 id: "strength_training",
                 name: "Strength Training",
@@ -368,6 +384,19 @@ const perksArray = {
                 tree: "fighter",
                 pos: { x: 0, y: 2 },
                 icon: "resources/icons/charge_ability.png"
+            },
+            fighting_with_your_voice: {
+                id: "fighting_with_your_voice",
+                name: "Fighting with your voice",
+                desc: "",
+                commands: {
+                    add_ability_warrior_shout: 1
+                },
+                relative_to: "charging_bull",
+                requires: ["charging_bull"],
+                tree: "fighter",
+                pos: { x: 0, y: 2 },
+                icon: "resources/icons/warrior_shout.png"
             },
             tactical_genius: {
                 id: "tactical_genius",
@@ -625,8 +654,8 @@ const perksArray = {
                 effects: {
                     damageP: 4,
                     barbarian_rage_cooldownV: -3,
-                    barbarian_rage_status_effect_strVV: 5,
-                    barbarian_rage_status_effect_resistAllVV: 5,
+                    barbarian_rage_status_effect_rage_strVV: 5,
+                    barbarian_rage_status_effect_rage_resistAllVV: 5,
                 },
                 tree: "barbarian",
                 pos: { x: 0, y: 2 },
@@ -771,7 +800,7 @@ const perksArray = {
                 name: "Poison Specialist",
                 desc: "",
                 effects: {
-                    venomous_blow_status_effect_lastV: 2,
+                    venomous_blow_status_effect_venom_lastV: 2,
                     venomous_blow_cooldownP: -20,
                 },
                 tree: "rogue",
@@ -859,8 +888,8 @@ const perksArray = {
                 desc: "",
                 effects: {
                     sneaky_stabbing_cooldownP: -20,
-                    sneaky_stabbing_status_effect_lastV: 3,
-                    sneaky_stabbing_status_effect_critChancePP: 5
+                    sneaky_stabbing_status_effect_sneaky_stabbing_lastV: 3,
+                    sneaky_stabbing_status_effect_sneaky_stabbing_critChancePP: 5
                 },
                 tree: "rogue",
                 relative_to: "smoke_screen",
@@ -874,7 +903,8 @@ const perksArray = {
                 desc: "",
                 effects: {
                     smoke_bomb_cooldownV: -2,
-                    smoke_bomb_status_effect_lastV: 3,
+                    smoke_bomb_status_effect_smoke_bomb_effect_lastV: 3,
+                    smoke_bomb_status_effect_smoke_evasion_lastV: 3,
                     smoke_bomb_damage_multiplierP: 25
                 },
                 tree: "rogue",
@@ -882,6 +912,185 @@ const perksArray = {
                 requires: ["smoke_screen"],
                 pos: { x: 1.5, y: 1.5 },
                 icon: "resources/icons/smoke_bomb_effect.png"
+            },
+        }
+    },
+    ranger: {
+        id: "ranger_perks",
+        name: "Ranger",
+        startPos: 50,
+        perks: {
+            target_practice: {
+                id: "target_practice",
+                name: "Target Practice",
+                desc: "",
+                effects: {
+                    dexV: 1
+                },
+                commands: {
+                    add_ability_true_shot: 1
+                },
+                tree: "ranger",
+                pos: { x: 8, y: 1 },
+                icon: "resources/icons/target.png"
+            },
+            call_of_the_forest: {
+                id: "call_of_the_forest",
+                name: "Call of the Forest",
+                desc: "",
+                effects: {
+                    true_shot_resistance_penetrationV: 20,
+                    retreat_cooldownP: -11,
+                    vitV: 2
+                },
+                tree: "ranger",
+                relative_to: "target_practice",
+                requires: ["target_practice"],
+                pos: { x: 0, y: 2 },
+                icon: "resources/tiles/tree_1.png"
+            },
+            rangers_totem: {
+                id: "rangers_totem",
+                name: "Rangers' Totem",
+                desc: "",
+                effects: {
+                    resistAllV: 1
+                },
+                commands: {
+                    add_ability_totem_of_arrows: 1
+                },
+                tree: "ranger",
+                relative_to: "call_of_the_forest",
+                requires: ["call_of_the_forest"],
+                pos: { x: -2, y: 2 },
+                icon: "resources/icons/totem_of_arrows.png"
+            },
+            extra_totem: {
+                id: "extra_totem",
+                name: "Rangers' Totem",
+                desc: "",
+                effects: {
+                    totem_of_arrows_total_summon_limitV: 1,
+                    totem_of_arrows_summon_levelV: 2,
+                },
+                tree: "ranger",
+                relative_to: "rangers_totem",
+                requires: ["rangers_totem"],
+                pos: { x: -2, y: 1 },
+                icon: "resources/icons/totem_of_arrows.png"
+            },
+            lasting_totem: {
+                id: "lasting_totem",
+                name: "Rangers' Totem",
+                desc: "",
+                effects: {
+                    totem_of_arrows_summon_lastP: 50,
+                    totem_of_arrows_summon_levelV: 2,
+                },
+                tree: "ranger",
+                relative_to: "rangers_totem",
+                requires: ["rangers_totem"],
+                pos: { x: -1, y: 2 },
+                icon: "resources/icons/totem_of_arrows.png"
+            },
+            rangers_call: {
+                id: "rangers_call",
+                name: "Rangers' Call",
+                desc: "",
+                effects: {
+                    pierceDamageP: 6,
+                    true_shot_cooldownV: -2,
+                    true_shot_use_rangeV: 2
+                },
+                tree: "ranger",
+                relative_to: "call_of_the_forest",
+                requires: ["call_of_the_forest"],
+                pos: { x: 0, y: 2 },
+                icon: "resources/icons/ornate_ranger_bow.png"
+            },
+            awakening: {
+                id: "awakening",
+                name: "Awakening",
+                desc: "",
+                effects: {
+                    hpMaxV: 10
+                },
+                commands: {
+                    add_ability_awaken: 1
+                },
+                tree: "ranger",
+                relative_to: "rangers_call",
+                requires: ["rangers_call"],
+                pos: { x: 0, y: 2 },
+                icon: "resources/icons/eye_awaken.png"
+            },
+            hunter_mark: {
+                id: "hunter_mark",
+                name: "Hunter Mark",
+                desc: "",
+                effects: {
+                    dexV: 1
+                },
+                statModifiers: [
+                    {
+                        id: "mark_of_hunter",
+                        conditions: {
+                            hp_more_than: 95
+                        },
+                        effects: {
+                            damageP: 10
+                        }
+                    }
+                ],
+                tree: "ranger",
+                relative_to: "awakening",
+                requires: ["awakening"],
+                pos: { x: 0, y: 2 },
+                icon: "resources/icons/hunter_mark.png"
+            },
+            wild_call: {
+                id: "wild_call",
+                name: "Rangers' Call",
+                desc: "",
+                effects: {
+                    damageP: 2
+                },
+                commands: {
+                    add_ability_ranger_wolf: 1
+                },
+                tree: "ranger",
+                relative_to: "call_of_the_forest",
+                requires: ["call_of_the_forest"],
+                pos: { x: 2, y: 2 },
+                icon: "resources/icons/ranger_wolf.png"
+            },
+            trusted_companion: {
+                id: "trusted_companion",
+                name: "Rangers' Call",
+                desc: "",
+                effects: {
+                    ranger_wolf_summon_levelV: 9,
+                    ranger_wolf_cooldownV: -20
+                },
+                tree: "ranger",
+                relative_to: "wild_call",
+                requires: ["wild_call"],
+                pos: { x: 1, y: 2 },
+                icon: "resources/icons/ranger_wolf.png"
+            },
+            fierce_beast: {
+                id: "fierce_beast",
+                name: "Rangers' Call",
+                desc: "",
+                effects: {
+                    all_summons_damageP: 20,
+                    all_summons_regenHpP: 100
+                },
+                tree: "ranger",
+                relative_to: "wild_call",
+                requires: ["wild_call"],
+                pos: { x: 2, y: 1 },
+                icon: "resources/icons/ranger_wolf.png"
             },
         }
     },

@@ -245,6 +245,8 @@ function perkTT(perk) {
     var txt = "";
     txt += `\t<f>21px<f>${(_a = lang[perk.id + "_name"]) !== null && _a !== void 0 ? _a : perk.id}\t\n`;
     txt += `<f>15px<f><c>silver<c>"${(_b = lang[perk.id + "_desc"]) !== null && _b !== void 0 ? _b : perk.id + "_desc"}"<c>white<c>\n`;
+    if (DEVMODE)
+        txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
     if (((_c = perk.requires) === null || _c === void 0 ? void 0 : _c.length) > 0) {
         txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
         perk.requires.forEach(req => {

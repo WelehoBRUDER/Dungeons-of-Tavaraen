@@ -2,23 +2,25 @@
 let invScroll = 0;
 class Item {
     constructor(base) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         this.id = base.id;
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
         this.name = baseItem.name;
         this.price = baseItem.price;
-        this.weight = baseItem.weight;
+        this.amount = (_a = base.amount) !== null && _a !== void 0 ? _a : 1;
+        this.weight = roundFloat(baseItem.weight * this.amount);
         this.type = baseItem.type;
         this.img = baseItem.img;
         this.sprite = baseItem.sprite;
         this.grade = baseItem.grade;
         this.gradeValue = grade_vals[this.grade];
-        this.index = (_a = base.index) !== null && _a !== void 0 ? _a : -1;
+        this.index = (_b = base.index) !== null && _b !== void 0 ? _b : -1;
         this.slot = baseItem.slot;
         this.spriteMap = baseItem.spriteMap;
-        this.requiresStats = (_b = baseItem.requiresStats) !== null && _b !== void 0 ? _b : null;
-        this.mainTitle = (_c = baseItem.mainTitle) !== null && _c !== void 0 ? _c : true;
+        this.requiresStats = (_c = baseItem.requiresStats) !== null && _c !== void 0 ? _c : null;
+        this.mainTitle = (_d = baseItem.mainTitle) !== null && _d !== void 0 ? _d : true;
+        this.stacks = (_e = baseItem.stacks) !== null && _e !== void 0 ? _e : false;
     }
 }
 const grade_vals = {
@@ -28,46 +30,59 @@ const grade_vals = {
     mythical: 40,
     legendary: 50
 };
-const namePartsArmor = {
-    slashSub: "Protective ",
-    slashMain: " of Slash Protection",
-    crushSub: "Defensive ",
-    crushMain: " of Bluntness",
-    pierceSub: "Shielding ",
-    pierceMain: " of Missile Protection",
-    magicSub: "Enchanted ",
-    magicMain: " of Magic",
-    darkSub: "Grimshielding ",
-    darkMain: " Of Darkshatter",
-    divineSub: "Blinding ",
-    divineMain: " of Seraphic Guard",
-    fireSub: "Burning ",
-    fireMain: " of Flameguard",
-    lightningSub: "Electric ",
-    lightningMain: " of Shock Aversion",
-    iceSub: "Melting ",
-    iceMain: " of Frost Defense"
+const damageCategories = {
+    slash: "physical",
+    crush: "physical",
+    pierce: "physical",
+    magic: "magical",
+    dark: "magical",
+    divine: "magical",
+    fire: "elemental",
+    lightning: "elemental",
+    ice: "elemental"
 };
-const nameParts = {
-    slashSub: "Edged ",
-    slashMain: " of Slashing",
-    crushSub: "Blunt ",
-    crushMain: " of Crushing",
-    pierceSub: "Penetrating ",
-    pierceMain: " of Breakthrough",
-    magicSub: "Enchanted ",
-    magicMain: " of Magic",
-    darkSub: "Corrupt ",
-    darkMain: " of Calamity",
-    divineSub: "Divine ",
-    divineMain: " of Celestial Might",
-    fireSub: "Flaming ",
-    fireMain: " Of Ashes",
-    lightningSub: "Shocking ",
-    lightningMain: " of Sparks",
-    iceSub: "Chilling ",
-    iceMain: " of Frost"
-};
+// RANDOMIZATION WAS REMOVED IN INDEV 8
+// const namePartsArmor = {
+//   slashSub: "Protective ",
+//   slashMain: " of Slash Protection",
+//   crushSub: "Defensive ",
+//   crushMain: " of Bluntness",
+//   pierceSub: "Shielding ",
+//   pierceMain: " of Missile Protection",
+//   magicSub: "Enchanted ",
+//   magicMain: " of Magic",
+//   darkSub: "Grimshielding ",
+//   darkMain: " Of Darkshatter",
+//   divineSub: "Blinding ",
+//   divineMain: " of Seraphic Guard",
+//   fireSub: "Burning ",
+//   fireMain: " of Flameguard",
+//   lightningSub: "Electric ",
+//   lightningMain: " of Shock Aversion",
+//   iceSub: "Melting ",
+//   iceMain: " of Frost Defense"
+// };
+// RANDOMIZATION WAS REMOVED IN INDEV 8
+// const nameParts = {
+//   slashSub: "Edged ",
+//   slashMain: " of Slashing",
+//   crushSub: "Blunt ",
+//   crushMain: " of Crushing",
+//   pierceSub: "Penetrating ",
+//   pierceMain: " of Breakthrough",
+//   magicSub: "Enchanted ",
+//   magicMain: " of Magic",
+//   darkSub: "Corrupt ",
+//   darkMain: " of Calamity",
+//   divineSub: "Divine ",
+//   divineMain: " of Celestial Might",
+//   fireSub: "Flaming ",
+//   fireMain: " Of Ashes",
+//   lightningSub: "Shocking ",
+//   lightningMain: " of Sparks",
+//   iceSub: "Chilling ",
+//   iceMain: " of Frost"
+// };
 const dmgWorths = {
     slash: 0.5,
     crush: 0.5,
@@ -88,65 +103,68 @@ const statWorths = {
     dexP: 7.5,
     intV: 10,
     intP: 7.5,
+    cunV: 10,
+    cunP: 7.5,
     hpMaxV: 2,
     hpMaxP: 3.5,
     mpMaxV: 5,
-    mpMaxP: 3.5,
+    mpMaxP: 4.5,
 };
 class Consumable extends Item {
     constructor(base) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
         this.status = baseItem.status;
         this.ability = baseItem.status;
         this.healValue = baseItem.healValue;
         this.manaValue = baseItem.manaValue;
-        this.usesTotal = baseItem.usesTotal;
-        this.usesRemaining = base.usesRemaining;
-        this.equippedSlot = (_a = base.equippedSlot) !== null && _a !== void 0 ? _a : -1;
+        this.usesTotal = (_a = baseItem.usesTotal) !== null && _a !== void 0 ? _a : 1;
+        this.usesRemaining = (_b = base.usesRemaining) !== null && _b !== void 0 ? _b : 1;
+        this.equippedSlot = (_c = base.equippedSlot) !== null && _c !== void 0 ? _c : -1;
         this.stats = {};
         this.commands = {};
-        this.name = (_b = lang[this.id + "_name"]) !== null && _b !== void 0 ? _b : baseItem.name;
-        this.fullPrice = () => { return this.price; };
+        this.name = (_d = lang[this.id + "_name"]) !== null && _d !== void 0 ? _d : baseItem.name;
+        this.fullPrice = () => { return this.price * this.amount; };
     }
 }
 class Weapon extends Item {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
+        this.name = (_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : baseItem.name;
+        this.level = (_b = base.level) !== null && _b !== void 0 ? _b : 0;
+        this.maxLevel = (_c = baseItem.maxLevel) !== null && _c !== void 0 ? _c : 5;
         this.range = baseItem.range;
         this.firesProjectile = baseItem.firesProjectile;
-        this.damagesTemplate = baseItem.damagesTemplate;
-        this.statsTemplate = baseItem.statsTemplate;
-        this.twoHanded = (_a = baseItem.twoHanded) !== null && _a !== void 0 ? _a : false;
-        this.damages = (_b = Object.assign({}, baseItem.damages)) !== null && _b !== void 0 ? _b : {};
-        this.stats = (_c = Object.assign({}, baseItem.stats)) !== null && _c !== void 0 ? _c : {};
-        this.commands = (_d = Object.assign({}, baseItem.commands)) !== null && _d !== void 0 ? _d : {};
-        this.rolledDamages = (_e = Object.assign({}, base.rolledDamages)) !== null && _e !== void 0 ? _e : {};
-        this.rolledStats = (_f = Object.assign({}, base.rolledStats)) !== null && _f !== void 0 ? _f : {};
-        this.statBonus = (_g = baseItem.statBonus) !== null && _g !== void 0 ? _g : "str";
-        if (Object.values(this.rolledDamages).length == 0) {
-            /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
-            this.damagesTemplate.forEach((template) => {
-                if (random(100, 0) < template.chance) {
-                    this.rolledDamages[template.type] = Math.round(random(template.value[1], template.value[0]));
-                }
-                else
-                    this.rolledDamages[template.type] = 0;
-            });
-        }
-        if (Object.values(this.rolledStats).length == 0) {
-            /* RANDOMIZE STAT MODIFIERS */
-            this.statsTemplate.forEach((template) => {
-                if (random(100, 0) < template.chance) {
-                    this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-                }
-                else
-                    this.rolledStats[template.type] = 0;
-            });
-        }
+        this.twoHanded = (_d = baseItem.twoHanded) !== null && _d !== void 0 ? _d : false;
+        this.damages = (_f = leveledStats(Object.assign({}, baseItem.damages), (_e = this.level) !== null && _e !== void 0 ? _e : 0)) !== null && _f !== void 0 ? _f : {};
+        this.stats = (_g = Object.assign({}, baseItem.stats)) !== null && _g !== void 0 ? _g : {};
+        this.commands = (_h = Object.assign({}, baseItem.commands)) !== null && _h !== void 0 ? _h : {};
+        this.statBonus = (_j = baseItem.statBonus) !== null && _j !== void 0 ? _j : "str";
+        if (this.level > 0)
+            this.name += ` +${this.level}`;
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // if (Object.values(this.rolledDamages).length == 0) {
+        //   /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
+        //   this.damagesTemplate.forEach((template: any) => {
+        //     if (random(100, 0) < template.chance) {
+        //       this.rolledDamages[template.type] = Math.round(random(template.value[1], template.value[0]));
+        //     }
+        //     else this.rolledDamages[template.type] = 0;
+        //   });
+        // }
+        // if (Object.values(this.rolledStats).length == 0) {
+        //   /* RANDOMIZE STAT MODIFIERS */
+        //   this.statsTemplate.forEach((template: any) => {
+        //     if (random(100, 0) < template.chance) {
+        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
+        //     }
+        //     else this.rolledStats[template.type] = 0;
+        //   });
+        // }
         this.fullPrice = () => {
             let bonus = 0;
             Object.entries(this.damages).forEach((dmg) => {
@@ -161,98 +179,99 @@ class Weapon extends Item {
                 bonus += _sw;
             });
             bonus *= grades[this.grade]["worth"];
-            let price = Math.floor(bonus + this.price);
+            let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
             return price < 1 ? 1 : price;
         };
-        Object.entries(this.rolledDamages).forEach((dmg) => {
-            if (!this.damages[dmg[0]])
-                this.damages[dmg[0]] = dmg[1];
-            else
-                this.damages[dmg[0]] += dmg[1];
-        });
-        Object.entries(this.rolledStats).forEach((stat) => {
-            if (!this.stats[stat[0]])
-                this.stats[stat[0]] = stat[1];
-            else
-                this.stats[stat[0]] += stat[1];
-        });
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // Object.entries(this.rolledDamages).forEach((dmg: any) => {
+        //   if (!this.damages[dmg[0]]) this.damages[dmg[0]] = dmg[1];
+        //   else this.damages[dmg[0]] += dmg[1];
+        // });
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // Object.entries(this.rolledStats).forEach((stat: any) => {
+        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
+        //   else this.stats[stat[0]] += stat[1];
+        // });
         /* SET NEW NAME FOR ITEM */
-        var mainDamage;
-        var subDamage;
-        if (Object.values(this.damages).length == 1) {
-            mainDamage = Object.keys(this.damages)[0];
-            subDamage = Object.keys(this.damages)[0];
-        }
-        else {
-            let max = -100;
-            let _max = -100;
-            Object.entries(this.damages).forEach((dmg) => {
-                if (dmg[1] > max) {
-                    max = dmg[1];
-                    mainDamage = dmg[0];
-                }
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // var mainDamage: string;
+        // var subDamage: string;
+        // if (Object.values(this.damages).length == 1) {
+        //   mainDamage = Object.keys(this.damages)[0];
+        //   subDamage = Object.keys(this.damages)[0];
+        // }
+        // else {
+        //   let max = -100;
+        //   let _max = -100;
+        //   Object.entries(this.damages).forEach((dmg: any) => {
+        //     if (dmg[1] > max) { max = dmg[1]; mainDamage = dmg[0]; }
+        //   });
+        //   Object.entries(this.damages).forEach((dmg: any) => {
+        //     if (dmg[1] == max && mainDamage != dmg[0]) {
+        //       if (dmg[1] > _max) { _max = dmg[1]; subDamage = dmg[0]; }
+        //     }
+        //     else if (mainDamage != dmg[0]) {
+        //       if (dmg[1] > _max) { _max = dmg[1]; subDamage = dmg[0]; }
+        //     }
+        //   });
+        // }
+        // this.statStrings = {
+        //   main: mainDamage,
+        //   sub: subDamage
+        // };
+        // if (lang["changeWordOrder"]) {
+        //   this.name = `${this.mainTitle ? lang[this.statStrings["main"] + "_damageMain"] : ""} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
+        // }
+        // // @ts-expect-error
+        // else this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${this.mainTitle ? nameParts[mainDamage + "Main"] : ""}`;
+        function leveledStats(stats, level) {
+            const values = {};
+            Object.entries(stats).forEach((stat) => {
+                values[stat[0]] = Math.round(stat[1] * (1 + level / 10));
             });
-            Object.entries(this.damages).forEach((dmg) => {
-                if (dmg[1] == max && mainDamage != dmg[0]) {
-                    if (dmg[1] > _max) {
-                        _max = dmg[1];
-                        subDamage = dmg[0];
-                    }
-                }
-                else if (mainDamage != dmg[0]) {
-                    if (dmg[1] > _max) {
-                        _max = dmg[1];
-                        subDamage = dmg[0];
-                    }
-                }
-            });
+            return values;
         }
-        this.statStrings = {
-            main: mainDamage,
-            sub: subDamage
-        };
-        if (lang["changeWordOrder"]) {
-            this.name = `${this.mainTitle ? lang[this.statStrings["main"] + "_damageMain"] : ""} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
-        }
-        // @ts-expect-error
-        else
-            this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${this.mainTitle ? nameParts[mainDamage + "Main"] : ""}`;
     }
 }
 class Armor extends Item {
     constructor(base) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
-        this.resistancesTemplate = baseItem.resistancesTemplate;
-        this.statsTemplate = baseItem.statsTemplate;
-        this.resistances = Object.assign({}, baseItem.resistances);
-        this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
-        this.commands = (_b = Object.assign({}, baseItem.commands)) !== null && _b !== void 0 ? _b : {};
-        this.rolledResistances = (_c = Object.assign({}, base.rolledResistances)) !== null && _c !== void 0 ? _c : {};
-        this.rolledStats = (_d = Object.assign({}, base.rolledStats)) !== null && _d !== void 0 ? _d : {};
-        this.coversHair = (_e = base.coversHair) !== null && _e !== void 0 ? _e : false;
-        if (Object.values(this.rolledResistances).length == 0) {
-            /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
-            this.resistancesTemplate.forEach((template) => {
-                if (random(100, 0) < template.chance) {
-                    this.rolledResistances[template.type] = Math.round(random(template.value[1], template.value[0]));
-                }
-                else
-                    this.rolledResistances[template.type] = 0;
-            });
-        }
-        if (Object.values(this.rolledStats).length == 0) {
-            /* RANDOMIZE STAT MODIFIERS */
-            this.statsTemplate.forEach((template) => {
-                if (random(100, 0) < template.chance) {
-                    this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-                }
-                else
-                    this.rolledStats[template.type] = 0;
-            });
-        }
+        this.name = (_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : baseItem.name;
+        this.level = (_b = base.level) !== null && _b !== void 0 ? _b : 0;
+        this.maxLevel = (_c = baseItem.maxLevel) !== null && _c !== void 0 ? _c : 5;
+        this.armor = (_e = leveledStats(Object.assign({}, baseItem.armor), (_d = this.level) !== null && _d !== void 0 ? _d : 0)) !== null && _e !== void 0 ? _e : {};
+        this.resistances = (_g = leveledStats(Object.assign({}, baseItem.resistances), (_f = this.level) !== null && _f !== void 0 ? _f : 0)) !== null && _g !== void 0 ? _g : {};
+        this.stats = (_h = Object.assign({}, baseItem.stats)) !== null && _h !== void 0 ? _h : {};
+        this.commands = (_j = Object.assign({}, baseItem.commands)) !== null && _j !== void 0 ? _j : {};
+        this.coversHair = (_k = base.coversHair) !== null && _k !== void 0 ? _k : false;
+        if (this.level > 0)
+            this.name += ` +${this.level}`;
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // if (Object.values(this.rolledResistances).length == 0) {
+        //   /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
+        //   this.resistancesTemplate.forEach((template: any) => {
+        //     if (random(100, 0) < template.chance) {
+        //       this.rolledResistances[template.type] = Math.round(random(template.value[1], template.value[0]));
+        //     }
+        //     else this.rolledResistances[template.type] = 0;
+        //   });
+        // }
+        // if (Object.values(this.rolledStats).length == 0) {
+        //   /* RANDOMIZE STAT MODIFIERS */
+        //   this.statsTemplate.forEach((template: any) => {
+        //     if (random(100, 0) < template.chance) {
+        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
+        //     }
+        //     else this.rolledStats[template.type] = 0;
+        //   });
+        // }
         this.fullPrice = () => {
             let bonus = 0;
             Object.entries(this.resistances).forEach((dmg) => {
@@ -267,62 +286,61 @@ class Armor extends Item {
                 bonus += _sw;
             });
             bonus *= grades[this.grade]["worth"];
-            let price = Math.floor(bonus + this.price);
+            let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
             return price < 1 ? 1 : price;
         };
-        Object.entries(this.rolledResistances).forEach((dmg) => {
-            if (!this.resistances[dmg[0]])
-                this.resistances[dmg[0]] = dmg[1];
-            else
-                this.resistances[dmg[0]] += dmg[1];
-        });
-        Object.entries(this.rolledStats).forEach((stat) => {
-            if (!this.stats[stat[0]])
-                this.stats[stat[0]] = stat[1];
-            else
-                this.stats[stat[0]] += stat[1];
-        });
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // Object.entries(this.rolledResistances).forEach((dmg: any) => {
+        //   if (!this.resistances[dmg[0]]) this.resistances[dmg[0]] = dmg[1];
+        //   else this.resistances[dmg[0]] += dmg[1];
+        // });
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // Object.entries(this.rolledStats).forEach((stat: any) => {
+        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
+        //   else this.stats[stat[0]] += stat[1];
+        // });
         /* SET NEW NAME FOR ITEM */
-        var mainResistance;
-        var subResistance;
-        if (Object.values(this.resistances).length == 1) {
-            mainResistance = Object.keys(this.resistances)[0];
-            subResistance = Object.keys(this.resistances)[0];
-        }
-        else {
-            let max = -100;
-            let _max = -100;
-            Object.entries(this.resistances).forEach((dmg) => {
-                if (dmg[1] > max) {
-                    max = dmg[1];
-                    mainResistance = dmg[0];
-                }
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // var mainResistance: string;
+        // var subResistance: string;
+        // if (Object.values(this.resistances).length == 1) {
+        //   mainResistance = Object.keys(this.resistances)[0];
+        //   subResistance = Object.keys(this.resistances)[0];
+        // }
+        // else {
+        //   let max = -100;
+        //   let _max = -100;
+        //   Object.entries(this.resistances).forEach((dmg: any) => {
+        //     if (dmg[1] > max) { max = dmg[1]; mainResistance = dmg[0]; }
+        //   });
+        //   Object.entries(this.resistances).forEach((dmg: any) => {
+        //     if (dmg[1] == max && mainResistance != dmg[0]) {
+        //       if (dmg[1] > _max) { _max = dmg[1]; subResistance = dmg[0]; }
+        //     } else if (mainResistance != dmg[0]) {
+        //       if (dmg[1] > _max) { _max = dmg[1]; subResistance = dmg[0]; }
+        //     }
+        //   });
+        // }
+        // this.resStrings = {
+        //   main: mainResistance,
+        //   sub: subResistance
+        // };
+        // if (lang["changeWordOrder"]) {
+        //   this.name = `${this.mainTitle ? lang[this.resStrings["main"] + "_resistanceMain"] : ""} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
+        // }
+        // else {
+        //   // @ts-expect-error
+        //   this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${this.mainTitle ? namePartsArmor[mainResistance + "Main"] : ""}`;
+        // }
+        function leveledStats(stats, level) {
+            const values = {};
+            Object.entries(stats).forEach((stat) => {
+                values[stat[0]] = Math.ceil(stat[1] * (1 + level / 10));
             });
-            Object.entries(this.resistances).forEach((dmg) => {
-                if (dmg[1] == max && mainResistance != dmg[0]) {
-                    if (dmg[1] > _max) {
-                        _max = dmg[1];
-                        subResistance = dmg[0];
-                    }
-                }
-                else if (mainResistance != dmg[0]) {
-                    if (dmg[1] > _max) {
-                        _max = dmg[1];
-                        subResistance = dmg[0];
-                    }
-                }
-            });
-        }
-        this.resStrings = {
-            main: mainResistance,
-            sub: subResistance
-        };
-        if (lang["changeWordOrder"]) {
-            this.name = `${this.mainTitle ? lang[this.resStrings["main"] + "_resistanceMain"] : ""} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
-        }
-        else {
-            // @ts-expect-error
-            this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${this.mainTitle ? namePartsArmor[mainResistance + "Main"] : ""}`;
+            return values;
         }
     }
 }
@@ -331,29 +349,29 @@ class Artifact extends Item {
         var _a, _b;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
-        this.statsTemplate = baseItem.statsTemplate;
         this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
         this.artifactSet = baseItem.artifactSet;
         this.rolledStats = (_b = Object.assign({}, base.rolledStats)) !== null && _b !== void 0 ? _b : {};
         this.commands = {};
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
-        if (Object.values(this.rolledStats).length == 0) {
-            /* RANDOMIZE STAT MODIFIERS */
-            this.statsTemplate.forEach((template) => {
-                if (random(100, 0) < template.chance) {
-                    this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-                }
-                else
-                    this.rolledStats[template.type] = 0;
-            });
-        }
-        Object.entries(this.rolledStats).forEach((stat) => {
-            if (!this.stats[stat[0]])
-                this.stats[stat[0]] = stat[1];
-            else
-                this.stats[stat[0]] += stat[1];
-        });
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // if (Object.values(this.rolledStats).length == 0) {
+        //   /* RANDOMIZE STAT MODIFIERS */
+        //   this.statsTemplate.forEach((template: any) => {
+        //     if (random(100, 0) < template.chance) {
+        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
+        //     }
+        //     else this.rolledStats[template.type] = 0;
+        //   });
+        // }
+        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
+        //
+        // Object.entries(this.rolledStats).forEach((stat: any) => {
+        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
+        //   else this.stats[stat[0]] += stat[1];
+        // });
         this.fullPrice = () => {
             let bonus = 0;
             Object.entries(this.stats).forEach((stat) => {
@@ -431,7 +449,7 @@ function closeLeveling() {
     lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     var text = "";
     text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
     text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
@@ -458,41 +476,65 @@ function itemTT(item) {
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
     }
-    if (item.resistances) {
-        let total = 0;
-        let totalCompare = 0;
-        let txt = "";
-        if ((_c = player[item.slot]) === null || _c === void 0 ? void 0 : _c.resistances)
-            Object.entries(player[item.slot].resistances).forEach((dmg) => { totalCompare += dmg[1]; });
-        (_d = Object.entries(item.resistances)) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => {
-            var _a, _b, _c, _d;
-            total += dmg[1];
-            if (dmg[1] !== 0) {
+    if (item.armor) {
+        if (((_c = Object.keys(item.armor)) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+            Object.entries(item.armor).forEach((armor) => {
+                var _a, _b;
+                let value = armor[1];
+                let key = armor[0];
                 let color = "lime";
-                if ((_b = (_a = player === null || player === void 0 ? void 0 : player[item.slot]) === null || _a === void 0 ? void 0 : _a.resistances) === null || _b === void 0 ? void 0 : _b[dmg[0]]) {
-                    if (((_c = player[item.slot]) === null || _c === void 0 ? void 0 : _c.resistances[dmg[0]]) > dmg[1])
+                let compareValue = (_b = (_a = player === null || player === void 0 ? void 0 : player[item.slot]) === null || _a === void 0 ? void 0 : _a.armor) === null || _b === void 0 ? void 0 : _b[key];
+                if (compareValue) {
+                    if (compareValue > value)
                         color = "red";
-                    else if (((_d = player[item.slot]) === null || _d === void 0 ? void 0 : _d.resistances[dmg[0]]) == dmg[1])
+                    else if (compareValue == value)
                         color = "white";
                 }
-                txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
-            }
-        });
-        txt = txt.substring(0, txt.length - 2);
-        text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
+                else if (value < 0)
+                    color = "red";
+                text += `<i>${icons[key + "_armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
+            });
+        }
+    }
+    if (item.resistances) {
+        if (((_d = Object.keys(item.resistances)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+            let total = 0;
+            let totalCompare = 0;
+            let txt = "";
+            if ((_e = player[item.slot]) === null || _e === void 0 ? void 0 : _e.resistances)
+                Object.entries(player[item.slot].resistances).forEach((dmg) => { totalCompare += dmg[1]; });
+            (_f = Object.entries(item.resistances)) === null || _f === void 0 ? void 0 : _f.forEach((dmg) => {
+                var _a, _b, _c, _d;
+                total += dmg[1];
+                if (dmg[1] !== 0) {
+                    let color = "lime";
+                    if ((_b = (_a = player === null || player === void 0 ? void 0 : player[item.slot]) === null || _a === void 0 ? void 0 : _a.resistances) === null || _b === void 0 ? void 0 : _b[dmg[0]]) {
+                        if (((_c = player[item.slot]) === null || _c === void 0 ? void 0 : _c.resistances[dmg[0]]) > dmg[1])
+                            color = "red";
+                        else if (((_d = player[item.slot]) === null || _d === void 0 ? void 0 : _d.resistances[dmg[0]]) == dmg[1])
+                            color = "white";
+                    }
+                    else if (dmg[1] < 0)
+                        color = "red";
+                    txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+                }
+            });
+            txt = txt.substring(0, txt.length - 2);
+            text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
+        }
     }
     if (item.requiresStats) {
         let txt = "";
-        (_e = Object.entries(item.requiresStats)) === null || _e === void 0 ? void 0 : _e.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+        (_g = Object.entries(item.requiresStats)) === null || _g === void 0 ? void 0 : _g.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
     }
-    if (((_f = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+    if (((_h = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _h === void 0 ? void 0 : _h.length) > 0) {
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
         Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0)
             text += effectSyntax(eff, true, ""); });
     }
-    if (((_g = Object.values(item.commands)) === null || _g === void 0 ? void 0 : _g.length) > 0) {
+    if (((_j = Object.values(item.commands)) === null || _j === void 0 ? void 0 : _j.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
     if (item.range > 1)
@@ -503,22 +545,26 @@ function itemTT(item) {
         text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
     if (item.usesRemaining)
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
+    if (item.stacks)
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["amount"]}: ${item.amount}\n`;
     if (item.twoHanded)
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
     if (item.statBonus)
         text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
+    if (item.slot)
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["item_slot"]}: ${lang[item.slot]}\n`;
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
     text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
     if (item.artifactSet) {
         text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
         let sets = player.getArtifactSetBonuses(true);
         text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
-        Object.entries((_h = artifactSets[item.artifactSet]) === null || _h === void 0 ? void 0 : _h.twoPieceEffect).forEach((effect) => {
+        Object.entries((_k = artifactSets[item.artifactSet]) === null || _k === void 0 ? void 0 : _k.twoPieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });
         text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
-        Object.entries((_j = artifactSets[item.artifactSet]) === null || _j === void 0 ? void 0 : _j.threePieceEffect).forEach((effect) => {
+        Object.entries((_l = artifactSets[item.artifactSet]) === null || _l === void 0 ? void 0 : _l.threePieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });
@@ -588,11 +634,14 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
         itemRarity.style.color = grades[itm.grade].color;
         itemWeight.style.color = grades[itm.grade].color;
         itemWorth.style.color = "gold";
-        itemName.textContent = itm.name;
+        itemName.textContent = `${itm.name} ${itm.stacks ? "x" + itm.amount : ""}`;
         itemRarity.textContent = lang[itm.grade].toLowerCase();
         itemType.textContent = lang[itm.type];
         itemWeight.textContent = itm.weight;
-        itemWorth.textContent = (_a = itm.fullPrice()) !== null && _a !== void 0 ? _a : itm.price;
+        let price = (_a = itm.fullPrice()) !== null && _a !== void 0 ? _a : itm.price;
+        if (price > 999)
+            price = `${Math.round(price / 1000)}k`;
+        itemWorth.textContent = price;
         if (context == "PLAYER_INVENTORY") {
             itemObject.addEventListener("mousedown", e => player.equip(e, itm));
             itemObject.addEventListener("dblclick", e => player.drop(itm));

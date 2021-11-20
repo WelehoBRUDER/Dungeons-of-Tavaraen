@@ -1,4 +1,6 @@
 vihu ai voi käyttää chargea seinien läpi --> ei liiku mutta tekee vahinkoa. / KORJATTU
 jos klikkaat loot ikkunan pois niin interact bugaa
 cooldownit ei toimi oikein, välillä kuluu 2 kierrosta kerralla, välillä ei mitään. / KORJATTU
-Charge tyyppisilä kyvyilla on loputon range.
+Charge tyyppisilä kyvyilla on loputon range. / KORJATTU
+Stunnattuna ei voi edetä vuoroja näppiksellä, vain klikkaamalla. / KORJATTU
+Summonit lasketaan pelaajaksi, tekee samat efektit.

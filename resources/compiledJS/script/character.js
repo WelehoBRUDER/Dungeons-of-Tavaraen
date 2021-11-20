@@ -321,7 +321,7 @@ function getModifiers(char, stat, withConditions = true) {
     }
     if (char.id === "player") {
         equipmentSlots.forEach((slot) => {
-            var _a, _b;
+            var _a, _b, _c;
             if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
                 Object.entries(char[slot].stats).forEach((eff) => {
                     if (eff[0].startsWith(stat)) {
@@ -338,6 +338,12 @@ function getModifiers(char, stat, withConditions = true) {
                 if ((_b = char[slot]) === null || _b === void 0 ? void 0 : _b.resistances) {
                     if (char[slot].resistances[stat.replace("Resist", '')])
                         val += char[slot].resistances[stat.replace("Resist", '')];
+                }
+            }
+            if (stat.includes("Def")) {
+                if ((_c = char[slot]) === null || _c === void 0 ? void 0 : _c.armor) {
+                    if (char[slot].armor[stat.replace("Def", '')])
+                        val += char[slot].armor[stat.replace("Def", '')];
                 }
             }
         });
@@ -357,20 +363,23 @@ function getModifiers(char, stat, withConditions = true) {
 }
 class Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
         this.stats = Object.assign({}, base.stats);
+        this.armor = (_c = Object.assign({}, base.armor)) !== null && _c !== void 0 ? _c : { physical: 0, magical: 0, elemental: 0 };
         this.resistances = Object.assign({}, base.resistances);
         this.statusResistances = Object.assign({}, base.statusResistances);
-        this.statModifiers = (_c = base.statModifiers) !== null && _c !== void 0 ? _c : [];
-        this.statusEffects = (_d = base.statusEffects) !== null && _d !== void 0 ? _d : [];
-        this.threat = (_e = base.threat) !== null && _e !== void 0 ? _e : 25;
-        this.regen = (_f = base.regen) !== null && _f !== void 0 ? _f : { hp: 0, mp: 0 };
-        this.hit = (_g = Object.assign({}, base.hit)) !== null && _g !== void 0 ? _g : { chance: 10, evasion: 5 };
-        this.scale = (_h = base.scale) !== null && _h !== void 0 ? _h : 1;
+        this.statModifiers = base.statModifiers ? [...base.statModifiers] : [];
+        this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
+        this.threat = (_d = base.threat) !== null && _d !== void 0 ? _d : 25;
+        this.regen = (_e = base.regen) !== null && _e !== void 0 ? _e : { hp: 0, mp: 0 };
+        this.hit = (_f = Object.assign({}, base.hit)) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
+        this.scale = (_g = base.scale) !== null && _g !== void 0 ? _g : 1;
         this.allModifiers = {};
+        if (Object.keys(this.armor).length < 1)
+            this.armor = { physical: 0, magical: 0, elemental: 0 };
         this.getStats = (withConditions = true) => {
             let stats = {};
             baseStats.forEach((stat) => {
@@ -436,9 +445,22 @@ class Character {
                 const { v: _val, m: _mod } = getModifiers(this, "resistAll");
                 let value = Math.floor((this.resistances[res] + val) * mod);
                 resists[res] = Math.floor((value + _val) * _mod);
-                resists[res] > 85 ? resists[res] = Math.floor(85 + (resists[res] - 85) / 17) : "";
+                if (resists[res] >= 320)
+                    resists[res] = 100;
+                else if (resists[res] > 80)
+                    resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
             });
             return resists;
+        };
+        this.getArmor = () => {
+            let armors = {};
+            Object.keys(this.armor).forEach((armor) => {
+                const { v: val, m: mod } = getModifiers(this, armor + "Def");
+                armors[armor] = Math.floor((this.armor[armor] + val) * mod);
+                if (armors[armor] > 200)
+                    armors[armor] = 200;
+            });
+            return armors;
         };
         this.getThreat = () => {
             if (!this.allModifiers["threatV"])
@@ -523,7 +545,7 @@ class Character {
                 }
             });
         };
-        this.abilities = (_j = [...base.abilities]) !== null && _j !== void 0 ? _j : [];
+        this.abilities = (_h = [...base.abilities]) !== null && _h !== void 0 ? _h : [];
         this.silenced = () => {
             var result = false;
             this.statusEffects.forEach((eff) => {

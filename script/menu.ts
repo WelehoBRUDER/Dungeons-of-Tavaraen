@@ -36,6 +36,37 @@ const mainButtons = [
   },
 ];
 
+interface grades {
+  [common: string]: any;
+  uncommon: any;
+  rare: any;
+  mythical: any;
+  legendary: any;
+}
+
+const grades = {
+  common: {
+    color: "#e0e0e0",
+    worth: 1
+  },
+  uncommon: {
+    color: "#7ccf63",
+    worth: 2
+  },
+  rare: {
+    color: "#4287f5",
+    worth: 3.25
+  },
+  mythical: {
+    color: "#5e18a3",
+    worth: 5
+  },
+  legendary: {
+    color: "#cfcf32",
+    worth: 8
+  }
+} as grades;
+
 const menuSettings = [
   {
     id: "setting_log_enemy_movement",
@@ -60,6 +91,11 @@ const menuSettings = [
     type: "hotkey",
   },
   {
+    id: "setting_hotkey_ranged",
+    tooltip: "toggle_rangedMode",
+    type: "hotkey",
+  },
+  {
     id: "setting_hotkey_move_up",
     type: "hotkey",
   },
@@ -77,6 +113,12 @@ const menuSettings = [
   },
   {
     id: "setting_hotkey_interact",
+    tooltip: "interact_help",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_open_world_messages",
+    tooltip: "world_messages",
     type: "hotkey",
   },
   {
@@ -96,7 +138,10 @@ const state = {
   menuOpen: false as boolean,
   titleScreen: false as boolean,
   optionsOpen: false as boolean,
-  savesOpen: false as boolean
+  savesOpen: false as boolean,
+  displayingTextHistory: false as boolean,
+  rangedMode: false as boolean,
+  textWindowOpen: false as boolean
 };
 
 function handleEscape() {
@@ -120,6 +165,14 @@ function handleEscape() {
     closeSettingsMenu();
     state.optionsOpen = false;
   }
+  else if(state.displayingTextHistory) {
+    state.displayingTextHistory = false
+    displayAllTextHistory();
+  }
+  else if(state.rangedMode) {
+    state.rangedMode = false;
+    renderTileHover(player.cords, null);
+  }
   else if (state.menuOpen && !state.titleScreen) {
     closeGameMenu(false, false, false);
     state.menuOpen = false;
@@ -130,6 +183,7 @@ function handleEscape() {
   }
   state.isSelected = false;
   state.abiSelected = {};
+  closeTextWindow();
   updateUI();
   contextMenu.textContent = "";
   assignContainer.style.display = "none";
@@ -260,6 +314,9 @@ function gotoSettingsMenu(inMainMenu = false) {
           selectingHotkey = _setting;
         }
       });
+      if (setting.tooltip) {
+        tooltip(container, lang[setting.tooltip]);
+      }
       container.append(text, keyButton);
       settingsBackground.append(container);
     }
@@ -309,6 +366,29 @@ async function gotoMainMenu() {
     }
     mainMenuButtons.append(frame);
   }
+}
+
+function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
+  const trimmed: PlayerCharacter = { ...playerObject };
+  trimmed.inventory.forEach((itm: any, index: number) =>{
+    if(itm.stackable) trimmed.inventory[index] = {id: itm.id, type: itm.type, amount: itm.amount};
+    else if(itm.level) trimmed.inventory[index] = {id: itm.id, type: itm.type, level: itm.level};
+    else trimmed.inventory[index] = {id: itm.id, type: itm.type};
+  });
+  trimmed.abilities.forEach((abi: any, index: number) => {
+    // @ts-ignore
+    trimmed.abilities[index] = {id: abi.id, equippedSlot: abi.equippedSlot};
+  });
+  trimmed.allModifiers = {};
+  equipSlots.forEach((slot: string) => {
+    if(trimmed[slot]?.id) {
+      trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level ?? 0 };
+    }
+  });
+  trimmed.perks.forEach((perk: any, index: number) => {
+    trimmed.perks[index] = {id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted};
+  });
+  return trimmed;
 }
 
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
@@ -382,7 +462,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     }
     saveOverwrite.addEventListener("click", () => {
       let saveData = {} as any;
-      saveData.player = { ...player };
+      saveData.player = trimPlayerObjectForSaveFile(player);
       saveData.fallenEnemies = [...fallenEnemies];
       saveData.itemData = [...itemData];
       saveData.currentMap = currentMap;
@@ -406,6 +486,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
       currentMap = save.save.currentMap;
       tree = player.classes.main.perkTree;
+      player.updatePerks(true);
       player.updateAbilities();
       purgeDeadEnemies();
       handleEscape();
@@ -421,6 +502,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     saveName.textContent = save.text;
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
+    renderedPlayer.updatePerks(false, true)
+    renderedPlayer.updateAbilities();
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
     await sleep(5);
     buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
@@ -487,7 +570,7 @@ function createNewSaveGame() {
   let sortTime = +(new Date());
   let saveTime = new Date();
   let gameSave = {} as any;
-  gameSave.player = { ...player };
+  gameSave.player = trimPlayerObjectForSaveFile(player);
   gameSave.fallenEnemies = [...fallenEnemies];
   gameSave.itemData = [...itemData];
   gameSave.currentMap = currentMap;
@@ -516,12 +599,11 @@ function saveToFile(input: string) {
       a.click();
       window.URL.revokeObjectURL(url);
     };
-
   }());
   let saveArray = [
     {
       key: "player",
-      data: { ...player }
+      data: trimPlayerObjectForSaveFile(player)
     },
     {
       key: "itemData",
@@ -623,11 +705,27 @@ function LoadSlot(data: any) {
   lootedChests = GetKey("lootedChests", data).data;
   currentMap = GetKey("currentMap", data).data;
   tree = player.classes.main.perkTree;
+  player.updatePerks(true);
   player.updateAbilities();
-  player.updatePerks();
   purgeDeadEnemies();
   handleEscape();
   closeGameMenu();
   modifyCanvas();
   updateUI();
+}
+
+function openTextWindow(txt: string) {
+  state.textWindowOpen = true;
+  const textWindow = document.querySelector<HTMLDivElement>(".textWindow");
+  textWindow.style.transform = "scale(1)";
+  textWindow.textContent = "";
+  // @ts-ignore
+  textWindow.append(textSyntax(txt));
+}
+
+function closeTextWindow() {
+  state.textWindowOpen = false;
+  const textWindow = document.querySelector<HTMLDivElement>(".textWindow");
+  textWindow.style.transform = "scale(0)";
+  textWindow.textContent = "";
 }

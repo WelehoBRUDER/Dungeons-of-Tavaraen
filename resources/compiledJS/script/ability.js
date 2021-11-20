@@ -1,13 +1,19 @@
 "use strict";
 const straight_modifiers = [
     "mana_cost",
+    "health_cost",
+    "health_cost_percentage",
     "cooldown",
     "resistance_penetration",
     "base_heal",
+    "heal_percentage",
+    "life_steal",
+    "life_steal_percentage",
     "damage_multiplier",
     "use_range",
     "summon_level",
     "summon_last",
+    "total_summon_limit",
     "aoe_size",
 ];
 const less_is_better = {
@@ -41,6 +47,8 @@ const possible_stat_modifiers = [
     "critDamageV",
     "critChanceP",
     "critDamageP",
+    "damageV",
+    "damageP"
 ];
 const possible_modifiers = [
     "last",
@@ -52,42 +60,56 @@ const possible_modifiers = [
 ];
 class Ability {
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
         // @ts-ignore
         const baseAbility = abilities[this.id];
-        const statusModifiers = getAbiStatusModifiers(user, base.id, baseAbility.status);
+        let statusModifiers = {};
+        (_a = baseAbility.statusesUser) === null || _a === void 0 ? void 0 : _a.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
+        (_b = baseAbility.statusesEnemy) === null || _b === void 0 ? void 0 : _b.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
+        if (baseAbility.summon_status)
+            statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, baseAbility.summon_status));
         this.name = baseAbility.name;
-        this.mana_cost = (_a = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif)) !== null && _a !== void 0 ? _a : 0;
-        this.cooldown = (_b = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif)) !== null && _b !== void 0 ? _b : 0;
-        this.type = (_c = baseAbility.type) !== null && _c !== void 0 ? _c : "none";
-        this.onCooldown = (_d = base.onCooldown) !== null && _d !== void 0 ? _d : 0;
-        this.equippedSlot = (_e = base.equippedSlot) !== null && _e !== void 0 ? _e : -1;
+        this.mana_cost = (_c = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif)) !== null && _c !== void 0 ? _c : 0;
+        this.health_cost = (_d = Math.floor((baseAbility.health_cost + values.health_cost.value) * values.health_cost.modif)) !== null && _d !== void 0 ? _d : 0;
+        this.health_cost_percentage = (_e = Math.floor((baseAbility.health_cost_percentage + values.health_cost_percentage.value) * values.health_cost_percentage.modif)) !== null && _e !== void 0 ? _e : 0;
+        this.cooldown = (_f = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif)) !== null && _f !== void 0 ? _f : 0;
+        this.type = (_g = baseAbility.type) !== null && _g !== void 0 ? _g : "none";
+        this.onCooldown = (_h = base.onCooldown) !== null && _h !== void 0 ? _h : 0;
+        this.equippedSlot = (_j = base.equippedSlot) !== null && _j !== void 0 ? _j : -1;
         this.damages = baseAbility.damages;
-        this.damage_multiplier = (_f = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1))) !== null && _f !== void 0 ? _f : 1;
-        this.resistance_penetration = (_g = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + (values.resistance_penetration.modif - 1)))) !== null && _g !== void 0 ? _g : 0;
-        this.base_heal = (_h = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif)) !== null && _h !== void 0 ? _h : 0;
-        this.stat_bonus = (_j = baseAbility.stat_bonus) !== null && _j !== void 0 ? _j : "";
-        this.status = (_k = baseAbility.status) !== null && _k !== void 0 ? _k : "";
-        this.status_power = (_l = baseAbility.status_power) !== null && _l !== void 0 ? _l : 0;
-        this.shoots_projectile = (_m = baseAbility.shoots_projectile) !== null && _m !== void 0 ? _m : "";
+        this.damage_multiplier = (_k = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1))) !== null && _k !== void 0 ? _k : 1;
+        this.resistance_penetration = (_l = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + (values.resistance_penetration.modif - 1)))) !== null && _l !== void 0 ? _l : 0;
+        this.base_heal = (_m = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif)) !== null && _m !== void 0 ? _m : 0;
+        this.heal_percentage = (_o = Math.floor((baseAbility.heal_percentage + values.heal_percentage.value) * values.heal_percentage.modif)) !== null && _o !== void 0 ? _o : 0;
+        this.life_steal = (_p = Math.floor((baseAbility.life_steal + values.life_steal.value) * values.life_steal.modif)) !== null && _p !== void 0 ? _p : 0;
+        this.life_steal_percentage = (_q = Math.floor((baseAbility.life_steal_percentage + values.life_steal_percentage.value) * values.life_steal_percentage.modif)) !== null && _q !== void 0 ? _q : 0;
+        this.life_steal_trigger_only_when_killing_enemy = (_r = baseAbility.life_steal_trigger_only_when_killing_enemy) !== null && _r !== void 0 ? _r : false;
+        this.stat_bonus = (_s = baseAbility.stat_bonus) !== null && _s !== void 0 ? _s : "";
+        this.statusesUser = (_t = baseAbility.statusesUser) !== null && _t !== void 0 ? _t : [];
+        this.statusesEnemy = (_u = baseAbility.statusesEnemy) !== null && _u !== void 0 ? _u : [];
+        this.status_power = (_v = baseAbility.status_power) !== null && _v !== void 0 ? _v : 0;
+        this.shoots_projectile = (_w = baseAbility.shoots_projectile) !== null && _w !== void 0 ? _w : "";
         this.icon = baseAbility.icon;
-        this.line = (_o = baseAbility.line) !== null && _o !== void 0 ? _o : "";
+        this.line = (_x = baseAbility.line) !== null && _x !== void 0 ? _x : "";
         this.use_range = typeof parseInt(baseAbility.use_range) === 'number' ? Math.floor(((parseInt(baseAbility.use_range) + values.use_range.value) * values.use_range.modif)).toString() : baseAbility.use_range;
-        this.requires_melee_weapon = (_p = baseAbility.requires_melee_weapon) !== null && _p !== void 0 ? _p : false;
-        this.requires_ranged_weapon = (_q = baseAbility.requires_ranged_weapon) !== null && _q !== void 0 ? _q : false;
-        this.requires_concentration = (_r = baseAbility.requires_concentration) !== null && _r !== void 0 ? _r : false;
-        this.recharge_only_in_combat = (_s = baseAbility.recharge_only_in_combat) !== null && _s !== void 0 ? _s : false;
+        this.requires_melee_weapon = (_y = baseAbility.requires_melee_weapon) !== null && _y !== void 0 ? _y : false;
+        this.requires_ranged_weapon = (_z = baseAbility.requires_ranged_weapon) !== null && _z !== void 0 ? _z : false;
+        this.requires_concentration = (_0 = baseAbility.requires_concentration) !== null && _0 !== void 0 ? _0 : false;
+        this.recharge_only_in_combat = (_1 = baseAbility.recharge_only_in_combat) !== null && _1 !== void 0 ? _1 : false;
         this.summon_unit = baseAbility.summon_unit;
-        this.summon_level = (_t = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif)) !== null && _t !== void 0 ? _t : 0;
+        this.summon_level = (_2 = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif)) !== null && _2 !== void 0 ? _2 : 0;
         ;
-        this.summon_last = (_u = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _u !== void 0 ? _u : 0;
+        this.summon_last = (_3 = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif)) !== null && _3 !== void 0 ? _3 : 0;
         ;
         this.summon_status = baseAbility.summon_status;
-        this.aoe_size = (_v = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _v !== void 0 ? _v : 0;
-        this.aoe_effect = (_w = baseAbility.aoe_effect) !== null && _w !== void 0 ? _w : "";
-        this.self_target = (_x = baseAbility.self_target) !== null && _x !== void 0 ? _x : false;
+        this.total_summon_limit = baseAbility.total_summon_limit + values.total_summon_limit.value;
+        this.instant_aoe = (_4 = baseAbility.instant_aoe) !== null && _4 !== void 0 ? _4 : false;
+        this.aoe_size = (_5 = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif) !== null && _5 !== void 0 ? _5 : 0;
+        this.aoe_effect = (_6 = baseAbility.aoe_effect) !== null && _6 !== void 0 ? _6 : "";
+        this.aoe_ignore_ledge = (_7 = baseAbility.aoe_ignore_ledge) !== null && _7 !== void 0 ? _7 : false;
+        this.self_target = (_8 = baseAbility.self_target) !== null && _8 !== void 0 ? _8 : false;
         this.statusModifiers = statusModifiers;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;
@@ -266,6 +288,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                             total["effects"][__key].modif *= (1 + value / 100);
                         else if (key.endsWith("P"))
                             total["effects"][__key].modif += (1 + value / 100);
+                        total["effects"][__key].status = effectId;
                     }
                     else {
                         if (key.endsWith("V"))
@@ -301,6 +324,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                                 total["effects"][__key].modif *= (1 + value / 100);
                             else if (key.endsWith("P"))
                                 total["effects"][__key].modif += (1 + value / 100);
+                            total["effects"][__key].status = effectId;
                         }
                         else {
                             if (key.endsWith("V"))
@@ -324,7 +348,8 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                 key = key.replace(abilityId + "_", "");
                 if (key.includes("status_effect")) {
                     const _key = key.replace("status_effect_", "");
-                    const __key = _key.substring(0, _key.length - 1);
+                    const trueKey = _key.replace(effectId + "_", "");
+                    const __key = trueKey.substring(0, trueKey.length - 1);
                     if (possible_stat_modifiers.find((m) => m == __key.toString())) {
                         if (key.endsWith("V"))
                             total["effects"][__key].value += value;
@@ -332,6 +357,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                             total["effects"][__key].modif *= (1 + value / 100);
                         else if (key.endsWith("P"))
                             total["effects"][__key].modif += (1 + value / 100);
+                        total["effects"][__key].status = effectId;
                     }
                     else {
                         if (key.endsWith("V"))
@@ -366,6 +392,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                                         total["effects"][__key].modif *= (1 + value / 100);
                                     else if (key.endsWith("P"))
                                         total["effects"][__key].modif += (1 + value / 100);
+                                    total["effects"][__key].status = effectId;
                                 }
                                 else {
                                     if (key.endsWith("V"))
@@ -416,4 +443,11 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
     });
     return total;
 }
+// {
+//   const arr = [1, 2, 3];
+//   console.log(JSON.stringify(arr, (key: any, value: any) => {
+//     console.log(key);
+//     return value;
+//   }, "\t"));
+// }
 //# sourceMappingURL=ability.js.map
