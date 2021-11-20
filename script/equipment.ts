@@ -601,6 +601,7 @@ function closeLeveling() {
 
 function itemTT(item: any) {
   var text = "";
+  if(!item.grade) return;
   text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
   text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
   if (item.damages) {

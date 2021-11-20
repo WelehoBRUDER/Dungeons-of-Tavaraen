@@ -476,6 +476,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       saves[save.id].save = saveData;
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
       localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
+      player.updatePerks(true);
+      player.updateAbilities();
       gotoSaveMenu(false, false);
     });
     loadGame.addEventListener("click", () => {
@@ -502,8 +504,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     saveName.textContent = save.text;
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
-    renderedPlayer.updatePerks(false, true)
-    renderedPlayer.updateAbilities();
+    renderedPlayer.updatePerks(true, true)
+    renderedPlayer.updateAbilities(true);
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
     await sleep(5);
     buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
@@ -625,6 +627,8 @@ function saveToFile(input: string) {
   let minutes: any = new Date().getMinutes();
   if (minutes < 10) minutes = `0${new Date().getMinutes()}`;
   saveData(saveArray, `DUNGEONS_OF_TAVARAEN-${input ?? player.name}-save_file-${new Date().getHours()}.${minutes}.txt`);
+  player.updatePerks(true);
+  player.updateAbilities();
 }
 
 function loadFromfile() {

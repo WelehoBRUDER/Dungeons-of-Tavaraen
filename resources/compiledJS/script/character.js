@@ -572,7 +572,7 @@ class Character {
         this.mpRemain = () => {
             return (this.stats.mp / this.getMpMax(false)) * 100;
         };
-        this.updateAbilities = () => {
+        this.updateAbilities = (useDummy = false) => {
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             this.allModifiers = getAllModifiersOnce(this);
             if (!this.allModifiers["damageV"])
@@ -580,7 +580,10 @@ class Character {
             if (!this.allModifiers["damageP"])
                 this.allModifiers["damageP"] = 1;
             for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
-                this.abilities[i] = new Ability(this.abilities[i], this);
+                if (!useDummy)
+                    this.abilities[i] = new Ability(this.abilities[i], this);
+                else
+                    this.abilities[i] = new Ability(this.abilities[i], dummy);
             }
             // @ts-ignore
             if (this.inventory) {
