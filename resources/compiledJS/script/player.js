@@ -96,7 +96,7 @@ class PlayerCharacter extends Character {
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
         this.classes = (_2 = Object.assign({}, base.classes)) !== null && _2 !== void 0 ? _2 : {};
         this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
-        this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : {};
+        this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : [];
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -138,12 +138,20 @@ class PlayerCharacter extends Character {
                 return;
             updateUI();
         };
-        this.unequip = (event, slot) => {
+        this.unequip = (event, slot, putToIndex = -1, shiftItems = false) => {
             var _a, _b;
             if (event.button !== 2 || !((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id))
                 return;
             if ((_b = this[slot]) === null || _b === void 0 ? void 0 : _b.id) {
-                this.inventory.push(this[slot]);
+                if (putToIndex != -1) {
+                    if (shiftItems) {
+                        this.inventory.splice(putToIndex, 0, this[slot]);
+                    }
+                    else
+                        this.inventory[putToIndex] = this[slot];
+                }
+                else
+                    this.inventory.push(this[slot]);
             }
             ;
             Object.entries(this[slot].commands).forEach(cmd => {
@@ -155,9 +163,14 @@ class PlayerCharacter extends Character {
             renderInventory();
         };
         this.equip = (event, item) => {
-            var _a;
+            var _a, _b, _c;
             if (event.button !== 2)
                 return;
+            if (item.id == "A0_error") {
+                player.inventory.splice(item.index, 1);
+                renderInventory();
+                return;
+            }
             const itm = Object.assign({}, item);
             let canEquip = true;
             if (itm.requiresStats) {
@@ -169,17 +182,28 @@ class PlayerCharacter extends Character {
                         canEquip = false;
                 });
             }
+            let spliceFromInv = true;
+            let shiftOffhand = true;
             if (item.slot == "offhand" && ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.twoHanded)) {
-                this.unequip(event, "weapon");
+                this.unequip(event, "weapon", item.index);
+                spliceFromInv = false;
             }
             if (!canEquip)
                 return;
-            player.inventory.splice(item.index, 1);
-            this.unequip(event, itm.slot);
+            if (!((_b = this[itm.slot]) === null || _b === void 0 ? void 0 : _b.id) && spliceFromInv)
+                player.inventory.splice(item.index, 1);
+            if (!((_c = this[itm.slot]) === null || _c === void 0 ? void 0 : _c.id))
+                shiftOffhand = false;
+            else
+                this.unequip(event, itm.slot, itm.index);
             this[itm.slot] = Object.assign({}, itm);
             Object.entries(item.commands).forEach(cmd => command(cmd));
             if (item.twoHanded) {
-                this.unequip(event, "offhand");
+                if (shiftOffhand) {
+                    this.unequip(event, "offhand", item.index + 1, true);
+                }
+                else
+                    this.unequip(event, "offhand", item.index, true);
             }
             renderInventory();
         };
@@ -481,7 +505,7 @@ function worthSort(a, b, reverse = false) {
 var player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 19, y: 72 },
+    cords: { x: 20, y: 72 },
     stats: {
         str: 1,
         dex: 1,
@@ -582,6 +606,9 @@ var randomProperty = function (mods) {
     var keys = Object.keys(mods);
     return mods[keys[keys.length * Math.random() << 0]];
 };
+// for (let i = 0; i < 20; i++) {
+//   player.addItem({...items.A0_error});
+// }
 // for (let i = 0; i < 20; i++) {
 //   player.addItem({ ...randomProperty(items) });
 // }

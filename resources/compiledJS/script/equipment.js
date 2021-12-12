@@ -556,7 +556,11 @@ function itemTT(item) {
     if (item.slot)
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["item_slot"]}: ${lang[item.slot]}\n`;
     text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
-    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+    if (typeof item.fullPrice === "function") {
+        text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+    }
+    else
+        text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
     if (item.artifactSet) {
         text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
         let sets = player.getArtifactSetBonuses(true);
@@ -606,7 +610,6 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
     const items = [...inventory];
     items.forEach((item) => {
-        var _a;
         let itm = Object.assign({}, item);
         if (itm.type == "weapon")
             itm = new Weapon(Object.assign({}, itm));
@@ -640,7 +643,10 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
         itemRarity.textContent = lang[itm.grade].toLowerCase();
         itemType.textContent = lang[itm.type];
         itemWeight.textContent = itm.weight;
-        let price = (_a = itm.fullPrice()) !== null && _a !== void 0 ? _a : itm.price;
+        let price = itm.price;
+        if (typeof itm.fullPrice === "function") {
+            price = itm.fullPrice();
+        }
         if (price > 999)
             price = `${Math.round(price / 1000)}k`;
         itemWorth.textContent = price;

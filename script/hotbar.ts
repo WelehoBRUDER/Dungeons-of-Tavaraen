@@ -11,6 +11,7 @@ class gameSettings {
   hotkey_char: string;
   hotkey_perk: string;
   hotkey_ranged: string;
+  ui_scale: number;
   hotkey_move_up: string;
   hotkey_move_down: string;
   hotkey_move_left: string;
@@ -24,6 +25,7 @@ class gameSettings {
     this.hotkey_char = base.hotkey_char || "c";
     this.hotkey_perk = base.hotkey_perk || "p";
     this.hotkey_ranged = base.hotkey_ranged || "g";
+    this.ui_scale = base.ui_scale || 100;
     this.hotkey_move_up = base.hotkey_move_up || "w";
     this.hotkey_move_down = base.hotkey_move_down || "s";
     this.hotkey_move_left = base.hotkey_move_left || "a";
@@ -40,6 +42,7 @@ let settings = new gameSettings({
   hotkey_char: "c",
   hotkey_perk: "p",
   hotkey_ranged: "g",
+  ui_scale: 100,
   hotkey_move_up: "w",
   hotkey_move_down: "s",
   hotkey_move_left: "a",
@@ -67,7 +70,7 @@ document.addEventListener("keyup", e => {
       player.statusEffects = [];
       updateUI();
       resetAllLivingEnemiesInAllMaps();
-      modifyCanvas();
+      modifyCanvas(true);
       displayText("HERÄSIT KUOLLEISTA!");
       spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
       return;

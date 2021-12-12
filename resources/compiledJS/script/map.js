@@ -40,7 +40,7 @@ function changeZoomLevel({ deltaY }) {
     else {
         currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) + 1] || zoomLevels[zoomLevels.length - 1];
     }
-    modifyCanvas();
+    modifyCanvas(true);
 }
 window.addEventListener("resize", modifyCanvas);
 (_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
@@ -96,16 +96,18 @@ function moveMinimap() {
     else {
         minimapContainer.style.display = "block";
     }
-    minimapCanvas.style.left = `${player.cords.x * -8 + 172}px`;
-    minimapCanvas.style.top = `${player.cords.y * -8 + 112}px`;
+    minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
+    minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
-function renderMap(map) {
+let sightMap;
+function renderMap(map, createNewSightMap = false) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     baseCanvas.width = baseCanvas.width; // Clears the canvas
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    let sightMap = createSightMap(player.cords, player.sight());
+    if (createNewSightMap)
+        sightMap = createSightMap(player.cords, player.sight());
     /* Render the base layer */
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
@@ -207,6 +209,20 @@ function renderMap(map) {
             });
         }
         enemyLayers.append(canvas);
+    });
+    /* Render Characters */
+    NPCcharacters.forEach((npc) => {
+        var _a;
+        if (npc.currentMap == currentMap) {
+            if (((_a = sightMap[npc.currentCords.y]) === null || _a === void 0 ? void 0 : _a[npc.currentCords.x]) == "x") {
+                const charSprite = document.querySelector("." + npc.sprite);
+                var tileX = (npc.currentCords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var tileY = (npc.currentCords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                if (charSprite) {
+                    baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
+                }
+            }
+        }
     });
     /* Render Summons */
     summonLayers.textContent = ""; // Delete summon canvases
@@ -534,13 +550,17 @@ function clickMap(event) {
 }
 const emptyMap = (base_tiles) => new Array(base_tiles.length).fill("0").map(e => new Array(base_tiles[0].length).fill("0"));
 function createSightMap(start, size) {
-    let sightMap = emptyMap(maps[currentMap].base);
+    let _sightMap = JSON.parse(JSON.stringify(sightMap_empty));
     let testiIsonnus = size ** 2;
-    return sightMap.map((rivi, y) => rivi.map((_, x) => {
-        if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus)
-            return "x";
-        return "0";
-    }));
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    for (let y = 0; y < spriteLimitY; y++) {
+        for (let x = 0; x < spriteLimitX; x++) {
+            if (Math.abs((x - start.x) + mapOffsetStartX) ** 2 + Math.abs((y - start.y) + mapOffsetStartY) ** 2 < testiIsonnus) {
+                _sightMap[y + mapOffsetStartY][x + mapOffsetStartX] = "x";
+            }
+        }
+    }
+    return _sightMap;
 }
 function createAOEMap(start, size, ignoreLedge = false) {
     let aoeMap = emptyMap(maps[currentMap].base);
@@ -603,7 +623,7 @@ document.addEventListener("keyup", (keyPress) => {
         if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
             moveMinimap();
             // @ts-ignore
-            renderMap(maps[currentMap]);
+            renderMap(maps[currentMap], true);
             advanceTurn();
         }
         else if (canMove(shittyFix, dirs[keyPress.key]) && rooted) {
@@ -654,7 +674,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
             isMovingCurrently = true;
             player.cords.x = step.x;
             player.cords.y = step.y;
-            modifyCanvas();
+            modifyCanvas(true);
             if (!ability) {
                 advanceTurn();
             }
@@ -734,6 +754,12 @@ function canMove(char, dir) {
             if (enemy.cords.x == tile.x && enemy.cords.y == tile.y)
                 movable = false;
         }
+        for (let npc of NPCcharacters) {
+            if (npc.currentMap == currentMap) {
+                if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y)
+                    movable = false;
+            }
+        }
         return movable;
     }
     catch (_a) { }
@@ -751,6 +777,12 @@ function canMoveTo(char, tile) {
     if (char.id !== "player") {
         for (let summon of combatSummons) {
             if (summon.cords.x == tile.x && summon.cords.y == tile.y)
+                movable = false;
+        }
+    }
+    for (let npc of NPCcharacters) {
+        if (npc.currentMap == currentMap) {
+            if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y)
                 movable = false;
         }
     }
@@ -814,11 +846,11 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
 function renderPlayerPortrait() {
     const portrait = document.createElement("div");
     const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 512;
+    canvas.width = 512 * (settings["ui_scale"] / 100);
+    canvas.height = 512 * (settings["ui_scale"] / 100);
     const ctx = canvas.getContext("2d");
     portrait.classList.add("playerPortrait");
-    renderPlayerOutOfMap(512, canvas, ctx, "left");
+    renderPlayerOutOfMap(512 * (settings["ui_scale"] / 100), canvas, ctx, "left");
     portrait.append(canvas);
     return portrait;
 }
@@ -877,6 +909,11 @@ function renderPlayerModel(size, canvas, ctx) {
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
 }
+function calcDistance(startX, startY, endX, endY) {
+    let xDist = Math.abs(endX - startX);
+    let yDist = Math.abs(endY - startY);
+    return xDist + yDist;
+}
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
@@ -888,15 +925,11 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     }
     if (end.x < 0 || end.x > maps[currentMap].base[0].length - 1 || end.y < 0 || end.y > maps[currentMap].base.length - 1)
         return;
-    var fieldMap = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
-        if (tiles[xv].isWall || (tiles[xv].isLedge && !canFly))
-            return 1;
-        return 0;
-    }));
-    maps[currentMap].clutter.forEach((yv, y) => yv.map((xv, x) => {
-        if (clutters[xv].isWall)
-            fieldMap[y][x] = 1;
-    }));
+    let fieldMap;
+    if (canFly)
+        fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
+    else
+        fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
     if (start.x !== player.cords.x && start.y !== player.cords.y) {
         fieldMap[player.cords.y][player.cords.x] = 1;
         combatSummons.forEach(summon => {
@@ -911,59 +944,45 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         }
         ;
     } });
+    NPCcharacters.forEach((npc) => {
+        if (npc.currentMap == currentMap) {
+            fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
+        }
+    });
+    fieldMap[start.y][start.x] = 0;
     fieldMap[end.y][end.x] = 5;
-    main: for (let i = 5; i < 100; i++) {
-        for (let y = 0; y < maps[currentMap].base.length; y++) {
-            for (let x = 0; x < maps[currentMap].base[y].length; x++) {
-                if (fieldMap[y][x] !== 0)
-                    continue;
-                if (((_a = fieldMap[y]) === null || _a === void 0 ? void 0 : _a[x + 1]) == i)
-                    fieldMap[y][x] = i + 1;
-                else if (((_b = fieldMap[y]) === null || _b === void 0 ? void 0 : _b[x - 1]) == i)
-                    fieldMap[y][x] = i + 1;
-                else if (((_c = fieldMap[y + 1]) === null || _c === void 0 ? void 0 : _c[x]) == i)
-                    fieldMap[y][x] = i + 1;
-                else if (((_d = fieldMap[y - 1]) === null || _d === void 0 ? void 0 : _d[x]) == i)
-                    fieldMap[y][x] = i + 1;
-                if (fieldMap[start.y][start.x] > 3)
-                    break main;
+    let calls = 0;
+    let maximumCalls = 2000;
+    const checkGrid = [{ v: 5, x: end.x, y: end.y }];
+    while (fieldMap[start.y][start.x] == 0 && checkGrid.length > 0 && calls < maximumCalls) {
+        const { v, x, y } = checkGrid.splice(0, 1)[0];
+        if (fieldMap[y][x] == v) {
+            if (((_a = fieldMap[y - 1]) === null || _a === void 0 ? void 0 : _a[x]) === 0) {
+                fieldMap[y - 1][x] = v + 1;
+                checkGrid.push({ v: v + 1, x: x, y: y - 1, dist: calcDistance(x, y - 1, start.x, start.y) });
+            }
+            if (((_b = fieldMap[y + 1]) === null || _b === void 0 ? void 0 : _b[x]) === 0) {
+                fieldMap[y + 1][x] = v + 1;
+                checkGrid.push({ v: v + 1, x: x, y: y + 1, dist: calcDistance(x, y + 1, start.x, start.y) });
+            }
+            if (((_c = fieldMap[y]) === null || _c === void 0 ? void 0 : _c[x - 1]) === 0) {
+                fieldMap[y][x - 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x - 1, y: y, dist: calcDistance(x - 1, y, start.x, start.y) });
+            }
+            if (((_d = fieldMap[y]) === null || _d === void 0 ? void 0 : _d[x + 1]) === 0) {
+                fieldMap[y][x + 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x + 1, y: y, dist: calcDistance(x + 1, y, start.x, start.y) });
             }
         }
+        checkGrid.sort((a, b) => {
+            return a.dist - b.dist;
+        });
+        calls++;
     }
-    const maxValueCords = { x: null, y: null, v: 0 };
-    const maxNum = fieldMap[start.y][start.x];
-    // if (retreatPath > 0) fieldMap[start.y][start.x] = 0;
-    // if (retreatPath > 0) {
-    //   const arr = [...new Array(retreatPath)].map(_ => []);
-    //   arr[0].push({ x: start.x, y: start.y });
-    //   for (let i = 0; i < arr.length; i++) {
-    //     for (let i2 = maxNum - 1; i2 < maxNum + retreatPath; i2++) {
-    //       for (const value of arr[i]) {
-    //         if (fieldMap[value.y][value.x] !== 0) continue;
-    //         const left = fieldMap[value.y]?.[value.x - 1] ?? null;
-    //         const right = fieldMap[value.y]?.[value.x + 1] ?? null;
-    //         const top = fieldMap[value.y - 1]?.[value.x] ?? null;
-    //         const bottom = fieldMap[value.y + 1]?.[value.x] ?? null;
-    //         // if(i != 0) map[value.y][value.x] = min + 1;
-    //         if ([left, right, top, bottom].find(e => e == i2)) {
-    //           fieldMap[value.y][value.x] = i2 + 1;
-    //           if (left == 0) arr[i + 1]?.push({ y: value.y, x: value.x - 1 });
-    //           if (right == 0) arr[i + 1]?.push({ y: value.y, x: value.x + 1 });
-    //           if (top == 0) arr[i + 1]?.push({ y: value.y - 1, x: value.x });
-    //           if (bottom == 0) arr[i + 1]?.push({ y: value.y + 1, x: value.x });
-    //         }
-    //         if (i2 >= maxValueCords.v - 1) {
-    //           Object.assign(maxValueCords, { y: value.y, x: value.x, v: i2 + 1 });
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
     const data = {
         x: start.x,
         y: start.y
     };
-    // if (retreatPath > 0) Object.assign(data, { ...maxValueCords });
     const cords = [];
     siksakki: for (let i = 0; i < 375; i++) {
         const v = fieldMap[data.y][data.x] - 1;
@@ -1067,7 +1086,7 @@ function generateArrowPath(start, end, distanceOnly = false) {
         return e;
     });
 }
-function modifyCanvas() {
+function modifyCanvas(createNewSightMap = false) {
     const layers = Array.from(document.querySelectorAll("canvas.layer"));
     moveMinimap();
     for (let canvas of layers) {
@@ -1077,7 +1096,7 @@ function modifyCanvas() {
         canvas.height = innerHeight;
     }
     // @ts-ignore
-    renderMap(maps[currentMap]);
+    renderMap(maps[currentMap], createNewSightMap);
 }
 var highestWaitTime = 0;
 /* Move to state file later */
@@ -1257,5 +1276,31 @@ function resetAllLivingEnemiesInAllMaps() {
             enemy.restore();
         });
     });
+}
+// This should be called once when entering a new map.
+// It returns nothing, instead updating 2 existing variables.
+let staticMap_normal = [];
+let staticMap_flying = [];
+let sightMap_empty = [];
+function createStaticMap() {
+    staticMap_normal = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
+        if (tiles[xv].isWall || tiles[xv].isLedge)
+            return 1;
+        return 0;
+    }));
+    maps[currentMap].clutter.forEach((yv, y) => yv.map((xv, x) => {
+        if (clutters[xv].isWall)
+            staticMap_normal[y][x] = 1;
+    }));
+    staticMap_flying = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
+        if (tiles[xv].isWall)
+            return 1;
+        return 0;
+    }));
+    maps[currentMap].clutter.forEach((yv, y) => yv.map((xv, x) => {
+        if (clutters[xv].isWall)
+            staticMap_flying[y][x] = 1;
+    }));
+    sightMap_empty = emptyMap(maps[currentMap].base);
 }
 //# sourceMappingURL=map.js.map

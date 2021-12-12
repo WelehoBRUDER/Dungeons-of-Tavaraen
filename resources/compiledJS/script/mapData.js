@@ -258,4 +258,12 @@ function fastGrabTreasure(e, chest) {
     chest.lootChest();
     modifyCanvas();
 }
+function resetAllChests() {
+    maps.forEach((mp) => {
+        mp.treasureChests.forEach((chest, index) => {
+            chest.loot = null;
+            mp.treasureChests[index] = new treasureChest(Object.assign({}, chest));
+        });
+    });
+}
 //# sourceMappingURL=mapData.js.map

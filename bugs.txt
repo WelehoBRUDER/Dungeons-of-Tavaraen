@@ -3,4 +3,9 @@ jos klikkaat loot ikkunan pois niin interact bugaa
 cooldownit ei toimi oikein, välillä kuluu 2 kierrosta kerralla, välillä ei mitään. / KORJATTU
 Charge tyyppisilä kyvyilla on loputon range. / KORJATTU
 Stunnattuna ei voi edetä vuoroja näppiksellä, vain klikkaamalla. / KORJATTU
-Summonit lasketaan pelaajaksi, tekee samat efektit.
+Summonit lasketaan pelaajaksi, tekee samat efektit. / KORJATTU
+Summonit ei resettaa oikein resummonatessa.
+Uuden pelin aloittaminen ilman F5 on ongelmallinen.
+Vuoro ei joskus vaihdu.
+Itemit resettaa määrän save/load (?)
+Pelin tallentaminen aiheuttaa black screenin.

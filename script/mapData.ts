@@ -261,3 +261,12 @@ function fastGrabTreasure(e: KeyboardEvent, chest: treasureChest) {
   chest.lootChest();
   modifyCanvas();
 }
+
+function resetAllChests() {
+  maps.forEach((mp) => {
+    mp.treasureChests.forEach((chest, index) => {
+      chest.loot = null;
+      mp.treasureChests[index] = new treasureChest({...chest});
+    });
+  });
+}

@@ -1,3 +1,21 @@
+# Indev Update 9 ~ 12.12.2021
+
+## New Additions
+  * Added NPC characters
+    > Currently only rendered in game with no interactions.
+  * Added UI-scaling! 
+    > In options, there's a new slider for UI scaling.  
+    Allows you to decide the size of the game's interface.  
+    Very useful if the interface is too big or small for your screen.
+
+## Fixes & Tweaks
+  * Fixed an issue with being unable to move after starting new game when dead.
+  * Fixed an issue with the tooltip being stuck on the screen.
+  * Fixed the inventory breaking due to malformed items.
+  * Fixed chests not respawning when starting new game.
+  * Optimized pathfinding and rendering.
+  * Unequipped items are now placed at the position of the equipped item.
+
 # Indev Update 8 ~ 20.11.2021 
 
 ## New Features & Additions

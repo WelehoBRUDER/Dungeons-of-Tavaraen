@@ -75,6 +75,7 @@ interface characterObject {
   getRegen?: Function;
   getHitchance?: Function;
   isRooted?: Function;
+  inventory?: any;
 }
 
 interface statusObject {
@@ -431,6 +432,7 @@ class Character {
   isRooted?: Function;
   scale?: number;
   allModifiers?: any;
+  inventory?: any;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -628,17 +630,20 @@ class Character {
         if(!useDummy) this.abilities[i] = new Ability(this.abilities[i], this);
         else this.abilities[i] = new Ability(this.abilities[i], dummy);
       }
-      // @ts-ignore
       if (this.inventory) {
-        // @ts-ignore
         for (let i = 0; i < this.inventory?.length; i++) {
-          // @ts-ignore
+          // If item is broken, default to error item
+          if(!this.inventory[i].id || !this.inventory[i].type) {
+            this.inventory[i] = {...items.A0_error};
+          }
+          // Manually refresh error items
+          if(this.inventory[i].id == "A0_error") {
+            this.inventory[i] = {...items.A0_error};
+            this.inventory[i].index = i;
+          } 
           if (this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({ ...this.inventory[i] });
-          // @ts-ignore
           else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor({ ...this.inventory[i] });
-          // @ts-ignore
           else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable({ ...this.inventory[i] });
-          // @ts-ignore
           else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact({ ...this.inventory[i] });
         }
       }

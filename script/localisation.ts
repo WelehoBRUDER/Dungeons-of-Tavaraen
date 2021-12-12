@@ -447,6 +447,7 @@ const finnish = {
   setting_hotkey_move_right: "Liiku oikealle",
   setting_hotkey_interact: "Poimi esine / käytä",
   setting_hotkey_open_world_messages: "Avaa teksti ikkuna",
+  setting_ui_scale: "UI skaalaus",
 
   open_menu: "Avaa valikko",
 
@@ -803,7 +804,8 @@ const finnish = {
   toggle_minimap: "<f>16px<f>Minikartta auttaa suunnistamaan eri alueissa. \nVoi hidastaa peliä.",
   interact_help: "<f>16px<f>Avaa arkkuja ja poimi tavaroita seisomalla niiden päällä. \nMyös mahdollistaa hahmoille puhumisen.",
   world_messages: "<f>16px<f>Näe lisää viestejä teksti ruudussa.",
-  toggle_rangedMode: "<f>16p<f>Ammunta tila näyttää ammunta aseiden kantomatkan.",
+  toggle_rangedMode: "<f>16px<f>Ammunta tila näyttää ammunta aseiden kantomatkan.",
+  ui_scale: "<f>16px<f>Muuttaa UI-elementtien kokoa kertoimella.\nMuuta jos elementit ovat liian pieniä tai suuria.",
 } as any;
 
 const english = {
@@ -1161,6 +1163,7 @@ const english = {
   setting_hotkey_move_right: "Move right",
   setting_hotkey_interact: "Interact",
   setting_hotkey_open_world_messages: "Open text box",
+  setting_ui_scale: "UI scaling",
 
   open_menu: "Open game menu",
 
@@ -1517,5 +1520,6 @@ const english = {
   toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
   interact_help: "<f>16px<f>Open chests or pick loot when standing on the same tile. \nAlso used to talk to NPCs and interact with world.",
   world_messages: "<f>16px<f>View more action messages displayed in the bottom left.",
-  toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach."
+  toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach.",
+  ui_scale: "<f>16px<f>Scales UI-elements based on multiplier.\nChange this value if UI is too large or small.",
 } as any;

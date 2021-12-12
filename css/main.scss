@@ -2,6 +2,10 @@ body {
   background: rgb(10, 10, 10);
 }
 
+:root {
+  --ui-scale: 1;
+}
+
 .sprites {
   .sprite {
     width: 0;
@@ -84,16 +88,16 @@ body {
   }
 
   .xpBar {
-    width: 1780px;
-    height: 37px;
+    width: calc(1780px * var(--ui-scale));
+    height: calc(37px * var(--ui-scale));
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 100px;
+    bottom: calc(100px * var(--ui-scale));
     background: rgb(10, 10, 10);
-    box-shadow: inset 0px 0px 8px 6px rgb(21, 21, 21);
-    border: 4px solid rgb(0, 0, 0);
-    border-radius: 8px;
+    box-shadow: inset 0px 0px calc(8px * var(--ui-scale)) calc(6px * var(--ui-scale)) rgb(21, 21, 21);
+    border: calc(4px * var(--ui-scale)) solid rgb(0, 0, 0);
+    border-radius: calc(8px * var(--ui-scale));
 
     .barFill {
       width: 100%;
@@ -104,24 +108,24 @@ body {
 
   .hotbar {
     background: rgb(70, 70, 70);
-    width: 1780px;
-    height: 90px;
+    width: calc(1780px * var(--ui-scale));
+    height: calc(90px * var(--ui-scale));
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: -10px;
-    border: 8px solid rgb(37, 25, 14);
-    box-shadow: inset 0px 0px 18px 12px rgb(46, 46, 46);
-    border-radius: 12px;
+    bottom: calc(-10px * var(--ui-scale));
+    border: calc(8px * var(--ui-scale)) solid rgb(37, 25, 14);
+    box-shadow: inset 0px 0px calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(46, 46, 46);
+    border-radius: calc(12px * var(--ui-scale));
     display: flex;
 
     .hotbarFrame {
       transition: 0.05s;
-      width: 124px;
-      height: 72px;
-      border: 4px solid rgb(90, 89, 89);
+      width: calc(124px * var(--ui-scale));
+      height: calc(72px * var(--ui-scale));
+      border: calc(4px * var(--ui-scale)) solid rgb(90, 89, 89);
       margin: 1px;
-      border-radius: 8px;
+      border-radius: calc(8px * var(--ui-scale));
       position: relative;
       top: 0;
       left: 0;
@@ -133,11 +137,11 @@ body {
 
       p {
         color: white;
-        font-size: 40px;
+        font-size: calc(40px * var(--ui-scale));;
         text-shadow: 0px 0px 4px black;
         top: 50%;
         left: 50%;
-        margin-top: -20px;
+        margin-top: calc(-20px * var(--ui-scale));;
         transform: translateX(-50%);
         position: absolute;
         z-index: 2;
@@ -161,13 +165,13 @@ body {
         transform: translateX(0%);
         margin-top: 15%;
         margin-left: 25%;
-        font-size: 23px;
+        font-size: calc(23px * var(--ui-scale));;
         text-shadow: 0px 0px 4px black;
       }
 
       span {
         color: silver;
-        font-size: 20px;
+        font-size: calc(20px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         position: absolute;
         top: 0;
@@ -196,7 +200,7 @@ body {
     }
 
     .hotbarFrame:hover {
-      border: 4px solid rgb(153, 151, 151);
+      border: calc(4px * var(--ui-scale)) solid rgb(153, 151, 151);
     }
   }
 
@@ -204,19 +208,19 @@ body {
     position: absolute;
     left: 0;
     top: 0;
-    filter: drop-shadow(0px 0px 4px rgb(70, 70, 70));
+    filter: drop-shadow(0px 0px calc(4px * var(--ui-scale)) rgb(70, 70, 70));
 
     .playerHpBg {
-      width: 192px;
-      height: 192px;
+      width: calc(192px * var(--ui-scale));
+      height: calc(192px * var(--ui-scale));
       position: absolute;
-      left: 45px;
-      top: 40px;
+      left: calc(45px * var(--ui-scale));
+      top: calc(40px * var(--ui-scale));
       z-index: 2;
 
       img {
-        width: 192px;
-        height: 192px;
+        width:calc(192px * var(--ui-scale));
+        height: calc(192px * var(--ui-scale));
         position: absolute;
         left: 0;
         top: 0;
@@ -224,11 +228,11 @@ body {
 
       .hpText {
         position: absolute;
-        top: 25%;
+        top: calc(25% * var(--ui-scale));
         left: 50%;
         transform: translate(-50%);
         color: white;
-        font-size: 30px;
+        font-size: calc(30px * var(--ui-scale));
         text-shadow: 0px 0px 2px black;
         white-space: nowrap;
       }
@@ -244,15 +248,15 @@ body {
     }
 
     .playerMpBg {
-      width: 128px;
-      height: 256px;
+      width: calc(128px * var(--ui-scale));
+      height: calc(256px * var(--ui-scale));
       position: absolute;
-      left: 8px;
-      top: 8px;
+      left: calc(8px * var(--ui-scale));
+      top: calc(8px * var(--ui-scale));
 
       img {
-        width: 128px;
-        height: 256px;
+        width: calc(128px * var(--ui-scale));
+        height: calc(256px * var(--ui-scale));
         position: absolute;
         left: 0;
         top: 0;
@@ -271,8 +275,8 @@ body {
   .defaultItemsArray {
     transition: 0.275s;
     transition-timing-function: ease-in;
-    width: 1360px;
-    height: 780px;
+    width: calc(1360px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
     background: rgba(10, 10, 10, 0.9);
     border: 6px solid rgb(50, 50, 50);
     border-radius: 4px;
@@ -282,8 +286,8 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -680px;
-    margin-top: -390px;
+    margin-left: calc(-680px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
     z-index: 8;
     transform: scale(0);
   }
@@ -291,8 +295,8 @@ body {
   .playerInventory {
     transition: 0.275s;
     transition-timing-function: ease-in;
-    width: 1360px;
-    height: 780px;
+    width: calc(1360px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
     background: rgba(10, 10, 10, 0.9);
     border: 6px solid rgb(50, 50, 50);
     border-radius: 4px;
@@ -302,8 +306,8 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -680px;
-    margin-top: -390px;
+    margin-left: calc(-680px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
     z-index: 8;
     transform: scale(0);
 
@@ -315,8 +319,8 @@ body {
       background: rgba(32, 50, 90, 0.6);
       box-shadow: inset 0px 0px 8px 7px rgba(4, 7, 14, 0.6);
       box-sizing: border-box;
-      border: 4px solid rgba(45, 45, 45, 0.7);
-      margin: 5px;
+      border: calc(4px * var(--ui-scale)) solid rgba(45, 45, 45, 0.7);
+      margin: calc(5px * var(--ui-scale));
       position: absolute;
       z-index: 7;
       background-image: background-image;
@@ -330,7 +334,7 @@ body {
       }
 
       .slotText {
-        font-size: 14px;
+        font-size: calc(14px * var(--ui-scale));
         white-space: nowrap;
         position: absolute;
         left: 50%;
@@ -341,7 +345,7 @@ body {
     }
 
     .slot:hover {
-      border: 4px solid rgba(110, 110, 110, 0.7);
+      border: calc(4px * var(--ui-scale)) solid rgba(110, 110, 110, 0.7);
     }
 
     .slotImg {
@@ -444,7 +448,7 @@ body {
       left: 39%;
       top: 0;
       background: rgba(7, 10, 17, 0.9);
-      border: 6px solid rgb(40, 46, 71);
+      border: calc(6px * var(--ui-scale)) solid rgb(40, 46, 71);
       box-sizing: border-box;
     }
   }
@@ -452,17 +456,17 @@ body {
   .playerWindow {
     transition: 0.275s;
     transition-timing-function: ease-in;
-    width: 1360px;
-    height: 780px;
+    width: calc(1360px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
     background: rgba(5, 5, 5, 0.95);
-    border: 6px solid rgb(50, 50, 50);
+    border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
     box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
     border-radius: 4px;
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -680px;
-    margin-top: -390px;
+    margin-left: calc(-680px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
     z-index: 8;
     transform: scale(0);
     user-select: none;
@@ -481,27 +485,27 @@ body {
       width: max-content;
       height: max-content;
       position: absolute;
-      left: 325px;
+      left: calc(325px * var(--ui-scale));
       top: 0px;
       white-space: nowrap;
 
       .charName {
-        font-size: 57px;
+        font-size: calc(57px * var(--ui-scale));
         color: gold;
         text-shadow: -1px 1px 4px rgb(240, 210, 40);
         position: relative;
         left: 0;
-        top: 10px;
+        top: calc(10px * var(--ui-scale));
         margin: 0;
         padding: 0;
       }
 
       .charRaceLevel {
-        font-size: 39px;
+        font-size: calc(39px * var(--ui-scale));
         color: silver;
         text-shadow: -1px 1px 4px rgb(151, 151, 151);
         position: relative;
-        left: 20px;
+        left: calc(20px * var(--ui-scale));
         top: 0px;
         margin: 0;
         padding: 0;
@@ -509,24 +513,24 @@ body {
 
       .charHealthContainer, .charManaContainer {
         position: relative;
-        left: 25px;
+        left: calc(25px * var(--ui-scale));
         top: 0px;
         display: flex;
         text-align: center;
         vertical-align: middle;
         margin: 0;
         padding: 0;
-        height: 36px;
+        height: calc(36px * var(--ui-scale));
         width: auto;
 
         img {
-          width: 32px;
-          height: 32px;
+          width: calc(32px * var(--ui-scale));
+          height: calc(32px * var(--ui-scale));
         }
 
         p {
           color: white;
-          font-size: 28px;
+          font-size: calc(28px * var(--ui-scale));
           vertical-align: middle;
           margin-top: 0px;
         }
@@ -535,30 +539,30 @@ body {
 
     .coreStatsTitle, .coreResistancesTitle, .statusResistancesTitle {
       text-align: center;
-      width: 300px;
-      font-size: 32px;
+      width: calc(300px * var(--ui-scale));
+      font-size: calc(32px * var(--ui-scale));
       white-space: nowrap;
       color: gold;
       text-shadow: -1px 1px 4px rgb(240, 210, 40);
       border: 4px solid gold;
       position: absolute;
-      left: 25px;
-      top: 240px;
+      left: calc(25px * var(--ui-scale));
+      top: calc(240px * var(--ui-scale));
       margin: 0;
       padding: 0;
       text-transform: uppercase;
-      padding: 10px;
+      padding: calc(10px * var(--ui-scale));
     }
 
     .coreStats, .coreResistances, .statusResistances {
       position: absolute;
       height: auto;
-      max-height: 370px;
-      width: 300px;
-      left: 25px;
-      top: 315px;
-      padding: 10px;
-      border: 4px solid gold;
+      max-height: calc(370px * var(--ui-scale));
+      width: calc(300px * var(--ui-scale));
+      left: calc(25px * var(--ui-scale));
+      top: calc(315px * var(--ui-scale));
+      padding: calc(10px * var(--ui-scale));
+      border: calc(4px * var(--ui-scale)) solid gold;
       overflow: hidden;
       overflow-y: auto;
 
@@ -569,36 +573,36 @@ body {
         color: rgb(224, 224, 224);
         text-shadow: -1px 1px 4px white;
         margin: 0;
-        font-size: 24px;
+        font-size: calc(24px * var(--ui-scale));
         white-space: nowrap;
 
         img {
-          width: 42px;
-          height: 42px;
+          width: calc(42px * var(--ui-scale));
+          height: calc(42px * var(--ui-scale));
           margin: 0;
         }
 
         p {
           margin: 0;
-          margin-top: 6px;
+          margin-top: calc(6px * var(--ui-scale));
           overflow: hidden;
         }
 
         span {
           position: absolute;
-          right: 10px;
+          right: calc(10px * var(--ui-scale));
           margin: 0;
-          margin-top: 6px;
+          margin-top: calc(6px * var(--ui-scale));
         }
       }
     }
 
     .coreResistances, .coreResistancesTitle {
-      left: 375px;
+      left: calc(375px * var(--ui-scale));
     }
 
     .statusResistances, .statusResistancesTitle {
-      left: 725px;
+      left: calc(725px * var(--ui-scale));
     }
 
     pre {
@@ -606,25 +610,25 @@ body {
       span {
         margin: 0;
         color: white;
-        font-size: 22px;
+        font-size: calc(22px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
-        line-height: 24px;
+        line-height: calc(24px * var(--ui-scale));
       }
 
       img {
-        width: 22px;
+        width: calc(22px * var(--ui-scale));
         vertical-align: middle;
       }
     }
   }
 
   .closestEnemyDistance {
-    font-size: 32px;
+    font-size: calc(32px * var(--ui-scale));
     color: white;
     position: absolute;
     left: 50%;
-    bottom: calc(10% + 30px);
+    bottom: calc((10% + 30px) * var(--ui-scale));
     transform: translateX(-50%);
     text-shadow: -2px 2px 5px rgb(48, 48, 48);
     background: rgba(0, 0, 0, 0.3);
@@ -632,11 +636,11 @@ body {
   }
 
   .interactPrompt {
-    font-size: 32px;
+    font-size: calc(32px * var(--ui-scale));
     color: white;
     position: absolute;
     left: 50%;
-    bottom: calc(15% + 32px);
+    bottom: calc((15% + 32px) * var(--ui-scale));
     transform: translateX(-50%);
     text-shadow: -2px 2px 5px rgb(48, 48, 48);
     background: rgba(0, 0, 0, 0.3);
@@ -648,13 +652,13 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 480px;
-    height: 360px;
-    margin-top: -180px;
-    margin-left: -240px;
+    width: calc(480px * var(--ui-scale));
+    height: calc(360px * var(--ui-scale));
+    margin-top: calc(-180px * var(--ui-scale));
+    margin-left: calc(-240px * var(--ui-scale));
     box-sizing: border-box;
     background: rgba(5, 5, 5, 0.95);
-    border: 6px solid rgb(50, 50, 50);
+    border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
     box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
     transform: scale(0);
     overflow: hidden;
@@ -693,10 +697,10 @@ body {
 
   .playerPortrait {
     width: auto;
-    max-width: 272px;
-    height: 192px;
+    max-width: calc(272px * var(--ui-scale));
+    height: calc(192px * var(--ui-scale));
     overflow: hidden;
-    border: 4px solid rgb(201, 152, 47);
+    border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
     background: url(../resources/ui/red_background.png);
     background-size: cover;
     position: absolute;
@@ -710,33 +714,33 @@ body {
   .playerEffects {
     max-width: 70%;
     width: auto;
-    height: 92px;
-    left: 248px;
-    top: 24px;
+    height: calc(92px * var(--ui-scale));
+    left: calc(248px * var(--ui-scale));
+    top: calc(24px * var(--ui-scale));
     position: absolute;
     display: flex;
     z-index: 2;
 
     .status {
-      width: 76px;
-      margin: 8px;
+      width: calc(76px * var(--ui-scale));
+      margin: calc(8px * var(--ui-scale));
     }
   }
 
   .mapHover {
-    width: 450px;
-    height: 280px;
+    width: calc(480px * var(--ui-scale));
+    height: calc(280px * var(--ui-scale));
     background: rgba(15, 15, 15, 0.95);
     box-shadow: inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95), 0px 0px 4px 2px gold;
     position: absolute;
-    right: 10px;
-    bottom: 10px;
-    border: 5px solid goldenrod;
+    right: calc(10px * var(--ui-scale));
+    bottom: calc(10px * var(--ui-scale));
+    border: calc(5px * var(--ui-scale)) solid goldenrod;
     display: none;
     pointer-events: none;
 
     p {
-      font-size: 28px;
+      font-size: calc(28px * var(--ui-scale));
       color: white;
       margin: 0;
     }
@@ -746,22 +750,22 @@ body {
       span {
         margin: 0;
         color: white;
-        font-size: 22px;
+        font-size: calc(22px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
-        line-height: 16px;
+        line-height: calc(16px * var(--ui-scale));
       }
 
       img {
-        width: 22px;
+        width: calc(22px * var(--ui-scale));
         vertical-align: middle;
       }
     }
 
     .enResists {
       position: absolute;
-      top: 50px;
-      right: 10px;
+      top: calc(50px * var(--ui-scale));
+      right: calc(10px * var(--ui-scale));
     }
   }
 
@@ -809,7 +813,7 @@ body {
     max-height: 55%;
     position: absolute;
     left: 0;
-    bottom: calc(15% + 15px);
+    bottom: calc((15% + 15px) * var(--ui-scale));
     margin: 0;
     overflow-x: visible;
     overflow-y: auto;
@@ -819,13 +823,13 @@ body {
     z-index: 3;
 
     pre {
-      margin-left: 48px;
-      margin-right: 48px;
+      margin-left: calc(48px * var(--ui-scale));
+      margin-right: calc(48px * var(--ui-scale));
       margin-top: 0px;
       margin-bottom: 0px;
       span {
         color: white;
-        font-size: 15px;
+        font-size: calc(15px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         white-space: normal;
         text-shadow: 0px 0px 8px black;
@@ -833,7 +837,7 @@ body {
       }
 
       img {
-        width: 18px;
+        width: calc(18px * var(--ui-scale));
         vertical-align: middle;
       }
     }
@@ -841,8 +845,8 @@ body {
     .scrollUp, .scrollDown {
       position: sticky;
       top: 0px;
-      width: 48px;
-      height: 48px;
+      width: calc(48px * var(--ui-scale));
+      height: calc(48px * var(--ui-scale));
       pointer-events: all;
     }
 
@@ -867,7 +871,7 @@ body {
 
     .itemListTop {
       width: 100%;
-      height: 36px;
+      height: calc(36px * var(--ui-scale));
       display: flex;
       position: absolute;
       left: 0px;
@@ -875,22 +879,22 @@ body {
       user-select: none;
 
       p {
-        font-size: 18px;
+        font-size: calc(18px * var(--ui-scale));
         color: white;
         top: 0;
         margin: 0px;
-        border-radius: 8px;
+        border-radius: calc(8px * var(--ui-scale));
         background: rgba(41, 190, 41, 0.77);
-        height: 36px;
+        height: calc(36px * var(--ui-scale));
       }
 
       .topImage {
-        width: 36px;
-        height: 36px;
+        width: calc(36px * var(--ui-scale));
+        height: calc(36px * var(--ui-scale));
       }
 
       .topName {
-        width: calc(54% - 36px);
+        width: calc((54% - (36px * var(--ui-scale))));
         padding-left: 1%;
       }
 
@@ -918,9 +922,9 @@ body {
     .itemList {
       position: absolute;
       left: 0;
-      top: 36px;
+      top: calc(36px * var(--ui-scale));
       width: 100%;
-      height: calc(100% - 36px);
+      height: calc(100% - (36px * var(--ui-scale)));
       margin: 0;
       padding: 0;
       overflow: auto;
@@ -929,7 +933,7 @@ body {
         transition: 0.07s;
         transition-timing-function: ease-in;
         width: 100%;
-        height: 36px;
+        height: calc(36px * var(--ui-scale));
         margin: 0px;
         display: flex;
         position: relative;
@@ -942,12 +946,12 @@ body {
         p {
           transition: 0.07s;
           transition-timing-function: ease-in;
-          font-size: 15px;
-          height: 36px;
+          font-size: calc(15px * var(--ui-scale));
+          height: calc(36px * var(--ui-scale));
           margin: 0px;
           color: white;
           top: 0px;
-          border-radius: 8px;
+          border-radius: calc(8px * var(--ui-scale));
           overflow: hidden;
           text-overflow: ellipsis;
         }
@@ -956,17 +960,17 @@ body {
           transition: 0.07s;
           transition-timing-function: ease-in;
           left: 0%;
-          width: 36px;
-          height: 36px;
+          width: calc(36px * var(--ui-scale));
+          height: calc(36px * var(--ui-scale));
           top: 100%;
           margin: 0px;
           -webkit-user-drag: none;
-          border-radius: 8px;
-          max-height: 36px;
+          border-radius: calc(8px * var(--ui-scale));
+          max-height: calc(36px * var(--ui-scale));
         }
 
         .itemName {
-          width: calc(52% - 36px);
+          width: calc(52% - (36px * var(--ui-scale)));
           padding-left: 1%;
         }
 
@@ -1002,7 +1006,7 @@ body {
   }
 
   .contextMenu {
-    width: 180px;
+    width: calc(180px * var(--ui-scale));
     height: auto;
     position: absolute;
     left: 0;
@@ -1010,16 +1014,16 @@ body {
     z-index: 99;
     button {
       transition: 0.13s;
-      font-size: 16px;
+      font-size: calc(16px * var(--ui-scale));
       color: white;
       background: $greyBgFade;
       background-size: inherit;
       background-position: inherit;
-      border: 2px solid rgba(192, 192, 192, 0.95);
-      height: 28px;
-      width: 175px;
+      border: calc(2px * var(--ui-scale)) solid rgba(192, 192, 192, 0.95);
+      height: calc(28px * var(--ui-scale));
+      width: calc(175px * var(--ui-scale));
       z-index: inherit;
-      border-radius: 4px;
+      border-radius: calc(4px * var(--ui-scale));
     }
 
     button:hover {
@@ -1028,12 +1032,12 @@ body {
   }
 
   .assignContainer {
-    width: 1280px;
-    height: 720px;
+    width: calc(1280px * var(--ui-scale));
+    height: calc(720px * var(--ui-scale));
     position: absolute;
     left: 50%;
     top: 25%;
-    margin-left: -640px;
+    margin-left: calc(-640px * var(--ui-scale));
     grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
     grid-template-rows: min-content;
     display: none;
@@ -1041,9 +1045,9 @@ body {
 
     .assignFrame {
       transition: 0.05s;
-      width: 128px;
-      height: 128px;
-      border: 4px solid rgb(90, 89, 89);
+      width: calc(128px * var(--ui-scale));
+      height: calc(128px * var(--ui-scale));
+      border: calc(4px * var(--ui-scale)) solid rgb(90, 89, 89);
       margin: 1px;
       border-radius: 8px;
       position: relative;
@@ -1057,11 +1061,11 @@ body {
 
       p {
         color: white;
-        font-size: 40px;
+        font-size: calc(40px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         top: 50%;
         left: 50%;
-        margin-top: -20px;
+        margin-top: calc(-20px * var(--ui-scale));
         transform: translateX(-50%);
         position: absolute;
         z-index: 2;
@@ -1070,12 +1074,12 @@ body {
 
       span {
         color: silver;
-        font-size: 20px;
+        font-size: calc(20px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         position: absolute;
         top: 0;
         left: 0;
-        margin: 4px;
+        margin: calc(4px * var(--ui-scale));
         z-index: 5;
       }
 
@@ -1100,19 +1104,19 @@ body {
 
   .rightTop {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: calc(10px * var(--ui-scale));
+    right: calc(10px * var(--ui-scale));
 
     .miniMap {
       position: relative;
       background: rgb(12, 60, 118);
       border: 4px solid gold;
       pointer-events: none;
-      width: 360px;
-      height: 240px;
+      width: calc(360px * var(--ui-scale));
+      height: calc(240px * var(--ui-scale));
       display: block;
-      top: 10px;
-      right: 10px;
+      top: calc(10px * var(--ui-scale));
+      right: calc(10px * var(--ui-scale));
       overflow: hidden;
 
       .minimapLayer {
@@ -1123,10 +1127,10 @@ body {
 
       .playerIcon {
         position: absolute;
-        left: calc(50% - 8px);
-        top: calc(50% - 8px);
-        height: 8px;
-        width: 8px;
+        left: calc(50% - (8px * var(--ui-scale)));
+        top: calc(50% - (8px * var(--ui-scale)));
+        height: calc(8px * var(--ui-scale));
+        width: calc(8px * var(--ui-scale));
       }
     }
 
@@ -1134,19 +1138,19 @@ body {
       position: relative;
       display: flex;
       width: auto;
-      height: 75px;
-      top: 10px;
-      left: 20px;
+      height: calc(75px * var(--ui-scale));
+      top: calc(10px * var(--ui-scale));
+      left: calc(20px * var(--ui-scale));
 
       .screenButton {
         transition: 0.11s;
-        width: 60px;
-        height: 60px;
+        width: calc(60px * var(--ui-scale));
+        height: calc(60px * var(--ui-scale));
         background: rgba(75, 20, 20, 0.95);
         border-radius: 50%;
-        margin: 8px;
+        margin: calc(8px * var(--ui-scale));
         box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 6px 4px rgb(39, 39, 39);
-        border: 3px solid rgb(59, 59, 59);
+        border: calc(3px * var(--ui-scale)) solid rgb(59, 59, 59);
 
         img {
           width: 100%;
@@ -1161,91 +1165,91 @@ body {
       }
     }
   }
-
-  @media only screen and (max-width: 1280px) {
-    .hotbar {
-      width: 896px;
-      height: 50px;
-
-      .hotbarFrame {
-        height: 36px;
-      }
-    }
-
-    .xpBar {
-      width: 896px;
-      height: 18px;
-      bottom: 50px;
-    }
-  }
-
-  @media only screen and (max-width: 1378px) {
-    .hotbar {
-      width: 1096px;
-      height: 62px;
-
-      .hotbarFrame {
-        height: 48px;
-      }
-    }
-
-    .xpBar {
-      width: 1096px;
-      height: 22px;
-      bottom: 62px;
-    }
-  }
-
-  @media only screen and (max-width: 1500px) {
-    .hotbar {
-      width: 1320px;
-      height: 70px;
-
-      .hotbarFrame {
-        height: 56px;
-      }
-    }
-
-    .xpBar {
-      width: 1320px;
-      height: 29px;
-      bottom: 70px;
-    }
-  }
-
-  @media only screen and (min-width: 2148px) {
-    .hotbar {
-      width: 2148px;
-      height: 100px;
-
-      .hotbarFrame {
-        height: 86px;
-      }
-    }
-
-    .xpBar {
-      width: 2148px;
-      height: 41px;
-      bottom: 100px;
-    }
-
-    .playerInventory,
-    .playerWindow,
-    .playerImprovement {
-      width: 1610px;
-      height: 920px;
-      margin-left: -805px;
-      margin-top: -460px;
-
-      .slot {
-        .slotText {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-
-  :where(:not(.canvasLayers)) {
-    z-index: 1;
-  }
 }
+//   @media only screen and (max-width: 1280px) {
+//     .hotbar {
+//       width: 896px;
+//       height: 50px;
+
+//       .hotbarFrame {
+//         height: 36px;
+//       }
+//     }
+
+//     .xpBar {
+//       width: 896px;
+//       height: 18px;
+//       bottom: 50px;
+//     }
+//   }
+
+//   @media only screen and (max-width: 1378px) {
+//     .hotbar {
+//       width: 1096px;
+//       height: 62px;
+
+//       .hotbarFrame {
+//         height: 48px;
+//       }
+//     }
+
+//     .xpBar {
+//       width: 1096px;
+//       height: 22px;
+//       bottom: 62px;
+//     }
+//   }
+
+//   @media only screen and (max-width: 1500px) {
+//     .hotbar {
+//       width: 1320px;
+//       height: 70px;
+
+//       .hotbarFrame {
+//         height: 56px;
+//       }
+//     }
+
+//     .xpBar {
+//       width: 1320px;
+//       height: 29px;
+//       bottom: 70px;
+//     }
+//   }
+
+//   @media only screen and (min-width: 2148px) {
+//     .hotbar {
+//       width: 2148px;
+//       height: 100px;
+
+//       .hotbarFrame {
+//         height: 86px;
+//       }
+//     }
+
+//     .xpBar {
+//       width: 2148px;
+//       height: 41px;
+//       bottom: 100px;
+//     }
+
+//     .playerInventory,
+//     .playerWindow,
+//     .playerImprovement {
+//       width: 1610px;
+//       height: 920px;
+//       margin-left: -805px;
+//       margin-top: -460px;
+
+//       .slot {
+//         .slotText {
+//           font-size: 16px;
+//         }
+//       }
+//     }
+//   }
+
+//   :where(:not(.canvasLayers)) {
+//     z-index: 1;
+//   }
+// }

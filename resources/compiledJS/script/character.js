@@ -585,20 +585,23 @@ class Character {
                 else
                     this.abilities[i] = new Ability(this.abilities[i], dummy);
             }
-            // @ts-ignore
             if (this.inventory) {
-                // @ts-ignore
                 for (let i = 0; i < ((_b = this.inventory) === null || _b === void 0 ? void 0 : _b.length); i++) {
-                    // @ts-ignore
+                    // If item is broken, default to error item
+                    if (!this.inventory[i].id || !this.inventory[i].type) {
+                        this.inventory[i] = Object.assign({}, items.A0_error);
+                    }
+                    // Manually refresh error items
+                    if (this.inventory[i].id == "A0_error") {
+                        this.inventory[i] = Object.assign({}, items.A0_error);
+                        this.inventory[i].index = i;
+                    }
                     if (this.inventory[i].type == "weapon")
                         this.inventory[i] = new Weapon(Object.assign({}, this.inventory[i]));
-                    // @ts-ignore
                     else if (this.inventory[i].type == "armor")
                         this.inventory[i] = new Armor(Object.assign({}, this.inventory[i]));
-                    // @ts-ignore
                     else if (this.inventory[i].type == "consumable")
                         this.inventory[i] = new Consumable(Object.assign({}, this.inventory[i]));
-                    // @ts-ignore
                     else if (this.inventory[i].type == "artifact")
                         this.inventory[i] = new Artifact(Object.assign({}, this.inventory[i]));
                 }

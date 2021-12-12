@@ -189,7 +189,7 @@ class PlayerCharacter extends Character {
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
     this.classes = {...base.classes} ?? {};
     this.oldCords = {...base.oldCords} ?? this.cords;
-    this.flags = {...base.flags} ?? {};
+    this.flags = {...base.flags} ?? [];
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -235,10 +235,16 @@ class PlayerCharacter extends Character {
       updateUI();
     };
 
-    this.unequip = (event: any, slot: string) => {
+    this.unequip = (event: any, slot: string, putToIndex: number = -1, shiftItems: boolean = false) => {
       if (event.button !== 2 || !this[slot]?.id) return;
       if (this[slot]?.id) {
-        this.inventory.push(this[slot]);
+        if(putToIndex != -1) {
+          if(shiftItems) {
+            this.inventory.splice(putToIndex, 0, this[slot]);
+          }
+          else this.inventory[putToIndex] = this[slot];
+        }
+        else this.inventory.push(this[slot]);
       };
       Object.entries(this[slot].commands).forEach(cmd => {
         if (cmd[0].includes("ability_")) {
@@ -251,6 +257,11 @@ class PlayerCharacter extends Character {
 
     this.equip = (event: any, item: any) => {
       if (event.button !== 2) return;
+      if(item.id == "A0_error") {
+        player.inventory.splice(item.index, 1);
+        renderInventory();
+        return;
+      }
       const itm = { ...item };
       let canEquip = true;
       if (itm.requiresStats) {
@@ -261,16 +272,23 @@ class PlayerCharacter extends Character {
           if (stats[key] < val) canEquip = false;
         });
       }
+      let spliceFromInv: boolean = true;
+      let shiftOffhand: boolean = true;
       if (item.slot == "offhand" && this.weapon?.twoHanded) {
-        this.unequip(event, "weapon");
+        this.unequip(event, "weapon", item.index);
+        spliceFromInv = false;
       }
       if (!canEquip) return;
-      player.inventory.splice(item.index, 1);
-      this.unequip(event, itm.slot);
+      if(!this[itm.slot]?.id && spliceFromInv) player.inventory.splice(item.index, 1);
+      if(!this[itm.slot]?.id) shiftOffhand = false;
+      else this.unequip(event, itm.slot, itm.index);
       this[itm.slot] = { ...itm };
       Object.entries(item.commands).forEach(cmd => command(cmd));
       if (item.twoHanded) {
-        this.unequip(event, "offhand");
+        if(shiftOffhand) {
+          this.unequip(event, "offhand", item.index+1, true);
+        }
+        else this.unequip(event, "offhand", item.index, true);
       }
       renderInventory();
     };
@@ -568,7 +586,7 @@ function worthSort(a: any, b: any, reverse: boolean = false) {
 var player = new PlayerCharacter({
   id: "player",
   name: "Varien Loreanus",
-  cords: { x: 19, y: 72 },
+  cords: { x: 20, y: 72 },
   stats: {
     str: 1,
     dex: 1,
@@ -662,7 +680,7 @@ var player = new PlayerCharacter({
   respawnPoint: { cords: { x: 20, y: 72 } },
   usedShrines: [],
   grave: null,
-  flags: {},
+  flags: {} as any,
 });
 
 let combatSummons: Array<any> = [];
@@ -671,6 +689,11 @@ var randomProperty = function (mods: any) {
   var keys = Object.keys(mods);
   return mods[keys[keys.length * Math.random() << 0]];
 };
+
+
+// for (let i = 0; i < 20; i++) {
+//   player.addItem({...items.A0_error});
+// }
 
 // for (let i = 0; i < 20; i++) {
 //   player.addItem({ ...randomProperty(items) });

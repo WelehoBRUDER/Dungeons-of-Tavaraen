@@ -683,7 +683,10 @@ function itemTT(item: any) {
   if (item.statBonus) text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
   if (item.slot) text += `<i>${icons.resistance}<i><f>18px<f>${lang["item_slot"]}: ${lang[item.slot]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
-  text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+  if(typeof item.fullPrice === "function") {
+    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
+  }
+  else text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
 
   if (item.artifactSet) {
     text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
@@ -764,7 +767,10 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemRarity.textContent = lang[itm.grade].toLowerCase();
     itemType.textContent = lang[itm.type];
     itemWeight.textContent = itm.weight;
-    let price = itm.fullPrice() ?? itm.price;
+    let price = itm.price;
+    if(typeof itm.fullPrice === "function") {
+      price = itm.fullPrice()
+    }
     if(price > 999) price = `${Math.round(price/1000)}k`;
     itemWorth.textContent = price;
     if (context == "PLAYER_INVENTORY") {

@@ -152,7 +152,18 @@ function beginGame() {
     setTimeout(() => { creation.style.display = "none"; }, 750);
     tree = player.classes.main.perkTree;
     closeGameMenu(false, true);
+    reviveAllDeadEnemies();
+    resetAllLivingEnemiesInAllMaps();
+    player.updatePerks(true);
+    player.updateAbilities();
+    fallenEnemies = [];
+    turnOver = true;
+    enemiesHadTurn = 0;
+    lootedChests = [];
+    state.inCombat = false;
+    resetAllChests();
     handleEscape();
+    createStaticMap();
     modifyCanvas();
     setTimeout(()=>{
       openLevelingScreen();

@@ -435,12 +435,12 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   try {
     let collided = false;
     for (let step of path) {
-      await sleep(50);
+      await sleep(20);
       const { screenX: x, screenY: y } = tileCordsToScreen(step);
       if (step.enemy) {
         collided = true;
         collision({ x: step.x, y: step.y }, ability, isPlayer, attacker);
-        if (isPlayer) setTimeout(advanceTurn, 50);
+        if (isPlayer) setTimeout(advanceTurn, 20);
         else if (attacker.isFoe) updateEnemiesTurn();
         break;
       }
@@ -458,7 +458,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       }
       if (step.blocked) {
         collided = true;
-        if (isPlayer) setTimeout(advanceTurn, 50);
+        if (isPlayer) setTimeout(advanceTurn, 20);
         else if (attacker.isFoe) updateEnemiesTurn();
         break;
       }
@@ -470,7 +470,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       ctx?.drawImage(projectile, x, y, spriteSize, spriteSize);
     }
     if (!collided && ability.aoe_size > 0) {
-      if (isPlayer) setTimeout(advanceTurn, 50);
+      if (isPlayer) setTimeout(advanceTurn, 20);
       aoeCollision(createAOEMap(path[path.length - 1], ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
     }
     projectileLayers.removeChild(canvas);

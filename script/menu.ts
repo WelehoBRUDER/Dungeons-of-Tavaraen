@@ -96,6 +96,11 @@ const menuSettings = [
     type: "hotkey",
   },
   {
+    id: "setting_ui_scale",
+    tooltip: "ui_scale",
+    type: "inputSlider",
+  },
+  {
     id: "setting_hotkey_move_up",
     type: "hotkey",
   },
@@ -185,6 +190,7 @@ function handleEscape() {
   state.abiSelected = {};
   closeTextWindow();
   updateUI();
+  hideHover();
   contextMenu.textContent = "";
   assignContainer.style.display = "none";
 }
@@ -200,6 +206,7 @@ setTimeout(() => {
   gotoMainMenu();
   // @ts-expect-error
   renderMinimap(maps[currentMap]);
+  createStaticMap();
   tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -249,6 +256,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     catch { console.log("This doesn't affect anything"); }
   }
   if (escape) handleEscape();
+  hideHover();
 }
 
 let selectingHotkey = "";
@@ -269,6 +277,13 @@ async function closeSettingsMenu() {
   settingsBackground.textContent = "";
   state.optionsOpen = false;
   setTimeout(() => { dim.style.height = "0%"; }, 5);
+  hideHover();
+}
+
+function scaleUI(scale: number) {
+  settings["ui_scale"] = scale * 100;
+  document.documentElement.style.setProperty('--ui-scale', scale.toString());
+  moveMinimap();
 }
 
 function gotoSettingsMenu(inMainMenu = false) {
@@ -318,6 +333,32 @@ function gotoSettingsMenu(inMainMenu = false) {
         tooltip(container, lang[setting.tooltip]);
       }
       container.append(text, keyButton);
+      settingsBackground.append(container);
+    }
+    else if (setting.type == "inputSlider") {
+      container.classList.add("sliderContainer");
+      const text = document.createElement("p");
+      const slider = document.createElement("input");
+      const textVal = document.createElement("p");
+      slider.classList.add("slider");
+      textVal.classList.add("inputValue");
+      text.textContent = lang[setting.id] ?? setting.id;
+      let _setting = setting.id.replace("setting_", "");
+      slider.type = "range";
+      slider.min = "50";
+      slider.max = "150";
+      slider.value = settings[_setting].toString();
+      container.classList.add(_setting);
+      if (setting.tooltip) {
+        tooltip(container, lang[setting.tooltip]);
+      }
+      textVal.textContent = `${(parseInt(slider.value) / 100).toString()}x`;
+      slider.oninput = () => {
+        scaleUI(parseInt(slider.value) / 100);
+        textVal.textContent = `${(parseInt(slider.value) / 100).toString()}x`;
+      }
+      text.append(textVal);
+      container.append(text, slider);
       settingsBackground.append(container);
     }
     else if (setting.type == "languageSelection") {
@@ -488,11 +529,16 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
       currentMap = save.save.currentMap;
       tree = player.classes.main.perkTree;
+      turnOver = true;
+      enemiesHadTurn = 0;
+      state.inCombat = false;
       player.updatePerks(true);
       player.updateAbilities();
       purgeDeadEnemies();
       handleEscape();
       closeGameMenu();
+      resetAllChests();
+      createStaticMap();
       modifyCanvas();
       updateUI();
     });
@@ -709,11 +755,16 @@ function LoadSlot(data: any) {
   lootedChests = GetKey("lootedChests", data).data;
   currentMap = GetKey("currentMap", data).data;
   tree = player.classes.main.perkTree;
+  turnOver = true;
+  enemiesHadTurn = 0;
+  state.inCombat = false;
   player.updatePerks(true);
   player.updateAbilities();
   purgeDeadEnemies();
   handleEscape();
   closeGameMenu();
+  resetAllChests();
+  createStaticMap();
   modifyCanvas();
   updateUI();
 }

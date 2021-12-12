@@ -119,6 +119,63 @@
     }
   }
 
+  .sliderContainer {
+    transition: 0.03s;
+    padding: 4px;
+    margin: 0;
+    width: auto;
+    height: min-content;
+    animation-name: popIn;
+    animation-duration: 0.175s;
+
+    p {
+      width: auto;
+      height: 24px;
+      margin: 0;
+      display: flex;
+      
+      p {
+        margin-left: 40%;
+      }
+    }
+
+    input {
+      transition: 0.05s;
+      appearance: none;
+      width: 90%;
+      margin-left: 4%;
+      margin-top: 8px;
+      height: 20px;
+      opacity: 0.8;
+      outline: none;
+      overflow: hidden;
+      border-radius: 25px;
+      background: rgb(61, 60, 60);
+      box-shadow: 0 0 2px 2px rgb(177, 164, 160);
+    }
+
+    input::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
+      appearance: none;
+      width: 20px; /* Set a specific slider handle width */
+      height: 20px; /* Slider handle height */
+      background: #6e2d07;
+      box-shadow: inset 0 0 3px 3px #833f18, 0 0 3px 3px rgb(211, 67, 10);
+      cursor: pointer; /* Cursor on hover */
+      box-shadow: -200px 0 0 200px #bb581f;
+    }
+    input::-webkit-slider-runnable-track {
+      height: 20px;
+      -webkit-appearance: none;
+      color: #13bba4;
+      margin-top: -1px;
+    }
+
+    input:hover {
+      opacity: 1;
+    }
+  }
+
   .languageSelection {
     transition: 0.03s;
     padding: 4px;
@@ -398,6 +455,8 @@
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
+      margin: 0;
+      padding: 0;
 
       .raceText {
         position: relative;
@@ -405,6 +464,8 @@
         color: gold;
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
+        margin: 0;
+        padding: 0;
       }
 
       .racesContainer {
@@ -452,12 +513,16 @@
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
+      margin: 0;
+      padding: 0;
 
       .classText {
         font-size: 48px;
         color: gold;
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
+        margin: 0;
+        padding: 0;
       }
 
       .classesContainer {
@@ -513,6 +578,8 @@
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
+      margin: 0;
+      padding: 0;
 
       p {
         font-size: 42px;
@@ -520,6 +587,7 @@
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
         position: relative;
+        padding: 0;
       }
 
       input {
