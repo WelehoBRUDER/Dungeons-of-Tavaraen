@@ -1,3 +1,18 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url(../resources/font/Montserrat/Montserrat-Light.ttf);
+}
+
+@font-face {
+  font-family: 'Montserrat-Thin';
+  src: url(../resources/font/Montserrat/Montserrat-Thin.ttf);
+}
+
+@font-face {
+  font-family: 'Montserrat-Light';
+  src: url(../resources/font/Montserrat/Montserrat-ExtraLight.ttf);
+}
+
 body {
   background: rgb(10, 10, 10);
 }
@@ -137,11 +152,11 @@ body {
 
       p {
         color: white;
-        font-size: calc(40px * var(--ui-scale));;
+        font-size: calc(40px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         top: 50%;
         left: 50%;
-        margin-top: calc(-20px * var(--ui-scale));;
+        margin-top: calc(-20px * var(--ui-scale));
         transform: translateX(-50%);
         position: absolute;
         z-index: 2;
@@ -165,7 +180,7 @@ body {
         transform: translateX(0%);
         margin-top: 15%;
         margin-left: 25%;
-        font-size: calc(23px * var(--ui-scale));;
+        font-size: calc(23px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
       }
 
@@ -219,7 +234,7 @@ body {
       z-index: 2;
 
       img {
-        width:calc(192px * var(--ui-scale));
+        width: calc(192px * var(--ui-scale));
         height: calc(192px * var(--ui-scale));
         position: absolute;
         left: 0;
@@ -228,9 +243,9 @@ body {
 
       .hpText {
         position: absolute;
-        top: calc(25% * var(--ui-scale));
+        top: calc(50%);
         left: 50%;
-        transform: translate(-50%);
+        transform: translateX(-50%) translateY(-120%);
         color: white;
         font-size: calc(30px * var(--ui-scale));
         text-shadow: 0px 0px 2px black;
@@ -268,6 +283,27 @@ body {
 
       .PlayerMpFill {
         clip-path: inset(var(--value) 0 0 0);
+      }
+    }
+
+    .goldContainer {
+      user-select: none;
+
+      img {
+        width: calc(48px * var(--ui-scale));
+        height: calc(48px * var(--ui-scale));
+        position: absolute;
+        left: calc(148px * var(--ui-scale));
+        top: 0;
+      }
+
+      p {
+        position: absolute;
+        left: calc(198px * var(--ui-scale));
+        top: calc(-28px * var(--ui-scale));
+        font-size: calc(32px * var(--ui-scale));
+        color: goldenrod;
+        text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
       }
     }
   }
@@ -511,7 +547,8 @@ body {
         padding: 0;
       }
 
-      .charHealthContainer, .charManaContainer {
+      .charHealthContainer,
+      .charManaContainer {
         position: relative;
         left: calc(25px * var(--ui-scale));
         top: 0px;
@@ -537,7 +574,9 @@ body {
       }
     }
 
-    .coreStatsTitle, .coreResistancesTitle, .statusResistancesTitle {
+    .coreStatsTitle,
+    .coreResistancesTitle,
+    .statusResistancesTitle {
       text-align: center;
       width: calc(300px * var(--ui-scale));
       font-size: calc(32px * var(--ui-scale));
@@ -554,7 +593,9 @@ body {
       padding: calc(10px * var(--ui-scale));
     }
 
-    .coreStats, .coreResistances, .statusResistances {
+    .coreStats,
+    .coreResistances,
+    .statusResistances {
       position: absolute;
       height: auto;
       max-height: calc(370px * var(--ui-scale));
@@ -597,11 +638,13 @@ body {
       }
     }
 
-    .coreResistances, .coreResistancesTitle {
+    .coreResistances,
+    .coreResistancesTitle {
       left: calc(375px * var(--ui-scale));
     }
 
-    .statusResistances, .statusResistancesTitle {
+    .statusResistances,
+    .statusResistancesTitle {
       left: calc(725px * var(--ui-scale));
     }
 
@@ -648,7 +691,7 @@ body {
   }
 
   .textWindow {
-    transition: .2s ease-in;
+    transition: 0.2s ease-in;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -842,7 +885,8 @@ body {
       }
     }
 
-    .scrollUp, .scrollDown {
+    .scrollUp,
+    .scrollDown {
       position: sticky;
       top: 0px;
       width: calc(48px * var(--ui-scale));
@@ -997,7 +1041,8 @@ body {
         }
       }
 
-      .itemListObject:hover {
+      .itemListObject:hover,
+      .itemSelected {
         * {
           background: rgba(192, 192, 43, 0.66);
         }
@@ -1163,6 +1208,372 @@ body {
         background: rgba(122, 33, 33, 0.95);
         box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 10px 8px rgb(39, 39, 39);
       }
+    }
+  }
+
+  .dialogWindow {
+    transition: 0.36s;
+    width: calc(1360px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
+    background: rgba(5, 5, 5, 0.95);
+    border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
+    box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(-680px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
+    z-index: 8;
+    opacity: 0;
+    transform: scale(0);
+
+    .dialogCharName {
+      color: white;
+      background: rgba(10, 10, 10, .9);
+      text-shadow: 0px 0px 8px black;
+      box-shadow: 0 0 9px 5px rgba(24, 24, 24, 0.95);
+      position: absolute;
+      top: calc(182px * var(--ui-scale));
+      width: calc(272px * var(--ui-scale) - 4px);
+      height: auto;
+      padding: calc(6px * var(--ui-scale));
+      right: 10px;
+      border-radius: 2px 2px 24px 24px;
+      text-align: center;
+      font-size: calc(26px * var(--ui-scale));
+    }
+
+    .dialogCharPortrait {
+      width: auto;
+      max-width: calc(272px * var(--ui-scale));
+      height: calc(192px * var(--ui-scale));
+      overflow: hidden;
+      border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
+      background: url(../resources/ui/red_background.png);
+      border-radius: 4px;
+      background-size: cover;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      canvas {
+        filter: drop-shadow(0px 0px 8px black);
+      }
+    }
+
+    .dialogChoices {
+      position: absolute;
+      top: calc(300px * var(--ui-scale));
+      right: 10px;
+      width: calc(278px * var(--ui-scale));
+      height: calc(470px * var(--ui-scale));
+      background: rgb(37, 37, 37);
+      box-shadow: 0 0 9px 12px rgba(24, 24, 24, 0.95);
+      border-radius: 8px;
+      user-select: none;
+
+      .option {
+        transition: .11s;
+        text-align: center;
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: 10%;
+        min-height: 5%;
+        margin-top: calc(3px * var(--ui-scale));
+        padding-top: calc(8px * var(--ui-scale));
+        padding-bottom: calc(8px * var(--ui-scale));
+        box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83), 0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
+        border-radius: calc(6px * var(--ui-scale));
+        background: rgba(58, 58, 58, .75);
+        color: white;
+        font-size: calc(17px * var(--ui-scale));
+        cursor: pointer;
+
+        pre {
+          margin: 2px;
+          word-wrap: normal;
+          white-space: pre-wrap;
+          span {
+            margin: 0;
+            word-wrap: normal;
+            white-space: pre-wrap;
+            color: inherit;
+            font-size: inherit;
+            font-family: Montserrat;
+            text-shadow: 0px 0px 8px black;
+            line-height: inherit;
+          }
+  
+          img {
+            width: 22px;
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .option:hover {
+        filter: brightness(1.3);
+        margin-left: 5%;
+      }
+    }
+
+    .dialogText {
+      position: absolute;
+      top: 15px;
+      left: 30px;
+      width: calc(1000px * var(--ui-scale));
+      height: calc(750px * var(--ui-scale));
+      border-radius: 8px;
+      word-wrap: normal;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      pre {
+        margin: 8px;
+        word-wrap: normal;
+        white-space: pre-wrap;
+        span {
+          margin: 0;
+          word-wrap: normal;
+          white-space: pre-wrap;
+          color: inherit;
+          font-size: inherit;
+          color: rgb(204, 204, 204);
+          font-size: calc(24px * var(--ui-scale));
+          font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+          text-shadow: 0px 0px 8px black;
+          line-height: inherit;
+        }
+
+        img {
+          width: 22px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .storeWindow {
+    transition: 0.275s;
+    transition-timing-function: ease-in;
+    width: calc(1920px * var(--ui-scale));
+    height: calc(1000px * var(--ui-scale));
+    background: rgba(10, 10, 10, 0.9);
+    border: 6px solid rgb(50, 50, 50);
+    border-radius: 4px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(-950px * var(--ui-scale));
+    margin-top: calc(-500px * var(--ui-scale));
+    z-index: 8;
+    transform: scale(0);
+
+    .merchantInv {
+      width: calc(816px * var(--ui-scale));
+      height: calc(1000px * var(--ui-scale));
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .playerInv {
+      width: calc(816px * var(--ui-scale));
+      height: calc(1000px * var(--ui-scale));
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      .itemList {
+        width: 98.25%;
+        left: 1.75%;
+      }
+
+      .itemListTop {
+        width: 98.25%;
+        left: 1.75%;
+      }
+    }
+
+    .confirmation {
+      background-image: $greyBgFade;
+      background-size: cover;
+      background-position: inherit;
+      width: calc(288px * var(--ui-scale));
+      height: calc(988px * var(--ui-scale));
+      position: absolute;
+      left: calc(816px * var(--ui-scale));
+      box-shadow: inset 0 0 calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(56, 56, 56);
+      user-select: none;
+      top: 0;
+
+      .pendingItemsBuying,
+      .pendingItemsSelling {
+        width: 80%;
+        height: 20%;
+        background: rgba(25, 25, 25, 0.25);
+        box-shadow: inset 0 0 calc(12px * var(--ui-scale)) calc(10px * var(--ui-scale)) rgba(20, 20, 20, 0.33);
+        border: 4px solid rgb(10, 10, 10);
+        box-sizing: border-box;
+        position: absolute;
+        left: 10%;
+        top: 5%;
+
+        p {
+          position: absolute;
+          color: gold;
+          font-size: calc(25px * var(--ui-scale));
+          left: 50%;
+          top: -25%;
+          text-shadow: 0 0 calc(8px * var(--ui-scale)) goldenrod;
+          transform: translateX(-50%);
+        }
+
+        .area {
+          width: 100%;
+          height: 100%;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: min-content;
+          overflow: auto;
+
+          div {
+            transition: 0.05s;
+            width: calc(50px * var(--ui-scale));
+            height: calc(50px * var(--ui-scale));
+            border: calc(2px * var(--ui-scale)) solid rgb(90, 89, 89);
+            margin: 1px;
+            border-radius: calc(8px * var(--ui-scale));
+            position: relative;
+            top: 0;
+            left: 0;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          div:hover {
+            border: calc(2px * var(--ui-scale)) solid rgb(163, 163, 163);
+          }
+        }
+      }
+
+      .pendingItemsSelling {
+        top: 75%;
+      }
+
+      .price {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-75%);
+
+        pre {
+          margin: 0;
+          span {
+            margin: 0;
+            color: white;
+            font-size: calc(36px * var(--ui-scale));
+            font-family: monospace;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0px 0px 8px black;
+            line-height: calc(38px * var(--ui-scale));
+            
+          }
+    
+          img {
+            width: calc(22px * var(--ui-scale));
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .amountSelector {
+        width: calc(250px * var(--ui-scale));
+        height: calc(110px * var(--ui-scale));
+        background: rgb(39, 39, 39);
+        box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15), 0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+
+
+        input {
+          position: absolute;
+          top: 10%;
+          left: 50%;
+          transform: translateX(-50%);
+          background:rgb(7, 33, 65);
+          color: white;
+          outline: none;
+          border: none;
+          box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(2, 3, 80);
+          font-size: calc(24px * var(--ui-scale));
+          max-width: 25%;
+        }
+
+        div {
+          transition: .11s;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgb(42, 134, 42);
+          padding: calc(4px * var(--ui-scale));
+          box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(4, 49, 14);
+          border-radius: 25%;
+          font-size: calc(24px * var(--ui-scale));
+          font-family: Montserrat;
+          color: white;
+          cursor: pointer;
+        }
+
+        div:hover {
+          filter: brightness(1.3);
+        }
+      }
+
+      .confirmButton, .cancelButton {
+        transition: .11s;
+        font-size: calc(25px * var(--ui-scale));
+        font-family: Montserrat;
+        border: calc(2px * var(--ui-scale)) solid white;
+        width: min-content;
+        padding: 2px;
+        color: white;
+        user-select: none;
+        position: absolute;
+        top: 57.5%;
+        cursor: pointer;
+      }
+
+      .confirmButton:hover, .cancelButton:hover {
+        filter: brightness(1.25);
+      }
+
+      .confirmButton {
+        left: 5%;
+        background: rgba(10, 155, 10, .5);
+      }
+      .cancelButton {
+        right: 5%;
+        background: rgba(214, 43, 43, .5);
+      }
+      
+      .greyedOut {
+        filter: grayScale(1) brightness(.5);
+      }
+
+      .greyedOut:hover {
+        filter: grayScale(1) brightness(.5);
+      }
+
     }
   }
 }

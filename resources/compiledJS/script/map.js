@@ -17,7 +17,7 @@ const spriteMap_tiles = document.querySelector(".spriteMap_tiles");
 const spriteMap_items = document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
-var currentMap = 0;
+var currentMap = 2;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
@@ -42,6 +42,7 @@ function changeZoomLevel({ deltaY }) {
     }
     modifyCanvas(true);
 }
+// @ts-expect-error
 window.addEventListener("resize", modifyCanvas);
 (_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
 function spriteVariables() {
@@ -108,9 +109,15 @@ function renderMap(map, createNewSightMap = false) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     if (createNewSightMap)
         sightMap = createSightMap(player.cords, player.sight());
+    if (!sightMap)
+        return;
     /* Render the base layer */
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
+            if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0)
+                continue;
+            if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0)
+                continue;
             const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x];
             // @ts-expect-error
             const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
@@ -121,7 +128,6 @@ function renderMap(map, createNewSightMap = false) {
             const fog = { x: 256, y: 0 };
             if (sprite) {
                 baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
-                //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
             if (player.grave) {
                 if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
@@ -287,7 +293,7 @@ function renderMap(map, createNewSightMap = false) {
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 function renderTileHover(tile, event) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e, _f, _g;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -301,7 +307,11 @@ function renderTileHover(tile, event) {
     }
     try {
         /* Render tile */
-        var strokeImg = document.querySelector(".sprites .hoverTile");
+        const strokeSprite = staticTiles[0].spriteMap;
+        const highlightSprite = (_a = staticTiles[3]) === null || _a === void 0 ? void 0 : _a.spriteMap;
+        const highlightRedSprite = (_b = staticTiles[4]) === null || _b === void 0 ? void 0 : _b.spriteMap;
+        const highlight2Sprite = (_c = staticTiles[5]) === null || _c === void 0 ? void 0 : _c.spriteMap;
+        const highlight2RedSprite = (_d = staticTiles[6]) === null || _d === void 0 ? void 0 : _d.spriteMap;
         renderPlayerModel(spriteSize, playerCanvas, playerCtx);
         var hoveredEnemy = false;
         maps[currentMap].enemies.forEach((enemy) => {
@@ -322,8 +332,6 @@ function renderTileHover(tile, event) {
         }
         if (state.abiSelected.type == "movement" || state.abiSelected.type == "charge") {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, false, false);
-            var highlight2Img = document.querySelector(".sprites .tileHIGHLIGHT2");
-            var highlight2RedImg = document.querySelector(".sprites .tileHIGHLIGHT2_RED");
             let distance = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
             let iteration = 0;
             path.forEach((step) => {
@@ -333,17 +341,15 @@ function renderTileHover(tile, event) {
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (iteration > distance) {
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlight2RedImg, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
                 }
                 else
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlight2Img, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
             });
         }
         /* Render highlight test */
-        else if ((((((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.shoots_projectile) && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
+        else if ((((((_e = state.abiSelected) === null || _e === void 0 ? void 0 : _e.shoots_projectile) && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
             const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
-            var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
-            var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
             let distance = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
             let iteration = 0;
             let lastStep = 0;
@@ -356,17 +362,17 @@ function renderTileHover(tile, event) {
                 if (step.blocked || iteration > distance) {
                     if (lastStep == 0)
                         lastStep = iteration;
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
                 }
                 else
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
             });
-            if (((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.aoe_size) > 0) {
+            if (((_f = state.abiSelected) === null || _f === void 0 ? void 0 : _f.aoe_size) > 0) {
                 let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
                 for (let y = 0; y < spriteLimitY; y++) {
                     for (let x = 0; x < spriteLimitX; x++) {
-                        if (((_c = aoeMap[mapOffsetStartY + y]) === null || _c === void 0 ? void 0 : _c[mapOffsetStartX + x]) == "x") {
-                            playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+                        if (((_g = aoeMap[mapOffsetStartY + y]) === null || _g === void 0 ? void 0 : _g[mapOffsetStartX + x]) == "x") {
+                            playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
                         }
                     }
                 }
@@ -374,37 +380,35 @@ function renderTileHover(tile, event) {
         }
         if (event.buttons == 1 && !state.isSelected) {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
-            var highlightImg = document.querySelector(".sprites .tileHIGHLIGHT");
-            var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
             path.forEach((step) => {
                 if (step.x == player.cords.x && step.y == player.cords.y)
                     return;
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (step.blocked) {
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
                 }
                 else
-                    playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
             });
         }
-        playerCtx === null || playerCtx === void 0 ? void 0 : playerCtx.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
+        playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, spriteSize + 1, spriteSize + 1);
     }
-    catch (_d) { }
+    catch (_h) { }
 }
 function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
-    var _a;
+    var _a, _b;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     playerCanvas.width = playerCanvas.width;
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
-    var highlightRedImg = document.querySelector(".sprites .tileHIGHLIGHT_RED");
+    const highlightRedSprite = (_a = staticTiles[4]) === null || _a === void 0 ? void 0 : _a.spriteMap;
     let aoeMap = createAOEMap(player.cords, aoeSize, ignoreLedge);
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
-            if (((_a = aoeMap[mapOffsetStartY + y]) === null || _a === void 0 ? void 0 : _a[mapOffsetStartX + x]) == "x" && !(player.cords.x == x && player.cords.y == y)) {
-                playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+            if (((_b = aoeMap[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]) == "x" && !(player.cords.x == x && player.cords.y == y)) {
+                playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
             }
         }
     }
@@ -556,6 +560,12 @@ function createSightMap(start, size) {
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
             if (Math.abs((x - start.x) + mapOffsetStartX) ** 2 + Math.abs((y - start.y) + mapOffsetStartY) ** 2 < testiIsonnus) {
+                if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) {
+                    continue;
+                }
+                if (x + mapOffsetStartX > maps[currentMap].base[0].length - 1 || x + mapOffsetStartX < 0) {
+                    continue;
+                }
                 _sightMap[y + mapOffsetStartY][x + mapOffsetStartX] = "x";
             }
         }
@@ -591,10 +601,10 @@ function cordsFromDir(cords, dir) {
 document.addEventListener("keyup", (keyPress) => {
     var _a;
     const rooted = player.isRooted();
-    if (!turnOver)
+    if (!turnOver || state.dialogWindow || state.storeOpen)
         return;
     let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
-    let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+    let target = maps[currentMap].enemies.find((e) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
     if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
         advanceTurn();
         state.abiSelected = {};
@@ -654,6 +664,9 @@ document.addEventListener("keyup", (keyPress) => {
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
                 chest.lootChest();
         });
+        if (!state.textWindowOpen && !state.invOpen) {
+            talkToCharacter();
+        }
     }
 });
 let isMovingCurrently = false;
@@ -843,6 +856,15 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, x, y, size, size);
     }
 }
+function renderNPCOutOfMap(size, canvas, ctx, npc, side = "center") {
+    canvas.width = canvas.width; // Clear canvas
+    const sprite = document.querySelector(".sprites ." + npc.sprite);
+    var x = 0;
+    var y = 0;
+    if (side == "left")
+        x = 0 - size / 4;
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(sprite, x, y, size, size);
+}
 function renderPlayerPortrait() {
     const portrait = document.createElement("div");
     const canvas = document.createElement("canvas");
@@ -938,7 +960,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
             }
         });
     }
-    maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) {
+    maps[currentMap].enemies.forEach((enemy) => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) {
         {
             fieldMap[enemy.cords.y][enemy.cords.x] = 1;
         }
@@ -1051,9 +1073,13 @@ function generateArrowPath(start, end, distanceOnly = false) {
         arrow.x += ratioX2;
         arrow.y += ratioY2;
         var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
+        if (tile.y > maps[currentMap].base.length || tile.y < 0)
+            continue;
+        if (tile.x > maps[currentMap].base[0].length || tile.x < 0)
+            continue;
         if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall)
             arrow.blocked = true;
-        maps[currentMap].enemies.forEach(enemy => {
+        maps[currentMap].enemies.forEach((enemy) => {
             if (enemy.cords.x == start.x && enemy.cords.y == start.y)
                 return;
             if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
@@ -1131,7 +1157,7 @@ async function advanceTurn() {
         summon.effects();
     });
     let closestEnemyDistance = -1;
-    map.enemies.forEach(enemy => {
+    map.enemies.forEach((enemy) => {
         let distToPlayer = enemy.distToPlayer();
         if (player.isDead)
             return;
@@ -1184,7 +1210,6 @@ function showInteractPrompt() {
         if (itm.cords.x == player.cords.x && itm.cords.y == player.cords.y) {
             foundPrompt = true;
             interactPrompt.textContent = `[${interactKey}] ` + lang["pick_item"];
-            return;
         }
     });
     if (!foundPrompt) {
@@ -1192,7 +1217,6 @@ function showInteractPrompt() {
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.loot.length > 0) {
                 foundPrompt = true;
                 interactPrompt.textContent = `[${interactKey}] ` + lang["pick_chest"];
-                return;
             }
         });
     }
@@ -1201,7 +1225,15 @@ function showInteractPrompt() {
             if (msg.cords.x == player.cords.x && msg.cords.y == player.cords.y) {
                 foundPrompt = true;
                 interactPrompt.textContent = `[${interactKey}] ` + lang["read_msg"];
-                return;
+            }
+        });
+    }
+    if (!foundPrompt) {
+        NPCcharacters.some((npc) => {
+            let dist = calcDistance(player.cords.x, player.cords.y, npc.currentCords.x, npc.currentCords.y);
+            if (dist < 3) {
+                foundPrompt = true;
+                interactPrompt.textContent = `[${interactKey}] ` + lang["talk_to_npc"] + ` ${lang[npc.id + "_name"]}`;
             }
         });
     }
@@ -1234,7 +1266,6 @@ function hoverEnemyShow(enemy) {
         mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
     });
     mainStatText += "<c>white<c>)\n";
-    // @ts-expect-error
     const mainStats = textSyntax(mainStatText);
     var resists = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
     Object.entries(enemy.getResists()).forEach((res) => {
@@ -1242,7 +1273,6 @@ function hoverEnemyShow(enemy) {
         const val = res[1];
         resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
     });
-    // @ts-expect-error
     const resistFrame = textSyntax(resists);
     resistFrame.classList.add("enResists");
     staticHover.append(name, mainStats, resistFrame);
@@ -1253,7 +1283,7 @@ function hideMapHover() {
     staticHover.style.display = "none";
 }
 function activateShrine() {
-    maps[currentMap].shrines.forEach(shrine => {
+    maps[currentMap].shrines.forEach((shrine) => {
         if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
             if (!(player.usedShrines.find((used) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
                 player.stats.hp = player.getHpMax();

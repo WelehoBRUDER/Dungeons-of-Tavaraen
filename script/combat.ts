@@ -146,11 +146,24 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   const hitChance = attacker.getHitchance().chance;
   const evasion = target.getHitchance().evasion;
   const evade: boolean = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
+  let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
 
   if (ability?.health_cost || ability?.health_cost_percentage) {
     if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
     if (ability.health_cost_percentage) attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
   }
+  if(attacker.id == "player") {
+    if(parseInt(player.weapon?.range) > 2) {
+      if(player.allModifiers?.rangedDamageP) attackTypeDamageModifier += player.allModifiers?.rangedDamageP;
+    }
+    else if(ability.mana_cost > 0) {
+      if(player.allModifiers?.spellDamageP) attackTypeDamageModifier += player.allModifiers?.spellDamageP;
+    }
+    else {
+      if(player.allModifiers?.meleeDamageP) attackTypeDamageModifier += player.allModifiers?.meleeDamageP;
+    }
+  }
+
 
   if (ability.statusesEnemy?.length > 0) {
     ability.statusesEnemy.forEach((status: string) => {
@@ -218,6 +231,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
         let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+        dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
       });
     } else {
@@ -236,6 +250,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
         let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+        dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
       });
     }
@@ -381,6 +396,10 @@ function spawnFloatingText(cords: tileObject, text: string, color: string = "gre
     floatingText.textContent = text;
     floatingText.style.fontSize = `${fontSize}px`;
     floatingText.style.color = color;
+    floatingText.style.background = "rgba(50, 50, 50, 0.25)";
+    floatingText.style.padding = "2px";
+    floatingText.style.borderRadius = "5px";
+    floatingText.style.textShadow = `0 0 12px ${color}`;
     floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (random(2.5, 0.5))}px`;
     floatingText.style.top = `${y + spriteSize / (random(4, 1))}px`;
     floatingText.classList.add("floatingText");

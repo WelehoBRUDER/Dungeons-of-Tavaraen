@@ -1,7 +1,7 @@
 "use strict";
 class Enemy extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         super(base);
         const defaultModel = Object.assign({}, enemies[base.id]);
         this.sprite = defaultModel.sprite;
@@ -21,8 +21,9 @@ class Enemy extends Character {
         this.shootsProjectile = defaultModel.shootsProjectile;
         this.hasBeenLeveled = (_j = base.hasBeenLeveled) !== null && _j !== void 0 ? _j : false;
         this.level = (_k = base.level) !== null && _k !== void 0 ? _k : 1;
-        this.xp = this.level > 1 ? Math.floor(defaultModel.xp + (defaultModel.xp * this.level / 2.9)) : defaultModel.xp;
-        this.statsPerLevel = (_l = Object.assign({}, defaultModel.statsPerLevel)) !== null && _l !== void 0 ? _l : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+        this.isUnique = (_l = base.isUnique) !== null && _l !== void 0 ? _l : false;
+        this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 15))) : defaultModel.xp;
+        this.statsPerLevel = (_m = Object.assign({}, defaultModel.statsPerLevel)) !== null && _m !== void 0 ? _m : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;
@@ -30,9 +31,9 @@ class Enemy extends Character {
         this.type = defaultModel.type;
         this.race = defaultModel.race;
         this.targetInterval = 4;
-        this.currentTargetInterval = (_m = base.currentTargetInterval) !== null && _m !== void 0 ? _m : 0;
-        this.chosenTarget = (_o = base.chosenTarget) !== null && _o !== void 0 ? _o : null;
-        this.oldCords = (_p = Object.assign({}, base.oldCords)) !== null && _p !== void 0 ? _p : Object.assign({}, this.cords);
+        this.currentTargetInterval = (_o = base.currentTargetInterval) !== null && _o !== void 0 ? _o : 0;
+        this.chosenTarget = (_p = base.chosenTarget) !== null && _p !== void 0 ? _p : null;
+        this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -209,11 +210,12 @@ class Enemy extends Character {
         this.kill = () => {
             player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
             this.spawnMap = currentMap;
-            const index = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
+            const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
+            displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
             lootEnemy(this);
             this.chosenTarget = null;
-            fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap });
+            fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
             player.lvlUp();

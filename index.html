@@ -59,6 +59,10 @@
         <img src="resources/ui/mana_bg.png" alt="" class="PlayerMpBgImg">
         <img src="resources/ui/mana.png" alt="" class="PlayerMpFill">
       </div>
+      <div class="goldContainer">
+        <img src="resources/icons/goldPile.png" alt="" class="playerGoldIcon">
+        <p class="playerGoldNumber"></p>
+      </div>
     </div>
     <div class="playerInventory">
       <div class="weapon slot"></div>
@@ -85,6 +89,27 @@
       <p class="enc"></p>
       <div class="items"></div>
     </div>
+    <div class="storeWindow">
+      <div class="merchantInv"></div>
+      <div class="playerInv"></div>
+      <div class="confirmation">
+        <div class="pendingItemsBuying">
+          <p class="buying">Buying</p>
+          <div class="area"></div>
+        </div>
+        <div class="pendingItemsSelling">
+          <p class="selling">Selling</p>
+          <div class="area"></div>
+        </div>
+        <div class="price"></div>
+        <div class="amountSelector">
+          <input type="number" class="amount">
+          <div class="confirm">OK</div>
+        </div>
+        <div class="confirmButton" onclick="confirmTransaction()">CONFIRM</div>
+        <div class="cancelButton" onclick="cancelTransaction()">CANCEL</div>
+      </div>
+    </div>
     <p class="closestEnemyDistance"></p>
     <p class="interactPrompt"></p>
     <div class="textWindow"></div>
@@ -97,6 +122,14 @@
         <div class="container"></div>
       </div>
       <div class="perkTreesContainer"></div>
+    </div>
+    <div class="dialogWindow">
+      <p class="dialogCharName"></p>
+      <div class="dialogCharPortrait">
+        <canvas class="dialogCanvas" width="512" height="512"></canvas>
+      </div>
+      <div class="dialogChoices"></div>
+      <div class="dialogText"></div>
     </div>
     <div class="defaultItemsArray"></div>
     <div class="mapHover"></div>
@@ -119,6 +152,12 @@
         </div>
         <div class="loadFile saveButton">
           <img src="resources/icons/load_file.png" alt="" class="src">
+        </div>
+        <div class="storageUsed">
+          <div class="usedBar">
+            <div class="usedBarFill"></div>
+            <p class="usedText"></p>
+          </div>
         </div>
       </div>
       <div class="saves"></div>
@@ -240,6 +279,7 @@
   <img src="resources/tiles/player/wooden_shield.png" alt="" onload="imgLoaded()" class="woodenShield sprite">
   <img src="resources/tiles/player/iron_shield.png" alt="" onload="imgLoaded()" class="ironShield sprite">
   <img src="resources/tiles/player/silver_shield.png" alt="" onload="imgLoaded()" class="silverShield sprite">
+  <img src="resources/tiles/player/parrying_dagger.png" alt="" onload="imgLoaded()" class="parryingDagger sprite">
 
   <!-- Projectiles -->
   <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
@@ -275,6 +315,8 @@
   <img src="resources/tiles/enemies/norseman_hunter.png" alt="" onload="imgLoaded()" class="norsemanHunter sprite">
   <img src="resources/tiles/enemies/wolf.png" alt="" onload="imgLoaded()" class="wolfGrey sprite">
   <img src="resources/tiles/enemies/female_orc_raider.png" alt="" onload="imgLoaded()" class="femaleOrcRaider sprite">
+  <img src="resources/tiles/enemies/male_orc_raider.png" alt="" onload="imgLoaded()" class="maleOrcRaider sprite">
+  <img src="resources/tiles/enemies/orc_chieftess.png" alt="" onload="imgLoaded()" class="orcChieftess sprite">
   <img src="resources/tiles/enemies/wild_troll.png" alt="" onload="imgLoaded()" class="wildTroll sprite">
   <img src="resources/tiles/enemies/wild_stone_troll.png" alt="" onload="imgLoaded()" class="wildStoneTroll sprite">
   <img src="resources/tiles/enemies/troll.png" alt="" onload="imgLoaded()" class="troll sprite">
@@ -296,13 +338,6 @@
    <!-- Map Tiles  -->
    <img src="resources/tiles/player/p_minimap.png" alt="" onload="imgLoaded()" class="pMinimap sprite">
    <img src="resources/tiles/tileMap.png" alt="" onload="imgLoaded()" class="spriteMap_tiles sprite">
-   <img src="resources/tiles/hovering.png" alt="" onload="imgLoaded()" class="hoverTile sprite">
-   <img src="resources/tiles/void.png" alt="" onload="imgLoaded()" class="tileVOID sprite">
-   <img src="resources/tiles/fog_of_war_2.png" alt="" onload="imgLoaded()" class="tileNoVision sprite">
-   <img src="resources/tiles/highlight.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT sprite">
-   <img src="resources/tiles/highlight_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT_RED sprite">
-   <img src="resources/tiles/highlight2.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT2 sprite">
-   <img src="resources/tiles/highlight2_red.png" alt="" onload="imgLoaded()" class="tileHIGHLIGHT2_RED sprite">
    <img src="resources/tiles/shrine.png" alt="" onload="imgLoaded()" class="shrineTile sprite">
    <img src="resources/tiles/shrine_lit.png" alt="" onload="imgLoaded()" class="shrineLitTile sprite">
    <img src="resources/tiles/message.png" alt="" onload="imgLoaded()" class="messageTile sprite">
@@ -331,7 +366,9 @@
 
 <script src="resources/compiledJS/script/syntax.js"></script>
 <script src="resources/compiledJS/arrays/tiles.js"></script>
+<script src="resources/compiledJS/arrays/icons.js"></script>
 <script src="resources/compiledJS/script/localisation.js"></script>
+<script src="resources/compiledJS/script/dialogLocalisation.js"></script>
 <script src="resources/compiledJS/script/menu.js"></script>
 <script src="resources/compiledJS/script/dev.js"></script>
 <script src="resources/compiledJS/arrays/perks.js"></script>
@@ -344,6 +381,7 @@
 <script src="resources/compiledJS/arrays/summons.js"></script>
 <script src="resources/compiledJS/arrays/items.js"></script>
 <script src="resources/compiledJS/arrays/characters.js"></script>
+<script src="resources/compiledJS/arrays/characterInteractions.js"></script>
 <script src="resources/compiledJS/script/equipment.js"></script>
 <script src="resources/compiledJS/script/status.js"></script>
 <script src="resources/compiledJS/script/combatClasses.js"></script>

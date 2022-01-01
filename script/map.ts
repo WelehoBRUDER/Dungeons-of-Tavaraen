@@ -15,7 +15,7 @@ const spriteMap_tiles = <HTMLImageElement>document.querySelector(".spriteMap_til
 const spriteMap_items = <HTMLImageElement>document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
-var currentMap = 0;
+var currentMap = 2;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
@@ -61,6 +61,7 @@ function changeZoomLevel({ deltaY }) {
   modifyCanvas(true);
 }
 
+// @ts-expect-error
 window.addEventListener("resize", modifyCanvas);
 document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -117,7 +118,7 @@ function moveMinimap() {
     minimapContainer.style.display = "block";
   }
   minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-  minimapCanvas.style.top = `${player.cords.y * -8 + 112  * settings["ui_scale"] / 100}px`;
+  minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
 let sightMap: any;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
@@ -126,11 +127,15 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
 
-  if(createNewSightMap) sightMap = createSightMap(player.cords, player.sight());
+
+  if (createNewSightMap) sightMap = createSightMap(player.cords, player.sight());
+  if (!sightMap) return;
 
   /* Render the base layer */
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
+      if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
+      if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
       const imgId = map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
       // @ts-expect-error
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
@@ -141,7 +146,6 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       const fog = { x: 256, y: 0 };
       if (sprite) {
         baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
-        //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
       }
       if (player.grave) {
         if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
@@ -228,13 +232,13 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   });
 
   /* Render Characters */
-  NPCcharacters.forEach((npc: Npc)=>{
-    if(npc.currentMap == currentMap) {
-      if(sightMap[npc.currentCords.y]?.[npc.currentCords.x] == "x") {
+  NPCcharacters.forEach((npc: Npc) => {
+    if (npc.currentMap == currentMap) {
+      if (sightMap[npc.currentCords.y]?.[npc.currentCords.x] == "x") {
         const charSprite = document.querySelector<HTMLImageElement>("." + npc.sprite);
         var tileX = (npc.currentCords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var tileY = (npc.currentCords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        if(charSprite) {
+        if (charSprite) {
           baseCtx?.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
         }
       }
@@ -314,7 +318,11 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
   try {
 
     /* Render tile */
-    var strokeImg = <HTMLImageElement>document.querySelector(".sprites .hoverTile");
+    const strokeSprite = staticTiles[0].spriteMap;
+    const highlightSprite = staticTiles[3]?.spriteMap;
+    const highlightRedSprite = staticTiles[4]?.spriteMap;
+    const highlight2Sprite = staticTiles[5]?.spriteMap;
+    const highlight2RedSprite = staticTiles[6]?.spriteMap;
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
     var hoveredEnemy = false;
     maps[currentMap].enemies.forEach((enemy: any) => {
@@ -323,7 +331,7 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         hoveredEnemy = true;
       }
     });
-    let hoveredSummon = false; 
+    let hoveredSummon = false;
     combatSummons.forEach((summon: any) => {
       if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
         hoverEnemyShow(summon);
@@ -336,8 +344,6 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
 
     if (state.abiSelected.type == "movement" || state.abiSelected.type == "charge") {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, false, false);
-      var highlight2Img = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT2");
-      var highlight2RedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT2_RED");
       let distance: number = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
       let iteration: number = 0;
       path.forEach((step: any) => {
@@ -346,16 +352,14 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
-          playerCtx?.drawImage(highlight2RedImg, _tileX, _tileY, spriteSize, spriteSize);
+          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
         }
-        else playerCtx?.drawImage(highlight2Img, _tileX, _tileY, spriteSize, spriteSize);
+        else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
       });
     }
     /* Render highlight test */
     else if ((((state.abiSelected?.shoots_projectile && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
       const path: any = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
-      var highlightImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT");
-      var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
       let distance: number = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
       let iteration: number = 0;
       let lastStep: number = 0;
@@ -366,16 +370,16 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked || iteration > distance) {
           if (lastStep == 0) lastStep = iteration;
-          playerCtx?.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
         }
-        else playerCtx?.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
       });
       if (state.abiSelected?.aoe_size > 0) {
         let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
         for (let y = 0; y < spriteLimitY; y++) {
           for (let x = 0; x < spriteLimitX; x++) {
             if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
-              playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+              playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
             }
           }
         }
@@ -383,21 +387,17 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
     }
     if (event.buttons == 1 && !state.isSelected) {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
-      var highlightImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT");
-      var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
       path.forEach((step: any) => {
         if (step.x == player.cords.x && step.y == player.cords.y) return;
         var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked) {
-          playerCtx?.drawImage(highlightRedImg, _tileX, _tileY, spriteSize, spriteSize);
+          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
         }
-        else playerCtx?.drawImage(highlightImg, _tileX, _tileY, spriteSize, spriteSize);
+        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
       });
     }
-
-
-    playerCtx?.drawImage(strokeImg, tileX, tileY, spriteSize, spriteSize);
+    playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, spriteSize + 1, spriteSize + 1);
   }
   catch { }
 }
@@ -405,15 +405,14 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
 function renderAOEHoverOnPlayer(aoeSize: number, ignoreLedge: boolean) {
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-
   playerCanvas.width = playerCanvas.width;
   renderPlayerModel(spriteSize, playerCanvas, playerCtx);
-  var highlightRedImg = <HTMLImageElement>document.querySelector(".sprites .tileHIGHLIGHT_RED");
+  const highlightRedSprite = staticTiles[4]?.spriteMap;
   let aoeMap = createAOEMap(player.cords, aoeSize, ignoreLedge);
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
       if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x" && !(player.cords.x == x && player.cords.y == y)) {
-        playerCtx.drawImage(highlightRedImg, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+        playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
       }
     }
   }
@@ -558,8 +557,14 @@ function createSightMap(start: tileObject, size: number) {
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
       if (Math.abs((x - start.x) + mapOffsetStartX) ** 2 + Math.abs((y - start.y) + mapOffsetStartY) ** 2 < testiIsonnus) {
+        if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) {
+          continue;
+        }
+        if (x + mapOffsetStartX > maps[currentMap].base[0].length - 1 || x + mapOffsetStartX < 0) {
+          continue;
+        }
         _sightMap[y + mapOffsetStartY][x + mapOffsetStartX] = "x";
-      } 
+      }
     }
   }
   return _sightMap;
@@ -570,7 +575,7 @@ function createAOEMap(start: tileObject, size: number, ignoreLedge: boolean = fa
   let testiIsonnus = size ** 2;
   return aoeMap.map((rivi, y) => rivi.map((_, x) => {
     let pass = true;
-    if(tiles[maps[currentMap].base[y][x]].isLedge && !ignoreLedge) pass = false;
+    if (tiles[maps[currentMap].base[y][x]].isLedge && !ignoreLedge) pass = false;
     if (pass && !tiles[maps[currentMap].base[y][x]].isWall && !clutters[maps[currentMap].clutter[y][x]].isWall) {
       if (Math.abs(x - start.x) ** 2 + Math.abs(y - start.y) ** 2 < testiIsonnus) return "x";
     }
@@ -588,9 +593,9 @@ function cordsFromDir(cords: tileObject, dir: string) {
 }
 document.addEventListener("keyup", (keyPress) => {
   const rooted = player.isRooted();
-  if (!turnOver) return;
+  if (!turnOver || state.dialogWindow || state.storeOpen) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
-  let target = maps[currentMap].enemies.find(e => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+  let target = maps[currentMap].enemies.find((e: any) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
   if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
     advanceTurn();
     state.abiSelected = {};
@@ -640,6 +645,9 @@ document.addEventListener("keyup", (keyPress) => {
       const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
       if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
     });
+    if (!state.textWindowOpen && !state.invOpen) {
+      talkToCharacter();
+    }
   }
 });
 
@@ -728,8 +736,8 @@ function canMove(char: any, dir: string) {
       if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) movable = false;
     }
     for (let npc of NPCcharacters) {
-      if(npc.currentMap == currentMap) {
-        if(npc.currentCords.x == tile.x && npc.currentCords.y == tile.y) movable = false;
+      if (npc.currentMap == currentMap) {
+        if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y) movable = false;
       }
     }
     return movable;
@@ -744,14 +752,14 @@ function canMoveTo(char: any, tile: tileObject) {
   for (let enemy of maps[currentMap].enemies) {
     if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) movable = false;
   }
-  if(char.id !== "player") {
-    for(let summon of combatSummons) {
+  if (char.id !== "player") {
+    for (let summon of combatSummons) {
       if (summon.cords.x == tile.x && summon.cords.y == tile.y) movable = false;
     }
   }
   for (let npc of NPCcharacters) {
-    if(npc.currentMap == currentMap) {
-      if(npc.currentCords.x == tile.x && npc.currentCords.y == tile.y) movable = false;
+    if (npc.currentMap == currentMap) {
+      if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y) movable = false;
     }
   }
   if (player.cords.x == tile.x && player.cords.y == tile.y) movable = false;
@@ -807,6 +815,15 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.offhand.sprite);
     ctx?.drawImage(offhandModel, x, y, size, size);
   }
+}
+
+function renderNPCOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, npc: Npc, side: string = "center") {
+  canvas.width = canvas.width; // Clear canvas
+  const sprite = <HTMLImageElement>document.querySelector(".sprites ." + npc.sprite);
+  var x = 0;
+  var y = 0;
+  if (side == "left") x = 0 - size / 4;
+  ctx?.drawImage(sprite, x, y, size, size);
 }
 
 function renderPlayerPortrait() {
@@ -891,19 +908,19 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   }
   if (end.x < 0 || end.x > maps[currentMap].base[0].length - 1 || end.y < 0 || end.y > maps[currentMap].base.length - 1) return;
   let fieldMap: Array<number[]>;
-  if(canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
+  if (canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
   else fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
   if (start.x !== player.cords.x && start.y !== player.cords.y) {
     fieldMap[player.cords.y][player.cords.x] = 1;
     combatSummons.forEach(summon => {
       if (summon.cords.x !== start.x && summon.cords.y !== start.y) {
         fieldMap[summon.cords.y][summon.cords.x] = 1;
-      } 
+      }
     });
   }
-  maps[currentMap].enemies.forEach(enemy => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
+  maps[currentMap].enemies.forEach((enemy: any) => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
   NPCcharacters.forEach((npc: Npc) => {
-    if(npc.currentMap == currentMap) {
+    if (npc.currentMap == currentMap) {
       fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
     }
   });
@@ -911,9 +928,9 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   fieldMap[end.y][end.x] = 5;
   let calls = 0;
   let maximumCalls = 2000;
-  const checkGrid = [{ v: 5, x: end.x, y: end.y }];
-  while(fieldMap[start.y][start.x] == 0 && checkGrid.length > 0 && calls < maximumCalls) {
-    const {v, x, y} = checkGrid.splice(0, 1)[0];
+  const checkGrid: Array<any> = [{ v: 5, x: end.x, y: end.y }];
+  while (fieldMap[start.y][start.x] == 0 && checkGrid.length > 0 && calls < maximumCalls) {
+    const { v, x, y } = checkGrid.splice(0, 1)[0];
     if (fieldMap[y][x] == v) {
       if (fieldMap[y - 1]?.[x] === 0) {
         fieldMap[y - 1][x] = v + 1;
@@ -929,11 +946,11 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
       }
       if (fieldMap[y]?.[x + 1] === 0) {
         fieldMap[y][x + 1] = v + 1;
-        checkGrid.push({ v: v + 1, x: x + 1, y: y, dist: calcDistance(x + 1, y, start.x, start.y)});
+        checkGrid.push({ v: v + 1, x: x + 1, y: y, dist: calcDistance(x + 1, y, start.x, start.y) });
       }
     }
-    checkGrid.sort((a: any,b: any)=>{
-      return a.dist - b.dist
+    checkGrid.sort((a: any, b: any) => {
+      return a.dist - b.dist;
     });
     calls++;
   }
@@ -1004,8 +1021,10 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
     arrow.x += ratioX2;
     arrow.y += ratioY2;
     var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
+    if (tile.y > maps[currentMap].base.length || tile.y < 0) continue;
+    if (tile.x > maps[currentMap].base[0].length || tile.x < 0) continue;
     if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) arrow.blocked = true;
-    maps[currentMap].enemies.forEach(enemy => {
+    maps[currentMap].enemies.forEach((enemy: any) => {
       if (enemy.cords.x == start.x && enemy.cords.y == start.y) return;
       if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) { arrow.enemy = true; arrow.blocked = true; };
     });
@@ -1067,7 +1086,7 @@ async function advanceTurn() {
     summon.effects();
   });
   let closestEnemyDistance = -1;
-  map.enemies.forEach(enemy => {
+  map.enemies.forEach((enemy: any) => {
     let distToPlayer = enemy.distToPlayer();
     if (player.isDead) return;
     if (!enemy.alive) { updateEnemiesTurn(); return; };
@@ -1107,27 +1126,33 @@ function showInteractPrompt() {
   let interactKey = settings["hotkey_interact"] == " " ? lang["space_key"] : settings["hotkey_interact"].toUpperCase();
   interactPrompt.textContent = "";
   itemData.some((itm: any) => {
-    if(itm.cords.x == player.cords.x && itm.cords.y == player.cords.y) {
+    if (itm.cords.x == player.cords.x && itm.cords.y == player.cords.y) {
       foundPrompt = true;
       interactPrompt.textContent = `[${interactKey}] ` + lang["pick_item"];
-      return;
     }
   });
-  if(!foundPrompt) {
+  if (!foundPrompt) {
     maps[currentMap].treasureChests.some((chest: any) => {
-      if(chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.loot.length > 0) {
+      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && chest.loot.length > 0) {
         foundPrompt = true;
         interactPrompt.textContent = `[${interactKey}] ` + lang["pick_chest"];
-        return;
       }
     });
   }
-  if(!foundPrompt) {
+  if (!foundPrompt) {
     maps[currentMap].messages.some((msg: any) => {
-      if(msg.cords.x == player.cords.x && msg.cords.y == player.cords.y) {
+      if (msg.cords.x == player.cords.x && msg.cords.y == player.cords.y) {
         foundPrompt = true;
         interactPrompt.textContent = `[${interactKey}] ` + lang["read_msg"];
-        return
+      }
+    });
+  }
+  if (!foundPrompt) {
+    NPCcharacters.some((npc: Npc) => {
+      let dist = calcDistance(player.cords.x, player.cords.y, npc.currentCords.x, npc.currentCords.y);
+      if (dist < 3) {
+        foundPrompt = true;
+        interactPrompt.textContent = `[${interactKey}] ` + lang["talk_to_npc"] + ` ${lang[npc.id + "_name"]}`;
       }
     });
   }
@@ -1160,7 +1185,6 @@ function hoverEnemyShow(enemy: enemy) {
     mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
   });
   mainStatText += "<c>white<c>)\n";
-  // @ts-expect-error
   const mainStats = textSyntax(mainStatText);
   var resists: string = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
   Object.entries(enemy.getResists()).forEach((res: any) => {
@@ -1168,7 +1192,6 @@ function hoverEnemyShow(enemy: enemy) {
     const val = res[1];
     resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
   });
-  // @ts-expect-error
   const resistFrame = textSyntax(resists);
   resistFrame.classList.add("enResists");
   staticHover.append(name, mainStats, resistFrame);
@@ -1181,7 +1204,7 @@ function hideMapHover() {
 }
 
 function activateShrine() {
-  maps[currentMap].shrines.forEach(shrine => {
+  maps[currentMap].shrines.forEach((shrine: any) => {
     if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
       if (!(player.usedShrines.find((used: any) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
         player.stats.hp = player.getHpMax();
@@ -1213,18 +1236,18 @@ let staticMap_normal: Array<number[]> = [];
 let staticMap_flying: Array<number[]> = [];
 let sightMap_empty: Array<number[]> = [];
 function createStaticMap() {
-  staticMap_normal = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
+  staticMap_normal = maps[currentMap].base.map((yv: any, y: number) => yv.map((xv: any, x: number) => {
     if (tiles[xv].isWall || tiles[xv].isLedge) return 1;
     return 0;
   }));
-  maps[currentMap].clutter.forEach((yv, y) => yv.map((xv, x) => {
+  maps[currentMap].clutter.forEach((yv: any, y: number) => yv.map((xv: any, x: number) => {
     if (clutters[xv].isWall) staticMap_normal[y][x] = 1;
   }));
-  staticMap_flying = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
+  staticMap_flying = maps[currentMap].base.map((yv: any, y: number) => yv.map((xv: any, x: number) => {
     if (tiles[xv].isWall) return 1;
     return 0;
   }));
-  maps[currentMap].clutter.forEach((yv, y) => yv.map((xv, x) => {
+  maps[currentMap].clutter.forEach((yv: any, y: number) => yv.map((xv: any, x: number) => {
     if (clutters[xv].isWall) staticMap_flying[y][x] = 1;
   }));
   sightMap_empty = emptyMap(maps[currentMap].base);

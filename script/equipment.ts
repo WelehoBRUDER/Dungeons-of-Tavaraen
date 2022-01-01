@@ -205,7 +205,7 @@ class Consumable extends Item {
   fullPrice?: Function;
   stats?: any;
   commands?: any;
-  constructor(base: Consumable) {
+  constructor(base: Consumable, setPrice: number = 0) {
     super(base);
     const baseItem = { ...items[this.id] };
     this.status = baseItem.status;
@@ -218,8 +218,12 @@ class Consumable extends Item {
     this.stats = {};
     this.commands = {};
     this.name = lang[this.id + "_name"] ?? baseItem.name;
+    if(setPrice > 0) this.price = setPrice;
 
-    this.fullPrice = () => { return this.price * this.amount; };
+    if(setPrice > 0) {
+      this.fullPrice = () => { return this.price; }
+    }
+    else this.fullPrice = () => { return this.price * this.amount; };
   }
 }
 
@@ -236,7 +240,7 @@ class Weapon extends Item {
   statBonus: string;
   level?: number;
   maxLevel?: number;
-  constructor(base: weaponClass) {
+  constructor(base: weaponClass, setPrice: number = 0) {
     super(base);
     const baseItem = { ...items[this.id] };
     this.name = lang[this.id + "_name"] ?? baseItem.name;
@@ -249,6 +253,7 @@ class Weapon extends Item {
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
     this.statBonus = baseItem.statBonus ?? "str";
+    if(setPrice > 0) this.price = setPrice;
 
     if(this.level > 0) this.name += ` +${this.level}`;
 
@@ -273,22 +278,25 @@ class Weapon extends Item {
     //   });
     // }
 
-    this.fullPrice = () => {
-      let bonus = 0;
-      Object.entries(this.damages).forEach((dmg: any) => {
-        const key = dmg[0];
-        const val = dmg[1];
-        bonus += val * dmgWorths[key];
-      });
-      Object.entries(this.stats).forEach((stat: any) => {
-        let _sw = statWorths[stat[0]] * stat[1];
-        if (isNaN(_sw)) _sw = stat[1] * 2;
-        bonus += _sw;
-      });
-      bonus *= grades[this.grade]["worth"];
-      let price = Math.floor((bonus + this.price) * (1 + this.level/2));
-      return price < 1 ? 1 : price;
-    };
+    if(setPrice > 0 ) this.fullPrice = () => { return this.price }
+    else {
+      this.fullPrice = () => {
+        let bonus = 0;
+        Object.entries(this.damages).forEach((dmg: any) => {
+          const key = dmg[0];
+          const val = dmg[1];
+          bonus += val * dmgWorths[key];
+        });
+        Object.entries(this.stats).forEach((stat: any) => {
+          let _sw = statWorths[stat[0]] * stat[1];
+          if (isNaN(_sw)) _sw = stat[1] * 2;
+          bonus += _sw;
+        });
+        bonus *= grades[this.grade]["worth"];
+        let price = Math.floor((bonus + this.price) * (1 + this.level/2));
+        return price < 1 ? 1 : price;
+      };
+    }
 
     // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
     //
@@ -370,7 +378,7 @@ class Armor extends Item {
   fullPrice?: Function;
   level?: number;
   maxLevel?: number;
-  constructor(base: armorClass) {
+  constructor(base: armorClass, setPrice: number = 0) {
     super(base);
     // @ts-ignore
     const baseItem = { ...items[this.id] };
@@ -381,7 +389,8 @@ class Armor extends Item {
     this.resistances = leveledStats({ ...baseItem.resistances }, this.level ?? 0) ?? {};
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
-    this.coversHair = base.coversHair ?? false;
+    this.coversHair = baseItem.coversHair ?? false;
+    if(setPrice > 0) this.price = setPrice;
 
     if(this.level > 0) this.name += ` +${this.level}`;
 
@@ -406,22 +415,25 @@ class Armor extends Item {
     //   });
     // }
 
-    this.fullPrice = () => {
-      let bonus = 0;
-      Object.entries(this.resistances).forEach((dmg: any) => {
-        const key = dmg[0];
-        const val = dmg[1];
-        bonus += val * dmgWorths[key];
-      });
-      Object.entries(this.stats).forEach((stat: any) => {
-        let _sw = statWorths[stat[0]] * stat[1];
-        if (isNaN(_sw)) _sw = stat[1] * 2;
-        bonus += _sw;
-      });
-      bonus *= grades[this.grade]["worth"];
-      let price = Math.floor((bonus + this.price) * (1 + this.level/2));
-      return price < 1 ? 1 : price;
-    };
+    if(setPrice > 0) this.fullPrice = () => { return this.price };
+    else {
+      this.fullPrice = () => {
+        let bonus = 0;
+        Object.entries(this.resistances).forEach((dmg: any) => {
+          const key = dmg[0];
+          const val = dmg[1];
+          bonus += val * dmgWorths[key];
+        });
+        Object.entries(this.stats).forEach((stat: any) => {
+          let _sw = statWorths[stat[0]] * stat[1];
+          if (isNaN(_sw)) _sw = stat[1] * 2;
+          bonus += _sw;
+        });
+        bonus *= grades[this.grade]["worth"];
+        let price = Math.floor((bonus + this.price) * (1 + this.level/2));
+        return price < 1 ? 1 : price;
+      };
+    }
 
     // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
     //
@@ -489,13 +501,14 @@ class Artifact extends Item {
   artifactSet: string;
   rolledStats?: any;
   fullPrice?: Function;
-  constructor(base: Artifact) {
+  constructor(base: Artifact, setPrice: number = 0) {
     super(base);
     const baseItem = { ...items[this.id] };
     this.stats = { ...baseItem.stats } ?? {};
     this.artifactSet = baseItem.artifactSet;
     this.rolledStats = { ...base.rolledStats } ?? {};
     this.commands = {};
+    if(setPrice > 0) this.price = setPrice;
 
     if(lang.language_id !== "english") this.name = lang[this.id + "_name"];
 
@@ -518,17 +531,20 @@ class Artifact extends Item {
     //   else this.stats[stat[0]] += stat[1];
     // });
 
-    this.fullPrice = () => {
-      let bonus = 0;
-      Object.entries(this.stats).forEach((stat: any) => {
-        let _sw = statWorths[stat[0]] * stat[1];
-        if (isNaN(_sw)) _sw = stat[1] * 2;
-        bonus += _sw * 1.5;
-      });
-      bonus *= grades[this.grade]["worth"];
-      let price = Math.floor(bonus + this.price);
-      return price < 1 ? 1 : price;
-    };
+    if(setPrice > 0) this.fullPrice = () => { return this.price; }
+    else {
+      this.fullPrice = () => {
+        let bonus = 0;
+        Object.entries(this.stats).forEach((stat: any) => {
+          let _sw = statWorths[stat[0]] * stat[1];
+          if (isNaN(_sw)) _sw = stat[1] * 2;
+          bonus += _sw * 1.5;
+        });
+        bonus *= grades[this.grade]["worth"];
+        let price = Math.floor(bonus + this.price);
+        return price < 1 ? 1 : price;
+      };
+    }
   }
 }
 
@@ -545,7 +561,8 @@ const equipSlots = [
   "artifact3"
 ];
 
-document.querySelector<HTMLDivElement>(".playerInventory").querySelectorAll<HTMLDivElement>(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
+document.querySelector<HTMLDivElement>(".playerInventory")?.querySelectorAll<HTMLDivElement>(".slot")?.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
+document.querySelector<HTMLDivElement>(".playerInventory")?.addEventListener("click", e=>removeContextMenu(e));
 
 function renderInventory() {
   state.invOpen = true;
@@ -564,6 +581,7 @@ function renderInventory() {
       const _item = { ...player[slot] };
       const img = document.createElement("img");
       const name = document.createElement("p");
+      img.addEventListener("click", e=>clickItem(e, player[slot], img, "PLAYER_EQUIPMENT"));
       img.src = _item.img;
       name.textContent = _item.name;
       img.classList.add("slotItem");
@@ -602,7 +620,18 @@ function closeLeveling() {
 function itemTT(item: any) {
   var text = "";
   if(!item.grade) return;
-  text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
+  text += `\t<css>z-index: 5; position: relative;<css><f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
+  if(item.requiresStats) {
+    let cantEquip: boolean = false;
+    Object.entries(item.requiresStats)?.forEach((dmg: any) => { 
+      if(player.getStats()[dmg[0]] < dmg[1]) {
+        cantEquip = true;
+      }
+    });
+    if(cantEquip) {
+      text += `§<css>background: rgba(209, 44, 77, .25); padding: 2px; margin-top: 8px; z-index: 1; position: relative;<css><i>${icons.warning_icon}<i><c>red<c><f>19px<f>${lang["cant_equip"]}\n§`;
+    }
+  }
   text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
   if (item.damages) {
     let total: number = 0;
@@ -674,7 +703,7 @@ function itemTT(item: any) {
   if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
-  if (item.range > 1) text += `<f>18px<f><c>lime<c>${lang["weapon_has_great_reach"]}\n`;
+  if (item.range > 0) text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;
   if (item.healValue) text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
   if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
   if (item.usesRemaining) text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
@@ -706,7 +735,7 @@ function itemTT(item: any) {
 
 var sortingReverse = false;
 
-function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY", chest: any = null) {
+function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY", chest: any = null, resetItem: boolean = true) {
   const container = document.createElement("div");
   const itemsList = document.createElement("div");
   const itemsListBar = document.createElement("div");
@@ -736,13 +765,16 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   itemsList.classList.add("itemList");
   itemsListBar.classList.add("itemListTop");
   itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
+  itemsList.addEventListener("click", e=>removeContextMenu(e));
   const items: Array<any> = [...inventory];
   items.forEach((item: any) => {
     let itm = {...item};
-    if (itm.type == "weapon") itm = new Weapon({ ...itm });
-    else if (itm.type == "armor") itm = new Armor({ ...itm });
-    else if (itm.type == "artifact") itm = new Artifact({ ...itm });
-    else if (itm.type == "consumable") itm = new Consumable({ ...itm });
+    if(resetItem) {
+      if (itm.type == "weapon") itm = new Weapon({ ...itm });
+      else if (itm.type == "armor") itm = new Armor({ ...itm });
+      else if (itm.type == "artifact") itm = new Artifact({ ...itm });
+      else if (itm.type == "consumable") itm = new Consumable({ ...itm });
+    }
     const itemObject = document.createElement("div");
     const itemImage = document.createElement("img");
     const itemName = document.createElement("p");
@@ -775,13 +807,24 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemWorth.textContent = price;
     if (context == "PLAYER_INVENTORY") {
       itemObject.addEventListener("mousedown", e => player.equip(e, itm));
-      itemObject.addEventListener("dblclick", e => player.drop(itm));
+      itemObject.addEventListener("mouseup", e => fastDrop(e, itm));
+      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PLAYER_INVENTORY"));
     }
     if (context == "PICK_LOOT") {
       itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
+      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PICK_LOOT"));
     }
     if (context == "PICK_TREASURE") {
       itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
+      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PICK_TREASURE", chest));
+    }
+    if (context == "MERCHANT_SELLING") {
+      itemObject.addEventListener("mousedown", e => buyItem(e, itm));
+      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "MERCHANT_SELLING", chest));
+    }
+    if (context == "PLAYER_SELLING") {
+      itemObject.addEventListener("mousedown", e => sellItem(e, itm));
+      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PLAYER_SELLING", chest));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
@@ -795,6 +838,65 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   return container;
 }
 
+function buyItem(e: MouseEvent, itm: any) {
+  if(e.button !== 2) return;
+  addItemToBuying(itm);
+}
+
+function sellItem(e: MouseEvent, itm:  any) {
+  if(e.button !== 2) return;
+  addItemToSelling(itm);
+}
+
+function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, context: string = "PLAYER_INVENTORY", chest: any = null) {
+  if(item.id == "A0_error") return;
+  contextMenu.textContent = "";
+  try {
+    document.querySelector(".itemSelected").classList.remove("itemSelected");
+  }
+  catch {}
+  if (Event.shiftKey) return;
+  if(context != "PLAYER_EQUIPMENT") itemObject.classList.add("itemSelected");
+  contextMenu.style.left = `${Event.x}px`;
+  contextMenu.style.top = `${Event.y}px`;
+  if(context == "PLAYER_INVENTORY") {
+    if(item.type != "consumable") contextMenuButton(lang["equip"], ()=> player.equip(Event, item, true));
+    contextMenuButton(lang["drop"], ()=> player.drop(item, true));
+  }
+  else if(context == "PICK_LOOT") {
+    contextMenuButton(lang["pick_up"], ()=> grabLoot(Event, item, item.dataIndex, true));
+  }
+  else if(context == "PICK_TREASURE") {
+    contextMenuButton(lang["pick_up"], ()=> grabTreasure(Event, item, chest, item.dataIndex, true));
+  }
+  else if(context == "PLAYER_EQUIPMENT") {
+    contextMenuButton(lang["unequip"], ()=> player.unequip(Event, item.slot, -1, false, true));
+  }
+  else if(context == "MERCHANT_SELLING") {
+    contextMenuButton(lang["buy_item"], ()=>{ addItemToBuying(item);});
+  }
+  else if(context == "PLAYER_SELLING") {
+    contextMenuButton(lang["sell_item"], ()=>{ addItemToSelling(item);});
+  }
+}
+
+function fastDrop(Event: MouseEvent, itm: any) {
+  if(Event.shiftKey) {
+    player.drop(itm)
+  }
+}
+
+function removeContextMenu(Event: MouseEvent) {
+  let target: any = Event.target;
+  if(target.className.includes("itemList") || target.className.includes("playerInventory")) {
+    try {
+      document.querySelector(".itemSelected").classList.remove("itemSelected");
+    }
+    catch {}
+    contextMenu.textContent = "";
+  }
+}
+
 const artifactSets = {
   defender: {
     id: "defender",
@@ -802,8 +904,7 @@ const artifactSets = {
       hpMaxP: 10
     },
     threePieceEffect: {
-      hpMaxV: 10,
-      resistAllV: 3
+      resistAllV: 10
     }
   },
   scholar: {
@@ -813,13 +914,13 @@ const artifactSets = {
     },
     threePieceEffect: {
       intV: 5,
-      magicDamageP: 12
+      spellDamageP: 10
     }
   },
   warrior: {
     id: "warrior",
     twoPieceEffect: {
-      attack_damage_multiplierP: 10
+      meleeDamageP: 10
     },
     threePieceEffect: {
       hitChanceV: 10,

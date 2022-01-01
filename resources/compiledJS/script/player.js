@@ -20,43 +20,28 @@ const raceTexts = {
 const raceEffects = {
     human: {
         modifiers: {
-            strV: 2,
-            vitV: 2,
-            dexV: 2,
-            intV: 2,
-            cunV: 2,
-            expGainP: 10
+            vitV: 3
         },
         name: "Human Will",
         desc: "No scenario is unbeatable to man, any adversary can be overcome with determination and grit! Where power fails, smarts will succeed."
     },
     elf: {
         modifiers: {
-            dexV: 5,
-            intV: 5,
-            sightV: 3,
-            mpMaxP: 10,
-            expGainP: -5
+            intV: 3
         },
         name: "Elvish Blood",
         desc: "Snobby pricks can show a good dance, but not a good fight."
     },
     orc: {
         modifiers: {
-            strV: 5,
-            vitV: 5,
-            hpMaxP: 10,
+            strV: 3
         },
         name: "Orcy Bod",
         desc: "Orcies not make gud thinkaz', but do good git smashaz."
     },
     ashen: {
         modifiers: {
-            dexV: 5,
-            cunV: 5,
-            sightV: 1,
-            evasionV: 5,
-            critDamageP: 20
+            dexV: 3
         },
         name: "Ashen Constitution",
         desc: "The Ashen are sly and slippery, not gifted in straight battle."
@@ -114,14 +99,16 @@ class PlayerCharacter extends Character {
         };
         this.sight = () => {
             const { v: val, m: mod } = getModifiers(this, "sight");
-            return Math.floor((10 + val) * mod);
+            return Math.floor((11 + val) * mod);
         };
-        this.drop = (itm) => {
+        this.drop = (itm, fromContextMenu = false) => {
             const item = Object.assign({}, itm);
             this.inventory.splice(itm.index, 1);
             createDroppedItem(this.cords, item);
             renderInventory();
             modifyCanvas();
+            if (fromContextMenu)
+                contextMenu.textContent = "";
         };
         this.updatePerks = (dontUpdateUI = false, dontExecuteCommands = false) => {
             this.perks.forEach((prk, index) => {
@@ -138,10 +125,13 @@ class PlayerCharacter extends Character {
                 return;
             updateUI();
         };
-        this.unequip = (event, slot, putToIndex = -1, shiftItems = false) => {
+        this.unequip = (event, slot, putToIndex = -1, shiftItems = false, fromContextMenu = false) => {
             var _a, _b;
-            if (event.button !== 2 || !((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id))
+            if ((event.button !== 2 && !fromContextMenu) || !((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id))
                 return;
+            if (fromContextMenu) {
+                contextMenu.textContent = "";
+            }
             if ((_b = this[slot]) === null || _b === void 0 ? void 0 : _b.id) {
                 if (putToIndex != -1) {
                     if (shiftItems) {
@@ -162,9 +152,14 @@ class PlayerCharacter extends Character {
             this[slot] = {};
             renderInventory();
         };
-        this.equip = (event, item) => {
+        this.equip = (event, item, fromContextMenu = false) => {
             var _a, _b, _c;
-            if (event.button !== 2)
+            if (event.button !== 2 && !fromContextMenu)
+                return;
+            if (fromContextMenu) {
+                contextMenu.textContent = "";
+            }
+            if (item.type == "consumable")
                 return;
             if (item.id == "A0_error") {
                 player.inventory.splice(item.index, 1);
@@ -222,13 +217,18 @@ class PlayerCharacter extends Character {
             while (this.level.xp >= this.level.xpNeed) {
                 this.level.xp -= this.level.xpNeed;
                 this.level.level++;
-                this.sp += 5;
-                if (this.level.level < 6)
+                if (this.level.level < 6) {
                     this.pp += 2;
-                else if (this.level.level % 10 == 0)
+                    this.sp += 2;
+                }
+                else if (this.level.level % 10 == 0) {
                     this.pp += 3;
-                else
+                    this.sp += 5;
+                }
+                else {
                     this.pp++;
+                    this.sp += 2;
+                }
                 this.level.xpNeed = nextLevel(this.level.level);
                 this.stats.hp = this.getHpMax();
                 this.stats.mp = this.getMpMax();
@@ -364,6 +364,12 @@ class PlayerCharacter extends Character {
                 this.inventory.push(Object.assign({}, itm));
             }
         };
+        this.addGold = (amnt) => {
+            if (isNaN(amnt))
+                amnt = 0;
+            player.gold += amnt;
+            document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
+        };
     }
 }
 function nextLevel(level) {
@@ -479,6 +485,10 @@ function numberSort(a, b, string, reverse = false) {
     }
 }
 function worthSort(a, b, reverse = false) {
+    if (typeof a.fullPrice !== "function")
+        return 1;
+    else if (typeof b.fullPrice !== "function")
+        return -1;
     var numA = a.fullPrice();
     var numB = b.fullPrice();
     if (!reverse) {
@@ -505,7 +515,7 @@ function worthSort(a, b, reverse = false) {
 var player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 20, y: 72 },
+    cords: { x: 41, y: 169 },
     stats: {
         str: 1,
         dex: 1,
@@ -596,7 +606,7 @@ var player = new PlayerCharacter({
     gold: 50,
     sp: 5,
     pp: 1,
-    respawnPoint: { cords: { x: 20, y: 72 } },
+    respawnPoint: { cords: { x: 41, y: 169 } },
     usedShrines: [],
     grave: null,
     flags: {},
@@ -609,9 +619,9 @@ var randomProperty = function (mods) {
 // for (let i = 0; i < 20; i++) {
 //   player.addItem({...items.A0_error});
 // }
-// for (let i = 0; i < 20; i++) {
-//   player.addItem({ ...randomProperty(items) });
-// }
+for (let i = 0; i < 20; i++) {
+    player.addItem(Object.assign({}, randomProperty(items)));
+}
 // for (let itm of Object.entries(items)) {
 //   player.addItem({...itm[1], level: 5});
 // }

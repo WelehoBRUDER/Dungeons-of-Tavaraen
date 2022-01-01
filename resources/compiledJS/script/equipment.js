@@ -1,4 +1,5 @@
 "use strict";
+var _a, _b, _c;
 let invScroll = 0;
 class Item {
     constructor(base) {
@@ -111,7 +112,7 @@ const statWorths = {
     mpMaxP: 4.5,
 };
 class Consumable extends Item {
-    constructor(base) {
+    constructor(base, setPrice = 0) {
         var _a, _b, _c, _d;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
@@ -125,11 +126,17 @@ class Consumable extends Item {
         this.stats = {};
         this.commands = {};
         this.name = (_d = lang[this.id + "_name"]) !== null && _d !== void 0 ? _d : baseItem.name;
-        this.fullPrice = () => { return this.price * this.amount; };
+        if (setPrice > 0)
+            this.price = setPrice;
+        if (setPrice > 0) {
+            this.fullPrice = () => { return this.price; };
+        }
+        else
+            this.fullPrice = () => { return this.price * this.amount; };
     }
 }
 class Weapon extends Item {
-    constructor(base) {
+    constructor(base, setPrice = 0) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
@@ -143,6 +150,8 @@ class Weapon extends Item {
         this.stats = (_g = Object.assign({}, baseItem.stats)) !== null && _g !== void 0 ? _g : {};
         this.commands = (_h = Object.assign({}, baseItem.commands)) !== null && _h !== void 0 ? _h : {};
         this.statBonus = (_j = baseItem.statBonus) !== null && _j !== void 0 ? _j : "str";
+        if (setPrice > 0)
+            this.price = setPrice;
         if (this.level > 0)
             this.name += ` +${this.level}`;
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
@@ -165,23 +174,27 @@ class Weapon extends Item {
         //     else this.rolledStats[template.type] = 0;
         //   });
         // }
-        this.fullPrice = () => {
-            let bonus = 0;
-            Object.entries(this.damages).forEach((dmg) => {
-                const key = dmg[0];
-                const val = dmg[1];
-                bonus += val * dmgWorths[key];
-            });
-            Object.entries(this.stats).forEach((stat) => {
-                let _sw = statWorths[stat[0]] * stat[1];
-                if (isNaN(_sw))
-                    _sw = stat[1] * 2;
-                bonus += _sw;
-            });
-            bonus *= grades[this.grade]["worth"];
-            let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
-            return price < 1 ? 1 : price;
-        };
+        if (setPrice > 0)
+            this.fullPrice = () => { return this.price; };
+        else {
+            this.fullPrice = () => {
+                let bonus = 0;
+                Object.entries(this.damages).forEach((dmg) => {
+                    const key = dmg[0];
+                    const val = dmg[1];
+                    bonus += val * dmgWorths[key];
+                });
+                Object.entries(this.stats).forEach((stat) => {
+                    let _sw = statWorths[stat[0]] * stat[1];
+                    if (isNaN(_sw))
+                        _sw = stat[1] * 2;
+                    bonus += _sw;
+                });
+                bonus *= grades[this.grade]["worth"];
+                let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
+                return price < 1 ? 1 : price;
+            };
+        }
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
         //
         // Object.entries(this.rolledDamages).forEach((dmg: any) => {
@@ -237,7 +250,7 @@ class Weapon extends Item {
     }
 }
 class Armor extends Item {
-    constructor(base) {
+    constructor(base, setPrice = 0) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
         // @ts-ignore
@@ -249,7 +262,9 @@ class Armor extends Item {
         this.resistances = (_g = leveledStats(Object.assign({}, baseItem.resistances), (_f = this.level) !== null && _f !== void 0 ? _f : 0)) !== null && _g !== void 0 ? _g : {};
         this.stats = (_h = Object.assign({}, baseItem.stats)) !== null && _h !== void 0 ? _h : {};
         this.commands = (_j = Object.assign({}, baseItem.commands)) !== null && _j !== void 0 ? _j : {};
-        this.coversHair = (_k = base.coversHair) !== null && _k !== void 0 ? _k : false;
+        this.coversHair = (_k = baseItem.coversHair) !== null && _k !== void 0 ? _k : false;
+        if (setPrice > 0)
+            this.price = setPrice;
         if (this.level > 0)
             this.name += ` +${this.level}`;
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
@@ -272,23 +287,27 @@ class Armor extends Item {
         //     else this.rolledStats[template.type] = 0;
         //   });
         // }
-        this.fullPrice = () => {
-            let bonus = 0;
-            Object.entries(this.resistances).forEach((dmg) => {
-                const key = dmg[0];
-                const val = dmg[1];
-                bonus += val * dmgWorths[key];
-            });
-            Object.entries(this.stats).forEach((stat) => {
-                let _sw = statWorths[stat[0]] * stat[1];
-                if (isNaN(_sw))
-                    _sw = stat[1] * 2;
-                bonus += _sw;
-            });
-            bonus *= grades[this.grade]["worth"];
-            let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
-            return price < 1 ? 1 : price;
-        };
+        if (setPrice > 0)
+            this.fullPrice = () => { return this.price; };
+        else {
+            this.fullPrice = () => {
+                let bonus = 0;
+                Object.entries(this.resistances).forEach((dmg) => {
+                    const key = dmg[0];
+                    const val = dmg[1];
+                    bonus += val * dmgWorths[key];
+                });
+                Object.entries(this.stats).forEach((stat) => {
+                    let _sw = statWorths[stat[0]] * stat[1];
+                    if (isNaN(_sw))
+                        _sw = stat[1] * 2;
+                    bonus += _sw;
+                });
+                bonus *= grades[this.grade]["worth"];
+                let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
+                return price < 1 ? 1 : price;
+            };
+        }
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
         //
         // Object.entries(this.rolledResistances).forEach((dmg: any) => {
@@ -345,7 +364,7 @@ class Armor extends Item {
     }
 }
 class Artifact extends Item {
-    constructor(base) {
+    constructor(base, setPrice = 0) {
         var _a, _b;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
@@ -353,6 +372,8 @@ class Artifact extends Item {
         this.artifactSet = baseItem.artifactSet;
         this.rolledStats = (_b = Object.assign({}, base.rolledStats)) !== null && _b !== void 0 ? _b : {};
         this.commands = {};
+        if (setPrice > 0)
+            this.price = setPrice;
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
@@ -372,18 +393,22 @@ class Artifact extends Item {
         //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
         //   else this.stats[stat[0]] += stat[1];
         // });
-        this.fullPrice = () => {
-            let bonus = 0;
-            Object.entries(this.stats).forEach((stat) => {
-                let _sw = statWorths[stat[0]] * stat[1];
-                if (isNaN(_sw))
-                    _sw = stat[1] * 2;
-                bonus += _sw * 1.5;
-            });
-            bonus *= grades[this.grade]["worth"];
-            let price = Math.floor(bonus + this.price);
-            return price < 1 ? 1 : price;
-        };
+        if (setPrice > 0)
+            this.fullPrice = () => { return this.price; };
+        else {
+            this.fullPrice = () => {
+                let bonus = 0;
+                Object.entries(this.stats).forEach((stat) => {
+                    let _sw = statWorths[stat[0]] * stat[1];
+                    if (isNaN(_sw))
+                        _sw = stat[1] * 2;
+                    bonus += _sw * 1.5;
+                });
+                bonus *= grades[this.grade]["worth"];
+                let price = Math.floor(bonus + this.price);
+                return price < 1 ? 1 : price;
+            };
+        }
     }
 }
 const equipSlots = [
@@ -398,7 +423,8 @@ const equipSlots = [
     "artifact2",
     "artifact3"
 ];
-document.querySelector(".playerInventory").querySelectorAll(".slot").forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
+(_b = (_a = document.querySelector(".playerInventory")) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".slot")) === null || _b === void 0 ? void 0 : _b.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
+(_c = document.querySelector(".playerInventory")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", e => removeContextMenu(e));
 function renderInventory() {
     state.invOpen = true;
     updatePlayerInventoryIndexes();
@@ -416,6 +442,7 @@ function renderInventory() {
             const _item = Object.assign({}, player[slot]);
             const img = document.createElement("img");
             const name = document.createElement("p");
+            img.addEventListener("click", e => clickItem(e, player[slot], img, "PLAYER_EQUIPMENT"));
             img.src = _item.img;
             name.textContent = _item.name;
             img.classList.add("slotItem");
@@ -449,19 +476,30 @@ function closeLeveling() {
     lvling.style.transform = "scale(0)";
 }
 function itemTT(item) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     var text = "";
     if (!item.grade)
         return;
-    text += `\t<f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
+    text += `\t<css>z-index: 5; position: relative;<css><f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
+    if (item.requiresStats) {
+        let cantEquip = false;
+        (_a = Object.entries(item.requiresStats)) === null || _a === void 0 ? void 0 : _a.forEach((dmg) => {
+            if (player.getStats()[dmg[0]] < dmg[1]) {
+                cantEquip = true;
+            }
+        });
+        if (cantEquip) {
+            text += `§<css>background: rgba(209, 44, 77, .25); padding: 2px; margin-top: 8px; z-index: 1; position: relative;<css><i>${icons.warning_icon}<i><c>red<c><f>19px<f>${lang["cant_equip"]}\n§`;
+        }
+    }
     text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
     if (item.damages) {
         let total = 0;
         let totalCompare = 0;
         let txt = "";
-        if ((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.id)
+        if ((_b = player.weapon) === null || _b === void 0 ? void 0 : _b.id)
             Object.entries(player.weapon.damages).forEach((dmg) => { totalCompare += dmg[1]; });
-        (_b = Object.entries(item.damages)) === null || _b === void 0 ? void 0 : _b.forEach((dmg) => {
+        (_c = Object.entries(item.damages)) === null || _c === void 0 ? void 0 : _c.forEach((dmg) => {
             var _a, _b;
             total += dmg[1];
             if (dmg[1] !== 0) {
@@ -479,7 +517,7 @@ function itemTT(item) {
         text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
     }
     if (item.armor) {
-        if (((_c = Object.keys(item.armor)) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+        if (((_d = Object.keys(item.armor)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
             Object.entries(item.armor).forEach((armor) => {
                 var _a, _b;
                 let value = armor[1];
@@ -499,13 +537,13 @@ function itemTT(item) {
         }
     }
     if (item.resistances) {
-        if (((_d = Object.keys(item.resistances)) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+        if (((_e = Object.keys(item.resistances)) === null || _e === void 0 ? void 0 : _e.length) > 0) {
             let total = 0;
             let totalCompare = 0;
             let txt = "";
-            if ((_e = player[item.slot]) === null || _e === void 0 ? void 0 : _e.resistances)
+            if ((_f = player[item.slot]) === null || _f === void 0 ? void 0 : _f.resistances)
                 Object.entries(player[item.slot].resistances).forEach((dmg) => { totalCompare += dmg[1]; });
-            (_f = Object.entries(item.resistances)) === null || _f === void 0 ? void 0 : _f.forEach((dmg) => {
+            (_g = Object.entries(item.resistances)) === null || _g === void 0 ? void 0 : _g.forEach((dmg) => {
                 var _a, _b, _c, _d;
                 total += dmg[1];
                 if (dmg[1] !== 0) {
@@ -527,20 +565,20 @@ function itemTT(item) {
     }
     if (item.requiresStats) {
         let txt = "";
-        (_g = Object.entries(item.requiresStats)) === null || _g === void 0 ? void 0 : _g.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+        (_h = Object.entries(item.requiresStats)) === null || _h === void 0 ? void 0 : _h.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
     }
-    if (((_h = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _h === void 0 ? void 0 : _h.length) > 0) {
+    if (((_j = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _j === void 0 ? void 0 : _j.length) > 0) {
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
         Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0)
             text += effectSyntax(eff, true, ""); });
     }
-    if (((_j = Object.values(item.commands)) === null || _j === void 0 ? void 0 : _j.length) > 0) {
+    if (((_k = Object.values(item.commands)) === null || _k === void 0 ? void 0 : _k.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
-    if (item.range > 1)
-        text += `<f>18px<f><c>lime<c>${lang["weapon_has_great_reach"]}\n`;
+    if (item.range > 0)
+        text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;
     if (item.healValue)
         text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
     if (item.manaValue)
@@ -565,12 +603,12 @@ function itemTT(item) {
         text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
         let sets = player.getArtifactSetBonuses(true);
         text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
-        Object.entries((_k = artifactSets[item.artifactSet]) === null || _k === void 0 ? void 0 : _k.twoPieceEffect).forEach((effect) => {
+        Object.entries((_l = artifactSets[item.artifactSet]) === null || _l === void 0 ? void 0 : _l.twoPieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });
         text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
-        Object.entries((_l = artifactSets[item.artifactSet]) === null || _l === void 0 ? void 0 : _l.threePieceEffect).forEach((effect) => {
+        Object.entries((_m = artifactSets[item.artifactSet]) === null || _m === void 0 ? void 0 : _m.threePieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });
@@ -578,7 +616,7 @@ function itemTT(item) {
     return text;
 }
 var sortingReverse = false;
-function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
+function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, resetItem = true) {
     const container = document.createElement("div");
     const itemsList = document.createElement("div");
     const itemsListBar = document.createElement("div");
@@ -608,17 +646,20 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsList.classList.add("itemList");
     itemsListBar.classList.add("itemListTop");
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
+    itemsList.addEventListener("click", e => removeContextMenu(e));
     const items = [...inventory];
     items.forEach((item) => {
         let itm = Object.assign({}, item);
-        if (itm.type == "weapon")
-            itm = new Weapon(Object.assign({}, itm));
-        else if (itm.type == "armor")
-            itm = new Armor(Object.assign({}, itm));
-        else if (itm.type == "artifact")
-            itm = new Artifact(Object.assign({}, itm));
-        else if (itm.type == "consumable")
-            itm = new Consumable(Object.assign({}, itm));
+        if (resetItem) {
+            if (itm.type == "weapon")
+                itm = new Weapon(Object.assign({}, itm));
+            else if (itm.type == "armor")
+                itm = new Armor(Object.assign({}, itm));
+            else if (itm.type == "artifact")
+                itm = new Artifact(Object.assign({}, itm));
+            else if (itm.type == "consumable")
+                itm = new Consumable(Object.assign({}, itm));
+        }
         const itemObject = document.createElement("div");
         const itemImage = document.createElement("img");
         const itemName = document.createElement("p");
@@ -652,13 +693,24 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
         itemWorth.textContent = price;
         if (context == "PLAYER_INVENTORY") {
             itemObject.addEventListener("mousedown", e => player.equip(e, itm));
-            itemObject.addEventListener("dblclick", e => player.drop(itm));
+            itemObject.addEventListener("mouseup", e => fastDrop(e, itm));
+            itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PLAYER_INVENTORY"));
         }
         if (context == "PICK_LOOT") {
             itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
+            itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_LOOT"));
         }
         if (context == "PICK_TREASURE") {
             itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
+            itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_TREASURE", chest));
+        }
+        if (context == "MERCHANT_SELLING") {
+            itemObject.addEventListener("mousedown", e => buyItem(e, itm));
+            itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "MERCHANT_SELLING", chest));
+        }
+        if (context == "PLAYER_SELLING") {
+            itemObject.addEventListener("mousedown", e => sellItem(e, itm));
+            itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PLAYER_SELLING", chest));
         }
         tooltip(itemObject, itemTT(itm));
         itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
@@ -671,6 +723,66 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null) {
     itemsList.scrollBy(invScroll, invScroll);
     return container;
 }
+function buyItem(e, itm) {
+    if (e.button !== 2)
+        return;
+    addItemToBuying(itm);
+}
+function sellItem(e, itm) {
+    if (e.button !== 2)
+        return;
+    addItemToSelling(itm);
+}
+function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest = null) {
+    if (item.id == "A0_error")
+        return;
+    contextMenu.textContent = "";
+    try {
+        document.querySelector(".itemSelected").classList.remove("itemSelected");
+    }
+    catch (_a) { }
+    if (Event.shiftKey)
+        return;
+    if (context != "PLAYER_EQUIPMENT")
+        itemObject.classList.add("itemSelected");
+    contextMenu.style.left = `${Event.x}px`;
+    contextMenu.style.top = `${Event.y}px`;
+    if (context == "PLAYER_INVENTORY") {
+        if (item.type != "consumable")
+            contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
+        contextMenuButton(lang["drop"], () => player.drop(item, true));
+    }
+    else if (context == "PICK_LOOT") {
+        contextMenuButton(lang["pick_up"], () => grabLoot(Event, item, item.dataIndex, true));
+    }
+    else if (context == "PICK_TREASURE") {
+        contextMenuButton(lang["pick_up"], () => grabTreasure(Event, item, chest, item.dataIndex, true));
+    }
+    else if (context == "PLAYER_EQUIPMENT") {
+        contextMenuButton(lang["unequip"], () => player.unequip(Event, item.slot, -1, false, true));
+    }
+    else if (context == "MERCHANT_SELLING") {
+        contextMenuButton(lang["buy_item"], () => { addItemToBuying(item); });
+    }
+    else if (context == "PLAYER_SELLING") {
+        contextMenuButton(lang["sell_item"], () => { addItemToSelling(item); });
+    }
+}
+function fastDrop(Event, itm) {
+    if (Event.shiftKey) {
+        player.drop(itm);
+    }
+}
+function removeContextMenu(Event) {
+    let target = Event.target;
+    if (target.className.includes("itemList") || target.className.includes("playerInventory")) {
+        try {
+            document.querySelector(".itemSelected").classList.remove("itemSelected");
+        }
+        catch (_a) { }
+        contextMenu.textContent = "";
+    }
+}
 const artifactSets = {
     defender: {
         id: "defender",
@@ -678,8 +790,7 @@ const artifactSets = {
             hpMaxP: 10
         },
         threePieceEffect: {
-            hpMaxV: 10,
-            resistAllV: 3
+            resistAllV: 10
         }
     },
     scholar: {
@@ -689,13 +800,13 @@ const artifactSets = {
         },
         threePieceEffect: {
             intV: 5,
-            magicDamageP: 12
+            spellDamageP: 10
         }
     },
     warrior: {
         id: "warrior",
         twoPieceEffect: {
-            attack_damage_multiplierP: 10
+            meleeDamageP: 10
         },
         threePieceEffect: {
             hitChanceV: 10,

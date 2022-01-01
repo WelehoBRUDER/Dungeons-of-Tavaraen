@@ -1,149 +1,60 @@
 "use strict";
-const equipmentSlots = ["chest", "legs", "gloves", "boots", "helmet", "weapon", "offhand", "artifact1", "artifact2", "artifact3"];
-const random = (max, min = -100) => (Math.random() * (max - min) + min);
-const icons = {
-    attack_damage_multiplier_icon: "resources/icons/atk.png",
-    fighter_symbol_icon: "resources/icons/fighter_symbol_icon.png",
-    melee: "resources/icons/melee_icon.png",
-    ranged: "resources/icons/ranged_icon.png",
-    resistance: "resources/icons/resistance_icon.png",
-    physical_armor: "resources/icons/physical_armor.png",
-    magical_armor: "resources/icons/magical_armor.png",
-    elemental_armor: "resources/icons/elemental_armor.png",
-    rp: "resources/icons/resistance_penetration.png",
-    fireResist_icon: "resources/icons/fire_resistance_icon.png",
-    iceResist_icon: "resources/icons/ice_resist_icon.png",
-    rp_icon: "resources/icons/resistance_penetration_icon.png",
-    resistance_penetration_icon: "resources/icons/resistance_penetration_icon.png",
-    gold_icon: "resources/icons/gold_icon.png",
-    fire: "resources/icons/fire_icon.png",
-    fire_icon: "resources/icons/fire_icon.png",
-    fireDamage_icon: "resources/icons/fire_icon.png",
-    dark: "resources/icons/dark.png",
-    dark_icon: "resources/icons/dark_icon.png",
-    darkResist_icon: "resources/icons/resistance_dark_icon.png",
-    divine: "resources/icons/divine.png",
-    divine_icon: "resources/icons/divine_icon.png",
-    divineResist_icon: "resources/icons/resistance_divine_icon.png",
-    lightning: "resources/icons/lightning.png",
-    lightning_icon: "resources/icons/lightning_icon.png",
-    lightningResist_icon: "resources/icons/resistance_shock_icon.png",
-    stun: "resources/icons/dazed.png",
-    stun_icon: "resources/icons/dazed_icon.png",
-    curse: "resources/icons/curse.png",
-    curse_icon: "resources/icons/curse.png",
-    bleed: "resources/icons/bleed.png",
-    bleed_icon: "resources/icons/bleed.png",
-    poison: "resources/icons/poison.png",
-    venom: "resources/icons/venom_icon.png",
-    rage: "resources/icons/rage_icon.png",
-    berserk: "resources/icons/berserk_icon.png",
-    thumbs_up_white_skin: "resources/icons/thumbs_up_white_skin.png",
-    sneaky_stabbing: "resources/icons/hand_gripping_knife_icon.png",
-    heightened_senses: "resources/icons/eye_green.png",
-    smoke_bomb_effect: "resources/icons/smoke_bomb_effect.png",
-    battle_fury: "resources/icons/fighters_fury_icon.png",
-    dazed: "resources/icons/dazed_icon.png",
-    hiddenIcon: "resources/icons/hiddenIcon.png",
-    disoriented: "resources/icons/disoriented_icon.png",
-    dueled: "resources/icons/dueled_icon.png",
-    ward: "resources/icons/ward_icon.png",
-    ward_icon: "resources/icons/ward_icon.png",
-    range: "resources/icons/use_range.png",
-    range_icon: "resources/icons/use_range_icon.png",
-    use_range_icon: "resources/icons/use_range_icon.png",
-    aoe_size: "resources/icons/splash_area.png",
-    aoe_size_icon: "resources/icons/splash_area_icon.png",
-    damage: "resources/icons/damage.png",
-    damage_icon: "resources/icons/damage_icon.png",
-    damage_multiplier_icon: "resources/icons/damage_icon.png",
-    heal: "resources/icons/healing.png",
-    heal_icon: "resources/icons/healing_icon.png",
-    base_heal_icon: "resources/icons/healing_icon.png",
-    cooldown: "resources/icons/cooldown.png",
-    cooldown_icon: "resources/icons/cooldown_icon.png",
-    last_icon: "resources/icons/cooldown_icon.png",
-    health: "resources/icons/health.png",
-    health_icon: "resources/icons/health_icon.png",
-    hpMax_icon: "resources/icons/health_icon.png",
-    mana: "resources/icons/mana.png",
-    mana_icon: "resources/icons/mana_icon.png",
-    mana_cost_icon: "resources/icons/mana_icon.png",
-    health_cost_icon: "resources/icons/health_cost.png",
-    mpMax_icon: "resources/icons/mana_icon.png",
-    silence: "resources/icons/silence.png",
-    silence_icon: "resources/icons/silence_icon.png",
-    dex: "resources/icons/dexterity.png",
-    dex_icon: "resources/icons/dexterity_icon.png",
-    str: "resources/icons/strength.png",
-    str_icon: "resources/icons/strength_icon.png",
-    int: "resources/icons/intelligence.png",
-    int_icon: "resources/icons/intelligence_icon.png",
-    vit: "resources/icons/vitality.png",
-    vit_icon: "resources/icons/vitality_icon.png",
-    cun: "resources/icons/cunning.png",
-    cun_icon: "resources/icons/cunning_icon.png",
-    crush: "resources/icons/crush.png",
-    crush_icon: "resources/icons/crush_icon.png",
-    crushResist_icon: "resources/icons/crush_resist_icon.png",
-    slash: "resources/icons/slash.png",
-    slash_icon: "resources/icons/slash_icon.png",
-    slashResist_icon: "resources/icons/slash_resist_icon.png",
-    pierce: "resources/icons/pierce.png",
-    pierce_icon: "resources/icons/pierce_icon.png",
-    pierceResist_icon: "resources/icons/pierce_resist_icon.png",
-    magic: "resources/icons/mana.png",
-    magic_icon: "resources/icons/mana_icon.png",
-    magicResist_icon: "resources/icons/resistance_magic_icon.png",
-    ice: "resources/icons/ice.png",
-    ice_icon: "resources/icons/ice_icon.png",
-    resistAll: "resources/icons/resistance_default.png",
-    resistAll_icon: "resources/icons/resistance_icon.png",
-    hitChance: "resources/icons/hit_chance.png",
-    hitChance_icon: "resources/icons/hit_chance_icon.png",
-    evasion: "resources/icons/evasion.png",
-    evasion_icon: "resources/icons/evasion_icon.png",
-    resistAllon: "resources/icons/concentration.png",
-    concentration_icon: "resources/icons/concentration_icon.png",
-    break_concentration: "resources/icons/break_concentration.png",
-    break_concentration_icon: "resources/icons/break_concentration_icon.png",
-    critChance: "resources/icons/critical_damage.png",
-    critDamage: "resources/icons/critical_damage.png",
-    critChance_icon: "resources/icons/critical_damage_icon.png",
-    critDamage_icon: "resources/icons/critical_damage_icon.png",
-    sight: "resources/icons/eye_open.png",
-    sight_icon: "resources/icons/sight_icon.png",
-    blight: "resources/icons/blighted.png",
-    blight_icon: "resoures/icons/blighted_icon.png",
-    burning: "resources/icons/flame_of_passion.png",
-    burning_icon: "resources/icons/flame_of_passion_icon.png",
-    chilled: "resources/icons/chilled.png",
-    chilled_icon: "resources/icons/chilled_icon.png",
-    slime_type_icon: "resources/icons/slime_type_icon.png",
-    skeleton_type_icon: "resources/icons/skull_icon.png",
-    barbarian_type_icon: "resources/icons/barbarian_type_icon.png",
-    troll_type_icon: "resources/icons/troll_type_icon.png",
-    undead_race_icon: "resources/icons/skull_icon.png",
-    regenHp_icon: "resources/icons/regen_icon.png",
-    regenMp_icon: "resources/icons/mana_regen.png",
-    poisonDefense: "resources/icons/poison.png",
-    poisonDefense_icon: "resources/icons/poison_icon.png",
-    burningDefense: "resources/icons/flame_of_passion.png",
-    burningDefense_icon: "resources/icons/flame_of_passion_icon.png",
-    stunDefense: "resources/icons/dazed.png",
-    stunDefense_icon: "resources/icons/dazed_icon.png",
-    curseDefense: "resources/icons/curse.png",
-    curseDefense_icon: "resources/icons/curse.png",
-    bleedDefense: "resources/icons/bleed.png",
-    bleedDefense_icon: "resources/icons/bleed.png",
-    exp_icon: "resources/icons/EXP.png",
-    expGain_icon: "resources/icons/EXP.png",
-    summon_level_icon: "resources/icons/portal.png",
-    summon_last_icon: "resources/icons/portal.png",
-    total_summon_limit_icon: "resources/icons/portal.png",
-    all_summons_damage_icon: "resources/icons/summon_damage.png",
-    all_summons_regenHp_icon: "resources/icons/summon_regen.png",
-};
+const staticTiles = [
+    {
+        name: "focus",
+        img: "resources/tiles/hovering.png",
+        spriteMap: { x: 0, y: 0 },
+        id: 0
+    },
+    {
+        name: "void",
+        img: "resources/tiles/void.png",
+        spriteMap: { x: 128, y: 0 },
+        id: 1
+    },
+    {
+        name: "fogOfWar",
+        img: "resources/tiles/fog_of_war_2.png",
+        spriteMap: { x: 256, y: 0 },
+        id: 2
+    },
+    {
+        name: "highlightGreen",
+        img: "resources/tiles/highlight.png",
+        spriteMap: { x: 384, y: 0 },
+        id: 3
+    },
+    {
+        name: "highlightRed",
+        img: "resources/tiles/highlight_red.png",
+        spriteMap: { x: 512, y: 0 },
+        id: 4
+    },
+    {
+        name: "highlightStripesGreen",
+        img: "resources/tiles/highlight2.png",
+        spriteMap: { x: 640, y: 0 },
+        id: 5
+    },
+    {
+        name: "highlightStripesRed",
+        img: "resources/tiles/highlight2_red.png",
+        spriteMap: { x: 768, y: 0 },
+        id: 6
+    },
+    {
+        name: "shrineInactive",
+        img: "resources/tiles/shrine.png",
+        spriteMap: { x: 896, y: 0 },
+        id: 7
+    },
+    {
+        name: "shrineActive",
+        img: "resources/tiles/shrine_lit.png",
+        spriteMap: { x: 1024, y: 0 },
+        id: 8
+    }
+];
 const tiles = [
     {
         name: "Water",
@@ -151,7 +62,8 @@ const tiles = [
         sprite: ".tile0",
         isLedge: true,
         isWall: false,
-        spriteMap: { x: 1152, y: 0 }
+        spriteMap: { x: 1152, y: 0 },
+        id: 0
     },
     {
         name: "Grass",
@@ -159,7 +71,8 @@ const tiles = [
         sprite: ".tile1",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 1280, y: 0 }
+        spriteMap: { x: 1280, y: 0 },
+        id: 1
     },
     {
         name: "Dirt",
@@ -167,7 +80,8 @@ const tiles = [
         sprite: ".tile2",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 1408, y: 0 }
+        spriteMap: { x: 1408, y: 0 },
+        id: 2
     },
     {
         name: "Pond",
@@ -175,7 +89,8 @@ const tiles = [
         sprite: ".tile3",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 1536, y: 0 }
+        spriteMap: { x: 1536, y: 0 },
+        id: 3
     },
     {
         name: "Gravel",
@@ -183,7 +98,8 @@ const tiles = [
         sprite: ".tile4",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 1664, y: 0 }
+        spriteMap: { x: 1664, y: 0 },
+        id: 4
     },
     {
         name: "Cobble",
@@ -191,7 +107,8 @@ const tiles = [
         sprite: ".tile5",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 1792, y: 0 }
+        spriteMap: { x: 1792, y: 0 },
+        id: 5
     },
     {
         name: "Dungeon Wall",
@@ -199,7 +116,8 @@ const tiles = [
         sprite: ".tile6",
         isLedge: false,
         isWall: true,
-        spriteMap: { x: 1920, y: 0 }
+        spriteMap: { x: 1920, y: 0 },
+        id: 6
     },
     {
         name: "Sand",
@@ -207,8 +125,9 @@ const tiles = [
         sprite: ".tile7",
         isLedge: false,
         isWall: false,
-        spriteMap: { x: 2048, y: 0 }
-    },
+        spriteMap: { x: 2048, y: 0 },
+        id: 7
+    }
 ];
 const clutters = [
     {
@@ -223,14 +142,16 @@ const clutters = [
         img: "resources/tiles/tree_1.png",
         sprite: ".clutter1",
         isWall: true,
-        spriteMap: { x: 0, y: 128 }
+        spriteMap: { x: 2176, y: 0 },
+        id: 1
     },
     {
         name: "Tree 2",
         img: "resources/tiles/tree_2.png",
         sprite: ".clutter2",
         isWall: true,
-        spriteMap: { x: 128, y: 128 }
-    },
+        spriteMap: { x: 2304, y: 0 },
+        id: 2
+    }
 ];
 //# sourceMappingURL=tiles.js.map

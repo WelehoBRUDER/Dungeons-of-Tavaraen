@@ -146,7 +146,9 @@ const state = {
   savesOpen: false as boolean,
   displayingTextHistory: false as boolean,
   rangedMode: false as boolean,
-  textWindowOpen: false as boolean
+  textWindowOpen: false as boolean,
+  dialogWindow: false as boolean,
+  storeOpen: false as boolean,
 };
 
 function handleEscape() {
@@ -182,6 +184,12 @@ function handleEscape() {
     closeGameMenu(false, false, false);
     state.menuOpen = false;
   }
+  else if(state.dialogWindow) {
+    exitDialog();
+  }
+  else if(state.storeOpen) {
+    cancelTransaction();
+  }
   else if (!state.isSelected) {
     openGameMenu();
     state.menuOpen = true;
@@ -204,9 +212,9 @@ setTimeout(() => {
   state.menuOpen = true;
   state.titleScreen = true;
   gotoMainMenu();
-  // @ts-expect-error
   renderMinimap(maps[currentMap]);
   createStaticMap();
+  modifyCanvas(true);
   tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -456,6 +464,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   saveBg.querySelector<HTMLDivElement>(".saveGame").onclick = () => createNewSaveGame();
   saveBg.querySelector<HTMLDivElement>(".saveFile").onclick = () => saveToFile(saveNameInput.value);
   saveBg.querySelector<HTMLDivElement>(".loadFile").onclick = () => loadFromfile();
+  saveBg.querySelector<HTMLDivElement>(".usedBarFill").style.width = `${(calcLocalStorageUsedSpace() / calcLocalStorageMaxSpace()) * 100}%`;
+  saveBg.querySelector<HTMLParagraphElement>(".usedText").textContent = `${lang["storage_used"]}: ${(calcLocalStorageUsedSpace() / 1000).toFixed(2)}/${(calcLocalStorageMaxSpace() / 1000).toFixed(2)}mb`;
   savesArea.textContent = "";
   if (animate) {
     saveBg.style.display = "block";
@@ -469,6 +479,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   saveNameInput.value = player.name + "_save";
   saves = saves.sort((x1, x2) => x2.time - x1.time);
   resetIds();
+  await sleep(5);
   let renderedSaves = 1;
   for (let save of saves) {
     if (renderedSaves < 15) await sleep(100);
@@ -506,8 +517,9 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       saveData.player = trimPlayerObjectForSaveFile(player);
       saveData.fallenEnemies = [...fallenEnemies];
       saveData.itemData = [...itemData];
-      saveData.currentMap = currentMap;
+      saveData.currentMap = maps[currentMap].id;
       saveData.lootedChests = [...lootedChests];
+      saveData.version = GAME_VERSION;
       let sortTime = +(new Date());
       let saveTime = new Date();
       let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -527,7 +539,9 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       fallenEnemies = [...save.save.fallenEnemies];
       itemData = [...save.save.itemData];
       if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
-      currentMap = save.save.currentMap;
+      let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
+      if(foundMap == -1) foundMap = save.save.currentMap;
+      currentMap = foundMap;
       tree = player.classes.main.perkTree;
       turnOver = true;
       enemiesHadTurn = 0;
@@ -548,15 +562,44 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
       gotoSaveMenu(false, false);
     });
-    saveName.textContent = save.text;
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
     renderedPlayer.updatePerks(true, true)
     renderedPlayer.updateAbilities(true);
+    let saveTime = new Date(save.time);
+    let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+    let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
+    let totalText = ``;
+    let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
+    let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
+    if(foundMap == -1) foundMap = save.save.currentMap;
+    totalText += save.text.split("||")[0];
+    totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
+    totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
+    totalText += `§\n${lang["map"]}: §<c>gold<c>${maps?.[foundMap]?.name}§ `;
+    totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
+    let verColor: string = "lime";
+    let addVersionWarning: boolean = false;
+    if((+save.save.version + .1 < +GAME_VERSION) || !save.save.version) {
+      verColor = "orange";
+      addVersionWarning = true;
+    } 
+    
+    let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
+    if(versionText.includes('undefined')) versionText = lang["old_save"];
+    totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
+    if(addVersionWarning) {
+      totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
+    }
+    saveName.append(textSyntax(totalText));
+    saveName.style.display = "flex";
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
     await sleep(5);
     buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
     saveContainer.append(saveCanvas, saveName, buttonsContainer);
     savesArea.append(saveContainer);
+    if(addVersionWarning) {
+      tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
+    }
   }
 }
 
@@ -616,16 +659,15 @@ function createNewSaveGame() {
   const saveNameInput = saveBg.querySelector<HTMLInputElement>(".saveName");
   let saveName = saveNameInput.value || player.name;
   let sortTime = +(new Date());
-  let saveTime = new Date();
   let gameSave = {} as any;
   gameSave.player = trimPlayerObjectForSaveFile(player);
   gameSave.fallenEnemies = [...fallenEnemies];
   gameSave.itemData = [...itemData];
-  gameSave.currentMap = currentMap;
+  gameSave.currentMap = maps[currentMap].id;
   gameSave.lootedChests = [...lootedChests];
-  let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+  gameSave.version = GAME_VERSION;
   let key = generateKey(7);
-  saves.push({ text: `${saveName} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`, save: gameSave, id: saves.length, time: sortTime, key: key });
+  saves.push({ text: `${saveName} ||`, save: gameSave, id: saves.length, time: sortTime, key: key });
   findIDs();
   localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
   localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
@@ -667,7 +709,11 @@ function saveToFile(input: string) {
     },
     {
       key: "currentMap",
-      data: currentMap
+      data: maps[currentMap].id
+    },
+    {
+      key: "version",
+      data: GAME_VERSION
     }
   ];
   let minutes: any = new Date().getMinutes();
@@ -719,10 +765,10 @@ function GetKey(key: string, table: any) {
 
 function purgeDeadEnemies() {
   fallenEnemies.forEach(deadFoe => {
-    maps.forEach((mp, index) => {
+    maps.forEach((mp: any, index: number) => {
       if (deadFoe.spawnMap == index) {
         let purgeList: Array<number> = [];
-        mp.enemies.forEach((en, _index) => {
+        mp.enemies.forEach((en: any, _index: number) => {
           if (en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
             purgeList.push(_index);
           }
@@ -737,7 +783,7 @@ function purgeDeadEnemies() {
 
 function reviveAllDeadEnemies() {
   fallenEnemies.forEach(deadFoe => {
-    maps.forEach((mp, index) => {
+    maps.forEach((mp: any, index: number) => {
       if (deadFoe.spawnMap == index) {
         let foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
         foe.restore();
@@ -753,7 +799,9 @@ function LoadSlot(data: any) {
   itemData = GetKey("itemData", data).data;
   fallenEnemies = GetKey("enemies", data).data;
   lootedChests = GetKey("lootedChests", data).data;
-  currentMap = GetKey("currentMap", data).data;
+  let foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
+  if(foundMap == -1) foundMap = GetKey("currentMap", data).data;
+  currentMap = foundMap;
   tree = player.classes.main.perkTree;
   turnOver = true;
   enemiesHadTurn = 0;
@@ -774,7 +822,6 @@ function openTextWindow(txt: string) {
   const textWindow = document.querySelector<HTMLDivElement>(".textWindow");
   textWindow.style.transform = "scale(1)";
   textWindow.textContent = "";
-  // @ts-ignore
   textWindow.append(textSyntax(txt));
 }
 
@@ -784,3 +831,48 @@ function closeTextWindow() {
   textWindow.style.transform = "scale(0)";
   textWindow.textContent = "";
 }
+
+
+// This function was provided by courtesy of kassu11
+// thanks
+function calcLocalStorageMaxSpace() {
+  try {
+      for(let tuhat = 1000; tuhat < 100005; tuhat += 1000) localStorage.tuhat = "a".repeat(1024 * tuhat);
+  } catch {}
+  try {
+      for(let sata = 100; sata < 1005; sata += 100) localStorage.sata = "a".repeat(1024 * sata);
+  } catch {}
+  try {
+      for(let kymmenen = 10; kymmenen < 105; kymmenen += 10) localStorage.kymppi = "a".repeat(1024 * kymmenen);
+  } catch {}
+  try {
+      for(let single = 1; single < 15; single++) localStorage.single = "a".repeat(1024 * single);
+  } catch {}
+  try {
+      for(let half = 20; half > 0; half--) localStorage.half = "a".repeat(Math.ceil(1024 / half));
+  } catch {}
+  try {
+      for(let pieni = 1; pieni < 512; pieni++) localStorage.pieni = "a".repeat(pieni);
+  } catch {}
+
+  const endSpace = calcLocalStorageUsedSpace();
+  localStorage.removeItem("tuhat");
+  localStorage.removeItem("sata");
+  localStorage.removeItem("kymppi");
+  localStorage.removeItem("single");
+  localStorage.removeItem("half");
+  localStorage.removeItem("pieni");
+  return Math.round(endSpace);
+}
+
+function calcLocalStorageUsedSpace() {
+  let total = 0;
+  for(const key in localStorage) {
+      if(localStorage.hasOwnProperty(key)) {
+          const length = (localStorage[key].length + key.length) * 2;
+          total += length;
+      }
+  }
+  return parseInt((total / 1024).toFixed(2));
+}
+console.log(Math.round(calcLocalStorageMaxSpace()));

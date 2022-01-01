@@ -161,7 +161,7 @@ function buffOrHeal(character, ability) {
     }
 }
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     if (targetCords) {
         maps[currentMap].enemies.forEach((en) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
             target = en; });
@@ -173,13 +173,28 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     const hitChance = attacker.getHitchance().chance;
     const evasion = target.getHitchance().evasion;
     const evade = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
+    let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
     if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
             attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
     }
-    if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+    if (attacker.id == "player") {
+        if (parseInt((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.range) > 2) {
+            if ((_b = player.allModifiers) === null || _b === void 0 ? void 0 : _b.rangedDamageP)
+                attackTypeDamageModifier += (_c = player.allModifiers) === null || _c === void 0 ? void 0 : _c.rangedDamageP;
+        }
+        else if (ability.mana_cost > 0) {
+            if ((_d = player.allModifiers) === null || _d === void 0 ? void 0 : _d.spellDamageP)
+                attackTypeDamageModifier += (_e = player.allModifiers) === null || _e === void 0 ? void 0 : _e.spellDamageP;
+        }
+        else {
+            if ((_f = player.allModifiers) === null || _f === void 0 ? void 0 : _f.meleeDamageP)
+                attackTypeDamageModifier += (_g = player.allModifiers) === null || _g === void 0 ? void 0 : _g.meleeDamageP;
+        }
+    }
+    if (((_h = ability.statusesEnemy) === null || _h === void 0 ? void 0 : _h.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
             const _Effect = new statEffect(Object.assign({}, statusEffects[status]), ability.statusModifiers);
             const resist = target.getStatusResists()[_Effect.type];
@@ -202,7 +217,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             }
         });
     }
-    if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+    if (((_j = ability.statusesUser) === null || _j === void 0 ? void 0 : _j.length) > 0) {
         ability.statusesUser.forEach((status) => {
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
                 // @ts-ignore
@@ -232,7 +247,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     if (target.isFoe) {
         let dmg = 0;
         if (!ability.damages) {
-            let _damages = (_c = attacker.weapon) === null || _c === void 0 ? void 0 : _c.damages;
+            let _damages = (_k = attacker.weapon) === null || _k === void 0 ? void 0 : _k.damages;
             if (!_damages && attacker.id == "player")
                 _damages = attacker.fistDmg();
             else if (!_damages)
@@ -255,6 +270,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
                 let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
             });
         }
@@ -274,6 +290,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
                 let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
             });
         }
@@ -306,7 +323,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
         if (isAoe) {
-            let actionText = (_d = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _d !== void 0 ? _d : ability.action_desc_pl;
+            let actionText = (_l = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _l !== void 0 ? _l : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
@@ -318,7 +335,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 desc += "_pl";
                 ally = false;
             }
-            let actionText = (_e = lang[ability.id + desc]) !== null && _e !== void 0 ? _e : ability.action_desc_pl;
+            let actionText = (_m = lang[ability.id + desc]) !== null && _m !== void 0 ? _m : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
@@ -402,7 +419,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
-        let actionText = (_f = lang[ability.id + "_action_desc"]) !== null && _f !== void 0 ? _f : "[TEXT NOT FOUND]";
+        let actionText = (_o = lang[ability.id + "_action_desc"]) !== null && _o !== void 0 ? _o : "[TEXT NOT FOUND]";
         let targetName = lang[target.id + "_name"];
         if (!targetName)
             targetName = player.name;
@@ -436,6 +453,10 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
         floatingText.textContent = text;
         floatingText.style.fontSize = `${fontSize}px`;
         floatingText.style.color = color;
+        floatingText.style.background = "rgba(50, 50, 50, 0.25)";
+        floatingText.style.padding = "2px";
+        floatingText.style.borderRadius = "5px";
+        floatingText.style.textShadow = `0 0 12px ${color}`;
         floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (random(2.5, 0.5))}px`;
         floatingText.style.top = `${y + spriteSize / (random(4, 1))}px`;
         floatingText.classList.add("floatingText");

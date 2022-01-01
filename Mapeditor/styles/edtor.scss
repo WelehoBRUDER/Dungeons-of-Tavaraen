@@ -15,8 +15,8 @@ body {
   overflow: hidden;
 
   > canvas {
-    --pituus: calc((100vw - 600px - 60px) * .95);
-    --korkeus: calc((100vw - 600px - 60px) * .64);
+    --pituus: calc((100vw - 600px - 60px) * 0.95);
+    --korkeus: calc((100vw - 600px - 60px) * 0.64);
     width: var(--pituus);
     height: var(--korkeus);
     user-select: none;
@@ -27,7 +27,6 @@ body {
     }
   }
 }
-
 
 #tileProperties {
   color: white;
@@ -44,7 +43,6 @@ body {
   }
 }
 
-
 .leftContainer {
   position: absolute;
   left: 0px;
@@ -60,7 +58,7 @@ body {
     position: relative;
     left: 35px;
     margin-top: 35px;
-  
+
     > button {
       transition: 0.1s;
       border: none;
@@ -73,20 +71,31 @@ body {
       box-shadow: inset 0px 0px 8px 6px rgba(30, 30, 30, 0.5), -4px 4px 6px 4px rgb(0, 0, 0);
       text-shadow: 0px 0px 4px black;
     }
-  
+
     > button:hover {
-      filter: brightness(1.25);
+      filter: brightness(1.15);
     }
   }
-  #printMap {background: rgb(153, 15, 15)}
-  
-  #importMap, 
-  #newMap {background: rgb(165, 199, 14)}
-  
-  #teleport, 
-  #tilesMenu, 
-  #cluttersMenu, 
-  #enemiesMenu {background: rgb(156, 56, 156)}
+  #printMap {
+    background: rgb(153, 15, 15);
+  }
+
+  #importMap,
+  #newMap {
+    background: rgb(165, 199, 14);
+  }
+
+  #saveMap,
+  #loadMap {
+    background: rgb(0, 182, 0);
+  }
+
+  #teleport,
+  #tilesMenu,
+  #cluttersMenu,
+  #enemiesMenu {
+    background: rgb(156, 56, 156);
+  }
 
   .gg-trash {
     left: 190px;
@@ -106,23 +115,24 @@ body {
     margin-top: -13px;
     top: -23px;
     color: white;
-  
-    &::before, &::after {
+
+    &::before,
+    &::after {
       content: "";
       display: block;
       box-sizing: border-box;
-      position: absolute
+      position: absolute;
     }
-  
+
     &::after {
       background: currentColor;
       border-radius: 3px;
       width: 16px;
       height: 2px;
       top: -4px;
-      left: -5px
+      left: -5px;
     }
-  
+
     &::before {
       width: 10px;
       height: 4px;
@@ -131,9 +141,9 @@ body {
       border-top-left-radius: 2px;
       border-top-right-radius: 2px;
       top: -7px;
-      left: -2px
+      left: -2px;
     }
-  
+
     &:hover {
       color: black;
       filter: drop-shadow(0px 0px 2px white);
@@ -148,13 +158,15 @@ body {
     width: fit-content;
     height: fit-content;
     user-select: none;
-    max-height: 100%;
+    max-height: 45%;
+    overflow: hidden;
     overflow-y: auto;
     word-wrap: normal;
     padding: 2px;
-    box-shadow: inset 0px 0px 0px 2px white;
+    box-shadow: inset 0px 0px 0px 2px rgb(68, 68, 68);
     display: none;
     margin-top: 15px;
+    border: none;
   }
 
   table {
@@ -162,6 +174,7 @@ body {
   }
 
   tr {
+    margin: 0;
     font-size: 16px;
     font-family: helvetica;
     font-weight: 600;
@@ -195,20 +208,137 @@ body {
   }
 }
 
+.createNewMap {
+  background: rgb(30, 30, 30);
+  color: white;
+  display: grid;
+  width: 250px;
+  height: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 30px;
+
+  input, select {
+    background: black;
+    color: white;
+    border: none
+  }
+
+  .createButtons {
+    display: flex;
+    margin: 12px;
+    width: 100%;
+    position: relative;
+    
+
+    button {
+      background: rgb(24, 24, 24);
+      color: white;
+      font-size: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .createNew {
+      border: 4px solid lime;
+      left: 0px;
+    }
+
+    .cancelCreate {
+      border: 4px solid red;
+      left: 54px;
+    }
+
+    button:hover {
+      filter: brightness(1.2);
+    }
+  }
+}
+
+.importMapBox {
+  width: 500px;
+  height: 1100px;
+  background: rgb(39, 39, 39);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  .importContainer {
+    width: 100%;
+    height: 85%;
+    position: absolute;
+    left: 0px;
+    top: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    border: 8px solid grey;
+    box-sizing: border-box;
+
+    div {
+      position: relative;
+      width: 100%;
+      height: 15%;
+      left: 0;
+      top: 0;
+      margin: 4px;
+      cursor: pointer;
+      border: 6px solid black;
+      color: white;
+
+      canvas {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+      }
+
+      p {
+        position: relative;
+        left: 230px;
+      }
+    }
+
+    div:hover {
+      background: rgba(30, 120, 55, .33);
+    }
+  }
+
+  button {
+    position: absolute;
+    font-size: 60px;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgb(20, 20, 20);
+    border: 4px solid lime;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+  }
+}
+
 .enemyInfoContainer {
   position: absolute;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
-  top: 0px;
-  left: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+
 
   .enemyInfoBox {
     background: rgb(24, 24, 24);
-    padding: .5em;
+    padding: 0.5em;
     width: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
 
     .valintaPohja {
       display: flex;
@@ -225,7 +355,7 @@ body {
       flex-grow: 1;
       display: grid;
       place-items: center;
-      
+
       p {
         padding: 0px;
         margin: 0px;
@@ -233,7 +363,7 @@ body {
         color: #fff;
         font-family: helvetica;
         font-size: 15px;
-        line-height: .95;
+        line-height: 0.95;
         top: 1px;
         position: relative;
       }
@@ -257,7 +387,7 @@ body {
 
       button {
         flex-grow: 1;
-        padding: .2em;
+        padding: 0.2em;
         width: 100%;
         margin: 5px;
         font-size: 1.5em;
@@ -282,4 +412,24 @@ body {
   .sprite {
     width: 0;
   }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #444444;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(34, 34, 34);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(8, 8, 8);
 }

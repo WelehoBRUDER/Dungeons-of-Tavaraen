@@ -1,7 +1,7 @@
 const emptyModel = {
   id: "player",
   name: "Player",
-  cords: { x: 19, y: 72 },
+  cords: { x: 41, y: 169 },
   stats: {
     str: 1,
     dex: 1,
@@ -87,7 +87,7 @@ const emptyModel = {
   gold: 50,
   sp: 5,
   pp: 1,
-  respawnPoint: {cords: {x: 20, y: 72}},
+  respawnPoint: {cords: {x: 41, y: 169}},
   usedShrines: [],
   flags: {}
 } as playerChar;
@@ -98,6 +98,54 @@ const creationCtx = creationCanvas.getContext("2d");
 const hairs = [1, 6];
 const eyes = [1, 3];
 const faces = [1, 3];
+
+const classEquipments = {
+  fighter: {
+    weapon: new Weapon({...items.chippedBlade}),
+    chest: new Armor({...items.raggedShirt}),
+    helmet: new Armor({...items.leatherHelmet}),
+    gloves: {},
+    legs: new Armor({...items.raggedPants}),
+    boots: new Armor({...items.raggedBoots}),
+    offhand: new Armor({...items.woodenShield}),
+  },
+  barbarian: {
+    weapon: new Weapon({...items.chippedAxe}),
+    chest: new Armor({...items.leatherChest}),
+    helmet: {},
+    gloves: new Armor({...items.leatherBracers}),
+    legs: new Armor({...items.raggedPants}),
+    boots: new Armor({...items.raggedBoots}),
+    offhand: {},
+  },
+  sorcerer: {
+    weapon: new Weapon({...items.apprenticeWand}),
+    chest: new Armor({...items.raggedShirt}),
+    helmet: {},
+    gloves: new Armor({...items.raggedGloves}),
+    legs: new Armor({...items.raggedPants}),
+    boots: new Armor({...items.raggedBoots}),
+    offhand: {},
+  },
+  rogue: {
+    weapon: new Weapon({...items.dagger}),
+    chest: new Armor({...items.raggedShirt}),
+    helmet: new Armor({...items.raggedHood}),
+    gloves: new Armor({...items.raggedGloves}),
+    legs: new Armor({...items.raggedPants}),
+    boots: new Armor({...items.raggedBoots}),
+    offhand: new Armor({...items.parryingDagger}),
+  },
+  ranger: {
+    weapon: new Weapon({...items.huntingBow}),
+    chest: new Armor({...items.raggedShirt}),
+    helmet: new Armor({...items.woolHat}),
+    gloves: new Armor({...items.raggedGloves}),
+    legs: new Armor({...items.raggedPants}),
+    boots: new Armor({...items.raggedBoots}),
+    offhand: {},
+  }
+} as any;
 
 function characterCreation(withAnimations = true) {
   if (withAnimations) {
@@ -217,6 +265,11 @@ function changeRace(race: any) {
 
 function changeClass(_combatClass: any) {
   player.classes.main = new combatClass(_combatClass);
+  Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq: any) => {
+    let id = eq[0];
+    let val = eq[1];
+    player[id] = {...val};
+  })
   characterCreation(false);
 }
 
@@ -236,6 +289,7 @@ function raceTT(race: string) {
 
 function classTT(data: any) {
   let txt = `<c>white<c><f>24px<f>${lang[data.id + "_name"]}\n`;
+  txt += lang[data.id + "_desc"];
   // @ts-expect-error
   let entries: any = Object.entries(data.statBonuses).sort((a: number, b: number) => b[1] - a[1]);
   let sortedTotal: any = {};

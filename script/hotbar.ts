@@ -585,6 +585,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
 
 tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>Math.round(player.stats.mp)<v>§/§<v>player.getMpMax()<v>§");
 tooltip(document.querySelector(".playerHpBg"), "<i><v>icons.health_icon<v><i><f>20px<f>Health: <v>Math.round(player.stats.hp)<v>§/§<v>player.getHpMax()<v>§");
+tooltip(document.querySelector(".goldContainer"), "<i><v>icons.gold_icon<v><i><f>20px<f>Gold: §<v>player.gold<v>§");
 tooltip(document.querySelector(".xpBar"), "<f>20px<f>Experience: <v>player.level.xp<v>§/§<v>player.level.xpNeed<v>§");
 
 function updateUI() {
@@ -597,6 +598,7 @@ function updateUI() {
   hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
   hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
   mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
+  ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();
   generateHotbar();
   generateEffects();
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;

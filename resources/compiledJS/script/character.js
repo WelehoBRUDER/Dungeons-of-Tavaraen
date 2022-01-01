@@ -31,6 +31,9 @@ function getAllModifiersOnce(char, withConditions = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     let obj = {};
     obj["expGainP"] = 1;
+    obj["meleeDamageP"] = 1;
+    obj["rangedDamageP"] = 1;
+    obj["spellDamageP"] = 1;
     char.statModifiers.forEach((mod) => {
         let apply = true;
         if (mod.conditions && withConditions) {

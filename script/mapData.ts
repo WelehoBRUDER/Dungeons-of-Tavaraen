@@ -60,7 +60,7 @@ const lootPools = {
 let lootedChests: Array<any> = [];
 
 const chestTemplates = {
-  default: {
+  defaultChest: {
     id: "defaultChest",
     cords: {x: 0, y: 0},
     map: 0,
@@ -93,7 +93,7 @@ const chestTemplates = {
     itemsGenerate: [5, 6],
     sinceOpened: -1
   }
-}
+} as any;
 
 class treasureChest {
   [id: string]: string | any;
@@ -110,6 +110,7 @@ class treasureChest {
   lootChest?: Function;
   constructor(base: treasureChest) {
     this.id = base.id;
+    if(!this.id) throw new Error("NO ID");
     this.cords = {...base.cords};
     this.map = base.map ?? 0;
     this.sprite = base.sprite ?? "treasureChest1";
@@ -155,7 +156,7 @@ class treasureChest {
 
     this.lootChest = () => {
       if(this.gold > 0) {
-        player.gold += this.gold;
+        player.addGold(this.gold);
         spawnFloatingText(this.cords, `${this.gold}G`, "gold");
         this.gold = 0;
       }
@@ -170,6 +171,7 @@ class treasureChest {
       }
       else {
         lootedChests.push({cords: {...this.cords}, sinceOpened: 0, map: this.map});
+        showInteractPrompt();
         modifyCanvas();
         closeInventory();
       } 
@@ -192,9 +194,10 @@ function lootEnemy(enemy: Enemy) {
       let amount = random(obj.amount[1], obj.amount[0]);
       amount *= 1 + (enemy.level / 4.9);
       amount = Math.floor(amount);
-      player.gold += amount;
+      player.addGold(amount);
       spawnFloatingText(enemy.cords, `${amount}G`, "gold");
     }
+    showInteractPrompt();
   });
 }
 
@@ -202,6 +205,7 @@ function createDroppedItem(spawnLoc: tileObject, item: any) {
   var xMod = random(0.7, 0.25);
   var yMod = random(0.7, 0.25);
   itemData.push({ cords: { x: spawnLoc.x, y: spawnLoc.y }, itm: item, mapCords: { xMod: xMod, yMod: yMod }, map: currentMap });
+  showInteractPrompt();
 }
 
 function pickLoot() {
@@ -223,14 +227,23 @@ function pickLoot() {
 }
 
 function readMessage() {
+  let foundMsg = false;
   maps[currentMap].messages.forEach((msg: any)=> {
-    if(player.cords.x == msg.cords.x && player.cords.y == msg.cords.y && !state.textWindowOpen) openTextWindow(lang[msg.id]);
-    else closeTextWindow();
+    if(player.cords.x == msg.cords.x && player.cords.y == msg.cords.y && !state.textWindowOpen) {
+      openTextWindow(lang[msg.id]);
+      foundMsg = true;
+    } 
   });
+  if(!foundMsg) {
+    closeTextWindow();
+  }
 }
 
-function grabLoot(e: MouseEvent, item: any, index: number) {
-  if(e.button !== 2) return;
+function grabLoot(e: MouseEvent, item: any, index: number, fromContextMenu: boolean = false) {
+  if(e.button !== 2 && !fromContextMenu) return;
+  if(fromContextMenu) {
+    contextMenu.textContent = "";
+  }
   itemData.splice(index, 1);
   player.addItem(item);
   pickLoot();
@@ -243,14 +256,19 @@ function fastGrabLoot(e: KeyboardEvent, totalArray: Array<any>) {
   itemData.splice(item.dataIndex, 1);
   player.addItem(item);
   pickLoot();
+  showInteractPrompt();
   modifyCanvas();
 }
 
-function grabTreasure(e: MouseEvent, item: any, chest: treasureChest, index: number) {
-  if(e.button !== 2) return;
+function grabTreasure(e: MouseEvent, item: any, chest: treasureChest, index: number, fromContextMenu: boolean = false) {
+  if(e.button !== 2 && !fromContextMenu) return;
+  if(fromContextMenu) {
+    contextMenu.textContent = "";
+  }
   chest.loot.splice(index, 1);
   player.addItem(item);
   chest.lootChest();
+  showInteractPrompt();
   modifyCanvas();
 }
 

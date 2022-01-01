@@ -19,6 +19,7 @@ interface enemy extends characterObject {
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;
   level?: number;
+  isUnique?: boolean;
   statsPerLevel: any;
   retreatPath?: any;
   retreatIndex?: number;
@@ -55,6 +56,7 @@ class Enemy extends Character {
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;
   level?: number;
+  isUnique?: boolean;
   statsPerLevel: any;
   retreatPath?: any;
   retreatIndex?: number;
@@ -90,7 +92,8 @@ class Enemy extends Character {
     this.shootsProjectile = defaultModel.shootsProjectile;
     this.hasBeenLeveled = base.hasBeenLeveled ?? false;
     this.level = base.level ?? 1;
-    this.xp = this.level > 1 ? Math.floor(defaultModel.xp + (defaultModel.xp * this.level / 2.9)) : defaultModel.xp;
+    this.isUnique = base.isUnique ?? false;
+    this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 15))) : defaultModel.xp;
     this.statsPerLevel = { ...defaultModel.statsPerLevel } ?? { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
     this.retreatPath = [];
     this.retreatIndex = 0;
@@ -276,11 +279,12 @@ class Enemy extends Character {
     this.kill = () => {
       player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
       this.spawnMap = currentMap;
-      const index: number = maps[currentMap].enemies.findIndex(e => e.cords == this.cords);
+      const index: number = maps[currentMap].enemies.findIndex((e: any) => e.cords == this.cords);
       displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
+      displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
       lootEnemy(this);
       this.chosenTarget = null;
-      fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap  });
+      fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique  });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;
       player.lvlUp();

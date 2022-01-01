@@ -57,15 +57,15 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 30,
-      crush: 30,
-      pierce: 30,
-      magic: 20,
-      dark: 10,
-      divine: 10,
-      fire: -20,
-      lightning: -20,
-      ice: -20
+      slash: 0,
+      crush: 0,
+      pierce: 0,
+      magic: 0,
+      dark: 0,
+      divine: 0,
+      fire: 0,
+      lightning: 0,
+      ice: 0
     },
     statusResistances: {
       poison: 0,
@@ -1012,12 +1012,12 @@ const enemies = {
     name: "Orc Raider",
     cords: { x: 0, y: 0 },
     stats: {
-      str: 18,
-      dex: 10,
+      str: 12,
+      dex: 8,
       int: 3,
-      vit: 5,
+      vit: 0,
       cun: 0,
-      hp: 80,
+      hp: 75,
       mp: 0,
       hpMax: 55,
       mpMax: 0
@@ -1041,11 +1041,11 @@ const enemies = {
       bleed: 0
     },
     damages: {
-      crush: 6,
+      crush: 5,
       pierce: 4
     },
     hit: {
-      chance: 60,
+      chance: 55,
       evasion: 25
     },
     threat: 30,
@@ -1099,7 +1099,7 @@ const enemies = {
         effects: {
           evasionV: 5,
           hitChanceV: -5,
-          regenHpP: 90
+          regenHpP: 75
         }
       }
     ],
@@ -1112,6 +1112,220 @@ const enemies = {
       {type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15},
       {type: "armor", amount: [1, 1], item: "ironShield", chance: 10},
       {type: "gold", amount: [15, 33]}
+    ]
+  },
+  maleOrcRaider: {
+    id: "maleOrcRaider",
+    name: "Orc Raider",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 8,
+      dex: 8,
+      int: 3,
+      vit: 4,
+      cun: 0,
+      hp: 95,
+      mp: 0,
+      hpMax: 75,
+      mpMax: 0
+    },
+    resistances: {
+      slash: 10,
+      crush: 10,
+      pierce: 10,
+      magic: 30,
+      dark: 30,
+      divine: 5,
+      fire: 5,
+      lightning: -5,
+      ice: 5
+    },
+    statusResistances: {
+      poison: 50,
+      burning: 0,
+      curse: 0,
+      stun: 30,
+      bleed: 0
+    },
+    damages: {
+      slash: 5,
+      pierce: 2
+    },
+    hit: {
+      chance: 55,
+      evasion: 25
+    },
+    threat: 30,
+    retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
+    alive: true,
+    xp: 75,
+    sprite: "maleOrcRaider",
+    type: "barbarian",
+    race: "orc",
+    img: "resources/tiles/enemies/male_orc_raider.png",
+    aggroRange: 11,
+    attackRange: 1,
+    canFly: false,
+    abilities: [
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.challenge, dummy),
+      new Ability(abilities.barbarian_rage, dummy),
+    ],
+    statModifiers: [
+      {
+        id: "enemy_regen_modifiers",
+        effects: {
+          regenHpP: -60,
+          regenMpP: -100 
+        }
+      },
+      {
+        id: "dont_spam_abilities",
+        effects: {
+          charge_cooldownV: 2,
+          charge_use_rangeV: -1,
+          rage_cooldownV: 5
+        }
+      },
+      {
+        id: "orc_frenzy",
+        conditions: {
+          hp_more_than: 50
+        },
+        effects: {
+          evasionV: -5,
+          hitChanceV: 5,
+          damageP: 8
+        }
+      },
+      {
+        id: "orc_resilience",
+        conditions: {
+          hp_less_than: 50
+        },
+        effects: {
+          evasionV: 5,
+          hitChanceV: -5,
+          regenHpP: 75
+        }
+      }
+    ],
+    statsPerLevel: {
+      str: 2,
+      vit: 2,
+      cun: 1
+    },
+    loot: [
+      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 15},
+      {type: "armor", amount: [1, 1], item: "silverShield", chance: 8},
+      {type: "gold", amount: [15, 33]}
+    ]
+  },
+  orcChieftess: {
+    id: "orcChieftess",
+    name: "Orc Chieftess",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 13,
+      dex: 8,
+      int: 3,
+      vit: 8,
+      cun: 6,
+      hp: 150,
+      mp: 0,
+      hpMax: 50,
+      mpMax: 0
+    },
+    resistances: {
+      slash: 5,
+      crush: 5,
+      pierce: 5,
+      magic: 45,
+      dark: 45,
+      divine: 5,
+      fire: 5,
+      lightning: 5,
+      ice: 5
+    },
+    statusResistances: {
+      poison: 55,
+      burning: 20,
+      curse: 0,
+      stun: 40,
+      bleed: 20
+    },
+    damages: {
+      pierce: 10,
+      divine: 5
+    },
+    hit: {
+      chance: 55,
+      evasion: 25
+    },
+    threat: 30,
+    retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
+    alive: true,
+    xp: 500,
+    sprite: "orcChieftess",
+    type: "barbarian",
+    race: "orc",
+    img: "resources/tiles/enemies/orc_chieftess.png",
+    aggroRange: 11,
+    attackRange: 1,
+    canFly: false,
+    abilities: [
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.challenge, dummy),
+      new Ability(abilities.charge, dummy),
+      new Ability(abilities.barbarian_rage, dummy),
+    ],
+    statModifiers: [
+      {
+        id: "enemy_regen_modifiers",
+        effects: {
+          regenHpP: -60,
+          regenMpP: -100 
+        }
+      },
+      {
+        id: "dont_spam_abilities",
+        effects: {
+          charge_cooldownV: 5,
+          charge_use_rangeV: -2,
+          rage_cooldownV: 5
+        }
+      },
+      {
+        id: "orc_frenzy",
+        conditions: {
+          hp_more_than: 50
+        },
+        effects: {
+          evasionV: -5,
+          hitChanceV: 5,
+          damageP: 8
+        }
+      },
+      {
+        id: "orc_resilience",
+        conditions: {
+          hp_less_than: 50
+        },
+        effects: {
+          evasionV: 5,
+          hitChanceV: -5,
+          regenHpP: 75
+        }
+      }
+    ],
+    statsPerLevel: {
+      str: 3,
+      vit: 3,
+      cun: 1
+    },
+    loot: [
+      {type: "weapon", amount: [1, 1], item: "galadorSpear", chance: 100},
+      {type: "gold", amount: [180, 260]}
     ]
   },
   wildTroll: {
@@ -1439,14 +1653,14 @@ const enemies = {
     name: "Enthralled Knight",
     cords: { x: 0, y: 0 },
     stats: {
-      str: 23,
+      str: 11,
       dex: 1,
       int: 1,
       vit: 0,
       cun: 0,
       hp: 100,
       mp: 0,
-      hpMax: 100,
+      hpMax: 30,
       mpMax: 0
     },
     resistances: {
@@ -1468,7 +1682,7 @@ const enemies = {
       bleed: 50
     },
     damages: {
-      slash: 11
+      slash: 9
     },
     hit: {
       chance: 75,
@@ -1526,14 +1740,14 @@ const enemies = {
     name: "Spectral Knight",
     cords: { x: 0, y: 0 },
     stats: {
-      str: 14,
+      str: 6,
       dex: 1,
       int: 1,
       vit: 0,
       cun: 5,
       hp: 60,
       mp: 0,
-      hpMax: 60,
+      hpMax: 25,
       mpMax: 0
     },
     resistances: {
@@ -1555,8 +1769,8 @@ const enemies = {
       bleed: 100
     },
     damages: {
-      slash: 6,
-      dark: 6
+      slash: 5,
+      dark: 5
     },
     hit: {
       chance: 60,
@@ -1615,14 +1829,14 @@ const enemies = {
     name: "Soul Wraith",
     cords: { x: 0, y: 0 },
     stats: {
-      str: 20,
+      str: 0,
       dex: 10,
       int: 20,
       vit: 0,
       cun: 10,
-      hp: 120,
+      hp: 125,
       mp: 60,
-      hpMax: 120,
+      hpMax: 75,
       mpMax: 60
     },
     resistances: {
@@ -1689,8 +1903,9 @@ const enemies = {
       str: 3,
       vit: 1
     },
-    loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20},
+    loot:[
+      {type: "weapon", amount: [1, 1], item: "pikeMore", chance: 80},
+      {type: "weapon", amount: [1, 1], item: "goldBow", chance: 80},
       {type: "gold", amount: [288, 541]}
     ]
   },

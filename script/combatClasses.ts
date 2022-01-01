@@ -3,8 +3,8 @@ const combatClasses = {
     id: "fighterClass",
     statBonuses: {
       vitV: 3,
-      strV: 2,
-      vitP: 10
+      meleeDamageP: 10,
+      rangedDamageP: -10
     },
     color: "#5e2813",
     perkTree: "fighter",
@@ -13,9 +13,9 @@ const combatClasses = {
   barbarianClass: {
     id: "barbarianClass",
     statBonuses: {
-      vitV: 2,
       strV: 3,
-      strP: 10
+      meleeDamageP: 10,
+      rangedDamageP: -10
     },
     color: "#5c2323",
     perkTree: "barbarian",
@@ -25,8 +25,9 @@ const combatClasses = {
     id: "sorcererClass",
     statBonuses: {
       intV: 3,
-      vitV: 2,
-      intP: 10
+      spellDamageP: 10,
+      meleeDamageP: -10,
+      hpMaxP: -25
     },
     color: "#183952",
     perkTree: "sorcerer",
@@ -36,8 +37,9 @@ const combatClasses = {
     id: "rogueClass",
     statBonuses: {
       cunV: 3,
-      dexV: 2,
-      cunP: 10
+      rangedDamageP: 5,
+      meleeDamageP: 5,
+      hpMaxP: -10
     },
     color: "#2b2b2b",
     perkTree: "rogue",
@@ -47,8 +49,9 @@ const combatClasses = {
     id: "rangerClass",
     statBonuses: {
       dexV: 3,
-      vitV: 2,
-      dexP: 10
+      rangedDamageP: 10,
+      meleeDamageP: -5,
+      hpMaxP: -20
     },
     color: "#19400a",
     perkTree: "ranger",

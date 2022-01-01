@@ -1,0 +1,85 @@
+<!-- THIS PROGRAM AUTOMATICALLY GENERATES A TILE ATLAS AND ASSIGNS POSITIONS TO ALL TILES -->
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TILE ATLAS GENERATOR</title>
+</head>
+
+<body>
+  <canvas class="canvas" width="3072" height="3072"></canvas>
+</body>
+
+</html>
+
+<script src="resources/compiledJS/arrays/tiles.js"></script>
+
+<script>
+  const canvas = document.querySelector(".canvas");
+  const ctx = canvas.getContext("2d");
+  const onRow = 24;
+  const _fixed = [...clutters];
+  const drawClut = [..._fixed.splice(1)];
+  const totalTiles = staticTiles.concat(tiles.concat(drawClut));
+  totalTiles.forEach((tile, index) => {
+    const img = new Image();
+    img.src = tile.img;
+    img.addEventListener("load", () => {
+      const x = (index % onRow) * 128;
+      const y = Math.floor(index / onRow) * 128;
+      ctx.drawImage(img, x, y, 128, 128);
+    })
+  });
+  // const _items = {...items};
+  const _staticTiles = [ ...staticTiles ];
+  const _tiles = [ ...tiles ];
+  const _clutters = [ ...clutters ];
+  // Object.entries(_items).forEach((itm, index) => { // Assigns position on the atlas
+  //   const item = itm[1];
+  //   const x = (index % onRow) * 128;
+  //   const y = Math.floor(index / onRow) * 128;
+  //   item.spriteMap = {x: x, y: y};
+  // });
+  for (let i = 0; i < totalTiles.length; i++) {
+    if (i < _staticTiles.length) {
+      const x = (i % onRow) * 128;
+      const y = Math.floor(i / onRow) * 128;
+      _staticTiles[i].spriteMap = {x: x, y: y};
+      _staticTiles[i].id = i;
+    }
+    else if (i < (_tiles.length + _staticTiles.length)) {
+      const x = (i % onRow) * 128;
+      const y = Math.floor(i / onRow) * 128;
+      _tiles[i - _staticTiles.length].spriteMap = {x: x, y: y};
+      _tiles[i - _staticTiles.length].id = i - _staticTiles.length;
+    }
+    else {
+      const x = (i % onRow) * 128;
+      const y = Math.floor(i / onRow) * 128;
+      _clutters[i - (_staticTiles.length + _tiles.length) + 1].spriteMap = {x: x, y: y};
+      _clutters[i - (_staticTiles.length + _tiles.length) + 1].id = i - (_staticTiles.length + _tiles.length) + 1;
+    }
+  }
+  let staticRaw = JSON.stringify(_staticTiles, (key, value) => { //  Prints finished JS to console for copy & paste
+    if (key == "spriteMap") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
+    return value;
+  }, 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
+  let tilesRaw = JSON.stringify(_tiles, (key, value) => { //  Prints finished JS to console for copy & paste
+    if (key == "spriteMap") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
+    return value;
+  }, 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
+  let cluttersRaw = JSON.stringify(_clutters, (key, value) => { //  Prints finished JS to console for copy & paste
+    if (key == "spriteMap") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
+    return value;
+  }, 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
+  staticRaw.replace(/\\"/g, "\uFFFF");
+  tilesRaw.replace(/\\"/g, "\uFFFF");
+  cluttersRaw.replace(/\\"/g, "\uFFFF");
+  let unquotedStatic = staticRaw.replace(/"([^"]+)":/g, '$1:').replace(/\uFFFF/g, '\\\"');
+  let unquotedTiles = tilesRaw.replace(/"([^"]+)":/g, '$1:').replace(/\uFFFF/g, '\\\"');
+  let unquotedClutters = cluttersRaw.replace(/"([^"]+)":/g, '$1:').replace(/\uFFFF/g, '\\\"');
+  console.log("const staticTiles = " + unquotedStatic + " as any;\n" + "const tiles = " + unquotedTiles + " as any;\n" + "const clutters = " + unquotedClutters + " as any;");
+</script>

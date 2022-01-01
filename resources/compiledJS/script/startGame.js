@@ -2,7 +2,7 @@
 const emptyModel = {
     id: "player",
     name: "Player",
-    cords: { x: 19, y: 72 },
+    cords: { x: 41, y: 169 },
     stats: {
         str: 1,
         dex: 1,
@@ -88,7 +88,7 @@ const emptyModel = {
     gold: 50,
     sp: 5,
     pp: 1,
-    respawnPoint: { cords: { x: 20, y: 72 } },
+    respawnPoint: { cords: { x: 41, y: 169 } },
     usedShrines: [],
     flags: {}
 };
@@ -98,6 +98,53 @@ const creationCtx = creationCanvas.getContext("2d");
 const hairs = [1, 6];
 const eyes = [1, 3];
 const faces = [1, 3];
+const classEquipments = {
+    fighter: {
+        weapon: new Weapon(Object.assign({}, items.chippedBlade)),
+        chest: new Armor(Object.assign({}, items.raggedShirt)),
+        helmet: new Armor(Object.assign({}, items.leatherHelmet)),
+        gloves: {},
+        legs: new Armor(Object.assign({}, items.raggedPants)),
+        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        offhand: new Armor(Object.assign({}, items.woodenShield)),
+    },
+    barbarian: {
+        weapon: new Weapon(Object.assign({}, items.chippedAxe)),
+        chest: new Armor(Object.assign({}, items.leatherChest)),
+        helmet: {},
+        gloves: new Armor(Object.assign({}, items.leatherBracers)),
+        legs: new Armor(Object.assign({}, items.raggedPants)),
+        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        offhand: {},
+    },
+    sorcerer: {
+        weapon: new Weapon(Object.assign({}, items.apprenticeWand)),
+        chest: new Armor(Object.assign({}, items.raggedShirt)),
+        helmet: {},
+        gloves: new Armor(Object.assign({}, items.raggedGloves)),
+        legs: new Armor(Object.assign({}, items.raggedPants)),
+        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        offhand: {},
+    },
+    rogue: {
+        weapon: new Weapon(Object.assign({}, items.dagger)),
+        chest: new Armor(Object.assign({}, items.raggedShirt)),
+        helmet: new Armor(Object.assign({}, items.raggedHood)),
+        gloves: new Armor(Object.assign({}, items.raggedGloves)),
+        legs: new Armor(Object.assign({}, items.raggedPants)),
+        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        offhand: new Armor(Object.assign({}, items.parryingDagger)),
+    },
+    ranger: {
+        weapon: new Weapon(Object.assign({}, items.huntingBow)),
+        chest: new Armor(Object.assign({}, items.raggedShirt)),
+        helmet: new Armor(Object.assign({}, items.woolHat)),
+        gloves: new Armor(Object.assign({}, items.raggedGloves)),
+        legs: new Armor(Object.assign({}, items.raggedPants)),
+        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        offhand: {},
+    }
+};
 function characterCreation(withAnimations = true) {
     var _a, _b, _c;
     if (withAnimations) {
@@ -216,6 +263,11 @@ function changeRace(race) {
 }
 function changeClass(_combatClass) {
     player.classes.main = new combatClass(_combatClass);
+    Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq) => {
+        let id = eq[0];
+        let val = eq[1];
+        player[id] = Object.assign({}, val);
+    });
     characterCreation(false);
 }
 function raceTT(race) {
@@ -233,6 +285,7 @@ function raceTT(race) {
 }
 function classTT(data) {
     let txt = `<c>white<c><f>24px<f>${lang[data.id + "_name"]}\n`;
+    txt += lang[data.id + "_desc"];
     // @ts-expect-error
     let entries = Object.entries(data.statBonuses).sort((a, b) => b[1] - a[1]);
     let sortedTotal = {};

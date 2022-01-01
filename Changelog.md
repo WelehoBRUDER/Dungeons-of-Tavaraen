@@ -1,3 +1,27 @@
+# 0.9.0 ~ 1.1.2022
+### This is an alpha release, most game mechanics are implemented!  
+## New Additions
+  * Added new enemies, including a new boss mob.
+  * Added new map
+  * Added merchants into the game
+    > Talk to an NPC and click "STORE" to see their wares.  
+    > Characters have more interactions, but they currently lead nowhere.   
+    > Quests will be implemented later, so stay tuned!  
+  * Added 1 new item
+  * Reworked map editor, next update will have new larger and better maps!
+
+## Fixes & Tweaks
+  * Fixed some rendering errors.
+  * Interact prompt no longer shows after looting chest completely.
+  * Held gold is now visible near health and mana.
+  * Weapons now display their actual attack range.
+  * Inventory now has a context menu and a new shortcut for dropping items. (Shift + m1)
+  * When hovering items and having lower stats than needed to equip, a warning is shown.
+  * Heavily rebalanced player stats:
+    >Classes and races give far less starting stats, but significant modifiers.  
+    Player now gains only +2 stat points per level, +5 every 10 levels.
+  * Classes now have unique starting equipment.
+
 # Indev Update 9 ~ 12.12.2021
 
 ## New Additions
