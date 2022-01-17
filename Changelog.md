@@ -1,3 +1,19 @@
+# 1.0.0 ~ 2.1.2022
+### This is a full alpha release, containing everything meant for the playtest!
+## New Additions
+  * Added 4 new barbarian perks and 2 new abilities
+  * Added 2 new ranger perks, changed 3 old ones and added 2 new abilities.
+
+## Fixes & Tweaks
+  * Improved save menu:
+    > Now remembers scroll and does not reset when deleting saves.
+    > No longer delays loading each save without reason.
+  * Increased xp needed for leveling.
+  * You can now multiclass after level 10, allowing a main and sub class.
+    > Main class is picked at game start, sub class gained later.
+  * Tweaked some abilities.
+  * Resistance penetration no longer lowers defense below 0.
+
 # 0.9.0 ~ 1.1.2022
 ### This is an alpha release, most game mechanics are implemented!  
 ## New Additions

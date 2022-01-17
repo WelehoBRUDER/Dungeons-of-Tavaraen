@@ -22,7 +22,9 @@ const less_is_better = {
     resistance_penetration: false,
     base_heal: false,
     damage_multiplier: false,
-    use_range: false
+    use_range: false,
+    health_cost: true,
+    health_cost_percentage: true
 };
 const possible_stat_modifiers = [
     "strV",
@@ -39,6 +41,9 @@ const possible_stat_modifiers = [
     "mpP",
     "resistAllV",
     "resistAllP",
+    "physicalDefP",
+    "magicalDefP",
+    "elementalDefP",
     "hitChanceV",
     "hitChanceP",
     "evasionV",
@@ -48,7 +53,9 @@ const possible_stat_modifiers = [
     "critChanceP",
     "critDamageP",
     "damageV",
-    "damageP"
+    "damageP",
+    "regenHpP",
+    "regenMpP",
 ];
 const possible_modifiers = [
     "last",
@@ -68,6 +75,8 @@ class Ability {
         let statusModifiers = {};
         (_a = baseAbility.statusesUser) === null || _a === void 0 ? void 0 : _a.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
         (_b = baseAbility.statusesEnemy) === null || _b === void 0 ? void 0 : _b.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
+        if (baseAbility.id == "finishing_blow")
+            console.log(values);
         if (baseAbility.summon_status)
             statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, baseAbility.summon_status));
         this.name = baseAbility.name;

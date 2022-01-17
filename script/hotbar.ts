@@ -113,7 +113,7 @@ document.addEventListener("keyup", e => {
       if (itm) useConsumable(itm);
       return;
     }
-    else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+    else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
   else if (number > -1 && !e.shiftKey) {
     let abi = player.abilities.find(a => a.equippedSlot == number - 1);
@@ -124,7 +124,7 @@ document.addEventListener("keyup", e => {
       if (itm) useConsumable(itm);
       return;
     }
-    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
 });
 
@@ -168,7 +168,7 @@ function generateHotbar() {
         }
         else {
           tooltip(abiDiv, abiTT(abi));
-          if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead) abiDiv.addEventListener("click", () => useAbi(abi));
+          if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead) abiDiv.addEventListener("click", () => useAbi(abi));
           else {
             abiDiv.style.filter = "brightness(0.25)";
             if (abi.onCooldown > 0) {
@@ -489,6 +489,11 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     key = key.replace("Resist", "");
     key_ = key;
     tailEnd = lang["resist"];
+  }
+  else if(key.includes("Def") && !key.includes("status_effect")) {
+    key = key.replace("Def", "");
+    key_ = key;
+    //tailEnd = lang["resist"];
   }
   else if (key.includes("Damage") && !key.includes("crit")) {
     key = key.replace("Damage", "");

@@ -267,8 +267,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
                     bonus = ability.damages[key];
                 bonus += num * attackerStats[((_c = (_b = attacker.weapon) === null || _b === void 0 ? void 0 : _b.statBonus) !== null && _c !== void 0 ? _c : attacker.firesProjectile) ? "dex" : "str"] / 50;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
-                let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
+                let penetration = ability.resistance_penetration / 100;
+                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
+                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
@@ -287,8 +288,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
                 let bonus = 0;
                 bonus += num * attackerStats[ability.stat_bonus] / 50;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
-                let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
+                let penetration = ability.resistance_penetration / 100;
+                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
+                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
@@ -371,8 +373,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 mod *= attacker.allModifiers["damageP"];
                 let bonus = 0;
                 bonus += num * attackerStats[ability.stat_bonus] / 50;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
-                let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
+                let penetration = ability.resistance_penetration / 100;
+                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
+                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 dmg = Math.floor(dmg * resistance);
             });
@@ -392,8 +395,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                     bonus += num * attackerStats.dex / 50;
                 else
                     bonus += num * attackerStats.str / 50;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 - ability.resistance_penetration) / 100;
-                let resistance = 1 - ((targetResists[key] - ability.resistance_penetration) / 100);
+                let penetration = ability.resistance_penetration / 100;
+                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
+                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 dmg = Math.floor(dmg * resistance);
             });
@@ -487,7 +491,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     }
     else if (attacker.isFoe) {
         try {
-            const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+            const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex((e) => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
             layer.style.animation = 'none';
             // @ts-ignore
             layer.offsetHeight; /* trigger reflow */
@@ -596,7 +600,7 @@ function aoeCollision(area, attacker, ability) {
     }
     let actionText = (_b = lang[ability.id + "_action_desc_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
-    maps[currentMap].enemies.forEach(en => {
+    maps[currentMap].enemies.forEach((en) => {
         if (area[en.cords.y][en.cords.x] == "x") {
             regularAttack(attacker, en, ability, null, true);
         }

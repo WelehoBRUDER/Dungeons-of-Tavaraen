@@ -78,6 +78,23 @@ const statusEffects = {
     textIcon: icons.burning_icon,
     icon: "resources/icons/flame_of_passion.png"
   },
+  sunder: {
+    id: "sunder",
+    name: "Sundered",
+    effects: {
+      physicalDefP: -50,
+      magicalDefP: -50,
+      elementalDefP: -50,
+      resistAllP: -50
+    },
+    last: {
+      total: 4,
+      current: 4
+    },
+    type: "curse",
+    textIcon: icons.resistance_penetration,
+    icon: "resources/icons/resistance_penetration.png"
+  },
   chilled: {
     id: "chilled",
     name: "Chilled",
@@ -189,26 +206,25 @@ const statusEffects = {
     id: "berserk",
     name: "Berserk",
     effects: {
-      strP: 60,
-      fireDamageP: 60,
-      crushDamageP: 40,
-      slashDamageP: 40,
-      pierceDamageP: 40,
-      crushResistV: -25,
-      slashResistV: -25,
-      pierceResistV: -25,
-      barbarian_rage_status_effect_strPV: 33,
-      attack_damage_multiplierP: 50
+      meleeDamageP: 30,
+      strP: 40,
+      barbarian_charge_cooldownP: -75,
+      physicalDefP: -100,
+      magicalDefP: -100,
+      elementalDefP: -100,
+      resistAllP: -100,
+      regenHpP: -100,
+      regenMpP: -100
     },
     silence: true,
     break_concentration: true,
     last: {
-      total: 6,
-      current: 6
+      total: 15,
+      current: 15
     },
     textIcon: icons.berserk,
     aura: "redMist",
-    icon: "resources/icons/berserk.png"
+    icon: "resources/icons/absolute_berserk.png"
   },
   sneaky_stabbing: {
     id: "sneaky_stabbing",
@@ -286,6 +302,24 @@ const statusEffects = {
     type: "stun",
     textIcon: icons.dazed,
     icon: "resources/icons/dazed.png"
+  },
+  paralyzed: {
+    id: "paralyzed",
+    name: "Paralyzed",
+    effects: {
+      damageP: -100,
+      resistAllP: 20
+    },
+    break_concentration: true,
+    silence: true,
+    last: {
+      total: 5,
+      current: 5
+    },
+    rooted: true,
+    type: "stun",
+    textIcon: icons.paralyzed,
+    icon: "resources/icons/bloom_yellow.png"
   },
   inanimate: {
     id: "inanimate",

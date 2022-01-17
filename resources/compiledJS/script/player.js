@@ -374,13 +374,17 @@ class PlayerCharacter extends Character {
 }
 function nextLevel(level) {
     let base = 75;
-    let exponent = 1.25;
-    if (level >= 9)
-        base = 100;
-    if (level >= 29)
-        base = 200;
-    if (level >= 49)
+    let exponent = 1.37;
+    if (level >= 4 && level < 10)
+        base = 150;
+    if (level >= 10 && level < 29)
+        base = 225;
+    if (level >= 29 && level < 39)
         base = 375;
+    if (level >= 39 && level < 50)
+        base = 450;
+    if (level >= 50)
+        base = 5000;
     return Math.floor(base * (Math.pow(level, exponent)));
 }
 function updatePlayerInventoryIndexes() {
@@ -555,7 +559,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["rangerClass"]),
+        main: new combatClass(combatClasses["barbarianClass"]),
         sub: null
     },
     sprite: ".player",

@@ -56,11 +56,14 @@ class perk {
             return isBought;
         };
         this.buy = () => {
+            var _a, _b;
             if (this.available() && !this.bought()) {
                 player.perks.push(new perk(Object.assign({}, this)));
                 player.pp--;
-                // if(this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree) {
-                // }
+                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != ((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.sub) === null || _b === void 0 ? void 0 : _b.perkTree)) {
+                    console.log(this.tree);
+                    player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
+                }
                 player.updatePerks();
                 player.updateAbilities();
                 formPerks();
