@@ -1,15 +1,15 @@
 @font-face {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   src: url(../resources/font/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
-  font-family: 'Montserrat-Thin';
+  font-family: "Montserrat-Thin";
   src: url(../resources/font/Montserrat/Montserrat-Thin.ttf);
 }
 
 @font-face {
-  font-family: 'Montserrat-Light';
+  font-family: "Montserrat-Light";
   src: url(../resources/font/Montserrat/Montserrat-ExtraLight.ttf);
 }
 
@@ -1230,7 +1230,7 @@ body {
 
     .dialogCharName {
       color: white;
-      background: rgba(10, 10, 10, .9);
+      background: rgba(10, 10, 10, 0.9);
       text-shadow: 0px 0px 8px black;
       box-shadow: 0 0 9px 5px rgba(24, 24, 24, 0.95);
       position: absolute;
@@ -1273,7 +1273,7 @@ body {
       user-select: none;
 
       .option {
-        transition: .11s;
+        transition: 0.11s;
         text-align: center;
         position: relative;
         width: 100%;
@@ -1283,9 +1283,10 @@ body {
         margin-top: calc(3px * var(--ui-scale));
         padding-top: calc(8px * var(--ui-scale));
         padding-bottom: calc(8px * var(--ui-scale));
-        box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83), 0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
+        box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83),
+          0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
         border-radius: calc(6px * var(--ui-scale));
-        background: rgba(58, 58, 58, .75);
+        background: rgba(58, 58, 58, 0.75);
         color: white;
         font-size: calc(17px * var(--ui-scale));
         cursor: pointer;
@@ -1304,7 +1305,7 @@ body {
             text-shadow: 0px 0px 8px black;
             line-height: inherit;
           }
-  
+
           img {
             width: 22px;
             vertical-align: middle;
@@ -1483,9 +1484,8 @@ body {
             font-variant-numeric: tabular-nums;
             text-shadow: 0px 0px 8px black;
             line-height: calc(38px * var(--ui-scale));
-            
           }
-    
+
           img {
             width: calc(22px * var(--ui-scale));
             vertical-align: middle;
@@ -1497,19 +1497,19 @@ body {
         width: calc(250px * var(--ui-scale));
         height: calc(110px * var(--ui-scale));
         background: rgb(39, 39, 39);
-        box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15), 0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
+        box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15),
+          0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
-
 
         input {
           position: absolute;
           top: 10%;
           left: 50%;
           transform: translateX(-50%);
-          background:rgb(7, 33, 65);
+          background: rgb(7, 33, 65);
           color: white;
           outline: none;
           border: none;
@@ -1519,7 +1519,7 @@ body {
         }
 
         div {
-          transition: .11s;
+          transition: 0.11s;
           position: absolute;
           top: 50%;
           left: 50%;
@@ -1539,8 +1539,9 @@ body {
         }
       }
 
-      .confirmButton, .cancelButton {
-        transition: .11s;
+      .confirmButton,
+      .cancelButton {
+        transition: 0.11s;
         font-size: calc(25px * var(--ui-scale));
         font-family: Montserrat;
         border: calc(2px * var(--ui-scale)) solid white;
@@ -1553,27 +1554,107 @@ body {
         cursor: pointer;
       }
 
-      .confirmButton:hover, .cancelButton:hover {
+      .confirmButton:hover,
+      .cancelButton:hover {
         filter: brightness(1.25);
       }
 
       .confirmButton {
         left: 5%;
-        background: rgba(10, 155, 10, .5);
+        background: rgba(10, 155, 10, 0.5);
       }
       .cancelButton {
         right: 5%;
-        background: rgba(214, 43, 43, .5);
+        background: rgba(214, 43, 43, 0.5);
       }
-      
+
       .greyedOut {
-        filter: grayScale(1) brightness(.5);
+        filter: grayScale(1) brightness(0.5);
       }
 
       .greyedOut:hover {
-        filter: grayScale(1) brightness(.5);
+        filter: grayScale(1) brightness(0.5);
+      }
+    }
+  }
+
+  .questJournalWindow {
+    transition: 0.36s;
+    width: calc(1360px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
+    background: rgba(5, 5, 5, 0.95);
+    border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
+    box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(-680px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
+    z-index: 8;
+    opacity: 0;
+    transform: scale(0);
+
+    .questList {
+      width: 30%;
+      height: 90%;
+      position: absolute;
+      left: 0;
+      top: 5%;
+      background: black;
+      user-select: none;
+
+      p {
+        transition: 0.05s;
+        margin: 0;
+        margin-top: calc(5px * var(--ui-scale));
+        color: rgb(255, 136, 0);
+        font-size: calc(24px * var(--ui-scale));
+        font-family: Montserrat;
+        text-shadow: 0px 0px 8px goldenrod;
+        line-height: calc(24px * var(--ui-scale));
       }
 
+      p:hover {
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+      }
+
+      .selectedEntry {
+        text-decoration: underline;
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+      }
+
+      .selectedEntry:hover {
+        text-decoration: underline;
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.9);
+      }
+      
+    }
+
+    .questInfo {
+      width: 70%;
+      height: 100%;
+      position: absolute;
+      left: 30%;
+      top: 0;
+      background: red;
+
+      pre {
+        margin: 0;
+        span {
+          margin: 0;
+          color: white;
+          font-size: calc(22px * var(--ui-scale));
+          font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+          text-shadow: 0px 0px 8px black;
+          line-height: calc(24px * var(--ui-scale));
+        }
+
+        img {
+          width: calc(22px * var(--ui-scale));
+          vertical-align: middle;
+        }
+      }
     }
   }
 }

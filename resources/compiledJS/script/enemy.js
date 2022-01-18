@@ -1,7 +1,7 @@
 "use strict";
 class Enemy extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
         super(base);
         const defaultModel = Object.assign({}, enemies[base.id]);
         this.sprite = defaultModel.sprite;
@@ -34,6 +34,7 @@ class Enemy extends Character {
         this.currentTargetInterval = (_o = base.currentTargetInterval) !== null && _o !== void 0 ? _o : 0;
         this.chosenTarget = (_p = base.chosenTarget) !== null && _p !== void 0 ? _p : null;
         this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
+        this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -208,6 +209,7 @@ class Enemy extends Character {
             return { total: dmg, split: dmgs };
         };
         this.kill = () => {
+            var _a;
             player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);
@@ -215,7 +217,12 @@ class Enemy extends Character {
             displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
             lootEnemy(this);
             this.chosenTarget = null;
-            fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
+            if (((_a = this.questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1) {
+                player.questProgress[this.questSpawn.quest].prog[this.questSpawn.index] = 1;
+                updateQuestProgress({ id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id] });
+            }
+            else
+                fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
             player.lvlUp();

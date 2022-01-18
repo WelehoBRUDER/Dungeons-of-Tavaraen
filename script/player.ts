@@ -34,6 +34,7 @@ interface playerChar extends characterObject {
   getBaseStats?: Function;
   addItem?: Function;
   addGold?: Function;
+  questProgress?: Array<any>;
 }
 
 interface levelObject {
@@ -144,6 +145,7 @@ class PlayerCharacter extends Character {
   flags?: any;
   addItem?: Function;
   addGold?: Function;
+  questProgress?: Array<any>;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -177,6 +179,7 @@ class PlayerCharacter extends Character {
     this.classes = {...base.classes} ?? {};
     this.oldCords = {...base.oldCords} ?? this.cords;
     this.flags = {...base.flags} ?? [];
+    this.questProgress = base.questProgress ? [...base.questProgress] : [];
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -694,6 +697,7 @@ var player = new PlayerCharacter({
   usedShrines: [],
   grave: null,
   flags: {} as any,
+  questProgress: [],
 });
 
 let combatSummons: Array<any> = [];
@@ -718,4 +722,5 @@ for (let i = 0; i < 20; i++) {
 
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
+//renderPlayerQuests();
 

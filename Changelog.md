@@ -1,6 +1,8 @@
 # 1.0.0 ~ 2.1.2022
 ### This is a full alpha release, containing everything meant for the playtest!
 ## New Additions
+  * Added a questing system, allowing you to get quests from npcs!
+    > Basic functionality already there, just needs a lot of expansion and polish.
   * Added 4 new barbarian perks and 2 new abilities
   * Added 2 new ranger perks, changed 3 old ones and added 2 new abilities.
 

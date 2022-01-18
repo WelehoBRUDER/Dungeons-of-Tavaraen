@@ -5,6 +5,8 @@
 const flags = [
     "has_spoken_to_merchant",
     "accepted_merchant_quest_1",
+    "defeated_robber_slimes_talk",
+    "completed_quest_defeat_slimes"
 ];
 // Returns flag index by searching with string.
 function getFlag(str) {
@@ -135,6 +137,10 @@ function createChoice(choice, choices, npc) {
     else if (choice.action.type == "quest") {
         button.addEventListener("click", e => questDialog(choice, npc));
     }
+    else if (choice.action.type == "questObjective") {
+        button.addEventListener("click", e => questObjectiveDialog(choice, npc));
+    }
+    ;
     choices.append(button);
 }
 function openMerchantStore(id) {
@@ -193,7 +199,27 @@ function questDialog(choice, npc) {
             setFlag(flag.set_flag.flag, flag.set_flag.value, true);
         }
     });
+    if (choice.action.questId) {
+        startNewQuest(choice.action.questId);
+    }
     dialogText.append(textSyntax(`\n\n<c>gold<c>Quests aren't implemented yet, but if they were you'd get one here!`));
+    createDialogChoices(npc.id, dialogChoices, npc);
+}
+function getQuestParams(questId) {
+    let questIndex = player.questProgress.findIndex((q) => Object.keys(quests)[q.id] == questId);
+    return { id: questIndex, quest: questId };
+}
+function questObjectiveDialog(choice, npc) {
+    var _a;
+    dialogText.innerHTML = "";
+    let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
+    dialogText.append(textSyntax(text));
+    (_a = choice.flags) === null || _a === void 0 ? void 0 : _a.forEach((flag) => {
+        if (flag.set_flag) {
+            setFlag(flag.set_flag.flag, flag.set_flag.value, true);
+        }
+    });
+    updateQuestProgress(getQuestParams(choice.action.questId), npc.id);
     createDialogChoices(npc.id, dialogChoices, npc);
 }
 const loremIpsum = `<c>white<c>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur scelerisque luctus varius. Aenean tristique a nulla luctus accumsan. Curabitur vehicula sodales congue. Sed porta egestas justo et posuere. Ut et velit vitae massa facilisis dapibus. Suspendisse ac luctus felis, vel luctus augue. Nulla facilisi. Sed in malesuada felis. Nam nec dapibus elit. Suspendisse potenti. Donec lacinia nulla nibh, laoreet commodo orci blandit vitae. In hac habitasse platea dictumst.

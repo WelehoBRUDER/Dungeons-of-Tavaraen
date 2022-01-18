@@ -82,6 +82,7 @@ class PlayerCharacter extends Character {
         this.classes = (_2 = Object.assign({}, base.classes)) !== null && _2 !== void 0 ? _2 : {};
         this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
         this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : [];
+        this.questProgress = base.questProgress ? [...base.questProgress] : [];
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -614,6 +615,7 @@ var player = new PlayerCharacter({
     usedShrines: [],
     grave: null,
     flags: {},
+    questProgress: [],
 });
 let combatSummons = [];
 var randomProperty = function (mods) {
@@ -631,4 +633,5 @@ for (let i = 0; i < 20; i++) {
 // }
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
+//renderPlayerQuests();
 //# sourceMappingURL=player.js.map

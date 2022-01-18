@@ -90,7 +90,8 @@ const emptyModel = {
     pp: 1,
     respawnPoint: { cords: { x: 41, y: 169 } },
     usedShrines: [],
-    flags: {}
+    flags: {},
+    questProgress: [],
 };
 const creation = document.querySelector(".mainMenu .characterCreation");
 const creationCanvas = creation.querySelector(".layerRender");
@@ -203,6 +204,7 @@ function beginGame() {
         closeGameMenu(false, true);
         reviveAllDeadEnemies();
         resetAllLivingEnemiesInAllMaps();
+        killAllQuestEnemies();
         player.updatePerks(true);
         player.updateAbilities();
         fallenEnemies = [];

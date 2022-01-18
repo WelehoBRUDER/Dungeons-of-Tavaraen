@@ -52,12 +52,23 @@ const characterInteractions = {
           }
         ],
       },
+      {
+        name: "testMerchant_defeated_the_slimes",
+        type: "quest",
+        action: { type: "questObjective", id: "completed_slime_quest", questId: "defeat_slimes_task" },
+        conditions: [
+          {
+            has_flag: "defeated_robber_slimes_talk",
+            NOT_has_flag: "completed_quest_defeat_slimes"
+          }
+        ],
+      },
     ],
     dialogChoices: [
       {
         name: "testMerchant_agree_to_quest",
         type: "quest",
-        action: { type: "quest", id: "accept_slime_quest" },
+        action: { type: "quest", id: "accept_slime_quest", questId: "defeat_slimes_task" },
         parent: "testMerchant_talk_about_business",
         conditions: [
           {

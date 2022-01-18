@@ -19,6 +19,7 @@ class gameSettings {
         this.hotkey_move_right = base.hotkey_move_right || "d";
         this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
         this.hotkey_interact = base.hotkey_interact || " ";
+        this.hotkey_journal = base.hotkey_journal || "j";
     }
 }
 let settings = new gameSettings({
@@ -34,7 +35,8 @@ let settings = new gameSettings({
     hotkey_move_left: "a",
     hotkey_move_right: "d",
     hotkey_interact: " ",
-    hotkey_open_world_messages: "Enter"
+    hotkey_open_world_messages: "Enter",
+    hotkey_journal: "j"
 });
 // Hotkeys
 document.addEventListener("keyup", e => {
@@ -96,6 +98,12 @@ document.addEventListener("keyup", e => {
             openLevelingScreen();
         else
             closeLeveling();
+    }
+    else if (e.key == settings.hotkey_journal && !state.menuOpen) {
+        if (!state.journalOpen)
+            renderPlayerQuests();
+        else
+            closePlayerQuests();
     }
     else if (state.invOpen || state.menuOpen)
         return;

@@ -33,6 +33,7 @@ interface enemy extends characterObject {
   currentTargetInterval?: number;
   chosenTarget?: characterObject;
   distToPlayer?: Function;
+  questSpawn?: any;
 }
 
 class Enemy extends Character {
@@ -72,6 +73,7 @@ class Enemy extends Character {
   chosenTarget?: characterObject;
   oldCords?: tileObject; // Shitty hack to make summon shooting possible.
   distToPlayer?: Function;
+  questSpawn?: any;
   constructor(base: enemy) {
     super(base);
     const defaultModel: any = {...enemies[base.id]};
@@ -105,6 +107,7 @@ class Enemy extends Character {
     this.currentTargetInterval = base.currentTargetInterval ?? 0;
     this.chosenTarget = base.chosenTarget ?? null;
     this.oldCords = { ...base.oldCords } ?? { ...this.cords };
+    this.questSpawn = {...base.questSpawn} ?? null;
 
     if (!this.hasBeenLeveled && this.level > 1) {
       for (let i = 1; i < this.level; i++) {
@@ -284,7 +287,11 @@ class Enemy extends Character {
       displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
       lootEnemy(this);
       this.chosenTarget = null;
-      fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique  });
+      if(this.questSpawn?.quest > -1) {
+        player.questProgress[this.questSpawn.quest].prog[this.questSpawn.index] = 1;
+        updateQuestProgress({id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id]});
+      }
+      else fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique  });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;
       player.lvlUp();
