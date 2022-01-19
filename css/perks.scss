@@ -129,7 +129,7 @@
     .container {
       width: fit-content;
       height: fit-content;
-      position: inherit;
+      position: absolute;
       left: 0;
       top: 0;
       overflow: auto;
@@ -137,6 +137,9 @@
       -webkit-user-drag: none;
       align-content: center;
       text-align: center;
+      transform: scale(1);
+      transform-origin: 0 0;
+      -webkit-transform-origin: 0 0;
 
       svg {
         filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.97));

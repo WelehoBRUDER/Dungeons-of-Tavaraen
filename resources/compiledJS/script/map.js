@@ -179,7 +179,7 @@ function renderMap(map, createNewSightMap = false) {
     /* Render Enemies */
     enemyLayers.textContent = ""; // Delete enemy canvases
     map.enemies.forEach((enemy, index) => {
-        var _a;
+        var _a, _b;
         if (!enemy.alive || ((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) != "x")
             return;
         var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -201,6 +201,11 @@ function renderMap(map, createNewSightMap = false) {
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             /* Render enemy on top of hp bar */
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+            if (((_b = enemy.questSpawn) === null || _b === void 0 ? void 0 : _b.quest) > -1) {
+                ctx.font = `${spriteSize / 1.9}px Arial`;
+                ctx.fillStyle = "goldenrod";
+                ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+            }
             let statCount = 0;
             enemy.statusEffects.forEach((effect) => {
                 if (statCount > 4)

@@ -7,7 +7,11 @@ const flags: Array<string> =
     "has_spoken_to_merchant",
     "accepted_merchant_quest_1",
     "defeated_robber_slimes_talk",
-    "completed_quest_defeat_slimes"
+    "completed_quest_defeat_slimes",
+    "has_heard_merchant_troubles",
+    "accepted_merchant_quest_2",
+    "exterminate_slimes_talk",
+    "completed_quest_defeat_slimes_2"
   ];
 
 // Returns flag index by searching with string.
@@ -94,6 +98,7 @@ function createDialogWindow(npc: Npc) {
 
 
 function applyVarsToDialogText(text: any, pronounSet: string) {
+  if(!text) return "empty";
   text = text.replaceAll("/heShe/", dialogLang[lang.language_id][pronounSet + "_heShe"]);
   text = text.replaceAll("/hisHer/", dialogLang[lang.language_id][pronounSet + "_hisHer"]);
   return text;
@@ -218,7 +223,9 @@ function questDialog(choice: any, npc: Npc) {
   if(choice.action.questId) {
     startNewQuest(choice.action.questId);
   }
-  dialogText.append(textSyntax(`\n\n<c>gold<c>Quests aren't implemented yet, but if they were you'd get one here!`));
+  let questAddedText = lang["quest_added"];
+  questAddedText = questAddedText.replace("[QUEST]", questLang[lang.language_id][choice.action.questId + "_name"] ?? choice.action.questId);
+  dialogText.append(textSyntax(`\n\n${questAddedText}`));
   createDialogChoices(npc.id, dialogChoices, npc);
 }
 
@@ -266,7 +273,7 @@ const pendingSellArea = pendingSell.querySelector(".area");
 const priceArea = confirmation.querySelector(".price");
 const amountScreen = document.querySelector<HTMLDivElement>(".amountSelector");
 const confirmButton = confirmation.querySelector(".confirmButton");
-function createMerchantWindow(resetInv: boolean = true) {
+function createMerchantWindow(resetInv: boolean = true, justSort: boolean = false) {
   storeWindow.style.transform = "scale(1)";
   amountScreen.style.display = "none";
   hideHover();
@@ -278,7 +285,7 @@ function createMerchantWindow(resetInv: boolean = true) {
     pendingItemsSelling = [];
     pendingItemsBuying = [];
   } 
-  currentMerchantInventory = createMerchantItems(currentMerchant);
+  if(!justSort) currentMerchantInventory = createMerchantItems(currentMerchant);
   merchantInv.append(createItems(currentMerchantInventory, "MERCHANT_SELLING", null, false));
   playerInv.append(createItems(player.inventory, "PLAYER_SELLING"));
   pendingBuyArea.innerHTML = "";

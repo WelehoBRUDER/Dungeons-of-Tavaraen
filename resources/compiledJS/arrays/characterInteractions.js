@@ -62,6 +62,36 @@ const characterInteractions = {
                     }
                 ],
             },
+            {
+                name: "testMerchant_more_slime_trouble",
+                type: "quest",
+                action: { type: "dialog", id: "testMerchant_business_dialog_1" },
+                conditions: [
+                    {
+                        has_flag: "completed_quest_defeat_slimes",
+                        NOT_has_flag: "has_heard_merchant_troubles"
+                    }
+                ],
+                flags: [
+                    {
+                        set_flag: {
+                            flag: "has_heard_merchant_troubles",
+                            value: true
+                        }
+                    }
+                ],
+            },
+            {
+                name: "testMerchant_defeated_the_slimes_2",
+                type: "quest",
+                action: { type: "questObjective", id: "completed_slime_quest_2", questId: "defeat_slimes_task_2" },
+                conditions: [
+                    {
+                        has_flag: "exterminate_slimes_talk",
+                        NOT_has_flag: "completed_quest_defeat_slimes_2"
+                    }
+                ],
+            },
         ],
         dialogChoices: [
             {
@@ -99,6 +129,46 @@ const characterInteractions = {
                     {
                         set_flag: {
                             flag: "has_spoken_to_merchant",
+                            value: false
+                        }
+                    }
+                ]
+            },
+            {
+                name: "testMerchant_agree_to_quest_2",
+                type: "quest",
+                action: { type: "quest", id: "accept_slime_quest_2", questId: "defeat_slimes_task_2" },
+                parent: "testMerchant_more_slime_trouble",
+                conditions: [
+                    {
+                        has_flag: "has_heard_merchant_troubles",
+                        NOT_has_flag: "accepted_merchant_quest_2"
+                    }
+                ],
+                flags: [
+                    {
+                        set_flag: {
+                            flag: "accepted_merchant_quest_2",
+                            value: true
+                        }
+                    }
+                ],
+            },
+            {
+                name: "testMerchant_decline_quest_2",
+                type: "exit",
+                action: { type: "exitWithFlags" },
+                parent: "testMerchant_more_slime_trouble",
+                conditions: [
+                    {
+                        has_flag: "has_heard_merchant_troubles",
+                        NOT_has_flag: "accepted_merchant_quest_2"
+                    }
+                ],
+                flags: [
+                    {
+                        set_flag: {
+                            flag: "has_heard_merchant_troubles",
                             value: false
                         }
                     }

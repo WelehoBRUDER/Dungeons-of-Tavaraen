@@ -292,6 +292,20 @@ class Enemy extends Character {
         updateQuestProgress({id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id]});
       }
       else fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique  });
+      player.questProgress.forEach((prog: any)=>{
+        let questFind: any = Object.values(quests)[prog.id];
+        if(prog.obj >= questFind.objectives.length) return;
+        let objective: any = questFind.objectives[prog.obj];
+        if(objective.objective == "killEnemies") {
+          objective.enemiesToKill?.forEach((en: any, index: number) => {
+            if(this.id == en.type) {
+              if(!prog.prog[index]) prog.prog[index] = 1;
+              else prog.prog[index]++;
+              updateQuestProgress({id: prog.id, quest: questFind.id})
+            }
+          });
+        }
+      });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;
       player.lvlUp();

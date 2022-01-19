@@ -17,6 +17,10 @@ const dialogLang = {
         testMerchant_agree_to_quest: "'Pelastan' tuotteesi",
         testMerchant_decline_quest: "Ei aikaa tälläiseen",
         completed_slime_quest: "test",
+        testMerchant_more_slime_trouble: "Jatkuvatko lima ongelmasi?",
+        testMerchant_agree_to_quest_2: "Hävitän niin monta kuin pyydät.",
+        testMerchant_decline_quest_2: "En kerkeä juuri nyt.",
+        testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman."
     },
     english: {
         masculine_heShe: "He",
@@ -35,6 +39,10 @@ const dialogLang = {
         testMerchant_agree_to_quest: "I'll get your merchandise back",
         testMerchant_decline_quest: "I don't have time for that",
         completed_slime_quest: "test",
+        testMerchant_more_slime_trouble: "More slime trouble?",
+        testMerchant_agree_to_quest_2: "Sure, I'll exterminate some.",
+        testMerchant_decline_quest_2: "No time for this now.",
+        testMerchant_defeated_the_slimes_2: "I've beaten a few slimes."
     }
 };
 //# sourceMappingURL=dialogLocalisation.js.map

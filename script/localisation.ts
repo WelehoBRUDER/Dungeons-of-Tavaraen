@@ -418,6 +418,7 @@ const finnish = {
   offhand: "Kilpi",
   buy_item: "Osta esine",
   sell_item: "Myy esine",
+  quest_added: "<c>goldenrod<c>Tehtävä '<c>gold<c>[QUEST]<c>goldenrod<c>' alkanut!",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -1191,6 +1192,7 @@ const english = {
   offhand: "Offhand",
   buy_item: "Buy item",
   sell_item: "Sell item",
+  quest_added: "<c>goldenrod<c>Quest '<c>gold<c>[QUEST]<c>goldenrod<c>' has begun!",
 
   // Character names
   testMerchant_name: "Karl Bauer",

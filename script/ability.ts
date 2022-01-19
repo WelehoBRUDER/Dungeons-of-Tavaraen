@@ -169,12 +169,11 @@ class Ability {
   constructor(base: ability, user: characterObject) {
     this.id = base.id;
     const values = getAbiModifiers(user, base.id);
-    // @ts-ignore
+    // @ts-ignorep
     const baseAbility = abilities[this.id];
     let statusModifiers: any = {}; 
     baseAbility.statusesUser?.forEach((str: string) => statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, str)});
     baseAbility.statusesEnemy?.forEach((str: string) => statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, str)});
-    if(baseAbility.id == "finishing_blow") console.log(values);
     if(baseAbility.summon_status) statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, baseAbility.summon_status)};
     this.name = baseAbility.name;
     this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;

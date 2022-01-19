@@ -216,6 +216,11 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       /* Render enemy on top of hp bar */
       ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+      if(enemy.questSpawn?.quest > -1) {
+        ctx.font = `${spriteSize / 1.9}px Arial`;
+        ctx.fillStyle = "goldenrod";
+        ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+      }
       let statCount = 0;
       enemy.statusEffects.forEach((effect: statEffect) => {
         if (statCount > 4) return;

@@ -6,7 +6,11 @@ const flags = [
     "has_spoken_to_merchant",
     "accepted_merchant_quest_1",
     "defeated_robber_slimes_talk",
-    "completed_quest_defeat_slimes"
+    "completed_quest_defeat_slimes",
+    "has_heard_merchant_troubles",
+    "accepted_merchant_quest_2",
+    "exterminate_slimes_talk",
+    "completed_quest_defeat_slimes_2"
 ];
 // Returns flag index by searching with string.
 function getFlag(str) {
@@ -83,6 +87,8 @@ function createDialogWindow(npc) {
     setTimeout(() => { dialogWindow.style.opacity = "1"; }, 10);
 }
 function applyVarsToDialogText(text, pronounSet) {
+    if (!text)
+        return "empty";
     text = text.replaceAll("/heShe/", dialogLang[lang.language_id][pronounSet + "_heShe"]);
     text = text.replaceAll("/hisHer/", dialogLang[lang.language_id][pronounSet + "_hisHer"]);
     return text;
@@ -190,7 +196,7 @@ function nextDialog(choice, npc) {
     createDialogChoices(npc.id, dialogChoices, npc);
 }
 function questDialog(choice, npc) {
-    var _a;
+    var _a, _b;
     dialogText.innerHTML = "";
     let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
     dialogText.append(textSyntax(text));
@@ -202,7 +208,9 @@ function questDialog(choice, npc) {
     if (choice.action.questId) {
         startNewQuest(choice.action.questId);
     }
-    dialogText.append(textSyntax(`\n\n<c>gold<c>Quests aren't implemented yet, but if they were you'd get one here!`));
+    let questAddedText = lang["quest_added"];
+    questAddedText = questAddedText.replace("[QUEST]", (_b = questLang[lang.language_id][choice.action.questId + "_name"]) !== null && _b !== void 0 ? _b : choice.action.questId);
+    dialogText.append(textSyntax(`\n\n${questAddedText}`));
     createDialogChoices(npc.id, dialogChoices, npc);
 }
 function getQuestParams(questId) {
@@ -247,7 +255,7 @@ const pendingSellArea = pendingSell.querySelector(".area");
 const priceArea = confirmation.querySelector(".price");
 const amountScreen = document.querySelector(".amountSelector");
 const confirmButton = confirmation.querySelector(".confirmButton");
-function createMerchantWindow(resetInv = true) {
+function createMerchantWindow(resetInv = true, justSort = false) {
     var _a;
     storeWindow.style.transform = "scale(1)";
     amountScreen.style.display = "none";
@@ -260,7 +268,8 @@ function createMerchantWindow(resetInv = true) {
         pendingItemsSelling = [];
         pendingItemsBuying = [];
     }
-    currentMerchantInventory = createMerchantItems(currentMerchant);
+    if (!justSort)
+        currentMerchantInventory = createMerchantItems(currentMerchant);
     merchantInv.append(createItems(currentMerchantInventory, "MERCHANT_SELLING", null, false));
     playerInv.append(createItems(player.inventory, "PLAYER_SELLING"));
     pendingBuyArea.innerHTML = "";

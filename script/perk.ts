@@ -96,13 +96,13 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     perks.push(new perk(_perk[1]));
   });
   hideHover();
-  const baseSize: number = 128 * currentZoomBG;
-  const baseImg: number = 104 * currentZoomBG;
-  const baseFont: number = 12 * currentZoomBG;
+  const baseSize: number = 128;
+  const baseImg: number = 104;
+  const baseFont: number = 12;
+  const lineSize: number = 64;
+  const lineWidth: number = 10;
   const points = document.createElement("p");
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute('width', "4000");
-  svg.setAttribute('height', "4000");
   points.textContent = lang["perk_points"] + ": " + player.pp.toString();
   points.classList.add("perkPoints");
   staticBg.textContent = "";
@@ -185,18 +185,22 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
         let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         if (_perk.bought()) color = "gold";
         else if (!_perk.available()) color = "rgb(40, 40, 40)";
-        line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-        line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-        line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-        line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
+        line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (lineSize)}px`);
         line.setAttribute("stroke", color);
-        line.setAttribute("stroke-width", `${10 * currentZoomBG}px`);
+        line.setAttribute("stroke-width", `${lineWidth}px`);
         svg.appendChild(line);
       });
     }
   });
   if(!scrollDefault) perkArea.scrollTo(leftScroll, topScroll);
   else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
+  perkArea.style.transform = `scale(${currentZoomBG})`;
+  svg.setAttribute('width', "4000");
+  svg.setAttribute('height', "4000");
+  /* Making a proper zoom has defeated me, it will simply not center on mouse, ever. */
 }
 
 function formStatUpgrades() {
@@ -295,7 +299,7 @@ function statModifTT(statModif: any) {
   return txt;
 }
 
-const zoomLevelsBG = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
 var currentZoomBG = 1;
 
 const background = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
@@ -303,13 +307,13 @@ background.addEventListener('mousedown', action1);
 background.addEventListener('mousemove', action2);
 background.addEventListener("wheel", changeZoomLevelBG);
 // @ts-expect-error
-function changeZoomLevelBG({ deltaY }) {
-  if (deltaY > 0) {
+function changeZoomLevelBG(e) {
+  if (e.deltaY > 0) {
     currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) - 1] || zoomLevelsBG[0];
   } else {
     currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) + 1] || zoomLevelsBG[zoomLevelsBG.length - 1];
   }
-  formPerks(eAction);
+  formPerks(e);
 }
 
 let mouseX = 0;

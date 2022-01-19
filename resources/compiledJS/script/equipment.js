@@ -638,11 +638,11 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
     topRarity.textContent = lang["item_rarity"];
     topWeight.textContent = lang["item_weight_title"];
     topWorth.textContent = lang["item_worth_title"];
-    topName.addEventListener("click", e => sortInventory("name", sortingReverse));
-    topType.addEventListener("click", e => sortInventory("type", sortingReverse));
-    topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
-    topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse));
-    topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse));
+    topName.addEventListener("click", e => sortInventory("name", sortingReverse, inventory, context));
+    topType.addEventListener("click", e => sortInventory("type", sortingReverse, inventory, context));
+    topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse, inventory, context));
+    topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse, inventory, context));
+    topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse, inventory, context));
     itemsList.classList.add("itemList");
     itemsListBar.classList.add("itemListTop");
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);

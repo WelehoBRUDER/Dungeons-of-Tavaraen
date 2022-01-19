@@ -1,8 +1,9 @@
 # 1.0.0 ~ 2.1.2022
 ### This is a full alpha release, containing everything meant for the playtest!
 ## New Additions
-  * Added a questing system, allowing you to get quests from npcs!
-    > Basic functionality already there, just needs a lot of expansion and polish.
+  * Added a questing system, allowing you to get quests from npcs!  
+    > Basic functionality already there, just needs a lot of expansion and polish.  
+    > There are currently 2 test quests in the game, both about defeating slimes.
   * Added 4 new barbarian perks and 2 new abilities
   * Added 2 new ranger perks, changed 3 old ones and added 2 new abilities.
 
@@ -15,6 +16,7 @@
     > Main class is picked at game start, sub class gained later.
   * Tweaked some abilities.
   * Resistance penetration no longer lowers defense below 0.
+  * Merchant inventories can now be sorted.
 
 # 0.9.0 ~ 1.1.2022
 ### This is an alpha release, most game mechanics are implemented!  

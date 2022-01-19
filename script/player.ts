@@ -466,19 +466,20 @@ function updatePlayerInventoryIndexes() {
   }
 }
 
-function sortInventory(category: string, reverse: boolean) {
+function sortInventory(category: string, reverse: boolean, inventory: Array<any>, context: string ) {
   sortingReverse = !sortingReverse;
   if (category == "name" || category == "type") {
-    player.inventory.sort((a, b) => stringSort(a, b, category, reverse));
+    inventory.sort((a, b) => stringSort(a, b, category, reverse));
   }
   else if (category == "grade") {
-    player.inventory.sort((a, b) => gradeSort(a, b, reverse));
+    inventory.sort((a, b) => gradeSort(a, b, reverse));
   }
   else if (category == "worth") {
-    player.inventory.sort((a, b) => worthSort(a, b, reverse));
+    inventory.sort((a, b) => worthSort(a, b, reverse));
   }
-  else player.inventory.sort((a, b) => numberSort(a, b, category, reverse));
-  renderInventory();
+  else inventory.sort((a, b) => numberSort(a, b, category, reverse));
+  if(context.includes("SELLING")) createMerchantWindow(false, true);
+  else renderInventory();
 }
 
 function commandRemoveAbility(cmd: any) {

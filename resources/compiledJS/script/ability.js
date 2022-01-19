@@ -70,13 +70,11 @@ class Ability {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
-        // @ts-ignore
+        // @ts-ignorep
         const baseAbility = abilities[this.id];
         let statusModifiers = {};
         (_a = baseAbility.statusesUser) === null || _a === void 0 ? void 0 : _a.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
         (_b = baseAbility.statusesEnemy) === null || _b === void 0 ? void 0 : _b.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
-        if (baseAbility.id == "finishing_blow")
-            console.log(values);
         if (baseAbility.summon_status)
             statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, baseAbility.summon_status));
         this.name = baseAbility.name;

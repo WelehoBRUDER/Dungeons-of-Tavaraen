@@ -559,6 +559,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player.updatePerks(true);
       player.updateAbilities();
       purgeDeadEnemies();
+      killAllQuestEnemies();
+      spawnQuestMonsters();
       handleEscape();
       closeGameMenu();
       resetAllChests();
@@ -833,6 +835,8 @@ function LoadSlot(data: any) {
   player.updatePerks(true);
   player.updateAbilities();
   purgeDeadEnemies();
+  killAllQuestEnemies();
+  spawnQuestMonsters();
   handleEscape();
   closeGameMenu();
   resetAllChests();
