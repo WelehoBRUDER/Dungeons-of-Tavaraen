@@ -1181,11 +1181,12 @@ body {
 
     .playerButtons {
       position: relative;
-      display: flex;
+      display: grid;
       width: auto;
       height: calc(75px * var(--ui-scale));
       top: calc(10px * var(--ui-scale));
       left: calc(20px * var(--ui-scale));
+      grid-template-columns: repeat(4, 1fr);
 
       .screenButton {
         transition: 0.11s;
@@ -1200,7 +1201,7 @@ body {
         img {
           width: 100%;
           height: 100%;
-          filter: drop-shadow(0 0 6px rgb(14, 13, 13));
+          filter: drop-shadow(0 0 6px rgb(14, 13, 13)) grayscale(1) brightness(.75);
         }
       }
 

@@ -35,6 +35,7 @@ class Enemy extends Character {
         this.chosenTarget = (_p = base.chosenTarget) !== null && _p !== void 0 ? _p : null;
         this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
         this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
+        this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -256,14 +257,23 @@ class Enemy extends Character {
             this.cords.y = this.spawnCords.y;
         };
         this.aggro = () => {
+            var _a, _b;
             // @ts-ignore
             let targets = combatSummons.concat([player]);
             let target = threatDistance(targets, this);
             let range = this.aggroRange + this.tempAggro;
             // @ts-ignore
             if (target) {
-                if (generatePath(this.cords, target.cords, this.canFly, true) <= range)
+                if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
+                    let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.indexInBaseArray.toString()];
+                    if (encounter < 1 || !encounter) {
+                        player.entitiesEverEncountered.enemies[this.indexInBaseArray.toString()] = 1;
+                        displayText("New enemy encountered!");
+                        displayText(this.id + " added to codex.");
+                        spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
+                    }
                     return true;
+                }
             }
             return false;
         };

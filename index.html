@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="fi">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/codex.css">
   <link rel="stylesheet" href="css/menu.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/perks.css">
   <title>Dungeons of Tavaraen - In Development</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon"> 
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
+
 <body>
   <div class="main">
     <div class="devTools">
@@ -43,6 +46,12 @@
         </div>
         <div class="screenButton perScrb" onclick="openLevelingScreen()">
           <img src="resources/icons/perks.png" alt="">
+        </div>
+        <div class="screenButton jorScrb" onclick="renderPlayerQuests()">
+          <img src="resources/icons/emblem_of_scholar.png" alt="">
+        </div>
+        <div class="screenButton codScrb" onclick="openIngameCodex()">
+          <img src="resources/icons/warn.png" alt="">
         </div>
         <div class="screenButton escScrb" onclick="handleEscape()">
           <img src="resources/icons/menu.png" alt="">
@@ -135,6 +144,10 @@
       <div class="questList"></div>
       <div class="questInfo"></div>
     </div>
+    <div class="codexWindow">
+      <div class="contentContainer"></div>
+      <div class="contentList"></div>
+    </div>
     <div class="defaultItemsArray"></div>
     <div class="mapHover"></div>
     <div id="globalHover"></div>
@@ -179,7 +192,8 @@
         </div>
         <div class="nameContainer">
           <p class="nameText">Name</p>
-          <input type="text" class="nameInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" class="nameInput" autocomplete="off" autocorrect="off" autocapitalize="off"
+            spellcheck="false">
         </div>
         <div class="raceSelection">
           <p class="raceText">Character Race</p>
@@ -200,180 +214,179 @@
   <!-- Player Sprites -->
 
   <!-- Auras -->
-  <img src="resources/tiles/player/red_mist_aura.png" alt="" onload="imgLoaded()" class="redMist sprite">
-  <img src="resources/tiles/player/ward_aura.png" alt="" onload="imgLoaded()" class="ward sprite">
+  <img src="resources/tiles/player/red_mist_aura.png" alt="" class="redMist sprite">
+  <img src="resources/tiles/player/ward_aura.png" alt="" class="ward sprite">
 
   <!-- Body Models  -->
-  <img src="resources/tiles/player/human_model.png" alt="" onload="imgLoaded()" class="humanModel sprite">
-  <img src="resources/tiles/player/elf_model.png" alt="" onload="imgLoaded()" class="elfModel sprite">
-  <img src="resources/tiles/player/orc_model.png" alt="" onload="imgLoaded()" class="orcModel sprite">
-  <img src="resources/tiles/player/ashen_model.png" alt="" onload="imgLoaded()" class="ashenModel sprite">
-  <img src="resources/tiles/player/death.png" alt="" onload="imgLoaded()" class="deadModel sprite">
+  <img src="resources/tiles/player/human_model.png" alt="" class="humanModel sprite">
+  <img src="resources/tiles/player/elf_model.png" alt="" class="elfModel sprite">
+  <img src="resources/tiles/player/orc_model.png" alt="" class="orcModel sprite">
+  <img src="resources/tiles/player/ashen_model.png" alt="" class="ashenModel sprite">
+  <img src="resources/tiles/player/death.png" alt="" class="deadModel sprite">
 
   <!-- Ears -->
-  <img src="resources/tiles/player/human_ears.png" alt="" onload="imgLoaded()" class="humanEars sprite">
-  <img src="resources/tiles/player/elf_ears.png" alt="" onload="imgLoaded()" class="elfEars sprite">
-  <img src="resources/tiles/player/orc_ears.png" alt="" onload="imgLoaded()" class="orcEars sprite">
-  <img src="resources/tiles/player/ashen_ears.png" alt="" onload="imgLoaded()" class="ashenEars sprite">
+  <img src="resources/tiles/player/human_ears.png" alt="" class="humanEars sprite">
+  <img src="resources/tiles/player/elf_ears.png" alt="" class="elfEars sprite">
+  <img src="resources/tiles/player/orc_ears.png" alt="" class="orcEars sprite">
+  <img src="resources/tiles/player/ashen_ears.png" alt="" class="ashenEars sprite">
 
-   <!-- Hair  -->
-  <img src="resources/tiles/player/hair_1.png" alt="" onload="imgLoaded()" class="hair1 sprite">
-  <img src="resources/tiles/player/hair_2.png" alt="" onload="imgLoaded()" class="hair2 sprite">
-  <img src="resources/tiles/player/hair_3.png" alt="" onload="imgLoaded()" class="hair3 sprite">
-  <img src="resources/tiles/player/hair_4.png" alt="" onload="imgLoaded()" class="hair4 sprite">
-  <img src="resources/tiles/player/hair_5.png" alt="" onload="imgLoaded()" class="hair5 sprite">
-  <img src="resources/tiles/player/hair_6.png" alt="" onload="imgLoaded()" class="hair6 sprite">
-   <!-- Eyes  -->
-  <img src="resources/tiles/player/eyes_1.png" alt="" onload="imgLoaded()" class="eyes1 sprite">
-  <img src="resources/tiles/player/eyes_2.png" alt="" onload="imgLoaded()" class="eyes2 sprite">
-  <img src="resources/tiles/player/eyes_3.png" alt="" onload="imgLoaded()" class="eyes3 sprite">
-   <!-- Faces  -->
-  <img src="resources/tiles/player/nose_mouth_1.png" alt="" onload="imgLoaded()" class="face1 sprite">
-  <img src="resources/tiles/player/nose_mouth_2.png" alt="" onload="imgLoaded()" class="face2 sprite">
-  <img src="resources/tiles/player/nose_mouth_3.png" alt="" onload="imgLoaded()" class="face3 sprite">
+  <!-- Hair  -->
+  <img src="resources/tiles/player/hair_1.png" alt="" class="hair1 sprite">
+  <img src="resources/tiles/player/hair_2.png" alt="" class="hair2 sprite">
+  <img src="resources/tiles/player/hair_3.png" alt="" class="hair3 sprite">
+  <img src="resources/tiles/player/hair_4.png" alt="" class="hair4 sprite">
+  <img src="resources/tiles/player/hair_5.png" alt="" class="hair5 sprite">
+  <img src="resources/tiles/player/hair_6.png" alt="" class="hair6 sprite">
+  <!-- Eyes  -->
+  <img src="resources/tiles/player/eyes_1.png" alt="" class="eyes1 sprite">
+  <img src="resources/tiles/player/eyes_2.png" alt="" class="eyes2 sprite">
+  <img src="resources/tiles/player/eyes_3.png" alt="" class="eyes3 sprite">
+  <!-- Faces  -->
+  <img src="resources/tiles/player/nose_mouth_1.png" alt="" class="face1 sprite">
+  <img src="resources/tiles/player/nose_mouth_2.png" alt="" class="face2 sprite">
+  <img src="resources/tiles/player/nose_mouth_3.png" alt="" class="face3 sprite">
 
   <!-- Item Atlas -->
-  <img src="resources/icons/itemMap.png" alt="" onload="imgLoaded()" class="spriteMap_items sprite">
+  <img src="resources/icons/itemMap.png" alt="" class="spriteMap_items sprite">
 
-   <!-- Clothes  -->
-  <img src="resources/tiles/player/generic_pants.png" alt="" onload="imgLoaded()" class="defaultPants sprite">
-  <img src="resources/tiles/player/ragged_shirt.png" alt="" onload="imgLoaded()" class="raggedShirt sprite">
-  <img src="resources/tiles/player/ragged_boots.png" alt="" onload="imgLoaded()" class="raggedBoots sprite">
-  <img src="resources/tiles/player/ragged_pants.png" alt="" onload="imgLoaded()" class="raggedPants sprite">
-  <img src="resources/tiles/player/ragged_gloves.png" alt="" onload="imgLoaded()" class="raggedGloves sprite">
-  <img src="resources/tiles/player/ragged_hood.png" alt="" onload="imgLoaded()" class="raggedHood sprite">
-  <img src="resources/tiles/player/wool_hat.png" alt="" onload="imgLoaded()" class="woolHat sprite">
-  <img src="resources/tiles/player/leather_chest.png" alt="" onload="imgLoaded()" class="leatherChest sprite">
-  <img src="resources/tiles/player/leather_boots.png" alt="" onload="imgLoaded()" class="leatherBoots sprite">
-  <img src="resources/tiles/player/leather_leg_bracers.png" alt="" onload="imgLoaded()" class="leatherLeggings sprite">
-  <img src="resources/tiles/player/leather_bracers.png" alt="" onload="imgLoaded()" class="leatherBracers sprite">
-  <img src="resources/tiles/player/leather_helmet.png" alt="" onload="imgLoaded()" class="leatherHelmet sprite">
-  <img src="resources/tiles/player/iron_armor.png" alt="" onload="imgLoaded()" class="ironArmor sprite">
-  <img src="resources/tiles/player/iron_boots.png" alt="" onload="imgLoaded()" class="ironBoots sprite">
-  <img src="resources/tiles/player/iron_leg_plates.png" alt="" onload="imgLoaded()" class="ironLegplates sprite">
-  <img src="resources/tiles/player/iron_gauntlets.png" alt="" onload="imgLoaded()" class="ironGauntlets sprite">
-  <img src="resources/tiles/player/iron_helmet.png" alt="" onload="imgLoaded()" class="ironHelmet sprite">
-  <img src="resources/tiles/player/knight_armor.png" alt="" onload="imgLoaded()" class="knightArmor sprite">
-  <img src="resources/tiles/player/knight_sabatons.png" alt="" onload="imgLoaded()" class="knightSabatons sprite">
-  <img src="resources/tiles/player/knight_greaves.png" alt="" onload="imgLoaded()" class="knightGreaves sprite">
-  <img src="resources/tiles/player/knight_gloves.png" alt="" onload="imgLoaded()" class="knightGauntlets sprite">
-  <img src="resources/tiles/player/great_helm.png" alt="" onload="imgLoaded()" class="greatHelm sprite">
-  <img src="resources/tiles/player/crown_of_wisdom.png" alt="" onload="imgLoaded()" class="crownOfWisdom sprite">
-  <img src="resources/tiles/player/lich_robes.png" alt="" onload="imgLoaded()" class="lichRobes sprite">
-  <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" onload="imgLoaded()" class="kasDJ sprite">
+  <!-- Clothes  -->
+  <img src="resources/tiles/player/generic_pants.png" alt="" class="defaultPants sprite">
+  <img src="resources/tiles/player/ragged_shirt.png" alt="" class="raggedShirt sprite">
+  <img src="resources/tiles/player/ragged_boots.png" alt="" class="raggedBoots sprite">
+  <img src="resources/tiles/player/ragged_pants.png" alt="" class="raggedPants sprite">
+  <img src="resources/tiles/player/ragged_gloves.png" alt="" class="raggedGloves sprite">
+  <img src="resources/tiles/player/ragged_hood.png" alt="" class="raggedHood sprite">
+  <img src="resources/tiles/player/wool_hat.png" alt="" class="woolHat sprite">
+  <img src="resources/tiles/player/leather_chest.png" alt="" class="leatherChest sprite">
+  <img src="resources/tiles/player/leather_boots.png" alt="" class="leatherBoots sprite">
+  <img src="resources/tiles/player/leather_leg_bracers.png" alt="" class="leatherLeggings sprite">
+  <img src="resources/tiles/player/leather_bracers.png" alt="" class="leatherBracers sprite">
+  <img src="resources/tiles/player/leather_helmet.png" alt="" class="leatherHelmet sprite">
+  <img src="resources/tiles/player/iron_armor.png" alt="" class="ironArmor sprite">
+  <img src="resources/tiles/player/iron_boots.png" alt="" class="ironBoots sprite">
+  <img src="resources/tiles/player/iron_leg_plates.png" alt="" class="ironLegplates sprite">
+  <img src="resources/tiles/player/iron_gauntlets.png" alt="" class="ironGauntlets sprite">
+  <img src="resources/tiles/player/iron_helmet.png" alt="" class="ironHelmet sprite">
+  <img src="resources/tiles/player/knight_armor.png" alt="" class="knightArmor sprite">
+  <img src="resources/tiles/player/knight_sabatons.png" alt="" class="knightSabatons sprite">
+  <img src="resources/tiles/player/knight_greaves.png" alt="" class="knightGreaves sprite">
+  <img src="resources/tiles/player/knight_gloves.png" alt="" class="knightGauntlets sprite">
+  <img src="resources/tiles/player/great_helm.png" alt="" class="greatHelm sprite">
+  <img src="resources/tiles/player/crown_of_wisdom.png" alt="" class="crownOfWisdom sprite">
+  <img src="resources/tiles/player/lich_robes.png" alt="" class="lichRobes sprite">
+  <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" class="kasDJ sprite">
 
   <!-- Weapons -->
-  <img src="resources/tiles/player/dagger_model.png" alt="" onload="imgLoaded()" class="rustyDagger sprite">
-  <img src="resources/tiles/player/stick_model.png" alt="" onload="imgLoaded()" class="stick sprite">
-  <img src="resources/tiles/player/bow_model.png" alt="" onload="imgLoaded()" class="bow sprite">
-  <img src="resources/tiles/player/hiisi_bow.png" alt="" onload="imgLoaded()" class="hiisiBow sprite">
-  <img src="resources/tiles/player/long_bow.png" alt="" onload="imgLoaded()" class="longBow sprite">
-  <img src="resources/tiles/player/gold_bow.png" alt="" onload="imgLoaded()" class="goldBow sprite">
-  <img src="resources/tiles/player/blade_model.png" alt="" onload="imgLoaded()" class="blade sprite">
-  <img src="resources/tiles/player/silver_sword.png" alt="" onload="imgLoaded()" class="silverSword sprite">
-  <img src="resources/tiles/player/chipped_blade_model.png" alt="" onload="imgLoaded()" class="chippedBlade sprite">
-  <img src="resources/tiles/player/chipped_axe_model.png" alt="" onload="imgLoaded()" class="chippedAxe sprite">
-  <img src="resources/tiles/player/apprentice_wand.png" alt="" onload="imgLoaded()" class="apprenticeWand sprite">
-  <img src="resources/tiles/player/troll_club.png" alt="" onload="imgLoaded()" class="trollClub sprite">
-  <img src="resources/tiles/player/spear_of_galador.png" alt="" onload="imgLoaded()" class="galadorSpear sprite">
-  <img src="resources/tiles/player/pikemore.png" alt="" onload="imgLoaded()" class="pikeMore sprite">
-  <img src="resources/tiles/player/orcish_axe.png" alt="" onload="imgLoaded()" class="orcishAxe sprite">
+  <img src="resources/tiles/player/dagger_model.png" alt="" class="rustyDagger sprite">
+  <img src="resources/tiles/player/stick_model.png" alt="" class="stick sprite">
+  <img src="resources/tiles/player/bow_model.png" alt="" class="bow sprite">
+  <img src="resources/tiles/player/hiisi_bow.png" alt="" class="hiisiBow sprite">
+  <img src="resources/tiles/player/long_bow.png" alt="" class="longBow sprite">
+  <img src="resources/tiles/player/gold_bow.png" alt="" class="goldBow sprite">
+  <img src="resources/tiles/player/blade_model.png" alt="" class="blade sprite">
+  <img src="resources/tiles/player/silver_sword.png" alt="" class="silverSword sprite">
+  <img src="resources/tiles/player/chipped_blade_model.png" alt="" class="chippedBlade sprite">
+  <img src="resources/tiles/player/chipped_axe_model.png" alt="" class="chippedAxe sprite">
+  <img src="resources/tiles/player/apprentice_wand.png" alt="" class="apprenticeWand sprite">
+  <img src="resources/tiles/player/troll_club.png" alt="" class="trollClub sprite">
+  <img src="resources/tiles/player/spear_of_galador.png" alt="" class="galadorSpear sprite">
+  <img src="resources/tiles/player/pikemore.png" alt="" class="pikeMore sprite">
+  <img src="resources/tiles/player/orcish_axe.png" alt="" class="orcishAxe sprite">
 
   <!-- Offhands -->
-  <img src="resources/tiles/player/wooden_shield.png" alt="" onload="imgLoaded()" class="woodenShield sprite">
-  <img src="resources/tiles/player/iron_shield.png" alt="" onload="imgLoaded()" class="ironShield sprite">
-  <img src="resources/tiles/player/silver_shield.png" alt="" onload="imgLoaded()" class="silverShield sprite">
-  <img src="resources/tiles/player/parrying_dagger.png" alt="" onload="imgLoaded()" class="parryingDagger sprite">
+  <img src="resources/tiles/player/wooden_shield.png" alt="" class="woodenShield sprite">
+  <img src="resources/tiles/player/iron_shield.png" alt="" class="ironShield sprite">
+  <img src="resources/tiles/player/silver_shield.png" alt="" class="silverShield sprite">
+  <img src="resources/tiles/player/parrying_dagger.png" alt="" class="parryingDagger sprite">
 
   <!-- Projectiles -->
-  <img src="resources/tiles/projectiles/arrow.png" alt="" onload="imgLoaded()" class="arrowProjectile sprite">
-  <img src="resources/tiles/projectiles/arrowPoison.png" alt="" onload="imgLoaded()" class="arrowPoisonedProjectile sprite">
-  <img src="resources/tiles/projectiles/arrowCharged.png" alt="" onload="imgLoaded()" class="arrowChargedProjectile sprite">
-  <img src="resources/tiles/projectiles/iceSpike.png" alt="" onload="imgLoaded()" class="iceSpikedProjectile sprite">
-  <img src="resources/tiles/projectiles/hunterJavelin.png" alt="" onload="imgLoaded()" class="hunterJavelinProjectile sprite">
-  <img src="resources/tiles/projectiles/blight.png" alt="" onload="imgLoaded()" class="blightProjectile sprite">
-  <img src="resources/tiles/projectiles/fireball.png" alt="" onload="imgLoaded()" class="fireballProjectile sprite">
-  <img src="resources/tiles/projectiles/piercingManaBolt.png" alt="" onload="imgLoaded()" class="piercingManaBoltProjectile sprite">
-  <img src="resources/tiles/projectiles/magicBlast.png" alt="" onload="imgLoaded()" class="magicBlastProjectile sprite">
-  <img src="resources/tiles/projectiles/hyväBoogie.png" alt="" onload="imgLoaded()" class="hyväBoogieProjectile sprite">
-  <img src="resources/tiles/projectiles/smokeBomb.png" alt="" onload="imgLoaded()" class="smokeBombProjectile sprite">
+  <img src="resources/tiles/projectiles/arrow.png" alt="" class="arrowProjectile sprite">
+  <img src="resources/tiles/projectiles/arrowPoison.png" alt="" class="arrowPoisonedProjectile sprite">
+  <img src="resources/tiles/projectiles/arrowCharged.png" alt="" class="arrowChargedProjectile sprite">
+  <img src="resources/tiles/projectiles/iceSpike.png" alt="" class="iceSpikedProjectile sprite">
+  <img src="resources/tiles/projectiles/hunterJavelin.png" alt="" class="hunterJavelinProjectile sprite">
+  <img src="resources/tiles/projectiles/blight.png" alt="" class="blightProjectile sprite">
+  <img src="resources/tiles/projectiles/fireball.png" alt="" class="fireballProjectile sprite">
+  <img src="resources/tiles/projectiles/piercingManaBolt.png" alt="" class="piercingManaBoltProjectile sprite">
+  <img src="resources/tiles/projectiles/magicBlast.png" alt="" class="magicBlastProjectile sprite">
+  <img src="resources/tiles/projectiles/hyväBoogie.png" alt="" class="hyväBoogieProjectile sprite">
+  <img src="resources/tiles/projectiles/smokeBomb.png" alt="" class="smokeBombProjectile sprite">
 
 
   <!-- Effects & AOEs -->
-  <img src="resources/tiles/fireAOE.png" alt="" onload="imgLoaded()" class="fireAOE sprite">
-  <img src="resources/tiles/smokeAOE.png" alt="" onload="imgLoaded()" class="smokeAOE sprite">
-  <img src="resources/tiles/shoutAOE.png" alt="" onload="imgLoaded()" class="shoutAOE sprite">
+  <img src="resources/tiles/fireAOE.png" alt="" class="fireAOE sprite">
+  <img src="resources/tiles/smokeAOE.png" alt="" class="smokeAOE sprite">
+  <img src="resources/tiles/shoutAOE.png" alt="" class="shoutAOE sprite">
 
   <!-- Enemies -->
-  <img src="resources/tiles/enemies/grey_slime.png" alt="" onload="imgLoaded()" class="greySlime sprite">
-  <img src="resources/tiles/enemies/flaming_slime.png" alt="" onload="imgLoaded()" class="fireSlime sprite">
-  <img src="resources/tiles/enemies/electric_slime.png" alt="" onload="imgLoaded()" class="shockSlime sprite">
-  <img src="resources/tiles/enemies/hiisi.png" alt="" onload="imgLoaded()" class="hiisi sprite">
-  <img src="resources/tiles/enemies/hiisi_warrior.png" alt="" onload="imgLoaded()" class="hiisiWarrior sprite">
-  <img src="resources/tiles/enemies/hiisi_hunter.png" alt="" onload="imgLoaded()" class="hiisiHunter sprite">
-  <img src="resources/tiles/enemies/skeleton_warrior.png" alt="" onload="imgLoaded()" class="skeletonWarrior sprite">
-  <img src="resources/tiles/enemies/skeleton_archer.png" alt="" onload="imgLoaded()" class="skeletonArcher sprite">
-  <img src="resources/tiles/enemies/skeleton_mage.png" alt="" onload="imgLoaded()" class="skeletonMage sprite">
-  <img src="resources/tiles/enemies/skeleton_lich.png" alt="" onload="imgLoaded()" class="skeletonLich sprite">
-  <img src="resources/tiles/enemies/norseman_berserk.png" alt="" onload="imgLoaded()" class="norsemanBerserk sprite">
-  <img src="resources/tiles/enemies/norseman_hunter.png" alt="" onload="imgLoaded()" class="norsemanHunter sprite">
-  <img src="resources/tiles/enemies/wolf.png" alt="" onload="imgLoaded()" class="wolfGrey sprite">
-  <img src="resources/tiles/enemies/female_orc_raider.png" alt="" onload="imgLoaded()" class="femaleOrcRaider sprite">
-  <img src="resources/tiles/enemies/male_orc_raider.png" alt="" onload="imgLoaded()" class="maleOrcRaider sprite">
-  <img src="resources/tiles/enemies/orc_chieftess.png" alt="" onload="imgLoaded()" class="orcChieftess sprite">
-  <img src="resources/tiles/enemies/wild_troll.png" alt="" onload="imgLoaded()" class="wildTroll sprite">
-  <img src="resources/tiles/enemies/wild_stone_troll.png" alt="" onload="imgLoaded()" class="wildStoneTroll sprite">
-  <img src="resources/tiles/enemies/troll.png" alt="" onload="imgLoaded()" class="troll sprite">
-  <img src="resources/tiles/enemies/stone_troll.png" alt="" onload="imgLoaded()" class="stoneTroll sprite">
-  <img src="resources/tiles/enemies/knight_sword_shield.png" alt="" onload="imgLoaded()" class="knightSwordShield sprite">
-  <img src="resources/tiles/enemies/spectral_knight_sword_shield.png" alt="" onload="imgLoaded()" class="spectralKnightSwordShield sprite">
-  <img src="resources/tiles/enemies/soul_wraith.png" alt="" onload="imgLoaded()" class="soulWraith sprite">
+  <img src="resources/tiles/enemies/grey_slime.png" alt="" class="greySlime sprite">
+  <img src="resources/tiles/enemies/flaming_slime.png" alt="" class="fireSlime sprite">
+  <img src="resources/tiles/enemies/electric_slime.png" alt="" class="shockSlime sprite">
+  <img src="resources/tiles/enemies/hiisi.png" alt="" class="hiisi sprite">
+  <img src="resources/tiles/enemies/hiisi_warrior.png" alt="" class="hiisiWarrior sprite">
+  <img src="resources/tiles/enemies/hiisi_hunter.png" alt="" class="hiisiHunter sprite">
+  <img src="resources/tiles/enemies/skeleton_warrior.png" alt="" class="skeletonWarrior sprite">
+  <img src="resources/tiles/enemies/skeleton_archer.png" alt="" class="skeletonArcher sprite">
+  <img src="resources/tiles/enemies/skeleton_mage.png" alt="" class="skeletonMage sprite">
+  <img src="resources/tiles/enemies/skeleton_lich.png" alt="" class="skeletonLich sprite">
+  <img src="resources/tiles/enemies/norseman_berserk.png" alt="" class="norsemanBerserk sprite">
+  <img src="resources/tiles/enemies/norseman_hunter.png" alt="" class="norsemanHunter sprite">
+  <img src="resources/tiles/enemies/wolf.png" alt="" class="wolfGrey sprite">
+  <img src="resources/tiles/enemies/female_orc_raider.png" alt="" class="femaleOrcRaider sprite">
+  <img src="resources/tiles/enemies/male_orc_raider.png" alt="" class="maleOrcRaider sprite">
+  <img src="resources/tiles/enemies/orc_chieftess.png" alt="" class="orcChieftess sprite">
+  <img src="resources/tiles/enemies/wild_troll.png" alt="" class="wildTroll sprite">
+  <img src="resources/tiles/enemies/wild_stone_troll.png" alt="" class="wildStoneTroll sprite">
+  <img src="resources/tiles/enemies/troll.png" alt="" class="troll sprite">
+  <img src="resources/tiles/enemies/stone_troll.png" alt="" class="stoneTroll sprite">
+  <img src="resources/tiles/enemies/knight_sword_shield.png" alt="" class="knightSwordShield sprite">
+  <img src="resources/tiles/enemies/spectral_knight_sword_shield.png" alt="" class="spectralKnightSwordShield sprite">
+  <img src="resources/tiles/enemies/soul_wraith.png" alt="" class="soulWraith sprite">
 
   <!-- Characters -->
-  <img src="resources/tiles/characters/generic_village_man.png" alt="" onload="imgLoaded()" class="villageMan sprite">
-  <img src="resources/tiles/characters/orc_warrior_lady.png" alt="" onload="imgLoaded()" class="orcLady sprite">
+  <img src="resources/tiles/characters/generic_village_man.png" alt="" class="villageMan sprite">
+  <img src="resources/tiles/characters/orc_warrior_lady.png" alt="" class="orcLady sprite">
 
   <!-- Health & Mana Bars -->
-  <img src="resources/tiles/enemies/healthBackground.png" alt="" onload="imgLoaded()" class="hpBg sprite">
-  <img src="resources/tiles/enemies/healthBar.png" alt="" onload="imgLoaded()" class="hpBar sprite">
-  <img src="resources/tiles/enemies/allyHealthBar.png" alt="" onload="imgLoaded()" class="hpBarAlly sprite">
-  <img src="resources/tiles/enemies/healthBorder.png" alt="" onload="imgLoaded()" class="hpBorder sprite">
+  <img src="resources/tiles/enemies/healthBackground.png" alt="" class="hpBg sprite">
+  <img src="resources/tiles/enemies/healthBar.png" alt="" class="hpBar sprite">
+  <img src="resources/tiles/enemies/allyHealthBar.png" alt="" class="hpBarAlly sprite">
+  <img src="resources/tiles/enemies/healthBorder.png" alt="" class="hpBorder sprite">
 
-   <!-- Map Tiles  -->
-   <img src="resources/tiles/player/p_minimap.png" alt="" onload="imgLoaded()" class="pMinimap sprite">
-   <img src="resources/tiles/tileMap.png" alt="" onload="imgLoaded()" class="spriteMap_tiles sprite">
-   <img src="resources/tiles/shrine.png" alt="" onload="imgLoaded()" class="shrineTile sprite">
-   <img src="resources/tiles/shrine_lit.png" alt="" onload="imgLoaded()" class="shrineLitTile sprite">
-   <img src="resources/tiles/message.png" alt="" onload="imgLoaded()" class="messageTile sprite">
-   <img src="resources/tiles/water.png" alt="" onload="imgLoaded()" class="tile0 sprite">
-   <img src="resources/tiles/grass.png" alt="" onload="imgLoaded()" class="tile1 sprite">
-   <img src="resources/tiles/dirt.png" alt="" onload="imgLoaded()" class="tile2 sprite">
-   <img src="resources/tiles/pond_water.png" alt="" onload="imgLoaded()" class="tile3 sprite">
-   <img src="resources/tiles/gravel.png" alt="" onload="imgLoaded()" class="tile4 sprite">
-   <img src="resources/tiles/cobble_flooring.png" alt="" onload="imgLoaded()" class="tile5 sprite">
-   <img src="resources/tiles/dungeon_wall.png" alt="" onload="imgLoaded()" class="tile6 sprite">
-   <img src="resources/tiles/sand.png" alt="" onload="imgLoaded()" class="tile7 sprite">
+  <!-- Map Tiles  -->
+  <img src="resources/tiles/player/p_minimap.png" alt="" class="pMinimap sprite">
+  <img src="resources/tiles/tileMap.png" alt="" class="spriteMap_tiles sprite">
+  <img src="resources/tiles/shrine.png" alt="" class="shrineTile sprite">
+  <img src="resources/tiles/shrine_lit.png" alt="" class="shrineLitTile sprite">
+  <img src="resources/tiles/message.png" alt="" class="messageTile sprite">
+  <img src="resources/tiles/water.png" alt="" class="tile0 sprite">
+  <img src="resources/tiles/grass.png" alt="" class="tile1 sprite">
+  <img src="resources/tiles/dirt.png" alt="" class="tile2 sprite">
+  <img src="resources/tiles/pond_water.png" alt="" class="tile3 sprite">
+  <img src="resources/tiles/gravel.png" alt="" class="tile4 sprite">
+  <img src="resources/tiles/cobble_flooring.png" alt="" class="tile5 sprite">
+  <img src="resources/tiles/dungeon_wall.png" alt="" class="tile6 sprite">
+  <img src="resources/tiles/sand.png" alt="" class="tile7 sprite">
 
   <!-- Clutters -->
-  <img src="resources/tiles/treasure_chest_1.png" alt="" onload="imgLoaded()" class="treasureChest1 sprite">
-  <img src="resources/tiles/treasure_chest_2.png" alt="" onload="imgLoaded()" class="treasureChest2 sprite">
-  <img src="resources/tiles/treasure_chest_magical.png" alt="" onload="imgLoaded()" class="treasureChestMagical sprite">
-  <img src="resources/tiles/tree_1.png" alt="" onload="imgLoaded()" class="clutter1 sprite">
-  <img src="resources/tiles/tree_2.png" alt="" onload="imgLoaded()" class="clutter2 sprite">
+  <img src="resources/tiles/treasure_chest_1.png" alt="" class="treasureChest1 sprite">
+  <img src="resources/tiles/treasure_chest_2.png" alt="" class="treasureChest2 sprite">
+  <img src="resources/tiles/treasure_chest_magical.png" alt="" class="treasureChestMagical sprite">
+  <img src="resources/tiles/tree_1.png" alt="" class="clutter1 sprite">
+  <img src="resources/tiles/tree_2.png" alt="" class="clutter2 sprite">
 
   <!-- Misc -->
-  <img src="resources/tiles/dummy.png" alt="" onload="imgLoaded()" class="dummyModel sprite">
-  <img src="resources/tiles/totem_sample.png" alt="" onload="imgLoaded()" class="arrowTotem sprite">
+  <img src="resources/tiles/dummy.png" alt="" class="dummyModel sprite">
+  <img src="resources/tiles/totem_sample.png" alt="" class="arrowTotem sprite">
 </div>
-
 </html>
-
 <script src="resources/compiledJS/script/syntax.js"></script>
 <script src="resources/compiledJS/arrays/tiles.js"></script>
 <script src="resources/compiledJS/arrays/icons.js"></script>
 <script src="resources/compiledJS/script/localisation.js"></script>
 <script src="resources/compiledJS/script/dialogLocalisation.js"></script>
 <script src="resources/compiledJS/script/questLocalisation.js"></script>
+<script src="resources/compiledJS/script/codexLocalisation.js"></script>
 <script src="resources/compiledJS/script/menu.js"></script>
 <script src="resources/compiledJS/script/dev.js"></script>
 <script src="resources/compiledJS/arrays/perks.js"></script>
@@ -401,4 +414,5 @@
 <script src="resources/compiledJS/script/combat.js"></script>
 <script src="resources/compiledJS/script/hotbar.js"></script>
 <script src="resources/compiledJS/script/perk.js"></script>
+<script src="resources/compiledJS/script/codex.js"></script>
 <script src="resources/compiledJS/script/startGame.js"></script>

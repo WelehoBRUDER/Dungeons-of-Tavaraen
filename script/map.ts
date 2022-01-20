@@ -203,7 +203,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     // @ts-ignore
     canvas.classList = `enemy${index} layer`;
     const ctx = canvas.getContext("2d");
-    const enemyImg = <HTMLImageElement>document.querySelector(`.${enemy.sprite}`);
+    const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     if (enemyImg) {
@@ -214,7 +214,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
       ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-      /* Render enemy on top of hp bar */
+      /* Render enemy on top of hp bar */ 
       ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       if(enemy.questSpawn?.quest > -1) {
         ctx.font = `${spriteSize / 1.9}px Arial`;

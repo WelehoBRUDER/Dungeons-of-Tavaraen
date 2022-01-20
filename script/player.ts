@@ -35,12 +35,19 @@ interface playerChar extends characterObject {
   addItem?: Function;
   addGold?: Function;
   questProgress?: Array<any>;
+  entitiesEverEncountered?: entityMemory;
 }
 
 interface levelObject {
   xp: number;
   xpNeed: number;
   level: number;
+}
+
+// Save entities to memory like such: 0:1, meaning for example "Has encountered grey slime"
+interface entityMemory {
+  [items: string]: any;
+  enemies: any;
 }
 
 interface raceTxt {
@@ -146,6 +153,7 @@ class PlayerCharacter extends Character {
   addItem?: Function;
   addGold?: Function;
   questProgress?: Array<any>;
+  entitiesEverEncountered: entityMemory;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -180,6 +188,7 @@ class PlayerCharacter extends Character {
     this.oldCords = {...base.oldCords} ?? this.cords;
     this.flags = {...base.flags} ?? [];
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
+    this.entitiesEverEncountered = base.entitiesEverEncountered ? {...base.entitiesEverEncountered} : {items: {}, enemies: {}} as entityMemory;
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -437,6 +446,11 @@ class PlayerCharacter extends Character {
       }
       else {
         this.inventory.push({...itm});
+      }
+      if(!itm.indexInBaseArray) return;
+      let encounter = player.entitiesEverEncountered?.items?.[itm.indexInBaseArray.toString()];
+      if(encounter < 1 || !encounter) {
+        player.entitiesEverEncountered.items[itm.indexInBaseArray.toString()] = 1;
       }
     }
 

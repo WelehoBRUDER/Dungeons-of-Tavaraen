@@ -34,6 +34,7 @@ interface enemy extends characterObject {
   chosenTarget?: characterObject;
   distToPlayer?: Function;
   questSpawn?: any;
+  indexInBaseArray?: number;
 }
 
 class Enemy extends Character {
@@ -74,6 +75,7 @@ class Enemy extends Character {
   oldCords?: tileObject; // Shitty hack to make summon shooting possible.
   distToPlayer?: Function;
   questSpawn?: any;
+  indexInBaseArray?: number;
   constructor(base: enemy) {
     super(base);
     const defaultModel: any = {...enemies[base.id]};
@@ -108,6 +110,7 @@ class Enemy extends Character {
     this.chosenTarget = base.chosenTarget ?? null;
     this.oldCords = { ...base.oldCords } ?? { ...this.cords };
     this.questSpawn = {...base.questSpawn} ?? null;
+    this.indexInBaseArray = Object.keys(enemies).findIndex((en: string)=>en == this.id);
 
     if (!this.hasBeenLeveled && this.level > 1) {
       for (let i = 1; i < this.level; i++) {
@@ -329,7 +332,16 @@ class Enemy extends Character {
       let range = this.aggroRange + this.tempAggro;
       // @ts-ignore
       if (target) {
-        if (generatePath(this.cords, target.cords, this.canFly, true) <= range) return true;
+        if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
+          let encounter = player.entitiesEverEncountered?.enemies?.[this.indexInBaseArray.toString()];
+          if(encounter < 1 || !encounter) {
+            player.entitiesEverEncountered.enemies[this.indexInBaseArray.toString()] = 1;
+            displayText("New enemy encountered!");
+            displayText(this.id + " added to codex.");
+            spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
+          }
+          return true;
+        } 
       }
       return false;
     };

@@ -1,0 +1,92 @@
+.codexWindow {
+  transition: 0.36s;
+  width: calc(1360px * var(--ui-scale));
+  height: calc(780px * var(--ui-scale));
+  background: rgba(5, 5, 5, 0.95);
+  border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
+  box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+  border-radius: 4px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: calc(-680px * var(--ui-scale));
+  margin-top: calc(-390px * var(--ui-scale));
+  z-index: 8;
+  opacity: 0;
+  transform: scale(0);
+
+  .contentContainer {
+    width: 75%;
+    height: 100%;
+    border: 4px solid silver;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(0, 10, 15, 0.9);
+  }
+
+  .contentList {
+    width: 25%;
+    height: 100%;
+    border: 4px solid grey;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgba(16, 16, 16, .9);
+    color: white;
+    overflow: hidden;
+    overflow-y: auto;
+
+    .title {
+      font-size: calc(25px * var(--ui-scale));
+      max-height: calc(28px * var(--ui-scale));
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      margin-left: calc(10px * var(--ui-scale));
+      user-select: none;
+
+      li {
+        transition: transform .3s ease-out;
+        transform: scale(0);
+        font-size: calc(21px * var(--ui-scale));
+        height: calc(24px * var(--ui-scale));
+        margin: 0;
+        padding: 0;
+        padding-left: calc(10px * var(--ui-scale));
+        cursor: default;
+        text-shadow: 0 0 0 gold;
+        list-style-type: none;
+        display: flex;
+
+        p {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin: 0;
+          padding: 0;
+          position: relative;
+          pointer-events: none;
+        }
+
+        img {
+          margin: 0;
+          padding: 0;
+          position: relative;
+          pointer-events: none;
+        }
+      }
+
+      li:hover {
+        background: rgba(200, 200, 200, .6);
+      }
+    }
+
+    .title:hover {
+      cursor: pointer;
+      text-shadow: 0 0 12px gold;
+    }
+  }
+}

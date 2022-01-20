@@ -14,6 +14,7 @@ interface itemClass {
   spriteMap?: any;
   amount?: number;
   stacks?: boolean;
+  indexInBaseArray?: number;
 }
 
 class Item {
@@ -33,6 +34,7 @@ class Item {
   mainTitle?: boolean;
   amount?: number;
   stacks?: boolean;
+  indexInBaseArray?: number; 
   constructor(base: itemClass) {
     this.id = base.id;
     // @ts-ignore
@@ -52,6 +54,7 @@ class Item {
     this.requiresStats = baseItem.requiresStats ?? null;
     this.mainTitle = baseItem.mainTitle ?? true;
     this.stacks = baseItem.stacks ?? false;
+    this.indexInBaseArray = Object.keys(items).findIndex((item: string)=>item == this.id);
   }
 }
 

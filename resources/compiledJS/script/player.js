@@ -83,6 +83,7 @@ class PlayerCharacter extends Character {
         this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
         this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
+        this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {} };
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -350,6 +351,7 @@ class PlayerCharacter extends Character {
             return vals;
         };
         this.addItem = (itm) => {
+            var _a, _b;
             if (itm.stacks) {
                 let wasAdded = false;
                 this.inventory.forEach((item) => {
@@ -363,6 +365,12 @@ class PlayerCharacter extends Character {
             }
             else {
                 this.inventory.push(Object.assign({}, itm));
+            }
+            if (!itm.indexInBaseArray)
+                return;
+            let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b[itm.indexInBaseArray.toString()];
+            if (encounter < 1 || !encounter) {
+                player.entitiesEverEncountered.items[itm.indexInBaseArray.toString()] = 1;
             }
         };
         this.addGold = (amnt) => {

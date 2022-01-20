@@ -22,6 +22,7 @@ class Item {
         this.requiresStats = (_c = baseItem.requiresStats) !== null && _c !== void 0 ? _c : null;
         this.mainTitle = (_d = baseItem.mainTitle) !== null && _d !== void 0 ? _d : true;
         this.stacks = (_e = baseItem.stacks) !== null && _e !== void 0 ? _e : false;
+        this.indexInBaseArray = Object.keys(items).findIndex((item) => item == this.id);
     }
 }
 const grade_vals = {

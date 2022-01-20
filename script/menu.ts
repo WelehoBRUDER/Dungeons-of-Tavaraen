@@ -95,6 +95,10 @@ const menuSettings = [
     type: "hotkey",
   },
   {
+    id: "setting_hotkey_codex",
+    type: "hotkey",
+  },
+  {
     id: "setting_hotkey_ranged",
     tooltip: "toggle_rangedMode",
     type: "hotkey",
@@ -153,7 +157,8 @@ const state = {
   textWindowOpen: false as boolean,
   dialogWindow: false as boolean,
   storeOpen: false as boolean,
-  journalOpen: false as boolean
+  journalOpen: false as boolean,
+  codexOpen: false as boolean,
 };
 
 function handleEscape() {
@@ -197,6 +202,9 @@ function handleEscape() {
   }
   else if(state.journalOpen) {
     closePlayerQuests();
+  }
+  else if(state.codexOpen) {
+    closeCodex();
   }
   else if (!state.isSelected) {
     openGameMenu();
@@ -284,6 +292,7 @@ window.addEventListener("keyup", (e) => {
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
     selectingHotkey = "";
   }
@@ -396,6 +405,7 @@ function gotoSettingsMenu(inMainMenu = false) {
           tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
           tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
           tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+          tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
           tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
           player.updateAbilities();
           gotoSettingsMenu(true);
@@ -903,4 +913,3 @@ function calcLocalStorageUsedSpace() {
   }
   return parseInt((total / 1024).toFixed(2));
 }
-console.log(Math.round(calcLocalStorageMaxSpace()));

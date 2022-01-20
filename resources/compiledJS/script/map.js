@@ -188,7 +188,7 @@ function renderMap(map, createNewSightMap = false) {
         // @ts-ignore
         canvas.classList = `enemy${index} layer`;
         const ctx = canvas.getContext("2d");
-        const enemyImg = document.querySelector(`.${enemy.sprite}`);
+        const enemyImg = document.querySelector(`.sprites .${enemy.sprite}`);
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         if (enemyImg) {

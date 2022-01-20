@@ -19,6 +19,7 @@ class gameSettings {
   hotkey_open_world_messages: string;
   hotkey_interact: string;
   hotkey_journal: string;
+  hotkey_codex: string;
   constructor(base: gameSettings) {
     this.log_enemy_movement = base.log_enemy_movement || false;
     this.toggle_minimap = base.toggle_minimap || true;
@@ -34,6 +35,7 @@ class gameSettings {
     this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
     this.hotkey_interact = base.hotkey_interact || " ";
     this.hotkey_journal = base.hotkey_journal || "j";
+    this.hotkey_codex = base.hotkey_codex || "y";
   }
 }
 
@@ -51,7 +53,8 @@ let settings = new gameSettings({
   hotkey_move_right: "d",
   hotkey_interact: " ",
   hotkey_open_world_messages: "Enter",
-  hotkey_journal: "j"
+  hotkey_journal: "j",
+  hotkey_codex: "y",
 });
 
 // Hotkeys
@@ -109,6 +112,10 @@ document.addEventListener("keyup", e => {
   else if(e.key == settings.hotkey_journal && !state.menuOpen) {
     if(!state.journalOpen) renderPlayerQuests();
     else closePlayerQuests();
+  }
+  else if(e.key == settings.hotkey_codex && !state.menuOpen) {
+    if(!state.codexOpen) openIngameCodex();
+    else closeCodex();
   }
   else if (state.invOpen || state.menuOpen) return;
   else if (number > -1 && e.shiftKey) {
@@ -874,4 +881,5 @@ updateUI();
 tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
 tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
 tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
 tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
