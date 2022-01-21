@@ -649,9 +649,9 @@ class Character {
           else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable({ ...this.inventory[i] });
           else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact({ ...this.inventory[i] });
           if(!this.inventory[i].indexInBaseArray) continue;
-          let encounter = player.entitiesEverEncountered?.items?.[this.inventory[i].indexInBaseArray.toString()];
+          let encounter = player.entitiesEverEncountered?.items?.[this.inventory[i].id];
           if(encounter < 1 || !encounter) {
-            player.entitiesEverEncountered.items[this.inventory[i].indexInBaseArray.toString()] = 1;
+            player.entitiesEverEncountered.items[this.inventory[i].id] = 1;
           }
         }
       }

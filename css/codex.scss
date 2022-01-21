@@ -34,12 +34,13 @@
     position: absolute;
     right: 0;
     top: 0;
-    background: rgba(16, 16, 16, .9);
+    background: rgba(16, 16, 16, 0.9);
     color: white;
     overflow: hidden;
     overflow-y: auto;
 
     .title {
+      transition: all 1s, text-shadow 0ms;
       font-size: calc(25px * var(--ui-scale));
       max-height: calc(28px * var(--ui-scale));
       overflow: hidden;
@@ -48,8 +49,8 @@
       margin-left: calc(10px * var(--ui-scale));
       user-select: none;
 
-      li {
-        transition: transform .3s ease-out;
+      li:not(.subCategory) {
+        transition: all 1s, text-shadow 0ms;
         transform: scale(0);
         font-size: calc(21px * var(--ui-scale));
         height: calc(24px * var(--ui-scale));
@@ -79,12 +80,33 @@
         }
       }
 
-      li:hover {
-        background: rgba(200, 200, 200, .6);
+      li:hover:not(.subCategory) {
+        background: rgba(200, 200, 200, 0.6);
+      }
+
+      li.subCategory {
+        transition: all 1s, text-shadow 0ms;
+        transform: scale(0);
+        font-size: calc(21px * var(--ui-scale));
+        max-height: calc(28px * var(--ui-scale));
+        margin: 0;
+        padding: 0;
+        padding-left: calc(10px * var(--ui-scale));
+        cursor: pointer;
+        text-shadow: 0 0 0 gold;
+        list-style-type: none;
+
+        ul.subList {
+          display: block;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          user-select: none;
+        }
       }
     }
 
-    .title:hover {
+    .title:hover, li.subCategory:hover {
       cursor: pointer;
       text-shadow: 0 0 12px gold;
     }

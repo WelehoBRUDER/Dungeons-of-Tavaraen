@@ -447,10 +447,9 @@ class PlayerCharacter extends Character {
       else {
         this.inventory.push({...itm});
       }
-      if(!itm.indexInBaseArray) return;
-      let encounter = player.entitiesEverEncountered?.items?.[itm.indexInBaseArray.toString()];
+      let encounter = player.entitiesEverEncountered?.items?.[itm.id];
       if(encounter < 1 || !encounter) {
-        player.entitiesEverEncountered.items[itm.indexInBaseArray.toString()] = 1;
+        player.entitiesEverEncountered.items[itm.id] = 1;
       }
     }
 

@@ -4,6 +4,9 @@
   * Added a questing system, allowing you to get quests from npcs!  
     > Basic functionality already there, just needs a lot of expansion and polish.  
     > There are currently 2 test quests in the game, both about defeating slimes.
+  * Added an ingame codex
+    > Codex has basic information about items, enemies and classes.
+    > Will be expanded with mechanics and lore as the game progresses.
   * Added 4 new barbarian perks and 2 new abilities
   * Added 2 new ranger perks, changed 3 old ones and added 2 new abilities.
 

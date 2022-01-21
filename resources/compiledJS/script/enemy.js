@@ -265,9 +265,9 @@ class Enemy extends Character {
             // @ts-ignore
             if (target) {
                 if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
-                    let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.indexInBaseArray.toString()];
+                    let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.id];
                     if (encounter < 1 || !encounter) {
-                        player.entitiesEverEncountered.enemies[this.indexInBaseArray.toString()] = 1;
+                        player.entitiesEverEncountered.enemies[this.id] = 1;
                         displayText("New enemy encountered!");
                         displayText(this.id + " added to codex.");
                         spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);

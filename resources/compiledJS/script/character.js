@@ -609,9 +609,9 @@ class Character {
                         this.inventory[i] = new Artifact(Object.assign({}, this.inventory[i]));
                     if (!this.inventory[i].indexInBaseArray)
                         continue;
-                    let encounter = (_d = (_c = player.entitiesEverEncountered) === null || _c === void 0 ? void 0 : _c.items) === null || _d === void 0 ? void 0 : _d[this.inventory[i].indexInBaseArray.toString()];
+                    let encounter = (_d = (_c = player.entitiesEverEncountered) === null || _c === void 0 ? void 0 : _c.items) === null || _d === void 0 ? void 0 : _d[this.inventory[i].id];
                     if (encounter < 1 || !encounter) {
-                        player.entitiesEverEncountered.items[this.inventory[i].indexInBaseArray.toString()] = 1;
+                        player.entitiesEverEncountered.items[this.inventory[i].id] = 1;
                     }
                 }
             }

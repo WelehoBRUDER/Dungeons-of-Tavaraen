@@ -366,11 +366,9 @@ class PlayerCharacter extends Character {
             else {
                 this.inventory.push(Object.assign({}, itm));
             }
-            if (!itm.indexInBaseArray)
-                return;
-            let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b[itm.indexInBaseArray.toString()];
+            let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b[itm.id];
             if (encounter < 1 || !encounter) {
-                player.entitiesEverEncountered.items[itm.indexInBaseArray.toString()] = 1;
+                player.entitiesEverEncountered.items[itm.id] = 1;
             }
         };
         this.addGold = (amnt) => {
