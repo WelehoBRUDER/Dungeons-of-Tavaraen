@@ -40,7 +40,7 @@
     overflow-y: auto;
 
     .title {
-      transition: all 1s, text-shadow 0ms;
+      transition: all 1s, text-shadow 1ms 1ms, background 1ms 1ms;
       font-size: calc(25px * var(--ui-scale));
       max-height: calc(28px * var(--ui-scale));
       overflow: hidden;
@@ -50,7 +50,7 @@
       user-select: none;
 
       li:not(.subCategory) {
-        transition: all 1s, text-shadow 0ms;
+        transition: all 1s, text-shadow 1ms 1ms, background 1ms 1ms;
         transform: scale(0);
         font-size: calc(21px * var(--ui-scale));
         height: calc(24px * var(--ui-scale));
@@ -73,6 +73,7 @@
         }
 
         img {
+          transition: 1s;
           margin: 0;
           padding: 0;
           position: relative;
@@ -85,7 +86,8 @@
       }
 
       li.subCategory {
-        transition: all 1s, text-shadow 0ms;
+        transition: all 1s, text-shadow 1ms 1ms, background 1ms 1ms;
+        height: max-content;
         transform: scale(0);
         font-size: calc(21px * var(--ui-scale));
         max-height: calc(28px * var(--ui-scale));
@@ -97,11 +99,16 @@
         list-style-type: none;
 
         ul.subList {
+          font-size: calc(25px * var(--ui-scale));
+          transition: all 1s, text-shadow 1ms 1ms, background 1ms 1ms;
+          height: max-content;
           display: block;
           overflow: hidden;
+          max-height: calc(28px * var(--ui-scale));
           margin: 0;
           padding: 0;
           user-select: none;
+          margin-left: calc(10px * var(--ui-scale));
         }
       }
     }
