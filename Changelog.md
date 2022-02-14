@@ -1,6 +1,6 @@
 # 1.0.0 ~ 13.2.2022
 
-### This is a full alpha release, containing everything meant for the playtest!
+### This release contains a lot of fixes and mechanics in preparation for a playtest.
 
 ## New Additions
 

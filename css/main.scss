@@ -1603,7 +1603,6 @@ body {
       position: absolute;
       left: 0;
       top: 5%;
-      background: black;
       user-select: none;
 
       p {
@@ -1638,8 +1637,7 @@ body {
       position: absolute;
       left: 30%;
       top: 0;
-      background: red;
-
+      box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
       pre {
         margin: 0;
         span {
