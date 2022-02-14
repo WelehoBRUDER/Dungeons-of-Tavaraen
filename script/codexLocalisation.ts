@@ -1,0 +1,4 @@
+const codexLang = {
+  finnish: {},
+  english: {}
+};

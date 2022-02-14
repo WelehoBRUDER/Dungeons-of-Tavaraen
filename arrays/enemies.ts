@@ -541,21 +541,21 @@ const enemies = {
       int: 1,
       vit: 0,
       cun: 0,
-      hp: 15,
+      hp: 25,
       mp: 0,
-      hpMax: 15,
+      hpMax: 25,
       mpMax: 0
     },
     resistances: {
-      slash: 70,
-      crush: -10,
-      pierce: 55,
+      slash: 45,
+      crush: 15,
+      pierce: 45,
       magic: 10,
-      dark: 20,
+      dark: 25,
       divine: -50,
-      fire: -20,
-      lightning: 20,
-      ice: 20
+      fire: 0,
+      lightning: 0,
+      ice: 0
     },
     statusResistances: {
       poison: 100,
@@ -620,21 +620,21 @@ const enemies = {
       int: 1,
       vit: 0,
       cun: 0,
-      hp: 12,
+      hp: 20,
       mp: 0,
-      hpMax: 12,
+      hpMax: 20,
       mpMax: 0
     },
     resistances: {
-      slash: 70,
-      crush: -15,
-      pierce: 60,
+      slash: 45,
+      crush: 15,
+      pierce: 45,
       magic: 10,
-      dark: 20,
+      dark: 25,
       divine: -50,
-      fire: -20,
-      lightning: 20,
-      ice: 20
+      fire: 0,
+      lightning: 0,
+      ice: 0
     },
     statusResistances: {
       poison: 100,
@@ -662,7 +662,8 @@ const enemies = {
     canFly: false,
     shootsProjectile: "arrowProjectile",
     abilities: [
-      new Ability(abilities.attack, dummy)
+      new Ability(abilities.attack, dummy),
+      new Ability(abilities.sundering_arrow, dummy)
     ],
     statModifiers: [
       {
@@ -706,15 +707,15 @@ const enemies = {
       mpMax: 4
     },
     resistances: {
-      slash: 70,
-      crush: -15,
-      pierce: 60,
-      magic: 40,
-      dark: 40,
+      slash: 45,
+      crush: 15,
+      pierce: 45,
+      magic: 50,
+      dark: 50,
       divine: -50,
-      fire: -20,
-      lightning: 20,
-      ice: 20
+      fire: 0,
+      lightning: 0,
+      ice: 5
     },
     statusResistances: {
       poison: 100,
@@ -781,15 +782,15 @@ const enemies = {
       mpMax: 50
     },
     resistances: {
-      slash: 70,
-      crush: -15,
-      pierce: 60,
-      magic: 65,
+      slash: 50,
+      crush: 15,
+      pierce: 50,
+      magic: 60,
       dark: 75,
-      divine: -40,
-      fire: -25,
-      lightning: 20,
-      ice: 20
+      divine: -50,
+      fire: 0,
+      lightning: 0,
+      ice: 10
     },
     statusResistances: {
       poison: 100,
@@ -1424,13 +1425,13 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 40,
-      crush: 40,
-      pierce: 40,
+      slash: 30,
+      crush: 15,
+      pierce: 30,
       magic: 5,
       dark: -10,
       divine: -10,
-      fire: -10,
+      fire: 10,
       lightning: 0,
       ice: 0
     },
@@ -1602,7 +1603,7 @@ const enemies = {
       bleed: 65
     },
     damages: {
-      crush: 13,
+      crush: 11,
     },
     hit: {
       chance: 70,
@@ -1664,15 +1665,15 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 60,
-      crush: 60,
-      pierce: 60,
-      magic: 30,
+      slash: 40,
+      crush: 25,
+      pierce: 40,
+      magic: 45,
       dark: 45,
-      divine: 30,
-      fire: -25,
-      lightning: -50,
-      ice: -25
+      divine: 45,
+      fire: 0,
+      lightning: -25,
+      ice: 0
     },
     statusResistances: {
       poison: 0,
@@ -1751,15 +1752,15 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 90,
-      crush: 90,
-      pierce: 90,
-      magic: -15,
-      dark: 0,
-      divine: -15,
-      fire: 80,
-      lightning: 80,
-      ice: 80
+      slash: 60,
+      crush: 60,
+      pierce: 60,
+      magic: 15,
+      dark: 15,
+      divine: 15,
+      fire: 30,
+      lightning: 30,
+      ice: 30
     },
     statusResistances: {
       poison: 100,
@@ -1840,26 +1841,26 @@ const enemies = {
       mpMax: 60
     },
     resistances: {
-      slash: 60,
-      crush: 60,
-      pierce: 60,
+      slash: 45,
+      crush: 45,
+      pierce: 45,
       magic: 30,
-      dark: 100,
-      divine: -75,
-      fire: -45,
-      lightning: 30,
-      ice: 75
+      dark: 75,
+      divine: -50,
+      fire: 15,
+      lightning: 15,
+      ice: 45
     },
     statusResistances: {
-      poison: 100,
-      burning: -50,
+      poison: 50,
+      burning: -25,
       curse: 100,
       stun: 25,
-      bleed: 100
+      bleed: 50
     },
     damages: {
-      slash: 8,
-      dark: 11,
+      slash: 7,
+      dark: 9,
       magic: 3
     },
     hit: {
@@ -1904,8 +1905,6 @@ const enemies = {
       vit: 1
     },
     loot:[
-      {type: "weapon", amount: [1, 1], item: "pikeMore", chance: 80},
-      {type: "weapon", amount: [1, 1], item: "goldBow", chance: 80},
       {type: "gold", amount: [288, 541]}
     ]
   },

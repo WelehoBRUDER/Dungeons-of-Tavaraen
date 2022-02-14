@@ -528,6 +528,33 @@ const perksArray = {
                 requires: ["raging_charge"],
                 icon: "resources/icons/cooldown_flame.png"
             },
+            perk_finishing_blow: {
+                id: "perk_finishing_blow",
+                name: "Finishing Blow",
+                desc: "",
+                commands: {
+                    add_ability_finishing_blow: 1
+                },
+                tree: "barbarian",
+                pos: { x: 2, y: 2 },
+                relative_to: "impatient",
+                requires: ["impatient", "ultimate_warrior"],
+                icon: "resources/icons/finishing_blow.png"
+            },
+            true_finish: {
+                id: "true_finish",
+                name: "True Finish",
+                desc: "",
+                effects: {
+                    finishing_blow_damage_multiplierP: 100,
+                    finishing_blow_resistance_penetrationV: 25
+                },
+                tree: "barbarian",
+                pos: { x: 0, y: 2 },
+                relative_to: "perk_finishing_blow",
+                requires: ["perk_finishing_blow"],
+                icon: "resources/icons/finishing_blow_burning.png"
+            },
             hardened_constitution: {
                 id: "hardened_constitution",
                 name: "Hardenend  Constitution",
@@ -662,6 +689,41 @@ const perksArray = {
                 relative_to: "perk_barbarian_rage",
                 requires: ["perk_barbarian_rage"],
                 icon: "resources/icons/skull_bleeding_eyes_flame.png"
+            },
+            perk_berserker: {
+                id: "perk_berserker",
+                name: "Berserker",
+                desc: "",
+                effects: {
+                    meleeDamageP: 3,
+                    strV: 1
+                },
+                commands: {
+                    add_ability_berserk: 1
+                },
+                tree: "barbarian",
+                pos: { x: -2, y: 2 },
+                relative_to: "unyielding_rage",
+                requires: ["unyielding_rage", "ultimate_warrior"],
+                icon: "resources/icons/absolute_berserk.png"
+            },
+            perk_calmer_berserk: {
+                id: "perk_calmer_berserk",
+                name: "Calmer Berserking",
+                desc: "",
+                effects: {
+                    berserk_cooldownV: -5,
+                    berserk_status_effect_berserk_physicalDefPP: 50,
+                    berserk_status_effect_berserk_magicalDefPP: 50,
+                    berserk_status_effect_berserk_elementalDefPP: 50,
+                    berserk_status_effect_berserk_resistAllPP: 50,
+                    berserk_status_effect_berserk_regenHpPP: 50
+                },
+                tree: "barbarian",
+                pos: { x: 0, y: 2 },
+                relative_to: "perk_berserker",
+                requires: ["perk_berserker"],
+                icon: "resources/icons/flaming_skull_defending.png"
             },
         }
     },
@@ -939,7 +1001,7 @@ const perksArray = {
                 name: "Call of the Forest",
                 desc: "",
                 effects: {
-                    true_shot_resistance_penetrationV: 20,
+                    true_shot_resistance_penetrationV: 10,
                     retreat_cooldownP: -11,
                     vitV: 2
                 },
@@ -949,49 +1011,50 @@ const perksArray = {
                 pos: { x: 0, y: 2 },
                 icon: "resources/tiles/tree_1.png"
             },
-            rangers_totem: {
-                id: "rangers_totem",
-                name: "Rangers' Totem",
+            powered_arrow: {
+                id: "powered_arrow",
+                name: "Powered Arrow",
                 desc: "",
                 effects: {
-                    resistAllV: 1
+                    rangedDamageP: 2
                 },
                 commands: {
-                    add_ability_totem_of_arrows: 1
+                    add_ability_sundering_arrow: 1
                 },
                 tree: "ranger",
                 relative_to: "call_of_the_forest",
                 requires: ["call_of_the_forest"],
                 pos: { x: -2, y: 2 },
-                icon: "resources/icons/totem_of_arrows.png"
+                icon: "resources/icons/ranged_damage.png"
             },
-            extra_totem: {
-                id: "extra_totem",
-                name: "Rangers' Totem",
+            rapid_fire: {
+                id: "rapid_fire",
+                name: "Rapid fire",
                 desc: "",
                 effects: {
-                    totem_of_arrows_total_summon_limitV: 1,
-                    totem_of_arrows_summon_levelV: 2,
+                    sundering_arrow_cooldownP: -33,
+                    sundering_arrow_status_effect_sunder_resistAllVV: -10,
+                    dexV: 1
                 },
                 tree: "ranger",
-                relative_to: "rangers_totem",
-                requires: ["rangers_totem"],
+                relative_to: "powered_arrow",
+                requires: ["powered_arrow"],
                 pos: { x: -2, y: 1 },
-                icon: "resources/icons/totem_of_arrows.png"
+                icon: "resources/icons/sundering_arrow.png"
             },
-            lasting_totem: {
-                id: "lasting_totem",
-                name: "Rangers' Totem",
+            critical_hit: {
+                id: "critical_hit",
+                name: "Critical Hit",
                 desc: "",
                 effects: {
-                    totem_of_arrows_summon_lastP: 50,
-                    totem_of_arrows_summon_levelV: 2,
+                    critDamageP: 15,
+                    critChanceP: 5
                 },
                 tree: "ranger",
-                relative_to: "rangers_totem",
-                requires: ["rangers_totem"],
+                relative_to: "powered_arrow",
+                requires: ["powered_arrow"],
                 pos: { x: -1, y: 2 },
-                icon: "resources/icons/totem_of_arrows.png"
+                icon: "resources/icons/critical_damage.png"
             },
             rangers_call: {
                 id: "rangers_call",
@@ -1038,7 +1101,7 @@ const perksArray = {
                             hp_more_than: 95
                         },
                         effects: {
-                            damageP: 10
+                            rangedDamageP: 10
                         }
                     }
                 ],
@@ -1047,6 +1110,38 @@ const perksArray = {
                 requires: ["awakening"],
                 pos: { x: 0, y: 2 },
                 icon: "resources/icons/hunter_mark.png"
+            },
+            shocking_assault: {
+                id: "shocking_assault",
+                name: "Shocking Assault",
+                desc: "",
+                effects: {
+                    dexV: 1
+                },
+                commands: {
+                    add_ability_shock_arrow: 1
+                },
+                tree: "ranger",
+                relative_to: "hunter_mark",
+                requires: ["hunter_mark"],
+                pos: { x: -1, y: 2 },
+                icon: "resources/icons/shock_arrow.png"
+            },
+            leave_you_paralyzed: {
+                id: "leave_you_paralyzed",
+                name: "Leave you paralyzed",
+                desc: "",
+                effects: {
+                    shock_arrow_cooldownV: -3,
+                    shock_arrow_status_effect_paralyzed_lastV: 2,
+                    shock_arrow_status_effect_paralyzed_resistAllPP: -15,
+                    dexV: 1
+                },
+                tree: "ranger",
+                relative_to: "hunter_mark",
+                requires: ["hunter_mark", "shocking_assault"],
+                pos: { x: 1, y: 2 },
+                icon: "resources/icons/bloom_yellow.png"
             },
             wild_call: {
                 id: "wild_call",
@@ -1207,6 +1302,15 @@ const perksArray = {
             },
         }
     }
+};
+const dummyPerk = {
+    id: "ignore",
+    name: "ignore",
+    desc: "",
+    effects: {},
+    tree: "adventurer_shared",
+    pos: { x: -5000, y: -5000 },
+    icon: ""
 };
 var lang = english;
 // This is an example of a passive ability

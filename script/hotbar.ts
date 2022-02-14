@@ -18,6 +18,8 @@ class gameSettings {
   hotkey_move_right: string;
   hotkey_open_world_messages: string;
   hotkey_interact: string;
+  hotkey_journal: string;
+  hotkey_codex: string;
   constructor(base: gameSettings) {
     this.log_enemy_movement = base.log_enemy_movement || false;
     this.toggle_minimap = base.toggle_minimap || true;
@@ -32,6 +34,8 @@ class gameSettings {
     this.hotkey_move_right = base.hotkey_move_right || "d";
     this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
     this.hotkey_interact = base.hotkey_interact || " ";
+    this.hotkey_journal = base.hotkey_journal || "j";
+    this.hotkey_codex = base.hotkey_codex || "y";
   }
 }
 
@@ -48,7 +52,9 @@ let settings = new gameSettings({
   hotkey_move_left: "a",
   hotkey_move_right: "d",
   hotkey_interact: " ",
-  hotkey_open_world_messages: "Enter"
+  hotkey_open_world_messages: "Enter",
+  hotkey_journal: "j",
+  hotkey_codex: "y",
 });
 
 // Hotkeys
@@ -103,6 +109,14 @@ document.addEventListener("keyup", e => {
     if (!state.perkOpen) openLevelingScreen();
     else closeLeveling();
   }
+  else if(e.key == settings.hotkey_journal && !state.menuOpen) {
+    if(!state.journalOpen) renderPlayerQuests();
+    else closePlayerQuests();
+  }
+  else if(e.key == settings.hotkey_codex && !state.menuOpen) {
+    if(!state.codexOpen) openIngameCodex();
+    else closeCodex();
+  }
   else if (state.invOpen || state.menuOpen) return;
   else if (number > -1 && e.shiftKey) {
     let abi = player.abilities.find(a => a.equippedSlot == number + 9);
@@ -113,7 +127,7 @@ document.addEventListener("keyup", e => {
       if (itm) useConsumable(itm);
       return;
     }
-    else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+    else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
   else if (number > -1 && !e.shiftKey) {
     let abi = player.abilities.find(a => a.equippedSlot == number - 1);
@@ -124,7 +138,7 @@ document.addEventListener("keyup", e => {
       if (itm) useConsumable(itm);
       return;
     }
-    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
   }
 });
 
@@ -168,7 +182,7 @@ function generateHotbar() {
         }
         else {
           tooltip(abiDiv, abiTT(abi));
-          if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead) abiDiv.addEventListener("click", () => useAbi(abi));
+          if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead) abiDiv.addEventListener("click", () => useAbi(abi));
           else {
             abiDiv.style.filter = "brightness(0.25)";
             if (abi.onCooldown > 0) {
@@ -489,6 +503,11 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     key = key.replace("Resist", "");
     key_ = key;
     tailEnd = lang["resist"];
+  }
+  else if(key.includes("Def") && !key.includes("status_effect")) {
+    key = key.replace("Def", "");
+    key_ = key;
+    //tailEnd = lang["resist"];
   }
   else if (key.includes("Damage") && !key.includes("crit")) {
     key = key.replace("Damage", "");
@@ -862,4 +881,5 @@ updateUI();
 tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
 tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
 tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
 tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);

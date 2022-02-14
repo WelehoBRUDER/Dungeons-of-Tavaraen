@@ -22,6 +22,7 @@ class Item {
         this.requiresStats = (_c = baseItem.requiresStats) !== null && _c !== void 0 ? _c : null;
         this.mainTitle = (_d = baseItem.mainTitle) !== null && _d !== void 0 ? _d : true;
         this.stacks = (_e = baseItem.stacks) !== null && _e !== void 0 ? _e : false;
+        this.indexInBaseArray = Object.keys(items).findIndex((item) => item == this.id);
     }
 }
 const grade_vals = {
@@ -638,11 +639,11 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
     topRarity.textContent = lang["item_rarity"];
     topWeight.textContent = lang["item_weight_title"];
     topWorth.textContent = lang["item_worth_title"];
-    topName.addEventListener("click", e => sortInventory("name", sortingReverse));
-    topType.addEventListener("click", e => sortInventory("type", sortingReverse));
-    topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
-    topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse));
-    topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse));
+    topName.addEventListener("click", e => sortInventory("name", sortingReverse, inventory, context));
+    topType.addEventListener("click", e => sortInventory("type", sortingReverse, inventory, context));
+    topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse, inventory, context));
+    topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse, inventory, context));
+    topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse, inventory, context));
     itemsList.classList.add("itemList");
     itemsListBar.classList.add("itemListTop");
     itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
@@ -748,8 +749,8 @@ function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest 
     contextMenu.style.left = `${Event.x}px`;
     contextMenu.style.top = `${Event.y}px`;
     if (context == "PLAYER_INVENTORY") {
-        if (item.type != "consumable")
-            contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
+        if (item.type != "consumable") { }
+        contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
         contextMenuButton(lang["drop"], () => player.drop(item, true));
     }
     else if (context == "PICK_LOOT") {

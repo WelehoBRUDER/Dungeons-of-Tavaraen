@@ -452,7 +452,7 @@ class Character {
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
 
-    if(Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
+    if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
     this.getStats = (withConditions = true) => {
       let stats = {} as statusObject;
@@ -498,8 +498,8 @@ class Character {
       if (!this.allModifiers["hitChanceP"]) this.allModifiers["hitChanceP"] = 1;
       if (!this.allModifiers["evasionV"]) this.allModifiers["evasionV"] = 0;
       if (!this.allModifiers["evasionP"]) this.allModifiers["evasionP"] = 1;
-      chances["chance"] = Math.floor((this.hit?.chance + this.allModifiers["hitChanceV"]) * this.allModifiers["hitChanceP"]);
-      chances["evasion"] = Math.floor((this.hit?.evasion + this.allModifiers["evasionV"]) * this.allModifiers["evasionP"]);
+      chances["chance"] = Math.floor((this.hit?.chance + this.allModifiers["hitChanceV"] + this.stats["dex"] * .25) * this.allModifiers["hitChanceP"]);
+      chances["evasion"] = Math.floor((this.hit?.evasion + this.allModifiers["evasionV"] + this.stats["dex"] * .25) * this.allModifiers["evasionP"]);
       return chances;
     };
 
@@ -510,8 +510,8 @@ class Character {
         const { v: _val, m: _mod } = getModifiers(this, "resistAll");
         let value = Math.floor((this.resistances[res] + val) * mod);
         resists[res] = Math.floor((value + _val) * _mod);
-        if(resists[res] >= 320) resists[res] = 100;
-        else if(resists[res] > 80) resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
+        if (resists[res] >= 320) resists[res] = 100;
+        else if (resists[res] > 80) resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
       });
       return resists;
     };
@@ -521,10 +521,10 @@ class Character {
       Object.keys(this.armor).forEach((armor: string) => {
         const { v: val, m: mod } = getModifiers(this, armor + "Def");
         armors[armor] = Math.floor((this.armor[armor] + val) * mod);
-        if(armors[armor] > 200) armors[armor] = 200;
+        if (armors[armor] > 200) armors[armor] = 200;
       });
       return armors;
-    }
+    };
 
     this.getThreat = () => {
       if (!this.allModifiers["threatV"]) this.allModifiers["threatV"] = 0;
@@ -627,27 +627,32 @@ class Character {
 
     this.updateAbilities = (useDummy: boolean = false) => {
       this.allModifiers = getAllModifiersOnce(this);
-      if(!this.allModifiers["damageV"]) this.allModifiers["damageV"] = 0;
-      if(!this.allModifiers["damageP"]) this.allModifiers["damageP"] = 1;
+      if (!this.allModifiers["damageV"]) this.allModifiers["damageV"] = 0;
+      if (!this.allModifiers["damageP"]) this.allModifiers["damageP"] = 1;
       for (let i = 0; i < this.abilities?.length; i++) {
-        if(!useDummy) this.abilities[i] = new Ability(this.abilities[i], this);
+        if (!useDummy) this.abilities[i] = new Ability(this.abilities[i], this);
         else this.abilities[i] = new Ability(this.abilities[i], dummy);
       }
       if (this.inventory) {
         for (let i = 0; i < this.inventory?.length; i++) {
           // If item is broken, default to error item
-          if(!this.inventory[i].id || !this.inventory[i].type) {
-            this.inventory[i] = {...items.A0_error};
+          if (!this.inventory[i].id || !this.inventory[i].type) {
+            this.inventory[i] = { ...items.A0_error };
           }
           // Manually refresh error items
-          if(this.inventory[i].id == "A0_error") {
-            this.inventory[i] = {...items.A0_error};
+          if (this.inventory[i].id == "A0_error") {
+            this.inventory[i] = { ...items.A0_error };
             this.inventory[i].index = i;
-          } 
+          }
           if (this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({ ...this.inventory[i] });
           else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor({ ...this.inventory[i] });
           else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable({ ...this.inventory[i] });
           else if (this.inventory[i].type == "artifact") this.inventory[i] = new Artifact({ ...this.inventory[i] });
+          if (!this.inventory[i].indexInBaseArray) continue;
+          let encounter = player.entitiesEverEncountered?.items?.[this.inventory[i].id];
+          if (encounter < 1 || !encounter) {
+            player.entitiesEverEncountered.items[this.inventory[i].id] = 1;
+          }
         }
       }
       if (this.weapon?.type) this.weapon = new Weapon({ ...this.weapon });

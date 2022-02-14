@@ -100,7 +100,6 @@ function renderMinimap(map: mapObject) {
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
         minimapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
-        //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
       }
       if (clutterSprite) {
         minimapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
@@ -145,18 +144,18 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       const clutterSprite = clutters[clutterId]?.spriteMap;
       const fog = { x: 256, y: 0 };
       if (sprite) {
-        baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+        baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
       }
       if (player.grave) {
         if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-          baseCtx.drawImage(grave, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+          baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
         }
       }
       if (clutterSprite) {
-        baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+        baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
       }
       if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-        baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 2, spriteSize + 2);
+        baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
       }
     }
   }
@@ -203,7 +202,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     // @ts-ignore
     canvas.classList = `enemy${index} layer`;
     const ctx = canvas.getContext("2d");
-    const enemyImg = <HTMLImageElement>document.querySelector(`.${enemy.sprite}`);
+    const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     if (enemyImg) {
@@ -216,6 +215,11 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       /* Render enemy on top of hp bar */
       ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+      if (enemy.questSpawn?.quest > -1) {
+        ctx.font = `${spriteSize / 1.9}px Arial`;
+        ctx.fillStyle = "goldenrod";
+        ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+      }
       let statCount = 0;
       enemy.statusEffects.forEach((effect: statEffect) => {
         if (statCount > 4) return;
@@ -352,9 +356,9 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
-          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
         }
-        else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+        else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
     }
     /* Render highlight test */
@@ -370,16 +374,16 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked || iteration > distance) {
           if (lastStep == 0) lastStep = iteration;
-          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
         }
-        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
       if (state.abiSelected?.aoe_size > 0) {
         let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
         for (let y = 0; y < spriteLimitY; y++) {
           for (let x = 0; x < spriteLimitX; x++) {
             if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
-              playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+              playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             }
           }
         }
@@ -392,12 +396,12 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked) {
-          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
         }
-        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
     }
-    playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, spriteSize + 1, spriteSize + 1);
+    playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
   }
   catch { }
 }
@@ -412,7 +416,7 @@ function renderAOEHoverOnPlayer(aoeSize: number, ignoreLedge: boolean) {
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
       if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x" && !(player.cords.x == x && player.cords.y == y)) {
-        playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+        playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       }
     }
   }
@@ -439,6 +443,7 @@ function clickMap(event: MouseEvent) {
     closeInventory();
     return;
   }
+  closeTextWindow();
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
   const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
@@ -455,6 +460,39 @@ function clickMap(event: MouseEvent) {
   if (dontMove) {
     dontMove = false;
     return;
+  }
+  itemData.some((item: any) => {
+    if (item.cords.x == x && item.cords.y == y) {
+      pickLoot();
+      return true;
+    }
+  });
+  maps[currentMap].shrines.some((shrine: any) => {
+    if (shrine.cords.x == x && shrine.cords.y == y) {
+      activateShrine();
+      return true;
+    }
+  });
+  maps[currentMap].messages.some((msg: any) => {
+    if (msg.cords.x == x && msg.cords.y == y) {
+      readMessage();
+      return true;
+    }
+  });
+  maps[currentMap].treasureChests.some((chest: treasureChest) => {
+    const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+    if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
+      chest.lootChest();
+      return true;
+    }
+  });
+  if (!state.textWindowOpen && !state.invOpen) {
+    NPCcharacters.some((npc: Npc) => {
+      if (npc.currentCords.x === x && npc.currentCords.y == y) {
+        talkToCharacter();
+        return true;
+      }
+    });
   }
   let move = true;
   let targetingEnemy = false;
@@ -768,12 +806,12 @@ function canMoveTo(char: any, tile: tileObject) {
 
 function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, side: string = "center", playerModel: any = player) {
   canvas.width = canvas.width; // Clear canvas
-  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Model");
+  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(player.sex));
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Ears");
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + playerModel.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + playerModel.eyes);
   const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + playerModel.face);
-  const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
+  const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
   var x = 0;
   var y = 0;
   if (side == "left") x = 0 - size / 4;
@@ -800,7 +838,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
     ctx?.drawImage(leggingsModel, x, y, size, size);
   }
   else if (!playerModel.legs?.sprite) {
-    const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
+    const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
     ctx?.drawImage(leggings, x, y, size, size);
   }
   if (playerModel.chest?.sprite) {
@@ -841,7 +879,7 @@ function renderPlayerPortrait() {
 function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   canvas.width = canvas.width; // Clear canvas
   if (player.isDead) return;
-  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model");
+  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Model" + capitalizeFirstLetter(player.sex));
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + player.race + "Ears");
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
@@ -875,7 +913,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
   else if (!player.legs?.sprite) {
-    const leggings = <HTMLImageElement>document.querySelector(".sprites .defaultPants");
+    const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
     ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
   if (player.chest?.sprite) {
@@ -932,6 +970,28 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   while (fieldMap[start.y][start.x] == 0 && checkGrid.length > 0 && calls < maximumCalls) {
     const { v, x, y } = checkGrid.splice(0, 1)[0];
     if (fieldMap[y][x] == v) {
+      // Check diagonal
+      // North-west
+      if (fieldMap[y - 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
+        fieldMap[y - 1][x - 1] = v + 1;
+        checkGrid.push({ v: v + 1, x: x - 1, y: y - 1, dist: calcDistance(x - 1, y - 1, start.x, start.y) });
+      }
+      // North-east
+      if (fieldMap[y - 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
+        fieldMap[y - 1][x + 1] = v + 1;
+        checkGrid.push({ v: v + 1, x: x + 1, y: y - 1, dist: calcDistance(x + 1, y - 1, start.x, start.y) });
+      }
+      // South-west
+      if (fieldMap[y + 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
+        fieldMap[y + 1][x - 1] = v + 1;
+        checkGrid.push({ v: v + 1, x: x - 1, y: y + 1, dist: calcDistance(x - 1, y + 1, start.x, start.y) });
+      }
+      // South-east
+      if (fieldMap[y + 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
+        fieldMap[y + 1][x + 1] = v + 1;
+        checkGrid.push({ v: v + 1, x: x + 1, y: y + 1, dist: calcDistance(x + 1, y + 1, start.x, start.y) });
+      }
+
       if (fieldMap[y - 1]?.[x] === 0) {
         fieldMap[y - 1][x] = v + 1;
         checkGrid.push({ v: v + 1, x: x, y: y - 1, dist: calcDistance(x, y - 1, start.x, start.y) });
@@ -961,12 +1021,25 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   const cords: Array<any> = [];
   siksakki: for (let i = 0; i < 375; i++) {
     const v = fieldMap[data.y][data.x] - 1;
-    if (i % 2 == 0) {
-      if (fieldMap[data.y]?.[data.x - 1] == v) data.x -= 1;
-      if (fieldMap[data.y]?.[data.x + 1] == v) data.x += 1;
-    } else {
-      if (fieldMap[data.y - 1]?.[data.x] == v) data.y -= 1;
-      if (fieldMap[data.y + 1]?.[data.x] == v) data.y += 1;
+    if (fieldMap[data.y]?.[data.x - 1] == v) data.x -= 1;
+    else if (fieldMap[data.y]?.[data.x + 1] == v) data.x += 1;
+    else if (fieldMap[data.y - 1]?.[data.x - 1] == v) {
+      data.y -= 1;
+      data.x -= 1;
+    }
+    else if (fieldMap[data.y - 1]?.[data.x + 1] == v) {
+      data.y -= 1;
+      data.x += 1;
+    }
+    else if (fieldMap[data.y - 1]?.[data.x] == v) data.y -= 1;
+    else if (fieldMap[data.y + 1]?.[data.x] == v) data.y += 1;
+    else if (fieldMap[data.y + 1]?.[data.x - 1] == v) {
+      data.y += 1;
+      data.x -= 1;
+    }
+    else if (fieldMap[data.y + 1]?.[data.x + 1] == v) {
+      data.y += 1;
+      data.x += 1;
     }
 
     if (fieldMap[data.y][data.x] == v) cords.push({ ...data });

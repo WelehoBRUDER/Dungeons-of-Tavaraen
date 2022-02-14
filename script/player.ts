@@ -34,12 +34,20 @@ interface playerChar extends characterObject {
   getBaseStats?: Function;
   addItem?: Function;
   addGold?: Function;
+  questProgress?: Array<any>;
+  entitiesEverEncountered?: entityMemory;
 }
 
 interface levelObject {
   xp: number;
   xpNeed: number;
   level: number;
+}
+
+// Save entities to memory like such: 0:1, meaning for example "Has encountered grey slime"
+interface entityMemory {
+  [items: string]: any;
+  enemies: any;
 }
 
 interface raceTxt {
@@ -144,6 +152,9 @@ class PlayerCharacter extends Character {
   flags?: any;
   addItem?: Function;
   addGold?: Function;
+  questProgress?: Array<any>;
+  entitiesEverEncountered: entityMemory;
+  sex: string;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -167,16 +178,19 @@ class PlayerCharacter extends Character {
     this.inventory = [...base.inventory] ?? [];
     this.isDead = base.isDead ?? false;
     this.grave = base.grave ?? null;
-    this.respawnPoint = {...base.respawnPoint} ?? null; // need to add default point, or this might soft lock
+    this.respawnPoint = { ...base.respawnPoint } ?? null; // need to add default point, or this might soft lock
     this.gold = base.gold ?? 0;
     this.perks = [...base.perks] ?? [];
     this.sp = base.sp ?? 0;
     this.pp = base.pp ?? 0;
     this.usedShrines = [...base.usedShrines] ?? [];
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
-    this.classes = {...base.classes} ?? {};
-    this.oldCords = {...base.oldCords} ?? this.cords;
-    this.flags = {...base.flags} ?? [];
+    this.classes = { ...base.classes } ?? {};
+    this.oldCords = { ...base.oldCords } ?? this.cords;
+    this.flags = { ...base.flags } ?? [];
+    this.questProgress = base.questProgress ? [...base.questProgress] : [];
+    this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {} } as entityMemory;
+    this.sex = base.sex ?? "male";
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -206,7 +220,7 @@ class PlayerCharacter extends Character {
       createDroppedItem(this.cords, item);
       renderInventory();
       modifyCanvas();
-      if(fromContextMenu) contextMenu.textContent = "";
+      if (fromContextMenu) contextMenu.textContent = "";
     };
 
     this.updatePerks = (dontUpdateUI: boolean = false, dontExecuteCommands: boolean = false) => {
@@ -217,20 +231,25 @@ class PlayerCharacter extends Character {
           Object.entries(prk.commands)?.forEach(cmd => { command(cmd); });
         }
         prk.commandsExecuted = cmdsEx;
-        this.perks[index] = {...prk};
+        this.perks[index] = { ...prk };
       });
-      if(dontUpdateUI) return;
+      for (let i = this.perks.length - 1; i >= 0; i--) {
+        if (this.perks[i]?.id == undefined) {
+          this.perks.splice(i, 1);
+        }
+      }
+      if (dontUpdateUI) return;
       updateUI();
     };
 
     this.unequip = (event: any, slot: string, putToIndex: number = -1, shiftItems: boolean = false, fromContextMenu: boolean = false) => {
       if ((event.button !== 2 && !fromContextMenu) || !this[slot]?.id) return;
-      if(fromContextMenu) {
+      if (fromContextMenu) {
         contextMenu.textContent = "";
       }
       if (this[slot]?.id) {
-        if(putToIndex != -1) {
-          if(shiftItems) {
+        if (putToIndex != -1) {
+          if (shiftItems) {
             this.inventory.splice(putToIndex, 0, this[slot]);
           }
           else this.inventory[putToIndex] = this[slot];
@@ -246,13 +265,13 @@ class PlayerCharacter extends Character {
       renderInventory();
     };
 
-    this.equip = (event: any, item: any, fromContextMenu: boolean = false) => {
+    this.equip = (event: any, item: any, fromContextMenu: boolean = false, auto: boolean = false) => {
       if (event.button !== 2 && !fromContextMenu) return;
-      if(fromContextMenu) {
+      if (fromContextMenu) {
         contextMenu.textContent = "";
       }
-      if(item.type == "consumable") return;
-      if(item.id == "A0_error") {
+      if (item.type == "consumable") return;
+      if (item.id == "A0_error") {
         player.inventory.splice(item.index, 1);
         renderInventory();
         return;
@@ -269,23 +288,23 @@ class PlayerCharacter extends Character {
       }
       let spliceFromInv: boolean = true;
       let shiftOffhand: boolean = true;
+      if (!canEquip) return;
       if (item.slot == "offhand" && this.weapon?.twoHanded) {
-        this.unequip(event, "weapon", item.index);
+        this.unequip(event, "weapon", item.index, false, fromContextMenu);
         spliceFromInv = false;
       }
-      if (!canEquip) return;
-      if(!this[itm.slot]?.id && spliceFromInv) player.inventory.splice(item.index, 1);
-      if(!this[itm.slot]?.id) shiftOffhand = false;
-      else this.unequip(event, itm.slot, itm.index);
+      if (!this[itm.slot]?.id && spliceFromInv) player.inventory.splice(item.index, 1);
+      if (!this[itm.slot]?.id) shiftOffhand = false;
+      else this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
       this[itm.slot] = { ...itm };
       Object.entries(item.commands).forEach(cmd => command(cmd));
       if (item.twoHanded) {
-        if(shiftOffhand) {
-          this.unequip(event, "offhand", item.index+1, true);
+        if (shiftOffhand) {
+          this.unequip(event, "offhand", item.index + 1, true, fromContextMenu);
         }
-        else this.unequip(event, "offhand", item.index, true);
+        else this.unequip(event, "offhand", item.index, true, fromContextMenu);
       }
-      renderInventory();
+      if (!auto) renderInventory();
     };
 
     this.carryingWeight = () => {
@@ -308,15 +327,15 @@ class PlayerCharacter extends Character {
         if (this.level.level < 6) {
           this.pp += 2;
           this.sp += 2;
-        } 
+        }
         else if (this.level.level % 10 == 0) {
           this.pp += 3;
           this.sp += 5;
-        } 
+        }
         else {
           this.pp++;
           this.sp += 2;
-        } 
+        }
         this.level.xpNeed = nextLevel(this.level.level);
         this.stats.hp = this.getHpMax();
         this.stats.mp = this.getMpMax();
@@ -387,7 +406,7 @@ class PlayerCharacter extends Character {
     };
 
     this.getBaseStats = () => {
-      const vals: any = {...this.stats};
+      const vals: any = { ...this.stats };
       const mods: any = {};
       if (this.raceEffect?.modifiers) {
         Object.entries(this.raceEffect?.modifiers).forEach((eff: any) => {
@@ -419,39 +438,49 @@ class PlayerCharacter extends Character {
         vals[stat] = Math.floor(this.stats[stat] + mods[stat + "V"]);
       });
       return vals;
-    }
+    };
 
     this.addItem = (itm: any) => {
-      if(itm.stacks) {
+      if (itm.stacks) {
         let wasAdded = false;
         this.inventory.forEach((item: any) => {
-          if(itm.id == item.id) {
+          if (itm.id == item.id) {
             wasAdded = true;
             item.amount += itm.amount;
           }
         });
-        if(!wasAdded) this.inventory.push({...itm});
+        if (!wasAdded) this.inventory.push({ ...itm });
       }
       else {
-        this.inventory.push({...itm});
+        this.inventory.push({ ...itm });
       }
-    }
+      let encounter = player.entitiesEverEncountered?.items?.[itm.id];
+      if (encounter < 1 || !encounter) {
+        player.entitiesEverEncountered.items[itm.id] = 1;
+      }
+      this.updateAbilities();
+      if (slotEmpty(itm)) {
+        this.equip({ button: 2 }, this.inventory[this.inventory.length - 1], false, true);
+      }
+    };
 
     this.addGold = (amnt: number) => {
-      if(isNaN(amnt)) amnt = 0;
+      if (isNaN(amnt)) amnt = 0;
       player.gold += amnt;
       document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
-    }
+    };
   }
 }
 
 
 function nextLevel(level: number) {
   let base = 75;
-  let exponent = 1.25;
-  if (level >= 9) base = 100;
-  if (level >= 29) base = 200;
-  if (level >= 49) base = 375;
+  let exponent = 1.37;
+  if (level >= 4 && level < 10) base = 150;
+  if (level >= 10 && level < 29) base = 225;
+  if (level >= 29 && level < 39) base = 375;
+  if (level >= 39 && level < 50) base = 450;
+  if (level >= 50) base = 5000;
   return Math.floor(base * (Math.pow(level, exponent)));
 }
 
@@ -461,19 +490,20 @@ function updatePlayerInventoryIndexes() {
   }
 }
 
-function sortInventory(category: string, reverse: boolean) {
+function sortInventory(category: string, reverse: boolean, inventory: Array<any>, context: string) {
   sortingReverse = !sortingReverse;
   if (category == "name" || category == "type") {
-    player.inventory.sort((a, b) => stringSort(a, b, category, reverse));
+    inventory.sort((a, b) => stringSort(a, b, category, reverse));
   }
   else if (category == "grade") {
-    player.inventory.sort((a, b) => gradeSort(a, b, reverse));
+    inventory.sort((a, b) => gradeSort(a, b, reverse));
   }
   else if (category == "worth") {
-    player.inventory.sort((a, b) => worthSort(a, b, reverse));
+    inventory.sort((a, b) => worthSort(a, b, reverse));
   }
-  else player.inventory.sort((a, b) => numberSort(a, b, category, reverse));
-  renderInventory();
+  else inventory.sort((a, b) => numberSort(a, b, category, reverse));
+  if (context.includes("SELLING")) createMerchantWindow(false, true);
+  else renderInventory();
 }
 
 function commandRemoveAbility(cmd: any) {
@@ -566,8 +596,8 @@ function numberSort(a: any, b: any, string: string, reverse: boolean = false) {
 }
 
 function worthSort(a: any, b: any, reverse: boolean = false) {
-  if(typeof a.fullPrice !== "function") return 1;
-  else if(typeof b.fullPrice !== "function") return -1;
+  if (typeof a.fullPrice !== "function") return 1;
+  else if (typeof b.fullPrice !== "function") return -1;
   var numA = a.fullPrice();
   var numB = b.fullPrice();
   if (!reverse) {
@@ -637,16 +667,16 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["rangerClass"]),
+    main: new combatClass(combatClasses["barbarianClass"]),
     sub: null
   },
   sprite: ".player",
-  race: "human",
+  race: "orc",
   hair: 3,
   eyes: 2,
   face: 1,
-  weapon: new Weapon({ ...items.huntingBow }),
-  chest: new Armor({ ...items.raggedShirt }),
+  weapon: {},
+  chest: {},
   offhand: {},
   helmet: {},
   gloves: {},
@@ -654,14 +684,14 @@ var player = new PlayerCharacter({
   artifact1: {},
   artifact2: {},
   artifact3: {},
-  boots: new Armor({ ...items.raggedBoots }),
+  boots: {},
   canFly: false,
   perks: [],
   abilities: [
     new Ability({ ...abilities.attack }, dummy),
     new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
-    new Ability({ ...abilities.defend,  equippedSlot: 2}, dummy),
+    new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
   statModifiers: [
     {
@@ -692,6 +722,8 @@ var player = new PlayerCharacter({
   usedShrines: [],
   grave: null,
   flags: {} as any,
+  questProgress: [],
+  sex: "male"
 });
 
 let combatSummons: Array<any> = [];
@@ -701,14 +733,20 @@ var randomProperty = function (mods: any) {
   return mods[keys[keys.length * Math.random() << 0]];
 };
 
+function slotEmpty(item: itemClass) {
+  let isEmpty = false;
+  if (!player[item.slot]?.id) {
+    if (item.slot === "offhand" && !player["weapon"]?.twoHanded) isEmpty = true;
+    else if (item.twoHanded && !player["offhand"]?.id) isEmpty = true;
+    else if (!item.twoHanded && item.slot !== "offhand") isEmpty = true;
+  }
+  return isEmpty;
+}
+
 
 // for (let i = 0; i < 20; i++) {
 //   player.addItem({...items.A0_error});
 // }
-
-for (let i = 0; i < 20; i++) {
-  player.addItem({ ...randomProperty(items) });
-}
 
 // for (let itm of Object.entries(items)) {
 //   player.addItem({...itm[1], level: 5});
@@ -716,4 +754,5 @@ for (let i = 0; i < 20; i++) {
 
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
+//renderPlayerQuests();
 

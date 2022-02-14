@@ -90,7 +90,8 @@ const emptyModel = {
     pp: 1,
     respawnPoint: { cords: { x: 41, y: 169 } },
     usedShrines: [],
-    flags: {}
+    flags: {},
+    questProgress: [],
 };
 const creation = document.querySelector(".mainMenu .characterCreation");
 const creationCanvas = creation.querySelector(".layerRender");
@@ -203,6 +204,7 @@ function beginGame() {
         closeGameMenu(false, true);
         reviveAllDeadEnemies();
         resetAllLivingEnemiesInAllMaps();
+        killAllQuestEnemies();
         player.updatePerks(true);
         player.updateAbilities();
         fallenEnemies = [];
@@ -219,40 +221,82 @@ function beginGame() {
         }, 100);
     }
 }
-function changeHair() {
-    if (player.hair + 1 <= hairs[1]) {
-        player.hair++;
-        creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-        characterCreation(false);
+function changeHair(e) {
+    if (e.button === 0) {
+        if (player.hair + 1 <= hairs[1]) {
+            player.hair++;
+            creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+            characterCreation(false);
+        }
+        else {
+            player.hair = hairs[0];
+            creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+            characterCreation(false);
+        }
     }
-    else {
-        player.hair = hairs[0];
-        creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-        characterCreation(false);
+    else if (e.button === 2) {
+        if (player.hair - 1 >= hairs[0]) {
+            player.hair--;
+            creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+            characterCreation(false);
+        }
+        else {
+            player.hair = hairs[1];
+            creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+            characterCreation(false);
+        }
     }
 }
-function changeEyes() {
-    if (player.eyes + 1 <= eyes[1]) {
-        player.eyes++;
-        creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-        characterCreation(false);
+function changeEyes(e) {
+    if (e.button === 0) {
+        if (player.eyes + 1 <= eyes[1]) {
+            player.eyes++;
+            creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+            characterCreation(false);
+        }
+        else {
+            player.eyes = eyes[0];
+            creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+            characterCreation(false);
+        }
     }
-    else {
-        player.eyes = eyes[0];
-        creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-        characterCreation(false);
+    else if (e.button === 2) {
+        if (player.eyes - 1 >= eyes[0]) {
+            player.eyes--;
+            creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+            characterCreation(false);
+        }
+        else {
+            player.eyes = eyes[1];
+            creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+            characterCreation(false);
+        }
     }
 }
-function changeFace() {
-    if (player.face + 1 <= faces[1]) {
-        player.face++;
-        creation.querySelector(".face").textContent = `face ${player.face}`;
-        characterCreation(false);
+function changeFace(e) {
+    if (e.button === 0) {
+        if (player.face + 1 <= faces[1]) {
+            player.face++;
+            creation.querySelector(".face").textContent = `face ${player.face}`;
+            characterCreation(false);
+        }
+        else {
+            player.face = faces[0];
+            creation.querySelector(".face").textContent = `face ${player.face}`;
+            characterCreation(false);
+        }
     }
-    else {
-        player.face = faces[0];
-        creation.querySelector(".face").textContent = `face ${player.face}`;
-        characterCreation(false);
+    else if (e.button === 2) {
+        if (player.face - 1 >= faces[0]) {
+            player.face--;
+            creation.querySelector(".face").textContent = `face ${player.face}`;
+            characterCreation(false);
+        }
+        else {
+            player.face = faces[1];
+            creation.querySelector(".face").textContent = `face ${player.face}`;
+            characterCreation(false);
+        }
     }
 }
 function changeRace(race) {
@@ -296,5 +340,8 @@ function classTT(data) {
         txt += effectSyntax(effect);
     });
     return txt;
+}
+for (let i = 0; i < 20; i++) {
+    player.addItem(Object.assign({}, randomProperty(items)));
 }
 //# sourceMappingURL=startGame.js.map

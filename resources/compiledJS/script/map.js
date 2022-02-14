@@ -81,7 +81,6 @@ function renderMinimap(map) {
             const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
             if (sprite) {
                 minimapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
-                //baseCtx.strokeRect(x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
             if (clutterSprite) {
                 minimapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
@@ -127,18 +126,18 @@ function renderMap(map, createNewSightMap = false) {
             const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
             const fog = { x: 256, y: 0 };
             if (sprite) {
-                baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+                baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
             if (player.grave) {
                 if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-                    baseCtx.drawImage(grave, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+                    baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
                 }
             }
             if (clutterSprite) {
-                baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+                baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
             if (((_h = sightMap[mapOffsetStartY + y]) === null || _h === void 0 ? void 0 : _h[mapOffsetStartX + x]) != "x" && imgId) {
-                baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 2, spriteSize + 2);
+                baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
         }
     }
@@ -179,7 +178,7 @@ function renderMap(map, createNewSightMap = false) {
     /* Render Enemies */
     enemyLayers.textContent = ""; // Delete enemy canvases
     map.enemies.forEach((enemy, index) => {
-        var _a;
+        var _a, _b;
         if (!enemy.alive || ((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) != "x")
             return;
         var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -188,7 +187,7 @@ function renderMap(map, createNewSightMap = false) {
         // @ts-ignore
         canvas.classList = `enemy${index} layer`;
         const ctx = canvas.getContext("2d");
-        const enemyImg = document.querySelector(`.${enemy.sprite}`);
+        const enemyImg = document.querySelector(`.sprites .${enemy.sprite}`);
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         if (enemyImg) {
@@ -201,6 +200,11 @@ function renderMap(map, createNewSightMap = false) {
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
             /* Render enemy on top of hp bar */
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+            if (((_b = enemy.questSpawn) === null || _b === void 0 ? void 0 : _b.quest) > -1) {
+                ctx.font = `${spriteSize / 1.9}px Arial`;
+                ctx.fillStyle = "goldenrod";
+                ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+            }
             let statCount = 0;
             enemy.statusEffects.forEach((effect) => {
                 if (statCount > 4)
@@ -341,10 +345,10 @@ function renderTileHover(tile, event) {
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (iteration > distance) {
-                    playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
                 }
                 else
-                    playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             });
         }
         /* Render highlight test */
@@ -362,17 +366,17 @@ function renderTileHover(tile, event) {
                 if (step.blocked || iteration > distance) {
                     if (lastStep == 0)
                         lastStep = iteration;
-                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
                 }
                 else
-                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             });
             if (((_f = state.abiSelected) === null || _f === void 0 ? void 0 : _f.aoe_size) > 0) {
                 let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
                 for (let y = 0; y < spriteLimitY; y++) {
                     for (let x = 0; x < spriteLimitX; x++) {
                         if (((_g = aoeMap[mapOffsetStartY + y]) === null || _g === void 0 ? void 0 : _g[mapOffsetStartX + x]) == "x") {
-                            playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+                            playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
                         }
                     }
                 }
@@ -386,13 +390,13 @@ function renderTileHover(tile, event) {
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (step.blocked) {
-                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
                 }
                 else
-                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, _tileX, _tileY, spriteSize + 1, spriteSize + 1);
+                    playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             });
         }
-        playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, spriteSize + 1, spriteSize + 1);
+        playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
     }
     catch (_h) { }
 }
@@ -408,7 +412,7 @@ function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
             if (((_b = aoeMap[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]) == "x" && !(player.cords.x == x && player.cords.y == y)) {
-                playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize + 1, spriteSize + 1);
+                playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             }
         }
     }
@@ -436,6 +440,7 @@ function clickMap(event) {
         closeInventory();
         return;
     }
+    closeTextWindow();
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
     const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
@@ -452,6 +457,39 @@ function clickMap(event) {
     if (dontMove) {
         dontMove = false;
         return;
+    }
+    itemData.some((item) => {
+        if (item.cords.x == x && item.cords.y == y) {
+            pickLoot();
+            return true;
+        }
+    });
+    maps[currentMap].shrines.some((shrine) => {
+        if (shrine.cords.x == x && shrine.cords.y == y) {
+            activateShrine();
+            return true;
+        }
+    });
+    maps[currentMap].messages.some((msg) => {
+        if (msg.cords.x == x && msg.cords.y == y) {
+            readMessage();
+            return true;
+        }
+    });
+    maps[currentMap].treasureChests.some((chest) => {
+        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+        if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
+            chest.lootChest();
+            return true;
+        }
+    });
+    if (!state.textWindowOpen && !state.invOpen) {
+        NPCcharacters.some((npc) => {
+            if (npc.currentCords.x === x && npc.currentCords.y == y) {
+                talkToCharacter();
+                return true;
+            }
+        });
     }
     let move = true;
     let targetingEnemy = false;
@@ -806,12 +844,12 @@ function canMoveTo(char, tile) {
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     canvas.width = canvas.width; // Clear canvas
-    const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model");
+    const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(player.sex));
     const earModel = document.querySelector(".sprites ." + playerModel.race + "Ears");
     const hairModel = document.querySelector(".sprites .hair" + playerModel.hair);
     const eyeModel = document.querySelector(".sprites .eyes" + playerModel.eyes);
     const faceModel = document.querySelector(".sprites .face" + playerModel.face);
-    const leggings = document.querySelector(".sprites .defaultPants");
+    const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
     var x = 0;
     var y = 0;
     if (side == "left")
@@ -840,7 +878,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
     }
     else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
-        const leggings = document.querySelector(".sprites .defaultPants");
+        const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
     }
     if ((_g = playerModel.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
@@ -881,7 +919,7 @@ function renderPlayerModel(size, canvas, ctx) {
     canvas.width = canvas.width; // Clear canvas
     if (player.isDead)
         return;
-    const bodyModel = document.querySelector(".sprites ." + player.race + "Model");
+    const bodyModel = document.querySelector(".sprites ." + player.race + "Model" + capitalizeFirstLetter(player.sex));
     const earModel = document.querySelector(".sprites ." + player.race + "Ears");
     const hairModel = document.querySelector(".sprites .hair" + player.hair);
     const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
@@ -915,7 +953,7 @@ function renderPlayerModel(size, canvas, ctx) {
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
     else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
-        const leggings = document.querySelector(".sprites .defaultPants");
+        const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
     if ((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
@@ -937,7 +975,7 @@ function calcDistance(startX, startY, endX, endY) {
     return xDist + yDist;
 }
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
     var distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
     if (distanceOnly) {
         let newDistance = distance;
@@ -979,19 +1017,40 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     while (fieldMap[start.y][start.x] == 0 && checkGrid.length > 0 && calls < maximumCalls) {
         const { v, x, y } = checkGrid.splice(0, 1)[0];
         if (fieldMap[y][x] == v) {
-            if (((_a = fieldMap[y - 1]) === null || _a === void 0 ? void 0 : _a[x]) === 0) {
+            // Check diagonal
+            // North-west
+            if (((_a = fieldMap[y - 1]) === null || _a === void 0 ? void 0 : _a[x - 1]) === 0 && (((_b = fieldMap[y]) === null || _b === void 0 ? void 0 : _b[x - 1]) === 0 || ((_c = fieldMap[y - 1]) === null || _c === void 0 ? void 0 : _c[x]) === 0)) {
+                fieldMap[y - 1][x - 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x - 1, y: y - 1, dist: calcDistance(x - 1, y - 1, start.x, start.y) });
+            }
+            // North-east
+            if (((_d = fieldMap[y - 1]) === null || _d === void 0 ? void 0 : _d[x + 1]) === 0 && (((_e = fieldMap[y]) === null || _e === void 0 ? void 0 : _e[x + 1]) === 0 || ((_f = fieldMap[y - 1]) === null || _f === void 0 ? void 0 : _f[x]) === 0)) {
+                fieldMap[y - 1][x + 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x + 1, y: y - 1, dist: calcDistance(x + 1, y - 1, start.x, start.y) });
+            }
+            // South-west
+            if (((_g = fieldMap[y + 1]) === null || _g === void 0 ? void 0 : _g[x - 1]) === 0 && (((_h = fieldMap[y]) === null || _h === void 0 ? void 0 : _h[x - 1]) === 0 || ((_j = fieldMap[y + 1]) === null || _j === void 0 ? void 0 : _j[x]) === 0)) {
+                fieldMap[y + 1][x - 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x - 1, y: y + 1, dist: calcDistance(x - 1, y + 1, start.x, start.y) });
+            }
+            // South-east
+            if (((_k = fieldMap[y + 1]) === null || _k === void 0 ? void 0 : _k[x + 1]) === 0 && (((_l = fieldMap[y]) === null || _l === void 0 ? void 0 : _l[x + 1]) === 0 || ((_m = fieldMap[y + 1]) === null || _m === void 0 ? void 0 : _m[x]) === 0)) {
+                fieldMap[y + 1][x + 1] = v + 1;
+                checkGrid.push({ v: v + 1, x: x + 1, y: y + 1, dist: calcDistance(x + 1, y + 1, start.x, start.y) });
+            }
+            if (((_o = fieldMap[y - 1]) === null || _o === void 0 ? void 0 : _o[x]) === 0) {
                 fieldMap[y - 1][x] = v + 1;
                 checkGrid.push({ v: v + 1, x: x, y: y - 1, dist: calcDistance(x, y - 1, start.x, start.y) });
             }
-            if (((_b = fieldMap[y + 1]) === null || _b === void 0 ? void 0 : _b[x]) === 0) {
+            if (((_p = fieldMap[y + 1]) === null || _p === void 0 ? void 0 : _p[x]) === 0) {
                 fieldMap[y + 1][x] = v + 1;
                 checkGrid.push({ v: v + 1, x: x, y: y + 1, dist: calcDistance(x, y + 1, start.x, start.y) });
             }
-            if (((_c = fieldMap[y]) === null || _c === void 0 ? void 0 : _c[x - 1]) === 0) {
+            if (((_q = fieldMap[y]) === null || _q === void 0 ? void 0 : _q[x - 1]) === 0) {
                 fieldMap[y][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y, dist: calcDistance(x - 1, y, start.x, start.y) });
             }
-            if (((_d = fieldMap[y]) === null || _d === void 0 ? void 0 : _d[x + 1]) === 0) {
+            if (((_r = fieldMap[y]) === null || _r === void 0 ? void 0 : _r[x + 1]) === 0) {
                 fieldMap[y][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y, dist: calcDistance(x + 1, y, start.x, start.y) });
             }
@@ -1008,17 +1067,29 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     const cords = [];
     siksakki: for (let i = 0; i < 375; i++) {
         const v = fieldMap[data.y][data.x] - 1;
-        if (i % 2 == 0) {
-            if (((_e = fieldMap[data.y]) === null || _e === void 0 ? void 0 : _e[data.x - 1]) == v)
-                data.x -= 1;
-            if (((_f = fieldMap[data.y]) === null || _f === void 0 ? void 0 : _f[data.x + 1]) == v)
-                data.x += 1;
+        if (((_s = fieldMap[data.y]) === null || _s === void 0 ? void 0 : _s[data.x - 1]) == v)
+            data.x -= 1;
+        else if (((_t = fieldMap[data.y]) === null || _t === void 0 ? void 0 : _t[data.x + 1]) == v)
+            data.x += 1;
+        else if (((_u = fieldMap[data.y - 1]) === null || _u === void 0 ? void 0 : _u[data.x - 1]) == v) {
+            data.y -= 1;
+            data.x -= 1;
         }
-        else {
-            if (((_g = fieldMap[data.y - 1]) === null || _g === void 0 ? void 0 : _g[data.x]) == v)
-                data.y -= 1;
-            if (((_h = fieldMap[data.y + 1]) === null || _h === void 0 ? void 0 : _h[data.x]) == v)
-                data.y += 1;
+        else if (((_v = fieldMap[data.y - 1]) === null || _v === void 0 ? void 0 : _v[data.x + 1]) == v) {
+            data.y -= 1;
+            data.x += 1;
+        }
+        else if (((_w = fieldMap[data.y - 1]) === null || _w === void 0 ? void 0 : _w[data.x]) == v)
+            data.y -= 1;
+        else if (((_x = fieldMap[data.y + 1]) === null || _x === void 0 ? void 0 : _x[data.x]) == v)
+            data.y += 1;
+        else if (((_y = fieldMap[data.y + 1]) === null || _y === void 0 ? void 0 : _y[data.x - 1]) == v) {
+            data.y += 1;
+            data.x -= 1;
+        }
+        else if (((_z = fieldMap[data.y + 1]) === null || _z === void 0 ? void 0 : _z[data.x + 1]) == v) {
+            data.y += 1;
+            data.x += 1;
         }
         if (fieldMap[data.y][data.x] == v)
             cords.push(Object.assign({}, data));

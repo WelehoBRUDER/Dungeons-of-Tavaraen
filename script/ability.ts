@@ -72,7 +72,9 @@ const less_is_better = {
   resistance_penetration: false,
   base_heal: false,
   damage_multiplier: false,
-  use_range: false
+  use_range: false,
+  health_cost: true,
+  health_cost_percentage: true
 };
 
 const possible_stat_modifiers = [
@@ -90,6 +92,9 @@ const possible_stat_modifiers = [
   "mpP",
   "resistAllV",
   "resistAllP",
+  "physicalDefP",
+  "magicalDefP",
+  "elementalDefP",
   "hitChanceV",
   "hitChanceP",
   "evasionV",
@@ -99,7 +104,9 @@ const possible_stat_modifiers = [
   "critChanceP",
   "critDamageP",
   "damageV",
-  "damageP"
+  "damageP",
+  "regenHpP",
+  "regenMpP",
 ];
 
 const possible_modifiers = [
@@ -162,7 +169,7 @@ class Ability {
   constructor(base: ability, user: characterObject) {
     this.id = base.id;
     const values = getAbiModifiers(user, base.id);
-    // @ts-ignore
+    // @ts-ignorep
     const baseAbility = abilities[this.id];
     let statusModifiers: any = {}; 
     baseAbility.statusesUser?.forEach((str: string) => statusModifiers = {...statusModifiers, ...getAbiStatusModifiers(user, base.id, str)});

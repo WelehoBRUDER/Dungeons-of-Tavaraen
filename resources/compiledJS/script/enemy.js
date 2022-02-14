@@ -1,7 +1,7 @@
 "use strict";
 class Enemy extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
         super(base);
         const defaultModel = Object.assign({}, enemies[base.id]);
         this.sprite = defaultModel.sprite;
@@ -34,6 +34,8 @@ class Enemy extends Character {
         this.currentTargetInterval = (_o = base.currentTargetInterval) !== null && _o !== void 0 ? _o : 0;
         this.chosenTarget = (_p = base.chosenTarget) !== null && _p !== void 0 ? _p : null;
         this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
+        this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
+        this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -41,7 +43,7 @@ class Enemy extends Character {
                 });
             }
             Object.entries(this.damages).forEach((dmg) => {
-                this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 17)) + 1;
+                this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 30)) + 1;
             });
             this["stats"]["hp"] = this.getHpMax();
             this["stats"]["mp"] = this.getMpMax();
@@ -208,6 +210,7 @@ class Enemy extends Character {
             return { total: dmg, split: dmgs };
         };
         this.kill = () => {
+            var _a;
             player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);
@@ -215,7 +218,30 @@ class Enemy extends Character {
             displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
             lootEnemy(this);
             this.chosenTarget = null;
-            fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
+            if (((_a = this.questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1) {
+                player.questProgress[this.questSpawn.quest].prog[this.questSpawn.index] = 1;
+                updateQuestProgress({ id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id] });
+            }
+            else
+                fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
+            player.questProgress.forEach((prog) => {
+                var _a;
+                let questFind = Object.values(quests)[prog.id];
+                if (prog.obj >= questFind.objectives.length)
+                    return;
+                let objective = questFind.objectives[prog.obj];
+                if (objective.objective == "killEnemies") {
+                    (_a = objective.enemiesToKill) === null || _a === void 0 ? void 0 : _a.forEach((en, index) => {
+                        if (this.id == en.type) {
+                            if (!prog.prog[index])
+                                prog.prog[index] = 1;
+                            else
+                                prog.prog[index]++;
+                            updateQuestProgress({ id: prog.id, quest: questFind.id });
+                        }
+                    });
+                }
+            });
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
             player.lvlUp();
@@ -231,14 +257,23 @@ class Enemy extends Character {
             this.cords.y = this.spawnCords.y;
         };
         this.aggro = () => {
+            var _a, _b;
             // @ts-ignore
             let targets = combatSummons.concat([player]);
             let target = threatDistance(targets, this);
             let range = this.aggroRange + this.tempAggro;
             // @ts-ignore
             if (target) {
-                if (generatePath(this.cords, target.cords, this.canFly, true) <= range)
+                if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
+                    let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.id];
+                    if (encounter < 1 || !encounter) {
+                        player.entitiesEverEncountered.enemies[this.id] = 1;
+                        displayText("New enemy encountered!");
+                        displayText(this.id + " added to codex.");
+                        spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
+                    }
                     return true;
+                }
             }
             return false;
         };

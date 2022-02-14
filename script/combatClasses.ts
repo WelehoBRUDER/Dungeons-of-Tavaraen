@@ -15,7 +15,7 @@ const combatClasses = {
     statBonuses: {
       strV: 3,
       meleeDamageP: 10,
-      rangedDamageP: -10
+      rangedDamageP: -10,
     },
     color: "#5c2323",
     perkTree: "barbarian",

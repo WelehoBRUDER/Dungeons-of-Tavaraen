@@ -2,6 +2,12 @@
 var perksData = [];
 var perks = [];
 var tree = player.classes.main.perkTree;
+const lvl_history = {
+    perks: [],
+    stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
+    pp: 0,
+    sp: 0
+};
 const perkColors = {
     necromancer: "#20142e",
     sorcerer: "#183952",
@@ -13,7 +19,11 @@ class perk {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f;
         this.id = base.id;
-        const basePerk = perksArray[base.tree || tree]["perks"][this.id];
+        let base_ = perksArray[base.tree || tree]["perks"][this.id];
+        if (!base_ && this.id) {
+            base_ = Object.assign({}, dummyPerk);
+        }
+        const basePerk = Object.assign({}, base_);
         if (!basePerk)
             console.error("Perk invalid! Most likely id is wrong!");
         this.name = basePerk.name;
@@ -56,13 +66,17 @@ class perk {
             return isBought;
         };
         this.buy = () => {
+            var _a, _b;
             if (this.available() && !this.bought()) {
                 player.perks.push(new perk(Object.assign({}, this)));
                 player.pp--;
-                // if(this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree) {
-                // }
+                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != ((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.sub) === null || _b === void 0 ? void 0 : _b.perkTree)) {
+                    player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
+                }
                 player.updatePerks();
                 player.updateAbilities();
+                lvl_history.perks.push(this.id);
+                lvl_history.pp++;
                 formPerks();
                 formStatUpgrades();
             }
@@ -86,13 +100,13 @@ function formPerks(e = null, scrollDefault = false) {
         perks.push(new perk(_perk[1]));
     });
     hideHover();
-    const baseSize = 128 * currentZoomBG;
-    const baseImg = 104 * currentZoomBG;
-    const baseFont = 12 * currentZoomBG;
+    const baseSize = 128;
+    const baseImg = 104;
+    const baseFont = 12;
+    const lineSize = 64;
+    const lineWidth = 10;
     const points = document.createElement("p");
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('width', "4000");
-    svg.setAttribute('height', "4000");
     points.textContent = lang["perk_points"] + ": " + player.pp.toString();
     points.classList.add("perkPoints");
     staticBg.textContent = "";
@@ -180,12 +194,12 @@ function formPerks(e = null, scrollDefault = false) {
                     color = "gold";
                 else if (!_perk.available())
                     color = "rgb(40, 40, 40)";
-                line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-                line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-                line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
-                line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (64 * currentZoomBG)}px`);
+                line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (lineSize)}px`);
+                line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (lineSize)}px`);
+                line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (lineSize)}px`);
+                line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (lineSize)}px`);
                 line.setAttribute("stroke", color);
-                line.setAttribute("stroke-width", `${10 * currentZoomBG}px`);
+                line.setAttribute("stroke-width", `${lineWidth}px`);
                 svg.appendChild(line);
             });
         }
@@ -194,10 +208,15 @@ function formPerks(e = null, scrollDefault = false) {
         perkArea.scrollTo(leftScroll, topScroll);
     else
         background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
+    perkArea.style.transform = `scale(${currentZoomBG})`;
+    svg.setAttribute('width', "4000");
+    svg.setAttribute('height', "4000");
+    /* Making a proper zoom has defeated me, it will simply not center on mouse, ever. */
 }
 function formStatUpgrades() {
     const bg = document.querySelector(".playerLeveling .stats");
     const points = document.createElement("p");
+    const undo = document.createElement("div");
     const baseStats = ["str", "dex", "vit", "int", "cun"];
     bg.innerHTML = "";
     points.textContent = lang["stat_points"] + ": " + player.sp.toString();
@@ -205,7 +224,10 @@ function formStatUpgrades() {
     /* Form stats */
     const container = document.createElement("div");
     container.classList.add("statContainer");
+    undo.classList.add("undo");
+    undo.textContent = "Undo changes";
     baseStats.forEach(stat => {
+        var _a;
         const base = document.createElement("div");
         const baseImg = document.createElement("img");
         const baseText = document.createElement("p");
@@ -217,17 +239,21 @@ function formStatUpgrades() {
         baseNumber.textContent = player.getBaseStats()[stat].toString();
         upgrade.textContent = "+";
         upgrade.addEventListener("click", a => upStat(stat));
+        tooltip(base, (_a = lang[stat + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
         if (player.sp <= 0)
             upgrade.style.transform = "scale(0)";
         base.append(baseImg, baseText, baseNumber, upgrade);
         container.append(base);
     });
-    bg.append(points, container);
+    undo.addEventListener("click", undoChanges);
+    bg.append(points, container, undo);
 }
 function upStat(stat) {
     if (player.sp >= 1) {
         player.sp--;
         player.stats[stat]++;
+        lvl_history.stats[stat]++;
+        lvl_history.sp++;
         formStatUpgrades();
     }
 }
@@ -236,6 +262,10 @@ function openLevelingScreen() {
     const lvling = document.querySelector(".playerLeveling");
     lvling.style.transform = "scale(1)";
     document.querySelector(".worldText").style.opacity = "0";
+    lvl_history.perks = [];
+    lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.pp = 0;
+    lvl_history.sp = 0;
     formPerks();
     formStatUpgrades();
     state.perkOpen = true;
@@ -291,21 +321,21 @@ function statModifTT(statModif) {
     Object.entries(statModif.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
     return txt;
 }
-const zoomLevelsBG = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
 var currentZoomBG = 1;
 const background = document.querySelector(".playerLeveling .perks");
 background.addEventListener('mousedown', action1);
 background.addEventListener('mousemove', action2);
 background.addEventListener("wheel", changeZoomLevelBG);
 // @ts-expect-error
-function changeZoomLevelBG({ deltaY }) {
-    if (deltaY > 0) {
+function changeZoomLevelBG(e) {
+    if (e.deltaY > 0) {
         currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) - 1] || zoomLevelsBG[0];
     }
     else {
         currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) + 1] || zoomLevelsBG[zoomLevelsBG.length - 1];
     }
-    formPerks(eAction);
+    formPerks(e);
 }
 let mouseX = 0;
 let mouseY = 0;
@@ -325,6 +355,25 @@ function action2(e) {
         let offsetY = e.y - mouseY;
         background.scrollTo(bgPosX - offsetX, bgPosY - offsetY);
     }
+}
+function undoChanges() {
+    lvl_history.perks.forEach((prk) => {
+        let index = player.perks.findIndex((_prk) => _prk.id == prk);
+        player.perks.splice(index, 1);
+    });
+    Object.entries(lvl_history.stats).forEach((stat) => {
+        const id = stat[0];
+        const val = stat[1];
+        player.stats[id] -= val;
+    });
+    player.sp += lvl_history.sp;
+    player.pp = lvl_history.pp;
+    lvl_history.perks = [];
+    lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.pp = 0;
+    lvl_history.sp = 0;
+    formPerks();
+    formStatUpgrades();
 }
 //formPerks();
 //# sourceMappingURL=perk.js.map

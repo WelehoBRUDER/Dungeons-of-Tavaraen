@@ -81,6 +81,14 @@ const menuSettings = [
         type: "hotkey",
     },
     {
+        id: "setting_hotkey_journal",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_codex",
+        type: "hotkey",
+    },
+    {
         id: "setting_hotkey_ranged",
         tooltip: "toggle_rangedMode",
         type: "hotkey",
@@ -138,6 +146,8 @@ const state = {
     textWindowOpen: false,
     dialogWindow: false,
     storeOpen: false,
+    journalOpen: false,
+    codexOpen: false,
 };
 function handleEscape() {
     if (state.perkOpen) {
@@ -178,6 +188,12 @@ function handleEscape() {
     else if (state.storeOpen) {
         cancelTransaction();
     }
+    else if (state.journalOpen) {
+        closePlayerQuests();
+    }
+    else if (state.codexOpen) {
+        closeCodex();
+    }
     else if (!state.isSelected) {
         openGameMenu();
         state.menuOpen = true;
@@ -190,6 +206,7 @@ function handleEscape() {
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
 }
+// This happens on a slight timeout to make sure resources can load in time.
 setTimeout(() => {
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
     if (options) {
@@ -206,7 +223,7 @@ setTimeout(() => {
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-}, 1200);
+}, 300);
 const languages = ["english", "finnish"];
 const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");
@@ -261,6 +278,7 @@ window.addEventListener("keyup", (e) => {
         tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
         tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
         tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+        tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
         tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
         selectingHotkey = "";
     }
@@ -380,6 +398,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
                     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
                     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+                    tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
                     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
                     player.updateAbilities();
                     gotoSettingsMenu(true);
@@ -433,18 +452,20 @@ function trimPlayerObjectForSaveFile(playerObject) {
     trimmed.perks.forEach((perk, index) => {
         trimmed.perks[index] = { id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted };
     });
-    return trimmed;
+    return Object.assign({}, trimmed);
 }
+let saveMenuScroll = 0;
+document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop);
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     hideHover();
     saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
-    state.savesOpen = true;
-    if (!inMainMenu)
-        closeGameMenu(true);
     const saveBg = document.querySelector(".savesMenu");
     const savesArea = saveBg.querySelector(".saves");
     const saveNameInput = saveBg.querySelector(".saveName");
+    state.savesOpen = true;
+    if (!inMainMenu)
+        closeGameMenu(true);
     if (inMainMenu) {
         saveNameInput.classList.add("unavailable");
         saveBg.querySelector(".saveGame").classList.add("unavailable");
@@ -476,11 +497,10 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
     saveNameInput.value = player.name + "_save";
     saves = saves.sort((x1, x2) => x2.time - x1.time);
     resetIds();
-    await sleep(5);
     let renderedSaves = 1;
     for (let save of saves) {
-        if (renderedSaves < 15)
-            await sleep(100);
+        if (renderedSaves < 10 && animate)
+            await sleep(110);
         const saveContainer = document.createElement("div");
         const saveCanvas = document.createElement("canvas");
         const saveName = document.createElement("p");
@@ -550,6 +570,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             player.updatePerks(true);
             player.updateAbilities();
             purgeDeadEnemies();
+            killAllQuestEnemies();
+            spawnQuestMonsters();
             handleEscape();
             closeGameMenu();
             resetAllChests();
@@ -561,7 +583,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             saves.splice(save.id, 1);
             resetIds();
             localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
-            gotoSaveMenu(false, false);
+            gotoSaveMenu(inMainMenu, false);
         });
         let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
         renderedPlayer.updatePerks(true, true);
@@ -595,7 +617,6 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         saveName.append(textSyntax(totalText));
         saveName.style.display = "flex";
         renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
-        await sleep(5);
         buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
         saveContainer.append(saveCanvas, saveName, buttonsContainer);
         savesArea.append(saveContainer);
@@ -603,6 +624,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
         }
     }
+    savesArea.scrollBy(saveMenuScroll, saveMenuScroll);
 }
 async function closeSaveMenu() {
     const saveBg = document.querySelector(".savesMenu");
@@ -653,6 +675,10 @@ function resetIds() {
         saves[i].id = i;
     }
 }
+function updatePlayerToPreventCrash() {
+    player.updatePerks(true);
+    player.updateAbilities();
+}
 function createNewSaveGame() {
     const saveBg = document.querySelector(".savesMenu");
     const savesArea = saveBg.querySelector(".saves");
@@ -672,6 +698,7 @@ function createNewSaveGame() {
     localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
     localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
     localStorage.setItem("DOT_game_language", JSON.stringify(lang.language_id));
+    updatePlayerToPreventCrash();
     gotoSaveMenu(false, false);
 }
 function saveToFile(input) {
@@ -780,6 +807,15 @@ function reviveAllDeadEnemies() {
         });
     });
 }
+function killAllQuestEnemies() {
+    maps.forEach((mp, index) => {
+        var _a;
+        for (let i = mp.enemies.length - 1; i >= 0; i--) {
+            if (((_a = mp.enemies[i].questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1)
+                mp.enemies.splice(i, 1);
+        }
+    });
+}
 function LoadSlot(data) {
     reviveAllDeadEnemies();
     player = new PlayerCharacter(Object.assign({}, GetKey("player", data).data));
@@ -797,6 +833,8 @@ function LoadSlot(data) {
     player.updatePerks(true);
     player.updateAbilities();
     purgeDeadEnemies();
+    killAllQuestEnemies();
+    spawnQuestMonsters();
     handleEscape();
     closeGameMenu();
     resetAllChests();
@@ -869,5 +907,7 @@ function calcLocalStorageUsedSpace() {
     }
     return parseInt((total / 1024).toFixed(2));
 }
-console.log(Math.round(calcLocalStorageMaxSpace()));
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+}
 //# sourceMappingURL=menu.js.map

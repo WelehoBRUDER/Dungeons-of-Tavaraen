@@ -91,6 +91,14 @@ const menuSettings = [
     type: "hotkey",
   },
   {
+    id: "setting_hotkey_journal",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_codex",
+    type: "hotkey",
+  },
+  {
     id: "setting_hotkey_ranged",
     tooltip: "toggle_rangedMode",
     type: "hotkey",
@@ -149,6 +157,8 @@ const state = {
   textWindowOpen: false as boolean,
   dialogWindow: false as boolean,
   storeOpen: false as boolean,
+  journalOpen: false as boolean,
+  codexOpen: false as boolean,
 };
 
 function handleEscape() {
@@ -172,11 +182,11 @@ function handleEscape() {
     closeSettingsMenu();
     state.optionsOpen = false;
   }
-  else if(state.displayingTextHistory) {
-    state.displayingTextHistory = false
+  else if (state.displayingTextHistory) {
+    state.displayingTextHistory = false;
     displayAllTextHistory();
   }
-  else if(state.rangedMode) {
+  else if (state.rangedMode) {
     state.rangedMode = false;
     renderTileHover(player.cords, null);
   }
@@ -184,11 +194,17 @@ function handleEscape() {
     closeGameMenu(false, false, false);
     state.menuOpen = false;
   }
-  else if(state.dialogWindow) {
+  else if (state.dialogWindow) {
     exitDialog();
   }
-  else if(state.storeOpen) {
+  else if (state.storeOpen) {
     cancelTransaction();
+  }
+  else if (state.journalOpen) {
+    closePlayerQuests();
+  }
+  else if (state.codexOpen) {
+    closeCodex();
   }
   else if (!state.isSelected) {
     openGameMenu();
@@ -203,6 +219,7 @@ function handleEscape() {
   assignContainer.style.display = "none";
 }
 
+// This happens on a slight timeout to make sure resources can load in time.
 setTimeout(() => {
   let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
   if (options) {
@@ -219,7 +236,7 @@ setTimeout(() => {
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
   tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-}, 1200);
+}, 300);
 
 const languages = ["english", "finnish"] as any;
 
@@ -275,6 +292,7 @@ window.addEventListener("keyup", (e) => {
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
     selectingHotkey = "";
   }
@@ -364,7 +382,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       slider.oninput = () => {
         scaleUI(parseInt(slider.value) / 100);
         textVal.textContent = `${(parseInt(slider.value) / 100).toString()}x`;
-      }
+      };
       text.append(textVal);
       container.append(text, slider);
       settingsBackground.append(container);
@@ -387,6 +405,7 @@ function gotoSettingsMenu(inMainMenu = false) {
           tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
           tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
           tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+          tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
           tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
           player.updateAbilities();
           gotoSettingsMenu(true);
@@ -419,35 +438,37 @@ async function gotoMainMenu() {
 
 function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   const trimmed: PlayerCharacter = { ...playerObject };
-  trimmed.inventory.forEach((itm: any, index: number) =>{
-    if(itm.stackable) trimmed.inventory[index] = {id: itm.id, type: itm.type, amount: itm.amount};
-    else if(itm.level) trimmed.inventory[index] = {id: itm.id, type: itm.type, level: itm.level};
-    else trimmed.inventory[index] = {id: itm.id, type: itm.type};
+  trimmed.inventory.forEach((itm: any, index: number) => {
+    if (itm.stackable) trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount };
+    else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
+    else trimmed.inventory[index] = { id: itm.id, type: itm.type };
   });
   trimmed.abilities.forEach((abi: any, index: number) => {
     // @ts-ignore
-    trimmed.abilities[index] = {id: abi.id, equippedSlot: abi.equippedSlot};
+    trimmed.abilities[index] = { id: abi.id, equippedSlot: abi.equippedSlot };
   });
   trimmed.allModifiers = {};
   equipSlots.forEach((slot: string) => {
-    if(trimmed[slot]?.id) {
+    if (trimmed[slot]?.id) {
       trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level ?? 0 };
     }
   });
   trimmed.perks.forEach((perk: any, index: number) => {
-    trimmed.perks[index] = {id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted};
+    trimmed.perks[index] = { id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted };
   });
-  return trimmed;
+  return { ...trimmed };
 }
 
+let saveMenuScroll = 0;
+document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop);
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   hideHover();
   saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
-  state.savesOpen = true;
-  if (!inMainMenu) closeGameMenu(true);
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
   const savesArea = saveBg.querySelector<HTMLDivElement>(".saves");
   const saveNameInput = saveBg.querySelector<HTMLInputElement>(".saveName");
+  state.savesOpen = true;
+  if (!inMainMenu) closeGameMenu(true);
   if (inMainMenu) {
     saveNameInput.classList.add("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveGame").classList.add("unavailable");
@@ -479,10 +500,9 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   saveNameInput.value = player.name + "_save";
   saves = saves.sort((x1, x2) => x2.time - x1.time);
   resetIds();
-  await sleep(5);
   let renderedSaves = 1;
   for (let save of saves) {
-    if (renderedSaves < 15) await sleep(100);
+    if (renderedSaves < 10 && animate) await sleep(110);
     const saveContainer = document.createElement("div");
     const saveCanvas = document.createElement("canvas");
     const saveName = document.createElement("p");
@@ -540,7 +560,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       itemData = [...save.save.itemData];
       if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
       let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
-      if(foundMap == -1) foundMap = save.save.currentMap;
+      if (foundMap == -1) foundMap = save.save.currentMap;
       currentMap = foundMap;
       tree = player.classes.main.perkTree;
       turnOver = true;
@@ -549,6 +569,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player.updatePerks(true);
       player.updateAbilities();
       purgeDeadEnemies();
+      killAllQuestEnemies();
+      spawnQuestMonsters();
       handleEscape();
       closeGameMenu();
       resetAllChests();
@@ -560,10 +582,10 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       saves.splice(save.id, 1);
       resetIds();
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
-      gotoSaveMenu(false, false);
+      gotoSaveMenu(inMainMenu, false);
     });
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
-    renderedPlayer.updatePerks(true, true)
+    renderedPlayer.updatePerks(true, true);
     renderedPlayer.updateAbilities(true);
     let saveTime = new Date(save.time);
     let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -571,7 +593,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     let totalText = ``;
     let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
     let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
-    if(foundMap == -1) foundMap = save.save.currentMap;
+    if (foundMap == -1) foundMap = save.save.currentMap;
     totalText += save.text.split("||")[0];
     totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
     totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
@@ -579,28 +601,28 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
     let verColor: string = "lime";
     let addVersionWarning: boolean = false;
-    if((+save.save.version + .1 < +GAME_VERSION) || !save.save.version) {
+    if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version) {
       verColor = "orange";
       addVersionWarning = true;
-    } 
-    
+    }
+
     let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
-    if(versionText.includes('undefined')) versionText = lang["old_save"];
+    if (versionText.includes('undefined')) versionText = lang["old_save"];
     totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
-    if(addVersionWarning) {
+    if (addVersionWarning) {
       totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
     }
     saveName.append(textSyntax(totalText));
     saveName.style.display = "flex";
     renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
-    await sleep(5);
     buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
     saveContainer.append(saveCanvas, saveName, buttonsContainer);
     savesArea.append(saveContainer);
-    if(addVersionWarning) {
+    if (addVersionWarning) {
       tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
     }
   }
+  savesArea.scrollBy(saveMenuScroll, saveMenuScroll);
 }
 
 async function closeSaveMenu() {
@@ -653,6 +675,11 @@ function resetIds() {
   }
 }
 
+function updatePlayerToPreventCrash() {
+  player.updatePerks(true);
+  player.updateAbilities();
+}
+
 function createNewSaveGame() {
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
   const savesArea = saveBg.querySelector<HTMLDivElement>(".saves");
@@ -672,6 +699,7 @@ function createNewSaveGame() {
   localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
   localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
   localStorage.setItem("DOT_game_language", JSON.stringify(lang.language_id));
+  updatePlayerToPreventCrash();
   gotoSaveMenu(false, false);
 }
 
@@ -793,6 +821,14 @@ function reviveAllDeadEnemies() {
   });
 }
 
+function killAllQuestEnemies() {
+  maps.forEach((mp: any, index: number) => {
+    for (let i = mp.enemies.length - 1; i >= 0; i--) {
+      if (mp.enemies[i].questSpawn?.quest > -1) mp.enemies.splice(i, 1);
+    }
+  });
+}
+
 function LoadSlot(data: any) {
   reviveAllDeadEnemies();
   player = new PlayerCharacter({ ...GetKey("player", data).data });
@@ -800,7 +836,7 @@ function LoadSlot(data: any) {
   fallenEnemies = GetKey("enemies", data).data;
   lootedChests = GetKey("lootedChests", data).data;
   let foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
-  if(foundMap == -1) foundMap = GetKey("currentMap", data).data;
+  if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
   currentMap = foundMap;
   tree = player.classes.main.perkTree;
   turnOver = true;
@@ -809,6 +845,8 @@ function LoadSlot(data: any) {
   player.updatePerks(true);
   player.updateAbilities();
   purgeDeadEnemies();
+  killAllQuestEnemies();
+  spawnQuestMonsters();
   handleEscape();
   closeGameMenu();
   resetAllChests();
@@ -837,23 +875,23 @@ function closeTextWindow() {
 // thanks
 function calcLocalStorageMaxSpace() {
   try {
-      for(let tuhat = 1000; tuhat < 100005; tuhat += 1000) localStorage.tuhat = "a".repeat(1024 * tuhat);
-  } catch {}
+    for (let tuhat = 1000; tuhat < 100005; tuhat += 1000) localStorage.tuhat = "a".repeat(1024 * tuhat);
+  } catch { }
   try {
-      for(let sata = 100; sata < 1005; sata += 100) localStorage.sata = "a".repeat(1024 * sata);
-  } catch {}
+    for (let sata = 100; sata < 1005; sata += 100) localStorage.sata = "a".repeat(1024 * sata);
+  } catch { }
   try {
-      for(let kymmenen = 10; kymmenen < 105; kymmenen += 10) localStorage.kymppi = "a".repeat(1024 * kymmenen);
-  } catch {}
+    for (let kymmenen = 10; kymmenen < 105; kymmenen += 10) localStorage.kymppi = "a".repeat(1024 * kymmenen);
+  } catch { }
   try {
-      for(let single = 1; single < 15; single++) localStorage.single = "a".repeat(1024 * single);
-  } catch {}
+    for (let single = 1; single < 15; single++) localStorage.single = "a".repeat(1024 * single);
+  } catch { }
   try {
-      for(let half = 20; half > 0; half--) localStorage.half = "a".repeat(Math.ceil(1024 / half));
-  } catch {}
+    for (let half = 20; half > 0; half--) localStorage.half = "a".repeat(Math.ceil(1024 / half));
+  } catch { }
   try {
-      for(let pieni = 1; pieni < 512; pieni++) localStorage.pieni = "a".repeat(pieni);
-  } catch {}
+    for (let pieni = 1; pieni < 512; pieni++) localStorage.pieni = "a".repeat(pieni);
+  } catch { }
 
   const endSpace = calcLocalStorageUsedSpace();
   localStorage.removeItem("tuhat");
@@ -867,12 +905,15 @@ function calcLocalStorageMaxSpace() {
 
 function calcLocalStorageUsedSpace() {
   let total = 0;
-  for(const key in localStorage) {
-      if(localStorage.hasOwnProperty(key)) {
-          const length = (localStorage[key].length + key.length) * 2;
-          total += length;
-      }
+  for (const key in localStorage) {
+    if (localStorage.hasOwnProperty(key)) {
+      const length = (localStorage[key].length + key.length) * 2;
+      total += length;
+    }
   }
   return parseInt((total / 1024).toFixed(2));
 }
-console.log(Math.round(calcLocalStorageMaxSpace()));
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.substring(1);
+}

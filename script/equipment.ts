@@ -14,6 +14,7 @@ interface itemClass {
   spriteMap?: any;
   amount?: number;
   stacks?: boolean;
+  indexInBaseArray?: number;
 }
 
 class Item {
@@ -33,6 +34,7 @@ class Item {
   mainTitle?: boolean;
   amount?: number;
   stacks?: boolean;
+  indexInBaseArray?: number;
   constructor(base: itemClass) {
     this.id = base.id;
     // @ts-ignore
@@ -52,6 +54,7 @@ class Item {
     this.requiresStats = baseItem.requiresStats ?? null;
     this.mainTitle = baseItem.mainTitle ?? true;
     this.stacks = baseItem.stacks ?? false;
+    this.indexInBaseArray = Object.keys(items).findIndex((item: string) => item == this.id);
   }
 }
 
@@ -218,10 +221,10 @@ class Consumable extends Item {
     this.stats = {};
     this.commands = {};
     this.name = lang[this.id + "_name"] ?? baseItem.name;
-    if(setPrice > 0) this.price = setPrice;
+    if (setPrice > 0) this.price = setPrice;
 
-    if(setPrice > 0) {
-      this.fullPrice = () => { return this.price; }
+    if (setPrice > 0) {
+      this.fullPrice = () => { return this.price; };
     }
     else this.fullPrice = () => { return this.price * this.amount; };
   }
@@ -253,9 +256,9 @@ class Weapon extends Item {
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
     this.statBonus = baseItem.statBonus ?? "str";
-    if(setPrice > 0) this.price = setPrice;
+    if (setPrice > 0) this.price = setPrice;
 
-    if(this.level > 0) this.name += ` +${this.level}`;
+    if (this.level > 0) this.name += ` +${this.level}`;
 
     // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
     //
@@ -278,7 +281,7 @@ class Weapon extends Item {
     //   });
     // }
 
-    if(setPrice > 0 ) this.fullPrice = () => { return this.price }
+    if (setPrice > 0) this.fullPrice = () => { return this.price; };
     else {
       this.fullPrice = () => {
         let bonus = 0;
@@ -293,7 +296,7 @@ class Weapon extends Item {
           bonus += _sw;
         });
         bonus *= grades[this.grade]["worth"];
-        let price = Math.floor((bonus + this.price) * (1 + this.level/2));
+        let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
         return price < 1 ? 1 : price;
       };
     }
@@ -390,9 +393,9 @@ class Armor extends Item {
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
     this.coversHair = baseItem.coversHair ?? false;
-    if(setPrice > 0) this.price = setPrice;
+    if (setPrice > 0) this.price = setPrice;
 
-    if(this.level > 0) this.name += ` +${this.level}`;
+    if (this.level > 0) this.name += ` +${this.level}`;
 
     // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
     //
@@ -415,7 +418,7 @@ class Armor extends Item {
     //   });
     // }
 
-    if(setPrice > 0) this.fullPrice = () => { return this.price };
+    if (setPrice > 0) this.fullPrice = () => { return this.price; };
     else {
       this.fullPrice = () => {
         let bonus = 0;
@@ -430,7 +433,7 @@ class Armor extends Item {
           bonus += _sw;
         });
         bonus *= grades[this.grade]["worth"];
-        let price = Math.floor((bonus + this.price) * (1 + this.level/2));
+        let price = Math.floor((bonus + this.price) * (1 + this.level / 2));
         return price < 1 ? 1 : price;
       };
     }
@@ -508,9 +511,9 @@ class Artifact extends Item {
     this.artifactSet = baseItem.artifactSet;
     this.rolledStats = { ...base.rolledStats } ?? {};
     this.commands = {};
-    if(setPrice > 0) this.price = setPrice;
+    if (setPrice > 0) this.price = setPrice;
 
-    if(lang.language_id !== "english") this.name = lang[this.id + "_name"];
+    if (lang.language_id !== "english") this.name = lang[this.id + "_name"];
 
     // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
     //
@@ -531,7 +534,7 @@ class Artifact extends Item {
     //   else this.stats[stat[0]] += stat[1];
     // });
 
-    if(setPrice > 0) this.fullPrice = () => { return this.price; }
+    if (setPrice > 0) this.fullPrice = () => { return this.price; };
     else {
       this.fullPrice = () => {
         let bonus = 0;
@@ -562,7 +565,7 @@ const equipSlots = [
 ];
 
 document.querySelector<HTMLDivElement>(".playerInventory")?.querySelectorAll<HTMLDivElement>(".slot")?.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
-document.querySelector<HTMLDivElement>(".playerInventory")?.addEventListener("click", e=>removeContextMenu(e));
+document.querySelector<HTMLDivElement>(".playerInventory")?.addEventListener("click", e => removeContextMenu(e));
 
 function renderInventory() {
   state.invOpen = true;
@@ -581,7 +584,7 @@ function renderInventory() {
       const _item = { ...player[slot] };
       const img = document.createElement("img");
       const name = document.createElement("p");
-      img.addEventListener("click", e=>clickItem(e, player[slot], img, "PLAYER_EQUIPMENT"));
+      img.addEventListener("click", e => clickItem(e, player[slot], img, "PLAYER_EQUIPMENT"));
       img.src = _item.img;
       name.textContent = _item.name;
       img.classList.add("slotItem");
@@ -619,16 +622,16 @@ function closeLeveling() {
 
 function itemTT(item: any) {
   var text = "";
-  if(!item.grade) return;
+  if (!item.grade) return;
   text += `\t<css>z-index: 5; position: relative;<css><f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
-  if(item.requiresStats) {
+  if (item.requiresStats) {
     let cantEquip: boolean = false;
-    Object.entries(item.requiresStats)?.forEach((dmg: any) => { 
-      if(player.getStats()[dmg[0]] < dmg[1]) {
+    Object.entries(item.requiresStats)?.forEach((dmg: any) => {
+      if (player.getStats()[dmg[0]] < dmg[1]) {
         cantEquip = true;
       }
     });
-    if(cantEquip) {
+    if (cantEquip) {
       text += `§<css>background: rgba(209, 44, 77, .25); padding: 2px; margin-top: 8px; z-index: 1; position: relative;<css><i>${icons.warning_icon}<i><c>red<c><f>19px<f>${lang["cant_equip"]}\n§`;
     }
   }
@@ -652,24 +655,24 @@ function itemTT(item: any) {
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
   }
-  if(item.armor) {
-    if(Object.keys(item.armor)?.length > 0) {
-      Object.entries(item.armor).forEach((armor: any)=>{
+  if (item.armor) {
+    if (Object.keys(item.armor)?.length > 0) {
+      Object.entries(item.armor).forEach((armor: any) => {
         let value: number = armor[1];
         let key: string = armor[0];
         let color: string = "lime";
         let compareValue = player?.[item.slot]?.armor?.[key];
-        if(compareValue) {
-          if(compareValue > value) color = "red";
-          else if(compareValue == value) color = "white";
+        if (compareValue) {
+          if (compareValue > value) color = "red";
+          else if (compareValue == value) color = "white";
         }
-        else if(value < 0) color = "red";
+        else if (value < 0) color = "red";
         text += `<i>${icons[key + "_armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
-      }); 
+      });
     }
   }
   if (item.resistances) {
-    if(Object.keys(item.resistances)?.length > 0) {
+    if (Object.keys(item.resistances)?.length > 0) {
       let total: number = 0;
       let totalCompare: number = 0;
       let txt: string = "";
@@ -682,7 +685,7 @@ function itemTT(item: any) {
             if (player[item.slot]?.resistances[dmg[0]] > dmg[1]) color = "red";
             else if (player[item.slot]?.resistances[dmg[0]] == dmg[1]) color = "white";
           }
-          else if(dmg[1] < 0) color = "red";
+          else if (dmg[1] < 0) color = "red";
           txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
         }
       });
@@ -712,7 +715,7 @@ function itemTT(item: any) {
   if (item.statBonus) text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
   if (item.slot) text += `<i>${icons.resistance}<i><f>18px<f>${lang["item_slot"]}: ${lang[item.slot]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
-  if(typeof item.fullPrice === "function") {
+  if (typeof item.fullPrice === "function") {
     text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
   }
   else text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
@@ -721,12 +724,12 @@ function itemTT(item: any) {
     text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
     let sets = player.getArtifactSetBonuses(true);
     text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
-    Object.entries(artifactSets[item.artifactSet]?.twoPieceEffect).forEach((effect: any)=>{
-      if (effect[1] !== 0) text += effectSyntax(effect, true, ""); 
+    Object.entries(artifactSets[item.artifactSet]?.twoPieceEffect).forEach((effect: any) => {
+      if (effect[1] !== 0) text += effectSyntax(effect, true, "");
     });
     text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
-    Object.entries(artifactSets[item.artifactSet]?.threePieceEffect).forEach((effect: any)=>{
-      if (effect[1] !== 0) text += effectSyntax(effect, true, ""); 
+    Object.entries(artifactSets[item.artifactSet]?.threePieceEffect).forEach((effect: any) => {
+      if (effect[1] !== 0) text += effectSyntax(effect, true, "");
     });
   }
 
@@ -757,19 +760,19 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   topRarity.textContent = lang["item_rarity"];
   topWeight.textContent = lang["item_weight_title"];
   topWorth.textContent = lang["item_worth_title"];
-  topName.addEventListener("click", e => sortInventory("name", sortingReverse));
-  topType.addEventListener("click", e => sortInventory("type", sortingReverse));
-  topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse));
-  topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse));
-  topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse));
+  topName.addEventListener("click", e => sortInventory("name", sortingReverse, inventory, context));
+  topType.addEventListener("click", e => sortInventory("type", sortingReverse, inventory, context));
+  topRarity.addEventListener("click", e => sortInventory("grade", sortingReverse, inventory, context));
+  topWeight.addEventListener("click", e => sortInventory("weight", sortingReverse, inventory, context));
+  topWorth.addEventListener("click", e => sortInventory("worth", sortingReverse, inventory, context));
   itemsList.classList.add("itemList");
   itemsListBar.classList.add("itemListTop");
   itemsListBar.append(topImage, topName, topType, topRarity, topWeight, topWorth);
-  itemsList.addEventListener("click", e=>removeContextMenu(e));
+  itemsList.addEventListener("click", e => removeContextMenu(e));
   const items: Array<any> = [...inventory];
   items.forEach((item: any) => {
-    let itm = {...item};
-    if(resetItem) {
+    let itm = { ...item };
+    if (resetItem) {
       if (itm.type == "weapon") itm = new Weapon({ ...itm });
       else if (itm.type == "armor") itm = new Armor({ ...itm });
       else if (itm.type == "artifact") itm = new Artifact({ ...itm });
@@ -800,31 +803,31 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemType.textContent = lang[itm.type];
     itemWeight.textContent = itm.weight;
     let price = itm.price;
-    if(typeof itm.fullPrice === "function") {
-      price = itm.fullPrice()
+    if (typeof itm.fullPrice === "function") {
+      price = itm.fullPrice();
     }
-    if(price > 999) price = `${Math.round(price/1000)}k`;
+    if (price > 999) price = `${Math.round(price / 1000)}k`;
     itemWorth.textContent = price;
     if (context == "PLAYER_INVENTORY") {
       itemObject.addEventListener("mousedown", e => player.equip(e, itm));
       itemObject.addEventListener("mouseup", e => fastDrop(e, itm));
-      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PLAYER_INVENTORY"));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PLAYER_INVENTORY"));
     }
     if (context == "PICK_LOOT") {
       itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
-      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PICK_LOOT"));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_LOOT"));
     }
     if (context == "PICK_TREASURE") {
       itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
-      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PICK_TREASURE", chest));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_TREASURE", chest));
     }
     if (context == "MERCHANT_SELLING") {
       itemObject.addEventListener("mousedown", e => buyItem(e, itm));
-      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "MERCHANT_SELLING", chest));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "MERCHANT_SELLING", chest));
     }
     if (context == "PLAYER_SELLING") {
       itemObject.addEventListener("mousedown", e => sellItem(e, itm));
-      itemObject.addEventListener("click", e=>clickItem(e, itm, itemObject, "PLAYER_SELLING", chest));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PLAYER_SELLING", chest));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
@@ -839,60 +842,60 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
 }
 
 function buyItem(e: MouseEvent, itm: any) {
-  if(e.button !== 2) return;
+  if (e.button !== 2) return;
   addItemToBuying(itm);
 }
 
-function sellItem(e: MouseEvent, itm:  any) {
-  if(e.button !== 2) return;
+function sellItem(e: MouseEvent, itm: any) {
+  if (e.button !== 2) return;
   addItemToSelling(itm);
 }
 
 function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, context: string = "PLAYER_INVENTORY", chest: any = null) {
-  if(item.id == "A0_error") return;
+  if (item.id == "A0_error") return;
   contextMenu.textContent = "";
   try {
     document.querySelector(".itemSelected").classList.remove("itemSelected");
   }
-  catch {}
+  catch { }
   if (Event.shiftKey) return;
-  if(context != "PLAYER_EQUIPMENT") itemObject.classList.add("itemSelected");
+  if (context != "PLAYER_EQUIPMENT") itemObject.classList.add("itemSelected");
   contextMenu.style.left = `${Event.x}px`;
   contextMenu.style.top = `${Event.y}px`;
-  if(context == "PLAYER_INVENTORY") {
-    if(item.type != "consumable") contextMenuButton(lang["equip"], ()=> player.equip(Event, item, true));
-    contextMenuButton(lang["drop"], ()=> player.drop(item, true));
+  if (context == "PLAYER_INVENTORY") {
+    if (item.type != "consumable") { } contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
+    contextMenuButton(lang["drop"], () => player.drop(item, true));
   }
-  else if(context == "PICK_LOOT") {
-    contextMenuButton(lang["pick_up"], ()=> grabLoot(Event, item, item.dataIndex, true));
+  else if (context == "PICK_LOOT") {
+    contextMenuButton(lang["pick_up"], () => grabLoot(Event, item, item.dataIndex, true));
   }
-  else if(context == "PICK_TREASURE") {
-    contextMenuButton(lang["pick_up"], ()=> grabTreasure(Event, item, chest, item.dataIndex, true));
+  else if (context == "PICK_TREASURE") {
+    contextMenuButton(lang["pick_up"], () => grabTreasure(Event, item, chest, item.dataIndex, true));
   }
-  else if(context == "PLAYER_EQUIPMENT") {
-    contextMenuButton(lang["unequip"], ()=> player.unequip(Event, item.slot, -1, false, true));
+  else if (context == "PLAYER_EQUIPMENT") {
+    contextMenuButton(lang["unequip"], () => player.unequip(Event, item.slot, -1, false, true));
   }
-  else if(context == "MERCHANT_SELLING") {
-    contextMenuButton(lang["buy_item"], ()=>{ addItemToBuying(item);});
+  else if (context == "MERCHANT_SELLING") {
+    contextMenuButton(lang["buy_item"], () => { addItemToBuying(item); });
   }
-  else if(context == "PLAYER_SELLING") {
-    contextMenuButton(lang["sell_item"], ()=>{ addItemToSelling(item);});
+  else if (context == "PLAYER_SELLING") {
+    contextMenuButton(lang["sell_item"], () => { addItemToSelling(item); });
   }
 }
 
 function fastDrop(Event: MouseEvent, itm: any) {
-  if(Event.shiftKey) {
-    player.drop(itm)
+  if (Event.shiftKey) {
+    player.drop(itm);
   }
 }
 
 function removeContextMenu(Event: MouseEvent) {
   let target: any = Event.target;
-  if(target.className.includes("itemList") || target.className.includes("playerInventory")) {
+  if (target.className.includes("itemList") || target.className.includes("playerInventory")) {
     try {
       document.querySelector(".itemSelected").classList.remove("itemSelected");
     }
-    catch {}
+    catch { }
     contextMenu.textContent = "";
   }
 }
