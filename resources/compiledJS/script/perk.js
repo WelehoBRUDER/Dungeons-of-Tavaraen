@@ -367,7 +367,7 @@ function undoChanges() {
         player.stats[id] -= val;
     });
     player.sp += lvl_history.sp;
-    player.pp = lvl_history.pp;
+    player.pp += lvl_history.pp;
     lvl_history.perks = [];
     lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
     lvl_history.pp = 0;
