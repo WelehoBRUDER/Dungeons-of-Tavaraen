@@ -71,10 +71,10 @@ class Npc {
 }
 
 function talkToCharacter() {
-  if(state.dialogWindow || state.inCombat) return;
+  if (state.dialogWindow || state.inCombat) return;
   NPCcharacters.some((npc: Npc) => {
     let dist = calcDistance(player.cords.x, player.cords.y, npc.currentCords.x, npc.currentCords.y);
-    if(dist < 3) {
+    if (dist < 3) {
       state.dialogWindow = true;
       createDialogWindow(npc);
     }
@@ -93,12 +93,12 @@ function createDialogWindow(npc: Npc) {
   dialogWindow.style.transform = "scale(1)";
   createNPCPortrait(npc);
   createDialogChoices(npc.id, dialogChoices, npc);
-  setTimeout(()=>{dialogWindow.style.opacity = "1";}, 10);
+  setTimeout(() => { dialogWindow.style.opacity = "1"; }, 10);
 }
 
 
 function applyVarsToDialogText(text: any, pronounSet: string) {
-  if(!text) return "empty";
+  if (!text) return "empty";
   text = text.replaceAll("/heShe/", dialogLang[lang.language_id][pronounSet + "_heShe"]);
   text = text.replaceAll("/hisHer/", dialogLang[lang.language_id][pronounSet + "_hisHer"]);
   return text;
@@ -116,22 +116,22 @@ function createDialogChoices(id: string, choices: HTMLDivElement, npc: Npc) {
   let interactions = characterInteractions[id];
   choices.innerHTML = "";
   interactions.always.forEach((choice: any) => {
-    if(!choice.displayAtBottom) {
+    if (!choice.displayAtBottom) {
       createChoice(choice, choices, npc);
     }
   });
   interactions.conditional.forEach((choice: any) => {
-    if(checkDialogConditions(choice.conditions)) {
+    if (checkDialogConditions(choice.conditions)) {
       createChoice(choice, choices, npc);
     }
   });
   interactions.dialogChoices.forEach((choice: any) => {
-    if(checkDialogConditions(choice.conditions)) {
+    if (checkDialogConditions(choice.conditions)) {
       createChoice(choice, choices, npc);
     }
   });
   interactions.always.forEach((choice: any) => {
-    if(choice.displayAtBottom) {
+    if (choice.displayAtBottom) {
       createChoice(choice, choices, npc);
     }
   });
@@ -141,23 +141,23 @@ function createChoice(choice: any, choices: HTMLDivElement, npc: Npc) {
   const button = document.createElement("div");
   button.classList.add("option");
   button.append(textSyntax(`<c>gold<c>[<c>white<c>${lang[choice.type]}<c>gold<c>]<c>white<c> ${dialogLang[lang.language_id][choice.name]}`));
-  if(choice.action.type == "store") {
-    button.addEventListener("click", e=>openMerchantStore(choice.action.id));
+  if (choice.action.type == "store") {
+    button.addEventListener("click", e => openMerchantStore(choice.action.id));
   }
-  else if(choice.action.type == "exit") {
+  else if (choice.action.type == "exit") {
     button.addEventListener("click", exitDialog);
   }
-  else if(choice.action.type == "exitWithFlags") {
-    button.addEventListener("click", e=>exitWithFlags(choice));
+  else if (choice.action.type == "exitWithFlags") {
+    button.addEventListener("click", e => exitWithFlags(choice));
   }
-  else if(choice.action.type == "dialog") {
-    button.addEventListener("click", e=>nextDialog(choice, npc));
+  else if (choice.action.type == "dialog") {
+    button.addEventListener("click", e => nextDialog(choice, npc));
   }
-  else if(choice.action.type == "quest") {
-    button.addEventListener("click", e=>questDialog(choice, npc));
+  else if (choice.action.type == "quest") {
+    button.addEventListener("click", e => questDialog(choice, npc));
   }
-  else if(choice.action.type == "questObjective") {
-    button.addEventListener("click", e=>questObjectiveDialog(choice, npc));
+  else if (choice.action.type == "questObjective") {
+    button.addEventListener("click", e => questObjectiveDialog(choice, npc));
   };
   choices.append(button);
 
@@ -177,7 +177,7 @@ function exitDialog() {
 
 function exitWithFlags(choice: any) {
   choice.flags.forEach((flag: any) => {
-    if(flag.set_flag) {
+    if (flag.set_flag) {
       setFlag(flag.set_flag.flag, flag.set_flag.value, true);
     }
   });
@@ -187,15 +187,15 @@ function exitWithFlags(choice: any) {
 function checkDialogConditions(conditions: any) {
   let pass = true;
   conditions.forEach((condition: any) => {
-    if(condition.NOT_has_flag) {
+    if (condition.NOT_has_flag) {
       let flag = getFlag(condition.NOT_has_flag);
-      if(player.flags[flag]) pass = false;
+      if (player.flags[flag]) pass = false;
     }
-    if(condition.has_flag) {
+    if (condition.has_flag) {
       let flag = getFlag(condition.has_flag);
-      if(!player.flags[flag]) pass = false;
+      if (!player.flags[flag]) pass = false;
     }
-  })
+  });
   return pass;
 }
 
@@ -204,7 +204,7 @@ function nextDialog(choice: any, npc: Npc) {
   let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
   dialogText.append(textSyntax(text));
   choice.flags?.forEach((flag: any) => {
-    if(flag.set_flag) {
+    if (flag.set_flag) {
       setFlag(flag.set_flag.flag, flag.set_flag.value, true);
     }
   });
@@ -216,11 +216,11 @@ function questDialog(choice: any, npc: Npc) {
   let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
   dialogText.append(textSyntax(text));
   choice.flags?.forEach((flag: any) => {
-    if(flag.set_flag) {
+    if (flag.set_flag) {
       setFlag(flag.set_flag.flag, flag.set_flag.value, true);
     }
   });
-  if(choice.action.questId) {
+  if (choice.action.questId) {
     startNewQuest(choice.action.questId);
   }
   let questAddedText = lang["quest_added"];
@@ -230,8 +230,8 @@ function questDialog(choice: any, npc: Npc) {
 }
 
 function getQuestParams(questId: string) {
-  let questIndex = player.questProgress.findIndex((q)=>Object.keys(quests)[q.id] == questId);
-  return {id: questIndex, quest: questId};
+  let questIndex = player.questProgress.findIndex((q) => Object.keys(quests)[q.id] == questId);
+  return { id: questIndex, quest: questId };
 }
 
 function questObjectiveDialog(choice: any, npc: Npc) {
@@ -239,7 +239,7 @@ function questObjectiveDialog(choice: any, npc: Npc) {
   let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
   dialogText.append(textSyntax(text));
   choice.flags?.forEach((flag: any) => {
-    if(flag.set_flag) {
+    if (flag.set_flag) {
       setFlag(flag.set_flag.flag, flag.set_flag.value, true);
     }
   });
@@ -281,18 +281,18 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
   merchantInv.innerHTML = "";
   playerInv.innerHTML = "";
   state.storeOpen = true;
-  if(resetInv) {
+  if (resetInv) {
     pendingItemsSelling = [];
     pendingItemsBuying = [];
-  } 
-  if(!justSort) currentMerchantInventory = createMerchantItems(currentMerchant);
+  }
+  if (!justSort) currentMerchantInventory = createMerchantItems(currentMerchant);
   merchantInv.append(createItems(currentMerchantInventory, "MERCHANT_SELLING", null, false));
   playerInv.append(createItems(player.inventory, "PLAYER_SELLING"));
   pendingBuyArea.innerHTML = "";
   pendingSellArea.innerHTML = "";
   let buyingPrice = 0;
   let sellingPrice = 0;
-  for(let i = 0; i < pendingItemsBuying.length; i++) {
+  for (let i = 0; i < pendingItemsBuying.length; i++) {
     let pending = pendingItemsBuying[i];
     const itemFrame = document.createElement("div");
     const itemImg = document.createElement("img");
@@ -301,16 +301,16 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
     itemImg.src = pending.img;
     tooltip(itemFrame, itemTT(pending));
     itemFrame.append(itemImg);
-    if(pending.stacks) {
+    if (pending.stacks) {
       const itemAmnt = document.createElement("p");
       itemAmnt.classList.add("itemAmount");
       itemAmnt.textContent = pending.amount;
       itemFrame.append(itemAmnt);
     }
-    itemFrame.addEventListener("mouseup", e=>removeItemFromBuying(i));
+    itemFrame.addEventListener("mouseup", e => removeItemFromBuying(i));
     pendingBuyArea.append(itemFrame);
   }
-  for(let i = 0; i < pendingItemsSelling.length; i++) {
+  for (let i = 0; i < pendingItemsSelling.length; i++) {
     let pending = pendingItemsSelling[i];
     const itemFrame = document.createElement("div");
     const itemImg = document.createElement("img");
@@ -319,7 +319,7 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
     itemImg.src = pending.img;
     tooltip(itemFrame, itemTT(pending));
     itemFrame.append(itemImg);
-    itemFrame.addEventListener("mouseup", e=>removeItemFromSelling(i));
+    itemFrame.addEventListener("mouseup", e => removeItemFromSelling(i));
     pendingSellArea.append(itemFrame);
   }
   priceArea.innerHTML = "";
@@ -330,7 +330,7 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
   priceTxt += `\n<c>white<c>Total: <c>${sellingPrice > buyingPrice ? "lime" : sellingPrice == buyingPrice ? "white" : "red"}<c>${sellingPrice - buyingPrice}`;
   priceArea.append(textSyntax(priceTxt));
   totalPrice = sellingPrice - buyingPrice;
-  if(Math.abs(totalPrice) > player.gold && totalPrice < 0) {
+  if (Math.abs(totalPrice) > player.gold && totalPrice < 0) {
     confirmButton.classList.add("greyedOut");
   }
   else {
@@ -349,16 +349,16 @@ function closeMerchantWindow() {
 
 function createMerchantItems(itemsInv: any) {
   let inv = [];
-  for(let item of itemsInv) {
+  for (let item of itemsInv) {
     let addThisItem: boolean = true;
-    pendingItemsBuying.forEach((pending: any) =>{ if(pending.id == item.id && item.unique) addThisItem = false});
-    if(!addThisItem) continue;
-    let _item = {...items[item.id]};
+    pendingItemsBuying.forEach((pending: any) => { if (pending.id == item.id && item.unique) addThisItem = false; });
+    if (!addThisItem) continue;
+    let _item = { ...items[item.id] };
     let itm: any;
-    if(_item.type == "consumable") itm = new Consumable(_item, item.price);
-    else if(_item.type == "weapon") itm = new Weapon(_item, item.price);
-    else if(_item.type == "armor") itm = new Armor(_item, item.price);
-    else if(item.type == "artifact") itm = new Artifact(_item, item.price);
+    if (_item.type == "consumable") itm = new Consumable(_item, item.price);
+    else if (_item.type == "weapon") itm = new Weapon(_item, item.price);
+    else if (_item.type == "armor") itm = new Armor(_item, item.price);
+    else if (item.type == "artifact") itm = new Artifact(_item, item.price);
     itm.unique = item.unique;
     inv.push(itm);
   }
@@ -370,16 +370,16 @@ function itemAmountSelector(item: any, selling: boolean = false) {
   const but = amountScreen.querySelector<HTMLDivElement>(".confirm");
   amountScreen.style.display = "block";
   input.value = item.amount;
-  but.onclick = ()=>{
+  but.onclick = () => {
     let value = parseInt(input.value);
-    if(value <= 0) value = 1;
-    if(selling && value > item.amount) value = item.amount;
-    if(selling) {
+    if (value <= 0) value = 1;
+    if (selling && value > item.amount) value = item.amount;
+    if (selling) {
       pendingItemsSelling.push(item);
-        for(let i = 0; i < player.inventory.length; i++) {
-          if(player.inventory[i].id == item.id) {
-            if(value == item.amount) {
-              player.inventory.splice(i, 1);
+      for (let i = 0; i < player.inventory.length; i++) {
+        if (player.inventory[i].id == item.id) {
+          if (value == item.amount) {
+            player.inventory.splice(i, 1);
           }
           else player.inventory[i].amount -= value;
         }
@@ -391,11 +391,11 @@ function itemAmountSelector(item: any, selling: boolean = false) {
       pendingItemsBuying.push(item);
       createMerchantWindow(false);
     }
-  }
+  };
 }
 
 function addItemToBuying(item: any) {
-  if(!item.stacks) {
+  if (!item.stacks) {
     pendingItemsBuying.push(item);
     createMerchantWindow(false);
   }
@@ -405,10 +405,11 @@ function addItemToBuying(item: any) {
 }
 
 function addItemToSelling(item: any) {
-  if(!item.stacks) {
+  if (item.id === "A0_error") return;
+  if (!item.stacks) {
     pendingItemsSelling.push(item);
-    for(let i = 0; i < player.inventory.length; i++) {
-      if(player.inventory[i].id == item.id) player.inventory.splice(i, 1);
+    for (let i = 0; i < player.inventory.length; i++) {
+      if (player.inventory[i].id == item.id) player.inventory.splice(i, 1);
     }
     createMerchantWindow(false);
   }
@@ -424,15 +425,15 @@ function removeItemFromBuying(index: number) {
 
 function removeItemFromSelling(index: number) {
   let item = pendingItemsSelling[index];
-  if(item.stacks) {
+  if (item.stacks) {
     let found: boolean = false;
     player.inventory.forEach((itm: any) => {
-      if(itm.id == item.id) {
+      if (itm.id == item.id) {
         found = true;
         itm.amount += item.amount;
-      } 
+      }
     });
-    if(!found) {
+    if (!found) {
       player.inventory.push(item);
     }
   }
@@ -442,17 +443,17 @@ function removeItemFromSelling(index: number) {
 }
 
 function confirmTransaction() {
-  if(totalPrice < 0 && Math.abs(totalPrice) > player.gold) return;
+  if (totalPrice < 0 && Math.abs(totalPrice) > player.gold) return;
   pendingItemsBuying.forEach((pending: any) => {
-    if(pending.stacks) {
+    if (pending.stacks) {
       let found: boolean = false;
       player.inventory.forEach((itm: any) => {
-        if(itm.id == pending.id) {
+        if (itm.id == pending.id) {
           itm.amount += pending.amount;
           found = true;
         }
-      })
-      if(!found) player.inventory.push(pending);
+      });
+      if (!found) player.inventory.push(pending);
     }
     else {
       player.inventory.push(pending);
@@ -460,7 +461,7 @@ function confirmTransaction() {
   });
   pendingItemsBuying = [];
   pendingItemsSelling = [];
-  player.gold += totalPrice;
+  player.addGold(totalPrice);
   closeMerchantWindow();
   updateUI();
   state.storeOpen = false;
@@ -469,15 +470,15 @@ function confirmTransaction() {
 function cancelTransaction() {
   pendingItemsBuying = [];
   pendingItemsSelling.forEach((pending: any) => {
-    if(pending.stacks) {
+    if (pending.stacks) {
       let found: boolean = false;
       player.inventory.forEach((itm: any) => {
-        if(itm.id == pending.id) {
+        if (itm.id == pending.id) {
           itm.amount += pending.amount;
           found = true;
         }
-      })
-      if(!found) player.inventory.push(pending);
+      });
+      if (!found) player.inventory.push(pending);
     }
     else {
       player.inventory.push(pending);

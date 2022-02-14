@@ -13,7 +13,11 @@ class perk {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f;
         this.id = base.id;
-        const basePerk = perksArray[base.tree || tree]["perks"][this.id];
+        let base_ = perksArray[base.tree || tree]["perks"][this.id];
+        if (!base_ && this.id) {
+            base_ = Object.assign({}, dummyPerk);
+        }
+        const basePerk = Object.assign({}, base_);
         if (!basePerk)
             console.error("Perk invalid! Most likely id is wrong!");
         this.name = basePerk.name;

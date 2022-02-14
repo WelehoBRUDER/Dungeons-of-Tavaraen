@@ -907,4 +907,7 @@ function calcLocalStorageUsedSpace() {
     }
     return parseInt((total / 1024).toFixed(2));
 }
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+}
 //# sourceMappingURL=menu.js.map

@@ -393,6 +393,8 @@ function addItemToBuying(item) {
     }
 }
 function addItemToSelling(item) {
+    if (item.id === "A0_error")
+        return;
     if (!item.stacks) {
         pendingItemsSelling.push(item);
         for (let i = 0; i < player.inventory.length; i++) {
@@ -449,7 +451,7 @@ function confirmTransaction() {
     });
     pendingItemsBuying = [];
     pendingItemsSelling = [];
-    player.gold += totalPrice;
+    player.addGold(totalPrice);
     closeMerchantWindow();
     updateUI();
     state.storeOpen = false;

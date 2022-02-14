@@ -186,9 +186,9 @@
           <canvas class="layerRender" width="256" height="256"></canvas>
         </div>
         <div class="cosmetics">
-          <div class="hair" onclick="changeHair()">hair 1</div>
-          <div class="eyes" onclick="changeEyes()">eyes 1</div>
-          <div class="face" onclick="changeFace()">face 1</div>
+          <div class="hair" onmousedown="changeHair(event)">hair 1</div>
+          <div class="eyes" onmousedown="changeEyes(event)">eyes 1</div>
+          <div class="face" onmousedown="changeFace(event)">face 1</div>
         </div>
         <div class="nameContainer">
           <p class="nameText">Name</p>
@@ -218,10 +218,14 @@
   <img src="resources/tiles/player/ward_aura.png" alt="" class="ward sprite">
 
   <!-- Body Models  -->
-  <img src="resources/tiles/player/human_model.png" alt="" class="humanModel sprite">
-  <img src="resources/tiles/player/elf_model.png" alt="" class="elfModel sprite">
-  <img src="resources/tiles/player/orc_model.png" alt="" class="orcModel sprite">
-  <img src="resources/tiles/player/ashen_model.png" alt="" class="ashenModel sprite">
+  <img src="resources/tiles/player/human_model.png" alt="" class="humanModelMale sprite">
+  <img src="resources/tiles/player/elf_model.png" alt="" class="elfModelMale sprite">
+  <img src="resources/tiles/player/orc_model.png" alt="" class="orcModelMale sprite">
+  <img src="resources/tiles/player/ashen_model.png" alt="" class="ashenModelMale sprite">
+  <img src="resources/tiles/player/female_human_model.png" alt="" class="humanModelFemale sprite">
+  <img src="resources/tiles/player/female_elf_model.png" alt="" class="elfModelFemale sprite">
+  <img src="resources/tiles/player/female_orc_model.png" alt="" class="orcModelFemale sprite">
+  <img src="resources/tiles/player/female_ashen_model.png" alt="" class="ashenModelFemale sprite">
   <img src="resources/tiles/player/death.png" alt="" class="deadModel sprite">
 
   <!-- Ears -->
@@ -250,7 +254,8 @@
   <img src="resources/icons/itemMap.png" alt="" class="spriteMap_items sprite">
 
   <!-- Clothes  -->
-  <img src="resources/tiles/player/generic_pants.png" alt="" class="defaultPants sprite">
+  <img src="resources/tiles/player/generic_pants.png" alt="" class="defaultPantsMale sprite">
+  <img src="resources/tiles/player/generic_female_underwear.png" alt="" class="defaultPantsFemale sprite">
   <img src="resources/tiles/player/ragged_shirt.png" alt="" class="raggedShirt sprite">
   <img src="resources/tiles/player/ragged_boots.png" alt="" class="raggedBoots sprite">
   <img src="resources/tiles/player/ragged_pants.png" alt="" class="raggedPants sprite">

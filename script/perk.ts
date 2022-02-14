@@ -27,7 +27,11 @@ class perk {
   tree: string;
   constructor(base: perk) {
     this.id = base.id;
-    const basePerk = perksArray[base.tree || tree]["perks"][this.id];
+    let base_ = perksArray[base.tree || tree]["perks"][this.id];
+    if (!base_ && this.id) {
+      base_ = { ...dummyPerk };
+    }
+    const basePerk = { ...base_ };
     if (!basePerk) console.error("Perk invalid! Most likely id is wrong!");
     this.name = basePerk.name;
     this.desc = basePerk.desc;
@@ -65,7 +69,7 @@ class perk {
       if (this.available() && !this.bought()) {
         player.perks.push(new perk({ ...this }));
         player.pp--;
-        if(this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
+        if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
           console.log(this.tree);
           player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
         }
@@ -109,19 +113,19 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   perkTreesContainer.textContent = "";
   Object.entries(combatClasses).forEach((combatClassObject: any) => {
     const combatClass = combatClassObject[1];
-    if(player.classes.main?.id && player.classes.sub?.id) {
-      if(combatClass.id != player.classes.main.id && combatClass.id != player.classes.sub.id) return;
+    if (player.classes.main?.id && player.classes.sub?.id) {
+      if (combatClass.id != player.classes.main.id && combatClass.id != player.classes.sub.id) return;
     }
     const classButtonContainer = document.createElement("div");
     const combatClassName = document.createElement("p");
     const combatClassIcon = document.createElement("img");
-    if(combatClass.perkTree == tree) {
+    if (combatClass.perkTree == tree) {
       classButtonContainer.classList.add("goldenBorder");
     }
-    else if(combatClass.id != player.classes.main.id && player.level.level < 10) {
+    else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
       classButtonContainer.classList.add("greyedOut");
     }
-    classButtonContainer.addEventListener("click", a=>changePerkTree(combatClass.perkTree));
+    classButtonContainer.addEventListener("click", a => changePerkTree(combatClass.perkTree));
     classButtonContainer.classList.add("classButtonContainer");
     combatClassName.textContent = lang[combatClass.id + "_name"];
     combatClassIcon.src = combatClass.icon;
@@ -132,12 +136,12 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   const classButtonContainer = document.createElement("div");
   const combatClassName = document.createElement("p");
   const combatClassIcon = document.createElement("img");
-  classButtonContainer.addEventListener("click", a=>changePerkTree("adventurer_shared"));
+  classButtonContainer.addEventListener("click", a => changePerkTree("adventurer_shared"));
   classButtonContainer.classList.add("classButtonContainer");
   combatClassName.textContent = lang["adventurerPerks"];
   combatClassIcon.src = "resources/icons/adventurer.png";
   classButtonContainer.style.background = "rgb(100, 52, 5)";
-  if(tree == "adventurer_shared") {
+  if (tree == "adventurer_shared") {
     classButtonContainer.classList.add("goldenBorder");
   }
   classButtonContainer.append(combatClassIcon, combatClassName);
@@ -195,7 +199,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
       });
     }
   });
-  if(!scrollDefault) perkArea.scrollTo(leftScroll, topScroll);
+  if (!scrollDefault) perkArea.scrollTo(leftScroll, topScroll);
   else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
   perkArea.style.transform = `scale(${currentZoomBG})`;
   svg.setAttribute('width', "4000");
@@ -254,7 +258,7 @@ function perkTT(perk: perk) {
   var txt: string = "";
   txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
   txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
-  if(DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
+  if (DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
   if (perk.requires?.length > 0) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
     perk.requires.forEach(req => {
@@ -277,25 +281,25 @@ function perkTT(perk: perk) {
     Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
   }
   if (perk.statModifiers) {
-    perk.statModifiers.forEach((statModif: any)=>{
+    perk.statModifiers.forEach((statModif: any) => {
       txt += statModifTT(statModif);
-    })
+    });
   }
   return txt;
 }
 
 function statModifTT(statModif: any) {
   let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
-  if(statModif.conditions) {
+  if (statModif.conditions) {
     txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
-    Object.entries(statModif.conditions).forEach(cond=>{
+    Object.entries(statModif.conditions).forEach(cond => {
       const key = cond[0];
       const val = cond[1];
       txt += `<c>white<c><f>13px<f>${lang[key]} ${val}%\n`;
-    })
+    });
   }
   txt += `<c>white<c><f>15px<f>${lang["status_effects"]}:\n`;
-  Object.entries(statModif.effects).forEach(eff=>txt += effectSyntax(eff, true, ""));
+  Object.entries(statModif.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
   return txt;
 }
 

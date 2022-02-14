@@ -43,11 +43,11 @@ const emptyModel = {
   hair: 1,
   eyes: 1,
   face: 1,
-  weapon: new Weapon({...items.stick}),
-  chest: new Armor({...items.raggedShirt}),
+  weapon: new Weapon({ ...items.stick }),
+  chest: new Armor({ ...items.raggedShirt }),
   helmet: {},
   gloves: {},
-  legs: new Armor({...items.raggedBoots}),
+  legs: new Armor({ ...items.raggedBoots }),
   boots: {},
   offhand: {},
   artifact1: {},
@@ -61,7 +61,7 @@ const emptyModel = {
     new Ability({ ...abilities.attack }, dummy),
     new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
-    new Ability({ ...abilities.defend,  equippedSlot: 2}, dummy),
+    new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
   statModifiers: [
     {
@@ -87,7 +87,7 @@ const emptyModel = {
   gold: 50,
   sp: 5,
   pp: 1,
-  respawnPoint: {cords: {x: 41, y: 169}},
+  respawnPoint: { cords: { x: 41, y: 169 } },
   usedShrines: [],
   flags: {},
   questProgress: [],
@@ -102,55 +102,55 @@ const faces = [1, 3];
 
 const classEquipments = {
   fighter: {
-    weapon: new Weapon({...items.chippedBlade}),
-    chest: new Armor({...items.raggedShirt}),
-    helmet: new Armor({...items.leatherHelmet}),
+    weapon: new Weapon({ ...items.chippedBlade }),
+    chest: new Armor({ ...items.raggedShirt }),
+    helmet: new Armor({ ...items.leatherHelmet }),
     gloves: {},
-    legs: new Armor({...items.raggedPants}),
-    boots: new Armor({...items.raggedBoots}),
-    offhand: new Armor({...items.woodenShield}),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
+    offhand: new Armor({ ...items.woodenShield }),
   },
   barbarian: {
-    weapon: new Weapon({...items.chippedAxe}),
-    chest: new Armor({...items.leatherChest}),
+    weapon: new Weapon({ ...items.chippedAxe }),
+    chest: new Armor({ ...items.leatherChest }),
     helmet: {},
-    gloves: new Armor({...items.leatherBracers}),
-    legs: new Armor({...items.raggedPants}),
-    boots: new Armor({...items.raggedBoots}),
+    gloves: new Armor({ ...items.leatherBracers }),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
     offhand: {},
   },
   sorcerer: {
-    weapon: new Weapon({...items.apprenticeWand}),
-    chest: new Armor({...items.raggedShirt}),
+    weapon: new Weapon({ ...items.apprenticeWand }),
+    chest: new Armor({ ...items.raggedShirt }),
     helmet: {},
-    gloves: new Armor({...items.raggedGloves}),
-    legs: new Armor({...items.raggedPants}),
-    boots: new Armor({...items.raggedBoots}),
+    gloves: new Armor({ ...items.raggedGloves }),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
     offhand: {},
   },
   rogue: {
-    weapon: new Weapon({...items.dagger}),
-    chest: new Armor({...items.raggedShirt}),
-    helmet: new Armor({...items.raggedHood}),
-    gloves: new Armor({...items.raggedGloves}),
-    legs: new Armor({...items.raggedPants}),
-    boots: new Armor({...items.raggedBoots}),
-    offhand: new Armor({...items.parryingDagger}),
+    weapon: new Weapon({ ...items.dagger }),
+    chest: new Armor({ ...items.raggedShirt }),
+    helmet: new Armor({ ...items.raggedHood }),
+    gloves: new Armor({ ...items.raggedGloves }),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
+    offhand: new Armor({ ...items.parryingDagger }),
   },
   ranger: {
-    weapon: new Weapon({...items.huntingBow}),
-    chest: new Armor({...items.raggedShirt}),
-    helmet: new Armor({...items.woolHat}),
-    gloves: new Armor({...items.raggedGloves}),
-    legs: new Armor({...items.raggedPants}),
-    boots: new Armor({...items.raggedBoots}),
+    weapon: new Weapon({ ...items.huntingBow }),
+    chest: new Armor({ ...items.raggedShirt }),
+    helmet: new Armor({ ...items.woolHat }),
+    gloves: new Armor({ ...items.raggedGloves }),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
     offhand: {},
   }
 } as any;
 
 function characterCreation(withAnimations = true) {
   if (withAnimations) {
-    const copiedModel = JSON.parse(JSON.stringify({...emptyModel}));
+    const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
     player = new PlayerCharacter({ ...copiedModel });
     creation.style.display = "block";
     setTimeout(() => { creation.style.opacity = "1"; }, 5);
@@ -215,46 +215,89 @@ function beginGame() {
     handleEscape();
     createStaticMap();
     modifyCanvas();
-    setTimeout(()=>{
+    setTimeout(() => {
       openLevelingScreen();
     }, 100);
   }
 }
 
-function changeHair() {
-  if (player.hair + 1 <= hairs[1]) {
-    player.hair++;
-    creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-    characterCreation(false);
+function changeHair(e: MouseEvent) {
+  console.log(e);
+  if (e.button === 0) {
+    if (player.hair + 1 <= hairs[1]) {
+      player.hair++;
+      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+      characterCreation(false);
+    }
+    else {
+      player.hair = hairs[0];
+      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+      characterCreation(false);
+    }
   }
-  else {
-    player.hair = hairs[0];
-    creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-    characterCreation(false);
+  else if (e.button === 2) {
+    if (player.hair - 1 >= hairs[0]) {
+      player.hair--;
+      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+      characterCreation(false);
+    }
+    else {
+      player.hair = hairs[1];
+      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
+      characterCreation(false);
+    }
   }
 }
-function changeEyes() {
-  if (player.eyes + 1 <= eyes[1]) {
-    player.eyes++;
-    creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-    characterCreation(false);
+function changeEyes(e: MouseEvent) {
+  if (e.button === 0) {
+    if (player.eyes + 1 <= eyes[1]) {
+      player.eyes++;
+      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+      characterCreation(false);
+    }
+    else {
+      player.eyes = eyes[0];
+      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+      characterCreation(false);
+    }
   }
-  else {
-    player.eyes = eyes[0];
-    creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-    characterCreation(false);
+  else if (e.button === 2) {
+    if (player.eyes - 1 >= eyes[0]) {
+      player.eyes--;
+      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+      characterCreation(false);
+    }
+    else {
+      player.eyes = eyes[1];
+      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
+      characterCreation(false);
+    }
   }
 }
-function changeFace() {
-  if (player.face + 1 <= faces[1]) {
-    player.face++;
-    creation.querySelector(".face").textContent = `face ${player.face}`;
-    characterCreation(false);
+function changeFace(e: MouseEvent) {
+  if (e.button === 0) {
+    if (player.face + 1 <= faces[1]) {
+      player.face++;
+      creation.querySelector(".face").textContent = `face ${player.face}`;
+      characterCreation(false);
+    }
+    else {
+      player.face = faces[0];
+      creation.querySelector(".face").textContent = `face ${player.face}`;
+      characterCreation(false);
+    }
   }
-  else {
-    player.face = faces[0];
-    creation.querySelector(".face").textContent = `face ${player.face}`;
-    characterCreation(false);
+  else if (e.button === 2) {
+    if (player.face - 1 >= faces[0]) {
+      player.face--;
+      creation.querySelector(".face").textContent = `face ${player.face}`;
+      characterCreation(false);
+    }
+    else {
+      player.face = faces[1];
+      creation.querySelector(".face").textContent = `face ${player.face}`;
+      characterCreation(false);
+    }
   }
 }
 
@@ -270,8 +313,8 @@ function changeClass(_combatClass: any) {
   Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq: any) => {
     let id = eq[0];
     let val = eq[1];
-    player[id] = {...val};
-  })
+    player[id] = { ...val };
+  });
   characterCreation(false);
 }
 
@@ -302,4 +345,8 @@ function classTT(data: any) {
     txt += effectSyntax(effect);
   });
   return txt;
+}
+
+for (let i = 0; i < 20; i++) {
+  player.addItem({ ...randomProperty(items) });
 }

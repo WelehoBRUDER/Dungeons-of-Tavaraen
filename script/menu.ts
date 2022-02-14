@@ -200,10 +200,10 @@ function handleEscape() {
   else if (state.storeOpen) {
     cancelTransaction();
   }
-  else if(state.journalOpen) {
+  else if (state.journalOpen) {
     closePlayerQuests();
   }
-  else if(state.codexOpen) {
+  else if (state.codexOpen) {
     closeCodex();
   }
   else if (!state.isSelected) {
@@ -823,8 +823,8 @@ function reviveAllDeadEnemies() {
 
 function killAllQuestEnemies() {
   maps.forEach((mp: any, index: number) => {
-    for(let i = mp.enemies.length-1; i >= 0; i--) {
-      if(mp.enemies[i].questSpawn?.quest > -1) mp.enemies.splice(i, 1);
+    for (let i = mp.enemies.length - 1; i >= 0; i--) {
+      if (mp.enemies[i].questSpawn?.quest > -1) mp.enemies.splice(i, 1);
     }
   });
 }
@@ -912,4 +912,8 @@ function calcLocalStorageUsedSpace() {
     }
   }
   return parseInt((total / 1024).toFixed(2));
+}
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.substring(1);
 }

@@ -1303,6 +1303,15 @@ const perksArray = {
         }
     }
 };
+const dummyPerk = {
+    id: "ignore",
+    name: "ignore",
+    desc: "",
+    effects: {},
+    tree: "adventurer_shared",
+    pos: { x: -5000, y: -5000 },
+    icon: ""
+};
 var lang = english;
 // This is an example of a passive ability
 // statModifiers: [
