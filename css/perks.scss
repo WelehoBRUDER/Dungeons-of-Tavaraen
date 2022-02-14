@@ -90,6 +90,29 @@
         }
       }
     }
+
+    .undo {
+      transition: 0.075s;
+      color: #fff;
+      font-size: calc(26px * var(--ui-scale));
+      background: rgb(131, 126, 101);
+      box-shadow: inset 0 0 8px 6px rgb(87 83 66), -2px 2px 6px 5px rgb(33 33 33);
+      width: max-content;
+      padding: calc(5px * var(--ui-scale));
+      position: absolute;
+      left: 10px;
+      bottom: 15px;
+    }
+
+    .undo:hover {
+      bottom: 11px;
+      box-shadow: inset 0 0 8px 6px rgb(87, 83, 66), -1px 1px 4px 3px rgb(33, 33, 33);
+    }
+
+    .undo:active {
+      bottom: 9px;
+      box-shadow: inset 0 0 8px 6px rgb(87, 83, 66), -1px 1px 3px 2px rgb(33, 33, 33);
+    }
   }
 
   .perksStatic {
@@ -150,7 +173,7 @@
       .perkBg {
         transition: 0.275s;
         position: absolute;
-        background:rgba(24, 24, 24, 0.95);
+        background: rgba(24, 24, 24, 0.95);
         background-size: cover;
         box-sizing: border-box;
         border: 4px solid rgb(50, 50, 50);
@@ -158,12 +181,12 @@
         text-align: center;
         user-select: none;
         box-shadow: inset 0 0 6px 4px rgba(16, 16, 16, 0.93), 0 0 7px 4px rgb(24, 24, 24);
-        
+
         img {
           filter: drop-shadow(0 0 8px rgba(16, 16, 16, 0.93));
           -webkit-user-drag: none;
         }
-        
+
         p {
           color: white;
           background: rgba(16, 16, 16, 0.98);
@@ -184,12 +207,11 @@
       }
 
       .perkUnavailable {
-        filter: brightness(.5);
+        filter: brightness(0.5);
       }
     }
   }
 
-  
   .perkTreesContainer {
     position: absolute;
     left: calc(25px + 20%);

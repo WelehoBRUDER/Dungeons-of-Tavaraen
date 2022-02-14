@@ -222,7 +222,6 @@ function beginGame() {
 }
 
 function changeHair(e: MouseEvent) {
-  console.log(e);
   if (e.button === 0) {
     if (player.hair + 1 <= hairs[1]) {
       player.hair++;

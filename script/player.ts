@@ -290,19 +290,19 @@ class PlayerCharacter extends Character {
       let shiftOffhand: boolean = true;
       if (!canEquip) return;
       if (item.slot == "offhand" && this.weapon?.twoHanded) {
-        this.unequip(event, "weapon", item.index);
+        this.unequip(event, "weapon", item.index, false, fromContextMenu);
         spliceFromInv = false;
       }
       if (!this[itm.slot]?.id && spliceFromInv) player.inventory.splice(item.index, 1);
       if (!this[itm.slot]?.id) shiftOffhand = false;
-      else this.unequip(event, itm.slot, itm.index);
+      else this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
       this[itm.slot] = { ...itm };
       Object.entries(item.commands).forEach(cmd => command(cmd));
       if (item.twoHanded) {
         if (shiftOffhand) {
-          this.unequip(event, "offhand", item.index + 1, true);
+          this.unequip(event, "offhand", item.index + 1, true, fromContextMenu);
         }
-        else this.unequip(event, "offhand", item.index, true);
+        else this.unequip(event, "offhand", item.index, true, fromContextMenu);
       }
       if (!auto) renderInventory();
     };
@@ -723,7 +723,7 @@ var player = new PlayerCharacter({
   grave: null,
   flags: {} as any,
   questProgress: [],
-  sex: "female"
+  sex: "male"
 });
 
 let combatSummons: Array<any> = [];

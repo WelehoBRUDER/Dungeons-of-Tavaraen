@@ -1,6 +1,12 @@
 var perksData: Array<any> = [];
 var perks: Array<any> = [];
 var tree = player.classes.main.perkTree;
+const lvl_history = {
+  perks: [],
+  stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
+  pp: 0,
+  sp: 0
+} as any;
 
 const perkColors = {
   necromancer: "#20142e",
@@ -70,11 +76,12 @@ class perk {
         player.perks.push(new perk({ ...this }));
         player.pp--;
         if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
-          console.log(this.tree);
           player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
         }
         player.updatePerks();
         player.updateAbilities();
+        lvl_history.perks.push(this.id);
+        lvl_history.pp++;
         formPerks();
         formStatUpgrades();
       }
@@ -210,6 +217,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
 function formStatUpgrades() {
   const bg = document.querySelector<HTMLDivElement>(".playerLeveling .stats");
   const points = document.createElement("p");
+  const undo = document.createElement("div");
   const baseStats = ["str", "dex", "vit", "int", "cun"];
   bg.innerHTML = "";
   points.textContent = lang["stat_points"] + ": " + player.sp.toString();
@@ -217,6 +225,8 @@ function formStatUpgrades() {
   /* Form stats */
   const container = document.createElement("div");
   container.classList.add("statContainer");
+  undo.classList.add("undo");
+  undo.textContent = "Undo changes";
   baseStats.forEach(stat => {
     const base = document.createElement("div");
     const baseImg = document.createElement("img");
@@ -229,17 +239,21 @@ function formStatUpgrades() {
     baseNumber.textContent = player.getBaseStats()[stat].toString();
     upgrade.textContent = "+";
     upgrade.addEventListener("click", a => upStat(stat));
+    tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
     if (player.sp <= 0) upgrade.style.transform = "scale(0)";
     base.append(baseImg, baseText, baseNumber, upgrade);
     container.append(base);
   });
-  bg.append(points, container);
+  undo.addEventListener("click", undoChanges);
+  bg.append(points, container, undo);
 }
 
 function upStat(stat: string) {
   if (player.sp >= 1) {
     player.sp--;
     player.stats[stat]++;
+    lvl_history.stats[stat]++;
+    lvl_history.sp++;
     formStatUpgrades();
   }
 }
@@ -249,6 +263,10 @@ function openLevelingScreen() {
   const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
   lvling.style.transform = "scale(1)";
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";
+  lvl_history.perks = [];
+  lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+  lvl_history.pp = 0;
+  lvl_history.sp = 0;
   formPerks();
   formStatUpgrades();
   state.perkOpen = true;
@@ -340,6 +358,26 @@ function action2(e: MouseEvent) {
     let offsetY = e.y - mouseY;
     background.scrollTo(bgPosX - offsetX, bgPosY - offsetY);
   }
+}
+
+function undoChanges() {
+  lvl_history.perks.forEach((prk: string) => {
+    let index = player.perks.findIndex((_prk: any) => _prk.id == prk);
+    player.perks.splice(index, 1);
+  });
+  Object.entries(lvl_history.stats).forEach((stat: any) => {
+    const id = stat[0];
+    const val = stat[1];
+    player.stats[id] -= val;
+  });
+  player.sp += lvl_history.sp;
+  player.pp = lvl_history.pp;
+  lvl_history.perks = [];
+  lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+  lvl_history.pp = 0;
+  lvl_history.sp = 0;
+  formPerks();
+  formStatUpgrades();
 }
 
 //formPerks();

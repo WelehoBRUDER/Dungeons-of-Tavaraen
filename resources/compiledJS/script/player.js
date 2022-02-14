@@ -191,7 +191,7 @@ class PlayerCharacter extends Character {
             if (!canEquip)
                 return;
             if (item.slot == "offhand" && ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.twoHanded)) {
-                this.unequip(event, "weapon", item.index);
+                this.unequip(event, "weapon", item.index, false, fromContextMenu);
                 spliceFromInv = false;
             }
             if (!((_b = this[itm.slot]) === null || _b === void 0 ? void 0 : _b.id) && spliceFromInv)
@@ -199,15 +199,15 @@ class PlayerCharacter extends Character {
             if (!((_c = this[itm.slot]) === null || _c === void 0 ? void 0 : _c.id))
                 shiftOffhand = false;
             else
-                this.unequip(event, itm.slot, itm.index);
+                this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
             this[itm.slot] = Object.assign({}, itm);
             Object.entries(item.commands).forEach(cmd => command(cmd));
             if (item.twoHanded) {
                 if (shiftOffhand) {
-                    this.unequip(event, "offhand", item.index + 1, true);
+                    this.unequip(event, "offhand", item.index + 1, true, fromContextMenu);
                 }
                 else
-                    this.unequip(event, "offhand", item.index, true);
+                    this.unequip(event, "offhand", item.index, true, fromContextMenu);
             }
             if (!auto)
                 renderInventory();
@@ -637,7 +637,7 @@ var player = new PlayerCharacter({
     grave: null,
     flags: {},
     questProgress: [],
-    sex: "female"
+    sex: "male"
 });
 let combatSummons = [];
 var randomProperty = function (mods) {

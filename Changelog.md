@@ -29,6 +29,10 @@
 - Items you pick up will now automatically be equipped if the corresponding slot is empty.
 - Gold can no longer become NaN.
 - You can now interact by clicking.
+- Fixed equipped items replacing old item when using context menu.
+- Added "undo changes" option to leveling screen.
+- Added tooltips for stats in leveling screen.
+- Dex now increases hit chance and evasion.
 
 # 0.9.0 ~ 1.1.2022
 

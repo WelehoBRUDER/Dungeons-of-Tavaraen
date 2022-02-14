@@ -23,7 +23,7 @@ const finnish = {
   bleed_status: "Verenvuoto",
 
   str_tt: `<i>${icons["str"]}<i>Voima parantaa <i>${icons["melee"]}<i>voima aseiden vahinkoa 2%,\n ja parantaa maksimi taakkaa 0.5`,
-  dex_tt: `<i>${icons["dex"]}<i>Taito parantaa <i>${icons["ranged"]}<i>taito aseiden vahinkoa 2%`,
+  dex_tt: `<i>${icons["dex"]}<i>Taito parantaa <i>${icons["ranged"]}<i>taito aseiden vahinkoa 2%,\nsekä nostaa <i>${icons["hitChance"]}<i>iskujen tarkkuutta ja <i>${icons["evasion"]}<i>väistelyä 0.25`,
   vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n<i>${icons["regenHp_icon"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
   int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n<i>${icons["regenMp_icon"]}<i>taian palautimista 1%\n ja <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Oveluus parantaa <i>${icons["critDamage"]}<i>krit vahinkoa 1.5%,\n ja <i>${icons["critDamage"]}<i>krit mahdollisuutta 0.4%`,
@@ -902,7 +902,7 @@ const english = {
   bleed_status: "Bleed",
 
   str_tt: `<i>${icons["str"]}<i>Strength increases <i>${icons["melee"]}<i>damage with strength scaling weapons by 2%,\n and encumbrance by 0.5`,
-  dex_tt: `<i>${icons["dex"]}<i>Dexterity increases <i>${icons["ranged"]}<i>damage with dexterity scaling weapons by 2%`,
+  dex_tt: `<i>${icons["dex"]}<i>Dexterity increases <i>${icons["ranged"]}<i>damage with dexterity scaling weapons by 2%,\nand increases both <i>${icons["hitChance"]}<i>Hit chance and <i>${icons["evasion"]}<i>evasion by 0.25`,
   vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n<i>${icons["regenHp_icon"]}<i>health regeneration by 1%\n and encumbrance by 1`,
   int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n<i>${icons["regenMp_icon"]}<i>mana recovery by 1%\n and <i>${icons["damage"]}<i>magical damage by 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Cunning increases <i>${icons["critDamage"]}<i>crit damage by 1.5%,\n and <i>${icons["critDamage"]}<i>crit chance by 0.4%`,
@@ -924,7 +924,7 @@ const english = {
   curseDefense: "Curse resistance",
   stunDefense: "Stun resistance",
   bleedDefense: "Bleed resistance",
-  
+
   // Messages
   test_message: "<c>white<c>Welcome to <c>gold<c>Dungeons of Tavaraen<c>white<c>!",
   follow_slimes: "<c>white<c>Keep following the <c>gold<c>slimes<c>white<c> and you'll get a fair fight!",
@@ -1606,7 +1606,7 @@ const english = {
   perk_berserker_desc: "I MUST LIVE ONLY AS LONG AS IT TAKES FOR YOU TO STOP DOING SO!",
   perk_calmer_berserk_name: "On Second Thought...",
   perk_calmer_berserk_desc: "Maybe I can keep living and still kill you!",
-  
+
   // RANGER
   target_practice_name: "Target Practice",
   target_practice_desc: "Practice makes perfect.",

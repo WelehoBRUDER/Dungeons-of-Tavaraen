@@ -437,8 +437,8 @@ class Character {
                 this.allModifiers["evasionV"] = 0;
             if (!this.allModifiers["evasionP"])
                 this.allModifiers["evasionP"] = 1;
-            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"]) * this.allModifiers["hitChanceP"]);
-            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"]) * this.allModifiers["evasionP"]);
+            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"] + this.stats["dex"] * .25) * this.allModifiers["hitChanceP"]);
+            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"] + this.stats["dex"] * .25) * this.allModifiers["evasionP"]);
             return chances;
         };
         this.getResists = () => {

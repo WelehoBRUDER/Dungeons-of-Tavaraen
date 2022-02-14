@@ -68,39 +68,39 @@ function openIngameCodex() {
     title.classList.add("title");
     title.addEventListener("click", e => animateTitle(e, title));
     let needsEncounter = codexEntry.needs_encounter ?? true;
-    if(codexEntry.import_from_array) {
+    if (codexEntry.import_from_array) {
       Object.values({ ...eval(codexEntry.import_from_array) }).forEach((entry: any, index: number) => {
-        if(entry.id.includes("error")) return;
+        if (entry.id.includes("error")) return;
         createCodexEntry(codexEntry, entry, needsEncounter, title);
       });
     }
-    else if(codexEntry.sub_categories) {
-      Object.values(codexEntry.sub_categories).forEach((subCategory: any)=>{
+    else if (codexEntry.sub_categories) {
+      Object.values(codexEntry.sub_categories).forEach((subCategory: any) => {
         createSubCategoryEntry(codexEntry, subCategory, needsEncounter, title);
       });
     }
     listContainer.append(title);
   });
   const defaultHeight = 30;
-  listContainer.childNodes.forEach((listPart: any)=>{
+  listContainer.childNodes.forEach((listPart: any) => {
     listPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
     let extraHeight = 0;
     let subListsHeight = 0;
-    listPart.childNodes.forEach((subListPart: any)=>{
-      if(!subListPart.style) return;
+    listPart.childNodes.forEach((subListPart: any) => {
+      if (!subListPart.style) return;
       subListPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
       extraHeight += defaultHeight * settings.ui_scale / 100;
-      if(subListPart.childNodes?.[1]?.classList.contains("subList")) {
+      if (subListPart.childNodes?.[1]?.classList.contains("subList")) {
         let subListHeight = 0;
-        subListPart.childNodes[1].childNodes.forEach((subListObject: any)=>{
-          if(!subListObject.style) return;
+        subListPart.childNodes[1].childNodes.forEach((subListObject: any) => {
+          if (!subListObject.style) return;
           subListObject.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
           subListsHeight += defaultHeight * settings.ui_scale / 100;
           subListHeight += defaultHeight * settings.ui_scale / 100;
         });
         subListPart.childNodes[1].style.height = `${defaultHeight * settings.ui_scale / 100}px`;
         subListPart.childNodes[1].style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + subListHeight}px`;
-        subListPart.style.maxHeight = `${(defaultHeight*2) * settings.ui_scale / 100 + subListHeight}px`;
+        subListPart.style.maxHeight = `${(defaultHeight * 2) * settings.ui_scale / 100 + subListHeight}px`;
       }
     });
     extraHeight += subListsHeight;
@@ -113,7 +113,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   const entryText = document.createElement("p");
   let playerHasEntry = false;
   if (player?.entitiesEverEncountered[codexEntry?.import_from_array]?.[entry.id]) playerHasEntry = true;
-  if(!needsEncounter) playerHasEntry = true;
+  if (!needsEncounter) playerHasEntry = true;
   let displayName = lang[entry.id + "_name"];
   if (!displayName) displayName = lang[entry.id];
   if (!displayName) displayName = entry.name ?? entry.title;
@@ -123,15 +123,15 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (!playerHasEntry) {
     entryElement.classList.add("noEntry");
     entryText.style.left = `0px`;
-  } 
-  else if(!entry.no_img) {
+  }
+  else if (!entry.no_img) {
     const icon = document.createElement("img");
     icon.src = entry.img ?? entry.icon;
-    entryText.style.left = `-${15 * settings.ui_scale/100}px`;
-    icon.style.left = `-${15 * settings.ui_scale/100}px`;
+    entryText.style.left = `-${15 * settings.ui_scale / 100}px`;
+    icon.style.left = `-${15 * settings.ui_scale / 100}px`;
     entryElement.append(icon);
   }
-  entryElement.style.maxHeight = `${30 * settings.ui_scale/100}px`;
+  entryElement.style.maxHeight = `${30 * settings.ui_scale / 100}px`;
   entryElement.append(entryText);
   title.append(entryElement);
 }
@@ -140,7 +140,7 @@ function createSubCategoryEntry(codexEntry: any, subCategory: any, needsEncounte
   const entryElement = document.createElement("li");
   let playerHasEntry = false;
   if (player?.entitiesEverEncountered[codexEntry?.import_from_array]?.[subCategory.id]) playerHasEntry = true;
-  if(!needsEncounter) playerHasEntry = true;
+  if (!needsEncounter) playerHasEntry = true;
   let displayName = lang[subCategory.title + "_title"];
   if (!displayName) displayName = subCategory.title;
   entryElement.textContent = playerHasEntry ? displayName : "???";
@@ -148,16 +148,16 @@ function createSubCategoryEntry(codexEntry: any, subCategory: any, needsEncounte
   entryElement.classList.add("subCategory");
   if (!playerHasEntry) {
     entryElement.classList.add("noEntry");
-  } 
+  }
   const subList = document.createElement("ul");
   subList.classList.add("subList");
-  if(subCategory.content) {
+  if (subCategory.content) {
     subCategory.content.forEach((item: any) => {
       createCodexEntry(subCategory, item, needsEncounter, subList);
     });
   }
-  if(subCategory.import_from_array) {
-    Object.values({...eval(subCategory.import_from_array)}).forEach((entry: any)=>{
+  if (subCategory.import_from_array) {
+    Object.values({ ...eval(subCategory.import_from_array) }).forEach((entry: any) => {
       createCodexEntry(subCategory, entry, needsEncounter, subList);
     });
   }
@@ -178,30 +178,30 @@ async function animateTitle(e: MouseEvent, title: HTMLUListElement) {
     return;
   }
   // @ts-expect-error
-  else if(e?.target?.classList?.contains("subCategory")) { // this shit is dumb but works
+  else if (e?.target?.classList?.contains("subCategory")) { // this shit is dumb but works
     title = e.target as HTMLUListElement;
-      
+
   }
   let subHeight = 0;
   // Now we know we're dealing with the highest element already.
-  if(title.parentElement.classList.contains("content")) {
+  if (title.parentElement.classList.contains("content")) {
     let maximumHeight = title.getBoundingClientRect().height;
   }
   // This time we're dealing with a sublist.
-  else if(title.parentElement.classList.contains("title")) {
+  else if (title.parentElement.classList.contains("title")) {
     subList = title.childNodes[1];
     subHeight += title.getBoundingClientRect().height;
 
   }
   let childrenToRead = title.childNodes as any; // Where to find the crap we want to display
-  if(subList) childrenToRead = subList.childNodes; // Oh look, this was a sub category so the kids are in a <ul>
+  if (subList) childrenToRead = subList.childNodes; // Oh look, this was a sub category so the kids are in a <ul>
   let transitionTime = 1; // animation lasts 1 second
   let transitionDelay = 0; // applies delay to animatable objects so no async needed, more responsive
   const defaultHeight = 30 * settings.ui_scale / 100;
   if (title.classList.contains("isOpen")) { // this section handles the closing animation.
     title.style.height = `${defaultHeight}px`;
     title.style.transition = `all ${transitionTime}s, text-shadow 1ms 1ms, background 1ms 1ms`;
-    for(let listObject of childrenToRead as any) {
+    for (let listObject of childrenToRead as any) {
       if (listObject?.style) {
         transitionDelay += transitionTime / childrenToRead.length * 750;
         listObject.style.transition = `all ${transitionTime / childrenToRead.length * 4}s ${transitionDelay}ms, text-shadow 1ms 1ms, background 1ms 1ms`;
@@ -211,12 +211,12 @@ async function animateTitle(e: MouseEvent, title: HTMLUListElement) {
   }
   else { // this section handles the opening section
     title.style.transition = `all ${transitionTime}s 0ms, text-shadow: 1ms 1ms, background 1ms 1ms`;
-    if(!title.classList.contains("subCategory")) { // We know it's the original title
+    if (!title.classList.contains("subCategory")) { // We know it's the original title
       let test = 0;
-      title.childNodes.forEach((child: any)=>{
-        if(!child?.style) return;
-        let height = +child.style.height.substring(0, child.style.height.length-2);
-        if(height < 1) test += defaultHeight;
+      title.childNodes.forEach((child: any) => {
+        if (!child?.style) return;
+        let height = +child.style.height.substring(0, child.style.height.length - 2);
+        if (height < 1) test += defaultHeight;
         else test += height;
       });
       title.style.height = `${test + defaultHeight}px`;
@@ -225,15 +225,15 @@ async function animateTitle(e: MouseEvent, title: HTMLUListElement) {
     else {
       let test = 0;
       let parent = title.parentElement;
-      parent.childNodes.forEach((child: any)=>{
-        if(!child?.style) return;
-        if(child.getBoundingClientRect().height < 1) test += defaultHeight;
+      parent.childNodes.forEach((child: any) => {
+        if (!child?.style) return;
+        if (child.getBoundingClientRect().height < 1) test += defaultHeight;
         else test += child.getBoundingClientRect().height;
       });
       let test2 = 0;
-      title.childNodes[1].childNodes.forEach((subItem: any)=>{
-        if(!subItem?.style) return;
-        if(subItem.getBoundingClientRect().height < 1) test2 += defaultHeight;
+      title.childNodes[1].childNodes.forEach((subItem: any) => {
+        if (!subItem?.style) return;
+        if (subItem.getBoundingClientRect().height < 1) test2 += defaultHeight;
         else test2 += subItem.getBoundingClientRect().height;
       });
       title.childNodes[1].style.height = `${test2}px`;
@@ -242,7 +242,7 @@ async function animateTitle(e: MouseEvent, title: HTMLUListElement) {
     }
     /* THIS SHIT DOESN'T WORK!!!! */
     /* IT WON'T RUN ON FIRST TRY NO MATTER WHAT! */
-    for(let listObject of childrenToRead as any) {
+    for (let listObject of childrenToRead as any) {
       if (listObject?.style) {
         transitionDelay += transitionTime / childrenToRead.length * 750;
         listObject.style.transition = `all ${transitionTime / childrenToRead.length * 4}s ${transitionDelay}ms, text-shadow 1ms 1ms, background 1ms 1ms`;

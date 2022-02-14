@@ -749,8 +749,8 @@ function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest 
     contextMenu.style.left = `${Event.x}px`;
     contextMenu.style.top = `${Event.y}px`;
     if (context == "PLAYER_INVENTORY") {
-        if (item.type != "consumable")
-            contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
+        if (item.type != "consumable") { }
+        contextMenuButton(lang["equip"], () => player.equip(Event, item, true));
         contextMenuButton(lang["drop"], () => player.drop(item, true));
     }
     else if (context == "PICK_LOOT") {
