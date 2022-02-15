@@ -44,24 +44,7 @@ let settings = new gameSettings({
 document.addEventListener("keyup", e => {
     if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
-            player.cords.x = player.respawnPoint.cords.x;
-            player.cords.y = player.respawnPoint.cords.y;
-            player.isDead = false;
-            player.stats.hp = player.getHpMax();
-            player.stats.mp = player.getMpMax();
-            state.inCombat = false;
-            state.isSelected = false;
-            state.abiSelected = {};
-            enemiesHadTurn = 0;
-            turnOver = true;
-            player.updateAbilities();
-            player.abilities.forEach(abi => abi.onCooldown = 0);
-            player.statusEffects = [];
-            updateUI();
-            resetAllLivingEnemiesInAllMaps();
-            modifyCanvas(true);
-            displayText("HERÄSIT KUOLLEISTA!");
-            spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+            respawnPlayer();
             return;
         }
     }
@@ -958,7 +941,10 @@ function closeCharacter() {
     bg.style.transform = "scale(0)";
 }
 player.updateAbilities();
-maps[currentMap].enemies.forEach((en) => en.updateAbilities());
+maps[currentMap].enemies.forEach((en) => {
+    en.updateStatModifiers();
+    en.updateAbilities();
+});
 updateUI();
 tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
 tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);

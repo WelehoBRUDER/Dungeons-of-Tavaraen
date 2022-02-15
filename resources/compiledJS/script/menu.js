@@ -205,6 +205,8 @@ function handleEscape() {
     hideHover();
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
+    if (player.isDead)
+        spawnDeathScreen();
 }
 // This happens on a slight timeout to make sure resources can load in time.
 setTimeout(() => {
@@ -215,15 +217,17 @@ setTimeout(() => {
     }
     state.menuOpen = true;
     state.titleScreen = true;
-    gotoMainMenu();
-    renderMinimap(maps[currentMap]);
-    createStaticMap();
-    modifyCanvas(true);
+    gotoMainMenu(true);
+    if (DEVMODE) {
+        renderMinimap(maps[currentMap]);
+        createStaticMap();
+        modifyCanvas(true);
+    }
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-}, 300);
+}, 350);
 const languages = ["english", "finnish"];
 const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");
@@ -269,6 +273,8 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     if (escape)
         handleEscape();
     hideHover();
+    if (player.isDead)
+        spawnDeathScreen();
 }
 let selectingHotkey = "";
 window.addEventListener("keyup", (e) => {
@@ -409,8 +415,9 @@ function gotoSettingsMenu(inMainMenu = false) {
         }
     }
 }
-async function gotoMainMenu() {
+async function gotoMainMenu(init = false) {
     var _a;
+    despawnDeathScreen();
     menu.textContent = "";
     setTimeout(() => { dim.style.height = "0%"; }, 150);
     mainMenu.style.display = "block";
@@ -425,6 +432,8 @@ async function gotoMainMenu() {
         if (button.action) {
             frame.addEventListener("click", () => button.action());
         }
+        if (button.id.includes("resume") && !DEVMODE && init)
+            frame.classList.add("greyedOut");
         mainMenuButtons.append(frame);
     }
 }

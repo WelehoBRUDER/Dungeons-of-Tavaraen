@@ -79,13 +79,8 @@ const enemies = {
             evasion: 0
         },
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" }
         ],
         threat: 10,
         alive: true,
@@ -150,13 +145,8 @@ const enemies = {
             evasion: 0
         },
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" }
         ],
         threat: 10,
         alive: true,
@@ -221,13 +211,8 @@ const enemies = {
             evasion: 0
         },
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" }
         ],
         threat: 10,
         alive: true,
@@ -306,30 +291,9 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_incompetence",
-                effects: {
-                    mpMaxP: -100,
-                }
-            },
-            {
-                id: "cornered_animal_frenzy",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 10,
-                    hitChanceV: 10,
-                    damageP: 5
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
+            { id: "cornered_animal" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -398,30 +362,9 @@ const enemies = {
             new Ability(abilities.battle_fury, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_incompetence",
-                effects: {
-                    mpMaxP: -100,
-                }
-            },
-            {
-                id: "cornered_animal_frenzy",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 10,
-                    hitChanceV: 10,
-                    damageP: 5
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
+            { id: "cornered_animal" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -491,31 +434,9 @@ const enemies = {
             new Ability(abilities.poisoned_arrow, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_incompetence",
-                effects: {
-                    mpMaxP: -100,
-                    poisoned_arrow_status_effect_damageAmountV: -2
-                }
-            },
-            {
-                id: "cornered_animal_frenzy",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 10,
-                    hitChanceV: 10,
-                    damageP: 5
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
+            { id: "cornered_animal" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -582,19 +503,8 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_binding",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -663,19 +573,8 @@ const enemies = {
             new Ability(abilities.sundering_arrow, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_binding",
-                effects: {
-                    mpMaxP: -100
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
         ],
         statsPerLevel: {
             str: 1,
@@ -745,13 +644,7 @@ const enemies = {
         ],
         threat: 20,
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: 25
-                }
-            },
+            { id: "magical_regen" },
         ],
         statsPerLevel: {
             dex: 1,
@@ -822,20 +715,8 @@ const enemies = {
             new Ability(abilities.fireball, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: 50
-                }
-            },
-            {
-                id: "dont_spam_abilities",
-                effects: {
-                    blight_cooldownV: 3,
-                    fireball_cooldownV: 5
-                }
-            }
+            { id: "magical_regen" },
+            { id: "weaker_natural_ability" }
         ],
         statsPerLevel: {
             dex: 2,
@@ -906,20 +787,8 @@ const enemies = {
             new Ability(abilities.charge, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "dont_spam_abilities",
-                effects: {
-                    charge_cooldownV: 2,
-                    charge_use_rangeV: -1
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "weaker_natural_ability" }
         ],
         statsPerLevel: {
             str: 2,
@@ -987,13 +856,7 @@ const enemies = {
             new Ability(abilities.attack, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
+            { id: "no_natural_regen" },
         ],
         statsPerLevel: {
             dex: 2,
@@ -1063,43 +926,10 @@ const enemies = {
             new Ability(abilities.barbarian_rage, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -60,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "dont_spam_abilities",
-                effects: {
-                    charge_cooldownV: 2,
-                    charge_use_rangeV: -1,
-                    rage_cooldownV: 5
-                }
-            },
-            {
-                id: "orc_frenzy",
-                conditions: {
-                    hp_more_than: 50
-                },
-                effects: {
-                    evasionV: -5,
-                    hitChanceV: 5,
-                    damageP: 8
-                }
-            },
-            {
-                id: "orc_resilience",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 5,
-                    hitChanceV: -5,
-                    regenHpP: 75
-                }
-            }
+            { id: "low_natural_regen" },
+            { id: "weaker_natural_ability" },
+            { id: "orc_frenzy", },
+            { id: "orc_resilience", }
         ],
         statsPerLevel: {
             str: 2,
@@ -1170,43 +1000,10 @@ const enemies = {
             new Ability(abilities.barbarian_rage, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -60,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "dont_spam_abilities",
-                effects: {
-                    charge_cooldownV: 2,
-                    charge_use_rangeV: -1,
-                    rage_cooldownV: 5
-                }
-            },
-            {
-                id: "orc_frenzy",
-                conditions: {
-                    hp_more_than: 50
-                },
-                effects: {
-                    evasionV: -5,
-                    hitChanceV: 5,
-                    damageP: 8
-                }
-            },
-            {
-                id: "orc_resilience",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 5,
-                    hitChanceV: -5,
-                    regenHpP: 75
-                }
-            }
+            { id: "low_natural_regen" },
+            { id: "weaker_natural_ability" },
+            { id: "orc_frenzy", },
+            { id: "orc_resilience", }
         ],
         statsPerLevel: {
             str: 2,
@@ -1278,43 +1075,10 @@ const enemies = {
             new Ability(abilities.barbarian_rage, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -60,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "dont_spam_abilities",
-                effects: {
-                    charge_cooldownV: 5,
-                    charge_use_rangeV: -2,
-                    rage_cooldownV: 5
-                }
-            },
-            {
-                id: "orc_frenzy",
-                conditions: {
-                    hp_more_than: 50
-                },
-                effects: {
-                    evasionV: -5,
-                    hitChanceV: 5,
-                    damageP: 8
-                }
-            },
-            {
-                id: "orc_resilience",
-                conditions: {
-                    hp_less_than: 50
-                },
-                effects: {
-                    evasionV: 5,
-                    hitChanceV: -5,
-                    regenHpP: 75
-                }
-            }
+            { id: "low_natural_regen" },
+            { id: "weaker_natural_ability" },
+            { id: "orc_frenzy", },
+            { id: "orc_resilience", }
         ],
         statsPerLevel: {
             str: 3,
@@ -1382,19 +1146,8 @@ const enemies = {
         ],
         scale: 1.2,
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: 50,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "anti_magic",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "troll_regeneration" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1462,19 +1215,8 @@ const enemies = {
         ],
         scale: 1.2,
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: 50,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "anti_magic",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "troll_regeneration" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1541,19 +1283,8 @@ const enemies = {
         ],
         scale: 1.2,
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: 50,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "anti_magic",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "troll_regeneration" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1621,19 +1352,8 @@ const enemies = {
         ],
         scale: 1.2,
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: 50,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "anti_magic",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "troll_regeneration" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1703,19 +1423,8 @@ const enemies = {
             new Ability(abilities.chivalrious_blow, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -100,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_binding",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "no_natural_regen" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1791,19 +1500,8 @@ const enemies = {
             new Ability(abilities.chivalrious_blow, dummy)
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -50,
-                    regenMpP: -100
-                }
-            },
-            {
-                id: "magical_binding",
-                effects: {
-                    mpMaxP: -100,
-                }
-            }
+            { id: "low_natural_regen" },
+            { id: "magically_impotent" },
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1882,19 +1580,8 @@ const enemies = {
             new Ability(abilities.reap, dummy),
         ],
         statModifiers: [
-            {
-                id: "enemy_regen_modifiers",
-                effects: {
-                    regenHpP: -50,
-                    regenMpP: -50
-                }
-            },
-            {
-                id: "attack_normally_sometimes",
-                effects: {
-                    piercing_mana_bolt_cooldownV: 4
-                }
-            }
+            { id: "medium_natural_regen" },
+            { id: "weaker_natural_ability" }
         ],
         retreatLimit: 0,
         statsPerLevel: {

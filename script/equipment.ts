@@ -815,11 +815,11 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     }
     if (context == "PICK_LOOT") {
       itemObject.addEventListener("mousedown", e => grabLoot(e, itm, item.dataIndex));
-      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_LOOT"));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_LOOT", null, item.dataIndex));
     }
     if (context == "PICK_TREASURE") {
       itemObject.addEventListener("mousedown", e => grabTreasure(e, itm, chest, item.dataIndex));
-      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_TREASURE", chest));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PICK_TREASURE", chest, item.dataIndex));
     }
     if (context == "MERCHANT_SELLING") {
       itemObject.addEventListener("mousedown", e => buyItem(e, itm));
@@ -851,7 +851,7 @@ function sellItem(e: MouseEvent, itm: any) {
   addItemToSelling(itm);
 }
 
-function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, context: string = "PLAYER_INVENTORY", chest: any = null) {
+function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, context: string = "PLAYER_INVENTORY", chest: any = null, dataIndex: number = -1) {
   if (item.id == "A0_error") return;
   contextMenu.textContent = "";
   try {
@@ -867,10 +867,10 @@ function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, con
     contextMenuButton(lang["drop"], () => player.drop(item, true));
   }
   else if (context == "PICK_LOOT") {
-    contextMenuButton(lang["pick_up"], () => grabLoot(Event, item, item.dataIndex, true));
+    contextMenuButton(lang["pick_up"], () => grabLoot(Event, item, dataIndex, true));
   }
   else if (context == "PICK_TREASURE") {
-    contextMenuButton(lang["pick_up"], () => grabTreasure(Event, item, chest, item.dataIndex, true));
+    contextMenuButton(lang["pick_up"], () => grabTreasure(Event, item, chest, dataIndex, true));
   }
   else if (context == "PLAYER_EQUIPMENT") {
     contextMenuButton(lang["unequip"], () => player.unequip(Event, item.slot, -1, false, true));

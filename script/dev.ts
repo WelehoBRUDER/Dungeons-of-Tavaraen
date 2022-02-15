@@ -7,17 +7,18 @@ const DEVTOOLS = {
   FREE_SKILLS: false,
   PERK_NO_COST: false
 };
-const GAME_VERSION = .91.toFixed(2); // Current version of the game, just used to warn players about old saves being potetianlly broken.
-const DEVMODE: boolean = false; // Whether developer mode is enabled or not.
+const GAME_VERSION = 1.01.toFixed(2); // Current version of the game, just used to warn players about old saves being potetianlly broken.
+const DEVMODE: boolean = true; // Whether developer mode is enabled or not.
 const devBox = document.querySelector<HTMLDivElement>(".devInfo");
-if(DEVMODE) { document.querySelector<HTMLDivElement>(".devTools").style.display = "block" };
+if (DEVMODE) { document.querySelector<HTMLDivElement>(".devTools").style.display = "block"; };
 
 
 function updateDeveloperInformation() {
   let txt = "";
   devBox.textContent = "";
-  txt = 
-  `
+  txt =
+    `
+  \t----|DEVELOPER TOOLS|----
   PLAYER_LOCATION: [X:${player.cords.x} Y:${player.cords.y}]
   POINTER_LOCATION: [X:${CURSOR_LOCATION.x} Y:${CURSOR_LOCATION.y}]
   `;

@@ -1,3 +1,20 @@
+# 1.0.1 ~ 15.2.2022
+
+### Patch
+
+## New Additions
+
+- Added a death screen.
+- Interacting with your grave now restores lost gold and exp.
+
+## Fixes & Tweaks
+
+- Fixed looting always picking top option regardless of where the user clicked.
+- Fixed some issues with interacting by clicking.
+- Fixed diagonal movement when going straight.
+- Turned all permanent stat modifiers into Classes to make managing them easier.
+- Made a few minor styling adjustments.
+
 # 1.0.0 ~ 13.2.2022
 
 ### This release contains a lot of fixes and mechanics in preparation for a playtest.

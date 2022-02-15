@@ -78,6 +78,17 @@ class perk {
         if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
           player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
         }
+        this.statModifiers.forEach((stat: any) => {
+          let add = true;
+          player.statModifiers.some((mod: PermanentStatModifier) => {
+            if (mod.id === stat.id) {
+              add = false;
+              return true;
+            }
+          });
+          if (add) player.statModifiers.push(stat);
+        });
+        player.updateStatModifiers();
         player.updatePerks();
         player.updateAbilities();
         lvl_history.perks.push(this.id);
@@ -307,6 +318,7 @@ function perkTT(perk: perk) {
 }
 
 function statModifTT(statModif: any) {
+  statModif = new PermanentStatModifier({ ...statModif });
   let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
   if (statModif.conditions) {
     txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
@@ -363,6 +375,10 @@ function action2(e: MouseEvent) {
 function undoChanges() {
   lvl_history.perks.forEach((prk: string) => {
     let index = player.perks.findIndex((_prk: any) => _prk.id == prk);
+    player.perks[index].statModifiers.forEach((rem: any) => {
+      const modIndex = player.statModifiers.findIndex((stat: any) => stat.id === rem.id);
+      player.statModifiers.splice(modIndex, 1);
+    });
     player.perks.splice(index, 1);
   });
   Object.entries(lvl_history.stats).forEach((stat: any) => {

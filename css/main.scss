@@ -15,6 +15,7 @@
 
 body {
   background: rgb(10, 10, 10);
+  user-select: none;
 }
 
 :root {
@@ -45,6 +46,11 @@ body {
   background-size: cover;
   background-position: center;
   user-select: none;
+
+  .greyedOut {
+    filter: brightness(50%);
+    pointer-events: none;
+  }
 
   animation-duration: 0.15s;
 

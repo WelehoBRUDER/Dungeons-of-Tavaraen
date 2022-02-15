@@ -167,6 +167,9 @@ const finnish = {
     pick_up: "Poimi",
     map: "Kartta",
     last_played: "Viimeksi pelattu",
+    slain: `<f>36px<f><c>white<c>Sinut on <c>crimson<c><f>36px<f>surmattu!\n§<c>silver<c>\tJätit jälkeesi <v>player.grave.xp<v><i>${icons["exp_icon"]}<i>, <v>player.grave.gold<v><i>${icons["gold_icon"]}<i>`,
+    respawn: "Synny [R]",
+    title_screen: "Alkuruutuun",
     // Item definitions
     slash_damageSub: "Viiltävä",
     slash_damageMain: "Haavoittavan",
@@ -1004,6 +1007,9 @@ const english = {
     pick_up: "Pick up",
     map: "Map",
     last_played: "Last played",
+    slain: `<f>36px<f><c>white<c>You have been <c>crimson<c><f>36px<f>slain!\n§<c>silver<c>\tYou left behind <v>player.grave.xp<v><i>${icons["exp_icon"]}<i>, <v>player.grave.gold<v><i>${icons["gold_icon"]}<i>`,
+    respawn: "Respawn [R]",
+    title_screen: "Title Screen",
     // Enemy names
     hiisi_name: "Hiisi",
     hiisiWarrior_name: "Hiisi Warrior",

@@ -126,33 +126,6 @@ function getAllModifiersOnce(char, withConditions = true) {
             else if (eff[0].endsWith("V"))
                 obj[eff[0]] += eff[1];
         });
-        if (mod.statModifiers) {
-            mod.statModifiers.forEach((_mod) => {
-                let apply = true;
-                if (_mod.conditions && withConditions) {
-                    apply = statConditions(_mod.conditions, char);
-                }
-                if (_mod.conditions && !withConditions)
-                    apply = false;
-                if (apply) {
-                    Object.entries(_mod.effects).forEach((eff) => {
-                        if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                            obj[eff[0]] = eff[1];
-                            if (eff[0].endsWith("P")) {
-                                obj[eff[0]] = obj[eff[0]] / 100;
-                                obj[eff[0]]++;
-                            }
-                        }
-                        else if (eff[0].endsWith("P") && eff[1] < 0)
-                            obj[eff[0]] *= (1 + eff[1] / 100);
-                        else if (eff[0].endsWith("P"))
-                            obj[eff[0]] += (eff[1] / 100);
-                        else if (eff[0].endsWith("V"))
-                            obj[eff[0]] += eff[1];
-                    });
-                }
-            });
-        }
     });
     if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
         Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
@@ -287,28 +260,6 @@ function getModifiers(char, stat, withConditions = true) {
                     val += eff[1];
             }
         });
-        if (mod.statModifiers) {
-            mod.statModifiers.forEach((_mod) => {
-                let apply = true;
-                if (_mod.conditions && withConditions) {
-                    apply = statConditions(_mod.conditions, char);
-                }
-                if (_mod.conditions && !withConditions)
-                    apply = false;
-                if (apply) {
-                    Object.entries(_mod.effects).forEach((eff) => {
-                        if (eff[0].startsWith(stat)) {
-                            if (eff[0] == stat + "P" && eff[1] < 0)
-                                modif *= (1 + eff[1] / 100);
-                            else if (eff[0] == stat + "P")
-                                modif += (eff[1] / 100);
-                            else if (eff[0] == stat + "V")
-                                val += eff[1];
-                        }
-                    });
-                }
-            });
-        }
     });
     if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
         Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
@@ -635,6 +586,12 @@ class Character {
                 this.artifact2 = new Artifact(Object.assign({}, this.artifact2));
             if ((_p = this.artifact3) === null || _p === void 0 ? void 0 : _p.type)
                 this.artifact3 = new Artifact(Object.assign({}, this.artifact3));
+        };
+        this.updateStatModifiers = () => {
+            this.statModifiers.forEach((mod, index) => {
+                let modifier = new PermanentStatModifier(mod);
+                this.statModifiers[index] = modifier;
+            });
         };
     }
 }

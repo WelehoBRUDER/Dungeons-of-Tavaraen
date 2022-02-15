@@ -471,18 +471,25 @@ function clickMap(event) {
         }
     });
     maps[currentMap].messages.some((msg) => {
-        if (msg.cords.x == x && msg.cords.y == y) {
+        if (msg.cords.x == x && msg.cords.y == y && msg.cords.x === player.cords.x && msg.cords.y === player.cords.y) {
             readMessage();
             return true;
         }
     });
     maps[currentMap].treasureChests.some((chest) => {
-        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-        if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
-            chest.lootChest();
-            return true;
+        if (chest.cords.x === x && chest.cords.y === y) {
+            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
+                chest.lootChest();
+                return true;
+            }
         }
     });
+    if (player.grave) {
+        if (player.grave.cords.x === x && player.grave.cords.y === y) {
+            restoreGrave();
+        }
+    }
     if (!state.textWindowOpen && !state.invOpen) {
         NPCcharacters.some((npc) => {
             if (npc.currentCords.x === x && npc.currentCords.y == y) {
@@ -697,6 +704,7 @@ document.addEventListener("keyup", (keyPress) => {
         activateShrine();
         pickLoot();
         readMessage();
+        restoreGrave();
         maps[currentMap].treasureChests.forEach((chest) => {
             const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
@@ -707,6 +715,18 @@ document.addEventListener("keyup", (keyPress) => {
         }
     }
 });
+function restoreGrave() {
+    if (!player.grave)
+        return;
+    if (player.cords.x == player.grave.cords.x && player.cords.y == player.grave.cords.y) {
+        player.addGold(player.grave.gold);
+        player.level.xp += player.grave.xp;
+        player.grave = null;
+        spawnFloatingText(player.cords, "GRAVE RESTORED!", "lime", 25, 3000);
+        modifyCanvas();
+        updateUI();
+    }
+}
 let isMovingCurrently = false;
 let breakMoving = false;
 async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
@@ -1071,18 +1091,18 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
             data.x -= 1;
         else if (((_t = fieldMap[data.y]) === null || _t === void 0 ? void 0 : _t[data.x + 1]) == v)
             data.x += 1;
-        else if (((_u = fieldMap[data.y - 1]) === null || _u === void 0 ? void 0 : _u[data.x - 1]) == v) {
+        else if (((_u = fieldMap[data.y - 1]) === null || _u === void 0 ? void 0 : _u[data.x]) == v)
+            data.y -= 1;
+        else if (((_v = fieldMap[data.y + 1]) === null || _v === void 0 ? void 0 : _v[data.x]) == v)
+            data.y += 1;
+        else if (((_w = fieldMap[data.y - 1]) === null || _w === void 0 ? void 0 : _w[data.x - 1]) == v) {
             data.y -= 1;
             data.x -= 1;
         }
-        else if (((_v = fieldMap[data.y - 1]) === null || _v === void 0 ? void 0 : _v[data.x + 1]) == v) {
+        else if (((_x = fieldMap[data.y - 1]) === null || _x === void 0 ? void 0 : _x[data.x + 1]) == v) {
             data.y -= 1;
             data.x += 1;
         }
-        else if (((_w = fieldMap[data.y - 1]) === null || _w === void 0 ? void 0 : _w[data.x]) == v)
-            data.y -= 1;
-        else if (((_x = fieldMap[data.y + 1]) === null || _x === void 0 ? void 0 : _x[data.x]) == v)
-            data.y += 1;
         else if (((_y = fieldMap[data.y + 1]) === null || _y === void 0 ? void 0 : _y[data.x - 1]) == v) {
             data.y += 1;
             data.x -= 1;

@@ -37,6 +37,7 @@ class Enemy extends Character {
         this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
         this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         if (!this.hasBeenLeveled && this.level > 1) {
+            this.updateStatModifiers();
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
                     this.stats[stat[0]] += stat[1];
@@ -247,6 +248,7 @@ class Enemy extends Character {
             player.lvlUp();
         };
         this.restore = () => {
+            this.updateStatModifiers();
             this.stats.hp = this.getHpMax();
             this.stats.mp = this.getMpMax();
             this.statusEffects = [];

@@ -78,7 +78,7 @@ class Enemy extends Character {
   indexInBaseArray?: number;
   constructor(base: enemy) {
     super(base);
-    const defaultModel: any = {...enemies[base.id]};
+    const defaultModel: any = { ...enemies[base.id] };
     this.sprite = defaultModel.sprite;
     this.aggroRange = defaultModel.aggroRange ?? base.aggroRange ?? 5;
     this.tempAggro = base.tempAggro ?? 0;
@@ -109,10 +109,11 @@ class Enemy extends Character {
     this.currentTargetInterval = base.currentTargetInterval ?? 0;
     this.chosenTarget = base.chosenTarget ?? null;
     this.oldCords = { ...base.oldCords } ?? { ...this.cords };
-    this.questSpawn = {...base.questSpawn} ?? null;
-    this.indexInBaseArray = Object.keys(enemies).findIndex((en: string)=>en == this.id);
+    this.questSpawn = { ...base.questSpawn } ?? null;
+    this.indexInBaseArray = Object.keys(enemies).findIndex((en: string) => en == this.id);
 
     if (!this.hasBeenLeveled && this.level > 1) {
+      this.updateStatModifiers();
       for (let i = 1; i < this.level; i++) {
         Object.entries(this.statsPerLevel).forEach((stat: any) => {
           this.stats[stat[0]] += stat[1];
@@ -127,9 +128,9 @@ class Enemy extends Character {
     }
 
     this.decideAction = async () => {
-      if(this.tempAggroLast > 0) {
+      if (this.tempAggroLast > 0) {
         this.tempAggroLast--;
-        if(this.tempAggroLast <= 0) this.tempAggro = 0;
+        if (this.tempAggroLast <= 0) this.tempAggro = 0;
       }
       // Will make enemy take their turn
       // Right now AI only randomly chooses an ability and checks if there's any point in using it,
@@ -174,8 +175,8 @@ class Enemy extends Character {
         let punchingDistance: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, true);
         let pathDistance: number = pathToTarget.length;
         let arrowPathDistance: number = arrowPathToTarget.length;
-        if(pathDistance < 1) pathDistance = 9999;
-        if(arrowPathDistance < 1) arrowPathDistance = 9999;
+        if (pathDistance < 1) pathDistance = 9999;
+        if (arrowPathDistance < 1) arrowPathDistance = 9999;
         // Check if it should be used
         if (chosenAbility && ((chosenAbility?.type == "charge" ? parseInt(chosenAbility.use_range) >= pathDistance : (parseInt(chosenAbility.use_range) >= arrowPathDistance && missileWillLand)) || chosenAbility.self_target)) {
           if (chosenAbility.type == "charge") {
@@ -290,21 +291,21 @@ class Enemy extends Character {
       displayText(`<c>white<c>[WORLD] <c>lime<c>${lang["gained"]} <c>yellow<c>${Math.floor(this.xp * player.allModifiers.expGainP)}<c>lime<c> EXP.`);
       lootEnemy(this);
       this.chosenTarget = null;
-      if(this.questSpawn?.quest > -1) {
+      if (this.questSpawn?.quest > -1) {
         player.questProgress[this.questSpawn.quest].prog[this.questSpawn.index] = 1;
-        updateQuestProgress({id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id]});
+        updateQuestProgress({ id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id] });
       }
-      else fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique  });
-      player.questProgress.forEach((prog: any)=>{
+      else fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
+      player.questProgress.forEach((prog: any) => {
         let questFind: any = Object.values(quests)[prog.id];
-        if(prog.obj >= questFind.objectives.length) return;
+        if (prog.obj >= questFind.objectives.length) return;
         let objective: any = questFind.objectives[prog.obj];
-        if(objective.objective == "killEnemies") {
+        if (objective.objective == "killEnemies") {
           objective.enemiesToKill?.forEach((en: any, index: number) => {
-            if(this.id == en.type) {
-              if(!prog.prog[index]) prog.prog[index] = 1;
+            if (this.id == en.type) {
+              if (!prog.prog[index]) prog.prog[index] = 1;
               else prog.prog[index]++;
-              updateQuestProgress({id: prog.id, quest: questFind.id})
+              updateQuestProgress({ id: prog.id, quest: questFind.id });
             }
           });
         }
@@ -315,6 +316,7 @@ class Enemy extends Character {
     };
 
     this.restore = () => {
+      this.updateStatModifiers();
       this.stats.hp = this.getHpMax();
       this.stats.mp = this.getMpMax();
       this.statusEffects = [];
@@ -334,21 +336,21 @@ class Enemy extends Character {
       if (target) {
         if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
           let encounter = player.entitiesEverEncountered?.enemies?.[this.id];
-          if(encounter < 1 || !encounter) {
+          if (encounter < 1 || !encounter) {
             player.entitiesEverEncountered.enemies[this.id] = 1;
             displayText("New enemy encountered!");
             displayText(this.id + " added to codex.");
             spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
           }
           return true;
-        } 
+        }
       }
       return false;
     };
 
     this.distToPlayer = () => {
       return generatePath(this.cords, player.cords, this.canFly, true);
-    }
+    };
   }
 }
 

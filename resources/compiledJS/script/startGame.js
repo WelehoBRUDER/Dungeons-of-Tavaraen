@@ -1,7 +1,7 @@
 "use strict";
 const emptyModel = {
     id: "player",
-    name: "Player",
+    name: "",
     cords: { x: 41, y: 169 },
     stats: {
         str: 1,
@@ -66,13 +66,8 @@ const emptyModel = {
     ],
     statModifiers: [
         {
-            name: "Resilience of the Lone Wanderer",
-            effects: {
-                hpMaxV: 55,
-                mpMaxV: 10,
-                retreat_status_effect_lastV: 1,
-            }
-        },
+            id: "resilience_of_the_lone_wanderer",
+        }
     ],
     regen: {
         hp: 0,
@@ -154,6 +149,7 @@ function characterCreation(withAnimations = true) {
         creation.style.display = "block";
         setTimeout(() => { creation.style.opacity = "1"; }, 5);
     }
+    checkIfCanStartGame();
     renderPlayerOutOfMap(256, creationCanvas, creationCtx);
     creation.querySelector(".nameText").textContent = (_a = lang["choose_name"]) !== null && _a !== void 0 ? _a : "lang_choose_name";
     creation.querySelector(".raceText").textContent = (_b = lang["choose_race"]) !== null && _b !== void 0 ? _b : "lang_choose_race";
@@ -194,32 +190,47 @@ function characterCreation(withAnimations = true) {
         classContainer.append(bg);
     });
 }
+creation.querySelector(".nameInput").addEventListener("keyup", (key) => {
+    player.name = creation.querySelector(".nameInput").value;
+    checkIfCanStartGame();
+});
 function beginGame() {
-    if (player.classes.main) {
-        player.name = creation.querySelector(".nameInput").value;
-        player.updateAbilities();
-        creation.style.opacity = "0";
-        setTimeout(() => { creation.style.display = "none"; }, 750);
-        tree = player.classes.main.perkTree;
-        closeGameMenu(false, true);
-        reviveAllDeadEnemies();
-        resetAllLivingEnemiesInAllMaps();
-        killAllQuestEnemies();
-        player.updatePerks(true);
-        player.updateAbilities();
-        fallenEnemies = [];
-        turnOver = true;
-        enemiesHadTurn = 0;
-        lootedChests = [];
-        state.inCombat = false;
-        resetAllChests();
-        handleEscape();
-        createStaticMap();
-        modifyCanvas();
-        setTimeout(() => {
-            openLevelingScreen();
-        }, 100);
+    player.updateStatModifiers();
+    player.updateAbilities();
+    creation.style.opacity = "0";
+    setTimeout(() => { creation.style.display = "none"; }, 750);
+    tree = player.classes.main.perkTree;
+    closeGameMenu(false, true);
+    reviveAllDeadEnemies();
+    resetAllLivingEnemiesInAllMaps();
+    killAllQuestEnemies();
+    player.updatePerks(true);
+    player.updateAbilities();
+    fallenEnemies = [];
+    turnOver = true;
+    enemiesHadTurn = 0;
+    lootedChests = [];
+    state.inCombat = false;
+    resetAllChests();
+    handleEscape();
+    createStaticMap();
+    modifyCanvas();
+    setTimeout(() => {
+        openLevelingScreen();
+    }, 100);
+}
+function checkIfCanStartGame() {
+    let canStart = false;
+    if (player.name.trim().length > 1 && player.classes.main)
+        canStart = true;
+    try {
+        if (canStart) {
+            creation.querySelector(".startGame").classList.remove("greyedOut");
+        }
+        else
+            creation.querySelector(".startGame").classList.add("greyedOut");
     }
+    catch (_a) { }
 }
 function changeHair(e) {
     if (e.button === 0) {
@@ -313,6 +324,7 @@ function changeClass(_combatClass) {
         player[id] = Object.assign({}, val);
     });
     characterCreation(false);
+    checkIfCanStartGame();
 }
 function raceTT(race) {
     let txt = "";

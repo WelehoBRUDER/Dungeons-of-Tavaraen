@@ -61,24 +61,7 @@ let settings = new gameSettings({
 document.addEventListener("keyup", e => {
   if (e.key == "r" && !state.savesOpen) {
     if (player.isDead) {
-      player.cords.x = player.respawnPoint.cords.x;
-      player.cords.y = player.respawnPoint.cords.y;
-      player.isDead = false;
-      player.stats.hp = player.getHpMax();
-      player.stats.mp = player.getMpMax();
-      state.inCombat = false;
-      state.isSelected = false;
-      state.abiSelected = {};
-      enemiesHadTurn = 0;
-      turnOver = true;
-      player.updateAbilities();
-      player.abilities.forEach(abi => abi.onCooldown = 0);
-      player.statusEffects = [];
-      updateUI();
-      resetAllLivingEnemiesInAllMaps();
-      modifyCanvas(true);
-      displayText("HERÄSIT KUOLLEISTA!");
-      spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+      respawnPlayer();
       return;
     }
   }
@@ -109,12 +92,12 @@ document.addEventListener("keyup", e => {
     if (!state.perkOpen) openLevelingScreen();
     else closeLeveling();
   }
-  else if(e.key == settings.hotkey_journal && !state.menuOpen) {
-    if(!state.journalOpen) renderPlayerQuests();
+  else if (e.key == settings.hotkey_journal && !state.menuOpen) {
+    if (!state.journalOpen) renderPlayerQuests();
     else closePlayerQuests();
   }
-  else if(e.key == settings.hotkey_codex && !state.menuOpen) {
-    if(!state.codexOpen) openIngameCodex();
+  else if (e.key == settings.hotkey_codex && !state.menuOpen) {
+    if (!state.codexOpen) openIngameCodex();
     else closeCodex();
   }
   else if (state.invOpen || state.menuOpen) return;
@@ -170,7 +153,7 @@ function generateHotbar() {
           tooltip(abiDiv, itemTT(abi));
           abiDiv.addEventListener("click", () => useConsumable(abi));
           const cdTxt = document.createElement("p");
-          if(abi.stacks) {
+          if (abi.stacks) {
             cdTxt.classList.add("amountHotbar");
             cdTxt.textContent = `${abi.amount}`;
           }
@@ -504,7 +487,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     key_ = key;
     tailEnd = lang["resist"];
   }
-  else if(key.includes("Def") && !key.includes("status_effect")) {
+  else if (key.includes("Def") && !key.includes("status_effect")) {
     key = key.replace("Def", "");
     key_ = key;
     //tailEnd = lang["resist"];
@@ -874,7 +857,10 @@ function closeCharacter() {
 }
 
 player.updateAbilities();
-maps[currentMap].enemies.forEach((en: Enemy) => en.updateAbilities());
+maps[currentMap].enemies.forEach((en: Enemy) => {
+  en.updateStatModifiers();
+  en.updateAbilities();
+});
 updateUI();
 
 

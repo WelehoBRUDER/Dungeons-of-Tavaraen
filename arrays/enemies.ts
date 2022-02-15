@@ -82,13 +82,8 @@ const enemies = {
       evasion: 0
     },
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" }
     ],
     threat: 10,
     alive: true,
@@ -109,7 +104,7 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "gold", amount: [1, 5]}
+      { type: "gold", amount: [1, 5] }
     ]
   },
   flamingSlime: {
@@ -153,13 +148,8 @@ const enemies = {
       evasion: 0
     },
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" }
     ],
     threat: 10,
     alive: true,
@@ -180,7 +170,7 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "gold", amount: [4, 11]}
+      { type: "gold", amount: [4, 11] }
     ]
   },
   electricSlime: {
@@ -224,13 +214,8 @@ const enemies = {
       evasion: 0
     },
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" }
     ],
     threat: 10,
     alive: true,
@@ -251,7 +236,7 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "gold", amount: [4, 11]}
+      { type: "gold", amount: [4, 11] }
     ]
   },
   hiisi: {
@@ -309,30 +294,9 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_incompetence",
-        effects: {
-          mpMaxP: -100,
-        }
-      },
-      {
-        id: "cornered_animal_frenzy",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 10,
-          hitChanceV: 10,
-          damageP: 5
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
+      { id: "cornered_animal" }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -341,8 +305,8 @@ const enemies = {
       vit: 2
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20},
-      {type: "gold", amount: [2, 11]}
+      { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+      { type: "gold", amount: [2, 11] }
     ]
   },
   hiisiWarrior: {
@@ -401,30 +365,9 @@ const enemies = {
       new Ability(abilities.battle_fury, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_incompetence",
-        effects: {
-          mpMaxP: -100,
-        }
-      },
-      {
-        id: "cornered_animal_frenzy",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 10,
-          hitChanceV: 10,
-          damageP: 5
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
+      { id: "cornered_animal" }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -433,8 +376,8 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20},
-      {type: "gold", amount: [2, 11]}
+      { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+      { type: "gold", amount: [2, 11] }
     ]
   },
   hiisiHunter: {
@@ -477,7 +420,7 @@ const enemies = {
       chance: 60,
       evasion: 40
     },
-    scale: 0.9,    
+    scale: 0.9,
     threat: 20,
     alive: true,
     xp: 24,
@@ -494,31 +437,9 @@ const enemies = {
       new Ability(abilities.poisoned_arrow, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_incompetence",
-        effects: {
-          mpMaxP: -100,
-          poisoned_arrow_status_effect_damageAmountV: -2
-        }
-      },
-      {
-        id: "cornered_animal_frenzy",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 10,
-          hitChanceV: 10,
-          damageP: 5
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
+      { id: "cornered_animal" }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -527,8 +448,8 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25},
-      {type: "gold", amount: [2, 11]}
+      { type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25 },
+      { type: "gold", amount: [2, 11] }
     ]
   },
   skeletonWarrior: {
@@ -585,19 +506,8 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -606,8 +516,8 @@ const enemies = {
       vit: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20},
-      {type: "gold", amount: [4, 15]}
+      { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
+      { type: "gold", amount: [4, 15] }
     ]
   },
   skeletonArcher: {
@@ -666,19 +576,8 @@ const enemies = {
       new Ability(abilities.sundering_arrow, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
     ],
     statsPerLevel: {
       str: 1,
@@ -687,8 +586,8 @@ const enemies = {
     },
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
-      {type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20},
-      {type: "gold", amount: [4, 15]}
+      { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20 },
+      { type: "gold", amount: [4, 15] }
     ]
   },
   skeletonMage: {
@@ -748,13 +647,7 @@ const enemies = {
     ],
     threat: 20,
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: 25 
-        }
-      },
+      { id: "magical_regen" },
     ],
     statsPerLevel: {
       dex: 1,
@@ -763,7 +656,7 @@ const enemies = {
     },
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
-      {type: "gold", amount: [4, 15]}
+      { type: "gold", amount: [4, 15] }
     ]
   },
   skeletonLich: {
@@ -825,20 +718,8 @@ const enemies = {
       new Ability(abilities.fireball, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: 50 
-        }
-      },
-      {
-        id: "dont_spam_abilities",
-        effects: {
-          blight_cooldownV: 3,
-          fireball_cooldownV: 5
-        }
-      }
+      { id: "magical_regen" },
+      { id: "weaker_natural_ability" }
     ],
     statsPerLevel: {
       dex: 2,
@@ -847,9 +728,9 @@ const enemies = {
     },
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
-      {type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5},
-      {type: "armor", amount: [1, 1], item: "lichRobes", chance: 10},
-      {type: "gold", amount: [24, 60]}
+      { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5 },
+      { type: "armor", amount: [1, 1], item: "lichRobes", chance: 10 },
+      { type: "gold", amount: [24, 60] }
     ]
   },
   norsemanBerserk: {
@@ -909,20 +790,8 @@ const enemies = {
       new Ability(abilities.charge, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "dont_spam_abilities",
-        effects: {
-          charge_cooldownV: 2,
-          charge_use_rangeV: -1
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "weaker_natural_ability" }
     ],
     statsPerLevel: {
       str: 2,
@@ -930,9 +799,9 @@ const enemies = {
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 15},
-      {type: "weapon", amount: [1, 1], item: "stick", chance: 20},
-      {type: "gold", amount: [6, 18]}
+      { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 15 },
+      { type: "weapon", amount: [1, 1], item: "stick", chance: 20 },
+      { type: "gold", amount: [6, 18] }
     ]
   },
   norsemanHunter: {
@@ -990,13 +859,7 @@ const enemies = {
       new Ability(abilities.attack, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
+      { id: "no_natural_regen" },
     ],
     statsPerLevel: {
       dex: 2,
@@ -1005,7 +868,7 @@ const enemies = {
     },
     shootsProjectile: "hunterJavelinProjectile",
     loot: [
-      {type: "gold", amount: [6, 18]}
+      { type: "gold", amount: [6, 18] }
     ]
   },
   femaleOrcRaider: {
@@ -1066,43 +929,10 @@ const enemies = {
       new Ability(abilities.barbarian_rage, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -60,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "dont_spam_abilities",
-        effects: {
-          charge_cooldownV: 2,
-          charge_use_rangeV: -1,
-          rage_cooldownV: 5
-        }
-      },
-      {
-        id: "orc_frenzy",
-        conditions: {
-          hp_more_than: 50
-        },
-        effects: {
-          evasionV: -5,
-          hitChanceV: 5,
-          damageP: 8
-        }
-      },
-      {
-        id: "orc_resilience",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 5,
-          hitChanceV: -5,
-          regenHpP: 75
-        }
-      }
+      { id: "low_natural_regen" },
+      { id: "weaker_natural_ability" },
+      { id: "orc_frenzy", },
+      { id: "orc_resilience", }
     ],
     statsPerLevel: {
       str: 2,
@@ -1110,9 +940,9 @@ const enemies = {
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15},
-      {type: "armor", amount: [1, 1], item: "ironShield", chance: 10},
-      {type: "gold", amount: [15, 33]}
+      { type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15 },
+      { type: "armor", amount: [1, 1], item: "ironShield", chance: 10 },
+      { type: "gold", amount: [15, 33] }
     ]
   },
   maleOrcRaider: {
@@ -1173,43 +1003,10 @@ const enemies = {
       new Ability(abilities.barbarian_rage, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -60,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "dont_spam_abilities",
-        effects: {
-          charge_cooldownV: 2,
-          charge_use_rangeV: -1,
-          rage_cooldownV: 5
-        }
-      },
-      {
-        id: "orc_frenzy",
-        conditions: {
-          hp_more_than: 50
-        },
-        effects: {
-          evasionV: -5,
-          hitChanceV: 5,
-          damageP: 8
-        }
-      },
-      {
-        id: "orc_resilience",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 5,
-          hitChanceV: -5,
-          regenHpP: 75
-        }
-      }
+      { id: "low_natural_regen" },
+      { id: "weaker_natural_ability" },
+      { id: "orc_frenzy", },
+      { id: "orc_resilience", }
     ],
     statsPerLevel: {
       str: 2,
@@ -1217,9 +1014,9 @@ const enemies = {
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 15},
-      {type: "armor", amount: [1, 1], item: "silverShield", chance: 8},
-      {type: "gold", amount: [15, 33]}
+      { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 15 },
+      { type: "armor", amount: [1, 1], item: "silverShield", chance: 8 },
+      { type: "gold", amount: [15, 33] }
     ]
   },
   orcChieftess: {
@@ -1281,43 +1078,10 @@ const enemies = {
       new Ability(abilities.barbarian_rage, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -60,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "dont_spam_abilities",
-        effects: {
-          charge_cooldownV: 5,
-          charge_use_rangeV: -2,
-          rage_cooldownV: 5
-        }
-      },
-      {
-        id: "orc_frenzy",
-        conditions: {
-          hp_more_than: 50
-        },
-        effects: {
-          evasionV: -5,
-          hitChanceV: 5,
-          damageP: 8
-        }
-      },
-      {
-        id: "orc_resilience",
-        conditions: {
-          hp_less_than: 50
-        },
-        effects: {
-          evasionV: 5,
-          hitChanceV: -5,
-          regenHpP: 75
-        }
-      }
+      { id: "low_natural_regen" },
+      { id: "weaker_natural_ability" },
+      { id: "orc_frenzy", },
+      { id: "orc_resilience", }
     ],
     statsPerLevel: {
       str: 3,
@@ -1325,8 +1089,8 @@ const enemies = {
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "galadorSpear", chance: 100},
-      {type: "gold", amount: [180, 260]}
+      { type: "weapon", amount: [1, 1], item: "galadorSpear", chance: 100 },
+      { type: "gold", amount: [180, 260] }
     ]
   },
   wildTroll: {
@@ -1385,19 +1149,8 @@ const enemies = {
     ],
     scale: 1.2,
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: 50,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "anti_magic",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "troll_regeneration" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1406,7 +1159,7 @@ const enemies = {
       vit: 3
     },
     loot: [
-      {type: "gold", amount: [22, 44]}
+      { type: "gold", amount: [22, 44] }
     ]
   },
   wildStoneTroll: {
@@ -1465,19 +1218,8 @@ const enemies = {
     ],
     scale: 1.2,
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: 50,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "anti_magic",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "troll_regeneration" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1486,7 +1228,7 @@ const enemies = {
       vit: 4
     },
     loot: [
-      {type: "gold", amount: [22, 44]}
+      { type: "gold", amount: [22, 44] }
     ]
   },
   troll: {
@@ -1544,19 +1286,8 @@ const enemies = {
     ],
     scale: 1.2,
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: 50,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "anti_magic",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "troll_regeneration" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1565,8 +1296,8 @@ const enemies = {
       vit: 3
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "trollClub", chance: 15},
-      {type: "gold", amount: [26, 51]}
+      { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
+      { type: "gold", amount: [26, 51] }
     ]
   },
   stoneTroll: {
@@ -1624,19 +1355,8 @@ const enemies = {
     ],
     scale: 1.2,
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: 50,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "anti_magic",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "troll_regeneration" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1645,8 +1365,8 @@ const enemies = {
       vit: 4
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "trollClub", chance: 15},
-      {type: "gold", amount: [53, 129]}
+      { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
+      { type: "gold", amount: [53, 129] }
     ]
   },
   enthralledKnight: {
@@ -1706,19 +1426,8 @@ const enemies = {
       new Ability(abilities.chivalrious_blow, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -100,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1726,14 +1435,14 @@ const enemies = {
       vit: 2
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "silverSword", chance: 10},
-      {type: "offhand", amount: [1, 1], item: "silverShield", chance: 10},
-      {type: "armor", amount: [1, 1], item: "greathelm", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightArmor", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10},
-      {type: "gold", amount: [37, 123]}
+      { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
+      { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "greathelm", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightArmor", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
+      { type: "gold", amount: [37, 123] }
     ]
   },
   spectralKnight: {
@@ -1794,19 +1503,8 @@ const enemies = {
       new Ability(abilities.chivalrious_blow, dummy)
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -50,
-          regenMpP: -100 
-        }
-      },
-      {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100,
-        }
-      }
+      { id: "low_natural_regen" },
+      { id: "magically_impotent" },
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
@@ -1815,14 +1513,14 @@ const enemies = {
       cun: 1
     },
     loot: [
-      {type: "weapon", amount: [1, 1], item: "silverSword", chance: 10},
-      {type: "offhand", amount: [1, 1], item: "silverShield", chance: 10},
-      {type: "armor", amount: [1, 1], item: "greathelm", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightArmor", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10},
-      {type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10},
-      {type: "gold", amount: [37, 123]}
+      { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
+      { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "greathelm", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightArmor", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
+      { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
+      { type: "gold", amount: [37, 123] }
     ]
   },
   soulWraith: {
@@ -1885,27 +1583,16 @@ const enemies = {
       new Ability(abilities.reap, dummy),
     ],
     statModifiers: [
-      {
-        id: "enemy_regen_modifiers",
-        effects: {
-          regenHpP: -50,
-          regenMpP: -50 
-        }
-      },
-      {
-        id: "attack_normally_sometimes",
-        effects: {
-          piercing_mana_bolt_cooldownV: 4
-        }
-      }
+      { id: "medium_natural_regen" },
+      { id: "weaker_natural_ability" }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     statsPerLevel: {
       str: 3,
       vit: 1
     },
-    loot:[
-      {type: "gold", amount: [288, 541]}
+    loot: [
+      { type: "gold", amount: [288, 541] }
     ]
   },
 } as any;

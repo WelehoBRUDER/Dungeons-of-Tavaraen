@@ -232,6 +232,16 @@ class PlayerCharacter extends Character {
         }
         prk.commandsExecuted = cmdsEx;
         this.perks[index] = { ...prk };
+        prk.statModifiers.forEach((stat: any) => {
+          let add = true;
+          player.statModifiers.some((mod: PermanentStatModifier) => {
+            if (mod.id === stat.id) {
+              add = false;
+              return true;
+            }
+          });
+          if (add) this.statModifiers.push(stat);
+        });
       });
       for (let i = this.perks.length - 1; i >= 0; i--) {
         if (this.perks[i]?.id == undefined) {
@@ -401,7 +411,8 @@ class PlayerCharacter extends Character {
       this.grave = { cords: { ...this.cords }, xp: xpLoss, gold: goldLoss };
       this.usedShrines = [];
       setTimeout(modifyCanvas, 300);
-      displayText("PAINA [R] JA RESPAWNAAT");
+      //displayText("PAINA [R] JA RESPAWNAAT");
+      spawnDeathScreen();
       updateUI();
     };
 
@@ -694,14 +705,7 @@ var player = new PlayerCharacter({
     new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
   statModifiers: [
-    {
-      name: "Resilience of the Lone Wanderer",
-      effects: {
-        hpMaxV: 55,
-        mpMaxV: 10,
-        retreat_status_effect_lastV: 1,
-      }
-    },
+    { id: "resilience_of_the_lone_wanderer" },
   ],
   regen: {
     hp: 0,
@@ -743,6 +747,47 @@ function slotEmpty(item: itemClass) {
   return isEmpty;
 }
 
+function spawnDeathScreen() {
+  const dScreen = document.querySelector<HTMLDivElement>(".deathScreen");
+  dim.style.height = "100%";
+  dScreen.style.transform = "scale(1)";
+  dScreen.style.opacity = "1";
+  const deathMessage = lang["slain"];
+  dScreen.querySelector(".textContainer").innerHTML = "";
+  dScreen.querySelector(".textContainer").append(textSyntax(deathMessage));
+  dScreen.querySelector(".respawn").textContent = lang["respawn"];
+  dScreen.querySelector(".backToTitle").textContent = lang["title_screen"];
+}
+
+function despawnDeathScreen() {
+  const dScreen = document.querySelector<HTMLDivElement>(".deathScreen");
+  dim.style.height = "0%";
+  dScreen.style.transform = "scale(0)";
+  dScreen.style.opacity = "0";
+}
+
+function respawnPlayer() {
+  despawnDeathScreen();
+  player.cords.x = player.respawnPoint.cords.x;
+  player.cords.y = player.respawnPoint.cords.y;
+  player.isDead = false;
+  player.stats.hp = player.getHpMax();
+  player.stats.mp = player.getMpMax();
+  state.inCombat = false;
+  state.isSelected = false;
+  state.abiSelected = {};
+  enemiesHadTurn = 0;
+  turnOver = true;
+  player.updateAbilities();
+  player.abilities.forEach(abi => abi.onCooldown = 0);
+  player.statusEffects = [];
+  updateUI();
+  resetAllLivingEnemiesInAllMaps();
+  modifyCanvas(true);
+  displayText("HERÄSIT KUOLLEISTA!");
+  spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
+}
+
 
 // for (let i = 0; i < 20; i++) {
 //   player.addItem({...items.A0_error});
@@ -752,6 +797,7 @@ function slotEmpty(item: itemClass) {
 //   player.addItem({...itm[1], level: 5});
 // }
 
+player.updateStatModifiers();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 //renderPlayerQuests();

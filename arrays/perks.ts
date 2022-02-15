@@ -18,12 +18,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "frantic_mana_recovery",
-            conditions: {
-              mp_less_than: 50
-            },
-            effects: {
-              regenMpP: 300
-            }
           }
         ],
         tree: "sorcerer",
@@ -56,13 +50,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "heightened_casting",
-            conditions: {
-              mp_more_than: 75
-            },
-            effects: {
-              magicDamageP: 10,
-              hitChanceV: 25
-            }
           }
         ],
         tree: "sorcerer",
@@ -426,12 +413,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "warrior_instinct",
-            conditions: {
-              hp_less_than: 50
-            },
-            effects: {
-              resistAllV: 4
-            }
           }
         ],
         relative_to: "tactical_genius",
@@ -457,25 +438,9 @@ const perksArray = {
         statModifiers: [
           {
             id: "blood_rage_1",
-            conditions: {
-              hp_less_than: 50,
-              hp_more_than: 20
-            },
-            effects: {
-              damageP: 10,
-              strV: 2,
-            }
           },
           {
             id: "blood_rage_2",
-            conditions: {
-              hp_less_than: 20
-            },
-            effects: {
-              damageP: 15,
-              strV: 5,
-              attack_damage_multiplierP: 10,
-            }
           }
         ],
         tree: "barbarian",
@@ -578,14 +543,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "sense_of_danger_1",
-            conditions: {
-              hp_less_than: 50,
-              hp_more_than: 20
-            },
-            effects: {
-              evasionV: 5,
-              resistAllV: 5
-            }
           }
         ],
         tree: "barbarian",
@@ -604,14 +561,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "reckless_1",
-            conditions: {
-              hp_less_than: 50,
-              hp_more_than: 20
-            },
-            effects: {
-              hitChanceV: 5,
-              attack_damage_multiplierP: 10
-            }
           }
         ],
         tree: "barbarian",
@@ -631,23 +580,9 @@ const perksArray = {
         statModifiers: [
           {
             id: "reckless_2",
-            conditions: {
-              hp_less_than: 20,
-            },
-            effects: {
-              hitChanceV: 10,
-              attack_damage_multiplierP: 20
-            }
           },
           {
             id: "sense_of_danger_2",
-            conditions: {
-              hp_less_than: 20,
-            },
-            effects: {
-              evasionV: 10,
-              resistAllV: 10
-            }
           },
         ],
         tree: "barbarian",
@@ -842,12 +777,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "confident_shot",
-            conditions: {
-              hp_more_than: 80
-            },
-            effects: {
-              pierceDamageP: 12
-            }
           }
         ],
         tree: "rogue",
@@ -1096,12 +1025,6 @@ const perksArray = {
         statModifiers: [
           {
             id: "mark_of_hunter",
-            conditions: {
-              hp_more_than: 95
-            },
-            effects: {
-              rangedDamageP: 10
-            }
           }
         ],
         tree: "ranger",
@@ -1315,6 +1238,7 @@ const dummyPerk = {
 
 var lang = english;
 
+/* OUTDATED */
 // This is an example of a passive ability
 // statModifiers: [
 //   {
@@ -1329,3 +1253,9 @@ var lang = english;
 //     }
 //   }
 // ],
+
+/* NEW */
+// statModifiers: [
+// { id: "frenzy" }
+//],
+// DEFINED IN statModifier.ts

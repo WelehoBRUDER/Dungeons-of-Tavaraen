@@ -155,6 +155,15 @@
     <div class="contextMenu"></div>
     <div class="assignContainer"></div>
 
+    <div class="deathScreen">
+      <img src="resources/icons/skull.png" alt="" draggable="false" class="skull">
+      <div class="textContainer"></div>
+      <div class="wrapper">
+        <div class="menuButton respawn" onclick="respawnPlayer()">Respawn [R]</div>
+        <div class="menuButton backToTitle" onclick="gotoMainMenu()">Title Screen</div> 
+      </div>
+    </div>
+
     <div class="dim"></div>
     <div class="gameMenu"></div>
     <div class="settingsMenu"></div>
@@ -398,6 +407,7 @@
 <script src="resources/compiledJS/arrays/effects.js"></script>
 <script src="resources/compiledJS/arrays/abilities.js"></script>
 <script src="resources/compiledJS/script/ability.js"></script>
+<script src="resources/compiledJS/script/statModifier.js"></script>
 <script src="resources/compiledJS/script/npc.js"></script>
 <script src="resources/compiledJS/script/quest.js"></script>
 <script src="resources/compiledJS/script/character.js"></script>
