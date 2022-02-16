@@ -194,7 +194,7 @@ function handleEscape() {
     else if (state.codexOpen) {
         closeCodex();
     }
-    else if (!state.isSelected) {
+    else if (!state.isSelected && !player.isDead) {
         openGameMenu();
         state.menuOpen = true;
     }
@@ -579,9 +579,11 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             player.updatePerks(true);
             player.updateStatModifiers();
             player.updateAbilities();
+            renderMinimap(maps[currentMap]);
             purgeDeadEnemies();
             killAllQuestEnemies();
             spawnQuestMonsters();
+            convertEnemyStatModifiers();
             handleEscape();
             closeGameMenu();
             resetAllChests();
@@ -825,6 +827,13 @@ function killAllQuestEnemies() {
             if (((_a = mp.enemies[i].questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1)
                 mp.enemies.splice(i, 1);
         }
+    });
+}
+function convertEnemyStatModifiers() {
+    maps.forEach((mp) => {
+        mp.enemies.map((en) => {
+            en.updateStatModifiers();
+        });
     });
 }
 function LoadSlot(data) {

@@ -91,9 +91,9 @@ const emptyModel = {
 const creation = document.querySelector(".mainMenu .characterCreation");
 const creationCanvas = creation.querySelector(".layerRender");
 const creationCtx = creationCanvas.getContext("2d");
-const hairs = [1, 6];
-const eyes = [1, 3];
-const faces = [1, 3];
+const hairs = [1, 10];
+const eyes = [1, 5];
+const faces = [1, 5];
 const classEquipments = {
     fighter: {
         weapon: new Weapon(Object.assign({}, items.chippedBlade)),

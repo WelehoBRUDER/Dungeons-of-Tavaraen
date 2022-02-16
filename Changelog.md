@@ -1,3 +1,17 @@
+# 1.0.3 - ~ 16.2.2022
+
+### Patch
+
+## New Additions
+
+- Added 4 new hairstyles
+- Added 2 new eye styles
+- Added 2 new face variants
+
+## Fixes & Tweaks
+
+- Fixed some issues with loading saves.
+
 # 1.0.2 ~ 16.2.2022
 
 ### Patch
