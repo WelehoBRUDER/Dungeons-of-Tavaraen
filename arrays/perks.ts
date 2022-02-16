@@ -647,11 +647,11 @@ const perksArray = {
         desc: "",
         effects: {
           berserk_cooldownV: -5,
-          berserk_status_effect_berserk_physicalDefPP: 50,
-          berserk_status_effect_berserk_magicalDefPP: 50,
-          berserk_status_effect_berserk_elementalDefPP: 50,
-          berserk_status_effect_berserk_resistAllPP: 50,
-          berserk_status_effect_berserk_regenHpPP: 50
+          berserk_status_effect_berserk_physicalDefPV: 50,
+          berserk_status_effect_berserk_magicalDefPV: 50,
+          berserk_status_effect_berserk_elementalDefPV: 50,
+          berserk_status_effect_berserk_resistAllPV: 50,
+          berserk_status_effect_berserk_regenHpPV: 50
         },
         tree: "barbarian",
         pos: { x: 0, y: 2 },

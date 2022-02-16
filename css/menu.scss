@@ -668,6 +668,47 @@
       }
     }
 
+    .genderWrapper {
+      position: absolute;
+      bottom: 15%;
+      right: 7.5%;
+      height: auto;
+      text-align: center;
+      user-select: none;
+
+      img {
+        width: calc(64px * var(--ui-scale));
+        filter: brightness(0.5);
+      }
+
+      img:hover {
+        filter: drop-shadow(0 0 4px gold);
+      }
+
+      .selected {
+        filter: brightness(1);
+      }
+    }
+
+    .toggleClothes {
+      position: absolute;
+      bottom: 7.5%;
+      right: 10%;
+      height: auto;
+      text-align: center;
+      user-select: none;
+      width: calc(72px * var(--ui-scale));
+      filter: brightness(0.5);
+    }
+
+    .toggleClothes:hover {
+      filter: drop-shadow(0 0 4px silver);
+    }
+
+    .selected {
+      filter: brightness(1);
+    }
+
     .startGame {
       transition: 0.13s;
       width: 180px;

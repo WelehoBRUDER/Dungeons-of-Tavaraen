@@ -832,12 +832,15 @@ function renderCharacter() {
     const coreStatsTitle = document.createElement("p");
     const coreResistancesTitle = document.createElement("p");
     const statusResistancesTitle = document.createElement("p");
+    const passiveAbilitiesTitle = document.createElement("p");
     coreStatsTitle.classList.add("coreStatsTitle");
     coreStatsTitle.textContent = lang["core_stats"];
     coreResistancesTitle.classList.add("coreResistancesTitle");
     coreResistancesTitle.textContent = lang["core_resistances"];
     statusResistancesTitle.classList.add("statusResistancesTitle");
     statusResistancesTitle.textContent = lang["status_resistances"];
+    passiveAbilitiesTitle.classList.add("passiveAbilitiesTitle");
+    passiveAbilitiesTitle.textContent = lang["passives"];
     coreStats.classList.add("coreStats");
     coreResistances.classList.add("coreResistances");
     statusResistances.classList.add("statusResistances");
@@ -912,6 +915,24 @@ function renderCharacter() {
         statContainer.append(statImage, statText, statValue);
         statusResistances.append(statContainer);
     });
+    player.statModifiers.forEach((mod) => {
+        var _a;
+        const statContainer = document.createElement("div");
+        const statImage = document.createElement("img");
+        const statText = document.createElement("p");
+        statImage.src = (_a = mod.icon) !== null && _a !== void 0 ? _a : icons["damage"];
+        statText.textContent = lang[mod.id + "_name"];
+        if (mod.conditions) {
+            let active = statConditions(mod.conditions, player);
+            if (active)
+                statText.classList.add("positive");
+            else
+                statText.classList.add("inactive");
+        }
+        statContainer.append(statImage, statText);
+        tooltip(statContainer, statModifTT(mod));
+        passiveAbilities.append(statContainer);
+    });
     var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
     Object.entries(player.getResists()).forEach(resistance => {
         const str = resistance[0];
@@ -931,7 +952,7 @@ function renderCharacter() {
     pc.style.left = "24px";
     pc.style.top = "24px";
     tooltip(statusResistances, lang["stat_resist_tt"]);
-    bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances);
+    bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances, passiveAbilitiesTitle, passiveAbilities);
 }
 function closeCharacter() {
     state.charOpen = false;

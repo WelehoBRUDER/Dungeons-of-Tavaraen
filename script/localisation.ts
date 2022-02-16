@@ -16,6 +16,7 @@ const finnish = {
   core_stats: "Yleiset statsit",
   core_resistances: "puolustukset",
   status_resistances: "vastustuskyky",
+  passives: "Passiiviset Kyvyt",
   poison_status: "Myrkky",
   burning_status: "Palaminen",
   curse_status: "Kirous",
@@ -423,11 +424,14 @@ const finnish = {
   buy_item: "Osta esine",
   sell_item: "Myy esine",
   quest_added: "<c>goldenrod<c>Tehtävä '<c>gold<c>[QUEST]<c>goldenrod<c>' alkanut!",
+  revive: "Olet herännyt henkiin pyhäköllä!",
 
   // Character names
   testMerchant_name: "Karl Bauer",
 
   // Passive abilities
+  resilience_of_the_lone_wanderer_name: "Kulkijan Sinnikkyys",
+  lone_wanderer_desc: "Edes tuonela ei kykene pysäyttämään tehtäväsi suoritusta.",
   frenzy_name: "Kiihko",
   heightened_casting_name: "Vahva Alku",
   warrior_instinct_name: "Soturin Aisti",
@@ -440,6 +444,10 @@ const finnish = {
   sense_of_danger_2_name: "Kuudes Aisti II",
   frantic_mana_recovery_name: "Hätäinen Taian Palautus",
   mark_of_hunter_name: "Suojelijan Merkki",
+  racial_ability_orc_1_name: "Örkin Lihaksikkuus",
+  racial_ability_human_1_name: "Ihmisen Kestävyys",
+  racial_ability_elf_1_name: "Haltian Viisaus",
+  racial_ability_ashen_1_name: "Kalpean Ketteryys",
 
   // Enemy types
   against_type_syntax: " vastaan",
@@ -898,6 +906,7 @@ const english = {
   core_stats: "Core stats",
   core_resistances: "Core resistances",
   status_resistances: "Status Resists",
+  passives: "Passive Abilities",
   poison_status: "Poison",
   burning_status: "Burning",
   curse_status: "Curse",
@@ -1201,6 +1210,7 @@ const english = {
   buy_item: "Buy item",
   sell_item: "Sell item",
   quest_added: "<c>goldenrod<c>Quest '<c>gold<c>[QUEST]<c>goldenrod<c>' has begun!",
+  revive: "You have been revived at a shrine!",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -1218,6 +1228,8 @@ const english = {
   loneShadeSet_name: "Lone Shade",
 
   // Passive abilities
+  resilience_of_the_lone_wanderer_name: "Lone Wanderer's Resilience",
+  lone_wanderer_desc: "You have a duty to complete, and nothing will stop you, not even death itself.",
   frenzy_name: "Frenzy",
   heightened_casting_name: "Heightened Casting",
   warrior_instinct_name: "Warrior Instinct",
@@ -1230,6 +1242,10 @@ const english = {
   sense_of_danger_2_name: "Danger Sense II",
   frantic_mana_recovery_name: "Frantic Mana Recovery",
   mark_of_hunter_name: "Mark of the Hunter",
+  racial_ability_orc_1_name: "Orcish Musculature",
+  racial_ability_human_1_name: "Human Tenacity",
+  racial_ability_elf_1_name: "Elven Wisdom",
+  racial_ability_ashen_1_name: "Ashen Agility",
 
   // Enemy types
   against_type_syntax: " against ",

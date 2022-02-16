@@ -320,6 +320,7 @@ function perkTT(perk: perk) {
 function statModifTT(statModif: any) {
   statModif = new PermanentStatModifier({ ...statModif });
   let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
+  if (statModif.desc) txt += `§<c>silver<c><f>13px<f>"${lang[statModif.desc]}"\n§`;
   if (statModif.conditions) {
     txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
     Object.entries(statModif.conditions).forEach(cond => {

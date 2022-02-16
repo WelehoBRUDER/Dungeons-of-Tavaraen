@@ -499,7 +499,7 @@ body {
   .playerWindow {
     transition: 0.275s;
     transition-timing-function: ease-in;
-    width: calc(1360px * var(--ui-scale));
+    width: calc(1480px * var(--ui-scale));
     height: calc(780px * var(--ui-scale));
     background: rgba(5, 5, 5, 0.95);
     border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
@@ -508,7 +508,7 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: calc(-680px * var(--ui-scale));
+    margin-left: calc(-740px * var(--ui-scale));
     margin-top: calc(-390px * var(--ui-scale));
     z-index: 8;
     transform: scale(0);
@@ -517,6 +517,11 @@ body {
     .negative {
       color: rgb(150, 58, 16);
       text-shadow: -1px 1px 4px rgb(179, 72, 23);
+    }
+
+    .inactive {
+      color: rgb(206, 107, 25);
+      text-shadow: -1px 1px 4px rgb(180, 104, 17);
     }
 
     .positive {
@@ -583,7 +588,8 @@ body {
 
     .coreStatsTitle,
     .coreResistancesTitle,
-    .statusResistancesTitle {
+    .statusResistancesTitle,
+    .passiveAbilitiesTitle {
       text-align: center;
       width: calc(300px * var(--ui-scale));
       font-size: calc(32px * var(--ui-scale));
@@ -602,7 +608,8 @@ body {
 
     .coreStats,
     .coreResistances,
-    .statusResistances {
+    .statusResistances,
+    .passiveAbilities {
       position: absolute;
       height: auto;
       max-height: calc(370px * var(--ui-scale));
@@ -653,6 +660,20 @@ body {
     .statusResistances,
     .statusResistancesTitle {
       left: calc(725px * var(--ui-scale));
+    }
+
+    .passiveAbilities,
+    .passiveAbilitiesTitle {
+      left: calc(1075px * var(--ui-scale));
+
+      p {
+        font-size: calc(22px * var(--ui-scale));
+      }
+
+      img {
+        width: calc(36px * var(--ui-scale));
+        height: calc(36px * var(--ui-scale));
+      }
     }
 
     pre {

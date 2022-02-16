@@ -1,3 +1,21 @@
+# 1.0.2 ~ 16.2.2022
+
+### Patch
+
+## New Additions
+
+- You can now view your passive abilities in the character screen.
+- You now gain a racial ability upon reaching level 10.
+- Added the option to play as a woman when creating a new character.
+- Added a clothing toggle in character creation.
+
+## Fixes & Tweaks
+
+- Fixed an issue with the perk `On second thought..` decreasing status effects instead of increasing.
+- Fixed an issue with older saves being unable to be loaded due to the reworked stat modifiers.
+- Fixed crash when quest enemies spawn.
+- Added some minor localisation and expanded texts.
+
 # 1.0.1 ~ 15.2.2022
 
 ### Patch

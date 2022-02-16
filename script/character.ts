@@ -629,6 +629,7 @@ class Character {
 
     this.updateStatModifiers = () => {
       this.statModifiers.forEach((mod: PermanentStatModifier, index: number) => {
+        if (mod.name) mod.id = mod.name.replaceAll(" ", "_").toLowerCase();
         let modifier = new PermanentStatModifier(mod);
         this.statModifiers[index] = modifier;
       });

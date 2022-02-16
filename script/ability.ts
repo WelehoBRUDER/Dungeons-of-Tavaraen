@@ -372,7 +372,8 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
           key = key.replace(abilityId + "_", "");
           if (key.includes("status_effect")) {
             const _key = key.replace("status_effect_", "");
-            const __key = _key.substring(0, _key.length - 1);
+            const trueKey = _key.replace(effectId + "_", "");
+            const __key = trueKey.substring(0, trueKey.length - 1);
             if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
               if (key.endsWith("V")) total["effects"][__key].value += value;
               else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);

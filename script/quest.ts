@@ -150,17 +150,17 @@ function createQuestData(entry: any) {
     }
     else if (currentTask.objective == "speakWithNpc") {
       let col = "silver";
-      if(objectiveDoneAlready) col = "lime";
+      if (objectiveDoneAlready) col = "lime";
       text += `\n<c>${col}<c>Talk to ${currentTask.npc}`;
     }
   });
-  if(entry.obj >= quest.objectives.length) { text += "\n\n§<f>28px<f><c>goldenrod<c>This quest is complete!";}
+  if (entry.obj >= quest.objectives.length) { text += "\n\n§<f>28px<f><c>goldenrod<c>This quest is complete!"; }
   else {
     text += `\n\n§<c>white<c><f>24px<f>Quest reward: `;
     quest.reward.forEach((reward: any) => {
       text += `${reward.amount} ${reward.type} `;
     });
-  } 
+  }
   questInfo.append(textSyntax(text));
 }
 
@@ -183,7 +183,9 @@ function spawnQuestMonsters() {
           if (en.spawnCords.x == enemy.pos.x && en.spawnCords.y == enemy.pos.y) foundUniqueMob = true;
         });
         if (!foundUniqueMob) {
-          maps.find((m: any) => m.id == enemy.map).enemies.push(new Enemy({ ...enemies[enemy.enemy], cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } }));
+          let spawnMap = maps.find((m: any) => m.id == enemy.map);
+          spawnMap.enemies.push(new Enemy({ ...enemies[enemy.enemy], cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } }));
+          spawnMap.enemies[spawnMap.enemies.length - 1].updateStatModifiers();
         }
       });
     }

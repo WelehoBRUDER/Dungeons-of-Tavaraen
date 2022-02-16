@@ -88,10 +88,10 @@ const statModifiers = {
     },
     resilience_of_the_lone_wanderer: {
         id: "resilience_of_the_lone_wanderer",
+        desc: "lone_wanderer_desc",
         effects: {
             hpMaxV: 55,
             mpMaxV: 10,
-            retreat_status_effect_lastV: 1,
         }
     },
     // PERK STAT MODIFIERS
@@ -144,6 +144,10 @@ const statModifiers = {
             strV: 5,
             attack_damage_multiplierP: 10,
         }
+    },
+    blood_rage_3: {
+        id: "blood_rage_3",
+        effects: {}
     },
     sense_of_danger_1: {
         id: "sense_of_danger_1",
@@ -204,17 +208,43 @@ const statModifiers = {
         effects: {
             rangedDamageP: 10
         }
+    },
+    // RACIAL ABILITIES
+    racial_ability_orc_1: {
+        id: "racial_ability_orc_1",
+        effects: {
+            strP: 20
+        }
+    },
+    racial_ability_human_1: {
+        id: "racial_ability_human_1",
+        effects: {
+            vitP: 20
+        }
+    },
+    racial_ability_elf_1: {
+        id: "racial_ability_elf_1",
+        effects: {
+            intP: 20
+        }
+    },
+    racial_ability_ashen_1: {
+        id: "racial_ability_ashen_1",
+        effects: {
+            dexP: 20
+        }
     }
 };
 class PermanentStatModifier {
     constructor(base) {
-        var _a;
+        var _a, _b, _c;
         this.id = base.id;
         const baseModifier = Object.assign({}, statModifiers[this.id]);
         if (!baseModifier)
             throw new Error("Invalid modifier id!");
         this.conditions = (_a = baseModifier.conditions) !== null && _a !== void 0 ? _a : null;
-        this.effects = baseModifier.effects;
+        this.effects = (_b = baseModifier.effects) !== null && _b !== void 0 ? _b : {};
+        this.desc = (_c = baseModifier.desc) !== null && _c !== void 0 ? _c : null;
     }
 }
 //# sourceMappingURL=statModifier.js.map

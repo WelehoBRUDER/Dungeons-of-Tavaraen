@@ -160,7 +160,7 @@
       <div class="textContainer"></div>
       <div class="wrapper">
         <div class="menuButton respawn" onclick="respawnPlayer()">Respawn [R]</div>
-        <div class="menuButton backToTitle" onclick="gotoMainMenu()">Title Screen</div> 
+        <div class="menuButton backToTitle" onclick="gotoMainMenu()">Title Screen</div>
       </div>
     </div>
 
@@ -199,6 +199,11 @@
           <div class="eyes" onmousedown="changeEyes(event)">eyes 1</div>
           <div class="face" onmousedown="changeFace(event)">face 1</div>
         </div>
+        <div class="genderWrapper">
+          <img src="resources/icons/male.png" alt="" class="male selected" onclick="changeSex('male')">
+          <img src="resources/icons/female.png" alt="" class="female" onclick="changeSex('female')">
+        </div>
+        <img src="resources/icons/clothToggle.png" alt="" class="toggleClothes" onclick="toggleClothes()">
         <div class="nameContainer">
           <p class="nameText">Name</p>
           <input type="text" class="nameInput" autocomplete="off" autocorrect="off" autocapitalize="off"
@@ -289,6 +294,31 @@
   <img src="resources/tiles/player/crown_of_wisdom.png" alt="" class="crownOfWisdom sprite">
   <img src="resources/tiles/player/lich_robes.png" alt="" class="lichRobes sprite">
   <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" class="kasDJ sprite">
+  <!-- Female Clothes Variants -->
+  <img src="resources/tiles/player/ragged_shirt_female.png" alt="" class="raggedShirtFemale sprite">
+  <img src="resources/tiles/player/ragged_boots_female.png" alt="" class="raggedBootsFemale  sprite">
+  <img src="resources/tiles/player/ragged_pants_female.png" alt="" class="raggedPantsFemale  sprite">
+  <img src="resources/tiles/player/ragged_gloves_female.png" alt="" class="raggedGlovesFemale  sprite">
+  <img src="resources/tiles/player/ragged_hood_female.png" alt="" class="raggedHoodFemale  sprite">
+  <img src="resources/tiles/player/wool_hat_female.png" alt="" class="woolHatFemale  sprite">
+  <img src="resources/tiles/player/leather_chest_female.png" alt="" class="leatherChestFemale  sprite">
+  <img src="resources/tiles/player/leather_boots_female.png" alt="" class="leatherBootsFemale  sprite">
+  <img src="resources/tiles/player/leather_leg_bracers_female.png" alt="" class="leatherLeggingsFemale  sprite">
+  <img src="resources/tiles/player/leather_bracers_female.png" alt="" class="leatherBracersFemale  sprite">
+  <img src="resources/tiles/player/leather_helmet_female.png" alt="" class="leatherHelmetFemale  sprite">
+  <img src="resources/tiles/player/iron_armor_female.png" alt="" class="ironArmorFemale  sprite">
+  <img src="resources/tiles/player/iron_boots_female.png" alt="" class="ironBootsFemale sprite">
+  <img src="resources/tiles/player/iron_leg_plates_female.png" alt="" class="ironLegplatesFemale  sprite">
+  <img src="resources/tiles/player/iron_gauntlets_female.png" alt="" class="ironGauntletsFemale  sprite">
+  <img src="resources/tiles/player/iron_helmet.png" alt="" class="ironHelmetFemale  sprite">
+  <img src="resources/tiles/player/knight_armor_female.png" alt="" class="knightArmorFemale  sprite">
+  <img src="resources/tiles/player/knight_sabatons_female.png" alt="" class="knightSabatonsFemale  sprite">
+  <img src="resources/tiles/player/knight_greaves_female.png" alt="" class="knightGreavesFemale  sprite">
+  <img src="resources/tiles/player/knight_gloves_female.png" alt="" class="knightGauntletsFemale  sprite">
+  <img src="resources/tiles/player/great_helm_female.png" alt="" class="greatHelmFemale  sprite">
+  <img src="resources/tiles/player/crown_of_wisdom_female.png" alt="" class="crownOfWisdomFemale  sprite">
+  <img src="resources/tiles/player/lich_robes_female.png" alt="" class="lichRobesFemale sprite">
+  <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" class="kasDJFemale sprite">
 
   <!-- Weapons -->
   <img src="resources/tiles/player/dagger_model.png" alt="" class="rustyDagger sprite">
@@ -393,6 +423,7 @@
   <img src="resources/tiles/dummy.png" alt="" class="dummyModel sprite">
   <img src="resources/tiles/totem_sample.png" alt="" class="arrowTotem sprite">
 </div>
+
 </html>
 <script src="resources/compiledJS/script/syntax.js"></script>
 <script src="resources/compiledJS/arrays/tiles.js"></script>

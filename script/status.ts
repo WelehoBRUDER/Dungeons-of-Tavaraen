@@ -40,13 +40,13 @@ class statEffect {
   break_concentration?: boolean;
   constructor(base: statusEffect, modifiers: any) {
     // @ts-ignore
-    if(!base) throw new Error("BASE EFFECT INVALID!");
+    if (!base) throw new Error("BASE EFFECT INVALID!");
     const defaultEffect: statusEffect = statusEffects[base.id];
     this.id = defaultEffect.id;
     this.name = defaultEffect.name;
-    this.dot = setDOT({...defaultEffect.dot});
-    this.effects = effectsInit({...defaultEffect.effects}, this.id);
-    this.last = {total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif)};
+    this.dot = setDOT({ ...defaultEffect.dot });
+    this.effects = effectsInit({ ...defaultEffect.effects }, this.id);
+    this.last = { total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif) };
     this.rooted = defaultEffect.rooted;
     this.type = defaultEffect.type;
     this.onRemove = defaultEffect.onRemove;
@@ -62,16 +62,16 @@ class statEffect {
         const val = eff[1].value;
         const mod = eff[1].modif;
         const statusId = eff[1].status;
-        if((val !== 0 || mod !== 1) && statusId == id) {
+        if ((val !== 0 || mod !== 1) && statusId == id) {
           var num = total[key];
-          if(!num) num = 0;
+          if (!num) num = 0;
           total[key] = Math.floor(((num + val) * mod));
         }
       });
       // @ts-expect-error
-      let entries: any = Object.entries(total).sort((a: number, b: number)=>b[1] - a[1]);
+      let entries: any = Object.entries(total).sort((a: number, b: number) => b[1] - a[1]);
       let sortedTotal: any = {};
-      entries.forEach((entry: any)=>{
+      entries.forEach((entry: any) => {
         sortedTotal[entry[0]] = entry[1];
       });
       return sortedTotal;
@@ -79,8 +79,8 @@ class statEffect {
 
     function setDOT(defaultDot: any) {
       let dot: any = defaultDot;
-      if(dot.damageAmount) {
-        dot.damageAmount = Math.floor((dot.damageAmount + modifiers.damageAmount.value )* modifiers.damageAmount.modif);
+      if (dot.damageAmount) {
+        dot.damageAmount = Math.floor((dot.damageAmount + modifiers.damageAmount.value) * modifiers.damageAmount.modif);
       }
       else return null;
       return dot;

@@ -143,6 +143,7 @@ const classEquipments = {
   }
 } as any;
 
+var clothToggleCreation = false;
 function characterCreation(withAnimations = true) {
   if (withAnimations) {
     const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
@@ -151,7 +152,7 @@ function characterCreation(withAnimations = true) {
     setTimeout(() => { creation.style.opacity = "1"; }, 5);
   }
   checkIfCanStartGame();
-  renderPlayerOutOfMap(256, creationCanvas, creationCtx);
+  renderPlayerOutOfMap(256, creationCanvas, creationCtx, "center", player, clothToggleCreation);
   creation.querySelector(".nameText").textContent = lang["choose_name"] ?? "lang_choose_name";
   creation.querySelector(".raceText").textContent = lang["choose_race"] ?? "lang_choose_race";
   creation.querySelector(".classText").textContent = lang["choose_class"] ?? "lang_choose_class";
@@ -325,6 +326,24 @@ function changeClass(_combatClass: any) {
     let val = eq[1];
     player[id] = { ...val };
   });
+  characterCreation(false);
+  checkIfCanStartGame();
+}
+
+function changeSex(sex: string) {
+  player.sex = sex;
+  document.querySelector(".genderWrapper .selected").classList.remove("selected");
+  document.querySelector(`.genderWrapper .${sex}`).classList.add("selected");
+  characterCreation(false);
+  checkIfCanStartGame();
+}
+
+function toggleClothes() {
+  clothToggleCreation = !clothToggleCreation;
+  if (clothToggleCreation) {
+    document.querySelector(".toggleClothes").classList.add("selected");
+  }
+  else document.querySelector(".toggleClothes").classList.remove("selected");
   characterCreation(false);
   checkIfCanStartGame();
 }

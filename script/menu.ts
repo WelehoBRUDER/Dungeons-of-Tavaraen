@@ -573,6 +573,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       enemiesHadTurn = 0;
       state.inCombat = false;
       player.updatePerks(true);
+      player.updateStatModifiers();
       player.updateAbilities();
       purgeDeadEnemies();
       killAllQuestEnemies();
@@ -592,6 +593,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
     renderedPlayer.updatePerks(true, true);
+    renderedPlayer.updateStatModifiers();
     renderedPlayer.updateAbilities(true);
     let saveTime = new Date(save.time);
     let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -849,6 +851,7 @@ function LoadSlot(data: any) {
   enemiesHadTurn = 0;
   state.inCombat = false;
   player.updatePerks(true);
+  player.updateStatModifiers();
   player.updateAbilities();
   purgeDeadEnemies();
   killAllQuestEnemies();

@@ -355,6 +355,11 @@ class PlayerCharacter extends Character {
         displayText(`<c>white<c>[WORLD] <c>gold<c>${lvlText}`);
         updateUI();
       }
+      // Add racial bonus
+      if (this.level.level >= 10 && this.statModifiers.findIndex((m: any) => m.id === `racial_ability_${this.race}_1`) === -1) {
+        this.statModifiers.push(new PermanentStatModifier(statModifiers[`racial_ability_${this.race}_1`]));
+        spawnFloatingText(this.cords, "RACIAL ABILITY!", "lime", 50, 2000, 450);
+      }
     };
 
     this.getArtifactSetBonuses = (getOnlySetAmounts = false as boolean) => {
@@ -683,7 +688,7 @@ var player = new PlayerCharacter({
   },
   sprite: ".player",
   race: "orc",
-  hair: 3,
+  hair: 5,
   eyes: 2,
   face: 1,
   weapon: {},
@@ -727,7 +732,7 @@ var player = new PlayerCharacter({
   grave: null,
   flags: {} as any,
   questProgress: [],
-  sex: "male"
+  sex: "female"
 });
 
 let combatSummons: Array<any> = [];
@@ -784,7 +789,7 @@ function respawnPlayer() {
   updateUI();
   resetAllLivingEnemiesInAllMaps();
   modifyCanvas(true);
-  displayText("HERÄSIT KUOLLEISTA!");
+  displayText(`[WORLD] ${lang["revive"]}`);
   spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
 
