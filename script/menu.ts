@@ -206,7 +206,7 @@ function handleEscape() {
   else if (state.codexOpen) {
     closeCodex();
   }
-  else if (!state.isSelected) {
+  else if (!state.isSelected && !player.isDead) {
     openGameMenu();
     state.menuOpen = true;
   }
@@ -445,7 +445,7 @@ async function gotoMainMenu(init: boolean = false) {
 function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   const trimmed: PlayerCharacter = { ...playerObject };
   trimmed.inventory.forEach((itm: any, index: number) => {
-    if (itm.stackable) trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount };
+    if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
     else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
     else trimmed.inventory[index] = { id: itm.id, type: itm.type };
   });
@@ -575,9 +575,11 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player.updatePerks(true);
       player.updateStatModifiers();
       player.updateAbilities();
+      renderMinimap(maps[currentMap]);
       purgeDeadEnemies();
       killAllQuestEnemies();
       spawnQuestMonsters();
+      convertEnemyStatModifiers();
       handleEscape();
       closeGameMenu();
       resetAllChests();
@@ -834,6 +836,14 @@ function killAllQuestEnemies() {
     for (let i = mp.enemies.length - 1; i >= 0; i--) {
       if (mp.enemies[i].questSpawn?.quest > -1) mp.enemies.splice(i, 1);
     }
+  });
+}
+
+function convertEnemyStatModifiers() {
+  maps.forEach((mp: any) => {
+    mp.enemies.map((en: any) => {
+      en.updateStatModifiers();
+    });
   });
 }
 

@@ -240,7 +240,7 @@ class PlayerCharacter extends Character {
                 this.level.level++;
                 if (this.level.level < 6) {
                     this.pp += 2;
-                    this.sp += 2;
+                    this.sp += 4;
                 }
                 else if (this.level.level % 10 == 0) {
                     this.pp += 3;
@@ -248,7 +248,7 @@ class PlayerCharacter extends Character {
                 }
                 else {
                     this.pp++;
-                    this.sp += 2;
+                    this.sp += 3;
                 }
                 this.level.xpNeed = nextLevel(this.level.level);
                 this.stats.hp = this.getHpMax();
@@ -410,7 +410,7 @@ class PlayerCharacter extends Character {
 }
 function nextLevel(level) {
     let base = 75;
-    let exponent = 1.37;
+    let exponent = 1.32;
     if (level >= 4 && level < 10)
         base = 150;
     if (level >= 10 && level < 29)
