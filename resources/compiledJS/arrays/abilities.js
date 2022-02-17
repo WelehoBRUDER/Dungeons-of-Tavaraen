@@ -203,7 +203,6 @@ const abilities = {
         type: "heal",
         action_desc: "performs first aid",
         action_desc_pl: "perform first aid",
-        requires_concentration: true,
         icon: "resources/icons/first_aid.png",
         recharge_only_in_combat: true,
         use_range: "0",

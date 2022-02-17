@@ -1,3 +1,13 @@
+# 1.0.4 ~ 17.2.2022
+
+### Patch
+
+## New Additions
+
+## Fixes & Tweaks
+
+- You can now heal even while stunned.
+
 # 1.0.3 - ~ 17.2.2022
 
 ### Patch
