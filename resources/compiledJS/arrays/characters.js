@@ -49,6 +49,7 @@ const NPCInventories = {
             Object.assign(Object.assign({}, items["ironShield"]), { unique: false, price: 400 }),
             { id: "longBow", unique: true, price: 1000 },
             { id: "healingPotion_weak", unique: false, price: 250 },
+            { id: "manaPotion_weak", unique: false, price: 250 },
         ],
     }
 };

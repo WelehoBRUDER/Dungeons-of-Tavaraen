@@ -440,8 +440,8 @@ async function gotoMainMenu(init = false) {
 function trimPlayerObjectForSaveFile(playerObject) {
     const trimmed = Object.assign({}, playerObject);
     trimmed.inventory.forEach((itm, index) => {
-        if (itm.stackable)
-            trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount };
+        if (itm.stackable || itm.type === "consumable")
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
         else if (itm.level)
             trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
         else

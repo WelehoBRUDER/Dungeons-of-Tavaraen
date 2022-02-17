@@ -21,7 +21,7 @@ var currentMap = 2;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
-const zoomLevels = [0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.5, 1.65, 1.8, 2];
+const zoomLevels = [0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
 var currentZoom = 1;
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -363,7 +363,7 @@ function renderTileHover(tile, event) {
                     return;
                 var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-                if (step.blocked || iteration > distance) {
+                if ((step.blocked && step.x !== tile.x && step.y !== tile.y) || iteration > distance) {
                     if (lastStep == 0)
                         lastStep = iteration;
                     playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));

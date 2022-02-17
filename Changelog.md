@@ -1,15 +1,20 @@
-# 1.0.3 - ~ 16.2.2022
+# 1.0.3 - ~ 17.2.2022
 
 ### Patch
 
 ## New Additions
 
-- Added 4 new hairstyles
-- Added 2 new eye styles
-- Added 2 new face variants
+- Added 4 new hairstyles.
+- Added 2 new eye styles.
+- Added 2 new face variants.
 
 ## Fixes & Tweaks
 
+- Added more zoom levels.
+- Ranged mode no longer shows red when enemy is in range to be hit.
+- Added mana potions to store.
+- Slight balance changes.
+- Fixed some localisation issues.
 - Fixed some issues with loading saves.
 
 # 1.0.2 ~ 16.2.2022

@@ -445,7 +445,7 @@ async function gotoMainMenu(init: boolean = false) {
 function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   const trimmed: PlayerCharacter = { ...playerObject };
   trimmed.inventory.forEach((itm: any, index: number) => {
-    if (itm.stackable) trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount };
+    if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
     else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
     else trimmed.inventory[index] = { id: itm.id, type: itm.type };
   });
