@@ -91,9 +91,9 @@ const creation = document.querySelector<HTMLDivElement>(".mainMenu .characterCre
 const creationCanvas = creation.querySelector<HTMLCanvasElement>(".layerRender");
 const creationCtx = creationCanvas.getContext("2d");
 
-const hairs = [1, 6];
-const eyes = [1, 3];
-const faces = [1, 3];
+const hairs = [1, 10];
+const eyes = [1, 5];
+const faces = [1, 5];
 
 const classEquipments = {
   fighter: {
