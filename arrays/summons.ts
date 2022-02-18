@@ -13,18 +13,18 @@ const summons = {
       mp: 0,
       hpMax: 20,
       mpMax: 0,
-      
+
     },
     resistances: {
-      slash: 70,
-      crush: -10,
-      pierce: 55,
+      slash: 45,
+      crush: 15,
+      pierce: 45,
       magic: 10,
-      dark: 20,
+      dark: 25,
       divine: -50,
-      fire: -20,
-      lightning: 20,
-      ice: 20
+      fire: 0,
+      lightning: 0,
+      ice: 0
     },
     statusResistances: {
       poison: 100,
@@ -54,10 +54,7 @@ const summons = {
     ],
     statModifiers: [
       {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100,
-        }
+        id: "magically_impotent",
       }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
@@ -83,15 +80,15 @@ const summons = {
       mpMax: 75
     },
     resistances: {
-      slash: 70,
-      crush: -15,
-      pierce: 60,
-      magic: 65,
-      dark: 75,
-      divine: -40,
-      fire: -25,
-      lightning: 20,
-      ice: 20
+      slash: 45,
+      crush: 15,
+      pierce: 45,
+      magic: 30,
+      dark: 25,
+      divine: -50,
+      fire: 0,
+      lightning: 0,
+      ice: 0
     },
     statusResistances: {
       poison: 100,
@@ -122,11 +119,7 @@ const summons = {
     ],
     statModifiers: [
       {
-        id: "dont_spam_abilities",
-        effects: {
-          blight_cooldownV: 3,
-          fireball_cooldownV: 5
-        }
+        id: "weaker_natural_ability",
       }
     ],
     statsPerLevel: {
@@ -186,10 +179,7 @@ const summons = {
     ],
     statModifiers: [
       {
-        id: "anti_magic",
-        effects: {
-          mpMaxP: -100,
-        }
+        id: "magically_impotent",
       }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
@@ -248,13 +238,10 @@ const summons = {
     aggroRange: 0,
     attackRange: 1,
     canFly: false,
-    abilities: [] as any, 
+    abilities: [] as any,
     statModifiers: [
       {
-        id: "inanimate_object",
-        effects: {
-          mpMaxP: -100,
-        }
+        id: "magically_impotent",
       }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
@@ -337,7 +324,7 @@ const summons = {
       mp: 0,
       hpMax: 30,
       mpMax: 0,
-      
+
     },
     resistances: {
       slash: 15,
@@ -379,10 +366,7 @@ const summons = {
     ],
     statModifiers: [
       {
-        id: "magical_binding",
-        effects: {
-          mpMaxP: -100,
-        }
+        id: "magically_impotent",
       }
     ],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.

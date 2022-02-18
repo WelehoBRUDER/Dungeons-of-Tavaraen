@@ -67,7 +67,7 @@ const possible_modifiers = [
 ];
 class Ability {
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
         this.id = base.id;
         const values = getAbiModifiers(user, base.id);
         // @ts-ignorep
@@ -122,6 +122,7 @@ class Ability {
         this.action_desc_pl = baseAbility.action_desc_pl;
         this.ai_chance = baseAbility.ai_chance;
         this.remove_status = baseAbility.remove_status;
+        this.permanent = (_9 = baseAbility.permanent) !== null && _9 !== void 0 ? _9 : false;
         if (this.cooldown < 0)
             this.cooldown = 0;
         this.get_true_damage = (_user) => {

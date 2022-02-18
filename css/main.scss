@@ -313,6 +313,57 @@ body {
         text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
       }
     }
+
+    .summonList {
+      position: absolute;
+      left: calc(5px * var(--ui-scale));
+      top: calc(260px * var(--ui-scale));
+
+      .summonContainer {
+        position: relative;
+        height: calc(80px * var(--ui-scale));
+        width: calc(300px * var(--ui-scale));
+        overflow: hidden;
+        pointer-events: none;
+
+        .summonImage {
+          width: calc(72px * var(--ui-scale));
+          height: calc(72px * var(--ui-scale));
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
+        .summonName {
+          position: absolute;
+          font-size: calc(13px * var(--ui-scale));
+          color: white;
+          left: calc(72px * var(--ui-scale));
+          top: 0;
+          white-space: nowrap;
+        }
+
+        .summonHpBarBg,
+        .summonHpBarFill {
+          position: absolute;
+          height: calc(150px * var(--ui-scale));
+          width: calc(128px * var(--ui-scale));
+          left: calc(72px * var(--ui-scale));
+          top: calc(40px * var(--ui-scale));
+        }
+
+        .summonLastTurns {
+          border-radius: 50%;
+          background: rgba(16, 10, 75, 0.55);
+          padding: calc(3px * var(--ui-scale));
+          font-size: calc(14px * var(--ui-scale));
+          color: white;
+          position: absolute;
+          left: calc(45px * var(--ui-scale));
+          top: calc(-15px * var(--ui-scale));
+        }
+      }
+    }
   }
 
   .defaultItemsArray {

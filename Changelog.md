@@ -1,12 +1,16 @@
 # 1.0.4 ~ 17.2.2022
 
-### Patch
+### Patch - The Summoning
 
 ## New Additions
 
 ## Fixes & Tweaks
 
+- Codex now displays the index of each entry.
 - You can now heal even while stunned.
+- Summoned creatures are now shown in a list with their hp bar and name.
+- Fixed some issues with summoned creatures.
+- Fixed perk screen scroll resetting when buying new perk.
 
 # 1.0.3 - ~ 17.2.2022
 

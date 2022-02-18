@@ -74,7 +74,7 @@ function openIngameCodex() {
             Object.values(Object.assign({}, eval(codexEntry.import_from_array))).forEach((entry, index) => {
                 if (entry.id.includes("error"))
                     return;
-                createCodexEntry(codexEntry, entry, needsEncounter, title);
+                createCodexEntry(codexEntry, entry, needsEncounter, title, index);
             });
         }
         else if (codexEntry.sub_categories) {
@@ -113,7 +113,7 @@ function openIngameCodex() {
         listPart.style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + extraHeight}px`;
     });
 }
-function createCodexEntry(codexEntry, entry, needsEncounter, title) {
+function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
     var _a, _b, _c;
     const entryElement = document.createElement("li");
     const entryText = document.createElement("p");
@@ -127,7 +127,7 @@ function createCodexEntry(codexEntry, entry, needsEncounter, title) {
         displayName = lang[entry.id];
     if (!displayName)
         displayName = (_b = entry.name) !== null && _b !== void 0 ? _b : entry.title;
-    entryText.textContent = playerHasEntry ? displayName : "???";
+    entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
     entryElement.classList.add(entry.id);
     entryElement.classList.add(codexEntry.import_from_array);
     if (!playerHasEntry) {
@@ -165,13 +165,13 @@ function createSubCategoryEntry(codexEntry, subCategory, needsEncounter, title) 
     const subList = document.createElement("ul");
     subList.classList.add("subList");
     if (subCategory.content) {
-        subCategory.content.forEach((item) => {
-            createCodexEntry(subCategory, item, needsEncounter, subList);
+        subCategory.content.forEach((item, index) => {
+            createCodexEntry(subCategory, item, needsEncounter, subList, index);
         });
     }
     if (subCategory.import_from_array) {
-        Object.values(Object.assign({}, eval(subCategory.import_from_array))).forEach((entry) => {
-            createCodexEntry(subCategory, entry, needsEncounter, subList);
+        Object.values(Object.assign({}, eval(subCategory.import_from_array))).forEach((entry, index) => {
+            createCodexEntry(subCategory, entry, needsEncounter, subList, index);
         });
     }
     entryElement.append(subList);
@@ -257,6 +257,7 @@ async function animateTitle(e, title) {
                 else
                     test2 += subItem.getBoundingClientRect().height;
             });
+            // @ts-ignore
             title.childNodes[1].style.height = `${test2}px`;
             title.style.height = `${test2 + defaultHeight}px`;
             parent.style.height = `${test + test2 + defaultHeight}px`;

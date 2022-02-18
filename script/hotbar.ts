@@ -187,6 +187,33 @@ function generateHotbar() {
   }
 }
 
+function generateSummonList() {
+  const summonList = document.querySelector(".playerUI .summonList");
+  summonList.innerHTML = "";
+  combatSummons.forEach((summon: Summon) => {
+    const container = document.createElement("div");
+    const img = document.createElement("img");
+    const name = document.createElement("p");
+    const hpBarBg = document.createElement("img");
+    const hpBarFill = document.createElement("img");
+    const lastTurns = document.createElement("p");
+    container.classList.add("summonContainer");
+    img.classList.add("summonImage");
+    name.classList.add("summonName");
+    hpBarBg.classList.add("summonHpBarBg");
+    hpBarFill.classList.add("summonHpBarFill");
+    lastTurns.classList.add("summonLastTurns");
+    img.src = summon.img;
+    name.textContent = lang[summon.id + "_name"];
+    hpBarBg.src = "resources/tiles/enemies/healthBorder.png";
+    hpBarFill.src = "resources/tiles/enemies/healthBar.png";
+    hpBarFill.style.clipPath = `inset(0 ${100 - summon.hpRemain()}% 0 0)`;
+    lastTurns.textContent = summon.permanent ? "" : summon.lastsFor;
+    container.append(img, name, hpBarBg, hpBarFill, lastTurns);
+    summonList.append(container);
+  });
+}
+
 function useConsumable(itm) {
 
   if (itm.healValue) {
@@ -365,7 +392,7 @@ function abiTT(abi: ability) {
   if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
   if (abi.summon_unit) txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
   if (abi.summon_level) txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-  if (abi.summon_last) txt += `<f>20px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+  if (abi.summon_last || abi.permanent) txt += `<f>20px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
   if (abi.total_summon_limit) txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
@@ -433,7 +460,7 @@ function embedAbiTT(abi: ability) {
   if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
   if (abi.summon_unit) txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${lang[abi.summon_unit + "_name"] ?? abi.summon_unit}<c>white<c>\n`;
   if (abi.summon_level) txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-  if (abi.summon_last) txt += `<f>15px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+  if (abi.summon_last || abi.permanent) txt += `<f>15px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
   if (abi.total_summon_limit) txt += `<f>15px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
@@ -603,6 +630,7 @@ function updateUI() {
   ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();
   generateHotbar();
   generateEffects();
+  generateSummonList();
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 
