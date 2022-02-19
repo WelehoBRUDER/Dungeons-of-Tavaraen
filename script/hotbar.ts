@@ -547,7 +547,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     key = id + "_name";
     let _value = 0;
     if (player.statusEffects.find((eff: any) => eff.id == effectId)) _value = value;
-    frontImg = abilities[id].icon;
+    frontImg = abilities[id]?.icon ?? icons.damage;
     if (value < 0) backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
     else backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
     try {
@@ -566,7 +566,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
   else if (keyIncludesAbility(key)) {
     key_ = keyIncludesAbility(key);
     let id = key.replace("_" + key_, "");
-    frontImg = abilities[id].icon;
+    frontImg = abilities[id]?.icon ?? icons.damage;
     key = id + "_name";
     flipColor = less_is_better[key_];
     if (key !== "attack_name") {
@@ -739,6 +739,69 @@ function hideHover() {
   tooltipBox.style.display = "none";
 }
 
+function createStatDisplay(stat: any) {
+  const key = stat[0] == "chance" ? "hitChance" : stat[0];
+  const val = stat[1];
+  const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+  statImage.src = icons[key];
+  statText.textContent = lang[key];
+  statValue.textContent = key.includes("crit") ? val + "%" : val;
+  tooltip(statContainer, lang[key + "_tt"] ?? "no tooltip");
+  statContainer.append(statImage, statText, statValue);
+  return statContainer;
+}
+
+function createArmorOrResistanceDisplay(stat: any, armor: boolean) {
+  const key = stat[0];
+  const val = stat[1];
+  const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+  statImage.src = icons[key + (armor ? "_armor" : "")];
+  statText.textContent = lang[key];
+  statValue.textContent = val + (armor ? "" : "%");
+  tooltip(statContainer, lang[armor ? key + "_tt" : "resistances_tt"] ?? "no tooltip");
+  if (val > 0) statValue.classList.add("positive");
+  else if (val < 0) statValue.classList.add("negative");
+  statContainer.append(statImage, statText, statValue);
+  return statContainer;
+}
+
+function createStatusResistanceDisplay(stat: any) {
+  const key = stat[0];
+  const val = stat[1];
+  const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+  statImage.src = icons[key] ?? icons["damage"];
+  statText.textContent = lang[key + "_status"];
+  statValue.textContent = val + "%";
+  if (val > 0) statValue.classList.add("positive");
+  else if (val < 0) statValue.classList.add("negative");
+  statContainer.append(statImage, statText, statValue);
+  return statContainer;
+}
+
+function createStatModifierDisplay(mod: any) {
+  const statContainer = document.createElement("div");
+  const statImage = document.createElement("img");
+  const statText = document.createElement("p");
+  statImage.src = mod.icon ?? icons["damage"];
+  statText.textContent = lang[mod.id + "_name"];
+  if (mod.conditions) {
+    let active = statConditions(mod.conditions, player);
+    if (active) statText.classList.add("positive");
+    else statText.classList.add("inactive");
+  }
+  statContainer.append(statImage, statText);
+  tooltip(statContainer, statModifTT(mod));
+  return statContainer;
+}
+
+function createBaseElementsForStatDisplay() {
+  const sc = document.createElement("div");
+  const si = document.createElement("img");
+  const st = document.createElement("p");
+  const sv = document.createElement("span");
+  return { statContainer: sc, statImage: si, statText: st, statValue: sv };
+}
+
 function renderCharacter() {
   state.charOpen = true;
   hideHover();
@@ -797,80 +860,19 @@ function renderCharacter() {
   statusResistances.classList.add("statusResistances");
   passiveAbilities.classList.add("passiveAbilities");
   Object.entries(playerCoreStats).forEach((stat: any) => {
-    const key = stat[0] == "chance" ? "hitChance" : stat[0];
-    const val = stat[1];
-    const statContainer = document.createElement("div");
-    const statImage = document.createElement("img");
-    const statText = document.createElement("p");
-    const statValue = document.createElement("span");
-    statImage.src = icons[key];
-    statText.textContent = lang[key];
-    statValue.textContent = key.includes("crit") ? val + "%" : val;
-    tooltip(statContainer, lang[key + "_tt"] ?? "no tooltip");
-    statContainer.append(statImage, statText, statValue);
-    coreStats.append(statContainer);
+    coreStats.append(createStatDisplay(stat));
   });
   Object.entries(playerArmor).forEach((stat: any) => {
-    const key = stat[0] == "chance" ? "hitChance" : stat[0];
-    const val = stat[1];
-    const statContainer = document.createElement("div");
-    const statImage = document.createElement("img");
-    const statText = document.createElement("p");
-    const statValue = document.createElement("span");
-    statImage.src = icons[key + "_armor"];
-    statText.textContent = lang[key];
-    statValue.textContent = val;
-    if (val > 0) statValue.classList.add("positive");
-    else if (val < 0) statValue.classList.add("negative");
-    tooltip(statContainer, lang[key + "_tt"] ?? "no tooltip");
-    statContainer.append(statImage, statText, statValue);
-    coreResistances.append(statContainer);
+    coreResistances.append(createArmorOrResistanceDisplay(stat, true));
   });
   Object.entries(playerResists).forEach((stat: any) => {
-    const key = stat[0] == "chance" ? "hitChance" : stat[0];
-    const val = stat[1];
-    const statContainer = document.createElement("div");
-    const statImage = document.createElement("img");
-    const statText = document.createElement("p");
-    const statValue = document.createElement("span");
-    statImage.src = icons[key];
-    statText.textContent = lang[key];
-    statValue.textContent = val + "%";
-    if (val > 0) statValue.classList.add("positive");
-    else if (val < 0) statValue.classList.add("negative");
-    tooltip(statContainer, lang["resistances_tt"]);
-    statContainer.append(statImage, statText, statValue);
-    coreResistances.append(statContainer);
+    coreResistances.append(createArmorOrResistanceDisplay(stat, false));
   });
   Object.entries(playerStatusResists).forEach((stat: any) => {
-    const key = stat[0] == "chance" ? "hitChance" : stat[0];
-    const val = stat[1];
-    const statContainer = document.createElement("div");
-    const statImage = document.createElement("img");
-    const statText = document.createElement("p");
-    const statValue = document.createElement("span");
-    statImage.src = icons[key] ?? icons["damage"];
-    statText.textContent = lang[key + "_status"];
-    statValue.textContent = val + "%";
-    if (val > 0) statValue.classList.add("positive");
-    else if (val < 0) statValue.classList.add("negative");
-    statContainer.append(statImage, statText, statValue);
-    statusResistances.append(statContainer);
+    statusResistances.append(createStatusResistanceDisplay(stat));
   });
   player.statModifiers.forEach((mod: PermanentStatModifier) => {
-    const statContainer = document.createElement("div");
-    const statImage = document.createElement("img");
-    const statText = document.createElement("p");
-    statImage.src = mod.icon ?? icons["damage"];
-    statText.textContent = lang[mod.id + "_name"];
-    if (mod.conditions) {
-      let active = statConditions(mod.conditions, player);
-      if (active) statText.classList.add("positive");
-      else statText.classList.add("inactive");
-    }
-    statContainer.append(statImage, statText);
-    tooltip(statContainer, statModifTT(mod));
-    passiveAbilities.append(statContainer);
+    passiveAbilities.append(createStatModifierDisplay(mod));
   });
   var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
   Object.entries(player.getResists()).forEach(resistance => {

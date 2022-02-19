@@ -24,6 +24,189 @@
     left: 0;
     top: 0;
     background: rgba(0, 10, 15, 0.9);
+    overflow: hidden;
+    overflow-y: auto;
+
+    .entryImage {
+      width: calc(172px * var(--ui-scale));
+      position: absolute;
+      right: calc(10px * var(--ui-scale));
+      top: calc(10px * var(--ui-scale));
+      border: calc(4px * var(--ui-scale)) solid gold;
+      background: rgba(100, 100, 100, 0.15);
+      border-radius: 50%;
+
+      img {
+        width: 100%;
+        filter: drop-shadow(0 0 calc(5px * var(--ui-scale)) rgb(0, 0, 0));
+      }
+    }
+
+    .coreStats,
+    .coreResists,
+    .statResists,
+    .passives {
+      position: absolute;
+      height: auto;
+      max-height: calc(420px * var(--ui-scale));
+      width: calc(400px * var(--ui-scale));
+      left: calc(25px * var(--ui-scale));
+      top: calc(315px * var(--ui-scale));
+      border: calc(4px * var(--ui-scale)) solid gold;
+      box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+      overflow: hidden;
+      overflow-y: auto;
+
+      div {
+        width: 100%;
+        height: auto;
+        display: flex;
+        color: rgb(224, 224, 224);
+        text-shadow: -1px 1px 4px white;
+        margin: 0;
+        font-size: calc(24px * var(--ui-scale));
+        white-space: nowrap;
+        box-sizing: border-box;
+        border: calc(2px * var(--ui-scale)) solid rgba(200, 200, 200, 0);
+
+        img {
+          width: calc(42px * var(--ui-scale));
+          height: calc(42px * var(--ui-scale));
+          margin: 0;
+        }
+
+        p {
+          margin: 0;
+          margin-top: calc(6px * var(--ui-scale));
+          overflow: hidden;
+        }
+
+        span {
+          position: absolute;
+          right: calc(10px * var(--ui-scale));
+          margin: 0;
+          margin-top: calc(6px * var(--ui-scale));
+        }
+      }
+
+      div:nth-child(odd) {
+        background: rgba(160, 160, 160, 0.05);
+      }
+
+      div:hover {
+        filter: brightness(1.1);
+        border: calc(2px * var(--ui-scale)) solid rgba(200, 200, 200, 0.75);
+      }
+    }
+
+    .entryTitle {
+      color: gold;
+      text-shadow: -2px 2px 5px goldenrod;
+      font-size: calc(50px * var(--ui-scale));
+      position: absolute;
+      text-decoration: underline;
+      left: calc(10px * var(--ui-scale));
+      top: calc(-30px * var(--ui-scale));
+    }
+
+    .entryHealth,
+    .entryMana,
+    .entryDamage {
+      position: absolute;
+      display: flex;
+      left: calc(10px * var(--ui-scale));
+      margin: 0;
+      height: calc(50px * var(--ui-scale));
+      width: auto;
+      padding: 0;
+
+      span {
+        font-size: calc(45px * var(--ui-scale));
+        color: white;
+        text-shadow: -2px 2px 3px silver;
+        margin: 0;
+        padding: 0;
+      }
+
+      img {
+        width: calc(50px * var(--ui-scale));
+        margin: 0;
+        padding: 0;
+        vertical-align: middle;
+      }
+    }
+
+    .entryHealth {
+      top: calc(75px * var(--ui-scale));
+    }
+
+    .entryMana {
+      top: calc(120px * var(--ui-scale));
+    }
+
+    .entryDamage {
+      top: calc(170px * var(--ui-scale));
+    }
+
+    .coreResists {
+      left: calc(475px * var(--ui-scale));
+    }
+
+    .statResists {
+      top: calc(775px * var(--ui-scale));
+    }
+
+    .skills {
+      background: rgb(70, 70, 70);
+      max-width: 90%;
+      width: auto;
+      height: calc(90px * var(--ui-scale));
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(200px * var(--ui-scale));
+      box-shadow: inset 0px 0px calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(46, 46, 46);
+      border-radius: calc(12px * var(--ui-scale));
+      display: flex;
+
+      .hotbarFrame {
+        transition: 0.05s;
+        width: calc(80px * var(--ui-scale));
+        height: calc(72px * var(--ui-scale));
+        border: calc(4px * var(--ui-scale)) solid rgb(90, 89, 89);
+        margin: 1px;
+        border-radius: calc(8px * var(--ui-scale));
+        position: relative;
+        top: 0;
+        left: 0;
+
+        img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
+    .passives {
+      left: calc(475px * var(--ui-scale));
+      top: calc(775px * var(--ui-scale));
+    }
+
+    .negative {
+      color: rgb(150, 58, 16);
+      text-shadow: -1px 1px 4px rgb(179, 72, 23);
+    }
+
+    .inactive {
+      color: rgb(206, 107, 25);
+      text-shadow: -1px 1px 4px rgb(180, 104, 17);
+    }
+
+    .positive {
+      color: rgb(16, 150, 56);
+      text-shadow: -1px 1px 4px rgb(23, 179, 36);
+    }
   }
 
   .contentList {
@@ -113,7 +296,8 @@
       }
     }
 
-    .title:hover, li.subCategory:hover {
+    .title:hover,
+    li.subCategory:hover {
       cursor: pointer;
       text-shadow: 0 0 12px gold;
     }

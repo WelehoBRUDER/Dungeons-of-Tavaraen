@@ -41,7 +41,7 @@ class Item {
     const baseItem = { ...items[this.id] };
     this.name = baseItem.name;
     this.price = baseItem.price;
-    this.amount = base.amount ?? 1;
+    this.amount = isNaN(base.amount) ? 1 : base.amount ?? 1;
     this.weight = roundFloat(baseItem.weight * this.amount);
     this.type = baseItem.type;
     this.img = baseItem.img;

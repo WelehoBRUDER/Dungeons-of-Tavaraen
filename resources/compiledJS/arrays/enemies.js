@@ -353,7 +353,7 @@ const enemies = {
         sprite: "hiisiWarrior",
         type: "hiisi",
         race: "monster",
-        img: "resources/tiles/enemies/hiisi.png",
+        img: "resources/tiles/enemies/hiisi_warrior.png",
         aggroRange: 9,
         attackRange: 1,
         canFly: false,
