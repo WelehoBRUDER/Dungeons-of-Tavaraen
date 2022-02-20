@@ -118,6 +118,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (!displayName) displayName = lang[entry.id];
   if (!displayName) displayName = entry.name ?? entry.title;
   if (DEVMODE) playerHasEntry = true;
+  if (codexEntry.import_from_array == "items") index--;
   entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
   entryElement.classList.add(entry.id);
   entryElement.classList.add(codexEntry.import_from_array);

@@ -602,8 +602,8 @@ class Character {
           // Manually refresh error items
           if (this.inventory[i].id == "A0_error") {
             this.inventory[i] = { ...items.A0_error };
-            this.inventory[i].index = i;
           }
+          this.inventory[i].index = i;
           if (this.inventory[i].type == "weapon") this.inventory[i] = new Weapon({ ...this.inventory[i] });
           else if (this.inventory[i].type == "armor") this.inventory[i] = new Armor({ ...this.inventory[i] });
           else if (this.inventory[i].type == "consumable") this.inventory[i] = new Consumable({ ...this.inventory[i] });

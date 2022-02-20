@@ -1,3 +1,18 @@
+# 1.0.5 ~ 20.2.2022
+
+### Patch - The Equipment Rush
+
+## New Additions
+
+- Added 2 new weapons:
+  - Crimson Staff, wand for mages using fire.
+  - Crystal Wand, wand for mages using ice.
+- Added `Hunter` artifact set.
+
+## Fixes & Tweaks
+
+- Fixed duplicate items being removed when selling one copy.
+
 # 1.0.4 ~ 20.2.2022
 
 ### Patch - The Summoning of the Codex

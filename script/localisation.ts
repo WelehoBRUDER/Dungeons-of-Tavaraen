@@ -232,6 +232,8 @@ const finnish = {
   huntingBow_name: "Metsästys Jousi",
   hiisiBow_name: "Hiiden Jousi",
   apprenticeWand_name: "Oppilaan Sauva",
+  crimsonStaff_name: "Tulinen Sauva",
+  crystalWand_name: "Kristalli Sauva",
   galadorSpear_name: "Galadorin Keihäs",
   pikeMore_name: "Murhahauki",
   trollClub_name: "Peikon Puumaila",
@@ -251,6 +253,11 @@ const finnish = {
   ironLegplates_name: "Rautajalkasuojat",
   ironGauntlets_name: "Rautakäsineet",
   ironHelmet_name: "Rautakypärä",
+  rangerArmor_name: "Metsästäjän Haarniska",
+  rangerBoots_name: "Metsästäjän Kengät",
+  rangerPants_name: "Metsästäjän Housut",
+  rangerGloves_name: "Metästäjän Hanskat",
+  rangerHood_name: "Metsästäjän Huppu",
   knightArmor_name: "Ritarin Haarniska",
   knightSabatons_name: "Ritarin Jalkimet",
   knightGreaves_name: "Ritarin Jalkasuojat",
@@ -273,6 +280,9 @@ const finnish = {
   loneShadesTalisman_name: "Yön Haamun Tähti Talismaani",
   loneShadesEmblem_name: "Yön Haamun Pimeä Tunnus",
   loneShadesRing_name: "Yön Haamun Kolkko Sormus",
+  huntersTalisman_name: "Vanhan Metsästäjän Talismaani",
+  huntersEmblem_name: "Vanhan Metsästäjän Tunnus",
+  huntersRing_name: "Vanhan Metsästäjän Arvostettu Sormus",
 
   // Artifacts
   part_of_set: "Osa",
@@ -285,6 +295,7 @@ const finnish = {
   scholarSet_name: "Tieteilijä",
   warriorSet_name: "Soturi",
   loneShadeSet_name: "Yön Haamu",
+  hunterSet_name: "Metsien Suojelija",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -1243,6 +1254,7 @@ const english = {
   scholarSet_name: "Scholar",
   warriorSet_name: "Warrior",
   loneShadeSet_name: "Lone Shade",
+  hunterSet_name: "Hunter",
 
   // Passive abilities
   resilience_of_the_lone_wanderer_name: "Lone Wanderer's Resilience",

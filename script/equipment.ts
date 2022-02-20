@@ -945,4 +945,17 @@ const artifactSets = {
       dexV: 2
     }
   },
+  hunter: {
+    id: "hunter",
+    twoPieceEffect: {
+      rangedDamageP: 5,
+      sightV: 1
+    },
+    threePieceEffect: {
+      rangedDamageP: 5,
+      hpMaxV: 5,
+      all_summons_damageP: 10,
+      all_summons_regenHpP: 10
+    }
+  }
 } as any;
