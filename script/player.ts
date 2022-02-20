@@ -683,7 +683,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["barbarianClass"]),
+    main: new combatClass(combatClasses["rangerClass"]),
     sub: null
   },
   sprite: ".player",
@@ -708,6 +708,9 @@ var player = new PlayerCharacter({
     new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
     new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
+    new Ability({ ...abilities.summon_skeleton_warrior, equippedSlot: 3 }, dummy),
+    new Ability({ ...abilities.ranger_wolf, equippedSlot: 4 }, dummy),
+    new Ability({ ...abilities.distraction, equippedSlot: 5 }, dummy),
   ],
   statModifiers: [
     { id: "resilience_of_the_lone_wanderer" },
@@ -732,7 +735,7 @@ var player = new PlayerCharacter({
   grave: null,
   flags: {} as any,
   questProgress: [],
-  sex: "female"
+  sex: "male"
 });
 
 let combatSummons: Array<any> = [];

@@ -271,7 +271,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                dmg *= attackTypeDamageModifier;
+                if (attackTypeDamageModifier > 0)
+                    dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
             });
         }
@@ -292,7 +293,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                dmg *= attackTypeDamageModifier;
+                if (attackTypeDamageModifier > 0)
+                    dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
             });
         }
@@ -662,7 +664,8 @@ function summonUnit(ability, cords) {
             }
         });
     });
-    let newSummon = new Summon(Object.assign({}, Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
+    let newSummon = new Summon(Object.assign({}, Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
+    newSummon.updateStatModifiers();
     newSummon.restore(true);
     newSummon.statModifiers.push({ id: "buffs_from_player", effects: Object.assign({}, playerBuffs) });
     if (ability.summon_status)

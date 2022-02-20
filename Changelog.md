@@ -1,6 +1,24 @@
+# 1.0.4 ~ 20.2.2022
+
+### Patch - The Summoning of the Codex
+
+## New Additions
+
+- Codex now displays actual information about its contents.
+
+## Fixes & Tweaks
+
+- Codex now displays the index of each entry.
+- The effect "Dazed" no longer stuns.
+- You can now heal even while stunned.
+- Summoned creatures are now shown in a list with their hp bar and name.
+- Fixed some issues with summoned creatures.
+- Fixed perk screen scroll resetting when buying new perk.
+- Enforced stackable items to not have an amount of NaN.
+
 # 1.0.3 - ~ 17.2.2022
 
-### Patch
+### Patch - The Customization
 
 ## New Additions
 
@@ -19,7 +37,7 @@
 
 # 1.0.2 ~ 16.2.2022
 
-### Patch
+### Patch - The Ability Scheme
 
 ## New Additions
 
@@ -37,7 +55,7 @@
 
 # 1.0.1 ~ 15.2.2022
 
-### Patch
+### Patch - The Grip of Death
 
 ## New Additions
 

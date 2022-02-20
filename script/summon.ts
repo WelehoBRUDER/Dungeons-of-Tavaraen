@@ -26,6 +26,7 @@ class Summon extends Character {
   targetInterval?: number; // How often, in turns, the AI should pick a target.
   currentTargetInterval?: number;
   chosenTarget?: characterObject;
+  permanent?: boolean;
   oldCords?: tileObject;
   lastsFor?: number;
   constructor(base: enemy) {
@@ -53,6 +54,7 @@ class Summon extends Character {
     this.targetInterval = 4;
     this.currentTargetInterval = base.currentTargetInterval ?? 0;
     this.chosenTarget = base.chosenTarget ?? null;
+    this.permanent = base.permanent ?? false;
     this.oldCords = base.oldCords ?? this.cords;
     this.lastsFor = base.lastsFor ?? 0;
 
@@ -65,6 +67,7 @@ class Summon extends Character {
       Object.entries(this.damages).forEach((dmg: any) => {
         this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 17)) + 1;
       });
+      this.updateStatModifiers();
       this["stats"]["hp"] = this.getHpMax();
       this["stats"]["mp"] = this.getMpMax();
       this.hasBeenLeveled = true;
@@ -95,7 +98,7 @@ class Summon extends Character {
       //   if(this.retreatIndex + 1 == this.retreatPath.length) this.hasRetreated = true;
       //   updateEnemiesTurn();
       // }
-      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || !this.chosenTarget.alive) {
+      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget.stats.hp <= 0) {
         let targets = maps[currentMap].enemies;
         this.chosenTarget = threatDistance(targets, this);
         this.currentTargetInterval = this.targetInterval;
@@ -132,18 +135,18 @@ class Summon extends Character {
           regularAttack(this, this.chosenTarget, this.abilities[0]);
         }
         // If there's no offensive action to be taken, just move towards the this.chosenTarget.
-        else if(!this.isRooted()) {
+        else if (!this.isRooted()) {
           var path: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
           try {
             let willStack = false;
-            if(path.length > 0) {
+            if (path.length > 0) {
               combatSummons.forEach(summon => {
                 if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
                   willStack = true;
                 }
               });
             }
-            if(!willStack) {
+            if (!willStack) {
               this.cords.x = path[0].x;
               this.cords.y = path[0].y;
               if (settings.log_enemy_movement) displayText(`<c>lime<c>[ALLY] <c>yellow<c>${lang[this.id + "_name"] ?? this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
@@ -152,11 +155,11 @@ class Summon extends Character {
           catch { }
         }
       }
-      else if(!this.isRooted()) {
+      else if (!this.isRooted()) {
         var path: any = generatePath(this.cords, player.cords, this.canFly);
         try {
           let willStack = false;
-          if(path.length > 0) {
+          if (path.length > 0) {
             combatSummons.forEach(summon => {
               if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
                 willStack = true;
@@ -228,7 +231,7 @@ class Summon extends Character {
     this.restore = (keepEffects: boolean = false) => {
       this.stats.hp = this.getHpMax();
       this.stats.mp = this.getMpMax();
-      if(!keepEffects) this.statusEffects = [];
+      if (!keepEffects) this.statusEffects = [];
       this.abilities.forEach(abi => {
         abi.onCooldown = 0;
       });

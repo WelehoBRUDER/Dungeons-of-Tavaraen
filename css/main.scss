@@ -313,6 +313,57 @@ body {
         text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
       }
     }
+
+    .summonList {
+      position: absolute;
+      left: calc(5px * var(--ui-scale));
+      top: calc(260px * var(--ui-scale));
+
+      .summonContainer {
+        position: relative;
+        height: calc(80px * var(--ui-scale));
+        width: calc(300px * var(--ui-scale));
+        overflow: hidden;
+        pointer-events: none;
+
+        .summonImage {
+          width: calc(72px * var(--ui-scale));
+          height: calc(72px * var(--ui-scale));
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
+        .summonName {
+          position: absolute;
+          font-size: calc(13px * var(--ui-scale));
+          color: white;
+          left: calc(72px * var(--ui-scale));
+          top: 0;
+          white-space: nowrap;
+        }
+
+        .summonHpBarBg,
+        .summonHpBarFill {
+          position: absolute;
+          height: calc(150px * var(--ui-scale));
+          width: calc(128px * var(--ui-scale));
+          left: calc(72px * var(--ui-scale));
+          top: calc(40px * var(--ui-scale));
+        }
+
+        .summonLastTurns {
+          border-radius: 50%;
+          background: rgba(16, 10, 75, 0.55);
+          padding: calc(3px * var(--ui-scale));
+          font-size: calc(14px * var(--ui-scale));
+          color: white;
+          position: absolute;
+          left: calc(45px * var(--ui-scale));
+          top: calc(-15px * var(--ui-scale));
+        }
+      }
+    }
   }
 
   .defaultItemsArray {
@@ -612,12 +663,12 @@ body {
     .passiveAbilities {
       position: absolute;
       height: auto;
-      max-height: calc(370px * var(--ui-scale));
-      width: calc(300px * var(--ui-scale));
+      max-height: calc(420px * var(--ui-scale));
+      width: calc(320px * var(--ui-scale));
       left: calc(25px * var(--ui-scale));
       top: calc(315px * var(--ui-scale));
-      padding: calc(10px * var(--ui-scale));
       border: calc(4px * var(--ui-scale)) solid gold;
+      box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
       overflow: hidden;
       overflow-y: auto;
 
@@ -630,6 +681,8 @@ body {
         margin: 0;
         font-size: calc(24px * var(--ui-scale));
         white-space: nowrap;
+        box-sizing: border-box;
+        border: calc(2px * var(--ui-scale)) solid rgba(200, 200, 200, 0);
 
         img {
           width: calc(42px * var(--ui-scale));
@@ -649,6 +702,15 @@ body {
           margin: 0;
           margin-top: calc(6px * var(--ui-scale));
         }
+      }
+
+      div:nth-child(odd) {
+        background: rgba(160, 160, 160, 0.05);
+      }
+
+      div:hover {
+        filter: brightness(1.1);
+        border: calc(2px * var(--ui-scale)) solid rgba(200, 200, 200, 0.75);
       }
     }
 

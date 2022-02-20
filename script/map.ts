@@ -259,6 +259,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     // @ts-ignore
     canvas.classList = `summon${index} layer`;
     const ctx = canvas.getContext("2d");
+    summonLayers.append(canvas);
     const enemyImg = <HTMLImageElement>document.querySelector(`.${enemy.sprite}`);
     canvas.width = innerWidth;
     canvas.height = innerHeight;
@@ -284,7 +285,6 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
         });
       });
     }
-    summonLayers.append(canvas);
   });
 
   /* Render Items */
@@ -388,6 +388,13 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
           }
         }
       }
+    }
+    if (state.isSelected && state.abiSelected.summon_unit) {
+      var _tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var _tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      if (generatePath(player.cords, tile, player.canFly, true) <= state.abiSelected.use_range) {
+        playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+      } else playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
     }
     if (event.buttons == 1 && !state.isSelected) {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
@@ -1172,11 +1179,14 @@ async function advanceTurn() {
     const sRegen = summon.getRegen();
     if (summon.stats.hp < summon.getHpMax()) summon.stats.hp += sRegen["hp"];
     if (summon.stats.mp < summon.getMpMax()) summon.stats.mp += sRegen["mp"];
-    summon.lastsFor--;
-    if (summon.lastsFor <= 0) {
-      summon.kill();
-      return;
+    if (!summon.permanent) {
+      summon.lastsFor--;
+      if (summon.lastsFor <= 0) {
+        summon.kill();
+        return;
+      }
     }
+    summon.updateStatModifiers();
     summon.updateAbilities();
     summon.decideAction();
     summon.effects();

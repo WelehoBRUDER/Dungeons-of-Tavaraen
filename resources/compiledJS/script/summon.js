@@ -1,7 +1,7 @@
 "use strict";
 class Summon extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         super(base);
         this.sprite = base.sprite;
         this.aggroRange = (_a = base.aggroRange) !== null && _a !== void 0 ? _a : 5;
@@ -26,8 +26,9 @@ class Summon extends Character {
         this.targetInterval = 4;
         this.currentTargetInterval = (_j = base.currentTargetInterval) !== null && _j !== void 0 ? _j : 0;
         this.chosenTarget = (_k = base.chosenTarget) !== null && _k !== void 0 ? _k : null;
-        this.oldCords = (_l = base.oldCords) !== null && _l !== void 0 ? _l : this.cords;
-        this.lastsFor = (_m = base.lastsFor) !== null && _m !== void 0 ? _m : 0;
+        this.permanent = (_l = base.permanent) !== null && _l !== void 0 ? _l : false;
+        this.oldCords = (_m = base.oldCords) !== null && _m !== void 0 ? _m : this.cords;
+        this.lastsFor = (_o = base.lastsFor) !== null && _o !== void 0 ? _o : 0;
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -37,6 +38,7 @@ class Summon extends Character {
             Object.entries(this.damages).forEach((dmg) => {
                 this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 17)) + 1;
             });
+            this.updateStatModifiers();
             this["stats"]["hp"] = this.getHpMax();
             this["stats"]["mp"] = this.getMpMax();
             this.hasBeenLeveled = true;
@@ -66,7 +68,7 @@ class Summon extends Character {
             //   if(this.retreatIndex + 1 == this.retreatPath.length) this.hasRetreated = true;
             //   updateEnemiesTurn();
             // }
-            if (this.currentTargetInterval <= 0 || this.chosenTarget == null || !this.chosenTarget.alive) {
+            if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget.stats.hp <= 0) {
                 let targets = maps[currentMap].enemies;
                 this.chosenTarget = threatDistance(targets, this);
                 this.currentTargetInterval = this.targetInterval;

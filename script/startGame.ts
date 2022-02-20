@@ -380,3 +380,25 @@ function classTT(data: any) {
 for (let i = 0; i < 20; i++) {
   player.addItem({ ...randomProperty(items) });
 }
+
+function initGame() {
+  let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
+  if (options) {
+    settings = new gameSettings(options);
+    lang = eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
+  }
+  state.menuOpen = true;
+  state.titleScreen = true;
+  gotoMainMenu(true);
+  if (DEVMODE) {
+    renderMinimap(maps[currentMap]);
+    createStaticMap();
+    modifyCanvas(true);
+  }
+  tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+  tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+  tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+  tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+}
+
+initGame();

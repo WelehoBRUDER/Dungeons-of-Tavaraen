@@ -66,12 +66,12 @@ function openIngameCodex() {
     const title = document.createElement("ul");
     title.textContent = codexEntry.title;
     title.classList.add("title");
-    title.addEventListener("click", e => animateTitle(e, title));
+    title.addEventListener("mouseup", e => animateTitle(e, title));
     let needsEncounter = codexEntry.needs_encounter ?? true;
     if (codexEntry.import_from_array) {
       Object.values({ ...eval(codexEntry.import_from_array) }).forEach((entry: any, index: number) => {
         if (entry.id.includes("error")) return;
-        createCodexEntry(codexEntry, entry, needsEncounter, title);
+        createCodexEntry(codexEntry, entry, needsEncounter, title, index);
       });
     }
     else if (codexEntry.sub_categories) {
@@ -108,7 +108,7 @@ function openIngameCodex() {
   });
 }
 
-function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, title: HTMLElement) {
+function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, title: HTMLElement, index: number) {
   const entryElement = document.createElement("li");
   const entryText = document.createElement("p");
   let playerHasEntry = false;
@@ -117,7 +117,8 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   let displayName = lang[entry.id + "_name"];
   if (!displayName) displayName = lang[entry.id];
   if (!displayName) displayName = entry.name ?? entry.title;
-  entryText.textContent = playerHasEntry ? displayName : "???";
+  if (DEVMODE) playerHasEntry = true;
+  entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
   entryElement.classList.add(entry.id);
   entryElement.classList.add(codexEntry.import_from_array);
   if (!playerHasEntry) {
@@ -152,13 +153,13 @@ function createSubCategoryEntry(codexEntry: any, subCategory: any, needsEncounte
   const subList = document.createElement("ul");
   subList.classList.add("subList");
   if (subCategory.content) {
-    subCategory.content.forEach((item: any) => {
-      createCodexEntry(subCategory, item, needsEncounter, subList);
+    subCategory.content.forEach((item: any, index: number) => {
+      createCodexEntry(subCategory, item, needsEncounter, subList, index);
     });
   }
   if (subCategory.import_from_array) {
-    Object.values({ ...eval(subCategory.import_from_array) }).forEach((entry: any) => {
-      createCodexEntry(subCategory, entry, needsEncounter, subList);
+    Object.values({ ...eval(subCategory.import_from_array) }).forEach((entry: any, index: number) => {
+      createCodexEntry(subCategory, entry, needsEncounter, subList, index);
     });
   }
   entryElement.append(subList);
@@ -236,6 +237,7 @@ async function animateTitle(e: MouseEvent, title: HTMLUListElement) {
         if (subItem.getBoundingClientRect().height < 1) test2 += defaultHeight;
         else test2 += subItem.getBoundingClientRect().height;
       });
+      // @ts-ignore
       title.childNodes[1].style.height = `${test2}px`;
       title.style.height = `${test2 + defaultHeight}px`;
       parent.style.height = `${test + test2 + defaultHeight}px`;
@@ -259,9 +261,85 @@ function clickListEntry(entry: HTMLLIElement) {
   const category = entry.classList[1];
   contentContainer.innerHTML = "";
   let object: any = { ...eval(category)[id] };
-  let text = `<f>30px<f><c>silver<c>${object.name}`;
-  text += `\n<i>${object.img ?? object.icon}<i>`;
-  contentContainer.append(textSyntax(text));
+  if (category === "enemies") {
+    createEnemyInfo(object);
+  }
+  // let text = `<f>30px<f><c>silver<c>${object.name}`;
+  // text += `\n<i>${object.img ?? object.icon}<i>`;
+  //contentContainer.append(textSyntax(text));
+}
+
+function createEnemyInfo(enemy: Enemy) {
+  enemy = new Enemy(enemy);
+  enemy.updateStatModifiers();
+  let totalDmg = 0;
+  Object.values(enemy.damages).forEach((dmg: any) => totalDmg += dmg);
+  const enemyStats = enemy.getStats();
+  const hitChances = enemy.getHitchance();
+  const enemyCoreStats = { ...enemyStats, ...hitChances };
+  const enemyResists = enemy.getResists();
+  const enemyStatusResists = enemy.getStatusResists();
+  const imageContainer = document.createElement("div");
+  const enemyImage = document.createElement("img");
+  const enemyName = document.createElement("p");
+  const enemyHealth = document.createElement("div");
+  const enemyMana = document.createElement("div");
+  const enemyDamage = document.createElement("div");
+  const enemyType = document.createElement("div");
+  const enemyRace = document.createElement("div");
+  const enemyCoreStatsContainer = document.createElement("div");
+  const enemyResistsContainer = document.createElement("div");
+  const enemyStatusResistsContainer = document.createElement("div");
+  const enemyPassiveAbilitiesContainer = document.createElement("div");
+  const enemySkillsContainer = document.createElement("div");
+  imageContainer.classList.add("entryImage");
+  enemyName.classList.add("entryTitle");
+  enemyHealth.classList.add("entryHealth");
+  enemyMana.classList.add("entryMana");
+  enemyDamage.classList.add("entryDamage");
+  enemyType.classList.add("entryType");
+  enemyRace.classList.add("entryRace");
+  enemyCoreStatsContainer.classList.add("coreStats");
+  enemyResistsContainer.classList.add("coreResists");
+  enemyStatusResistsContainer.classList.add("statResists");
+  enemyPassiveAbilitiesContainer.classList.add("passives");
+  enemySkillsContainer.classList.add("skills");
+  enemyImage.src = enemy.img;
+  enemyName.textContent = lang[enemy.id + "_name"];
+  enemyHealth.append(textSyntax(`<i>${icons.health}<i>${enemy.getHpMax()}`));
+  enemyMana.append(textSyntax(`<i>${icons.mana}<i>${enemy.getMpMax()}`));
+  enemyDamage.append(textSyntax(`<i>${icons.damage}<i>${totalDmg}`));
+  enemyType.append(textSyntax(`${lang["type"]}:<i>${icons[enemy.type + "_type_icon"]}<i>${lang["singular_type_" + enemy.type]}`));
+  enemyRace.append(textSyntax(`${lang["choose_race"]}:<i>${icons[enemy.race + "_race_icon"]}<i>${lang["singular_race_" + enemy.race]}`));
+  Object.entries(enemyCoreStats).map((stat: any) => {
+    enemyCoreStatsContainer.append(createStatDisplay(stat));
+  });
+  Object.entries(enemyResists).map((stat: any) => {
+    enemyResistsContainer.append(createArmorOrResistanceDisplay(stat, false));
+  });
+  Object.entries(enemyStatusResists).map((stat: any) => {
+    enemyStatusResistsContainer.append(createStatusResistanceDisplay(stat));
+  });
+  enemy.statModifiers.map((mod: PermanentStatModifier) => {
+    enemyPassiveAbilitiesContainer.append(createStatModifierDisplay(mod));
+  });
+  enemy.abilities.map((abi: Ability) => {
+    if (abi.id != "attack") {
+      const bg = document.createElement("img");
+      const frame = document.createElement("div");
+      frame.classList.add("hotbarFrame");
+      bg.src = "resources/ui/hotbar_bg.png";
+      frame.append(bg);
+      const abiImg = document.createElement("img");
+      abiImg.src = abi.icon ?? icons.damage;
+      tooltip(abiImg, abiTT(abi));
+      frame.append(abiImg);
+      enemySkillsContainer.append(frame);
+    }
+  });
+  imageContainer.append(enemyImage);
+  contentContainer.append(imageContainer, enemyName, enemyHealth, enemyMana, enemyDamage, enemyType, enemyRace, enemyCoreStatsContainer, enemyResistsContainer, enemyStatusResistsContainer, enemyPassiveAbilitiesContainer, enemySkillsContainer);
+
 }
 
 function closeCodex() {

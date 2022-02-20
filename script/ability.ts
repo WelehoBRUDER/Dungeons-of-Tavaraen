@@ -35,6 +35,7 @@ interface ability {
   summon_last?: number;
   summon_status?: string;
   total_summon_limit?: number;
+  permanent?: boolean;
   instant_aoe?: boolean;
   aoe_size?: number;
   aoe_effect?: string;
@@ -155,6 +156,7 @@ class Ability {
   summon_last?: number;
   summon_status?: string;
   total_summon_limit?: number;
+  permanent?: boolean;
   instant_aoe?: boolean;
   aoe_size?: number;
   aoe_effect?: string;
@@ -218,6 +220,7 @@ class Ability {
     this.action_desc_pl = baseAbility.action_desc_pl;
     this.ai_chance = baseAbility.ai_chance;
     this.remove_status = baseAbility.remove_status;
+    this.permanent = baseAbility.permanent ?? false;
 
     if (this.cooldown < 0) this.cooldown = 0;
 

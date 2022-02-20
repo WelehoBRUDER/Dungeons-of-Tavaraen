@@ -105,14 +105,19 @@ function changePerkTree(newTree: string) {
   formPerks(null, true);
 }
 
+const perkScroll = {
+  x: 0,
+  y: 0
+};
+
 function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   perks = [];
   const bg = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
   const staticBg = document.querySelector<HTMLDivElement>(".playerLeveling .perksStatic");
   const perkTreesContainer = document.querySelector<HTMLDivElement>(".playerLeveling .perkTreesContainer");
   const perkArea = bg.querySelector<HTMLDivElement>(".container");
-  const leftScroll = perkArea.scrollLeft;
-  const topScroll = perkArea.scrollTop;
+  // const leftScroll = perkArea.scrollLeft;
+  // const topScroll = perkArea.scrollTop;
   perkArea.innerHTML = "";
   Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
     perks.push(new perk(_perk[1]));
@@ -131,8 +136,8 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   perkTreesContainer.textContent = "";
   Object.entries(combatClasses).forEach((combatClassObject: any) => {
     const combatClass = combatClassObject[1];
-    if (player.classes.main?.id && player.classes.sub?.id) {
-      if (combatClass.id != player.classes.main.id && combatClass.id != player.classes.sub.id) return;
+    if ((player.classes.main?.id && player.classes.sub?.id) || player.level.level < 10) {
+      if (combatClass.id != player.classes.main.id && combatClass.id != player.classes?.sub?.id) return;
     }
     const classButtonContainer = document.createElement("div");
     const combatClassName = document.createElement("p");
@@ -217,11 +222,11 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
       });
     }
   });
-  if (!scrollDefault) perkArea.scrollTo(leftScroll, topScroll);
-  else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
   perkArea.style.transform = `scale(${currentZoomBG})`;
   svg.setAttribute('width', "4000");
   svg.setAttribute('height', "4000");
+  if (!scrollDefault) background.scrollTo(perkScroll.x, perkScroll.y);
+  else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
   /* Making a proper zoom has defeated me, it will simply not center on mouse, ever. */
 }
 
@@ -370,6 +375,8 @@ function action2(e: MouseEvent) {
     let offsetX = e.x - mouseX;
     let offsetY = e.y - mouseY;
     background.scrollTo(bgPosX - offsetX, bgPosY - offsetY);
+    perkScroll.x = bgPosX - offsetX;
+    perkScroll.y = bgPosY - offsetY;
   }
 }
 

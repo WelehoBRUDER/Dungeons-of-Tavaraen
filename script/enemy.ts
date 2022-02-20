@@ -158,7 +158,7 @@ class Enemy extends Character {
       // }
       if (this.stats.hp > this.getHpMax()) this.stats.hp = this.getHpMax();
       if (this.stats.mp > this.getMpMax()) this.stats.mp = this.getMpMax();
-      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || !this.chosenTarget.alive) {
+      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget.stats.hp <= 0) {
         // @ts-ignore
         let targets = combatSummons.concat([player]);
         this.chosenTarget = threatDistance(targets, this);

@@ -193,6 +193,32 @@ function generateHotbar() {
         });
     }
 }
+function generateSummonList() {
+    const summonList = document.querySelector(".playerUI .summonList");
+    summonList.innerHTML = "";
+    combatSummons.forEach((summon) => {
+        const container = document.createElement("div");
+        const img = document.createElement("img");
+        const name = document.createElement("p");
+        const hpBarBg = document.createElement("img");
+        const hpBarFill = document.createElement("img");
+        const lastTurns = document.createElement("p");
+        container.classList.add("summonContainer");
+        img.classList.add("summonImage");
+        name.classList.add("summonName");
+        hpBarBg.classList.add("summonHpBarBg");
+        hpBarFill.classList.add("summonHpBarFill");
+        lastTurns.classList.add("summonLastTurns");
+        img.src = summon.img;
+        name.textContent = lang[summon.id + "_name"];
+        hpBarBg.src = "resources/tiles/enemies/healthBorder.png";
+        hpBarFill.src = "resources/tiles/enemies/healthBar.png";
+        hpBarFill.style.clipPath = `inset(0 ${100 - summon.hpRemain()}% 0 0)`;
+        lastTurns.textContent = summon.permanent ? "" : summon.lastsFor;
+        container.append(img, name, hpBarBg, hpBarFill, lastTurns);
+        summonList.append(container);
+    });
+}
 function useConsumable(itm) {
     if (itm.healValue) {
         player.stats.hp += itm.healValue;
@@ -383,8 +409,8 @@ function abiTT(abi) {
         txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
     if (abi.summon_level)
         txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-    if (abi.summon_last)
-        txt += `<f>20px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+    if (abi.summon_last || abi.permanent)
+        txt += `<f>20px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
     if (abi.total_summon_limit)
         txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
@@ -473,8 +499,8 @@ function embedAbiTT(abi) {
         txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${(_g = lang[abi.summon_unit + "_name"]) !== null && _g !== void 0 ? _g : abi.summon_unit}<c>white<c>\n`;
     if (abi.summon_level)
         txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-    if (abi.summon_last)
-        txt += `<f>15px<f>${lang["summon_last"]}: ${abi.summon_last - 1} ${lang["turns"]}\n`;
+    if (abi.summon_last || abi.permanent)
+        txt += `<f>15px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
     if (abi.total_summon_limit)
         txt += `<f>15px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
@@ -526,7 +552,7 @@ function keyIncludesAbility(key) {
 }
 // Syntax for effects
 function effectSyntax(effect, embed = false, effectId = "") {
-    var _a, _b, _c;
+    var _a, _b, _c, _e, _f, _g, _h;
     let text = "";
     const rawKey = effect[0];
     var value = effect[1];
@@ -579,15 +605,15 @@ function effectSyntax(effect, embed = false, effectId = "") {
         let _value = 0;
         if (player.statusEffects.find((eff) => eff.id == effectId))
             _value = value;
-        frontImg = abilities[id].icon;
+        frontImg = (_b = (_a = abilities[id]) === null || _a === void 0 ? void 0 : _a.icon) !== null && _b !== void 0 ? _b : icons.damage;
         if (value < 0)
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
         else
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
         try {
-            var _abi = new Ability((_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find((__abi) => __abi.id == id), player);
+            var _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
         }
-        catch (_e) { }
+        catch (_j) { }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);
         let status = new statEffect(statusEffects[statusId], _abi.statusModifiers);
@@ -598,12 +624,12 @@ function effectSyntax(effect, embed = false, effectId = "") {
             tailEnd = lang[_d] + " status";
         if (tailEnd.includes("undefined"))
             tailEnd = _d + " status";
-        lastBit = `[${((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_b = status === null || status === void 0 ? void 0 : status[_d]) === null || _b === void 0 ? void 0 : _b["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${(((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_c = status === null || status === void 0 ? void 0 : status[_d]) === null || _c === void 0 ? void 0 : _c["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
+        lastBit = `[${((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_e = status === null || status === void 0 ? void 0 : status[_d]) === null || _e === void 0 ? void 0 : _e["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0}${_d.endsWith("P") ? "%" : ""}-->${(((status === null || status === void 0 ? void 0 : status.effects[_d]) - _value || ((_f = status === null || status === void 0 ? void 0 : status[_d]) === null || _f === void 0 ? void 0 : _f["total"]) - _value || (status === null || status === void 0 ? void 0 : status[_d]) - _value) || 0) + value}${_d.endsWith("P") ? "%" : ""}]`;
     }
     else if (keyIncludesAbility(key)) {
         key_ = keyIncludesAbility(key);
         let id = key.replace("_" + key_, "");
-        frontImg = abilities[id].icon;
+        frontImg = (_h = (_g = abilities[id]) === null || _g === void 0 ? void 0 : _g.icon) !== null && _h !== void 0 ? _h : icons.damage;
         key = id + "_name";
         flipColor = less_is_better[key_];
         if (key !== "attack_name") {
@@ -679,6 +705,7 @@ function updateUI() {
     ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();
     generateHotbar();
     generateEffects();
+    generateSummonList();
     xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 const worldTextHistoryArray = [];
@@ -788,6 +815,74 @@ function hideHover() {
     tooltipBox.textContent = "";
     tooltipBox.style.display = "none";
 }
+function createStatDisplay(stat) {
+    var _a;
+    const key = stat[0] == "chance" ? "hitChance" : stat[0];
+    const val = stat[1];
+    const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+    statImage.src = icons[key];
+    statText.textContent = lang[key];
+    statValue.textContent = key.includes("crit") ? val + "%" : val;
+    tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+    statContainer.append(statImage, statText, statValue);
+    return statContainer;
+}
+function createArmorOrResistanceDisplay(stat, armor) {
+    var _a;
+    const key = stat[0];
+    const val = stat[1];
+    const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+    statImage.src = icons[key + (armor ? "_armor" : "")];
+    statText.textContent = lang[key];
+    statValue.textContent = val + (armor ? "" : "%");
+    tooltip(statContainer, (_a = lang[armor ? key + "_tt" : "resistances_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+    if (val > 0)
+        statValue.classList.add("positive");
+    else if (val < 0)
+        statValue.classList.add("negative");
+    statContainer.append(statImage, statText, statValue);
+    return statContainer;
+}
+function createStatusResistanceDisplay(stat) {
+    var _a;
+    const key = stat[0];
+    const val = stat[1];
+    const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
+    statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
+    statText.textContent = lang[key + "_status"];
+    statValue.textContent = val + "%";
+    if (val > 0)
+        statValue.classList.add("positive");
+    else if (val < 0)
+        statValue.classList.add("negative");
+    statContainer.append(statImage, statText, statValue);
+    return statContainer;
+}
+function createStatModifierDisplay(mod) {
+    var _a;
+    const statContainer = document.createElement("div");
+    const statImage = document.createElement("img");
+    const statText = document.createElement("p");
+    statImage.src = (_a = mod.icon) !== null && _a !== void 0 ? _a : icons["damage"];
+    statText.textContent = lang[mod.id + "_name"];
+    if (mod.conditions) {
+        let active = statConditions(mod.conditions, player);
+        if (active)
+            statText.classList.add("positive");
+        else
+            statText.classList.add("inactive");
+    }
+    statContainer.append(statImage, statText);
+    tooltip(statContainer, statModifTT(mod));
+    return statContainer;
+}
+function createBaseElementsForStatDisplay() {
+    const sc = document.createElement("div");
+    const si = document.createElement("img");
+    const st = document.createElement("p");
+    const sv = document.createElement("span");
+    return { statContainer: sc, statImage: si, statText: st, statValue: sv };
+}
 function renderCharacter() {
     state.charOpen = true;
     hideHover();
@@ -846,92 +941,19 @@ function renderCharacter() {
     statusResistances.classList.add("statusResistances");
     passiveAbilities.classList.add("passiveAbilities");
     Object.entries(playerCoreStats).forEach((stat) => {
-        var _a;
-        const key = stat[0] == "chance" ? "hitChance" : stat[0];
-        const val = stat[1];
-        const statContainer = document.createElement("div");
-        const statImage = document.createElement("img");
-        const statText = document.createElement("p");
-        const statValue = document.createElement("span");
-        statImage.src = icons[key];
-        statText.textContent = lang[key];
-        statValue.textContent = key.includes("crit") ? val + "%" : val;
-        tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
-        statContainer.append(statImage, statText, statValue);
-        coreStats.append(statContainer);
+        coreStats.append(createStatDisplay(stat));
     });
     Object.entries(playerArmor).forEach((stat) => {
-        var _a;
-        const key = stat[0] == "chance" ? "hitChance" : stat[0];
-        const val = stat[1];
-        const statContainer = document.createElement("div");
-        const statImage = document.createElement("img");
-        const statText = document.createElement("p");
-        const statValue = document.createElement("span");
-        statImage.src = icons[key + "_armor"];
-        statText.textContent = lang[key];
-        statValue.textContent = val;
-        if (val > 0)
-            statValue.classList.add("positive");
-        else if (val < 0)
-            statValue.classList.add("negative");
-        tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
-        statContainer.append(statImage, statText, statValue);
-        coreResistances.append(statContainer);
+        coreResistances.append(createArmorOrResistanceDisplay(stat, true));
     });
     Object.entries(playerResists).forEach((stat) => {
-        const key = stat[0] == "chance" ? "hitChance" : stat[0];
-        const val = stat[1];
-        const statContainer = document.createElement("div");
-        const statImage = document.createElement("img");
-        const statText = document.createElement("p");
-        const statValue = document.createElement("span");
-        statImage.src = icons[key];
-        statText.textContent = lang[key];
-        statValue.textContent = val + "%";
-        if (val > 0)
-            statValue.classList.add("positive");
-        else if (val < 0)
-            statValue.classList.add("negative");
-        tooltip(statContainer, lang["resistances_tt"]);
-        statContainer.append(statImage, statText, statValue);
-        coreResistances.append(statContainer);
+        coreResistances.append(createArmorOrResistanceDisplay(stat, false));
     });
     Object.entries(playerStatusResists).forEach((stat) => {
-        var _a;
-        const key = stat[0] == "chance" ? "hitChance" : stat[0];
-        const val = stat[1];
-        const statContainer = document.createElement("div");
-        const statImage = document.createElement("img");
-        const statText = document.createElement("p");
-        const statValue = document.createElement("span");
-        statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
-        statText.textContent = lang[key + "_status"];
-        statValue.textContent = val + "%";
-        if (val > 0)
-            statValue.classList.add("positive");
-        else if (val < 0)
-            statValue.classList.add("negative");
-        statContainer.append(statImage, statText, statValue);
-        statusResistances.append(statContainer);
+        statusResistances.append(createStatusResistanceDisplay(stat));
     });
     player.statModifiers.forEach((mod) => {
-        var _a;
-        const statContainer = document.createElement("div");
-        const statImage = document.createElement("img");
-        const statText = document.createElement("p");
-        statImage.src = (_a = mod.icon) !== null && _a !== void 0 ? _a : icons["damage"];
-        statText.textContent = lang[mod.id + "_name"];
-        if (mod.conditions) {
-            let active = statConditions(mod.conditions, player);
-            if (active)
-                statText.classList.add("positive");
-            else
-                statText.classList.add("inactive");
-        }
-        statContainer.append(statImage, statText);
-        tooltip(statContainer, statModifTT(mod));
-        passiveAbilities.append(statContainer);
+        passiveAbilities.append(createStatModifierDisplay(mod));
     });
     var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
     Object.entries(player.getResists()).forEach(resistance => {

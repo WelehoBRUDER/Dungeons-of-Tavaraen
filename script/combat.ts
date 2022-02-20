@@ -152,15 +152,15 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
     if (ability.health_cost_percentage) attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
   }
-  if(attacker.id == "player") {
-    if(parseInt(player.weapon?.range) > 2) {
-      if(player.allModifiers?.rangedDamageP) attackTypeDamageModifier += player.allModifiers?.rangedDamageP;
+  if (attacker.id == "player") {
+    if (parseInt(player.weapon?.range) > 2) {
+      if (player.allModifiers?.rangedDamageP) attackTypeDamageModifier += player.allModifiers?.rangedDamageP;
     }
-    else if(ability.mana_cost > 0) {
-      if(player.allModifiers?.spellDamageP) attackTypeDamageModifier += player.allModifiers?.spellDamageP;
+    else if (ability.mana_cost > 0) {
+      if (player.allModifiers?.spellDamageP) attackTypeDamageModifier += player.allModifiers?.spellDamageP;
     }
     else {
-      if(player.allModifiers?.meleeDamageP) attackTypeDamageModifier += player.allModifiers?.meleeDamageP;
+      if (player.allModifiers?.meleeDamageP) attackTypeDamageModifier += player.allModifiers?.meleeDamageP;
     }
   }
 
@@ -232,7 +232,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
         let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        dmg *= attackTypeDamageModifier;
+        if (attackTypeDamageModifier > 0) dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
       });
     } else {
@@ -252,7 +252,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
         let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        dmg *= attackTypeDamageModifier;
+        if (attackTypeDamageModifier > 0) dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
       });
     }
@@ -592,7 +592,8 @@ function summonUnit(ability: ability, cords: tileObject) {
       }
     });
   });
-  let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, lastsFor: ability.summon_last, cords: { ...cords } } });
+  let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
+  newSummon.updateStatModifiers();
   newSummon.restore(true);
   newSummon.statModifiers.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
   if (ability.summon_status) newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
