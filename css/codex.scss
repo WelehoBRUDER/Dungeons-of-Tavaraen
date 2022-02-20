@@ -111,7 +111,9 @@
 
     .entryHealth,
     .entryMana,
-    .entryDamage {
+    .entryDamage,
+    .entryType,
+    .entryRace {
       position: absolute;
       display: flex;
       left: calc(10px * var(--ui-scale));
@@ -146,6 +148,20 @@
 
     .entryDamage {
       top: calc(170px * var(--ui-scale));
+    }
+
+    .entryType,
+    .entryRace {
+      left: calc(730px * var(--ui-scale));
+      top: calc(200px * var(--ui-scale));
+
+      span {
+        font-size: calc(25px * var(--ui-scale));
+      }
+    }
+
+    .entryRace {
+      top: calc(250px * var(--ui-scale));
     }
 
     .coreResists {
@@ -185,6 +201,10 @@
           width: 100%;
           height: 100%;
         }
+      }
+
+      .hotbarFrame:hover {
+        border: calc(4px * var(--ui-scale)) solid rgb(153, 151, 151);
       }
     }
 

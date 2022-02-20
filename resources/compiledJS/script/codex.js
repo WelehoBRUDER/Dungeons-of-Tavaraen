@@ -68,7 +68,7 @@ function openIngameCodex() {
         const title = document.createElement("ul");
         title.textContent = codexEntry.title;
         title.classList.add("title");
-        title.addEventListener("click", e => animateTitle(e, title));
+        title.addEventListener("mouseup", e => animateTitle(e, title));
         let needsEncounter = (_a = codexEntry.needs_encounter) !== null && _a !== void 0 ? _a : true;
         if (codexEntry.import_from_array) {
             Object.values(Object.assign({}, eval(codexEntry.import_from_array))).forEach((entry, index) => {
@@ -306,6 +306,8 @@ function createEnemyInfo(enemy) {
     const enemyHealth = document.createElement("div");
     const enemyMana = document.createElement("div");
     const enemyDamage = document.createElement("div");
+    const enemyType = document.createElement("div");
+    const enemyRace = document.createElement("div");
     const enemyCoreStatsContainer = document.createElement("div");
     const enemyResistsContainer = document.createElement("div");
     const enemyStatusResistsContainer = document.createElement("div");
@@ -316,6 +318,8 @@ function createEnemyInfo(enemy) {
     enemyHealth.classList.add("entryHealth");
     enemyMana.classList.add("entryMana");
     enemyDamage.classList.add("entryDamage");
+    enemyType.classList.add("entryType");
+    enemyRace.classList.add("entryRace");
     enemyCoreStatsContainer.classList.add("coreStats");
     enemyResistsContainer.classList.add("coreResists");
     enemyStatusResistsContainer.classList.add("statResists");
@@ -326,6 +330,8 @@ function createEnemyInfo(enemy) {
     enemyHealth.append(textSyntax(`<i>${icons.health}<i>${enemy.getHpMax()}`));
     enemyMana.append(textSyntax(`<i>${icons.mana}<i>${enemy.getMpMax()}`));
     enemyDamage.append(textSyntax(`<i>${icons.damage}<i>${totalDmg}`));
+    enemyType.append(textSyntax(`${lang["type"]}:<i>${icons[enemy.type + "_type_icon"]}<i>${lang["singular_type_" + enemy.type]}`));
+    enemyRace.append(textSyntax(`${lang["choose_race"]}:<i>${icons[enemy.race + "_race_icon"]}<i>${lang["singular_race_" + enemy.race]}`));
     Object.entries(enemyCoreStats).map((stat) => {
         enemyCoreStatsContainer.append(createStatDisplay(stat));
     });
@@ -354,7 +360,7 @@ function createEnemyInfo(enemy) {
         }
     });
     imageContainer.append(enemyImage);
-    contentContainer.append(imageContainer, enemyName, enemyHealth, enemyMana, enemyDamage, enemyCoreStatsContainer, enemyResistsContainer, enemyStatusResistsContainer, enemyPassiveAbilitiesContainer, enemySkillsContainer);
+    contentContainer.append(imageContainer, enemyName, enemyHealth, enemyMana, enemyDamage, enemyType, enemyRace, enemyCoreStatsContainer, enemyResistsContainer, enemyStatusResistsContainer, enemyPassiveAbilitiesContainer, enemySkillsContainer);
 }
 function closeCodex() {
     state.codexOpen = false;

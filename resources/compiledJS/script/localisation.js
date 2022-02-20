@@ -452,9 +452,11 @@ const finnish = {
     plural_type_troll: "Peikkoja",
     singular_type_hiisi: "Hiisi",
     plural_type_hiisi: "Hiisiä",
+    singular_type_wraith: "Haamu",
+    plural_type_wraith: "Haamuja",
     // Enemy races
     against_race_syntax: " vastaan",
-    singular_race_elemenal: "Elementtaali",
+    singular_race_elemental: "Elementtaali",
     plural_race_elemental: "Elementtaaleja",
     singular_race_undead: "Epäkuollut",
     plural_race_undead: "Epäkuolleita",
@@ -462,6 +464,8 @@ const finnish = {
     plural_race_human: "Ihmisiä",
     singular_race_monster: "Hirviö",
     plural_race_monster: "Hirviöitä",
+    singular_race_orc: "Örkki",
+    plural_race_orc: "Örkkejä",
     /* MENU */
     menu_resume: "Takaisin",
     menu_options: "Asetukset",
@@ -1219,9 +1223,11 @@ const english = {
     plural_type_troll: "Trolls",
     singular_type_hiisi: "Hiisi",
     plural_type_hiisi: "Hiisi creatures",
+    singular_type_wraith: "Wraith",
+    plural_type_wraith: "Wraiths",
     // Enemy races
     against_race_syntax: " against ",
-    singular_race_elemenal: "Elemental",
+    singular_race_elemental: "Elemental",
     plural_race_elemental: "Elementals",
     singular_race_undead: "Undead",
     plural_race_undead: "Undead",
@@ -1229,6 +1235,8 @@ const english = {
     plural_race_human: "Humans",
     singular_race_monster: "Monster",
     plural_race_monster: "Monsters",
+    singular_race_orc: "Orc",
+    plural_race_orc: "Orcs",
     /* MENU */
     menu_resume: "Resume",
     menu_options: "Options",

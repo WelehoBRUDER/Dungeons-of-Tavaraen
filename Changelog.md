@@ -1,4 +1,4 @@
-# 1.0.4 ~ 17.2.2022
+# 1.0.4 ~ 20.2.2022
 
 ### Patch - The Summoning of the Codex
 

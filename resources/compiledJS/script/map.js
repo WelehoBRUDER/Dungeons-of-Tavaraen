@@ -246,6 +246,7 @@ function renderMap(map, createNewSightMap = false) {
         // @ts-ignore
         canvas.classList = `summon${index} layer`;
         const ctx = canvas.getContext("2d");
+        summonLayers.append(canvas);
         const enemyImg = document.querySelector(`.${enemy.sprite}`);
         canvas.width = innerWidth;
         canvas.height = innerHeight;
@@ -272,7 +273,6 @@ function renderMap(map, createNewSightMap = false) {
                 });
             });
         }
-        summonLayers.append(canvas);
     });
     /* Render Items */
     mapDataCanvas.width = mapDataCanvas.width;

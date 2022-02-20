@@ -1411,7 +1411,7 @@ const enemies = {
         alive: true,
         xp: 200,
         sprite: "knightSwordShield",
-        type: "human",
+        type: "wraith",
         race: "human",
         img: "resources/tiles/enemies/knight_sword_shield.png",
         aggroRange: 14,
