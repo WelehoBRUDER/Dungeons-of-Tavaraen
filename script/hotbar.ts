@@ -16,6 +16,10 @@ class gameSettings {
   hotkey_move_down: string;
   hotkey_move_left: string;
   hotkey_move_right: string;
+  hotkey_move_right_up: string;
+  hotkey_move_right_down: string;
+  hotkey_move_left_up: string;
+  hotkey_move_left_down: string;
   hotkey_open_world_messages: string;
   hotkey_interact: string;
   hotkey_journal: string;
@@ -32,6 +36,10 @@ class gameSettings {
     this.hotkey_move_down = base.hotkey_move_down || "s";
     this.hotkey_move_left = base.hotkey_move_left || "a";
     this.hotkey_move_right = base.hotkey_move_right || "d";
+    this.hotkey_move_right_up = base.hotkey_move_right_up || "PageUp";
+    this.hotkey_move_right_down = base.hotkey_move_right_down || "PageDown";
+    this.hotkey_move_left_up = base.hotkey_move_left_up || "Home";
+    this.hotkey_move_left_down = base.hotkey_move_left_down || "End";
     this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
     this.hotkey_interact = base.hotkey_interact || " ";
     this.hotkey_journal = base.hotkey_journal || "j";
@@ -51,6 +59,10 @@ let settings = new gameSettings({
   hotkey_move_down: "s",
   hotkey_move_left: "a",
   hotkey_move_right: "d",
+  hotkey_move_right_up: "PageUp",
+  hotkey_move_right_down: "PageDown",
+  hotkey_move_left_up: "Home",
+  hotkey_move_left_down: "End",
   hotkey_interact: " ",
   hotkey_open_world_messages: "Enter",
   hotkey_journal: "j",

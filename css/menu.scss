@@ -48,6 +48,7 @@
   transition: 0.06s;
   width: auto;
   height: auto;
+  max-height: 65%;
   position: absolute;
   top: 20%;
   left: 50%;
@@ -56,11 +57,12 @@
   z-index: 51 !important;
   box-shadow: -4px 4px 12px rgba(20, 20, 20, 0.95);
   border-radius: 4px;
-
   font-size: 22px;
   color: white;
   text-shadow: -2px 2px 4px black;
   user-select: none;
+  overflow: hidden;
+  overflow-y: auto;
 
   .toggle {
     transition: 0.03s;

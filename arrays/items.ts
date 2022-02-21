@@ -1215,7 +1215,7 @@ const items = {
   },
   huntersEmblem: {
     id: "huntersEmblem",
-    name: "Emblem of Old Hunter",
+    name: "Emblem of the Old Hunter",
     stats: {
       vitV: 2,
       hitChanceV: 5

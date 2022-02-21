@@ -116,8 +116,18 @@ function moveMinimap() {
   else {
     minimapContainer.style.display = "block";
   }
-  minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-  minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
+  let scale = 1;
+  let left = 172;
+  let top = 112;
+  if (miniMapExpanded) {
+    left = window.innerWidth / 3;
+    top = window.innerWidth / 4;
+  }
+  else {
+    scale = settings["ui_scale"] / 100;
+  }
+  minimapCanvas.style.left = `${player.cords.x * -8 + left * scale}px`;
+  minimapCanvas.style.top = `${player.cords.y * -8 + top * scale}px`;
 }
 let sightMap: any;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
@@ -641,12 +651,16 @@ function cordsFromDir(cords: tileObject, dir: string) {
   else if (dir == "down") cord.y++;
   else if (dir == "left") cord.x--;
   else if (dir == "right") cord.x++;
+  else if (dir == "rightUp") { cord.y--; cord.x++; }
+  else if (dir == "rightDown") { cord.y++; cord.x++; }
+  else if (dir == "leftUp") { cord.y--; cord.x--; }
+  else if (dir == "leftDown") { cord.y++; cord.x--; }
   return cord;
 }
 document.addEventListener("keyup", (keyPress) => {
   const rooted = player.isRooted();
   if (!turnOver || state.dialogWindow || state.storeOpen) return;
-  let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" } as any;
+  let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right", [settings.hotkey_move_right_up]: "rightUp", [settings.hotkey_move_right_down]: "rightDown", [settings.hotkey_move_left_up]: "leftUp", [settings.hotkey_move_left_down]: "leftDown" } as any;
   let target = maps[currentMap].enemies.find((e: any) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
   if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
     advanceTurn();
@@ -659,12 +673,9 @@ document.addEventListener("keyup", (keyPress) => {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
     return;
   }
-  if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !rooted) { player.cords.y--; }
-  else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !rooted) { player.cords.y++; }
-  else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !rooted) { player.cords.x--; }
-  else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !rooted) { player.cords.x++; }
   if (dirs[keyPress.key]) {
     if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
+      player.cords = cordsFromDir(player.cords, dirs[keyPress.key]);
       moveMinimap();
       // @ts-ignore
       renderMap(maps[currentMap], true);
@@ -785,29 +796,33 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
   updateEnemiesTurn();
 }
 
-
+const checkDirs = {
+  rightUp: { x1: 0, y1: -1, x2: 1, y2: 0 },
+  rightDown: { x1: 1, 1: 0, x2: 0, y2: 1 },
+  leftUp: { x1: 0, y1: -1, x2: -1, y2: 0 },
+  leftDown: { x1: -1, y1: 0, x2: 0, y2: 1 }
+} as any;
 
 function canMove(char: any, dir: string) {
-  try {
-    var tile = { x: char.cords.x, y: char.cords.y };
-    if (dir == "up") tile.y--;
-    else if (dir == "down") tile.y++;
-    else if (dir == "left") tile.x--;
-    else if (dir == "right") tile.x++;
-    var movable = true;
-    if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly)) movable = false;
-    if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) movable = false;
-    for (let enemy of maps[currentMap].enemies) {
-      if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) movable = false;
+  var tile = cordsFromDir(char.cords, dir);
+  var check = char.cords;
+  var movable = true;
+  const map = maps[currentMap];
+  let fieldMap: Array<number[]>;
+  if (char.canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
+  else fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
+  map.enemies.forEach((enemy: any) => { if (!(char.cords.x == enemy.cords.x && char.cords.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
+  NPCcharacters.forEach((npc: Npc) => {
+    if (npc.currentMap == currentMap) {
+      fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
     }
-    for (let npc of NPCcharacters) {
-      if (npc.currentMap == currentMap) {
-        if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y) movable = false;
-      }
-    }
-    return movable;
+  });
+  if (fieldMap?.[tile.y]?.[tile.x] === 1) movable = false;
+  if (checkDirs[dir]) {
+    if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 && fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1) movable = false;
   }
-  catch { }
+  if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length) movable = false;
+  return movable;
 }
 
 function canMoveTo(char: any, tile: tileObject) {
@@ -1357,4 +1372,15 @@ function createStaticMap() {
     if (clutters[xv].isWall) staticMap_flying[y][x] = 1;
   }));
   sightMap_empty = emptyMap(maps[currentMap].base);
+}
+
+let miniMapExpanded: boolean = false;
+function toggleMinimapSize() {
+  miniMapExpanded = !miniMapExpanded;
+  if (miniMapExpanded) {
+    minimapContainer.style.width = "75vw";
+    minimapContainer.style.height = "50vw";
+    renderMinimap(maps[currentMap]);
+    moveMinimap();
+  }
 }

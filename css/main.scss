@@ -1450,23 +1450,22 @@ body {
   .storeWindow {
     transition: 0.275s;
     transition-timing-function: ease-in;
-    width: calc(1920px * var(--ui-scale));
-    height: calc(1000px * var(--ui-scale));
+    width: 100vw;
+    height: 100vh;
     background: rgba(10, 10, 10, 0.9);
     border: 6px solid rgb(50, 50, 50);
     border-radius: 4px;
     box-sizing: border-box;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: calc(-950px * var(--ui-scale));
-    margin-top: calc(-500px * var(--ui-scale));
+    // left: 50%;
+    // top: 50%;
     z-index: 8;
     transform: scale(0);
 
     .merchantInv {
       width: calc(816px * var(--ui-scale));
       height: calc(1000px * var(--ui-scale));
+      max-height: 100%;
       position: absolute;
       left: 0;
       top: 0;
@@ -1475,6 +1474,7 @@ body {
     .playerInv {
       width: calc(816px * var(--ui-scale));
       height: calc(1000px * var(--ui-scale));
+      max-height: 100%;
       position: absolute;
       right: 0;
       top: 0;
@@ -1495,7 +1495,7 @@ body {
       background-size: cover;
       background-position: inherit;
       width: calc(288px * var(--ui-scale));
-      height: calc(988px * var(--ui-scale));
+      height: 100%;
       position: absolute;
       left: calc(816px * var(--ui-scale));
       box-shadow: inset 0 0 calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(56, 56, 56);

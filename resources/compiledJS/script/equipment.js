@@ -364,19 +364,119 @@ class Armor extends Item {
         }
     }
 }
+// Artifact stat generation has been reintroduced.
+const artifactStatRandomization = {
+    str: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 10
+    },
+    dex: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 10
+    },
+    vit: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 10
+    },
+    int: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 10
+    },
+    cun: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 10
+    },
+    hpMax: {
+        Value: [4, 7, 10, 14, 17],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 7
+    },
+    mpMax: {
+        Value: [3, 5, 6, 9],
+        Percent: [2, 3, 6, 8, 10, 13],
+        chance: 7
+    },
+    critChance: {
+        Percent: [1, 1.5, 2, 2.5, 3, 3.5, 4.1],
+        disableValue: true,
+        chance: 5
+    },
+    critDamage: {
+        Percent: [2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
+        disableValue: true,
+        chance: 5
+    },
+    evasion: {
+        disablePercent: true,
+        Value: [1, 2, 3, 4, 5, 6],
+        chance: 6
+    },
+    rangedDamage: {
+        disableValue: true,
+        Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+        chance: 3
+    },
+    meleeDamage: {
+        disableValue: true,
+        Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+        chance: 3
+    },
+    spellDamage: {
+        disableValue: true,
+        Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+        chance: 3
+    },
+    resistAll: {
+        Value: [1, 2, 3, 4, 5],
+        Percent: [1.5, 3, 4.5, 6, 7.5],
+        chance: 2
+    },
+};
+const maxStatsForArtifactsToRoll = {
+    uncommon: 4
+};
 class Artifact extends Item {
     constructor(base, setPrice = 0) {
-        var _a, _b;
+        var _a;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
         this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
         this.artifactSet = baseItem.artifactSet;
-        this.rolledStats = (_b = Object.assign({}, base.rolledStats)) !== null && _b !== void 0 ? _b : {};
+        this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
         this.commands = {};
         if (setPrice > 0)
             this.price = setPrice;
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
+        if (this.rolledStats.length === 0) {
+            Object.entries(artifactStatRandomization).forEach((stat) => {
+                if (this.rolledStats.length >= maxStatsForArtifactsToRoll[this.grade])
+                    return;
+                const key = stat[0];
+                const data = stat[1];
+                if (random(100, 0) < data.chance) {
+                    if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+                        this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
+                    }
+                    else if (!data.disableValue) {
+                        this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+                    }
+                }
+            });
+        }
+        this.rolledStats.forEach((stat) => {
+            let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+            val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+            if (!this.stats[stat.stat])
+                this.stats[stat.stat] = val;
+            else
+                this.stats[stat.stat] += val;
+        });
         // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
         //
         // if (Object.values(this.rolledStats).length == 0) {
