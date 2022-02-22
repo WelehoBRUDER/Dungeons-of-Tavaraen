@@ -514,6 +514,7 @@ const finnish = {
 
   setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
   setting_toggle_minimap: "Minikartta pois/päällä",
+  setting_hide_helmet: "Piilota kypärä",
   setting_game_language: "Pelin kieli",
   setting_hotkey_inv: "Avaa inventaario",
   setting_hotkey_char: "Avaa hahmoruutu",
@@ -918,6 +919,7 @@ const finnish = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Kirjaa teksti ruutuun vihollisten sijainnin joka kierroksella. \nVoi täyttää ruudun nopeasti.",
   toggle_minimap: "<f>16px<f>Minikartta auttaa suunnistamaan eri alueissa. \nVoi hidastaa peliä.",
+  hide_helmet: "<f>16px<f>Piilota kypärä nähdäksesi hahmosi naama.",
   interact_help: "<f>16px<f>Avaa arkkuja ja poimi tavaroita seisomalla niiden päällä. \nMyös mahdollistaa hahmoille puhumisen.",
   world_messages: "<f>16px<f>Näe lisää viestejä teksti ruudussa.",
   toggle_rangedMode: "<f>16px<f>Ammunta tila näyttää ammunta aseiden kantomatkan.",
@@ -1332,6 +1334,7 @@ const english = {
 
   setting_log_enemy_movement: "Log character movement",
   setting_toggle_minimap: "Toggle minimap",
+  setting_hide_helmet: "Hide helmet",
   setting_game_language: "Game language",
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",
@@ -1736,6 +1739,7 @@ const english = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Logs enemy movement in the text area every turn. \nCan clutter the text screen.",
   toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
+  hide_helmet: "<f>16px<f>Toggle helmet visiblity to see or hide character's face.",
   interact_help: "<f>16px<f>Open chests or pick loot when standing on the same tile. \nAlso used to talk to NPCs and interact with world.",
   world_messages: "<f>16px<f>View more action messages displayed in the bottom left.",
   toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach.",

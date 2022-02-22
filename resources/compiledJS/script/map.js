@@ -96,18 +96,8 @@ function moveMinimap() {
     else {
         minimapContainer.style.display = "block";
     }
-    let scale = 1;
-    let left = 172;
-    let top = 112;
-    if (miniMapExpanded) {
-        left = window.innerWidth / 3;
-        top = window.innerWidth / 4;
-    }
-    else {
-        scale = settings["ui_scale"] / 100;
-    }
-    minimapCanvas.style.left = `${player.cords.x * -8 + left * scale}px`;
-    minimapCanvas.style.top = `${player.cords.y * -8 + top * scale}px`;
+    minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
+    minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
 let sightMap;
 function renderMap(map, createNewSightMap = false) {
@@ -894,7 +884,7 @@ function canMoveTo(char, tile) {
     return movable;
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player, noClothes = false) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     canvas.width = canvas.width; // Clear canvas
     const sex = playerModel.sex === "male" ? "" : capitalizeFirstLetter(playerModel.sex);
     const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex));
@@ -931,20 +921,20 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
             const leggingsModel = document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
         }
-        else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
+        else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (player.sex === "female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
             const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
         }
-        if ((_g = playerModel.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
+        if ((_h = playerModel.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
             const chestModel = document.querySelector(".sprites ." + playerModel.chest.sprite + sex);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, x, y, size, size);
         }
     }
-    if ((_h = playerModel.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_j = playerModel.weapon) === null || _j === void 0 ? void 0 : _j.sprite) {
         const weaponModel = document.querySelector(".sprites ." + playerModel.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
-    if ((_j = playerModel.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+    if ((_k = playerModel.offhand) === null || _k === void 0 ? void 0 : _k.sprite) {
         const offhandModel = document.querySelector(".sprites ." + playerModel.offhand.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, x, y, size, size);
     }
@@ -970,7 +960,7 @@ function renderPlayerPortrait() {
     return portrait;
 }
 function renderPlayerModel(size, canvas, ctx) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     canvas.width = canvas.width; // Clear canvas
     const sex = player.sex === "male" ? "" : capitalizeFirstLetter(player.sex);
     if (player.isDead)
@@ -990,9 +980,9 @@ function renderPlayerModel(size, canvas, ctx) {
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    if (!((_a = player.helmet) === null || _a === void 0 ? void 0 : _a.coversHair))
+    if (!((_a = player.helmet) === null || _a === void 0 ? void 0 : _a.coversHair) || settings["hide_helmet"])
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
+    if (((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) && !settings["hide_helmet"]) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
@@ -1008,19 +998,19 @@ function renderPlayerModel(size, canvas, ctx) {
         const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
+    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (sex === "Female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
         const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
+    if ((_h = player.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_h = player.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_j = player.weapon) === null || _j === void 0 ? void 0 : _j.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_j = player.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+    if ((_k = player.offhand) === null || _k === void 0 ? void 0 : _k.sprite) {
         const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
@@ -1462,15 +1452,5 @@ function createStaticMap() {
             staticMap_flying[y][x] = 1;
     }));
     sightMap_empty = emptyMap(maps[currentMap].base);
-}
-let miniMapExpanded = false;
-function toggleMinimapSize() {
-    miniMapExpanded = !miniMapExpanded;
-    if (miniMapExpanded) {
-        minimapContainer.style.width = "75vw";
-        minimapContainer.style.height = "50vw";
-        renderMinimap(maps[currentMap]);
-        moveMinimap();
-    }
 }
 //# sourceMappingURL=map.js.map

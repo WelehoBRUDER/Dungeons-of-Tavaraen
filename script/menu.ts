@@ -79,6 +79,11 @@ const menuSettings = [
     type: "toggle",
   },
   {
+    id: "setting_hide_helmet",
+    tooltip: "hide_helmet",
+    type: "toggle",
+  },
+  {
     id: "setting_hotkey_inv",
     type: "hotkey",
   },

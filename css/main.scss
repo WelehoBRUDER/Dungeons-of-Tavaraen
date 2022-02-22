@@ -142,7 +142,7 @@ body {
     display: flex;
 
     .hotbarFrame {
-      transition: 0.05s;
+      transition: all 0.05s, position 0ms;
       width: calc(124px * var(--ui-scale));
       height: calc(72px * var(--ui-scale));
       border: calc(4px * var(--ui-scale)) solid rgb(90, 89, 89);
@@ -155,6 +155,7 @@ body {
       img {
         width: 100%;
         height: 100%;
+        -webkit-user-drag: none;
       }
 
       p {
@@ -1264,8 +1265,8 @@ body {
         position: absolute;
         left: calc(50% - (8px * var(--ui-scale)));
         top: calc(50% - (8px * var(--ui-scale)));
-        height: calc(8px * var(--ui-scale));
-        width: calc(8px * var(--ui-scale));
+        height: 8px;
+        width: 8px;
       }
     }
 

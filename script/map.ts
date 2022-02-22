@@ -116,18 +116,8 @@ function moveMinimap() {
   else {
     minimapContainer.style.display = "block";
   }
-  let scale = 1;
-  let left = 172;
-  let top = 112;
-  if (miniMapExpanded) {
-    left = window.innerWidth / 3;
-    top = window.innerWidth / 4;
-  }
-  else {
-    scale = settings["ui_scale"] / 100;
-  }
-  minimapCanvas.style.left = `${player.cords.x * -8 + left * scale}px`;
-  minimapCanvas.style.top = `${player.cords.y * -8 + top * scale}px`;
+  minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
+  minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
 let sightMap: any;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
@@ -881,7 +871,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
       const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
       ctx?.drawImage(leggingsModel, x, y, size, size);
     }
-    else if (!playerModel.legs?.sprite) {
+    else if (!playerModel.legs?.sprite || (player.sex === "female" && !player.chest?.sprite)) {
       const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
       ctx?.drawImage(leggings, x, y, size, size);
     }
@@ -941,8 +931,8 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   ctx?.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   ctx?.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   ctx?.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  if (!player.helmet?.coversHair) ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  if (player.helmet?.sprite) {
+  if (!player.helmet?.coversHair || settings["hide_helmet"]) ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  if (player.helmet?.sprite && !settings["hide_helmet"]) {
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite + sex);
     ctx?.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
@@ -958,7 +948,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite + sex);
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
-  else if (!player.legs?.sprite) {
+  else if (!player.legs?.sprite || (sex === "Female" && !player.chest?.sprite)) {
     const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
     ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
@@ -1372,15 +1362,4 @@ function createStaticMap() {
     if (clutters[xv].isWall) staticMap_flying[y][x] = 1;
   }));
   sightMap_empty = emptyMap(maps[currentMap].base);
-}
-
-let miniMapExpanded: boolean = false;
-function toggleMinimapSize() {
-  miniMapExpanded = !miniMapExpanded;
-  if (miniMapExpanded) {
-    minimapContainer.style.width = "75vw";
-    minimapContainer.style.height = "50vw";
-    renderMinimap(maps[currentMap]);
-    moveMinimap();
-  }
 }
