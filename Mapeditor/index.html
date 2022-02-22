@@ -1,115 +1,117 @@
 <!DOCTYPE html>
-  <html lang="fi">
+<html lang="fi">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavaraen Map Editor</title>
-    <link rel="stylesheet" href="styles/edtor.css">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tavaraen Map Editor</title>
+  <link rel="stylesheet" href="styles/edtor.css">
+</head>
 
-  <body>
-    <div class="mapContainer">
-      <canvas id="mainMap" width="1280px" height="896px"></canvas>
-      <canvas id="enemyLayer" width="1280px" height="896px"></canvas>
-      <canvas id="selecting" width="1280px" height="896px"></canvas>
+<body>
+  <div class="mapContainer">
+    <canvas id="mainMap" width="1280px" height="896px"></canvas>
+    <canvas id="enemyLayer" width="1280px" height="896px"></canvas>
+    <canvas id="selecting" width="1280px" height="896px"></canvas>
+  </div>
+  <div id="tileProperties"></div>
+  <div class="leftContainer">
+    <div id="mapButtons">
+      <button id="printMap" onclick="printMap()">PrintMap</button>
+      <button id="importMap" onclick="importMap()">ImportMap</button>
+      <button id="newMap" onclick="createNewMap()">CreateMap</button>
+      <button id="saveMap" onclick="saveMapToMemory()">SaveMap</button>
+      <button id="loadMap" onclick="loadMapFromMemory()">LoadMap</button>
+      <button id="teleport" onclick="tpTo()">Teleport</button>
+
+      <button id="tilesMenu" onclick=" updateTilesMenu()">TilesMenu</button>
+      <i class="gg-trash" onclick="clearTileSelect()"></i>
+
+      <button id="cluttersMenu" onclick="updateClutterMenu()">CluttersMenu&emsp;</button>
+      <i class="gg-trash" onclick="clearClutterSelect()"></i>
+
+      <button id="enemiesMenu" onclick="updateEnemiesMenu()">EnemyMenu</button>
+      <i class="gg-trash" onclick="clearEnemySelect()"></i>
     </div>
-    <div id="tileProperties"></div>
-    <div class="leftContainer">
-      <div id="mapButtons">
-        <button id="printMap" onclick="printMap()">PrintMap</button>
-        <button id="importMap" onclick="importMap()">ImportMap</button>
-        <button id="newMap" onclick="createNewMap()">CreateMap</button>
-        <button id="saveMap" onclick="saveMapToMemory()">SaveMap</button>
-        <button id="loadMap" onclick="loadMapFromMemory()">LoadMap</button>
-        <button id="teleport" onclick="tpTo()">Teleport</button>
-  
-        <button id="tilesMenu" onclick=" updateTilesMenu()">TilesMenu</button>
-        <i class="gg-trash" onclick="clearTileSelect()"></i>
-  
-        <button id="cluttersMenu" onclick="updateClutterMenu()">CluttersMenu&emsp;</button>
-        <i class="gg-trash" onclick="clearClutterSelect()"></i>
-        
-        <button id="enemiesMenu" onclick="updateEnemiesMenu()">EnemyMenu</button>
-        <i class="gg-trash" onclick="clearEnemySelect()"></i>
+    <div id="tilesContainer"></div>
+  </div>
+
+  <div class="importMapBox" style="display: none">
+    <div class="importContainer"></div>
+    <button class="cancelButton" onclick="dontImportMap()">Cancel</button>
+  </div>
+
+  <div class="createNewMap" style="display: none">
+    <label for="mapName">Name: </label>
+    <input type="text" class="mapName" name="mapName">
+    <label for="mapArea">Area: </label>
+    <input type="text" class="mapArea" name="mapArea">
+    <label for="mapId">MapId: </label>
+    <input type="text" class="mapId" name="mapId">
+    <label for="baseTile">Base Tile: </label>
+    <select name="BaseTile" id="baseTile" class="baseTile"></select>
+    <label for="width">Width: </label>
+    <input type="number" class="width" name="width">
+    <label for="height">Height: </label>
+    <input type="number" class="height" name="height">
+    <div class="createButtons">
+      <button class="createNew" onclick="confirmMapCreate()">Create</button>
+      <button class="cancelCreate" onclick="cancelMapCreate()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="enemyInfoContainer" style="display: none">
+    <div class="enemyInfoBox">
+      <div class="valintaPohja"></div>
+      <div class="buttonBox">
+        <button class="done" onclick="enemyStatsConfirm()">Done</button>
+        <button class="reset" onclick="enemyDelete()">Delete</button>
       </div>
-      <div id="tilesContainer"></div>
     </div>
+  </div>
+</body>
 
-    <div class="importMapBox" style="display: none">
-      <div class="importContainer"></div>
-      <button class="cancelButton" onclick="dontImportMap()">Cancel</button>
-    </div>
-
-    <div class="createNewMap" style="display: none">
-      <label for="mapName">Name: </label>
-      <input type="text" class="mapName" name="mapName">
-      <label for="mapArea">Area: </label>
-      <input type="text" class="mapArea" name="mapArea">
-      <label for="mapId">MapId: </label>
-      <input type="text" class="mapId" name="mapId">
-      <label for="baseTile">Base Tile: </label>
-      <select name="BaseTile" id="baseTile" class="baseTile"></select>
-      <label for="width">Width: </label>
-      <input type="number" class="width" name="width">
-      <label for="height">Height: </label>
-      <input type="number" class="height" name="height">
-      <div class="createButtons">
-        <button class="createNew" onclick="confirmMapCreate()">Create</button>
-        <button class="cancelCreate" onclick="cancelMapCreate()">Cancel</button>
-      </div>
-    </div>
-
-    <div class="enemyInfoContainer" style="display: none">
-      <div class="enemyInfoBox">
-        <div class="valintaPohja"></div>
-        <div class="buttonBox">
-          <button class="done" onclick="enemyStatsConfirm()">Done</button>
-          <button class="reset" onclick="enemyDelete()">Delete</button>
-        </div>
-      </div>
-    </div>
-  </body>
 </html>
 
 <div class="sprites">
   <!-- Enemies -->
-  <img src="../resources/tiles/enemies/grey_slime.png" alt=""  class="greySlime sprite">
-  <img src="../resources/tiles/enemies/flaming_slime.png" alt=""  class="fireSlime sprite">
-  <img src="../resources/tiles/enemies/electric_slime.png" alt=""  class="shockSlime sprite">
-  <img src="../resources/tiles/enemies/hiisi.png" alt=""  class="hiisi sprite">
-  <img src="../resources/tiles/enemies/hiisi_warrior.png" alt=""  class="hiisiWarrior sprite">
-  <img src="../resources/tiles/enemies/hiisi_hunter.png" alt=""  class="hiisiHunter sprite">
-  <img src="../resources/tiles/enemies/skeleton_warrior.png" alt=""  class="skeletonWarrior sprite">
-  <img src="../resources/tiles/enemies/skeleton_archer.png" alt=""  class="skeletonArcher sprite">
-  <img src="../resources/tiles/enemies/skeleton_mage.png" alt=""  class="skeletonMage sprite">
-  <img src="../resources/tiles/enemies/skeleton_lich.png" alt=""  class="skeletonLich sprite">
-  <img src="../resources/tiles/enemies/norseman_berserk.png" alt=""  class="norsemanBerserk sprite">
-  <img src="../resources/tiles/enemies/norseman_hunter.png" alt=""  class="norsemanHunter sprite">
-  <img src="../resources/tiles/enemies/female_orc_raider.png" alt=""  class="femaleOrcRaider sprite">
+  <img src="../resources/tiles/enemies/grey_slime.png" alt="" class="greySlime sprite">
+  <img src="../resources/tiles/enemies/flaming_slime.png" alt="" class="fireSlime sprite">
+  <img src="../resources/tiles/enemies/electric_slime.png" alt="" class="shockSlime sprite">
+  <img src="../resources/tiles/enemies/hiisi.png" alt="" class="hiisi sprite">
+  <img src="../resources/tiles/enemies/hiisi_warrior.png" alt="" class="hiisiWarrior sprite">
+  <img src="../resources/tiles/enemies/hiisi_hunter.png" alt="" class="hiisiHunter sprite">
+  <img src="../resources/tiles/enemies/skeleton_warrior.png" alt="" class="skeletonWarrior sprite">
+  <img src="../resources/tiles/enemies/skeleton_archer.png" alt="" class="skeletonArcher sprite">
+  <img src="../resources/tiles/enemies/skeleton_mage.png" alt="" class="skeletonMage sprite">
+  <img src="../resources/tiles/enemies/skeleton_lich.png" alt="" class="skeletonLich sprite">
+  <img src="../resources/tiles/enemies/norseman_berserk.png" alt="" class="norsemanBerserk sprite">
+  <img src="../resources/tiles/enemies/norseman_hunter.png" alt="" class="norsemanHunter sprite">
+  <img src="../resources/tiles/enemies/female_orc_raider.png" alt="" class="femaleOrcRaider sprite">
   <img src="../resources/tiles/enemies/male_orc_raider.png" alt="" class="maleOrcRaider sprite">
   <img src="../resources/tiles/enemies/orc_chieftess.png" alt="" class="orcChieftess sprite">
-  <img src="../resources/tiles/enemies/wild_troll.png" alt=""  class="wildTroll sprite">
-  <img src="../resources/tiles/enemies/wild_stone_troll.png" alt=""  class="wildStoneTroll sprite">
-  <img src="../resources/tiles/enemies/troll.png" alt=""  class="troll sprite">
-  <img src="../resources/tiles/enemies/stone_troll.png" alt=""  class="stoneTroll sprite">
-  <img src="../resources/tiles/enemies/knight_sword_shield.png" alt=""  class="knightSwordShield sprite">
-  <img src="../resources/tiles/enemies/spectral_knight_sword_shield.png" alt=""  class="spectralKnightSwordShield sprite">
-  <img src="../resources/tiles/enemies/soul_wraith.png" alt=""  class="soulWraith sprite">
+  <img src="../resources/tiles/enemies/wild_troll.png" alt="" class="wildTroll sprite">
+  <img src="../resources/tiles/enemies/wild_stone_troll.png" alt="" class="wildStoneTroll sprite">
+  <img src="../resources/tiles/enemies/troll.png" alt="" class="troll sprite">
+  <img src="../resources/tiles/enemies/stone_troll.png" alt="" class="stoneTroll sprite">
+  <img src="../resources/tiles/enemies/knight_sword_shield.png" alt="" class="knightSwordShield sprite">
+  <img src="../resources/tiles/enemies/spectral_knight_sword_shield.png" alt=""
+    class="spectralKnightSwordShield sprite">
+  <img src="../resources/tiles/enemies/soul_wraith.png" alt="" class="soulWraith sprite">
 
   <!-- Health & Mana Bars -->
-  <img src="resources/tiles/enemies/healthBackground.png" alt=""  class="hpBg sprite">
-  <img src="resources/tiles/enemies/healthBar.png" alt=""  class="hpBar sprite">
-  <img src="resources/tiles/enemies/healthBorder.png" alt=""  class="hpBorder sprite">
+  <img src="resources/tiles/enemies/healthBackground.png" alt="" class="hpBg sprite">
+  <img src="resources/tiles/enemies/healthBar.png" alt="" class="hpBar sprite">
+  <img src="resources/tiles/enemies/healthBorder.png" alt="" class="hpBorder sprite">
 
-   <!-- Map Tiles  -->
-   <img src="../resources/tiles/tileMap.png" alt=""  class="tileAtlas sprite">
-   <img src="../resources/tiles/message.png" alt="" class="messageTile sprite">
+  <!-- Map Tiles  -->
+  <img src="../resources/tiles/tileMap.png" alt="" class="tileAtlas sprite">
+  <img src="../resources/tiles/message.png" alt="" class="messageTile sprite">
 
   <!-- Clutters -->
-  <img src="../resources/tiles/treasure_chest_1.png" alt=""  class="treasureChest1 sprite">
-  <img src="../resources/tiles/treasure_chest_2.png" alt=""  class="treasureChest2 sprite">
-  <img src="../resources/tiles/treasure_chest_magical.png" alt=""  class="treasureChestMagical sprite">
+  <img src="../resources/tiles/treasure_chest_1.png" alt="" class="treasureChest1 sprite">
+  <img src="../resources/tiles/treasure_chest_2.png" alt="" class="treasureChest2 sprite">
+  <img src="../resources/tiles/treasure_chest_magical.png" alt="" class="treasureChestMagical sprite">
 </div>
 
 
@@ -120,6 +122,7 @@
 <script src="../resources/compiledJS/arrays/items.js"></script>
 <script src="../resources/compiledJS/arrays/perks.js"></script>
 <script src="../resources/compiledJS/script/ability.js"></script>
+<script src="../resources/compiledJS/script/statModifier.js"></script>
 <script src="../resources/compiledJS/script/character.js"></script>
 <script src="../resources/compiledJS/arrays/abilities.js"></script>
 <script src="../resources/compiledJS/arrays/enemies.js"></script>

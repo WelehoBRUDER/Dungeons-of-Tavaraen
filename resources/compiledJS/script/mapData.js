@@ -35,12 +35,15 @@ const lootPools = {
         { type: "artifact", amount: [1, 1], item: "loneShadesTalisman", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "loneShadesRing", chance: 8 },
         { type: "artifact", amount: [1, 1], item: "loneShadesEmblem", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "huntersTalisman", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "huntersRing", chance: 8 },
+        { type: "artifact", amount: [1, 1], item: "huntersEmblem", chance: 8 },
         { type: "consumable", amount: [1, 3], item: "healingPotion_weak", chance: 5 },
         { type: "consumable", amount: [1, 3], item: "manaPotion_weak", chance: 5 },
         { type: "gold", amount: [13, 76] }
     ],
     lichLoot: [
-        { type: "weapon", amount: [1, 1], item: "apprenticeWand", chance: 100 },
+        { type: "weapon", amount: [1, 1], item: "crimsonStaff", chance: 100 },
         { type: "armor", amount: [1, 1], item: "lichRobes", chance: 100 },
         { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 100 },
         { type: "gold", amount: [180, 250] }

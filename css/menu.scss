@@ -48,6 +48,7 @@
   transition: 0.06s;
   width: auto;
   height: auto;
+  max-height: 65%;
   position: absolute;
   top: 20%;
   left: 50%;
@@ -56,11 +57,12 @@
   z-index: 51 !important;
   box-shadow: -4px 4px 12px rgba(20, 20, 20, 0.95);
   border-radius: 4px;
-
   font-size: 22px;
   color: white;
   text-shadow: -2px 2px 4px black;
   user-select: none;
+  overflow: hidden;
+  overflow-y: auto;
 
   .toggle {
     transition: 0.03s;
@@ -79,14 +81,15 @@
     }
 
     div {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       padding: 4px;
       text-align: center;
       border: 2px solid rgb(59, 59, 59);
       background: rgb(22, 22, 22);
       margin-left: 10px;
-      font-size: 12px;
+      font-size: 15px;
+      border-radius: 50%;
     }
   }
 

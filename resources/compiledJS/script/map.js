@@ -650,6 +650,22 @@ function cordsFromDir(cords, dir) {
         cord.x--;
     else if (dir == "right")
         cord.x++;
+    else if (dir == "rightUp") {
+        cord.y--;
+        cord.x++;
+    }
+    else if (dir == "rightDown") {
+        cord.y++;
+        cord.x++;
+    }
+    else if (dir == "leftUp") {
+        cord.y--;
+        cord.x--;
+    }
+    else if (dir == "leftDown") {
+        cord.y++;
+        cord.x--;
+    }
     return cord;
 }
 document.addEventListener("keyup", (keyPress) => {
@@ -657,7 +673,7 @@ document.addEventListener("keyup", (keyPress) => {
     const rooted = player.isRooted();
     if (!turnOver || state.dialogWindow || state.storeOpen)
         return;
-    let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right" };
+    let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right", [settings.hotkey_move_right_up]: "rightUp", [settings.hotkey_move_right_down]: "rightDown", [settings.hotkey_move_left_up]: "leftUp", [settings.hotkey_move_left_down]: "leftDown" };
     let target = maps[currentMap].enemies.find((e) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
     if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
         advanceTurn();
@@ -671,20 +687,9 @@ document.addEventListener("keyup", (keyPress) => {
         displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
         return;
     }
-    if (keyPress.key == settings.hotkey_move_up && canMove(player, "up") && !rooted) {
-        player.cords.y--;
-    }
-    else if (keyPress.key == settings.hotkey_move_down && canMove(player, "down") && !rooted) {
-        player.cords.y++;
-    }
-    else if (keyPress.key == settings.hotkey_move_left && canMove(player, "left") && !rooted) {
-        player.cords.x--;
-    }
-    else if (keyPress.key == settings.hotkey_move_right && canMove(player, "right") && !rooted) {
-        player.cords.x++;
-    }
     if (dirs[keyPress.key]) {
         if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
+            player.cords = cordsFromDir(player.cords, dirs[keyPress.key]);
             moveMinimap();
             // @ts-ignore
             renderMap(maps[currentMap], true);
@@ -814,35 +819,43 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
     updateUI();
     updateEnemiesTurn();
 }
+const checkDirs = {
+    rightUp: { x1: 0, y1: -1, x2: 1, y2: 0 },
+    rightDown: { x1: 1, 1: 0, x2: 0, y2: 1 },
+    leftUp: { x1: 0, y1: -1, x2: -1, y2: 0 },
+    leftDown: { x1: -1, y1: 0, x2: 0, y2: 1 }
+};
 function canMove(char, dir) {
-    try {
-        var tile = { x: char.cords.x, y: char.cords.y };
-        if (dir == "up")
-            tile.y--;
-        else if (dir == "down")
-            tile.y++;
-        else if (dir == "left")
-            tile.x--;
-        else if (dir == "right")
-            tile.x++;
-        var movable = true;
-        if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly))
-            movable = false;
-        if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall)
-            movable = false;
-        for (let enemy of maps[currentMap].enemies) {
-            if (enemy.cords.x == tile.x && enemy.cords.y == tile.y)
-                movable = false;
+    var _a, _b, _c;
+    var tile = cordsFromDir(char.cords, dir);
+    var check = char.cords;
+    var movable = true;
+    const map = maps[currentMap];
+    let fieldMap;
+    if (char.canFly)
+        fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
+    else
+        fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
+    map.enemies.forEach((enemy) => { if (!(char.cords.x == enemy.cords.x && char.cords.y == enemy.cords.y)) {
+        {
+            fieldMap[enemy.cords.y][enemy.cords.x] = 1;
         }
-        for (let npc of NPCcharacters) {
-            if (npc.currentMap == currentMap) {
-                if (npc.currentCords.x == tile.x && npc.currentCords.y == tile.y)
-                    movable = false;
-            }
+        ;
+    } });
+    NPCcharacters.forEach((npc) => {
+        if (npc.currentMap == currentMap) {
+            fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
         }
-        return movable;
+    });
+    if (((_a = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[tile.y]) === null || _a === void 0 ? void 0 : _a[tile.x]) === 1)
+        movable = false;
+    if (checkDirs[dir]) {
+        if (((_b = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y1]) === null || _b === void 0 ? void 0 : _b[check.x + checkDirs[dir].x1]) === 1 && ((_c = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y2]) === null || _c === void 0 ? void 0 : _c[check.x + checkDirs[dir].x2]) === 1)
+            movable = false;
     }
-    catch (_a) { }
+    if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length)
+        movable = false;
+    return movable;
 }
 function canMoveTo(char, tile) {
     var movable = true;
@@ -871,7 +884,7 @@ function canMoveTo(char, tile) {
     return movable;
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player, noClothes = false) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     canvas.width = canvas.width; // Clear canvas
     const sex = playerModel.sex === "male" ? "" : capitalizeFirstLetter(playerModel.sex);
     const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex));
@@ -908,20 +921,20 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
             const leggingsModel = document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
         }
-        else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
+        else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (player.sex === "female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
             const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
         }
-        if ((_g = playerModel.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
+        if ((_h = playerModel.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
             const chestModel = document.querySelector(".sprites ." + playerModel.chest.sprite + sex);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, x, y, size, size);
         }
     }
-    if ((_h = playerModel.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_j = playerModel.weapon) === null || _j === void 0 ? void 0 : _j.sprite) {
         const weaponModel = document.querySelector(".sprites ." + playerModel.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, x, y, size, size);
     }
-    if ((_j = playerModel.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+    if ((_k = playerModel.offhand) === null || _k === void 0 ? void 0 : _k.sprite) {
         const offhandModel = document.querySelector(".sprites ." + playerModel.offhand.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, x, y, size, size);
     }
@@ -947,7 +960,7 @@ function renderPlayerPortrait() {
     return portrait;
 }
 function renderPlayerModel(size, canvas, ctx) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     canvas.width = canvas.width; // Clear canvas
     const sex = player.sex === "male" ? "" : capitalizeFirstLetter(player.sex);
     if (player.isDead)
@@ -967,9 +980,9 @@ function renderPlayerModel(size, canvas, ctx) {
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    if (!((_a = player.helmet) === null || _a === void 0 ? void 0 : _a.coversHair))
+    if (!((_a = player.helmet) === null || _a === void 0 ? void 0 : _a.coversHair) || settings["hide_helmet"])
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    if ((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) {
+    if (((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) && !settings["hide_helmet"]) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
@@ -985,19 +998,19 @@ function renderPlayerModel(size, canvas, ctx) {
         const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite)) {
+    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (sex === "Female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
         const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite) {
+    if ((_h = player.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_h = player.weapon) === null || _h === void 0 ? void 0 : _h.sprite) {
+    if ((_j = player.weapon) === null || _j === void 0 ? void 0 : _j.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_j = player.offhand) === null || _j === void 0 ? void 0 : _j.sprite) {
+    if ((_k = player.offhand) === null || _k === void 0 ? void 0 : _k.sprite) {
         const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }

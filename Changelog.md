@@ -1,3 +1,27 @@
+# 1.0.5 ~ 20.2.2022
+
+### Patch - The Equipment Rush
+
+## New Additions
+
+- Added 2 new weapons:
+  - Crimson Staff, wand for mages using fire.
+  - Crystal Wand, wand for mages using ice.
+- Added 2 new armor sets:
+  - Apprentice, a light set for mages.
+  - Ranger, a medium set for all characters.
+- Added `Hunter` artifact set.
+- Reintroduced stat randomness for artifacts.
+- Added the option to toggle helmet visibility.
+
+## Fixes & Tweaks
+
+- Fixed duplicate items being removed when selling one copy.
+- Made some screens scale slightly better.
+- Reworked keyboard movement, added diagonal movement keys.
+- Fixed some player rendering errors.
+- Made hotbar items and abilities draggable.
+
 # 1.0.4 ~ 20.2.2022
 
 ### Patch - The Summoning of the Codex

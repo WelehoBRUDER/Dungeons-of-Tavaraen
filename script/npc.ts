@@ -314,7 +314,7 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
     let pending = pendingItemsSelling[i];
     const itemFrame = document.createElement("div");
     const itemImg = document.createElement("img");
-    sellingPrice += pending.price * pending.amount;
+    sellingPrice += pending.fullPrice() * pending.amount;
     itemFrame.classList.add("itmFrame");
     itemImg.src = pending.img;
     tooltip(itemFrame, itemTT(pending));
@@ -408,9 +408,8 @@ function addItemToSelling(item: any) {
   if (item.id === "A0_error") return;
   if (!item.stacks) {
     pendingItemsSelling.push(item);
-    for (let i = 0; i < player.inventory.length; i++) {
-      if (player.inventory[i].id == item.id) player.inventory.splice(i, 1);
-    }
+    player.inventory.splice(item.index, 1);
+    player.updateAbilities();
     createMerchantWindow(false);
   }
   else {

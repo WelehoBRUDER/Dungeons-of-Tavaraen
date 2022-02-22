@@ -7,6 +7,7 @@ const assignContainer = document.querySelector<HTMLDivElement>(".assignContainer
 class gameSettings {
   [log_enemy_movement: string]: boolean | any;
   toggle_minimap: boolean;
+  hide_helmet: boolean;
   hotkey_inv: string;
   hotkey_char: string;
   hotkey_perk: string;
@@ -16,6 +17,10 @@ class gameSettings {
   hotkey_move_down: string;
   hotkey_move_left: string;
   hotkey_move_right: string;
+  hotkey_move_right_up: string;
+  hotkey_move_right_down: string;
+  hotkey_move_left_up: string;
+  hotkey_move_left_down: string;
   hotkey_open_world_messages: string;
   hotkey_interact: string;
   hotkey_journal: string;
@@ -23,6 +28,7 @@ class gameSettings {
   constructor(base: gameSettings) {
     this.log_enemy_movement = base.log_enemy_movement || false;
     this.toggle_minimap = base.toggle_minimap || true;
+    this.hide_helmet = base.hide_helmet || false;
     this.hotkey_inv = base.hotkey_inv || "i";
     this.hotkey_char = base.hotkey_char || "c";
     this.hotkey_perk = base.hotkey_perk || "p";
@@ -32,6 +38,10 @@ class gameSettings {
     this.hotkey_move_down = base.hotkey_move_down || "s";
     this.hotkey_move_left = base.hotkey_move_left || "a";
     this.hotkey_move_right = base.hotkey_move_right || "d";
+    this.hotkey_move_right_up = base.hotkey_move_right_up || "PageUp";
+    this.hotkey_move_right_down = base.hotkey_move_right_down || "PageDown";
+    this.hotkey_move_left_up = base.hotkey_move_left_up || "Home";
+    this.hotkey_move_left_down = base.hotkey_move_left_down || "End";
     this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
     this.hotkey_interact = base.hotkey_interact || " ";
     this.hotkey_journal = base.hotkey_journal || "j";
@@ -42,6 +52,7 @@ class gameSettings {
 let settings = new gameSettings({
   log_enemy_movement: false,
   toggle_minimap: true,
+  hide_helmet: false,
   hotkey_inv: "i",
   hotkey_char: "c",
   hotkey_perk: "p",
@@ -51,6 +62,10 @@ let settings = new gameSettings({
   hotkey_move_down: "s",
   hotkey_move_left: "a",
   hotkey_move_right: "d",
+  hotkey_move_right_up: "PageUp",
+  hotkey_move_right_down: "PageDown",
+  hotkey_move_left_up: "Home",
+  hotkey_move_left_down: "End",
   hotkey_interact: " ",
   hotkey_open_world_messages: "Enter",
   hotkey_journal: "j",
@@ -144,6 +159,7 @@ function generateHotbar() {
         const abiDiv = document.createElement("div");
         const abiImg = document.createElement("img");
         abiDiv.classList.add("ability");
+        abiDiv.classList.add(abi.equippedSlot);
         if (state.abiSelected == abi && state.isSelected) {
           frame.style.border = "4px solid gold";
         }
@@ -180,11 +196,30 @@ function generateHotbar() {
             abiDiv.addEventListener("mouseleave", e => renderTileHover(player.cords, e));
           }
         }
+        dragElem(abiDiv, [hotbar], updateUI);
         abiDiv.append(abiImg);
         frame.append(abiDiv);
       }
     });
   }
+}
+
+function swapAbility(from: number, to: number) {
+  console.log(from);
+  console.log(to);
+  let mainSkill = null;
+  let replaceSkill = null;
+  player.inventory.map((itm: any) => {
+    if (itm.equippedSlot === from) mainSkill = itm;
+    if (itm.equippedSlot === to) replaceSkill = itm;
+  });
+  player.abilities.map((abi: any) => {
+    if (abi.equippedSlot === from) mainSkill = abi;
+    if (abi.equippedSlot === to) replaceSkill = abi;
+  });
+  if (mainSkill) mainSkill.equippedSlot = to;
+  if (replaceSkill) replaceSkill.equippedSlot = from;
+  updateUI();
 }
 
 function generateSummonList() {
@@ -215,7 +250,10 @@ function generateSummonList() {
 }
 
 function useConsumable(itm) {
-
+  if (dragging) {
+    dragging = false;
+    return;
+  }
   if (itm.healValue) {
     player.stats.hp += itm.healValue;
     spawnFloatingText(player.cords, itm.healValue.toString(), "lime", 36, 1000, 200);

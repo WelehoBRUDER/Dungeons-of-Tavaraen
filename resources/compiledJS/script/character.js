@@ -548,8 +548,8 @@ class Character {
                     // Manually refresh error items
                     if (this.inventory[i].id == "A0_error") {
                         this.inventory[i] = Object.assign({}, items.A0_error);
-                        this.inventory[i].index = i;
                     }
+                    this.inventory[i].index = i;
                     if (this.inventory[i].type == "weapon")
                         this.inventory[i] = new Weapon(Object.assign({}, this.inventory[i]));
                     else if (this.inventory[i].type == "armor")

@@ -73,6 +73,11 @@ function attackTarget(attacker, target, attackDir) {
     }
 }
 function useAbi(abi) {
+    if (dragging) {
+        dragging = false;
+        updateUI();
+        return;
+    }
     state.abiSelected = abi;
     state.isSelected = true;
     if (abi.self_target) {

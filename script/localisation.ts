@@ -232,6 +232,8 @@ const finnish = {
   huntingBow_name: "Metsästys Jousi",
   hiisiBow_name: "Hiiden Jousi",
   apprenticeWand_name: "Oppilaan Sauva",
+  crimsonStaff_name: "Tulinen Sauva",
+  crystalWand_name: "Kristalli Sauva",
   galadorSpear_name: "Galadorin Keihäs",
   pikeMore_name: "Murhahauki",
   trollClub_name: "Peikon Puumaila",
@@ -246,11 +248,19 @@ const finnish = {
   leatherLeggings_name: "Nahkajalkasuojat",
   leatherBracers_name: "Nahkakäsisuojat",
   leatherHelmet_name: "Nahkakypärä",
+  apprenticeRobe_name: "Oppilaan Kaapu",
+  apprenticeBoots_name: "Oppilaan Kengät",
+  apprenticePants_name: "Oppilaan Housut",
   ironArmor_name: "Rautahaarniska",
   ironBoots_name: "Rautajalkimet",
   ironLegplates_name: "Rautajalkasuojat",
   ironGauntlets_name: "Rautakäsineet",
   ironHelmet_name: "Rautakypärä",
+  rangerArmor_name: "Metsästäjän Haarniska",
+  rangerBoots_name: "Metsästäjän Kengät",
+  rangerPants_name: "Metsästäjän Housut",
+  rangerGloves_name: "Metästäjän Hanskat",
+  rangerHood_name: "Metsästäjän Huppu",
   knightArmor_name: "Ritarin Haarniska",
   knightSabatons_name: "Ritarin Jalkimet",
   knightGreaves_name: "Ritarin Jalkasuojat",
@@ -273,6 +283,9 @@ const finnish = {
   loneShadesTalisman_name: "Yön Haamun Tähti Talismaani",
   loneShadesEmblem_name: "Yön Haamun Pimeä Tunnus",
   loneShadesRing_name: "Yön Haamun Kolkko Sormus",
+  huntersTalisman_name: "Vanhan Metsästäjän Talismaani",
+  huntersEmblem_name: "Vanhan Metsästäjän Tunnus",
+  huntersRing_name: "Vanhan Metsästäjän Arvostettu Sormus",
 
   // Artifacts
   part_of_set: "Osa",
@@ -285,6 +298,7 @@ const finnish = {
   scholarSet_name: "Tieteilijä",
   warriorSet_name: "Soturi",
   loneShadeSet_name: "Yön Haamu",
+  hunterSet_name: "Metsien Suojelija",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -500,6 +514,7 @@ const finnish = {
 
   setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
   setting_toggle_minimap: "Minikartta pois/päällä",
+  setting_hide_helmet: "Piilota kypärä",
   setting_game_language: "Pelin kieli",
   setting_hotkey_inv: "Avaa inventaario",
   setting_hotkey_char: "Avaa hahmoruutu",
@@ -511,6 +526,10 @@ const finnish = {
   setting_hotkey_move_down: "Liiku alaspäin",
   setting_hotkey_move_left: "Liiku vasemmalle",
   setting_hotkey_move_right: "Liiku oikealle",
+  setting_hotkey_move_right_up: "Liiku koilliseen",
+  setting_hotkey_move_right_down: "Liiku kaakkoon",
+  setting_hotkey_move_left_up: "Liiku luoteeseen",
+  setting_hotkey_move_left_down: "Liiku lounaaseen",
   setting_hotkey_interact: "Poimi esine / käytä",
   setting_hotkey_open_world_messages: "Avaa teksti ikkuna",
   setting_ui_scale: "UI skaalaus",
@@ -900,6 +919,7 @@ const finnish = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Kirjaa teksti ruutuun vihollisten sijainnin joka kierroksella. \nVoi täyttää ruudun nopeasti.",
   toggle_minimap: "<f>16px<f>Minikartta auttaa suunnistamaan eri alueissa. \nVoi hidastaa peliä.",
+  hide_helmet: "<f>16px<f>Piilota kypärä nähdäksesi hahmosi naama.",
   interact_help: "<f>16px<f>Avaa arkkuja ja poimi tavaroita seisomalla niiden päällä. \nMyös mahdollistaa hahmoille puhumisen.",
   world_messages: "<f>16px<f>Näe lisää viestejä teksti ruudussa.",
   toggle_rangedMode: "<f>16px<f>Ammunta tila näyttää ammunta aseiden kantomatkan.",
@@ -1243,6 +1263,7 @@ const english = {
   scholarSet_name: "Scholar",
   warriorSet_name: "Warrior",
   loneShadeSet_name: "Lone Shade",
+  hunterSet_name: "Hunter",
 
   // Passive abilities
   resilience_of_the_lone_wanderer_name: "Lone Wanderer's Resilience",
@@ -1313,6 +1334,7 @@ const english = {
 
   setting_log_enemy_movement: "Log character movement",
   setting_toggle_minimap: "Toggle minimap",
+  setting_hide_helmet: "Hide helmet",
   setting_game_language: "Game language",
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",
@@ -1324,6 +1346,10 @@ const english = {
   setting_hotkey_move_down: "Move down",
   setting_hotkey_move_left: "Move left",
   setting_hotkey_move_right: "Move right",
+  setting_hotkey_move_right_up: "Move north-east",
+  setting_hotkey_move_right_down: "Move south-east",
+  setting_hotkey_move_left_up: "Move north-west",
+  setting_hotkey_move_left_down: "Move south-west",
   setting_hotkey_interact: "Interact",
   setting_hotkey_open_world_messages: "Open text box",
   setting_ui_scale: "UI scaling",
@@ -1713,6 +1739,7 @@ const english = {
   // Settings tooltips
   log_char_movement: "<f>16px<f>Logs enemy movement in the text area every turn. \nCan clutter the text screen.",
   toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
+  hide_helmet: "<f>16px<f>Toggle helmet visiblity to see or hide character's face.",
   interact_help: "<f>16px<f>Open chests or pick loot when standing on the same tile. \nAlso used to talk to NPCs and interact with world.",
   world_messages: "<f>16px<f>View more action messages displayed in the bottom left.",
   toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach.",

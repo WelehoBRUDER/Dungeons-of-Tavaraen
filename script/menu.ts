@@ -79,6 +79,11 @@ const menuSettings = [
     type: "toggle",
   },
   {
+    id: "setting_hide_helmet",
+    tooltip: "hide_helmet",
+    type: "toggle",
+  },
+  {
     id: "setting_hotkey_inv",
     type: "hotkey",
   },
@@ -122,6 +127,22 @@ const menuSettings = [
   },
   {
     id: "setting_hotkey_move_right",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_move_right_up",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_move_right_down",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_move_left_up",
+    type: "hotkey",
+  },
+  {
+    id: "setting_hotkey_move_left_down",
     type: "hotkey",
   },
   {
@@ -260,7 +281,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
     }
-    catch { console.log("This doesn't affect anything"); }
+    catch { }
   }
   if (escape) handleEscape();
   hideHover();
@@ -425,8 +446,8 @@ function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   const trimmed: PlayerCharacter = { ...playerObject };
   trimmed.inventory.forEach((itm: any, index: number) => {
     if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
-    else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
-    else trimmed.inventory[index] = { id: itm.id, type: itm.type };
+    else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats ?? null };
+    else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats ?? null };
   });
   trimmed.abilities.forEach((abi: any, index: number) => {
     // @ts-ignore

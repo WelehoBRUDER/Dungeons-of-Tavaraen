@@ -69,6 +69,11 @@ const menuSettings = [
         type: "toggle",
     },
     {
+        id: "setting_hide_helmet",
+        tooltip: "hide_helmet",
+        type: "toggle",
+    },
+    {
         id: "setting_hotkey_inv",
         type: "hotkey",
     },
@@ -112,6 +117,22 @@ const menuSettings = [
     },
     {
         id: "setting_hotkey_move_right",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_move_right_up",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_move_right_down",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_move_left_up",
+        type: "hotkey",
+    },
+    {
+        id: "setting_hotkey_move_left_down",
         type: "hotkey",
     },
     {
@@ -246,9 +267,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
             const frame = menu.querySelector(`.${button.id}`);
             frame.remove();
         }
-        catch (_a) {
-            console.log("This doesn't affect anything");
-        }
+        catch (_a) { }
     }
     if (escape)
         handleEscape();
@@ -420,12 +439,13 @@ async function gotoMainMenu(init = false) {
 function trimPlayerObjectForSaveFile(playerObject) {
     const trimmed = Object.assign({}, playerObject);
     trimmed.inventory.forEach((itm, index) => {
+        var _a, _b;
         if (itm.stackable || itm.type === "consumable")
             trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
         else if (itm.level)
-            trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level };
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: (_a = itm.rolledStats) !== null && _a !== void 0 ? _a : null };
         else
-            trimmed.inventory[index] = { id: itm.id, type: itm.type };
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: (_b = itm.rolledStats) !== null && _b !== void 0 ? _b : null };
     });
     trimmed.abilities.forEach((abi, index) => {
         // @ts-ignore
