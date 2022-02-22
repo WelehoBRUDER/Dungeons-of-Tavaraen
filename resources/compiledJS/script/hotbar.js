@@ -720,10 +720,10 @@ function effectSyntax(effect, embed = false, effectId = "") {
     if (!img)
         img = icons[key_ + "_icon"];
     if (value < 0) {
-        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
     }
     else
-        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value + "%" : value} ${lastBit}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
     return text;
 }
 tooltip(document.querySelector(".playerMpBg"), "<i><v>icons.mana_icon<v><i><f>20px<f>Mana: <v>Math.round(player.stats.mp)<v>§/§<v>player.getMpMax()<v>§");
@@ -979,6 +979,19 @@ function renderCharacter() {
     coreResistances.classList.add("coreResistances");
     statusResistances.classList.add("statusResistances");
     passiveAbilities.classList.add("passiveAbilities");
+    let allMods = "<f>20px<f>All modifiers: §\n";
+    Object.entries(player.allModifiers).map((eff) => {
+        if (eff[1] - 1 === 0)
+            return;
+        else if (eff[1] === 0)
+            return;
+        console.log(eff[1]);
+        const displayEff = Object.assign({}, eff);
+        if (displayEff[0].endsWith("P") && !displayEff[0].includes("crit"))
+            displayEff[1] = displayEff[1] * 100 - 100;
+        allMods += effectSyntax(displayEff);
+    });
+    tooltip(pc, allMods);
     Object.entries(playerCoreStats).forEach((stat) => {
         coreStats.append(createStatDisplay(stat));
     });

@@ -1,8 +1,12 @@
 # 1.0.6 ~ 22.2.2022
 
-### Patch
+### Patch - The Blacksmithing Update
 
 ## New Additions
+
+- Added new npc "Blacksmith Maroch"
+- Added smithing, you can now upgrade your equipment up to +5!
+- Hovering your portrait in the character screen will display all modifiers from perks, items etc combined.
 
 ## Fixes & Tweaks
 

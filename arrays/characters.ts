@@ -22,6 +22,16 @@ const NPCcharacters = [
     conditionalMaps: [],
     conditionalCords: []
   }),
+  new Npc({
+    id: "blacksmithMaroch",
+    sprite: "norsemanBerserk",
+    greeting: "generic_hail_friend",
+    pronounSet: "masculine",
+    currentMap: 2,
+    currentCords: { x: 37, y: 168 },
+    conditionalMaps: [],
+    conditionalCords: []
+  }),
 ];
 
 const NPCInventories = {
@@ -31,7 +41,6 @@ const NPCInventories = {
       { id: "chippedAxe", unique: false, price: 100 },
       { ...items["longsword"], unique: false, price: 200 },
       { ...items["apprenticeWand"], unique: false, price: 100 },
-      { ...items["crimsonStaff"], unique: false, price: 800 },
       { ...items["raggedHood"], unique: false, price: 15 },
       { ...items["raggedShirt"], unique: false, price: 25 },
       { ...items["raggedGloves"], unique: false, price: 12 },
@@ -42,6 +51,18 @@ const NPCInventories = {
       { ...items["leatherBracers"], unique: false, price: 40 },
       { ...items["leatherLeggings"], unique: false, price: 110 },
       { ...items["leatherBoots"], unique: false, price: 40 },
+      { ...items["woodenShield"], unique: false, price: 75 },
+      { ...items["apprenticeRobe"], unique: false, price: 900 },
+      { ...items["apprenticePants"], unique: false, price: 700 },
+      { ...items["apprenticeBoots"], unique: false, price: 500 },
+      { id: "healingPotion_weak", unique: false, price: 250 },
+      { id: "manaPotion_weak", unique: false, price: 250 },
+    ],
+  },
+  blacksmithMaroch: {
+    normal: [
+      { id: "longBow", unique: true, price: 1000 },
+      { ...items["crimsonStaff"], unique: false, price: 800 },
       { ...items["ironHelmet"], unique: false, price: 225 },
       { ...items["ironArmor"], unique: false, price: 500 },
       { ...items["ironGauntlets"], unique: false, price: 180 },
@@ -52,14 +73,7 @@ const NPCInventories = {
       { ...items["rangerGloves"], unique: false, price: 600 },
       { ...items["rangerPants"], unique: false, price: 1200 },
       { ...items["rangerBoots"], unique: false, price: 600 },
-      { ...items["woodenShield"], unique: false, price: 75 },
       { ...items["ironShield"], unique: false, price: 400 },
-      { ...items["apprenticeRobe"], unique: false, price: 900 },
-      { ...items["apprenticePants"], unique: false, price: 700 },
-      { ...items["apprenticeBoots"], unique: false, price: 500 },
-      { id: "longBow", unique: true, price: 1000 },
-      { id: "healingPotion_weak", unique: false, price: 250 },
-      { id: "manaPotion_weak", unique: false, price: 250 },
-    ],
+    ]
   }
 } as any;

@@ -250,7 +250,7 @@ const finnish = {
     rangerArmor_name: "Metsästäjän Haarniska",
     rangerBoots_name: "Metsästäjän Kengät",
     rangerPants_name: "Metsästäjän Housut",
-    rangerGloves_name: "Metästäjän Hanskat",
+    rangerGloves_name: "Metsästäjän Hanskat",
     rangerHood_name: "Metsästäjän Huppu",
     knightArmor_name: "Ritarin Haarniska",
     knightSabatons_name: "Ritarin Jalkimet",

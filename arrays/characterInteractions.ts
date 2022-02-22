@@ -29,7 +29,7 @@ const characterInteractions = {
       {
         name: "leaveDialog",
         type: "exit",
-        action: {type: "exit"},
+        action: { type: "exit" },
         displayAtBottom: true,
       }
     ],
@@ -176,5 +176,25 @@ const characterInteractions = {
         ]
       }
     ],
+  },
+  blacksmithMaroch: {
+    always: [
+      {
+        name: "blacksmithMaroch_store",
+        type: "openStore",
+        action: { type: "store", id: "blacksmithMaroch_store_normal" }
+      },
+      {
+        name: "blacksmithMaroch_smithing",
+        type: "smithScreen",
+        action: { type: "smith", id: "blacksmithMaroch_smith" }
+      },
+      {
+        name: "leaveDialog",
+        type: "exit",
+        action: { type: "exit" },
+        displayAtBottom: true,
+      }
+    ]
   }
 } as any;

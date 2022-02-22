@@ -8,4 +8,4 @@ Paranna summonien toimintaa, lisää ikoni joka summonnille, mahdollista summoni
 Tehdään vihollisista vahvempia ja vähennetään niiden määrää, pitäisi auttaa balanceen.
 Korjaa miten itemien droppaaminen toimii, tuplaklikin jälkeen ei pitäisi joutua liikuttamaan hiirtä. // TEHTY
 Right clickin esto vain paikoissa missä sitä käytetään.
-Dex voisi lisää hit chance ja evasion
+Dex voisi lisää hit chance ja evasion // TEHTY

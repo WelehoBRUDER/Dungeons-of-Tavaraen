@@ -211,14 +211,17 @@ function beginGame() {
     turnOver = true;
     enemiesHadTurn = 0;
     lootedChests = [];
+    currentMap = 2;
     state.inCombat = false;
     resetAllChests();
     handleEscape();
     createStaticMap();
     modifyCanvas();
+    renderMinimap(maps[currentMap]);
+    moveMinimap();
     setTimeout(() => {
         openLevelingScreen();
-    }, 100);
+    }, 50);
 }
 function checkIfCanStartGame() {
     let canStart = false;
@@ -371,7 +374,7 @@ function classTT(data) {
     });
     return txt;
 }
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 80; i++) {
     player.addItem(Object.assign({}, randomProperty(items)));
 }
 function initGame() {
@@ -394,4 +397,5 @@ function initGame() {
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 }
 initGame();
+createSmithingWindow();
 //# sourceMappingURL=startGame.js.map

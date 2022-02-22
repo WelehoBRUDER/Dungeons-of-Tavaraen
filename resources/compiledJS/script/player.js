@@ -170,6 +170,7 @@ class PlayerCharacter extends Character {
                 }
             });
             this[slot] = {};
+            player.allModifiers = getAllModifiersOnce(player, true);
             renderInventory();
         };
         this.equip = (event, item, fromContextMenu = false, auto = false) => {
@@ -220,6 +221,7 @@ class PlayerCharacter extends Character {
                 else
                     this.unequip(event, "offhand", item.index, true, fromContextMenu);
             }
+            player.allModifiers = getAllModifiersOnce(player, true);
             if (!auto)
                 renderInventory();
         };
@@ -443,6 +445,8 @@ function sortInventory(category, reverse, inventory, context) {
         inventory.sort((a, b) => numberSort(a, b, category, reverse));
     if (context.includes("SELLING"))
         createMerchantWindow(false, true);
+    else if (context == "UPGRADE")
+        createSmithingWindow(false);
     else
         renderInventory();
 }
