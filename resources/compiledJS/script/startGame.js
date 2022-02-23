@@ -374,7 +374,7 @@ function classTT(data) {
     });
     return txt;
 }
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 20; i++) {
     player.addItem(Object.assign({}, randomProperty(items)));
 }
 function initGame() {
@@ -397,5 +397,4 @@ function initGame() {
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 }
 initGame();
-createSmithingWindow();
 //# sourceMappingURL=startGame.js.map

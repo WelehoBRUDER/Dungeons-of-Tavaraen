@@ -47,6 +47,26 @@ body {
   background-position: center;
   user-select: none;
 
+  .closeWindowButton {
+    transition: filter 0.08s;
+    font-size: calc(24px * var(--ui-scale));
+    padding: calc(3px * var(--ui-scale));
+    padding-left: calc(9px * var(--ui-scale));
+    padding-right: calc(9px * var(--ui-scale));
+    background: rgba(143, 12, 12, 0.75);
+    box-shadow: inset 0 0 4px 4px rgba(125, 10, 10, 0.66);
+    border-radius: 50%;
+    color: white;
+    position: absolute;
+    right: calc(-4px * var(--ui-scale));
+    top: calc(-4px * var(--ui-scale));
+    z-index: 50;
+  }
+
+  .closeWindowButton:hover {
+    filter: brightness(1.2);
+  }
+
   .greyedOut {
     filter: brightness(50%);
     pointer-events: none;
@@ -1711,6 +1731,10 @@ body {
         top: 40%;
         margin-left: calc(-45px * var(--ui-scale));
         margin-top: calc(-45px * var(--ui-scale));
+
+        img {
+          width: 100%;
+        }
       }
 
       .upgradeSlot:hover {
@@ -1738,6 +1762,10 @@ body {
           z-index: 7;
           background-image: background-image;
           margin: calc(5px * var(--ui-scale));
+
+          img {
+            width: 100%;
+          }
         }
 
         div:hover {
@@ -1762,7 +1790,7 @@ body {
 
         position: absolute;
         left: 50%;
-        top: 70%;
+        top: 75%;
         transform: translateX(-50%);
         user-select: none;
 
@@ -1780,6 +1808,35 @@ body {
       .upgradeButton:active {
         margin-top: 8px;
         box-shadow: -1px 1px 1px 1px rgba(11, 124, 124, 0.75);
+      }
+
+      .smithingGoldContainer {
+        user-select: none;
+        position: absolute;
+        left: 50%;
+        top: 65%;
+        transform: translateX(-50%);
+        display: inline-flex;
+        padding: 0;
+        margin: 0;
+        align-items: center;
+        max-height: min-content;
+
+        img {
+          width: calc(48px * var(--ui-scale));
+          height: calc(48px * var(--ui-scale));
+          padding: 0;
+          margin: 0;
+          top: 0;
+        }
+
+        p {
+          font-size: calc(32px * var(--ui-scale));
+          color: goldenrod;
+          text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
+          padding: 0;
+          margin: 0;
+        }
       }
     }
 

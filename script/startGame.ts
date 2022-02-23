@@ -380,7 +380,7 @@ function classTT(data: any) {
   return txt;
 }
 
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 20; i++) {
   player.addItem({ ...randomProperty(items) });
 }
 
@@ -405,6 +405,3 @@ function initGame() {
 }
 
 initGame();
-
-
-createSmithingWindow();

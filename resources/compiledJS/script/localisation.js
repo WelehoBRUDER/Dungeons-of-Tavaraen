@@ -351,6 +351,7 @@ const finnish = {
     // Dialog screen stuff
     openStore: "KAUPPA",
     quest: "TEHTÄVÄ",
+    smith: "SEPPÄ",
     exit: "POISTU",
     // Misc
     attack_name: "tavallisten iskujen vahinkoa",
@@ -425,6 +426,7 @@ const finnish = {
     revive: "Olet herännyt henkiin pyhäköllä!",
     // Character names
     testMerchant_name: "Karl Bauer",
+    blacksmithMaroch_name: "Maroch",
     // Passive abilities
     resilience_of_the_lone_wanderer_name: "Kulkijan Sinnikkyys",
     lone_wanderer_desc: "Edes tuonela ei kykene pysäyttämään tehtäväsi suoritusta.",
@@ -793,7 +795,7 @@ const finnish = {
     smoke_screen_desc: "Peitä vastustajasi näkökenttä.",
     sneakier_stabbing_name: "Konnan Kepponen",
     sneakier_stabbing_desc: "Tästä tempusta eivät puukotukselle allergiset pidä!",
-    smoke_and_mirrors_name: "Taika Temppu",
+    smoke_and_mirrors_name: "Taikatemppu",
     smoke_and_mirrors_desc: "Savua ja peilejä...",
     tricky_distraction_name: "Harhautusliike",
     tricky_distraction_desc: "Laita vastustajasi läiskimään väärää kohdetta.",
@@ -1117,6 +1119,7 @@ const english = {
     // Dialog screen stuff
     openStore: "STORE",
     quest: "QUEST",
+    smith: "SMITH",
     exit: "EXIT",
     // Misc
     attack_name: "base attack damage",
@@ -1191,6 +1194,7 @@ const english = {
     revive: "You have been revived at a shrine!",
     // Character names
     testMerchant_name: "Karl Bauer",
+    blacksmithMaroch_name: "Maroch",
     // Artifacts
     part_of_set: "Part of",
     artifact_def: "Artifact",

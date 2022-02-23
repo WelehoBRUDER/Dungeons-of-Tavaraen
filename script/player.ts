@@ -560,6 +560,18 @@ function stringSort(a: any, b: any, string: string, reverse: boolean = false) {
   }
 };
 
+function modsSort(a: any, b: any) {
+  const numA: number = a[1];
+  const numB: number = b[1];
+  if (numA > numB) {
+    return -1;
+  }
+  if (numA < numB) {
+    return 1;
+  }
+  return 0;
+}
+
 function gradeSort(a: any, b: any, reverse: boolean = false) {
   var numA: number = parseInt(a.gradeValue);
   var numB: number = parseInt(b.gradeValue);
@@ -686,7 +698,7 @@ var player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["rangerClass"]),
+    main: new combatClass(combatClasses["rogueClass"]),
     sub: null
   },
   sprite: ".player",

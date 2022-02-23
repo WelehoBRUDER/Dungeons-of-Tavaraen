@@ -608,7 +608,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
         key_ = key;
         tailEnd = lang["resist"];
     }
-    else if (key.includes("Def") && !key.includes("status_effect")) {
+    else if (key.includes("Def") && !key.includes("status_effect") && !key.includes("Defense")) {
         key = key.replace("Def", "");
         key_ = key;
         //tailEnd = lang["resist"];
@@ -929,6 +929,11 @@ function renderCharacter() {
     document.querySelector(".worldText").style.opacity = "0";
     bg.style.transform = "scale(1)";
     bg.textContent = "";
+    const xBut = document.createElement("div");
+    xBut.classList.add("closeWindowButton");
+    xBut.textContent = "X";
+    xBut.onclick = closeCharacter;
+    bg.append(xBut);
     const playerStats = player.getStats();
     const hitChances = player.getHitchance();
     const playerCoreStats = Object.assign(Object.assign({}, playerStats), hitChances);
@@ -980,17 +985,25 @@ function renderCharacter() {
     statusResistances.classList.add("statusResistances");
     passiveAbilities.classList.add("passiveAbilities");
     let allMods = "<f>20px<f>All modifiers: §\n";
+    // This convoluted mess allows us to "sort" an object.
+    const modsToSort = [];
     Object.entries(player.allModifiers).map((eff) => {
+        // Trim the object data to what we're going to display
         if (eff[1] - 1 === 0)
             return;
         else if (eff[1] === 0)
             return;
-        console.log(eff[1]);
         const displayEff = Object.assign({}, eff);
         if (displayEff[0].endsWith("P") && !displayEff[0].includes("crit"))
             displayEff[1] = displayEff[1] * 100 - 100;
-        allMods += effectSyntax(displayEff);
+        modsToSort.push([displayEff[0], displayEff[1]]); // Copy object data to an Array
     });
+    // Sort the Array
+    modsToSort.sort((a, b) => modsSort(a, b));
+    modsToSort.forEach((mod) => {
+        allMods += effectSyntax(mod); // Finally process the data
+    });
+    // Done !
     tooltip(pc, allMods);
     Object.entries(playerCoreStats).forEach((stat) => {
         coreStats.append(createStatDisplay(stat));

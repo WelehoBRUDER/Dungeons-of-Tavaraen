@@ -20,7 +20,9 @@ const dialogLang = {
         testMerchant_more_slime_trouble: "Jatkuvatko lima ongelmasi?",
         testMerchant_agree_to_quest_2: "Hävitän niin monta kuin pyydät.",
         testMerchant_decline_quest_2: "En kerkeä juuri nyt.",
-        testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman."
+        testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman.",
+        blacksmithMaroch_store: "Tarvitsen varusteita",
+        blacksmithMaroch_smithing: "Paranna varusteitani"
     },
     english: {
         masculine_heShe: "He",
@@ -42,7 +44,9 @@ const dialogLang = {
         testMerchant_more_slime_trouble: "More slime trouble?",
         testMerchant_agree_to_quest_2: "Sure, I'll exterminate some.",
         testMerchant_decline_quest_2: "No time for this now.",
-        testMerchant_defeated_the_slimes_2: "I've beaten a few slimes."
+        testMerchant_defeated_the_slimes_2: "I've beaten a few slimes.",
+        blacksmithMaroch_store: "I need equipment",
+        blacksmithMaroch_smithing: "I need upgrades"
     }
 };
 //# sourceMappingURL=dialogLocalisation.js.map
