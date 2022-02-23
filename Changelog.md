@@ -1,4 +1,12 @@
-# 1.0.6 ~ 22.2.2022
+# 1.0.7 ~ 23.2.2022
+
+### Patch
+
+## New Additions
+
+## Fixes & Tweaks
+
+# 1.0.6 ~ 23.2.2022
 
 ### Patch - The Blacksmithing Update
 

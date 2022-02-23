@@ -8,8 +8,8 @@ const DEVTOOLS = {
     FREE_SKILLS: false,
     PERK_NO_COST: false
 };
-const GAME_VERSION = 1.06.toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
-const DEVMODE = false; // Whether developer mode is enabled or not.
+const GAME_VERSION = 1.07.toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
+const DEVMODE = true; // Whether developer mode is enabled or not.
 const devBox = document.querySelector(".devInfo");
 if (DEVMODE) {
     document.querySelector(".devTools").style.display = "block";
