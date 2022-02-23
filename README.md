@@ -1,3 +1,47 @@
+# 1.0.6 ~ 22.2.2022
+
+### Patch - The Blacksmithing Update
+
+## New Additions
+
+- Added new npc "Blacksmith Maroch"
+  > Maroch can upgrade your items and has a quest.
+- Added smithing, you can now upgrade your equipment up to +5!
+  > Note: Smithing screen is very rough, expect to have some minor inconveniences.
+  > To upgrade an item, you need to have an extra two identical items of the same level.
+  > Upgrading an item costs 50% of its full price.
+- Hovering your portrait in the character screen will display all modifiers from perks, items etc combined.
+
+## Fixes & Tweaks
+
+- Added a close button to most windows.
+- Fixed some localisation issues.
+- Made some fallbacks to missing localisation.
+
+# 1.0.5 ~ 22.2.2022
+
+### Patch - The Equipment Rush
+
+## New Additions
+
+- Added 2 new weapons:
+  - Crimson Staff, wand for mages using fire.
+  - Crystal Wand, wand for mages using ice.
+- Added 2 new armor sets:
+  - Apprentice, a light set for mages.
+  - Ranger, a medium set for all characters.
+- Added `Hunter` artifact set.
+- Reintroduced stat randomness for artifacts.
+- Added the option to toggle helmet visibility.
+
+## Fixes & Tweaks
+
+- Fixed duplicate items being removed when selling one copy.
+- Made some screens scale slightly better.
+- Reworked keyboard movement, added diagonal movement keys.
+- Fixed some player rendering errors.
+- Made hotbar items and abilities draggable.
+
 # 1.0.4 ~ 20.2.2022
 
 ### Patch - The Summoning of the Codex
@@ -18,7 +62,7 @@
 
 # 1.0.3 - ~ 17.2.2022
 
-### Patch
+### Patch - The Customization
 
 ## New Additions
 
@@ -37,7 +81,7 @@
 
 # 1.0.2 ~ 16.2.2022
 
-### Patch
+### Patch - The Ability Scheme
 
 ## New Additions
 
@@ -55,7 +99,7 @@
 
 # 1.0.1 ~ 15.2.2022
 
-### Patch
+### Patch - The Grip of Death
 
 ## New Additions
 
