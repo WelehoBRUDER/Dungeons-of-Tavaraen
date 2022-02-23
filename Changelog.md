@@ -4,6 +4,8 @@
 
 ## New Additions
 
+- Improved the map editor.
+
 ## Fixes & Tweaks
 
 # 1.0.6 ~ 23.2.2022

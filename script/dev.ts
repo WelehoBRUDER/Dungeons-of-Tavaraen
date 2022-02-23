@@ -3,7 +3,7 @@ const CURSOR_LOCATION = {
   y: 0
 };
 const DEVTOOLS = {
-  GOD: false,
+  GOD: true,
   FREE_SKILLS: false,
   PERK_NO_COST: false
 };
