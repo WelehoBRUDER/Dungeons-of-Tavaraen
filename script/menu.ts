@@ -178,6 +178,7 @@ const state = {
   textWindowOpen: false as boolean,
   dialogWindow: false as boolean,
   storeOpen: false as boolean,
+  smithOpen: false as boolean,
   journalOpen: false as boolean,
   codexOpen: false as boolean,
 };
@@ -226,6 +227,9 @@ function handleEscape() {
   }
   else if (state.codexOpen) {
     closeCodex();
+  }
+  else if (state.smithOpen) {
+    closeSmithingWindow();
   }
   else if (!state.isSelected && !player.isDead) {
     openGameMenu();

@@ -29,7 +29,7 @@ const characterInteractions = {
       {
         name: "leaveDialog",
         type: "exit",
-        action: {type: "exit"},
+        action: { type: "exit" },
         displayAtBottom: true,
       }
     ],
@@ -175,6 +175,57 @@ const characterInteractions = {
           }
         ]
       }
+    ],
+  },
+  blacksmithMaroch: {
+    always: [
+      {
+        name: "blacksmithMaroch_store",
+        type: "openStore",
+        action: { type: "store", id: "blacksmithMaroch_store_normal" }
+      },
+      {
+        name: "blacksmithMaroch_smithing",
+        type: "smith",
+        action: { type: "smith", id: "blacksmithMaroch_smith" }
+      },
+      {
+        name: "leaveDialog",
+        type: "exit",
+        action: { type: "exit" },
+        displayAtBottom: true,
+      }
+    ],
+    conditional: [
+      {
+        name: "blacksmithMaroch_",
+        type: "quest",
+        action: { type: "quest", id: "maroch_slay_brethren", questId: "maroch_slay_brethren_task" },
+        conditions: [
+          {
+            NOT_has_flag: "maroch_slay_brethren_quest"
+          }
+        ],
+        flags: [
+          {
+            set_flag: {
+              flag: "maroch_slay_brethren_quest",
+              value: true
+            }
+          }
+        ],
+      },
+      {
+        name: "blacksmithMaroch_brethren_slain",
+        type: "quest",
+        action: { type: "questObjective", id: "completed_maroch_slay_brethren", questId: "maroch_slay_brethren_task" },
+        conditions: [
+          {
+            has_flag: "brethren_slain_talk",
+            NOT_has_flag: "completed_quest_slay_brethren"
+          }
+        ],
+      },
     ],
   }
 } as any;

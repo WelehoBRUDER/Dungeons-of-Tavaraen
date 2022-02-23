@@ -839,7 +839,7 @@ function itemTT(item: any) {
 
 var sortingReverse = false;
 
-function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY", chest: any = null, resetItem: boolean = true) {
+function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY", chest: any = null, resetItem: boolean = true, itemToMatch: any = null) {
   const container = document.createElement("div");
   const itemsList = document.createElement("div");
   const itemsListBar = document.createElement("div");
@@ -872,6 +872,10 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   itemsList.addEventListener("click", e => removeContextMenu(e));
   const items: Array<any> = [...inventory];
   items.forEach((item: any) => {
+    if (context == "UPGRADE" && itemToMatch?.id) {
+      if (item.id !== itemToMatch?.id || item.level !== itemToMatch?.level) return;
+    };
+    if (context == "UPGRADE" && (item.type == "artifact" || item.type == "consumable")) return;
     let itm = { ...item };
     if (resetItem) {
       if (itm.type == "weapon") itm = new Weapon({ ...itm });
@@ -929,6 +933,10 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     if (context == "PLAYER_SELLING") {
       itemObject.addEventListener("mousedown", e => sellItem(e, itm));
       itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "PLAYER_SELLING", chest));
+    }
+    if (context == "UPGRADE") {
+      itemObject.addEventListener("mousedown", e => handleUpgradeAdding(e, itm));
+      itemObject.addEventListener("click", e => clickItem(e, itm, itemObject, "UPGRADE", chest));
     }
     tooltip(itemObject, itemTT(itm));
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);

@@ -144,8 +144,8 @@ function renderMap(map, createNewSightMap = false) {
     map.shrines.forEach((checkpoint) => {
         var _a, _b, _c;
         if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
-            const shrine = document.querySelector(".shrineTile");
-            const shrineLit = document.querySelector(".shrineLitTile");
+            const shrine = document.querySelector(".sprites .shrineTile");
+            const shrineLit = document.querySelector(".sprites .shrineLitTile");
             var tileX = (checkpoint.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             var tileY = (checkpoint.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             if (((_b = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _b === void 0 ? void 0 : _b.cords.x) == checkpoint.cords.x && ((_c = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _c === void 0 ? void 0 : _c.cords.y) == checkpoint.cords.y)
@@ -159,7 +159,7 @@ function renderMap(map, createNewSightMap = false) {
         const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
         if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
             if (!lootedChest) {
-                const chestSprite = document.querySelector(`.${chest.sprite}`);
+                const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
                 var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
@@ -225,7 +225,7 @@ function renderMap(map, createNewSightMap = false) {
         var _a;
         if (npc.currentMap == currentMap) {
             if (((_a = sightMap[npc.currentCords.y]) === null || _a === void 0 ? void 0 : _a[npc.currentCords.x]) == "x") {
-                const charSprite = document.querySelector("." + npc.sprite);
+                const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
                 var tileX = (npc.currentCords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
                 var tileY = (npc.currentCords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (charSprite) {
@@ -247,7 +247,7 @@ function renderMap(map, createNewSightMap = false) {
         canvas.classList = `summon${index} layer`;
         const ctx = canvas.getContext("2d");
         summonLayers.append(canvas);
-        const enemyImg = document.querySelector(`.${enemy.sprite}`);
+        const enemyImg = document.querySelector(`.sprites .${enemy.sprite}`);
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         if (enemyImg && (((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) == "x")) {

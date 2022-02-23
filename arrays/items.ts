@@ -305,7 +305,7 @@ const items = {
     price: 800,
     weight: 1.7,
     type: "weapon",
-    firesProjectile: "iceSpikeProjectile",
+    firesProjectile: "iceSpikedProjectile",
     statBonus: "int",
     grade: "rare",
     slot: "weapon",

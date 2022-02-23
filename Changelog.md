@@ -1,4 +1,24 @@
-# 1.0.5 ~ 20.2.2022
+# 1.0.6 ~ 22.2.2022
+
+### Patch - The Blacksmithing Update
+
+## New Additions
+
+- Added new npc "Blacksmith Maroch"
+  > Maroch can upgrade your items and has a quest.
+- Added smithing, you can now upgrade your equipment up to +5!
+  > Note: Smithing screen is very rough, expect to have some minor inconveniences.
+  > To upgrade an item, you need to have an extra two identical items of the same level.
+  > Upgrading an item costs 50% of its full price.
+- Hovering your portrait in the character screen will display all modifiers from perks, items etc combined.
+
+## Fixes & Tweaks
+
+- Added a close button to most windows.
+- Fixed some localisation issues.
+- Made some fallbacks to missing localisation.
+
+# 1.0.5 ~ 22.2.2022
 
 ### Patch - The Equipment Rush
 

@@ -47,6 +47,26 @@ body {
   background-position: center;
   user-select: none;
 
+  .closeWindowButton {
+    transition: filter 0.08s;
+    font-size: calc(24px * var(--ui-scale));
+    padding: calc(3px * var(--ui-scale));
+    padding-left: calc(9px * var(--ui-scale));
+    padding-right: calc(9px * var(--ui-scale));
+    background: rgba(143, 12, 12, 0.75);
+    box-shadow: inset 0 0 4px 4px rgba(125, 10, 10, 0.66);
+    border-radius: 50%;
+    color: white;
+    position: absolute;
+    right: calc(-4px * var(--ui-scale));
+    top: calc(-4px * var(--ui-scale));
+    z-index: 50;
+  }
+
+  .closeWindowButton:hover {
+    filter: brightness(1.2);
+  }
+
   .greyedOut {
     filter: brightness(50%);
     pointer-events: none;
@@ -1667,6 +1687,167 @@ body {
       .greyedOut:hover {
         filter: grayScale(1) brightness(0.5);
       }
+    }
+  }
+
+  .smithingWindow {
+    transition: 0.275s;
+    transition-timing-function: ease-in;
+    width: calc(1480px * var(--ui-scale));
+    height: calc(780px * var(--ui-scale));
+    background: rgba(5, 5, 5, 0.95);
+    border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
+    box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(-740px * var(--ui-scale));
+    margin-top: calc(-390px * var(--ui-scale));
+    z-index: 8;
+    transform: scale(0);
+    user-select: none;
+
+    .upgradeArea {
+      width: 40%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      .upgradeSlot {
+        transition: 0.07s;
+        position: absolute;
+        width: calc(90px * var(--ui-scale));
+        height: calc(90px * var(--ui-scale));
+        transition-timing-function: ease-in;
+        background: rgba(32, 50, 90, 0.6);
+        box-shadow: inset 0px 0px 8px 7px rgba(4, 7, 14, 0.6);
+        box-sizing: border-box;
+        border: calc(4px * var(--ui-scale)) solid rgba(45, 45, 45, 0.7);
+        z-index: 7;
+        background-image: background-image;
+        left: 50%;
+        top: 40%;
+        margin-left: calc(-45px * var(--ui-scale));
+        margin-top: calc(-45px * var(--ui-scale));
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .upgradeSlot:hover {
+        filter: brightness(1.1);
+        border: calc(4px * var(--ui-scale)) solid rgba(126, 126, 126, 0.7);
+      }
+
+      .materialWrapper {
+        display: flex;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%);
+
+        div {
+          transition: 0.07s;
+          position: relative;
+          width: calc(80px * var(--ui-scale));
+          height: calc(80px * var(--ui-scale));
+          transition-timing-function: ease-in;
+          background: rgba(32, 50, 90, 0.6);
+          box-shadow: inset 0px 0px 8px 7px rgba(4, 7, 14, 0.6);
+          box-sizing: border-box;
+          border: calc(4px * var(--ui-scale)) solid rgba(45, 45, 45, 0.7);
+          z-index: 7;
+          background-image: background-image;
+          margin: calc(5px * var(--ui-scale));
+
+          img {
+            width: 100%;
+          }
+        }
+
+        div:hover {
+          filter: brightness(1.1);
+          border: calc(4px * var(--ui-scale)) solid rgba(126, 126, 126, 0.7);
+        }
+      }
+
+      .upgradeButton {
+        transition: 0.275s;
+        animation-name: popIn;
+        animation-duration: 0.175s;
+
+        font-size: 26px;
+        color: white;
+        padding: 15px;
+        text-shadow: -4px 4px 8px black;
+        border: 4px solid grey;
+        text-align: center;
+        width: 305px;
+        height: 30px;
+
+        position: absolute;
+        left: 50%;
+        top: 75%;
+        transform: translateX(-50%);
+        user-select: none;
+
+        background: url(../resources/ui/menu_button.png);
+        background-size: 100% 100%;
+
+        box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
+      }
+
+      .upgradeButton:hover {
+        margin-top: 6px;
+        box-shadow: -2px 2px 3px 3px rgba(11, 124, 124, 0.75);
+      }
+
+      .upgradeButton:active {
+        margin-top: 8px;
+        box-shadow: -1px 1px 1px 1px rgba(11, 124, 124, 0.75);
+      }
+
+      .smithingGoldContainer {
+        user-select: none;
+        position: absolute;
+        left: 50%;
+        top: 65%;
+        transform: translateX(-50%);
+        display: inline-flex;
+        padding: 0;
+        margin: 0;
+        align-items: center;
+        max-height: min-content;
+
+        img {
+          width: calc(48px * var(--ui-scale));
+          height: calc(48px * var(--ui-scale));
+          padding: 0;
+          margin: 0;
+          top: 0;
+        }
+
+        p {
+          font-size: calc(32px * var(--ui-scale));
+          color: goldenrod;
+          text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
+
+    .invContainer {
+      width: 60%;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      box-sizing: border-box;
+      border: 3px solid rgb(29, 29, 29);
     }
   }
 

@@ -292,8 +292,9 @@ class Enemy extends Character {
       lootEnemy(this);
       this.chosenTarget = null;
       if (this.questSpawn?.quest > -1) {
-        player.questProgress[this.questSpawn.quest].prog[this.questSpawn.index] = 1;
-        updateQuestProgress({ id: this.questSpawn.quest, quest: Object.keys(quests)[player.questProgress[this.questSpawn.quest].id] });
+        let index = player.questProgress.findIndex((q: any) => q.id === this.questSpawn.quest);
+        player.questProgress[index].prog[this.questSpawn.index] = 1;
+        updateQuestProgress({ id: index, quest: Object.keys(quests)[player.questProgress[index].id] });
       }
       else fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
       player.questProgress.forEach((prog: any) => {

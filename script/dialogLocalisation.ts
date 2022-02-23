@@ -7,7 +7,7 @@ const dialogLang = {
     feminine_hisHer: "Hänen",
     neutral_hisHer: "Hänen",
     leaveDialog: "Näkemisiin!",
-    generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Tervehdys kamu! On hyvä nähdä etteivät kaikki ole menettäneet järkeään. \nJos olet kiinnostunut tarjoamastani asioista, niin totta ihmeessä mainitse siitä!"\n\n§/heShe/ huokaisee ja nojaa taaksepäin.`,
+    generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Tervehdys kamu! On hyvä nähdä etteivät kaikki ole menettäneet järkeään. \nJos olet kiinnostunut tarjoamastani asioista, niin totta ihmeessä mainitse siitä!"`,
     testMerchant_store: "Näytä tuotteesi",
     testMerchant_business: "Kuinka hyvin kauppa käy?",
     testMerchant_defeated_the_slimes: "Päihitin ryöväri limat",
@@ -19,7 +19,9 @@ const dialogLang = {
     testMerchant_more_slime_trouble: "Jatkuvatko lima ongelmasi?",
     testMerchant_agree_to_quest_2: "Hävitän niin monta kuin pyydät.",
     testMerchant_decline_quest_2: "En kerkeä juuri nyt.",
-    testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman."
+    testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman.",
+    blacksmithMaroch_store: "Tarvitsen varusteita",
+    blacksmithMaroch_smithing: "Paranna varusteitani"
   },
   english: {
     masculine_heShe: "He",
@@ -29,7 +31,7 @@ const dialogLang = {
     feminine_hisHer: "Her",
     neutral_hisHer: "Their",
     leaveDialog: "Goodbye!",
-    generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Hail friend! It's good to see someone who can think for themself, I've seen far too many of the corrupted for my own good. \nAnyway, if you're interested in what I've got, just say the word."\n\n§/heShe/ sighs and leans back.`,
+    generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Hail friend! It's good to see someone who can think for themself, I've seen far too many of the corrupted for my own good. \nAnyway, if you're interested in what I've got, just say the word."`,
     testMerchant_store: "Show me your wares",
     testMerchant_business: "How's business?",
     testMerchant_defeated_the_slimes: "I defeated the slimes",
@@ -41,6 +43,8 @@ const dialogLang = {
     testMerchant_more_slime_trouble: "More slime trouble?",
     testMerchant_agree_to_quest_2: "Sure, I'll exterminate some.",
     testMerchant_decline_quest_2: "No time for this now.",
-    testMerchant_defeated_the_slimes_2: "I've beaten a few slimes."
+    testMerchant_defeated_the_slimes_2: "I've beaten a few slimes.",
+    blacksmithMaroch_store: "I need equipment",
+    blacksmithMaroch_smithing: "I need upgrades"
   }
 } as any;

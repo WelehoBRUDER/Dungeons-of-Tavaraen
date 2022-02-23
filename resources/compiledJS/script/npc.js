@@ -10,7 +10,10 @@ const flags = [
     "has_heard_merchant_troubles",
     "accepted_merchant_quest_2",
     "exterminate_slimes_talk",
-    "completed_quest_defeat_slimes_2"
+    "completed_quest_defeat_slimes_2",
+    "maroch_slay_brethren_quest",
+    "brethren_slain_talk",
+    "completed_quest_slay_brethren"
 ];
 // Returns flag index by searching with string.
 function getFlag(str) {
@@ -101,24 +104,27 @@ function createNPCPortrait(npc) {
     renderNPCOutOfMap(512 * (settings["ui_scale"] / 100), canvas, ctx, npc, "left");
 }
 function createDialogChoices(id, choices, npc) {
+    var _a, _b, _c, _d;
     let interactions = characterInteractions[id];
+    if (!interactions)
+        return;
     choices.innerHTML = "";
-    interactions.always.forEach((choice) => {
+    (_a = interactions.always) === null || _a === void 0 ? void 0 : _a.forEach((choice) => {
         if (!choice.displayAtBottom) {
             createChoice(choice, choices, npc);
         }
     });
-    interactions.conditional.forEach((choice) => {
+    (_b = interactions.conditional) === null || _b === void 0 ? void 0 : _b.forEach((choice) => {
         if (checkDialogConditions(choice.conditions)) {
             createChoice(choice, choices, npc);
         }
     });
-    interactions.dialogChoices.forEach((choice) => {
+    (_c = interactions.dialogChoices) === null || _c === void 0 ? void 0 : _c.forEach((choice) => {
         if (checkDialogConditions(choice.conditions)) {
             createChoice(choice, choices, npc);
         }
     });
-    interactions.always.forEach((choice) => {
+    (_d = interactions.always) === null || _d === void 0 ? void 0 : _d.forEach((choice) => {
         if (choice.displayAtBottom) {
             createChoice(choice, choices, npc);
         }
@@ -127,7 +133,9 @@ function createDialogChoices(id, choices, npc) {
 function createChoice(choice, choices, npc) {
     const button = document.createElement("div");
     button.classList.add("option");
-    button.append(textSyntax(`<c>gold<c>[<c>white<c>${lang[choice.type]}<c>gold<c>]<c>white<c> ${dialogLang[lang.language_id][choice.name]}`));
+    let type = lang[choice.type] || choice.type;
+    let name = dialogLang[lang.language_id][choice.name] || choice.name;
+    button.append(textSyntax(`<c>gold<c>[<c>white<c>${type}<c>gold<c>]<c>white<c> ${name}`));
     if (choice.action.type == "store") {
         button.addEventListener("click", e => openMerchantStore(choice.action.id));
     }
@@ -146,7 +154,9 @@ function createChoice(choice, choices, npc) {
     else if (choice.action.type == "questObjective") {
         button.addEventListener("click", e => questObjectiveDialog(choice, npc));
     }
-    ;
+    else if (choice.action.type == "smith") {
+        button.addEventListener("click", e => createSmithingWindow());
+    }
     choices.append(button);
 }
 function openMerchantStore(id) {
@@ -230,15 +240,6 @@ function questObjectiveDialog(choice, npc) {
     updateQuestProgress(getQuestParams(choice.action.questId), npc.id);
     createDialogChoices(npc.id, dialogChoices, npc);
 }
-const loremIpsum = `<c>white<c>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur scelerisque luctus varius. Aenean tristique a nulla luctus accumsan. Curabitur vehicula sodales congue. Sed porta egestas justo et posuere. Ut et velit vitae massa facilisis dapibus. Suspendisse ac luctus felis, vel luctus augue. Nulla facilisi. Sed in malesuada felis. Nam nec dapibus elit. Suspendisse potenti. Donec lacinia nulla nibh, laoreet commodo orci blandit vitae. In hac habitasse platea dictumst.
-
-Ut in eros dapibus, ultrices neque sit amet, varius tortor. Nullam pellentesque consectetur tellus, vitae commodo magna tristique ac. Nunc viverra viverra ex et pharetra. Quisque sollicitudin ullamcorper convallis. Mauris pretium porttitor purus, eu dignissim diam cursus vel. Duis eu urna a est cursus eleifend vitae quis massa. Aenean quis lacus ut quam vestibulum sollicitudin. Etiam eget vulputate nunc. Fusce elementum luctus dolor sit amet tempor. Ut vestibulum volutpat magna, vel consequat lorem fermentum at.
-
-Ut eget quam vel tellus pulvinar finibus. Nulla facilisi. Fusce interdum libero a erat consequat, sit amet vulputate sapien hendrerit. Curabitur pretium risus non lectus tristique tincidunt. Etiam interdum, justo quis pulvinar imperdiet, nibh lorem finibus erat, non tincidunt velit ipsum vel ligula. Maecenas ligula neque, tempus eget lorem ut, viverra rhoncus diam. Donec pellentesque lacus et augue posuere, eget consectetur elit laoreet. Donec dictum diam nec elit porta dictum. Donec ipsum lacus, tincidunt viverra lorem vel, sagittis pharetra nisi. Morbi in ante fringilla, vulputate massa eu, interdum turpis.
-
-Maecenas bibendum porta nulla non porttitor. Morbi ac egestas lectus, quis elementum leo. Pellentesque ligula dui, gravida quis tempor non, auctor nec tortor. Phasellus tortor libero, tincidunt ut lacinia in, porta vitae metus. Aliquam id vestibulum metus. Aenean vel vehicula ipsum. Pellentesque ac augue nec sem sagittis porttitor. Curabitur ac volutpat tellus. In ac consectetur quam. Sed iaculis et quam eget mattis.
-
-Integer vulputate erat eu velit eleifend, nec tristique ligula consectetur. Nulla facilisi. Pellentesque justo dui, lobortis quis scelerisque non, semper ut neque. Integer aliquet efficitur urna eu tempor. Proin magna mi, semper sed enim non, blandit consectetur nisi. Nunc ultricies metus nec elit maximus ornare. Maecenas felis dolor, vehicula et rhoncus vel, posuere in mauris. Quisque tortor nibh, molestie ut augue eu, fermentum auctor quam. Nullam imperdiet a tellus commodo lobortis. In quis malesuada diam. Curabitur varius risus sed quam vulputate, vitae accumsan urna hendrerit. Sed facilisis erat euismod volutpat pulvinar. Duis vitae urna turpis. Proin id cursus urna. In id placerat leo, at dictum orci. Cras a tellus in ligula dapibus rhoncus sed quis quam.`;
 let currentMerchant;
 let currentMerchantInventory = [];
 let pendingItemsSelling = [];
@@ -255,6 +256,7 @@ const pendingSellArea = pendingSell.querySelector(".area");
 const priceArea = confirmation.querySelector(".price");
 const amountScreen = document.querySelector(".amountSelector");
 const confirmButton = confirmation.querySelector(".confirmButton");
+const smithingWindow = document.querySelector(".smithingWindow");
 function createMerchantWindow(resetInv = true, justSort = false) {
     var _a;
     storeWindow.style.transform = "scale(1)";
@@ -476,5 +478,115 @@ function cancelTransaction() {
     closeMerchantWindow();
     updateUI();
     state.storeOpen = false;
+}
+let pendingUpgrade = {
+    upgradeItem: null,
+    materials: []
+};
+function createSmithingWindow(reset = true) {
+    hideHover();
+    exitDialog();
+    state.smithOpen = true;
+    smithingWindow.style.transform = "scale(1)";
+    if (reset) {
+        pendingUpgrade.upgradeItem = null;
+        pendingUpgrade.materials = [];
+    }
+    const invContainer = smithingWindow.querySelector(".invContainer");
+    const upSlot = smithingWindow.querySelector(".upgradeSlot");
+    const price = smithingWindow.querySelector(".smithingGoldContainer .smithingGoldNumber");
+    smithingWindow.querySelector(".mat1").innerHTML = "";
+    smithingWindow.querySelector(".mat2").innerHTML = "";
+    upSlot.innerHTML = "";
+    invContainer.innerHTML = "";
+    if (pendingUpgrade.upgradeItem) {
+        invContainer.append(createItems(player.inventory, "UPGRADE", null, true, pendingUpgrade.upgradeItem));
+        upSlot.append(createItemToSlot(pendingUpgrade.upgradeItem, false));
+        price.textContent = upgradePrice().toString();
+    }
+    else {
+        invContainer.append(createItems(player.inventory, "UPGRADE"));
+        price.textContent = "0";
+    }
+    pendingUpgrade.materials.forEach((item, index) => {
+        smithingWindow.querySelector(`.mat${index + 1}`).append(createItemToSlot(item, true));
+    });
+}
+function createItemToSlot(item, material = true) {
+    const img = document.createElement("img");
+    img.addEventListener("mousedown", e => removeItemFromUpgrade(e, item, material));
+    img.src = item.img;
+    img.classList.add("slotItem");
+    tooltip(img, itemTT(item));
+    return img;
+}
+function handleUpgradeAdding(e, item) {
+    if (e.button !== 2)
+        return;
+    if (!pendingUpgrade.upgradeItem) {
+        addUpgradeItem(item);
+    }
+    else if (pendingUpgrade.materials.length < 2) {
+        addMaterialItem(item);
+    }
+}
+function removeItemFromUpgrade(e, item, material = true) {
+    if (e.button !== 2)
+        return;
+    if (material) {
+        pendingUpgrade.materials.some((itm, index) => {
+            if (itm.id == item.id) {
+                player.inventory.push(itm);
+                pendingUpgrade.materials.splice(index, 1);
+                return true;
+            }
+        });
+    }
+    else {
+        player.inventory.push(pendingUpgrade.upgradeItem);
+        pendingUpgrade.upgradeItem = null;
+    }
+    createSmithingWindow(false);
+}
+function addUpgradeItem(item) {
+    pendingUpgrade.upgradeItem = item;
+    player.inventory.splice(item.index, 1);
+    player.updateAbilities();
+    createSmithingWindow(false);
+}
+function addMaterialItem(item) {
+    pendingUpgrade.materials.push(item);
+    player.inventory.splice(item.index, 1);
+    player.updateAbilities();
+    createSmithingWindow(false);
+}
+function upgrade() {
+    if (player.gold < upgradePrice())
+        return;
+    if (pendingUpgrade.upgradeItem && pendingUpgrade.materials.length == 2) {
+        pendingUpgrade.upgradeItem.level++;
+        player.addGold(-upgradePrice());
+        player.inventory.push(pendingUpgrade.upgradeItem);
+        player.updateAbilities();
+        createSmithingWindow();
+    }
+}
+function closeSmithingWindow() {
+    if (pendingUpgrade.upgradeItem) {
+        player.inventory.push(pendingUpgrade.upgradeItem);
+        pendingUpgrade.upgradeItem = null;
+    }
+    if (pendingUpgrade.materials.length > 0) {
+        pendingUpgrade.materials.forEach((itm) => {
+            player.inventory.push(itm);
+        });
+        pendingUpgrade.materials = [];
+    }
+    state.smithOpen = false;
+    smithingWindow.style.transform = "scale(0)";
+}
+function upgradePrice() {
+    var _a;
+    return Math.floor(((_a = pendingUpgrade.upgradeItem) === null || _a === void 0 ? void 0 : _a.fullPrice()) * .5);
 }
 //# sourceMappingURL=npc.js.map

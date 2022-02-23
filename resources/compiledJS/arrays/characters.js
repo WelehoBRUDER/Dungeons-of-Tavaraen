@@ -23,6 +23,16 @@ const NPCcharacters = [
         conditionalMaps: [],
         conditionalCords: []
     }),
+    new Npc({
+        id: "blacksmithMaroch",
+        sprite: "norsemanBerserk",
+        greeting: "generic_hail_friend",
+        pronounSet: "masculine",
+        currentMap: 2,
+        currentCords: { x: 37, y: 168 },
+        conditionalMaps: [],
+        conditionalCords: []
+    }),
 ];
 const NPCInventories = {
     testMerchant: {
@@ -31,7 +41,6 @@ const NPCInventories = {
             { id: "chippedAxe", unique: false, price: 100 },
             Object.assign(Object.assign({}, items["longsword"]), { unique: false, price: 200 }),
             Object.assign(Object.assign({}, items["apprenticeWand"]), { unique: false, price: 100 }),
-            Object.assign(Object.assign({}, items["crimsonStaff"]), { unique: false, price: 800 }),
             Object.assign(Object.assign({}, items["raggedHood"]), { unique: false, price: 15 }),
             Object.assign(Object.assign({}, items["raggedShirt"]), { unique: false, price: 25 }),
             Object.assign(Object.assign({}, items["raggedGloves"]), { unique: false, price: 12 }),
@@ -42,6 +51,18 @@ const NPCInventories = {
             Object.assign(Object.assign({}, items["leatherBracers"]), { unique: false, price: 40 }),
             Object.assign(Object.assign({}, items["leatherLeggings"]), { unique: false, price: 110 }),
             Object.assign(Object.assign({}, items["leatherBoots"]), { unique: false, price: 40 }),
+            Object.assign(Object.assign({}, items["woodenShield"]), { unique: false, price: 75 }),
+            Object.assign(Object.assign({}, items["apprenticeRobe"]), { unique: false, price: 900 }),
+            Object.assign(Object.assign({}, items["apprenticePants"]), { unique: false, price: 700 }),
+            Object.assign(Object.assign({}, items["apprenticeBoots"]), { unique: false, price: 500 }),
+            { id: "healingPotion_weak", unique: false, price: 250 },
+            { id: "manaPotion_weak", unique: false, price: 250 },
+        ],
+    },
+    blacksmithMaroch: {
+        normal: [
+            { id: "longBow", unique: true, price: 1000 },
+            Object.assign(Object.assign({}, items["crimsonStaff"]), { unique: false, price: 800 }),
             Object.assign(Object.assign({}, items["ironHelmet"]), { unique: false, price: 225 }),
             Object.assign(Object.assign({}, items["ironArmor"]), { unique: false, price: 500 }),
             Object.assign(Object.assign({}, items["ironGauntlets"]), { unique: false, price: 180 }),
@@ -52,15 +73,8 @@ const NPCInventories = {
             Object.assign(Object.assign({}, items["rangerGloves"]), { unique: false, price: 600 }),
             Object.assign(Object.assign({}, items["rangerPants"]), { unique: false, price: 1200 }),
             Object.assign(Object.assign({}, items["rangerBoots"]), { unique: false, price: 600 }),
-            Object.assign(Object.assign({}, items["woodenShield"]), { unique: false, price: 75 }),
             Object.assign(Object.assign({}, items["ironShield"]), { unique: false, price: 400 }),
-            Object.assign(Object.assign({}, items["apprenticeRobe"]), { unique: false, price: 900 }),
-            Object.assign(Object.assign({}, items["apprenticePants"]), { unique: false, price: 700 }),
-            Object.assign(Object.assign({}, items["apprenticeBoots"]), { unique: false, price: 500 }),
-            { id: "longBow", unique: true, price: 1000 },
-            { id: "healingPotion_weak", unique: false, price: 250 },
-            { id: "manaPotion_weak", unique: false, price: 250 },
-        ],
+        ]
     }
 };
 //# sourceMappingURL=characters.js.map

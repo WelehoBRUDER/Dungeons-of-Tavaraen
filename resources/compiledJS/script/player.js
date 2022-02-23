@@ -170,6 +170,7 @@ class PlayerCharacter extends Character {
                 }
             });
             this[slot] = {};
+            player.allModifiers = getAllModifiersOnce(player, true);
             renderInventory();
         };
         this.equip = (event, item, fromContextMenu = false, auto = false) => {
@@ -220,6 +221,7 @@ class PlayerCharacter extends Character {
                 else
                     this.unequip(event, "offhand", item.index, true, fromContextMenu);
             }
+            player.allModifiers = getAllModifiersOnce(player, true);
             if (!auto)
                 renderInventory();
         };
@@ -443,6 +445,8 @@ function sortInventory(category, reverse, inventory, context) {
         inventory.sort((a, b) => numberSort(a, b, category, reverse));
     if (context.includes("SELLING"))
         createMerchantWindow(false, true);
+    else if (context == "UPGRADE")
+        createSmithingWindow(false);
     else
         renderInventory();
 }
@@ -479,6 +483,17 @@ function stringSort(a, b, string, reverse = false) {
     }
 }
 ;
+function modsSort(a, b) {
+    const numA = a[1];
+    const numB = b[1];
+    if (numA > numB) {
+        return -1;
+    }
+    if (numA < numB) {
+        return 1;
+    }
+    return 0;
+}
 function gradeSort(a, b, reverse = false) {
     var numA = parseInt(a.gradeValue);
     var numB = parseInt(b.gradeValue);
@@ -598,7 +613,7 @@ var player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["rangerClass"]),
+        main: new combatClass(combatClasses["rogueClass"]),
         sub: null
     },
     sprite: ".player",

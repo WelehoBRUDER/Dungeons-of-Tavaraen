@@ -211,14 +211,17 @@ function beginGame() {
   turnOver = true;
   enemiesHadTurn = 0;
   lootedChests = [];
+  currentMap = 2;
   state.inCombat = false;
   resetAllChests();
   handleEscape();
   createStaticMap();
   modifyCanvas();
+  renderMinimap(maps[currentMap]);
+  moveMinimap();
   setTimeout(() => {
     openLevelingScreen();
-  }, 100);
+  }, 50);
 }
 
 function checkIfCanStartGame() {

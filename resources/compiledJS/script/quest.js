@@ -52,6 +52,29 @@ const quests = {
             { type: "gold", amount: 250 },
             { type: "xp", amount: 100 }
         ]
+    },
+    maroch_slay_brethren_task: {
+        id: "maroch_slay_brethren_task",
+        objectives: [
+            {
+                objective: "killEnemies",
+                desc: "slay_brethren_desc",
+                spawnUnique: "maroch_brethren",
+                flag: "brethren_slain_talk",
+                prog: "saveEnemyKillIndex"
+            },
+            {
+                objective: "speakWithNpc",
+                npc: "blacksmithMaroch",
+                desc: "brethren_slain_desc",
+                flag: "completed_quest_slay_brethren",
+                completesQuest: true
+            }
+        ],
+        reward: [
+            { type: "gold", amount: 750 },
+            { type: "xp", amount: 500 }
+        ]
     }
 };
 const uniqueQuestSpawns = {
@@ -59,6 +82,12 @@ const uniqueQuestSpawns = {
         { enemy: "greySlime", pos: { x: 42, y: 163 }, map: "western_heere_coast", level: 1 },
         { enemy: "greySlime", pos: { x: 40, y: 162 }, map: "western_heere_coast", level: 1 },
         { enemy: "flamingSlime", pos: { x: 42, y: 161 }, map: "western_heere_coast", level: 2 },
+    ],
+    maroch_brethren: [
+        { enemy: "norsemanHunter", pos: { x: 36, y: 148 }, map: "western_heere_coast", level: 4 },
+        { enemy: "norsemanHunter", pos: { x: 39, y: 149 }, map: "western_heere_coast", level: 4 },
+        { enemy: "norsemanHunter", pos: { x: 38, y: 153 }, map: "western_heere_coast", level: 4 },
+        { enemy: "norsemanBerserk", pos: { x: 36, y: 154 }, map: "western_heere_coast", level: 5 },
     ]
 };
 class Quest {
@@ -119,7 +148,8 @@ function selectEntry(entryElement, entry) {
 function createQuestData(entry) {
     questInfo.innerHTML = "";
     let quest = new Quest(Object.values(quests)[entry.id]);
-    let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${questLang[lang.language_id][quest.id + "_name"]}`;
+    let title = questLang[lang.language_id][quest.id + "_name"] || quest.id;
+    let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${title}`;
     //let currentTask = quest.objectives[entry.obj];
     quest.objectives.forEach((currentTask, ObjectiveIndex) => {
         if (ObjectiveIndex > entry.obj)
@@ -130,11 +160,28 @@ function createQuestData(entry) {
         text += `\n<c>grey<c>"${currentTask.desc}"`;
         if (currentTask.objective == "killEnemies") {
             if (currentTask.spawnUnique) {
+                let amounts = {};
                 uniqueQuestSpawns[currentTask.spawnUnique].forEach((enemy, index) => {
+                    if (amounts[enemy.enemy]) {
+                        amounts[enemy.enemy]["max"]++;
+                        amounts[enemy.enemy]["def"] += entry.prog[index] ? 1 : 0;
+                        return;
+                    }
+                    else {
+                        amounts[enemy.enemy] = {
+                            max: 1,
+                            def: entry.prog[index] ? 1 : 0,
+                            lvl: enemy.level,
+                        };
+                    }
+                });
+                Object.entries(amounts).forEach((data) => {
+                    const key = data[0];
+                    const value = data[1];
                     let col = "silver";
-                    if (entry.prog[index] || objectiveDoneAlready)
+                    if (value.def >= value.max || objectiveDoneAlready)
                         col = "lime";
-                    text += `\n<c>${col}<c>(${entry.prog[index] ? entry.prog[index] : objectiveDoneAlready ? 1 : 0}/1) Defeat ${lang[enemy.enemy + "_name"]} (Lvl ${enemy.level})`;
+                    text += `\n<c>${col}<c>(${objectiveDoneAlready ? value.max : value.def}/${value.max}) Defeat ${lang[key + "_name"]} (Lvl ${value.lvl})`;
                 });
             }
             else {
