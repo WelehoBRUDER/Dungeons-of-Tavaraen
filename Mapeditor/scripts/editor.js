@@ -578,6 +578,16 @@ function hotkey(e) {
   else if (e.code == "KeyW") cam.y -= 1 * kerroin;
   else if (e.code == "KeyS") cam.y += 1 * kerroin;
 
+  if (e.key == "Delete") {
+    if (editingMap.chestMap?.[select.y]?.[select.x]?.id) {
+      delete editingMap.chestMap[select.y][select.x];
+    }
+    if (editingMap.vihuMap?.[select.y]?.[select.x]?.id) {
+      delete editingMap.vihuMap[select.y][select.x];
+    }
+    createMap();
+  }
+
   const wasd = [65, 83, 87, 68];
   if (wasd.indexOf(e.keyCode) !== -1) {
     e.preventDefault();

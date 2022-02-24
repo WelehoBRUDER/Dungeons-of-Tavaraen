@@ -1,12 +1,17 @@
-# 1.0.7 ~ 23.2.2022
+# 1.0.7 ~ 24.2.2022
 
-### Patch
+### Patch - The Roguelikery
 
 ## New Additions
 
 - Improved the map editor.
+- Reintroduced all stat randomization as a toggleable option.
+  > Randomization is by default off and must be enabled in the settings.
 
 ## Fixes & Tweaks
+
+- Fixed some more localisation.
+- Made the character creation screen scale slightly better.
 
 # 1.0.6 ~ 23.2.2022
 

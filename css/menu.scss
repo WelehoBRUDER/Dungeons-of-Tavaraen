@@ -483,10 +483,10 @@
     opacity: 0;
 
     .playerRenderer {
-      width: 512px;
-      height: 512px;
+      width: calc(512px * var(--ui-scale));
+      height: calc(512px * var(--ui-scale));
       position: absolute;
-      right: 8%;
+      right: 2.5%;
       top: 20%;
 
       .layerRender {
@@ -500,7 +500,7 @@
       width: auto;
       height: auto;
       position: absolute;
-      top: 20%;
+      top: calc(220px * var(--ui-scale));
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -509,7 +509,7 @@
 
       .raceText {
         position: relative;
-        font-size: 48px;
+        font-size: calc(48px * var(--ui-scale));
         color: gold;
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
@@ -524,14 +524,14 @@
         position: absolute;
         left: -200%;
         transform: translateX(-50%);
-        top: 110px;
+        top: calc(60px * var(--ui-scale));
         display: flex;
 
         .raceButton {
           transition: 0.15s;
           width: auto;
           height: 48px;
-          font-size: 36px;
+          font-size: calc(36px * var(--ui-scale));
           color: white;
           text-shadow: -2px 2px 4px black;
           background: rgb(75, 75, 75);
@@ -539,8 +539,8 @@
           white-space: nowrap;
           left: 0;
           top: 0;
-          margin: 6px;
-          padding: 4px;
+          margin: calc(6px * var(--ui-scale));
+          padding: calc(4px * var(--ui-scale));
           text-align: center;
           border-radius: 3px;
           box-shadow: inset 0 0 6px 3px rgb(45, 45, 45), 0 0 7px 4px rgb(25, 25, 25);
@@ -556,9 +556,9 @@
 
     .classSelection {
       width: auto;
-      height: 330px;
+      height: calc(330px * var(--ui-scale));
       position: absolute;
-      top: 37.5%;
+      top: calc(375px * var(--ui-scale));
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -566,7 +566,7 @@
       padding: 0;
 
       .classText {
-        font-size: 48px;
+        font-size: calc(48px * var(--ui-scale));
         color: gold;
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
@@ -576,20 +576,20 @@
 
       .classesContainer {
         position: absolute;
-        top: 110px;
+        top: calc(60px * var(--ui-scale));
         left: -410%;
         display: flex;
 
         .classCard {
           transition: 0.15s;
-          width: 160px;
-          height: 280px;
+          width: calc(160px * var(--ui-scale));
+          height: calc(280px * var(--ui-scale));
           position: relative;
           white-space: nowrap;
           left: 0;
           top: 0;
-          margin: 6px;
-          padding: 4px;
+          margin: calc(6px * var(--ui-scale));
+          padding: calc(4px * var(--ui-scale));
           text-align: center;
           border-radius: 3px;
           box-shadow: 0 0 7px 4px rgb(25, 25, 25);
@@ -600,16 +600,16 @@
           p {
             top: 0;
             margin: 0;
-            font-size: 36px;
+            font-size: calc(36px * var(--ui-scale));
             color: white;
             text-shadow: -2px 2px 4px black;
             background: rgba(255, 255, 255, 0.11);
           }
 
           img {
-            width: 148px;
-            height: 148px;
-            margin-top: 72px;
+            width: calc(148px * var(--ui-scale));
+            height: calc(148px * var(--ui-scale));
+            margin-top: calc(72px * var(--ui-scale));
             filter: drop-shadow(0 0 8px black);
           }
         }
@@ -622,7 +622,7 @@
 
     .nameContainer {
       position: absolute;
-      top: 7.5%;
+      top: calc(100px * var(--ui-scale));
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -630,24 +630,27 @@
       padding: 0;
 
       p {
-        font-size: 42px;
+        font-size: calc(42px * var(--ui-scale));
         color: gold;
         text-shadow: -3px 3px 6px black;
         text-decoration: underline;
         position: relative;
         padding: 0;
+        margin: 0;
+        margin-bottom: calc(10px * var(--ui-scale));
       }
 
       input {
-        margin-top: -64px;
+        margin-top: calc(-64px * var(--ui-scale));
         top: 0;
-        height: 28px;
-        width: 372px;
+        margin: 0;
+        height: calc(28px * var(--ui-scale));
+        width: calc(372px * var(--ui-scale));
         border: none;
         background: rgb(36, 36, 36);
         pointer-events: all;
         outline: none;
-        font-size: 26px;
+        font-size: calc(26px * var(--ui-scale));
         color: white;
         position: relative;
       }
@@ -655,15 +658,15 @@
 
     .cosmetics {
       position: absolute;
-      bottom: 7.5%;
+      bottom: calc(60px * var(--ui-scale));
       right: 15%;
-      width: 180px;
+      width: calc(180px * var(--ui-scale));
       height: auto;
       text-align: center;
       user-select: none;
 
       div {
-        font-size: 30px;
+        font-size: calc(30px * var(--ui-scale));
         color: white;
         background: rgb(35, 35, 35);
         border: 2px solid black;
@@ -674,7 +677,7 @@
 
     .genderWrapper {
       position: absolute;
-      bottom: 15%;
+      bottom: calc(120px * var(--ui-scale));
       right: 7.5%;
       height: auto;
       text-align: center;
@@ -696,7 +699,7 @@
 
     .toggleClothes {
       position: absolute;
-      bottom: 7.5%;
+      bottom: calc(60px * var(--ui-scale));
       right: 10%;
       height: auto;
       text-align: center;
@@ -715,21 +718,21 @@
 
     .startGame {
       transition: 0.13s;
-      width: 180px;
+      width: calc(180px * var(--ui-scale));
       height: auto;
       position: absolute;
-      top: calc(39% + 425px);
+      top: calc(39% + (425px * var(--ui-scale)));
       left: 50%;
       transform: translateX(-50%);
       background: rgba(45, 45, 45, 0.95);
       border: 4px solid gold;
-      font-size: 64px;
+      font-size: calc(64px * var(--ui-scale));
       color: white;
       text-shadow: -2px 2px 4px black;
-      padding: 8px;
+      padding: calc(8px * var(--ui-scale));
       user-select: none;
       text-align: center;
-      border-radius: 8px;
+      border-radius: calc(8px * var(--ui-scale));
       box-shadow: -3px 3px 8px 6px black;
     }
 
