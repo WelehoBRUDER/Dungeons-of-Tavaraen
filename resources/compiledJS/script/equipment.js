@@ -43,48 +43,6 @@ const damageCategories = {
     lightning: "elemental",
     ice: "elemental"
 };
-// RANDOMIZATION WAS REMOVED IN INDEV 8
-// const namePartsArmor = {
-//   slashSub: "Protective ",
-//   slashMain: " of Slash Protection",
-//   crushSub: "Defensive ",
-//   crushMain: " of Bluntness",
-//   pierceSub: "Shielding ",
-//   pierceMain: " of Missile Protection",
-//   magicSub: "Enchanted ",
-//   magicMain: " of Magic",
-//   darkSub: "Grimshielding ",
-//   darkMain: " Of Darkshatter",
-//   divineSub: "Blinding ",
-//   divineMain: " of Seraphic Guard",
-//   fireSub: "Burning ",
-//   fireMain: " of Flameguard",
-//   lightningSub: "Electric ",
-//   lightningMain: " of Shock Aversion",
-//   iceSub: "Melting ",
-//   iceMain: " of Frost Defense"
-// };
-// RANDOMIZATION WAS REMOVED IN INDEV 8
-// const nameParts = {
-//   slashSub: "Edged ",
-//   slashMain: " of Slashing",
-//   crushSub: "Blunt ",
-//   crushMain: " of Crushing",
-//   pierceSub: "Penetrating ",
-//   pierceMain: " of Breakthrough",
-//   magicSub: "Enchanted ",
-//   magicMain: " of Magic",
-//   darkSub: "Corrupt ",
-//   darkMain: " of Calamity",
-//   divineSub: "Divine ",
-//   divineMain: " of Celestial Might",
-//   fireSub: "Flaming ",
-//   fireMain: " Of Ashes",
-//   lightningSub: "Shocking ",
-//   lightningMain: " of Sparks",
-//   iceSub: "Chilling ",
-//   iceMain: " of Frost"
-// };
 const dmgWorths = {
     slash: 0.5,
     crush: 0.5,
@@ -136,6 +94,13 @@ class Consumable extends Item {
             this.fullPrice = () => { return this.price * this.amount; };
     }
 }
+const gradeStatMultis = {
+    common: 1,
+    uncommon: 1.25,
+    rare: 1.5,
+    mythical: 1.75,
+    legendary: 2
+};
 class Weapon extends Item {
     constructor(base, setPrice = 0) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
@@ -151,30 +116,85 @@ class Weapon extends Item {
         this.stats = (_g = Object.assign({}, baseItem.stats)) !== null && _g !== void 0 ? _g : {};
         this.commands = (_h = Object.assign({}, baseItem.commands)) !== null && _h !== void 0 ? _h : {};
         this.statBonus = (_j = baseItem.statBonus) !== null && _j !== void 0 ? _j : "str";
+        this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
         if (setPrice > 0)
             this.price = setPrice;
         if (this.level > 0)
             this.name += ` +${this.level}`;
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // if (Object.values(this.rolledDamages).length == 0) {
-        //   /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
-        //   this.damagesTemplate.forEach((template: any) => {
-        //     if (random(100, 0) < template.chance) {
-        //       this.rolledDamages[template.type] = Math.round(random(template.value[1], template.value[0]));
-        //     }
-        //     else this.rolledDamages[template.type] = 0;
-        //   });
-        // }
-        // if (Object.values(this.rolledStats).length == 0) {
-        //   /* RANDOMIZE STAT MODIFIERS */
-        //   this.statsTemplate.forEach((template: any) => {
-        //     if (random(100, 0) < template.chance) {
-        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-        //     }
-        //     else this.rolledStats[template.type] = 0;
-        //   });
-        // }
+        if (this.rolledStats.length === 0 && settings.randomize_items) {
+            Object.entries(equipmentStatRandomization["damage"]).forEach((dmg) => {
+                if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"])
+                    return;
+                const key = dmg[0];
+                const data = dmg[1];
+                if (random(100, 0) < data.chance) {
+                    this.rolledStats.push({ damage: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+                }
+            });
+            Object.entries(equipmentStatRandomization["side"]).forEach((stat) => {
+                if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["side"])
+                    return;
+                const key = stat[0];
+                const data = stat[1];
+                if (random(100, 0) < data.chance) {
+                    if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+                        this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
+                    }
+                    else if (!data.disableValue) {
+                        this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+                    }
+                }
+            });
+        }
+        this.rolledStats.forEach((stat) => {
+            if (stat.damage) {
+                let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
+                if (!this.damages[stat.damage])
+                    this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
+                else
+                    this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
+            }
+            else {
+                let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+                val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+                if (!this.stats[stat.stat])
+                    this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
+                else
+                    this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
+            }
+        });
+        // Assign correct name based on stat effects.
+        if (this.rolledStats.length > 0) {
+            let name = "";
+            const maxAdjectives = 3;
+            let adjectivesUsed = 0;
+            const statKeys = [];
+            Object.entries(this.stats).forEach((stat) => {
+                if (!stat[0].includes("damage_against")) {
+                    statKeys.push({ key: stat[0], num: stat[1] });
+                }
+            });
+            statKeys.sort((key1, key2) => {
+                if (key1.num > key2.num)
+                    return -1;
+                else if (key2.num > key1.num)
+                    return 1;
+                else
+                    return 0;
+            });
+            let langName = lang[this.id + "_name"];
+            if (!langName)
+                langName = items[this.id].name;
+            statKeys.forEach((stat) => {
+                stat.key = stat.key.substring(0, stat.key.length - 1);
+                if (adjectivesUsed >= maxAdjectives || name.includes(lang[stat.key + "_adjective"]))
+                    return;
+                adjectivesUsed++;
+                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective"]} `;
+            });
+            name += `${langName}`;
+            this.name = name;
+        }
         if (setPrice > 0)
             this.fullPrice = () => { return this.price; };
         else {
@@ -196,51 +216,6 @@ class Weapon extends Item {
                 return price < 1 ? 1 : price;
             };
         }
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // Object.entries(this.rolledDamages).forEach((dmg: any) => {
-        //   if (!this.damages[dmg[0]]) this.damages[dmg[0]] = dmg[1];
-        //   else this.damages[dmg[0]] += dmg[1];
-        // });
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // Object.entries(this.rolledStats).forEach((stat: any) => {
-        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
-        //   else this.stats[stat[0]] += stat[1];
-        // });
-        /* SET NEW NAME FOR ITEM */
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // var mainDamage: string;
-        // var subDamage: string;
-        // if (Object.values(this.damages).length == 1) {
-        //   mainDamage = Object.keys(this.damages)[0];
-        //   subDamage = Object.keys(this.damages)[0];
-        // }
-        // else {
-        //   let max = -100;
-        //   let _max = -100;
-        //   Object.entries(this.damages).forEach((dmg: any) => {
-        //     if (dmg[1] > max) { max = dmg[1]; mainDamage = dmg[0]; }
-        //   });
-        //   Object.entries(this.damages).forEach((dmg: any) => {
-        //     if (dmg[1] == max && mainDamage != dmg[0]) {
-        //       if (dmg[1] > _max) { _max = dmg[1]; subDamage = dmg[0]; }
-        //     }
-        //     else if (mainDamage != dmg[0]) {
-        //       if (dmg[1] > _max) { _max = dmg[1]; subDamage = dmg[0]; }
-        //     }
-        //   });
-        // }
-        // this.statStrings = {
-        //   main: mainDamage,
-        //   sub: subDamage
-        // };
-        // if (lang["changeWordOrder"]) {
-        //   this.name = `${this.mainTitle ? lang[this.statStrings["main"] + "_damageMain"] : ""} ${lang[this.statStrings["sub"] + "_damageSub"]} ${lang[this.id + "_name"]}`;
-        // }
-        // // @ts-expect-error
-        // else this.name = `${Object.values(this.damages).length > 1 ? nameParts[subDamage + "Sub"] : ""}${baseItem.name}${this.mainTitle ? nameParts[mainDamage + "Main"] : ""}`;
         function leveledStats(stats, level) {
             const values = {};
             Object.entries(stats).forEach((stat) => {
@@ -264,30 +239,85 @@ class Armor extends Item {
         this.stats = (_h = Object.assign({}, baseItem.stats)) !== null && _h !== void 0 ? _h : {};
         this.commands = (_j = Object.assign({}, baseItem.commands)) !== null && _j !== void 0 ? _j : {};
         this.coversHair = (_k = baseItem.coversHair) !== null && _k !== void 0 ? _k : false;
+        this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
         if (setPrice > 0)
             this.price = setPrice;
         if (this.level > 0)
             this.name += ` +${this.level}`;
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // if (Object.values(this.rolledResistances).length == 0) {
-        //   /* RANDOMIZE DAMAGE VALUES FOR WEAPON */
-        //   this.resistancesTemplate.forEach((template: any) => {
-        //     if (random(100, 0) < template.chance) {
-        //       this.rolledResistances[template.type] = Math.round(random(template.value[1], template.value[0]));
-        //     }
-        //     else this.rolledResistances[template.type] = 0;
-        //   });
-        // }
-        // if (Object.values(this.rolledStats).length == 0) {
-        //   /* RANDOMIZE STAT MODIFIERS */
-        //   this.statsTemplate.forEach((template: any) => {
-        //     if (random(100, 0) < template.chance) {
-        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-        //     }
-        //     else this.rolledStats[template.type] = 0;
-        //   });
-        // }
+        // Randomization reintroduced
+        if (this.rolledStats.length === 0 && settings.randomize_items) {
+            Object.entries(equipmentStatRandomization["armor"]).forEach((arm) => {
+                if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"])
+                    return;
+                const key = arm[0];
+                const data = arm[1];
+                if (random(100, 0) < data.chance) {
+                    this.rolledStats.push({ armor: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+                }
+            });
+            Object.entries(equipmentStatRandomization["side"]).forEach((stat) => {
+                if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["side"])
+                    return;
+                const key = stat[0];
+                const data = stat[1];
+                if (random(100, 0) < data.chance) {
+                    if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+                        this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
+                    }
+                    else if (!data.disableValue) {
+                        this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+                    }
+                }
+            });
+        }
+        this.rolledStats.forEach((stat) => {
+            if (stat.armor) {
+                let val = equipmentStatRandomization["armor"][stat.armor]["Value"][stat.value];
+                if (!this.armor[stat.armor])
+                    this.armor[stat.armor] = Math.floor(val * gradeStatMultis[this.grade]);
+                else
+                    this.armor[stat.armor] += Math.floor(val * gradeStatMultis[this.grade]);
+            }
+            else {
+                let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+                val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+                if (!this.stats[stat.stat])
+                    this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
+                else
+                    this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
+            }
+        });
+        if (this.rolledStats.length > 0) {
+            let name = "";
+            const maxAdjectives = 3;
+            let adjectivesUsed = 0;
+            const statKeys = [];
+            Object.entries(this.stats).forEach((stat) => {
+                if (!stat[0].includes("damage_against")) {
+                    statKeys.push({ key: stat[0], num: stat[1] });
+                }
+            });
+            statKeys.sort((key1, key2) => {
+                if (key1.num > key2.num)
+                    return -1;
+                else if (key2.num > key1.num)
+                    return 1;
+                else
+                    return 0;
+            });
+            let langName = lang[this.id + "_name"];
+            if (!langName)
+                langName = items[this.id].name;
+            statKeys.forEach((stat) => {
+                if (adjectivesUsed >= maxAdjectives)
+                    return;
+                adjectivesUsed++;
+                stat.key = stat.key.substring(0, stat.key.length - 1);
+                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective"]} `;
+            });
+            name += `${langName}`;
+            this.name = name;
+        }
         if (setPrice > 0)
             this.fullPrice = () => { return this.price; };
         else {
@@ -309,52 +339,6 @@ class Armor extends Item {
                 return price < 1 ? 1 : price;
             };
         }
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // Object.entries(this.rolledResistances).forEach((dmg: any) => {
-        //   if (!this.resistances[dmg[0]]) this.resistances[dmg[0]] = dmg[1];
-        //   else this.resistances[dmg[0]] += dmg[1];
-        // });
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // Object.entries(this.rolledStats).forEach((stat: any) => {
-        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
-        //   else this.stats[stat[0]] += stat[1];
-        // });
-        /* SET NEW NAME FOR ITEM */
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // var mainResistance: string;
-        // var subResistance: string;
-        // if (Object.values(this.resistances).length == 1) {
-        //   mainResistance = Object.keys(this.resistances)[0];
-        //   subResistance = Object.keys(this.resistances)[0];
-        // }
-        // else {
-        //   let max = -100;
-        //   let _max = -100;
-        //   Object.entries(this.resistances).forEach((dmg: any) => {
-        //     if (dmg[1] > max) { max = dmg[1]; mainResistance = dmg[0]; }
-        //   });
-        //   Object.entries(this.resistances).forEach((dmg: any) => {
-        //     if (dmg[1] == max && mainResistance != dmg[0]) {
-        //       if (dmg[1] > _max) { _max = dmg[1]; subResistance = dmg[0]; }
-        //     } else if (mainResistance != dmg[0]) {
-        //       if (dmg[1] > _max) { _max = dmg[1]; subResistance = dmg[0]; }
-        //     }
-        //   });
-        // }
-        // this.resStrings = {
-        //   main: mainResistance,
-        //   sub: subResistance
-        // };
-        // if (lang["changeWordOrder"]) {
-        //   this.name = `${this.mainTitle ? lang[this.resStrings["main"] + "_resistanceMain"] : ""} ${lang[this.resStrings["sub"] + "_resistanceSub"]} ${lang[this.id + "_name"]}`;
-        // }
-        // else {
-        //   // @ts-expect-error
-        //   this.name = `${Object.values(this.resistances).length > 1 ? namePartsArmor[subResistance + "Sub"] : ""}${baseItem.name}${this.mainTitle ? namePartsArmor[mainResistance + "Main"] : ""}`;
-        // }
         function leveledStats(stats, level) {
             const values = {};
             Object.entries(stats).forEach((stat) => {
@@ -437,8 +421,143 @@ const artifactStatRandomization = {
         chance: 2
     },
 };
+const equipmentStatRandomization = {
+    damage: {
+        slash: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        crush: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        pierce: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        magic: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        dark: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        divine: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        fire: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        lightning: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+        ice: {
+            Value: [1, 2, 3, 4, 5],
+            chance: 8
+        },
+    },
+    armor: {
+        physical: {
+            Value: [2, 4, 6, 8],
+            chance: 20
+        },
+        magical: {
+            Value: [2, 4, 6, 8],
+            chance: 20
+        },
+        elemental: {
+            Value: [2, 4, 6, 8],
+            chance: 20
+        }
+    },
+    side: {
+        str: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 10
+        },
+        dex: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 10
+        },
+        vit: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 10
+        },
+        int: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 10
+        },
+        cun: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 10
+        },
+        hpMax: {
+            Value: [4, 7, 10, 14, 17],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 7
+        },
+        mpMax: {
+            Value: [3, 5, 6, 9],
+            Percent: [2, 3, 6, 8, 10, 13],
+            chance: 7
+        },
+        critChance: {
+            Percent: [1, 1.5, 2, 2.5, 3, 3.5, 4.1],
+            disableValue: true,
+            chance: 5
+        },
+        critDamage: {
+            Percent: [2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
+            disableValue: true,
+            chance: 5
+        },
+        evasion: {
+            disablePercent: true,
+            Value: [1, 2, 3, 4, 5, 6],
+            chance: 6
+        },
+        rangedDamage: {
+            disableValue: true,
+            Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+            chance: 3
+        },
+        meleeDamage: {
+            disableValue: true,
+            Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+            chance: 3
+        },
+        spellDamage: {
+            disableValue: true,
+            Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+            chance: 3
+        },
+        resistAll: {
+            Value: [1, 2, 3, 4, 5],
+            Percent: [1.5, 3, 4.5, 6, 7.5],
+            chance: 2
+        },
+    }
+};
 const maxStatsForArtifactsToRoll = {
     uncommon: 4
+};
+// Main: for weapons damage, for armor, well armor.
+// Side: any random stat effect.
+const maxStatsForEquipmentToRoll = {
+    common: { main: 1, side: 1 },
+    uncommon: { main: 1, side: 2 },
+    rare: { main: 2, side: 3 },
+    mythical: { main: 3, side: 3 },
+    legendary: { main: 3, side: 4 }
 };
 class Artifact extends Item {
     constructor(base, setPrice = 0) {
@@ -477,23 +596,6 @@ class Artifact extends Item {
             else
                 this.stats[stat.stat] += val;
         });
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // if (Object.values(this.rolledStats).length == 0) {
-        //   /* RANDOMIZE STAT MODIFIERS */
-        //   this.statsTemplate.forEach((template: any) => {
-        //     if (random(100, 0) < template.chance) {
-        //       this.rolledStats[template.type] = template.value[Math.round(random(template.value.length - 1, 0))];
-        //     }
-        //     else this.rolledStats[template.type] = 0;
-        //   });
-        // }
-        // RANDOMIZATION HAS BEEN REMOVED AS OF INDEV 8
-        //
-        // Object.entries(this.rolledStats).forEach((stat: any) => {
-        //   if (!this.stats[stat[0]]) this.stats[stat[0]] = stat[1];
-        //   else this.stats[stat[0]] += stat[1];
-        // });
         if (setPrice > 0)
             this.fullPrice = () => { return this.price; };
         else {

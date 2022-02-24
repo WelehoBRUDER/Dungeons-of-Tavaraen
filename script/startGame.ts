@@ -163,7 +163,7 @@ function characterCreation(withAnimations = true) {
   Object.entries(raceTexts).forEach((race: any) => {
     const content = race[1];
     const btn = document.createElement("div");
-    btn.textContent = content.name;
+    btn.textContent = lang[race[0] + "_name"] ?? content.name;
     btn.classList.add("raceButton");
     tooltip(btn, raceTT(race[0]));
     if (player.race == race[0]) btn.style.border = "4px solid gold";

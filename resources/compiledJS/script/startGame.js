@@ -160,9 +160,10 @@ function characterCreation(withAnimations = true) {
     raceContainer.textContent = "";
     classContainer.textContent = "";
     Object.entries(raceTexts).forEach((race) => {
+        var _a;
         const content = race[1];
         const btn = document.createElement("div");
-        btn.textContent = content.name;
+        btn.textContent = (_a = lang[race[0] + "_name"]) !== null && _a !== void 0 ? _a : content.name;
         btn.classList.add("raceButton");
         tooltip(btn, raceTT(race[0]));
         if (player.race == race[0])

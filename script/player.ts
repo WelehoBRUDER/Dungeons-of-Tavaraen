@@ -404,6 +404,10 @@ class PlayerCharacter extends Character {
     };
 
     this.kill = () => {
+      if (DEVTOOLS.GOD) {
+        this.stats.hp = this.getHpMax();
+        return;
+      }
       if (this.isDead) return;
       // handle death logic once we get there ;)
       this.isDead = true;

@@ -1,4 +1,52 @@
 "use strict";
+class gameSettings {
+    constructor(base) {
+        this.log_enemy_movement = base.log_enemy_movement || false;
+        this.toggle_minimap = base.toggle_minimap || true;
+        this.hide_helmet = base.hide_helmet || false;
+        this.randomize_items = base.randomize_items || false;
+        this.hotkey_inv = base.hotkey_inv || "i";
+        this.hotkey_char = base.hotkey_char || "c";
+        this.hotkey_perk = base.hotkey_perk || "p";
+        this.hotkey_ranged = base.hotkey_ranged || "g";
+        this.ui_scale = base.ui_scale || 100;
+        this.hotkey_move_up = base.hotkey_move_up || "w";
+        this.hotkey_move_down = base.hotkey_move_down || "s";
+        this.hotkey_move_left = base.hotkey_move_left || "a";
+        this.hotkey_move_right = base.hotkey_move_right || "d";
+        this.hotkey_move_right_up = base.hotkey_move_right_up || "PageUp";
+        this.hotkey_move_right_down = base.hotkey_move_right_down || "PageDown";
+        this.hotkey_move_left_up = base.hotkey_move_left_up || "Home";
+        this.hotkey_move_left_down = base.hotkey_move_left_down || "End";
+        this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
+        this.hotkey_interact = base.hotkey_interact || " ";
+        this.hotkey_journal = base.hotkey_journal || "j";
+        this.hotkey_codex = base.hotkey_codex || "y";
+    }
+}
+let settings = new gameSettings({
+    log_enemy_movement: false,
+    toggle_minimap: true,
+    hide_helmet: false,
+    randomize_items: false,
+    hotkey_inv: "i",
+    hotkey_char: "c",
+    hotkey_perk: "p",
+    hotkey_ranged: "g",
+    ui_scale: 100,
+    hotkey_move_up: "w",
+    hotkey_move_down: "s",
+    hotkey_move_left: "a",
+    hotkey_move_right: "d",
+    hotkey_move_right_up: "PageUp",
+    hotkey_move_right_down: "PageDown",
+    hotkey_move_left_up: "Home",
+    hotkey_move_left_down: "End",
+    hotkey_interact: " ",
+    hotkey_open_world_messages: "Enter",
+    hotkey_journal: "j",
+    hotkey_codex: "y",
+});
 const menuOptions = [
     {
         id: "menu_resume",
@@ -71,6 +119,11 @@ const menuSettings = [
     {
         id: "setting_hide_helmet",
         tooltip: "hide_helmet",
+        type: "toggle",
+    },
+    {
+        id: "setting_randomize_items",
+        tooltip: "randomize_items",
         type: "toggle",
     },
     {

@@ -15,7 +15,7 @@ var editingMap = {
     [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ],
   clutterMap: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -31,14 +31,14 @@ var editingMap = {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ],
   nbt: [],
   vihut: [],
   vihuMap: [],
-  teleports: []
+  teleports: [],
 };
-const copy = e => JSON.parse(JSON.stringify(e));
+const copy = (e) => JSON.parse(JSON.stringify(e));
 
 let ctrlZArray = [];
 let ctrlZIndex = -1;
@@ -53,34 +53,39 @@ let zoomLevel = 1;
 let baseSize = 64;
 let cam = {
   x: 6,
-  y: 7
+  y: 7,
 };
 
 let brush = {
   tile: null,
-  clutter: null
+  clutter: null,
 };
 
 let select = {
   x: null,
   y: null,
   x2: null,
-  y2: null
+  y2: null,
 };
 
 let hover = {
   x: null,
-  y: null
+  y: null,
 };
 
 let enemySpawnLevel = 1;
 let selectedEnemyCords = null;
 let enemySelect = null;
+let chestSelect = null;
 const spriteMap_tiles = document.querySelector(".tileAtlas");
 function createMap() {
   const newSize = baseSize * zoomLevel;
-  const karttaSpriteMaaraY = Math.ceil(canvas.height / newSize) + (1 - Math.ceil(canvas.height / newSize) % 2);
-  const karttaSpriteMaaraX = Math.ceil(canvas.width / newSize) + (1 - Math.ceil(canvas.width / newSize) % 2);
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
   const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2;
   const karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
   const offsetMapAloitusY = cam.y - Math.floor(karttaSpriteMaaraY / 2);
@@ -91,38 +96,114 @@ function createMap() {
   canvas.width = canvas.width; // Reset canvas
   for (let y = 0; y < karttaSpriteMaaraY; y++) {
     for (let x = 0; x < karttaSpriteMaaraX; x++) {
-      const imgId = editingMap.base[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
+      const imgId =
+        editingMap.base[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
-      const clutterId = editingMap.clutter[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
+      const clutterId =
+        editingMap.clutter[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
       const clutterSprite = clutters[clutterId]?.spriteMap;
-      const enemyId = editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]?.id;
-      const chestSpriteId = editingMap.chestMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]?.sprite;
-      const enemyImg = enemyId != null ? document.querySelector("." + enemies[enemyId].sprite) : null;
-      const chestImg = chestSpriteId != null ? document.querySelector("." + chestSpriteId) : null;
-
+      const enemyId =
+        editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]?.id;
+      const chestSpriteId =
+        editingMap.chestMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+          ?.sprite;
+      const enemyImg =
+        enemyId != null
+          ? document.querySelector("." + enemies[enemyId].sprite)
+          : null;
+      const chestImg =
+        chestSpriteId != null
+          ? document.querySelector("." + chestSpriteId)
+          : null;
 
       if (sprite) {
-        ctx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+        ctx.drawImage(
+          spriteMap_tiles,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
         //ctx.drawImage(img, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
-      } if (clutterSprite) {
-        ctx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+      }
+      if (clutterSprite) {
+        ctx.drawImage(
+          spriteMap_tiles,
+          clutterSprite.x,
+          clutterSprite.y,
+          128,
+          128,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
         //ctx.drawImage(clutterImg, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
-      } if (enemyImg) {
+      }
+      if (enemyImg) {
         ctx.font = `${newSize / 3}px Arial`;
         ctx.fillStyle = "white";
-        if (editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]?.isUnique) ctx.fillStyle = "red";
-        ctx.fillText(`Level ${editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]?.level}`, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY);
-        ctx.drawImage(enemyImg, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
-      } if (chestImg) {
-        ctx.drawImage(chestImg, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
+        if (
+          editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+            ?.isUnique
+        )
+          ctx.fillStyle = "red";
+        ctx.fillText(
+          `Level ${
+            editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+              ?.level
+          }`,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY
+        );
+        ctx.drawImage(
+          enemyImg,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
       }
-      if (editingMap.shrineMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]) {
+      if (chestImg) {
+        ctx.drawImage(
+          chestImg,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
+      }
+      if (
+        editingMap.shrineMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+      ) {
         const shrineSprite = staticTiles[7].spriteMap;
-        ctx.drawImage(spriteMap_tiles, shrineSprite.x, shrineSprite.y, 128, 128, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+        ctx.drawImage(
+          spriteMap_tiles,
+          shrineSprite.x,
+          shrineSprite.y,
+          128,
+          128,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
       }
-      if (editingMap.messageMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]) {
+      if (
+        editingMap.messageMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+      ) {
         const message = document.querySelector(".messageTile");
-        ctx.drawImage(message, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
+        ctx.drawImage(
+          message,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
       }
     }
   }
@@ -133,57 +214,76 @@ function createMap() {
   canvas.onmousemove = painaCanvasta;
   function painaCanvasta({ offsetX, offsetY, buttons, type }) {
     const { width, height } = canvas.getBoundingClientRect(),
-      venytysX = width / canvas.width * newSize,
-      venytysY = height / canvas.height * newSize,
-      venytysOffsetX = width / canvas.width * karttaOffsetX,
-      venytysOffsetY = height / canvas.height * karttaOffsetY;
+      venytysX = (width / canvas.width) * newSize,
+      venytysY = (height / canvas.height) * newSize,
+      venytysOffsetX = (width / canvas.width) * karttaOffsetX,
+      venytysOffsetY = (height / canvas.height) * karttaOffsetY;
 
-    const valittuX = Math.floor((offsetX + venytysOffsetX) / venytysX) + offsetMapAloitusX,
-      valittuY = Math.floor((offsetY + venytysOffsetY) / venytysY) + offsetMapAloitusY;
+    const valittuX =
+        Math.floor((offsetX + venytysOffsetX) / venytysX) + offsetMapAloitusX,
+      valittuY =
+        Math.floor((offsetY + venytysOffsetY) / venytysY) + offsetMapAloitusY;
 
-    if (buttons == 1 && type !== "click" || type == "click") {
+    if ((buttons == 1 && type !== "click") || type == "click") {
       if (editingMap.base?.[valittuY]?.[valittuX] === undefined) return;
       const nykyTieto = paintCtrlZArray({ x: valittuX, y: valittuY });
-      if (nykyTieto && !onkoEdellinenCtrlZSama(nykyTieto)) lisaaCtrlZ(nykyTieto);
+      if (nykyTieto && !onkoEdellinenCtrlZSama(nykyTieto))
+        lisaaCtrlZ(nykyTieto);
 
       select = { x: valittuX, y: valittuY };
 
-      if (brush.tile !== null) editingMap.base[valittuY][valittuX] = tiles.findIndex(tile => tile.name == brush.tile.name);
-      if (brush.clutter !== null) editingMap.clutter[valittuY][valittuX] = clutters.findIndex(clutter => clutter.name == brush.clutter.name);
-      if (enemySelect !== null) {
+      if (brush.tile !== null)
+        editingMap.base[valittuY][valittuX] = tiles.findIndex(
+          (tile) => tile.name == brush.tile.name
+        );
+      if (brush.clutter !== null)
+        editingMap.clutter[valittuY][valittuX] = clutters.findIndex(
+          (clutter) => clutter.name == brush.clutter.name
+        );
+      else if (enemySelect !== null) {
         if (!editingMap.vihuMap[valittuY]) editingMap.vihuMap[valittuY] = [];
-        editingMap.vihuMap[valittuY][valittuX] = new Enemy({ ...enemies[enemySelect.id], cords: { x: valittuX, y: valittuY }, spawnCords: { x: valittuX, y: valittuY }, level: enemySpawnLevel });
-      }
-
-      if (editingMap.vihuMap?.[valittuY]?.[valittuX]?.id) {
+        editingMap.vihuMap[valittuY][valittuX] = new Enemy({
+          ...enemies[enemySelect.id],
+          cords: { x: valittuX, y: valittuY },
+          spawnCords: { x: valittuX, y: valittuY },
+          level: enemySpawnLevel,
+        });
+      } else if (chestSelect !== null) {
+        if (!editingMap.chestMap[valittuY]) editingMap.chestMap[valittuY] = [];
+        editingMap.chestMap[valittuY][valittuX] = new treasureChest({
+          ...chestTemplates[chestSelect.id],
+        });
+      } else if (editingMap.vihuMap?.[valittuY]?.[valittuX]?.id) {
         let vihu = editingMap.vihuMap[valittuY][valittuX];
         console.log("klikkasit vihua " + vihu.id);
         selectedEnemyCords = vihu.cords;
         editEnemyStats(vihu);
-      }
-      else {
+      } else {
         selectedEnemyCords = null;
       }
 
       const uusiTieto = paintCtrlZArray({ x: valittuX, y: valittuY });
-      if (uusiTieto && !onkoEdellinenCtrlZSama(uusiTieto)) lisaaCtrlZ(uusiTieto);
+      if (uusiTieto && !onkoEdellinenCtrlZSama(uusiTieto))
+        lisaaCtrlZ(uusiTieto);
 
       drawOnMapsGrid({ x: valittuX, y: valittuY });
       mapProps();
     } else if (buttons == 2 && editingMap.base[valittuY]?.[valittuX] != null) {
-      select.x2 = valittuX; select.y2 = valittuY;
+      select.x2 = valittuX;
+      select.y2 = valittuY;
     }
 
     piirraSelect({ x: valittuX, y: valittuY });
 
     if (buttons == 4 && type == "mousemove") {
       brush.tile = tiles[editingMap?.map?.[valittuY]?.[valittuX]] || null;
-      brush.clutter = clutters[editingMap?.clutterMap?.[valittuY]?.[valittuX]] || null;
+      brush.clutter =
+        clutters[editingMap?.clutterMap?.[valittuY]?.[valittuX]] || null;
       mapProps();
     }
   }
 }
-canvas.addEventListener("contextmenu", e => {
+canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   return false;
 });
@@ -191,32 +291,44 @@ canvas.addEventListener("mousedown", mouseDownCanvas);
 function mouseDownCanvas({ offsetX, offsetY, buttons }) {
   if (buttons !== 4 && buttons !== 2) return;
   const newSize = baseSize * zoomLevel;
-  const karttaSpriteMaaraY = Math.ceil(canvas.height / newSize) + (1 - Math.ceil(canvas.height / newSize) % 2),
-    karttaSpriteMaaraX = Math.ceil(canvas.width / newSize) + (1 - Math.ceil(canvas.width / newSize) % 2);
+  const karttaSpriteMaaraY =
+      Math.ceil(canvas.height / newSize) +
+      (1 - (Math.ceil(canvas.height / newSize) % 2)),
+    karttaSpriteMaaraX =
+      Math.ceil(canvas.width / newSize) +
+      (1 - (Math.ceil(canvas.width / newSize) % 2));
   const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2,
     karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
   const offsetMapAloitusY = cam.y - Math.floor(karttaSpriteMaaraY / 2),
     offsetMapAloitusX = cam.x - Math.floor(karttaSpriteMaaraX / 2);
   const { width, height } = canvas.getBoundingClientRect(),
-    venytysX = width / canvas.width * newSize,
-    venytysY = height / canvas.height * newSize,
-    venytysOffsetX = width / canvas.width * karttaOffsetX,
-    venytysOffsetY = height / canvas.height * karttaOffsetY;
-  const valittuX = Math.floor((offsetX + venytysOffsetX) / venytysX) + offsetMapAloitusX,
-    valittuY = Math.floor((offsetY + venytysOffsetY) / venytysY) + offsetMapAloitusY;
+    venytysX = (width / canvas.width) * newSize,
+    venytysY = (height / canvas.height) * newSize,
+    venytysOffsetX = (width / canvas.width) * karttaOffsetX,
+    venytysOffsetY = (height / canvas.height) * karttaOffsetY;
+  const valittuX =
+      Math.floor((offsetX + venytysOffsetX) / venytysX) + offsetMapAloitusX,
+    valittuY =
+      Math.floor((offsetY + venytysOffsetY) / venytysY) + offsetMapAloitusY;
 
-  if (buttons == 2 && editingMap.base[valittuY]?.[valittuX] != null) select = { x: valittuX, y: valittuY };
+  if (buttons == 2 && editingMap.base[valittuY]?.[valittuX] != null)
+    select = { x: valittuX, y: valittuY };
   else {
     brush.tile = tiles[editingMap?.map?.[valittuY]?.[valittuX]] || null;
-    brush.clutter = clutters[editingMap?.clutterMap?.[valittuY]?.[valittuX]] || null;
+    brush.clutter =
+      clutters[editingMap?.clutterMap?.[valittuY]?.[valittuX]] || null;
     mapProps();
   }
 }
 
 function piirraSelect({ x, y }) {
   const newSize = baseSize * zoomLevel;
-  const karttaSpriteMaaraY = Math.ceil(canvas.height / newSize) + (1 - Math.ceil(canvas.height / newSize) % 2);
-  const karttaSpriteMaaraX = Math.ceil(canvas.width / newSize) + (1 - Math.ceil(canvas.width / newSize) % 2);
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
   const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2;
   const karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
   const offsetMapAloitusY = cam.y - Math.floor(karttaSpriteMaaraY / 2);
@@ -227,70 +339,231 @@ function piirraSelect({ x, y }) {
   if (x !== select.x || y !== select.y) {
     selectCtx.strokeStyle = "white";
     selectCtx.lineWidth = 4;
-    selectCtx.strokeRect((x - offsetMapAloitusX) * newSize - karttaOffsetX, (y - offsetMapAloitusY) * newSize - karttaOffsetY, newSize, newSize);
+    selectCtx.strokeRect(
+      (x - offsetMapAloitusX) * newSize - karttaOffsetX,
+      (y - offsetMapAloitusY) * newSize - karttaOffsetY,
+      newSize,
+      newSize
+    );
+    if (brush.tile?.spriteMap) {
+      selectCtx.globalAlpha = 0.5;
+      selectCtx.drawImage(
+        spriteMap_tiles,
+        brush.tile?.spriteMap.x,
+        brush.tile?.spriteMap.y,
+        128,
+        128,
+        (x - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (y - offsetMapAloitusY) * newSize - karttaOffsetY,
+        newSize,
+        newSize
+      );
+      selectCtx.globalAlpha = 1;
+    }
+    if (brush.clutter?.spriteMap) {
+      selectCtx.globalAlpha = 0.5;
+      selectCtx.drawImage(
+        spriteMap_tiles,
+        brush.clutter?.spriteMap.x,
+        brush.clutter?.spriteMap.y,
+        128,
+        128,
+        (x - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (y - offsetMapAloitusY) * newSize - karttaOffsetY,
+        newSize,
+        newSize
+      );
+      selectCtx.globalAlpha = 1;
+    }
+    if (enemySelect !== null) {
+      selectCtx.globalAlpha = 0.5;
+      const sprite = document.querySelector(
+        "." + enemies[enemySelect.id].sprite
+      );
+      selectCtx.drawImage(
+        sprite,
+        (x - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (y - offsetMapAloitusY) * newSize - karttaOffsetY,
+        newSize,
+        newSize
+      );
+      selectCtx.globalAlpha = 1;
+    }
+    if (chestSelect !== null) {
+      selectCtx.globalAlpha = 0.5;
+      const sprite = document.querySelector(
+        "." + chestTemplates[chestSelect.id].sprite
+      );
+      selectCtx.drawImage(
+        sprite,
+        (x - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (y - offsetMapAloitusY) * newSize - karttaOffsetY,
+        newSize,
+        newSize
+      );
+      selectCtx.globalAlpha = 1;
+    }
   }
 
   if (select.x !== null || select.y !== null) {
     selectCtx.strokeStyle = "red";
     selectCtx.lineWidth = 4;
     if (select.x2 == null || select.y2 == null) {
-      selectCtx.strokeRect((select.x - offsetMapAloitusX) * newSize - karttaOffsetX, (select.y - offsetMapAloitusY) * newSize - karttaOffsetY, newSize, newSize);
+      selectCtx.strokeRect(
+        (select.x - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (select.y - offsetMapAloitusY) * newSize - karttaOffsetY,
+        newSize,
+        newSize
+      );
     } else {
       const xSize = (Math.abs(select.x - select.x2) + 1) * newSize,
         ySize = (Math.abs(select.y - select.y2) + 1) * newSize;
       const pieniX = Math.min(select.x, select.x2),
         pieniY = Math.min(select.y, select.y2);
-      selectCtx.strokeRect((pieniX - offsetMapAloitusX) * newSize - karttaOffsetX, (pieniY - offsetMapAloitusY) * newSize - karttaOffsetY, xSize, ySize);
+      selectCtx.strokeRect(
+        (pieniX - offsetMapAloitusX) * newSize - karttaOffsetX,
+        (pieniY - offsetMapAloitusY) * newSize - karttaOffsetY,
+        xSize,
+        ySize
+      );
     }
   }
 }
 
 function drawOnMapsGrid({ x, y, x2 = x, y2 = y }) {
   const newSize = baseSize * zoomLevel;
-  const karttaSpriteMaaraY = Math.ceil(canvas.height / newSize) + (1 - Math.ceil(canvas.height / newSize) % 2);
-  const karttaSpriteMaaraX = Math.ceil(canvas.width / newSize) + (1 - Math.ceil(canvas.width / newSize) % 2);
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
   const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2;
   const karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
   const offsetMapAloitusY = cam.y - Math.floor(karttaSpriteMaaraY / 2);
   const offsetMapAloitusX = cam.x - Math.floor(karttaSpriteMaaraX / 2);
-  const yEro = (Math.abs(y - y2) + y + 1) - offsetMapAloitusY;
-  const xEro = (Math.abs(x - x2) + x + 1) - offsetMapAloitusX;
+  const yEro = Math.abs(y - y2) + y + 1 - offsetMapAloitusY;
+  const xEro = Math.abs(x - x2) + x + 1 - offsetMapAloitusX;
 
   let test = 5 % 2;
 
-  for (let aloitusY = y - offsetMapAloitusY; aloitusY < karttaSpriteMaaraY && aloitusY < yEro; aloitusY++) {
-    for (let aloitusX = x - offsetMapAloitusX; aloitusX < karttaSpriteMaaraX && aloitusX < xEro; aloitusX++) {
-      const imgId = editingMap.base[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX];
+  for (
+    let aloitusY = y - offsetMapAloitusY;
+    aloitusY < karttaSpriteMaaraY && aloitusY < yEro;
+    aloitusY++
+  ) {
+    for (
+      let aloitusX = x - offsetMapAloitusX;
+      aloitusX < karttaSpriteMaaraX && aloitusX < xEro;
+      aloitusX++
+    ) {
+      const imgId =
+        editingMap.base[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ];
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
-      const clutterId = editingMap.clutter[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX];
-      const clutterSprite = clutterId !== 0 ? clutters[clutterId]?.spriteMap : null;
-      const enemyId = editingMap.vihuMap[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX]?.id;
-      const chestSpriteId = editingMap.chestMap[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX]?.sprite;
-      const enemyImg = enemyId != null ? document.querySelector("." + enemies[enemyId].sprite) : null;
-      const chestImg = chestSpriteId != null ? document.querySelector("." + chestSpriteId) : null;
+      const clutterId =
+        editingMap.clutter[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ];
+      const clutterSprite =
+        clutterId !== 0 ? clutters[clutterId]?.spriteMap : null;
+      const enemyId =
+        editingMap.vihuMap[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ]?.id;
+      const chestSpriteId =
+        editingMap.chestMap[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ]?.sprite;
+      const enemyImg =
+        enemyId != null
+          ? document.querySelector("." + enemies[enemyId].sprite)
+          : null;
+      const chestImg =
+        chestSpriteId != null
+          ? document.querySelector("." + chestSpriteId)
+          : null;
 
       if (sprite) {
-        ctx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize + 1, newSize + 1);
-      } if (clutterSprite) {
-        ctx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize + 1, newSize + 1);
-      } if (enemyImg) {
-        ctx.drawImage(enemyImg, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize, newSize);
-      } if (chestImg) {
-        ctx.drawImage(chestImg, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize, newSize);
+        ctx.drawImage(
+          spriteMap_tiles,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
       }
-      if (editingMap.shrineMap[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX]) {
+      if (clutterSprite) {
+        ctx.drawImage(
+          spriteMap_tiles,
+          clutterSprite.x,
+          clutterSprite.y,
+          128,
+          128,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
+      }
+      if (enemyImg) {
+        ctx.drawImage(
+          enemyImg,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
+      }
+      if (chestImg) {
+        ctx.drawImage(
+          chestImg,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
+      }
+      if (
+        editingMap.shrineMap[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ]
+      ) {
         const shrineSprite = staticTiles[7].spriteMap;
-        ctx.drawImage(spriteMap_tiles, shrineSprite.x, shrineSprite.y, 128, 128, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+        ctx.drawImage(
+          spriteMap_tiles,
+          shrineSprite.x,
+          shrineSprite.y,
+          128,
+          128,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
       }
-      if (editingMap.messageMap[offsetMapAloitusY + aloitusY]?.[offsetMapAloitusX + aloitusX]) {
+      if (
+        editingMap.messageMap[offsetMapAloitusY + aloitusY]?.[
+          offsetMapAloitusX + aloitusX
+        ]
+      ) {
         const message = document.querySelector(".messageTile");
-        ctx.drawImage(message, aloitusX * newSize - karttaOffsetX, aloitusY * newSize - karttaOffsetY, newSize, newSize);
+        ctx.drawImage(
+          message,
+          aloitusX * newSize - karttaOffsetX,
+          aloitusY * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
       }
     }
   }
 }
-
-
 
 window.addEventListener("keydown", hotkey);
 function hotkey(e) {
@@ -304,6 +577,16 @@ function hotkey(e) {
   else if (e.code == "KeyA") cam.x -= 1 * kerroin;
   else if (e.code == "KeyW") cam.y -= 1 * kerroin;
   else if (e.code == "KeyS") cam.y += 1 * kerroin;
+
+  if (e.key == "Delete") {
+    if (editingMap.chestMap?.[select.y]?.[select.x]?.id) {
+      delete editingMap.chestMap[select.y][select.x];
+    }
+    if (editingMap.vihuMap?.[select.y]?.[select.x]?.id) {
+      delete editingMap.vihuMap[select.y][select.x];
+    }
+    createMap();
+  }
 
   const wasd = [65, 83, 87, 68];
   if (wasd.indexOf(e.keyCode) !== -1) {
@@ -328,43 +611,53 @@ function showTileInfo() {
 
 function printMap() {
   let mapArray = `[\n`;
-  editingMap.base.forEach(rivi => {
+  editingMap.base.forEach((rivi) => {
     mapArray += "\t\t" + JSON.stringify(rivi) + ", \n";
-  }); mapArray += "\t]";
+  });
+  mapArray += "\t]";
 
   let clutterArray = `[\n`;
-  editingMap.clutter.forEach(rivi => {
+  editingMap.clutter.forEach((rivi) => {
     clutterArray += "\t\t" + JSON.stringify(rivi) + ", \n";
-  }); clutterArray += "\t]";
+  });
+  clutterArray += "\t]";
 
   let vihutArray = `[\n`;
   editingMap.vihuMap?.forEach((rivi, y) => {
     rivi.forEach((vihu, x) => {
       let text = `cords: { x: ${x}, y: ${y} }, spawnCords: { x: ${x}, y: ${y} }, level: ${vihu.level}, isUnique: ${vihu.isUnique}, spawnMap: "${editingMap.id}" `;
-      vihutArray += "\t\t" + `new Enemy({...enemies["${vihu.id}"], ${text}})` + ", \n";
+      vihutArray +=
+        "\t\t" + `new Enemy({...enemies["${vihu.id}"], ${text}})` + ", \n";
     });
-  }); vihutArray += "\t]";
+  });
+  vihutArray += "\t]";
   let arkutArray = `[\n`;
   editingMap.chestMap?.forEach((rivi, y) => {
     rivi.forEach((arkku, x) => {
       let text = `cords: { x: ${x}, y: ${y} }`;
-      arkutArray += "\t\t" + `new treasureChest({...chestTemplates["${arkku.id}"], ${text}})` + ", \n";
+      arkutArray +=
+        "\t\t" +
+        `new treasureChest({...chestTemplates["${arkku.id}"], ${text}})` +
+        ", \n";
     });
-  }); arkutArray += "\t]";
+  });
+  arkutArray += "\t]";
   let viestitArray = `[\n`;
   editingMap.messageMap?.forEach((rivi, y) => {
     rivi.forEach((msg, x) => {
       let text = `cords: { x: ${x}, y: ${y} }`;
       viestitArray += "\t\t" + `{id: "${msg.id}", ${text}}` + ", \n";
     });
-  }); viestitArray += "\t]";
+  });
+  viestitArray += "\t]";
   let pyhäkötArray = `[\n`;
   editingMap.shrineMap?.forEach((rivi, y) => {
     rivi.forEach((arkku, x) => {
       let text = `cords: { x: ${x}, y: ${y} }`;
       pyhäkötArray += "\t\t" + `{${text}}` + ", \n";
     });
-  }); pyhäkötArray += "\t]";
+  });
+  pyhäkötArray += "\t]";
   let editingMapText = `{
     \tname: "${editingMap.name}",
     \tarea: "${editingMap.area}",
@@ -378,41 +671,50 @@ function printMap() {
     },`;
   let totalText = "";
   let addMap = true;
-  maps.forEach(map => {
+  maps.forEach((map) => {
     if (map.id == editingMap.id) {
       totalText += editingMapText;
       addMap = false;
-    }
-    else {
+    } else {
       let _mapArray = `[\n`;
-      map.base.forEach(rivi => {
+      map.base.forEach((rivi) => {
         _mapArray += "\t\t" + JSON.stringify(rivi) + ", \n";
-      }); _mapArray += "\t]";
+      });
+      _mapArray += "\t]";
 
       let _clutterArray = `[\n`;
-      map.clutter.forEach(rivi => {
+      map.clutter.forEach((rivi) => {
         _clutterArray += "\t\t" + JSON.stringify(rivi) + ", \n";
-      }); _clutterArray += "\t]";
+      });
+      _clutterArray += "\t]";
       let enArray = `[\n`;
-      map.enemies?.forEach(enemy => {
+      map.enemies?.forEach((enemy) => {
         let text = `cords: { x: ${enemy.cords.x}, y: ${enemy.cords.y} }, spawnCords: { x: ${enemy.spawnCords.x}, y: ${enemy.spawnCords.y} }, level: ${enemy.level}, isUnique: ${enemy.isUnique}, spawnMap: "${map.id}" `;
-        enArray += "\t\t" + `new Enemy({...enemies["${enemy.id}"], ${text}})` + ", \n";
-      }); enArray += "\t]";
+        enArray +=
+          "\t\t" + `new Enemy({...enemies["${enemy.id}"], ${text}})` + ", \n";
+      });
+      enArray += "\t]";
       let chestArray = `[\n`;
-      map.treasureChests?.forEach(chest => {
+      map.treasureChests?.forEach((chest) => {
         let text = `cords: { x: ${chest.cords.x}, y: ${chest.cords.y} }`;
-        chestArray += "\t\t" + `new treasureChest({...chestTemplates["${chest.id}"], ${text}})` + ", \n";
-      }); chestArray += "\t]";
+        chestArray +=
+          "\t\t" +
+          `new treasureChest({...chestTemplates["${chest.id}"], ${text}})` +
+          ", \n";
+      });
+      chestArray += "\t]";
       let messageArray = `[\n`;
-      map.messages?.forEach(message => {
+      map.messages?.forEach((message) => {
         let text = `cords: { x: ${message.cords.x}, y: ${message.cords.y} }`;
         messageArray += "\t\t" + `{id: "${message.id}", ${text}}` + ", \n";
-      }); messageArray += "\t]";
+      });
+      messageArray += "\t]";
       let shrineArray = `[\n`;
-      map.shrines?.forEach(shrine => {
+      map.shrines?.forEach((shrine) => {
         let text = `cords: { x: ${shrine.cords.x}, y: ${shrine.cords.y} }`;
         shrineArray += "\t\t" + `{${text}}` + ", \n";
-      }); shrineArray += "\t]";
+      });
+      shrineArray += "\t]";
       totalText += `{
         \tname: "${map.name}",
         \tarea: "${map.area}",
@@ -449,7 +751,7 @@ function createImportableMaps() {
     importName.textContent = `Name: ${map.name}`;
     importArea.textContent = `Area: ${map.area}`;
     importId.textContent = `Id: ${map.id}`;
-    importDiv.onclick = e=>importThisMap(index);
+    importDiv.onclick = (e) => importThisMap(index);
     importDiv.append(importCanvas, importName, importArea, importId);
     importContainer.append(importDiv);
     createSmallMap(importCanvas, map);
@@ -497,24 +799,54 @@ function importThisMap(index) {
 function createSmallMap(canvas, map) {
   const smallCtx = canvas.getContext("2d");
   const newSize = 2;
-  const karttaSpriteMaaraY = Math.ceil(canvas.height / newSize) + (1 - Math.ceil(canvas.height / newSize) % 2);
-  const karttaSpriteMaaraX = Math.ceil(canvas.width / newSize) + (1 - Math.ceil(canvas.width / newSize) % 2);
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
   const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2;
   const karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
-  const offsetMapAloitusY = Math.floor(map.base.length / 2 - Math.floor(karttaSpriteMaaraY / 2));
-  const offsetMapAloitusX = Math.floor( map.base[0].length / 2 - Math.floor(karttaSpriteMaaraX / 2));
+  const offsetMapAloitusY = Math.floor(
+    map.base.length / 2 - Math.floor(karttaSpriteMaaraY / 2)
+  );
+  const offsetMapAloitusX = Math.floor(
+    map.base[0].length / 2 - Math.floor(karttaSpriteMaaraX / 2)
+  );
   canvas.width = canvas.width; // Reset canvas
   for (let y = 0; y < karttaSpriteMaaraY; y++) {
     for (let x = 0; x < karttaSpriteMaaraX; x++) {
       const imgId = map.base[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
-      const clutterId = map.clutter[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
+      const clutterId =
+        map.clutter[offsetMapAloitusY + y]?.[offsetMapAloitusX + x];
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        smallCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+        smallCtx.drawImage(
+          spriteMap_tiles,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
         //ctx.drawImage(img, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
-      } if (clutterSprite) {
-        smallCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize + 1, newSize + 1);
+      }
+      if (clutterSprite) {
+        smallCtx.drawImage(
+          spriteMap_tiles,
+          clutterSprite.x,
+          clutterSprite.y,
+          128,
+          128,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize + 1,
+          newSize + 1
+        );
         //ctx.drawImage(clutterImg, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
       }
     }
@@ -540,7 +872,7 @@ function createNewMap() {
   mapTile.innerHTML = "";
   mapWidth.value = 50;
   mapHeight.value = 50;
-  tiles.forEach(tile => {
+  tiles.forEach((tile) => {
     const tileOption = document.createElement("option");
     tileOption.value = tile.id;
     tileOption.textContent = tile.name;
@@ -556,8 +888,12 @@ function confirmMapCreate() {
   editingMap.name = mapName.value;
   editingMap.area = mapArea.value;
   editingMap.id = mapId.value;
-  editingMap.base = new Array(height).fill("0").map(e => new Array(width).fill(mapTile.value));
-  editingMap.clutter = new Array(height).fill("0").map(e => new Array(width).fill(0));
+  editingMap.base = new Array(height)
+    .fill("0")
+    .map((e) => new Array(width).fill(mapTile.value));
+  editingMap.clutter = new Array(height)
+    .fill("0")
+    .map((e) => new Array(width).fill(0));
   editingMap.voidTexture = 0;
   editingMap.chestMap = [];
   editingMap.vihuMap = [];
@@ -578,11 +914,13 @@ function cancelMapCreate() {
 
 canvas.addEventListener("wheel", changeZoomLevel);
 function changeZoomLevel({ deltaY }) {
-  const zoomLevels = [.1, .2, .4, .75, 1, 1.3, 1.75, 2];
+  const zoomLevels = [0.1, 0.2, 0.4, 0.75, 1, 1.3, 1.75, 2];
   if (deltaY > 0) {
     zoomLevel = zoomLevels[zoomLevels.indexOf(zoomLevel) - 1] || zoomLevels[0];
   } else {
-    zoomLevel = zoomLevels[zoomLevels.indexOf(zoomLevel) + 1] || zoomLevels[zoomLevels.length - 1];
+    zoomLevel =
+      zoomLevels[zoomLevels.indexOf(zoomLevel) + 1] ||
+      zoomLevels[zoomLevels.length - 1];
   }
 
   createMap();
@@ -610,11 +948,16 @@ isWall: ${tiles[pos]?.isWall ? tiles[pos].isWall : "false"}
 isLedge: ${tiles[pos]?.isLedge ? tiles[pos].isLedge : "false"}
 
 ${clutters[clu]?.name && clu != 0 ? "Clutter: " + clutters[clu].name : ""}
-${clutters[clu]?.isWall != null && clu != 0 ? "isWall: " + clutters[clu].isWall : ""}
+${
+  clutters[clu]?.isWall != null && clu != 0
+    ? "isWall: " + clutters[clu].isWall
+    : ""
+}
 
 BrushTile: ${brush.tile !== null ? brush?.tile.name : "not selected"}
 BrushClutter: ${brush.clutter !== null ? brush?.clutter.name : "not selected"}
-EnemySelect: ${enemySelect !== null ? enemySelect : "not selected"}
+EnemySelect: ${enemySelect !== null ? enemySelect.id : "not selected"}
+ChestSelect: ${chestSelect !== null ? chestSelect.id : "not selected"}
 `;
   document.querySelector("#tileProperties").appendChild(text);
 }
@@ -631,8 +974,11 @@ function updateTilesMenu() {
   function luoTaulu() {
     let taulu = [
       [
-        { nimi: "Tile name", tyyli: "string" }, { nimi: "isWall" }, { nimi: "isLedge" }, { nimi: "img" }
-      ]
+        { nimi: "Tile name", tyyli: "string" },
+        { nimi: "isWall" },
+        { nimi: "isLedge" },
+        { nimi: "img" },
+      ],
     ];
     tiles.forEach(({ name, isLedge, isWall, img, sprite }) => {
       let rivi = { data: [name, isWall, isLedge, { text: " ", img: img }] };
@@ -643,15 +989,22 @@ function updateTilesMenu() {
   }
 
   document.querySelector("#tilesContainer").style.display = "block";
-  lisaaSpreadSheet(document.querySelector("#tilesContainer"), luoTaulu(), false, "tile");
+  lisaaSpreadSheet(
+    document.querySelector("#tilesContainer"),
+    luoTaulu(),
+    false,
+    "tile"
+  );
 }
 
 function updateClutterMenu() {
   function luoTaulu() {
     let taulu = [
       [
-        { nimi: "Clutter", tyyli: "string" }, { nimi: "isWall" }, { nimi: "img" }
-      ]
+        { nimi: "Clutter", tyyli: "string" },
+        { nimi: "isWall" },
+        { nimi: "img" },
+      ],
     ];
     clutters.forEach(({ name, isWall, img }) => {
       let rivi = { data: [name, isWall, { text: " ", img: img }] };
@@ -662,15 +1015,79 @@ function updateClutterMenu() {
   }
 
   document.querySelector("#tilesContainer").style.display = "block";
-  lisaaSpreadSheet(document.querySelector("#tilesContainer"), luoTaulu(), false, "clutter");
+  lisaaSpreadSheet(
+    document.querySelector("#tilesContainer"),
+    luoTaulu(),
+    false,
+    "clutter"
+  );
+}
+
+// const chestTemplates = {
+//   defaultChest: {
+//     id: "defaultChest",
+//     cords: { x: 0, y: 0 },
+//     map: 0,
+//     sprite: "treasureChest1",
+//     isUnique: false,
+//     respawnTime: 750,
+//     lootPool: "default",
+//     itemsGenerate: [1, 7],
+//     sinceOpened: -1
+//   },
+
+function updateChestMenu() {
+  function luoTaulu() {
+    let taulu = [
+      [
+        { nimi: "Chest", tyyli: "string" },
+        { nimi: "lootPool" },
+        { nimi: "isUnique" },
+        { nimi: "respawnTime" },
+        { nimi: "itemsGenerate" },
+        { nimi: "img" },
+      ],
+    ];
+    for (let chest in chestTemplates) {
+      let data = chestTemplates[chest];
+      let rivi = {
+        data: [
+          chest,
+          data.lootPool,
+          data.isUnique,
+          data.respawnTime,
+          data.itemsGenerate,
+          { text: " ", img: data.img },
+        ],
+      };
+      taulu.push(rivi);
+    }
+    return taulu;
+  }
+
+  document.querySelector("#tilesContainer").style.display = "block";
+  lisaaSpreadSheet(
+    document.querySelector("#tilesContainer"),
+    luoTaulu(),
+    false,
+    "chest"
+  );
 }
 
 function updateEnemiesMenu() {
   function luoTaulu() {
     let taulu = [
       [
-        { nimi: "id", tyyli: "string" }, { nimi: "STR" }, { nimi: "DEX" }, { nimi: "VIT" }, { nimi: "INT" }, { nimi: "CUN" }, { nimi: "HP" }, { nimi: "MP" }, { nimi: "img" }
-      ]
+        { nimi: "id", tyyli: "string" },
+        { nimi: "STR" },
+        { nimi: "DEX" },
+        { nimi: "VIT" },
+        { nimi: "INT" },
+        { nimi: "CUN" },
+        { nimi: "HP" },
+        { nimi: "MP" },
+        { nimi: "img" },
+      ],
     ];
     for (let enemy in enemies) {
       const foe = new Enemy(enemies[enemy]);
@@ -681,7 +1098,19 @@ function updateEnemiesMenu() {
       const cun = foe.stats.cun;
       const hp = foe.stats.hp;
       const mp = foe.stats.mp;
-      let rivi = { data: [foe.id, str, dex, vit, int, cun, hp, mp, { text: " ", img: foe.img }] };
+      let rivi = {
+        data: [
+          foe.id,
+          str,
+          dex,
+          vit,
+          int,
+          cun,
+          hp,
+          mp,
+          { text: " ", img: foe.img },
+        ],
+      };
       taulu.push(rivi);
     }
 
@@ -689,22 +1118,35 @@ function updateEnemiesMenu() {
   }
 
   document.querySelector("#tilesContainer").style.display = "block";
-  lisaaSpreadSheet(document.querySelector("#tilesContainer"), luoTaulu(), false, "enemy");
+  lisaaSpreadSheet(
+    document.querySelector("#tilesContainer"),
+    luoTaulu(),
+    false,
+    "enemy"
+  );
 }
 
 function selectEnemy(id) {
   enemySelect = { id };
+  chestSelect = null;
   brush.tile = null;
   brush.clutter = null;
   // editEnemyStats(new Enemy(enemies[id]));
   mapProps();
 }
 
+function selectChest(id) {
+  chestSelect = { id };
+  enemySelect = null;
+  brush.tile = null;
+  brush.clutter = null;
+  mapProps();
+}
+
 function selectTile(id) {
-  console.log(id);
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
-  brush.tile = copy(tiles.find(tile => tile.name == id));
-  let index = tiles.findIndex(tile => tile.name == id);
+  brush.tile = copy(tiles.find((tile) => tile.name == id));
+  let index = tiles.findIndex((tile) => tile.name == id);
   console.log(index);
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
   if (select.x2 != null && select.y2 != null) {
@@ -717,14 +1159,16 @@ function selectTile(id) {
       for (let x = minX; x <= maxX; x++) {
         editingMap.base[y][x] = index;
       }
-    } drawOnMapsGrid({ x: minX, y: minY, x2: maxX, y2: maxY });
+    }
+    drawOnMapsGrid({ x: minX, y: minY, x2: maxX, y2: maxY });
     lisaaCtrlZ({ event: "tileMap", run: { map: copy(editingMap.base) } });
-  } mapProps();
+  }
+  mapProps();
 }
 
 function selectClutter(id) {
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
-  brush.clutter = copy(clutters.find(c => c.name == id));
+  brush.clutter = copy(clutters.find((c) => c.name == id));
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
 
   if (select.x2 != null && select.y2 != null) {
@@ -737,9 +1181,11 @@ function selectClutter(id) {
       for (let x = minX; x <= maxX; x++) {
         editingMap.clutter[y][x] = id;
       }
-    } drawOnMapsGrid({ x: minX, y: minY, x2: maxX, y2: maxY });
+    }
+    drawOnMapsGrid({ x: minX, y: minY, x2: maxX, y2: maxY });
     lisaaCtrlZ({ event: "clutterMap", run: { map: copy(editingMap.clutter) } });
-  } mapProps();
+  }
+  mapProps();
 }
 
 function clearTileSelect() {
@@ -763,6 +1209,14 @@ function clearEnemySelect() {
   lisaaCtrlZ({ event: "enemy", run: copy(enemySelect) });
   enemySelect = null;
   lisaaCtrlZ({ event: "enemy", run: copy(enemySelect) });
+  mapProps();
+}
+
+function clearChestSelect() {
+  document.querySelector("#tilesContainer").style.display = null;
+  lisaaCtrlZ({ event: "chest", run: copy(chestSelect) });
+  chestSelect = null;
+  lisaaCtrlZ({ event: "chest", run: copy(chestSelect) });
   mapProps();
 }
 
@@ -800,7 +1254,14 @@ function ctrlZHotkey({ ctrlKey, shiftKey, code }) {
 function onkoEdellinenCtrlZSama({ event, run }) {
   const nyky = ctrlZArray[ctrlZIndex] || {};
   const { x, y, tile, clutter } = nyky.run || {};
-  if (event == nyky.event && x == run.x && y == run.y && tile == run.tile && clutter == run.clutter) return true;
+  if (
+    event == nyky.event &&
+    x == run.x &&
+    y == run.y &&
+    tile == run.tile &&
+    clutter == run.clutter
+  )
+    return true;
   return false;
 }
 
@@ -809,7 +1270,10 @@ function paintCtrlZArray({ x, y }) {
     clutterMap = editingMap.clutter;
 
   if (tileMap?.[y]?.[x] === undefined) return false;
-  return { event: "paint", run: { x, y, tile: tileMap[y][x], clutter: clutterMap[y][x] } };
+  return {
+    event: "paint",
+    run: { x, y, tile: tileMap[y][x], clutter: clutterMap[y][x] },
+  };
 }
 
 function lisaaCtrlZ(arr) {
@@ -845,14 +1309,23 @@ function editEnemyStats(vihollinen) {
     soluBox.appendChild(nameText);
     soluBox.appendChild(nameInput);
     pohja.appendChild(soluBox);
-  } if (vihollinen.stats) {
+  }
+  if (vihollinen.stats) {
     const level = vihollinen.level;
     const isUnique = vihollinen.isUnique;
-    newBlock({ values: level, value: vihollinen.level, text: "Level", boolean: false });
-    newBlock({ values: isUnique, value: vihollinen.isUnique, text: "Unique", boolean: true });
+    newBlock({
+      values: level,
+      value: vihollinen.level,
+      text: "Level",
+      boolean: false,
+    });
+    newBlock({
+      values: isUnique,
+      value: vihollinen.isUnique,
+      text: "Unique",
+      boolean: true,
+    });
   }
-
-
 
   function newBlock({ values, value, text, boolean, score = value }) {
     const soluBox = document.createElement("div");
@@ -867,8 +1340,7 @@ function editEnemyStats(vihollinen) {
       if (!boolean) {
         scoreText.textContent = target.value;
         levelSet = target.value;
-      }
-      else {
+      } else {
         scoreText.textContent = target.checked;
         uniqueSet = target.checked;
       }
@@ -903,7 +1375,12 @@ function enemyDelete() {
 
 function testaaKopio() {
   let vihu1 = new Enemy({ ...enemies["mugger"], x: 29, y: 32 });
-  let vihu2 = new Enemy({ ...enemies["mugger"], x: 3, y: 2, stats: { armor: 4 } });
+  let vihu2 = new Enemy({
+    ...enemies["mugger"],
+    x: 3,
+    y: 2,
+    stats: { armor: 4 },
+  });
 
   console.log(vihu1);
   console.log(vihu2);
@@ -913,24 +1390,28 @@ function saveMapToMemory() {
   let saveMap = { ...editingMap };
   const enemyArray = [];
   const chestArray = [];
-  saveMap.vihuMap.map(_en => _en.map(en => {
-    if (en == null) return;
-    let enemy = { ...en };
-    en = {};
-    en.id = enemy.id;
-    en.cords = enemy.cords;
-    en.spawnCords = enemy.spawnCords;
-    en.level = enemy.level;
-    en.isUnique = enemy.isUnique;
-    enemyArray.push(en);
-  }));
-  saveMap.chestMap.map(_chest => _chest.map(chest => {
-    let _chest = { ...chest };
-    chest = {};
-    chest.id = _chest.id;
-    chest.cords = _chest.cords;
-    chestArray.push(chest);
-  }));
+  saveMap.vihuMap.map((_en) =>
+    _en.map((en) => {
+      if (en == null) return;
+      let enemy = { ...en };
+      en = {};
+      en.id = enemy.id;
+      en.cords = enemy.cords;
+      en.spawnCords = enemy.spawnCords;
+      en.level = enemy.level;
+      en.isUnique = enemy.isUnique;
+      enemyArray.push(en);
+    })
+  );
+  saveMap.chestMap.map((_chest) =>
+    _chest.map((chest) => {
+      let _chest = { ...chest };
+      chest = {};
+      chest.id = _chest.id;
+      chest.cords = _chest.cords;
+      chestArray.push(chest);
+    })
+  );
   saveMap.vihuMap = null;
   saveMap.chestMap = null;
   saveMap.messageMap = null;
@@ -944,11 +1425,22 @@ function loadMapFromMemory() {
   let loadedMap = JSON.parse(localStorage.getItem("DOT_editor_current_map"));
   if (!loadedMap) return;
   console.log(loadedMap);
-  loadedMap.enemies = loadedMap.enemies.map(en => {
+  loadedMap.enemies = loadedMap.enemies.map((en) => {
     if (!en.id) return;
-    return new Enemy({ ...enemies[en.id], cords: en.cords, spawnCords: en.spawnCords, level: en.level, isUnique: en.isUnique });
+    return new Enemy({
+      ...enemies[en.id],
+      cords: en.cords,
+      spawnCords: en.spawnCords,
+      level: en.level,
+      isUnique: en.isUnique,
+    });
   });
-  loadedMap.treasureChests = loadedMap.treasureChests.map(chest => { return new treasureChest({ ...chestTemplates[chest.id], cords: chest.cords }); });
+  loadedMap.treasureChests = loadedMap.treasureChests.map((chest) => {
+    return new treasureChest({
+      ...chestTemplates[chest.id],
+      cords: chest.cords,
+    });
+  });
   editingMap = { ...loadedMap };
   editingMap.vihuMap = [];
   editingMap.chestMap = [];

@@ -93,7 +93,8 @@ body {
   #teleport,
   #tilesMenu,
   #cluttersMenu,
-  #enemiesMenu {
+  #enemiesMenu,
+  #chestsMenu {
     background: rgb(156, 56, 156);
   }
 
@@ -220,10 +221,11 @@ body {
   transform: translateX(-50%) translateY(-50%);
   padding: 30px;
 
-  input, select {
+  input,
+  select {
     background: black;
     color: white;
-    border: none
+    border: none;
   }
 
   .createButtons {
@@ -231,7 +233,6 @@ body {
     margin: 12px;
     width: 100%;
     position: relative;
-    
 
     button {
       background: rgb(24, 24, 24);
@@ -301,7 +302,7 @@ body {
     }
 
     div:hover {
-      background: rgba(30, 120, 55, .33);
+      background: rgba(30, 120, 55, 0.33);
     }
   }
 
@@ -329,7 +330,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-
 
   .enemyInfoBox {
     background: rgb(24, 24, 24);
