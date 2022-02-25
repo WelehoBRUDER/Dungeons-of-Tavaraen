@@ -257,6 +257,7 @@ const state = {
   smithOpen: false as boolean,
   journalOpen: false as boolean,
   codexOpen: false as boolean,
+  areaMapOpen: false as boolean,
 };
 
 function handleEscape() {
@@ -311,11 +312,18 @@ function handleEscape() {
     openGameMenu();
     state.menuOpen = true;
   }
+  if (state.areaMapOpen) {
+    state.areaMapOpen = false;
+    moveAreaMap();
+  }
   state.isSelected = false;
   state.abiSelected = {};
+  mapSelection.x = null;
+  mapSelection.y = null;
   closeTextWindow();
   updateUI();
   hideHover();
+  renderTileHover(player.cords);
   contextMenu.textContent = "";
   assignContainer.style.display = "none";
   if (player.isDead) spawnDeathScreen();
@@ -656,6 +664,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player.updateStatModifiers();
       player.updateAbilities();
       renderMinimap(maps[currentMap]);
+      renderAreaMap(maps[currentMap]);
       purgeDeadEnemies();
       killAllQuestEnemies();
       spawnQuestMonsters();

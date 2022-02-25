@@ -27,6 +27,10 @@ document.addEventListener("keyup", e => {
     if (e.key == settings["hotkey_ranged"]) {
         state.rangedMode = !state.rangedMode;
     }
+    if (e.key == "m") { // replace with hotkey soon
+        state.areaMapOpen = !state.areaMapOpen;
+        moveAreaMap();
+    }
     if (player.isDead || state.savesOpen)
         return;
     const number = parseInt(e.keyCode) - 48;

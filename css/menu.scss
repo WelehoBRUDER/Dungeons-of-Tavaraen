@@ -530,7 +530,7 @@
         .raceButton {
           transition: 0.15s;
           width: auto;
-          height: 48px;
+          height: calc(48px * var(--ui-scale));
           font-size: calc(36px * var(--ui-scale));
           color: white;
           text-shadow: -2px 2px 4px black;

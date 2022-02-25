@@ -223,6 +223,7 @@ const state = {
     smithOpen: false,
     journalOpen: false,
     codexOpen: false,
+    areaMapOpen: false,
 };
 function handleEscape() {
     if (state.perkOpen) {
@@ -276,11 +277,18 @@ function handleEscape() {
         openGameMenu();
         state.menuOpen = true;
     }
+    if (state.areaMapOpen) {
+        state.areaMapOpen = false;
+        moveAreaMap();
+    }
     state.isSelected = false;
     state.abiSelected = {};
+    mapSelection.x = null;
+    mapSelection.y = null;
     closeTextWindow();
     updateUI();
     hideHover();
+    renderTileHover(player.cords);
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
     if (player.isDead)
@@ -637,6 +645,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             player.updateStatModifiers();
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
+            renderAreaMap(maps[currentMap]);
             purgeDeadEnemies();
             killAllQuestEnemies();
             spawnQuestMonsters();

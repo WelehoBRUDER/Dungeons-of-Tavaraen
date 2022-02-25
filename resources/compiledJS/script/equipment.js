@@ -102,7 +102,7 @@ const gradeStatMultis = {
     legendary: 2
 };
 class Weapon extends Item {
-    constructor(base, setPrice = 0) {
+    constructor(base, setPrice = 0, dontRollStats = false) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
@@ -121,7 +121,7 @@ class Weapon extends Item {
             this.price = setPrice;
         if (this.level > 0)
             this.name += ` +${this.level}`;
-        if (this.rolledStats.length === 0 && settings.randomize_items) {
+        if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
             Object.entries(equipmentStatRandomization["damage"]).forEach((dmg) => {
                 if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"])
                     return;
@@ -226,7 +226,7 @@ class Weapon extends Item {
     }
 }
 class Armor extends Item {
-    constructor(base, setPrice = 0) {
+    constructor(base, setPrice = 0, dontRollStats = false) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
         // @ts-ignore
@@ -245,7 +245,7 @@ class Armor extends Item {
         if (this.level > 0)
             this.name += ` +${this.level}`;
         // Randomization reintroduced
-        if (this.rolledStats.length === 0 && settings.randomize_items) {
+        if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
             Object.entries(equipmentStatRandomization["armor"]).forEach((arm) => {
                 if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"])
                     return;
@@ -560,7 +560,7 @@ const maxStatsForEquipmentToRoll = {
     legendary: { main: 3, side: 4 }
 };
 class Artifact extends Item {
-    constructor(base, setPrice = 0) {
+    constructor(base, setPrice = 0, dontRollStats = false) {
         var _a;
         super(base);
         const baseItem = Object.assign({}, items[this.id]);
@@ -572,7 +572,7 @@ class Artifact extends Item {
             this.price = setPrice;
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
-        if (this.rolledStats.length === 0) {
+        if (this.rolledStats.length === 0 && !dontRollStats) {
             Object.entries(artifactStatRandomization).forEach((stat) => {
                 if (this.rolledStats.length >= maxStatsForArtifactsToRoll[this.grade])
                     return;
@@ -862,11 +862,11 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
         let itm = Object.assign({}, item);
         if (resetItem) {
             if (itm.type == "weapon")
-                itm = new Weapon(Object.assign({}, itm));
+                itm = new Weapon(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "armor")
-                itm = new Armor(Object.assign({}, itm));
+                itm = new Armor(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "artifact")
-                itm = new Artifact(Object.assign({}, itm));
+                itm = new Artifact(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "consumable")
                 itm = new Consumable(Object.assign({}, itm));
         }

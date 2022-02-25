@@ -208,7 +208,7 @@ class Weapon extends Item {
   level?: number;
   maxLevel?: number;
   rolledStats?: Array<any>;
-  constructor(base: weaponClass, setPrice: number = 0) {
+  constructor(base: weaponClass, setPrice: number = 0, dontRollStats: boolean = false) {
     super(base);
     const baseItem = { ...items[this.id] };
     this.name = lang[this.id + "_name"] ?? baseItem.name;
@@ -226,7 +226,7 @@ class Weapon extends Item {
 
     if (this.level > 0) this.name += ` +${this.level}`;
 
-    if (this.rolledStats.length === 0 && settings.randomize_items) {
+    if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
       Object.entries(equipmentStatRandomization["damage"]).forEach((dmg: any) => {
         if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"]) return;
         const key = dmg[0];
@@ -345,7 +345,7 @@ class Armor extends Item {
   level?: number;
   maxLevel?: number;
   rolledStats?: Array<any>;
-  constructor(base: armorClass, setPrice: number = 0) {
+  constructor(base: armorClass, setPrice: number = 0, dontRollStats: boolean = false) {
     super(base);
     // @ts-ignore
     const baseItem = { ...items[this.id] };
@@ -364,7 +364,7 @@ class Armor extends Item {
 
     // Randomization reintroduced
 
-    if (this.rolledStats.length === 0 && settings.randomize_items) {
+    if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
       Object.entries(equipmentStatRandomization["armor"]).forEach((arm: any) => {
         if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"]) return;
         const key = arm[0];
@@ -680,7 +680,7 @@ class Artifact extends Item {
   artifactSet: string;
   rolledStats?: any;
   fullPrice?: Function;
-  constructor(base: Artifact, setPrice: number = 0) {
+  constructor(base: Artifact, setPrice: number = 0, dontRollStats: boolean = false) {
     super(base);
     const baseItem = { ...items[this.id] };
     this.stats = { ...baseItem.stats } ?? {};
@@ -691,7 +691,7 @@ class Artifact extends Item {
 
     if (lang.language_id !== "english") this.name = lang[this.id + "_name"];
 
-    if (this.rolledStats.length === 0) {
+    if (this.rolledStats.length === 0 && !dontRollStats) {
       Object.entries(artifactStatRandomization).forEach((stat: any) => {
         if (this.rolledStats.length >= maxStatsForArtifactsToRoll[this.grade]) return;
         const key = stat[0];
@@ -957,9 +957,9 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     if (context == "UPGRADE" && (item.type == "artifact" || item.type == "consumable")) return;
     let itm = { ...item };
     if (resetItem) {
-      if (itm.type == "weapon") itm = new Weapon({ ...itm });
-      else if (itm.type == "armor") itm = new Armor({ ...itm });
-      else if (itm.type == "artifact") itm = new Artifact({ ...itm });
+      if (itm.type == "weapon") itm = new Weapon({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
+      else if (itm.type == "armor") itm = new Armor({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
+      else if (itm.type == "artifact") itm = new Artifact({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
       else if (itm.type == "consumable") itm = new Consumable({ ...itm });
     }
     const itemObject = document.createElement("div");

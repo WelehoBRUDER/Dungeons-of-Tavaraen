@@ -11,6 +11,9 @@ const staticHover = <HTMLDivElement>document.querySelector(".mapHover");
 const minimapContainer = <HTMLDivElement>document.querySelector(".rightTop .miniMap");
 const minimapCanvas = <HTMLCanvasElement>minimapContainer.querySelector(".minimapLayer");
 const minimapCtx = minimapCanvas.getContext("2d");
+const areaMapContainer = <HTMLDivElement>document.querySelector(".areaMap");
+const areaMapCanvas = <HTMLCanvasElement>areaMapContainer.querySelector(".areaCanvas");
+const areaMapCtx = areaMapCanvas.getContext("2d");
 const spriteMap_tiles = <HTMLImageElement>document.querySelector(".spriteMap_tiles");
 const spriteMap_items = <HTMLImageElement>document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
@@ -32,6 +35,12 @@ const highlight = {
   x: 0,
   y: 0
 };
+
+const mapSelection = {
+  x: null,
+  y: null,
+  disableHover: false
+} as any;
 
 interface mapObject {
   id: string,
@@ -119,6 +128,62 @@ function moveMinimap() {
   minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
   minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
+
+function renderAreaMap(map: mapObject) {
+  const miniSpriteSize = 12;
+  areaMapCanvas.width = map.base[0].length * miniSpriteSize;
+  areaMapCanvas.height = map.base.length * miniSpriteSize;
+  for (let y = 0; y < map.base.length; y++) {
+    for (let x = 0; x < map.base[y].length; x++) {
+      const imgId = map.base?.[y]?.[x];
+      // @ts-expect-error
+      const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
+      const clutterId = map.clutter?.[y]?.[x];
+      // @ts-expect-error
+      const clutterSprite = clutters[clutterId]?.spriteMap;
+      if (sprite) {
+        areaMapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+      }
+      if (clutterSprite) {
+        areaMapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+      }
+    }
+  }
+}
+
+function moveAreaMap() {
+  //const displayLimit = areaMapCalcDisplay();
+  if (state.areaMapOpen) {
+    areaMapContainer.style.display = "block";
+  }
+  else {
+    areaMapContainer.style.display = "none";
+  }
+  areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2) * settings["ui_scale"] / 100}px`;
+  areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2) * settings["ui_scale"] / 100}px`;
+  // if (player.cords.y >= maps[currentMap].base.length - displayLimit.heightLimit) {
+  //   areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8) * settings["ui_scale"] / 100}px`;
+  // }
+  // if (player.cords.y <= displayLimit.heightLimit) {
+  //   areaMapCanvas.style.top = `${player.cords.y * -12 * settings["ui_scale"] / 100}px`;
+  // }
+  // if (player.cords.x >= maps[currentMap].base[0].length - displayLimit.widthLimit) {
+  //   areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6) * settings["ui_scale"] / 100}px`;
+  // }
+  // if (player.cords.x <= displayLimit.widthLimit) {
+  //   areaMapCanvas.style.left = `${player.cords.x * -12 * settings["ui_scale"] / 100}px`;
+  // }
+}
+
+function areaMapCalcDisplay() {
+  let height = 0;
+  let width = 0;
+  const spriteSize = 12;
+  width = areaMapContainer.getBoundingClientRect().width / 2;
+  height = areaMapContainer.getBoundingClientRect().height / 2;
+  return { widthLimit: Math.ceil(width / spriteSize), heightLimit: Math.ceil(height / spriteSize) };
+}
+
 let sightMap: any;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
 
@@ -307,7 +372,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   renderPlayerModel(spriteSize, playerCanvas, playerCtx);
 }
 
-function renderTileHover(tile: tileObject, event: MouseEvent) {
+function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   var tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -319,10 +384,10 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
     dontMove = false;
     return;
   }
+  const strokeSprite = staticTiles[0].spriteMap;
   try {
 
     /* Render tile */
-    const strokeSprite = staticTiles[0].spriteMap;
     const highlightSprite = staticTiles[3]?.spriteMap;
     const highlightRedSprite = staticTiles[4]?.spriteMap;
     const highlight2Sprite = staticTiles[5]?.spriteMap;
@@ -408,9 +473,9 @@ function renderTileHover(tile: tileObject, event: MouseEvent) {
         else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
     }
-    playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
   }
   catch { }
+  playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
 }
 
 function renderAOEHoverOnPlayer(aoeSize: number, ignoreLedge: boolean) {
@@ -460,10 +525,12 @@ function clickMap(event: MouseEvent) {
     state.isSelected = false;
     state.abiSelected = {};
     updateUI();
+    mapSelection.x = null;
+    mapSelection.y = null;
     renderTileHover({ x: x, y: y }, event);
     dontMove = true;
     return;
-  }
+  } 1;
   if (dontMove) {
     dontMove = false;
     return;
@@ -657,6 +724,24 @@ document.addEventListener("keyup", (keyPress) => {
     state.abiSelected = {};
     return;
   }
+  if ((state.abiSelected?.id || (+player.weapon.range > 2 && state.rangedMode)) && keyPress.key === settings.hotkey_interact) {
+    useAbiTargetingWithKeyboard();
+  }
+  if (dirs[keyPress.key] && (state.abiSelected?.id || (+player.weapon.range > 2 && state.rangedMode))) {
+    if (mapSelection.x !== null && mapSelection.y !== null) {
+      const cords = cordsFromDir({ x: mapSelection.x, y: mapSelection.y }, dirs[keyPress.key]);
+      mapSelection.x = cords.x;
+      mapSelection.y = cords.y;
+      renderTileHover({ x: mapSelection.x, y: mapSelection.y });
+    }
+    else {
+      const cords = cordsFromDir(player.cords, dirs[keyPress.key]);
+      mapSelection.x = cords.x;
+      mapSelection.y = cords.y;
+      renderTileHover({ x: mapSelection.x, y: mapSelection.y });
+    }
+    return;
+  }
   if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen) return;
   let shittyFix = JSON.parse(JSON.stringify(player));
   if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
@@ -667,6 +752,7 @@ document.addEventListener("keyup", (keyPress) => {
     if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
       player.cords = cordsFromDir(player.cords, dirs[keyPress.key]);
       moveMinimap();
+      moveAreaMap();
       // @ts-ignore
       renderMap(maps[currentMap], true);
       advanceTurn();
@@ -1155,6 +1241,7 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
 function modifyCanvas(createNewSightMap: boolean = false) {
   const layers = Array.from(document.querySelectorAll("canvas.layer"));
   moveMinimap();
+  moveAreaMap();
   for (let canvas of layers) {
     // @ts-ignore
     canvas.width = innerWidth;
@@ -1172,6 +1259,8 @@ async function advanceTurn() {
   if (player.isDead) return;
   if (DEVMODE) updateDeveloperInformation();
   state.inCombat = false;
+  state.abiSelected = {};
+  state.isSelected = false;
   turnOver = false;
   enemiesHadTurn = 0;
   var map = maps[currentMap];
@@ -1339,6 +1428,83 @@ function resetAllLivingEnemiesInAllMaps() {
     }
     );
   });
+}
+
+function useAbiTargetingWithKeyboard() {
+  let targetingEnemy = false;
+  for (let enemy of maps[currentMap].enemies) {
+    if (enemy.cords.x == mapSelection.x && enemy.cords.y == mapSelection.y) {
+      if (!enemy.alive) break;
+      targetingEnemy = true;
+      if (state.isSelected) {
+        // @ts-expect-error
+        if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
+          if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile)) break;
+          if (state.abiSelected.type == "attack") {
+            if (state.abiSelected.shoots_projectile) fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
+            else regularAttack(player, enemy, state.abiSelected);
+            // @ts-expect-error
+            if (weaponReach(player, state.abiSelected.use_range, enemy)) attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
+            if (!state.abiSelected.shoots_projectile) advanceTurn();
+          }
+        }
+        if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
+          player.stats.mp -= state.abiSelected.mana_cost;
+          state.abiSelected.onCooldown = state.abiSelected.cooldown;
+          movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
+        }
+      }
+      else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
+        // @ts-expect-error
+        attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
+        if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
+          regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
+          advanceTurn();
+        }
+        // @ts-ignore
+      } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
+        // @ts-ignore
+        fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true, player);
+      }
+      break;
+    }
+  };
+  if (state.isSelected && state.abiSelected?.aoe_size > 0 && !targetingEnemy) {
+    // @ts-expect-error
+    if (generateArrowPath(player.cords, { x: mapSelection.x, y: mapSelection.y }).length <= state.abiSelected.use_range) {
+      fireProjectile(player.cords, { x: mapSelection.x, y: mapSelection.y }, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
+    }
+  }
+  if (state.isSelected && state.abiSelected.summon_unit) {
+    if (generatePath(player.cords, { x: mapSelection.x, y: mapSelection.y }, player.canFly, true) <= state.abiSelected.use_range) {
+      summonUnit(state.abiSelected, { x: mapSelection.x, y: mapSelection.y });
+      advanceTurn();
+    }
+  }
+  state.clicked = true;
+  setTimeout(() => { state.clicked = false; }, 30);
+  if (state.abiSelected.type == "movement" && !player.isRooted()) {
+    player.stats.mp -= state.abiSelected.mana_cost;
+    state.abiSelected.onCooldown = state.abiSelected.cooldown;
+    if (state.abiSelected.statusesUser?.length > 0) {
+      state.abiSelected.statusesUser.forEach((status: string) => {
+        if (!player.statusEffects.find((eff: statEffect) => eff.id == status)) {
+          // @ts-ignore
+          player.statusEffects.push(new statEffect({ ...statusEffects[status] }, state.abiSelected.statusModifiers));
+        } else {
+          player.statusEffects.find((eff: statEffect) => eff.id == status).last.current += statusEffects[status].last.total;
+        }
+        // @ts-ignore
+        statusEffects[status].last.current = statusEffects[status].last.total;
+        spawnFloatingText(player.cords, state.abiSelected.line, "crimson", 36);
+        let string: string = "";
+        string = lang[state.abiSelected.id + "_action_desc_pl"];
+        displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
+      });
+    }
+    movePlayer({ x: mapSelection.x, y: mapSelection.y }, true, state.abiSelected.use_range);
+  }
+  state.abiSelected = {};
 }
 
 // This should be called once when entering a new map.

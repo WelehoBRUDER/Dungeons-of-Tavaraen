@@ -1,3 +1,16 @@
+# 1.0.8 ~ 25.2.2022
+
+### Patch
+
+## New Additions
+
+- Abilities can now be targeted and used with keyboard.
+
+## Fixes & Tweaks
+
+- Merchant items no longer roll random stats before they are bought.
+- Fixed error caused by broken enemy loot.
+
 # 1.0.7 ~ 24.2.2022
 
 ### Patch - The Roguelikery
