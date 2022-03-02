@@ -1265,7 +1265,7 @@ body {
 
     .miniMap {
       position: relative;
-      background: rgb(12, 60, 118);
+      background: rgb(10, 10, 10);
       border: 4px solid gold;
       pointer-events: none;
       width: calc(360px * var(--ui-scale));
@@ -1936,7 +1936,7 @@ body {
     bottom: 0;
     padding: 0;
     margin: auto;
-    background: rgb(12, 60, 118);
+    background: rgb(10, 10, 10);
     border: 4px solid gold;
     pointer-events: none;
     width: 60%;

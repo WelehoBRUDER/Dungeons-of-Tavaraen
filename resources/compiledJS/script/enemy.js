@@ -94,6 +94,7 @@ class Enemy extends Character {
                 this.currentTargetInterval--;
             // Choose a random ability
             if (this.chosenTarget) {
+                console.log(this.getRegen());
                 let chosenAbility = this.chooseAbility();
                 let pathToTarget = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
                 let arrowPathToTarget = generateArrowPath(this.cords, this.chosenTarget.cords, false);
@@ -212,6 +213,7 @@ class Enemy extends Character {
         };
         this.kill = () => {
             var _a;
+            console.log("???");
             player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);

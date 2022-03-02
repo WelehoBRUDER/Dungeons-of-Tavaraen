@@ -119,6 +119,8 @@ function getAllModifiersOnce(char: any, withConditions = true) {
   obj["meleeDamageP"] = 1;
   obj["rangedDamageP"] = 1;
   obj["spellDamageP"] = 1;
+  obj["movementSpeedV"] = 0;
+  obj["attackSpeedV"] = 0;
   char.statModifiers.forEach((mod: any) => {
     let apply = true;
     if (mod.conditions && withConditions) {
@@ -131,7 +133,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
           obj[eff[0]] = eff[1];
           if (eff[0].endsWith("P")) {
             obj[eff[0]] = obj[eff[0]] / 100;
-            obj[eff[0]]++;
+            if (!eff[0].includes("regen")) obj[eff[0]]++;
           }
         }
         else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -146,7 +148,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -160,7 +162,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -174,7 +176,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -188,7 +190,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -202,7 +204,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -218,7 +220,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
             obj[eff[0]] = eff[1];
             if (eff[0].endsWith("P")) {
               obj[eff[0]] = obj[eff[0]] / 100;
-              obj[eff[0]]++;
+              if (!eff[0].includes("regen")) obj[eff[0]]++;
             }
           }
           else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -238,7 +240,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
           obj[eff[0]] = obj[eff[0]] / 100;
-          obj[eff[0]]++;
+          if (!eff[0].includes("regen")) obj[eff[0]]++;
         }
       }
       else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);
@@ -347,6 +349,13 @@ function getModifiers(char: any, stat: string, withConditions = true) {
   return { v: val, m: modif };
 }
 
+const baseSpeed = {
+  movement: 100,
+  attack: 100,
+  movementFill: 0,
+  attackFill: 0
+} as any;
+
 class Character {
   id: string;
   name: string;
@@ -396,6 +405,8 @@ class Character {
   scale?: number;
   allModifiers?: any;
   inventory?: any;
+  speed?: any;
+  getSpeed?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -411,6 +422,7 @@ class Character {
     this.hit = { ...base.hit } ?? { chance: 10, evasion: 5 };
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
+    this.speed = base.speed ? { ...base.speed } : baseSpeed;
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
@@ -426,9 +438,18 @@ class Character {
       if (!this.allModifiers["critDamageP"]) this.allModifiers["critDamageP"] = 1;
       if (!this.allModifiers["critChanceV"]) this.allModifiers["critChanceV"] = 0;
       if (!this.allModifiers["critChanceP"]) this.allModifiers["critChanceP"] = 1;
+      if (!this.allModifiers["movementSpeedV"]) this.allModifiers["movementSpeedV"] = 0;
+      if (!this.allModifiers["attackSpeedV"]) this.allModifiers["attackSpeedV"] = 0;
       stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5) + 18.5);
       stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4) + 4.6);
       return stats;
+    };
+
+    this.getSpeed = () => {
+      let speed = {} as any;
+      speed.movement = this.speed.movement + this.allModifiers["movementSpeedV"];
+      speed.attack = this.speed.attack + this.allModifiers["attackSpeedV"];
+      return speed;
     };
 
     this.getHpMax = (withConditions = true) => {
@@ -494,6 +515,7 @@ class Character {
 
     this.getRegen = () => {
       let stats = this.getStats();
+      if (this.id.includes("Statue")) console.log(this.allModifiers);
       if (!this.allModifiers["regenHpV"]) this.allModifiers["regenHpV"] = 0;
       if (!this.allModifiers["regenHpP"]) this.allModifiers["regenHpP"] = 1;
       if (!this.allModifiers["regenMpV"]) this.allModifiers["regenMpV"] = 0;

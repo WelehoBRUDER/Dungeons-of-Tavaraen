@@ -117,7 +117,18 @@ function renderMinimap(map: mapObject) {
   }
 }
 
+// Found this from google, the function returns true / false depending on whether or not the canvas is empty.
+function isCanvasBlank(canvas: HTMLCanvasElement) {
+  try {
+    return !canvas.getContext('2d')
+      .getImageData(0, 0, canvas.width, canvas.height).data
+      .some(channel => channel !== 0);
+  }
+  catch { }
+}
+
 function moveMinimap() {
+  if (isCanvasBlank(minimapCanvas)) renderMinimap(maps[currentMap]);
   if (!settings.toggle_minimap) {
     minimapContainer.style.display = "none";
     return;
@@ -153,6 +164,7 @@ function renderAreaMap(map: mapObject) {
 
 function moveAreaMap() {
   //const displayLimit = areaMapCalcDisplay();
+  if (isCanvasBlank(areaMapCanvas)) renderAreaMap(maps[currentMap]);
   if (state.areaMapOpen) {
     areaMapContainer.style.display = "block";
   }
@@ -755,7 +767,13 @@ document.addEventListener("keyup", (keyPress) => {
       moveAreaMap();
       // @ts-ignore
       renderMap(maps[currentMap], true);
-      advanceTurn();
+      let extraMove = false;
+      if (player.speed.movementFill >= 100) {
+        player.speed.movementFill -= 100;
+        extraMove = true;
+      }
+      else player.speed.movementFill += (player.getSpeed().movement - 100);
+      if (!extraMove) advanceTurn();
     }
     else if (canMove(shittyFix, dirs[keyPress.key]) && rooted) {
       advanceTurn();
@@ -815,12 +833,20 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   if (isMovingCurrently) breakMoving = true;
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
-      await sleep(30);
+      await sleep(15);
+      let extraMove = false;
+      if (!ability) {
+        if (player.speed.movementFill >= 100) {
+          player.speed.movementFill -= 100;
+          extraMove = true;
+        }
+        else player.speed.movementFill += (player.getSpeed().movement - 100);
+      }
       isMovingCurrently = true;
       player.cords.x = step.x;
       player.cords.y = step.y;
       modifyCanvas(true);
-      if (!ability) {
+      if (!ability && !extraMove) {
         advanceTurn();
       }
       count++;
@@ -856,11 +882,19 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
   let count: number = 0;
   moving: for (let step of path) {
     if (canMoveTo(enemy, step)) {
-      await sleep(55);
+      await sleep(20);
+      let increaseMovement = true;
+      while (enemy.speed.movementFill >= 100) {
+        enemy.speed.movementFill -= 100;
+        increaseMovement = false;
+        maxRange++;
+      }
+      if (increaseMovement) {
+        enemy.speed.movementFill += (player.getSpeed().movement - 100);
+      }
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
       modifyCanvas();
-
       count++;
       if (count > maxRange) break moving;
     }
@@ -1258,6 +1292,7 @@ var highestWaitTime = 0;
 async function advanceTurn() {
   if (player.isDead) return;
   if (DEVMODE) updateDeveloperInformation();
+  if (state.inCombat) displayText("<c>white<c>[WORLD]: <c>yellow<c>-----Turn change-----");
   state.inCombat = false;
   state.abiSelected = {};
   state.isSelected = false;
