@@ -27,7 +27,7 @@ document.addEventListener("keyup", e => {
     if (e.key == settings["hotkey_ranged"]) {
         state.rangedMode = !state.rangedMode;
     }
-    if (e.key == "m") { // replace with hotkey soon
+    if (e.key == settings["hotkey_area_map"]) { // replace with hotkey soon
         state.areaMapOpen = !state.areaMapOpen;
         moveAreaMap();
     }

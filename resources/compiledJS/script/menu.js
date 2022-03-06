@@ -9,6 +9,7 @@ class gameSettings {
         this.hotkey_char = base.hotkey_char || "c";
         this.hotkey_perk = base.hotkey_perk || "p";
         this.hotkey_ranged = base.hotkey_ranged || "g";
+        this.hotkey_area_map = base.hotkey_area_map || "m";
         this.ui_scale = base.ui_scale || 100;
         this.hotkey_move_up = base.hotkey_move_up || "w";
         this.hotkey_move_down = base.hotkey_move_down || "s";
@@ -33,6 +34,7 @@ let settings = new gameSettings({
     hotkey_char: "c",
     hotkey_perk: "p",
     hotkey_ranged: "g",
+    hotkey_area_map: "m",
     ui_scale: 100,
     hotkey_move_up: "w",
     hotkey_move_down: "s",
@@ -127,6 +129,11 @@ const menuSettings = [
         type: "toggle",
     },
     {
+        id: "setting_ui_scale",
+        tooltip: "ui_scale",
+        type: "inputSlider",
+    },
+    {
         id: "setting_hotkey_inv",
         type: "hotkey",
     },
@@ -147,14 +154,13 @@ const menuSettings = [
         type: "hotkey",
     },
     {
-        id: "setting_hotkey_ranged",
-        tooltip: "toggle_rangedMode",
+        id: "setting_hotkey_area_map",
         type: "hotkey",
     },
     {
-        id: "setting_ui_scale",
-        tooltip: "ui_scale",
-        type: "inputSlider",
+        id: "setting_hotkey_ranged",
+        tooltip: "toggle_rangedMode",
+        type: "hotkey",
     },
     {
         id: "setting_hotkey_move_up",

@@ -27,6 +27,22 @@ function statConditions(conditions, char) {
     });
     return fulfilled;
 }
+function effectApply(eff, obj) {
+    if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+        obj[eff[0]] = eff[1];
+        if (eff[0].endsWith("P")) {
+            obj[eff[0]] = obj[eff[0]] / 100;
+            if (!eff[0].includes("regen"))
+                obj[eff[0]]++;
+        }
+    }
+    else if (eff[0].endsWith("P") && eff[1] < 0)
+        obj[eff[0]] *= (1 + eff[1] / 100);
+    else if (eff[0].endsWith("P"))
+        obj[eff[0]] += (eff[1] / 100);
+    else if (eff[0].endsWith("V"))
+        obj[eff[0]] += eff[1];
+}
 function getAllModifiersOnce(char, withConditions = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     let obj = {};
@@ -45,111 +61,33 @@ function getAllModifiersOnce(char, withConditions = true) {
             apply = false;
         if (apply) {
             Object.entries(mod.effects).forEach((eff) => {
-                if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                    obj[eff[0]] = eff[1];
-                    if (eff[0].endsWith("P")) {
-                        obj[eff[0]] = obj[eff[0]] / 100;
-                        if (!eff[0].includes("regen"))
-                            obj[eff[0]]++;
-                    }
-                }
-                else if (eff[0].endsWith("P") && eff[1] < 0)
-                    obj[eff[0]] *= (1 + eff[1] / 100);
-                else if (eff[0].endsWith("P"))
-                    obj[eff[0]] += (eff[1] / 100);
-                else if (eff[0].endsWith("V"))
-                    obj[eff[0]] += eff[1];
+                effectApply(eff, obj);
             });
         }
     });
     char.statusEffects.forEach((mod) => {
         Object.entries(mod.effects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     });
     if ((_b = (_a = char.classes) === null || _a === void 0 ? void 0 : _a.main) === null || _b === void 0 ? void 0 : _b.statBonuses) {
         Object.entries(char.classes.main.statBonuses).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     if ((_d = (_c = char.classes) === null || _c === void 0 ? void 0 : _c.sub) === null || _d === void 0 ? void 0 : _d.statBonuses) {
         Object.entries(char.classes.sub.statBonuses).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     (_e = char.perks) === null || _e === void 0 ? void 0 : _e.forEach((mod) => {
         Object.entries(mod.effects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     });
     if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
         Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     if (char.id === "player") {
@@ -157,44 +95,13 @@ function getAllModifiersOnce(char, withConditions = true) {
             var _a;
             if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
                 Object.entries(char[slot].stats).forEach((eff) => {
-                    if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                        obj[eff[0]] = eff[1];
-                        if (eff[0].endsWith("P")) {
-                            obj[eff[0]] = obj[eff[0]] / 100;
-                            if (!eff[0].includes("regen"))
-                                obj[eff[0]]++;
-                        }
-                    }
-                    else if (eff[0].endsWith("P") && eff[1] < 0)
-                        obj[eff[0]] *= (1 + eff[1] / 100);
-                    else if (eff[0].endsWith("P"))
-                        obj[eff[0]] += (eff[1] / 100);
-                    else if (eff[0].endsWith("V"))
-                        obj[eff[0]] += eff[1];
+                    effectApply(eff, obj);
                 });
             }
-            // if (stat.includes("Resist")) {
-            //   if (char[slot]?.resistances) {
-            //     if (char[slot].resistances[stat.replace("Resist", '')]) val += char[slot].resistances[stat.replace("Resist", '')];
-            //   }
-            // }
         });
         const artifactEffects = char.getArtifactSetBonuses();
         Object.entries(artifactEffects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    if (!eff[0].includes("regen"))
-                        obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     return obj;

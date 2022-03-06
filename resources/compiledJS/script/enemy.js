@@ -94,7 +94,6 @@ class Enemy extends Character {
                 this.currentTargetInterval--;
             // Choose a random ability
             if (this.chosenTarget) {
-                console.log(this.getRegen());
                 let chosenAbility = this.chooseAbility();
                 let pathToTarget = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
                 let arrowPathToTarget = generateArrowPath(this.cords, this.chosenTarget.cords, false);

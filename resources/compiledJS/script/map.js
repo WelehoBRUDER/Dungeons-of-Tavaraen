@@ -70,6 +70,7 @@ function spriteVariables() {
 function renderMinimap(map) {
     var _a, _b, _c, _d, _e, _f, _g;
     const miniSpriteSize = 8;
+    const spriteSize = miniSpriteSize;
     minimapCanvas.width = map.base[0].length * miniSpriteSize;
     minimapCanvas.height = map.base.length * miniSpriteSize;
     if (!settings.toggle_minimap) {
@@ -95,6 +96,38 @@ function renderMinimap(map) {
             }
         }
     }
+    map.shrines.forEach((checkpoint) => {
+        const shrine = document.querySelector(".sprites .shrineTile");
+        var tileX = checkpoint.cords.x * spriteSize;
+        var tileY = checkpoint.cords.y * spriteSize;
+        minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
+    });
+    map.treasureChests.forEach((chest) => {
+        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+        if (!lootedChest) {
+            const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
+            var tileX = chest.cords.x * spriteSize;
+            var tileY = chest.cords.y * spriteSize;
+            minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+        }
+    });
+    map.messages.forEach((msg) => {
+        const message = document.querySelector(".messageTile");
+        var tileX = msg.cords.x * spriteSize;
+        var tileY = msg.cords.y * spriteSize;
+        minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
+    });
+    /* Render Characters */
+    NPCcharacters.forEach((npc) => {
+        if (npc.currentMap == currentMap) {
+            const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
+            var tileX = npc.currentCords.x * spriteSize;
+            var tileY = npc.currentCords.y * spriteSize;
+            if (charSprite) {
+                minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
+            }
+        }
+    });
 }
 // Found this from google, the function returns true / false depending on whether or not the canvas is empty.
 function isCanvasBlank(canvas) {
@@ -120,7 +153,7 @@ function moveMinimap() {
 }
 function renderAreaMap(map) {
     var _a, _b, _c, _d, _e, _f, _g;
-    const miniSpriteSize = 12;
+    const miniSpriteSize = 11.97;
     areaMapCanvas.width = map.base[0].length * miniSpriteSize;
     areaMapCanvas.height = map.base.length * miniSpriteSize;
     for (let y = 0; y < map.base.length; y++) {
@@ -150,8 +183,8 @@ function moveAreaMap() {
     else {
         areaMapContainer.style.display = "none";
     }
-    areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2) * settings["ui_scale"] / 100}px`;
-    areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2) * settings["ui_scale"] / 100}px`;
+    areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
+    areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
     // if (player.cords.y >= maps[currentMap].base.length - displayLimit.heightLimit) {
     //   areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8) * settings["ui_scale"] / 100}px`;
     // }
@@ -1563,7 +1596,7 @@ function useAbiTargetingWithKeyboard() {
                 break;
             targetingEnemy = true;
             if (state.isSelected) {
-                // @ts-expect-error
+                // @ts-ignore
                 if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
                     if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
