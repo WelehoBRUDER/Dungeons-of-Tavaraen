@@ -525,7 +525,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     try {
         let collided = false;
         for (let step of path) {
-            await sleep(20);
+            await sleep(15);
             const { screenX: x, screenY: y } = tileCordsToScreen(step);
             if (step.enemy) {
                 collided = true;

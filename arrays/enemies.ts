@@ -1369,6 +1369,143 @@ const enemies = {
       { type: "gold", amount: [53, 129] }
     ]
   },
+  stoneStatue: {
+    id: "stoneStatue",
+    name: "Stone Statue",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 18,
+      dex: 5,
+      int: 0,
+      vit: 0,
+      cun: 0,
+      hp: 100,
+      mp: 0,
+      hpMax: 100,
+      mpMax: 0
+    },
+    resistances: {
+      slash: 40,
+      crush: 15,
+      pierce: 40,
+      magic: 30,
+      dark: 25,
+      divine: 0,
+      fire: 30,
+      lightning: 40,
+      ice: 35
+    },
+    statusResistances: {
+      poison: 100,
+      burning: 100,
+      curse: 0,
+      stun: 25,
+      bleed: 100
+    },
+    damages: {
+      pierce: 10,
+      slash: 3
+    },
+    hit: {
+      chance: 50,
+      evasion: 20
+    },
+    threat: 50,
+    type: "troll",
+    race: "monster",
+    alive: true,
+    xp: 200,
+    sprite: "stoneStatue",
+    img: "resources/tiles/enemies/statue.png",
+    aggroRange: 14,
+    attackRange: 1,
+    canFly: false,
+    abilities: [
+      new Ability(abilities.attack, dummy)
+    ],
+    scale: 1.33,
+    statModifiers: [
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
+    ],
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    statsPerLevel: {
+      str: 4,
+      vit: 4
+    },
+    loot: [
+      { type: "gold", amount: [65, 150] }
+    ]
+  },
+  stoneStatueHalberd: {
+    id: "stoneStatueHalberd",
+    name: "Armored Stone Statue",
+    cords: { x: 0, y: 0 },
+    stats: {
+      str: 20,
+      dex: 5,
+      int: 0,
+      vit: 0,
+      cun: 0,
+      hp: 120,
+      mp: 0,
+      hpMax: 120,
+      mpMax: 0
+    },
+    resistances: {
+      slash: 50,
+      crush: 25,
+      pierce: 50,
+      magic: 40,
+      dark: 35,
+      divine: 10,
+      fire: 40,
+      lightning: 50,
+      ice: 45
+    },
+    statusResistances: {
+      poison: 100,
+      burning: 100,
+      curse: 0,
+      stun: 25,
+      bleed: 100
+    },
+    damages: {
+      pierce: 11,
+      slash: 3
+    },
+    hit: {
+      chance: 50,
+      evasion: 20
+    },
+    threat: 50,
+    type: "troll",
+    race: "monster",
+    alive: true,
+    xp: 325,
+    sprite: "stoneStatueHalberd",
+    img: "resources/tiles/enemies/armored_statue_halberd.png",
+    aggroRange: 14,
+    attackRange: 1,
+    canFly: false,
+    abilities: [
+      new Ability(abilities.attack, dummy)
+    ],
+    scale: 1.33,
+    statModifiers: [
+      { id: "no_natural_regen" },
+      { id: "magically_impotent" },
+    ],
+    retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
+    statsPerLevel: {
+      str: 4,
+      vit: 4
+    },
+    loot: [
+      { type: "weapon", amount: [1, 1], item: "stoneHalberd", chance: 12 },
+      { type: "gold", amount: [90, 210] }
+    ]
+  },
   enthralledKnight: {
     id: "enthralledKnight",
     name: "Enthralled Knight",

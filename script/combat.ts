@@ -463,7 +463,7 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   try {
     let collided = false;
     for (let step of path) {
-      await sleep(20);
+      await sleep(15);
       const { screenX: x, screenY: y } = tileCordsToScreen(step);
       if (step.enemy) {
         collided = true;

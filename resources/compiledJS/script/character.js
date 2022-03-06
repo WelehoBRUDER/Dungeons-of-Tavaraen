@@ -27,6 +27,22 @@ function statConditions(conditions, char) {
     });
     return fulfilled;
 }
+function effectApply(eff, obj) {
+    if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
+        obj[eff[0]] = eff[1];
+        if (eff[0].endsWith("P")) {
+            obj[eff[0]] = obj[eff[0]] / 100;
+            if (!eff[0].includes("regen"))
+                obj[eff[0]]++;
+        }
+    }
+    else if (eff[0].endsWith("P") && eff[1] < 0)
+        obj[eff[0]] *= (1 + eff[1] / 100);
+    else if (eff[0].endsWith("P"))
+        obj[eff[0]] += (eff[1] / 100);
+    else if (eff[0].endsWith("V"))
+        obj[eff[0]] += eff[1];
+}
 function getAllModifiersOnce(char, withConditions = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     let obj = {};
@@ -34,6 +50,8 @@ function getAllModifiersOnce(char, withConditions = true) {
     obj["meleeDamageP"] = 1;
     obj["rangedDamageP"] = 1;
     obj["spellDamageP"] = 1;
+    obj["movementSpeedV"] = 0;
+    obj["attackSpeedV"] = 0;
     char.statModifiers.forEach((mod) => {
         let apply = true;
         if (mod.conditions && withConditions) {
@@ -43,105 +61,33 @@ function getAllModifiersOnce(char, withConditions = true) {
             apply = false;
         if (apply) {
             Object.entries(mod.effects).forEach((eff) => {
-                if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                    obj[eff[0]] = eff[1];
-                    if (eff[0].endsWith("P")) {
-                        obj[eff[0]] = obj[eff[0]] / 100;
-                        obj[eff[0]]++;
-                    }
-                }
-                else if (eff[0].endsWith("P") && eff[1] < 0)
-                    obj[eff[0]] *= (1 + eff[1] / 100);
-                else if (eff[0].endsWith("P"))
-                    obj[eff[0]] += (eff[1] / 100);
-                else if (eff[0].endsWith("V"))
-                    obj[eff[0]] += eff[1];
+                effectApply(eff, obj);
             });
         }
     });
     char.statusEffects.forEach((mod) => {
         Object.entries(mod.effects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     });
     if ((_b = (_a = char.classes) === null || _a === void 0 ? void 0 : _a.main) === null || _b === void 0 ? void 0 : _b.statBonuses) {
         Object.entries(char.classes.main.statBonuses).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     if ((_d = (_c = char.classes) === null || _c === void 0 ? void 0 : _c.sub) === null || _d === void 0 ? void 0 : _d.statBonuses) {
         Object.entries(char.classes.sub.statBonuses).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     (_e = char.perks) === null || _e === void 0 ? void 0 : _e.forEach((mod) => {
         Object.entries(mod.effects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     });
     if ((_f = char.raceEffect) === null || _f === void 0 ? void 0 : _f.modifiers) {
         Object.entries((_g = char.raceEffect) === null || _g === void 0 ? void 0 : _g.modifiers).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     if (char.id === "player") {
@@ -149,42 +95,13 @@ function getAllModifiersOnce(char, withConditions = true) {
             var _a;
             if ((_a = char[slot]) === null || _a === void 0 ? void 0 : _a.stats) {
                 Object.entries(char[slot].stats).forEach((eff) => {
-                    if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                        obj[eff[0]] = eff[1];
-                        if (eff[0].endsWith("P")) {
-                            obj[eff[0]] = obj[eff[0]] / 100;
-                            obj[eff[0]]++;
-                        }
-                    }
-                    else if (eff[0].endsWith("P") && eff[1] < 0)
-                        obj[eff[0]] *= (1 + eff[1] / 100);
-                    else if (eff[0].endsWith("P"))
-                        obj[eff[0]] += (eff[1] / 100);
-                    else if (eff[0].endsWith("V"))
-                        obj[eff[0]] += eff[1];
+                    effectApply(eff, obj);
                 });
             }
-            // if (stat.includes("Resist")) {
-            //   if (char[slot]?.resistances) {
-            //     if (char[slot].resistances[stat.replace("Resist", '')]) val += char[slot].resistances[stat.replace("Resist", '')];
-            //   }
-            // }
         });
         const artifactEffects = char.getArtifactSetBonuses();
         Object.entries(artifactEffects).forEach((eff) => {
-            if (!(obj === null || obj === void 0 ? void 0 : obj[eff[0]])) {
-                obj[eff[0]] = eff[1];
-                if (eff[0].endsWith("P")) {
-                    obj[eff[0]] = obj[eff[0]] / 100;
-                    obj[eff[0]]++;
-                }
-            }
-            else if (eff[0].endsWith("P") && eff[1] < 0)
-                obj[eff[0]] *= (1 + eff[1] / 100);
-            else if (eff[0].endsWith("P"))
-                obj[eff[0]] += (eff[1] / 100);
-            else if (eff[0].endsWith("V"))
-                obj[eff[0]] += eff[1];
+            effectApply(eff, obj);
         });
     }
     return obj;
@@ -315,6 +232,12 @@ function getModifiers(char, stat, withConditions = true) {
     }
     return { v: val, m: modif };
 }
+const baseSpeed = {
+    movement: 100,
+    attack: 100,
+    movementFill: 0,
+    attackFill: 0
+};
 class Character {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -332,6 +255,7 @@ class Character {
         this.hit = (_f = Object.assign({}, base.hit)) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
         this.scale = (_g = base.scale) !== null && _g !== void 0 ? _g : 1;
         this.allModifiers = {};
+        this.speed = base.speed ? Object.assign({}, base.speed) : baseSpeed;
         if (Object.keys(this.armor).length < 1)
             this.armor = { physical: 0, magical: 0, elemental: 0 };
         this.getStats = (withConditions = true) => {
@@ -352,9 +276,19 @@ class Character {
                 this.allModifiers["critChanceV"] = 0;
             if (!this.allModifiers["critChanceP"])
                 this.allModifiers["critChanceP"] = 1;
+            if (!this.allModifiers["movementSpeedV"])
+                this.allModifiers["movementSpeedV"] = 0;
+            if (!this.allModifiers["attackSpeedV"])
+                this.allModifiers["attackSpeedV"] = 0;
             stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5) + 18.5);
             stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4) + 4.6);
             return stats;
+        };
+        this.getSpeed = () => {
+            let speed = {};
+            speed.movement = this.speed.movement + this.allModifiers["movementSpeedV"];
+            speed.attack = this.speed.attack + this.allModifiers["attackSpeedV"];
+            return speed;
         };
         this.getHpMax = (withConditions = true) => {
             var _a, _b;
@@ -425,6 +359,8 @@ class Character {
         };
         this.getRegen = () => {
             let stats = this.getStats();
+            if (this.id.includes("Statue"))
+                console.log(this.allModifiers);
             if (!this.allModifiers["regenHpV"])
                 this.allModifiers["regenHpV"] = 0;
             if (!this.allModifiers["regenHpP"])

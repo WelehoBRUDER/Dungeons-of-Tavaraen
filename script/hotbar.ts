@@ -25,6 +25,10 @@ document.addEventListener("keyup", e => {
   if (e.key == settings["hotkey_ranged"]) {
     state.rangedMode = !state.rangedMode;
   }
+  if (e.key == settings["hotkey_area_map"]) {// replace with hotkey soon
+    state.areaMapOpen = !state.areaMapOpen;
+    moveAreaMap();
+  }
   if (player.isDead || state.savesOpen) return;
   const number = parseInt(e.keyCode) - 48;
   if (e.key == settings.hotkey_inv && !state.menuOpen) {
@@ -51,6 +55,7 @@ document.addEventListener("keyup", e => {
   else if (number > -1 && e.shiftKey) {
     let abi = player.abilities.find(a => a.equippedSlot == number + 9);
     if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
+
     if (!abi) {
       let itm = player.inventory.find(a => a.equippedSlot == number + 9);
       if (number == 0) itm = player.inventory.find(a => a.equippedSlot == 19);

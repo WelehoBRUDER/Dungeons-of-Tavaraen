@@ -219,6 +219,7 @@ function beginGame() {
     createStaticMap();
     modifyCanvas();
     renderMinimap(maps[currentMap]);
+    renderAreaMap(maps[currentMap]);
     moveMinimap();
     setTimeout(() => {
         openLevelingScreen();
@@ -389,6 +390,7 @@ function initGame() {
     gotoMainMenu(true);
     if (DEVMODE) {
         renderMinimap(maps[currentMap]);
+        renderAreaMap(maps[currentMap]);
         createStaticMap();
         modifyCanvas(true);
     }

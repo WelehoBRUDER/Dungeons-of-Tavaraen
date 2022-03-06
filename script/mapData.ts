@@ -187,21 +187,22 @@ class treasureChest {
 
 function lootEnemy(enemy: Enemy) {
   enemy.loot.forEach((obj: any) => {
-    if (random(100, 0) <= obj.chance) {
-      var itm: any;
-      // @ts-ignore
-      if (obj.type == "weapon") itm = new Weapon({ ...items[obj.item] });
-      else if (obj.type == "armor") itm = new Armor({ ...items[obj.item] });
-      else if (obj.type == "artifact") itm = new Artifact({ ...items[obj.item] });
-      else if (obj.type == "consumable") itm = new Consumable({ ...items[obj.item] });
-      createDroppedItem(enemy.cords, itm);
-    }
-    else if (obj.type == "gold") {
+    if (obj.type == "gold") {
       let amount = random(obj.amount[1], obj.amount[0]);
       amount *= 1 + (enemy.level / 4.9);
       amount = Math.floor(amount);
       player.addGold(amount);
       spawnFloatingText(enemy.cords, `${amount}G`, "gold");
+    }
+    else if (random(100, 0) <= obj.chance) {
+      var itm: any;
+      // @ts-ignore
+      if (obj.type == "weapon") itm = new Weapon({ ...items[obj.item] });
+      else if (obj.type == "armor" || obj.type == "offhand") itm = new Armor({ ...items[obj.item] });
+      else if (obj.type == "artifact") itm = new Artifact({ ...items[obj.item] });
+      else if (obj.type == "consumable") itm = new Consumable({ ...items[obj.item] });
+      else itm = items["A0_error"];
+      createDroppedItem(enemy.cords, itm);
     }
     showInteractPrompt();
   });

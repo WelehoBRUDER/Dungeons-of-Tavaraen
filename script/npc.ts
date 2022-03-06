@@ -356,9 +356,9 @@ function createMerchantItems(itemsInv: any) {
     let _item = { ...items[item.id] };
     let itm: any;
     if (_item.type == "consumable") itm = new Consumable(_item, item.price);
-    else if (_item.type == "weapon") itm = new Weapon(_item, item.price);
-    else if (_item.type == "armor") itm = new Armor(_item, item.price);
-    else if (item.type == "artifact") itm = new Artifact(_item, item.price);
+    else if (_item.type == "weapon") itm = new Weapon(_item, item.price, true);
+    else if (_item.type == "armor") itm = new Armor(_item, item.price, true);
+    else if (item.type == "artifact") itm = new Artifact(_item, item.price, true);
     itm.unique = item.unique;
     inv.push(itm);
   }

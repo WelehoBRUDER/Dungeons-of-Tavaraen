@@ -284,6 +284,7 @@ class Enemy extends Character {
     };
 
     this.kill = () => {
+      console.log("???");
       player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
       this.spawnMap = currentMap;
       const index: number = maps[currentMap].enemies.findIndex((e: any) => e.cords == this.cords);
