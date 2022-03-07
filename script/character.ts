@@ -118,7 +118,7 @@ function effectApply(eff: any, obj: any) {
     obj[eff[0]] = eff[1];
     if (eff[0].endsWith("P")) {
       obj[eff[0]] = obj[eff[0]] / 100;
-      if (!eff[0].includes("regen")) obj[eff[0]]++;
+      if (!eff[0].includes("regen") || eff[1] > 0) obj[eff[0]]++;
     }
   }
   else if (eff[0].endsWith("P") && eff[1] < 0) obj[eff[0]] *= (1 + eff[1] / 100);

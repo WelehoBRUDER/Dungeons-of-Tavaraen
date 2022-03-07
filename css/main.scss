@@ -1275,7 +1275,8 @@ body {
       right: calc(10px * var(--ui-scale));
       overflow: hidden;
 
-      .minimapLayer {
+      .minimapLayer,
+      .minimapUpdateLayer {
         position: absolute;
         left: 0;
         top: 0;

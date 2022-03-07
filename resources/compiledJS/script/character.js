@@ -32,7 +32,7 @@ function effectApply(eff, obj) {
         obj[eff[0]] = eff[1];
         if (eff[0].endsWith("P")) {
             obj[eff[0]] = obj[eff[0]] / 100;
-            if (!eff[0].includes("regen"))
+            if (!eff[0].includes("regen") || eff[1] > 0)
                 obj[eff[0]]++;
         }
     }

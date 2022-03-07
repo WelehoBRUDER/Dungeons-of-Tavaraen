@@ -9,3 +9,4 @@ Tehdään vihollisista vahvempia ja vähennetään niiden määrää, pitäisi a
 Korjaa miten itemien droppaaminen toimii, tuplaklikin jälkeen ei pitäisi joutua liikuttamaan hiirtä. // TEHTY
 Right clickin esto vain paikoissa missä sitä käytetään.
 Dex voisi lisää hit chance ja evasion // TEHTY
+Huutomerkki level up nappiin kun pisteitä

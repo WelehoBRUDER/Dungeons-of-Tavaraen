@@ -1,6 +1,17 @@
-# 1.0.8 ~ 2.3.2022
+# 1.0.9 ~ 6.3.2022
 
 ### Patch
+
+## New Additions
+
+## Fixes & Tweaks
+
+- Fixed hp regeneration being nerfed by a buff.
+- Chests now disappear in the minimap after looted.
+
+# 1.0.8 ~ 6.3.2022
+
+### Patch - Map & Movement
 
 ## New Additions
 

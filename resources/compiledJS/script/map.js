@@ -13,6 +13,8 @@ const staticHover = document.querySelector(".mapHover");
 const minimapContainer = document.querySelector(".rightTop .miniMap");
 const minimapCanvas = minimapContainer.querySelector(".minimapLayer");
 const minimapCtx = minimapCanvas.getContext("2d");
+const minimapUpdateCanvas = minimapContainer.querySelector(".minimapUpdateLayer");
+const minimapUpdateCtx = minimapUpdateCanvas.getContext("2d");
 const areaMapContainer = document.querySelector(".areaMap");
 const areaMapCanvas = areaMapContainer.querySelector(".areaCanvas");
 const areaMapCtx = areaMapCanvas.getContext("2d");
@@ -73,6 +75,8 @@ function renderMinimap(map) {
     const spriteSize = miniSpriteSize;
     minimapCanvas.width = map.base[0].length * miniSpriteSize;
     minimapCanvas.height = map.base.length * miniSpriteSize;
+    minimapUpdateCanvas.width = map.base[0].length * spriteSize;
+    minimapUpdateCanvas.height = map.base.length * spriteSize;
     if (!settings.toggle_minimap) {
         minimapContainer.style.display = "none";
         return;
@@ -101,15 +105,6 @@ function renderMinimap(map) {
         var tileX = checkpoint.cords.x * spriteSize;
         var tileY = checkpoint.cords.y * spriteSize;
         minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
-    });
-    map.treasureChests.forEach((chest) => {
-        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-        if (!lootedChest) {
-            const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
-            var tileX = chest.cords.x * spriteSize;
-            var tileY = chest.cords.y * spriteSize;
-            minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
-        }
     });
     map.messages.forEach((msg) => {
         const message = document.querySelector(".messageTile");
@@ -148,8 +143,22 @@ function moveMinimap() {
     else {
         minimapContainer.style.display = "block";
     }
+    const map = maps[currentMap];
+    const spriteSize = 8;
+    minimapUpdateCanvas.width = minimapUpdateCanvas.width;
+    map.treasureChests.forEach((chest) => {
+        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+        if (!lootedChest) {
+            const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
+            var tileX = chest.cords.x * spriteSize;
+            var tileY = chest.cords.y * spriteSize;
+            minimapUpdateCtx === null || minimapUpdateCtx === void 0 ? void 0 : minimapUpdateCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+        }
+    });
     minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
     minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
+    minimapUpdateCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
+    minimapUpdateCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
 }
 function renderAreaMap(map) {
     var _a, _b, _c, _d, _e, _f, _g;
