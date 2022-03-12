@@ -343,6 +343,7 @@ class Character {
   inventory?: any;
   speed?: any;
   getSpeed?: Function;
+  doNormalAttack?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -358,7 +359,7 @@ class Character {
     this.hit = { ...base.hit } ?? { chance: 10, evasion: 5 };
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
-    this.speed = base.speed ? { ...base.speed } : baseSpeed;
+    this.speed = base.speed ? { ...base.speed } : { ...baseSpeed };
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
@@ -385,7 +386,7 @@ class Character {
       let speed = {} as any;
       speed.movement = this.speed.movement + this.allModifiers["movementSpeedV"];
       speed.attack = this.speed.attack + this.allModifiers["attackSpeedV"];
-      return speed;
+      return { ...speed };
     };
 
     this.getHpMax = (withConditions = true) => {
@@ -515,6 +516,38 @@ class Character {
           else abi.onCooldown--;
         }
       });
+    };
+
+    this.doNormalAttack = async (target: any) => {
+      // @ts-expect-error
+      const reach: number = this.id === "player" ? this.weapon?.range : this.attackRange;
+      let attacks: number = 1;
+      console.log(this);
+      this.speed.attackFill += (this.getSpeed().attack - 100);
+      while (this.speed.attackFill >= 100) {
+        this.speed.attackFill -= 100;
+        attacks++;
+      }
+      // @ts-expect-error
+      if (this.weapon?.firesProjectile || this.shootsProjectile) {
+        for (let i = attacks; i > 0; i--) {
+          // @ts-expect-error
+          const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
+          const isPlayer = this.id === "player";
+          fireProjectile(this.cords, target.cords, projectile, this.abilities.find(e => e.id === "attack"), isPlayer, this);
+          await sleep(110);
+        }
+      }
+      else {
+        for (let i = attacks; i > 0; i--) {
+          // @ts-expect-error
+          attackTarget(this, target, weaponReach(this, reach, target));
+          regularAttack(this, target, this.abilities.find(e => e.id === "attack"));
+          await sleep(110);
+        }
+      }
+      if (this.id === "player") advanceTurn();
+      else if (this.isFoe) updateEnemiesTurn();
     };
 
     this.abilities = [...base.abilities] ?? [];

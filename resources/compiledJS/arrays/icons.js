@@ -163,5 +163,7 @@ const icons = {
     all_summons_damage_icon: "resources/icons/summon_damage.png",
     all_summons_regenHp_icon: "resources/icons/summon_regen.png",
     warning_icon: "resources/icons/warn.png",
+    movementSpeed_icon: "resources/icons/speed.png",
+    attackSpeed_icon: "resources/icons/speed.png",
 };
 //# sourceMappingURL=icons.js.map

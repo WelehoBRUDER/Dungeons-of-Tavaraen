@@ -86,6 +86,8 @@ const finnish = {
   increases: "Nostaa",
   decreases: "Alentaa",
   damage: "Vahinkoa",
+  movementSpeed: "Liikkumis Nopeus",
+  attackSpeed: "Hyökkäys Nopeus",
   by: "",
   strV: "Voima",
   strP: "Voima%",
@@ -112,6 +114,8 @@ const finnish = {
   critChanceP: "Krit Mahdollisuus",
   critDamageV: "Krit Vahinko",
   critDamageP: "Krit Vahinko",
+  movementSpeedV: "Liikkumis nopeus",
+  attackSpeedV: "Hyökkäys nopeus",
   status_effect: "Tila efekti",
   status_effects: "Tila efektit",
   last: "Efektin kesto",
@@ -592,6 +596,8 @@ const finnish = {
   regenMp_adjective: "Taianpalauttava",
   regenHp_adjective: "Parantava",
   damage_adjective: "Vahingoittava",
+  movementSpeed_adjective: "Nopea",
+  attackSpeed_adjective: "Kiireinen",
 
   // Statuses
   effect_defend_name: "Puolustaa",
@@ -1051,6 +1057,8 @@ const english = {
   increases: "Increases",
   decreases: "Decreases",
   damage: "Damage",
+  movementSpeed: "Movement Speed",
+  attackSpeed: "Attack Speed",
   by: "by ",
   strV: "Strength",
   strP: "Strength%",
@@ -1077,6 +1085,8 @@ const english = {
   critChanceP: "Crit Chance",
   critDamageV: "Crit Damage",
   critDamageP: "Crit Damage",
+  movementSpeedV: "Movement Speed",
+  attackSpeedV: "Attack Speed",
   status_effect: "Status effect",
   status_effects: "Status effects",
   last: "Effect time",
@@ -1446,6 +1456,8 @@ const english = {
   regenMp_adjective: "Magic Returning",
   regenHp_adjective: "Regenerating",
   damage_adjective: "Damaging",
+  movementSpeed_adjective: "Quick",
+  attackSpeed_adjective: "Hasty",
 
   // Statuses
   effect_defend_name: "Defending",

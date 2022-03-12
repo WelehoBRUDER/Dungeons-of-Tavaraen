@@ -51,7 +51,7 @@ let settings = new gameSettings({
   log_enemy_movement: false,
   toggle_minimap: true,
   hide_helmet: false,
-  randomize_items: false,
+  randomize_items: true,
   hotkey_inv: "i",
   hotkey_char: "c",
   hotkey_perk: "p",
@@ -343,6 +343,25 @@ const menu = document.querySelector<HTMLDivElement>(".gameMenu");
 const dim = document.querySelector<HTMLDivElement>(".dim");
 const mainMenuButtons = mainMenu.querySelector<HTMLDivElement>(".menuButtons");
 
+function weightedRandom(Array: Array<any>) {
+  let table: Array<any> = [...Array];
+  let max = 0;
+  for (let i = 0; i < table.length; i++) {
+    table[i].dynamicChance = 0;
+    if (table[i - 1]) table[i].dynamicChance = table[i - 1].dynamicChance;
+    else table[i].dynamicChance = 0;
+    table[i].dynamicChance += table[i].chance;
+    max = table[i].dynamicChance;
+  }
+  let value: number = Math.floor(random(max, 0));
+  let result: any;
+  for (let item of table) {
+    if (item.dynamicChance >= value) { result = item; break; }
+  }
+  return result;
+
+}
+
 function openGameMenu() {
   menu.textContent = "";
   setTimeout(() => { dim.style.height = "100%"; }, 5);
@@ -541,8 +560,8 @@ function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   const trimmed: PlayerCharacter = { ...playerObject };
   trimmed.inventory.forEach((itm: any, index: number) => {
     if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
-    else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats ?? null };
-    else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats ?? null };
+    else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats ?? [] };
+    else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats ?? [] };
   });
   trimmed.abilities.forEach((abi: any, index: number) => {
     // @ts-ignore
@@ -551,7 +570,7 @@ function trimPlayerObjectForSaveFile(playerObject: PlayerCharacter) {
   trimmed.allModifiers = {};
   equipSlots.forEach((slot: string) => {
     if (trimmed[slot]?.id) {
-      trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level ?? 0 };
+      trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level ?? 0, rolledStats: trimmed[slot].rolledStats ?? [] };
     }
   });
   trimmed.perks.forEach((perk: any, index: number) => {

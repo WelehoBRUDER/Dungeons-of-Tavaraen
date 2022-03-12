@@ -654,17 +654,12 @@ function clickMap(event: MouseEvent) {
           movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
         }
       }
-      else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
+      else if (weaponReach(player, player.weapon.range, enemy)) {
         // @ts-expect-error
         attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-        if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-          regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
-          advanceTurn();
+        if (weaponReach(player, player.weapon.range, enemy)) {
+          player.doNormalAttack(enemy);
         }
-        // @ts-ignore
-      } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
-        // @ts-ignore
-        fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true, player);
       }
       move = false;
       break;
@@ -824,11 +819,8 @@ document.addEventListener("keyup", (keyPress) => {
     }
     else {
       if (target) {
-        // @ts-expect-error
-        attackTarget(player, target, weaponReach(player, player.weapon.range, target));
         if (weaponReach(player, player.weapon.range, target)) {
-          regularAttack(player, target, player.abilities?.find(e => e.id == "attack"));
-          advanceTurn();
+          player.doNormalAttack(target);
         }
       }
       else {
@@ -1532,17 +1524,10 @@ function useAbiTargetingWithKeyboard() {
           movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
         }
       }
-      else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-        // @ts-expect-error
-        attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-        if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-          regularAttack(player, enemy, player.abilities?.find(e => e.id == "attack"));
-          advanceTurn();
+      else if (weaponReach(player, player.weapon.range, enemy)) {
+        if (weaponReach(player, player.weapon.range, enemy)) {
+          player.doNormalAttack(enemy);
         }
-        // @ts-ignore
-      } else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
-        // @ts-ignore
-        fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, player.abilities?.find(e => e.id == "attack"), true, player);
       }
       break;
     }

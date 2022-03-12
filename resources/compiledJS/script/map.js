@@ -558,7 +558,7 @@ function mapHover(event) {
     renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
-    var _a, _b, _c, _d;
+    var _a, _b;
     if (state.clicked || player.isDead)
         return;
     if (state.invOpen || (event.button != 0 && event.button != 2)) {
@@ -656,25 +656,19 @@ function clickMap(event) {
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
                 }
             }
-            else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
+            else if (weaponReach(player, player.weapon.range, enemy)) {
                 // @ts-expect-error
                 attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-                if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-                    regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
-                    advanceTurn();
+                if (weaponReach(player, player.weapon.range, enemy)) {
+                    player.doNormalAttack(enemy);
                 }
-                // @ts-ignore
-            }
-            else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
-                // @ts-ignore
-                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true, player);
             }
             move = false;
             break;
         }
     }
     ;
-    if (state.isSelected && ((_c = state.abiSelected) === null || _c === void 0 ? void 0 : _c.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && ((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.aoe_size) > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: x, y: y }).length <= state.abiSelected.use_range) {
             move = false;
@@ -693,7 +687,7 @@ function clickMap(event) {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (((_d = state.abiSelected.statusesUser) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+        if (((_b = state.abiSelected.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
@@ -788,7 +782,7 @@ function cordsFromDir(cords, dir) {
     return cord;
 }
 document.addEventListener("keyup", (keyPress) => {
-    var _a, _b, _c;
+    var _a, _b;
     const rooted = player.isRooted();
     if (!turnOver || state.dialogWindow || state.storeOpen)
         return;
@@ -847,11 +841,8 @@ document.addEventListener("keyup", (keyPress) => {
         }
         else {
             if (target) {
-                // @ts-expect-error
-                attackTarget(player, target, weaponReach(player, player.weapon.range, target));
                 if (weaponReach(player, player.weapon.range, target)) {
-                    regularAttack(player, target, (_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find(e => e.id == "attack"));
-                    advanceTurn();
+                    player.doNormalAttack(target);
                 }
             }
             else {
@@ -1597,7 +1588,7 @@ function resetAllLivingEnemiesInAllMaps() {
     });
 }
 function useAbiTargetingWithKeyboard() {
-    var _a, _b, _c, _d;
+    var _a, _b;
     let targetingEnemy = false;
     for (let enemy of maps[currentMap].enemies) {
         if (enemy.cords.x == mapSelection.x && enemy.cords.y == mapSelection.y) {
@@ -1627,24 +1618,16 @@ function useAbiTargetingWithKeyboard() {
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
                 }
             }
-            else if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-                // @ts-expect-error
-                attackTarget(player, enemy, weaponReach(player, player.weapon.range, enemy));
-                if (weaponReach(player, player.weapon.range, enemy) && !player.weapon.firesProjectile) {
-                    regularAttack(player, enemy, (_a = player.abilities) === null || _a === void 0 ? void 0 : _a.find(e => e.id == "attack"));
-                    advanceTurn();
+            else if (weaponReach(player, player.weapon.range, enemy)) {
+                if (weaponReach(player, player.weapon.range, enemy)) {
+                    player.doNormalAttack(enemy);
                 }
-                // @ts-ignore
-            }
-            else if (player.weapon.range >= generateArrowPath(player.cords, enemy.cords).length && player.weapon.firesProjectile) {
-                // @ts-ignore
-                fireProjectile(player.cords, enemy.cords, player.weapon.firesProjectile, (_b = player.abilities) === null || _b === void 0 ? void 0 : _b.find(e => e.id == "attack"), true, player);
             }
             break;
         }
     }
     ;
-    if (state.isSelected && ((_c = state.abiSelected) === null || _c === void 0 ? void 0 : _c.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && ((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.aoe_size) > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: mapSelection.x, y: mapSelection.y }).length <= state.abiSelected.use_range) {
             fireProjectile(player.cords, { x: mapSelection.x, y: mapSelection.y }, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
@@ -1661,7 +1644,7 @@ function useAbiTargetingWithKeyboard() {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (((_d = state.abiSelected.statusesUser) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+        if (((_b = state.abiSelected.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore

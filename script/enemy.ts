@@ -199,16 +199,11 @@ class Enemy extends Character {
         }
         // Check if enemy should shoot the target
         else if (this.shootsProjectile && arrowPathDistance <= this.attackRange && missileWillLand) {
-          fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
+          this.doNormalAttack(this.chosenTarget);
         }
         // Check if enemy should instead punch the target (and is in range)
         else if (!this.shootsProjectile && punchingDistance <= this.attackRange) {
-          // regular attack for now
-          // @ts-ignore
-          attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
-          // @ts-ignore
-          regularAttack(this, this.chosenTarget, this.abilities[0]);
-          updateEnemiesTurn();
+          this.doNormalAttack(this.chosenTarget);
         }
         // If there's no offensive action to be taken, just move towards the target.
         else if (!this.isRooted()) {

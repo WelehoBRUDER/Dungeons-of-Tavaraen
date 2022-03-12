@@ -221,36 +221,33 @@ class Weapon extends Item {
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
     this.statBonus = baseItem.statBonus ?? "str";
-    this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
+    this.rolledStats = base.rolledStats || [];
     if (setPrice > 0) this.price = setPrice;
-
     if (this.level > 0) this.name += ` +${this.level}`;
 
     if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
-      Object.entries(equipmentStatRandomization["damage"]).forEach((dmg: any) => {
-        if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"]) return;
-        const key = dmg[0];
-        const data = dmg[1];
-        if (random(100, 0) < data.chance) {
-          this.rolledStats.push({ damage: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+      const amountOfMainStats = random(maxStatsForEquipmentToRoll[this.grade].main, 0);
+      for (let i = 0; i <= amountOfMainStats; i++) {
+        const randomStat = weightedRandom(Object.values(equipmentStatRandomization.damage));
+        const key = randomStat.id;
+        const data = randomStat;
+        this.rolledStats.push({ damage: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+      }
+      const amountOfSideStats = random(maxStatsForEquipmentToRoll[this.grade].side, 0);
+      for (let i = 0; i <= amountOfSideStats; i++) {
+        const randomStat = weightedRandom(Object.values(equipmentStatRandomization.side));
+        const key = randomStat.id;
+        const data = randomStat;
+        if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+          this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
         }
-      });
-      Object.entries(equipmentStatRandomization["side"]).forEach((stat: any) => {
-        if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["side"]) return;
-        const key = stat[0];
-        const data = stat[1];
-        if (random(100, 0) < data.chance) {
-          if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
-            this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
-          }
-          else if (!data.disableValue) {
-            this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
-          }
+        else if (!data.disableValue) {
+          this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
         }
-      });
+      }
     }
 
-    this.rolledStats.forEach((stat: any) => {
+    this.rolledStats?.forEach((stat: any) => {
       if (stat.damage) {
         let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
         if (!this.damages[stat.damage]) this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
@@ -357,7 +354,7 @@ class Armor extends Item {
     this.stats = { ...baseItem.stats } ?? {};
     this.commands = { ...baseItem.commands } ?? {};
     this.coversHair = baseItem.coversHair ?? false;
-    this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
+    this.rolledStats = base.rolledStats || [];
     if (setPrice > 0) this.price = setPrice;
 
     if (this.level > 0) this.name += ` +${this.level}`;
@@ -365,30 +362,28 @@ class Armor extends Item {
     // Randomization reintroduced
 
     if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
-      Object.entries(equipmentStatRandomization["armor"]).forEach((arm: any) => {
-        if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["main"]) return;
-        const key = arm[0];
-        const data = arm[1];
-        if (random(100, 0) < data.chance) {
-          this.rolledStats.push({ armor: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+      const amountOfMainStats = random(maxStatsForEquipmentToRoll[this.grade].main, 0);
+      for (let i = 0; i <= amountOfMainStats; i++) {
+        const randomStat = weightedRandom(Object.values(equipmentStatRandomization.armor));
+        const key = randomStat.id;
+        const data = randomStat;
+        this.rolledStats.push({ armor: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+      }
+      const amountOfSideStats = random(maxStatsForEquipmentToRoll[this.grade].side, 0);
+      for (let i = 0; i <= amountOfSideStats; i++) {
+        const randomStat = weightedRandom(Object.values(equipmentStatRandomization.side));
+        const key = randomStat.id;
+        const data = randomStat;
+        if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+          this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
         }
-      });
-      Object.entries(equipmentStatRandomization["side"]).forEach((stat: any) => {
-        if (this.rolledStats.length >= maxStatsForEquipmentToRoll[this.grade]["side"]) return;
-        const key = stat[0];
-        const data = stat[1];
-        if (random(100, 0) < data.chance) {
-          if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
-            this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
-          }
-          else if (!data.disableValue) {
-            this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
-          }
+        else if (!data.disableValue) {
+          this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
         }
-      });
+      }
     }
 
-    this.rolledStats.forEach((stat: any) => {
+    this.rolledStats?.forEach((stat: any) => {
       if (stat.armor) {
         let val = equipmentStatRandomization["armor"][stat.armor]["Value"][stat.value];
         if (!this.armor[stat.armor]) this.armor[stat.armor] = Math.floor(val * gradeStatMultis[this.grade]);
@@ -462,200 +457,264 @@ class Armor extends Item {
 // Artifact stat generation has been reintroduced.
 const artifactStatRandomization = {
   str: {
+    id: "str",
     Value: [1, 2, 3, 4, 5],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 10
   },
   dex: {
+    id: "dex",
     Value: [1, 2, 3, 4, 5],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 10
   },
   vit: {
+    id: "vit",
     Value: [1, 2, 3, 4, 5],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 10
   },
   int: {
+    id: "int",
     Value: [1, 2, 3, 4, 5],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 10
   },
   cun: {
+    id: "cun",
     Value: [1, 2, 3, 4, 5],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 10
   },
   hpMax: {
+    id: "hpMax",
     Value: [4, 7, 10, 14, 17],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 7
   },
   mpMax: {
+    id: "mpMax",
     Value: [3, 5, 6, 9],
     Percent: [2, 3, 6, 8, 10, 13],
     chance: 7
   },
   critChance: {
+    id: "critChance",
     Percent: [1, 1.5, 2, 2.5, 3, 3.5, 4.1],
     disableValue: true,
     chance: 5
   },
   critDamage: {
+    id: "critDamage",
     Percent: [2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
     disableValue: true,
     chance: 5
   },
   evasion: {
+    id: "evasion",
     disablePercent: true,
     Value: [1, 2, 3, 4, 5, 6],
     chance: 6
   },
   rangedDamage: {
+    id: "rangedDamage",
     disableValue: true,
     Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
     chance: 3
   },
   meleeDamage: {
+    id: "meleeDamage",
     disableValue: true,
     Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
     chance: 3
   },
   spellDamage: {
+    id: "spellDamage",
     disableValue: true,
     Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
     chance: 3
   },
   resistAll: {
+    id: "resistAll",
     Value: [1, 2, 3, 4, 5],
     Percent: [1.5, 3, 4.5, 6, 7.5],
     chance: 2
+  },
+  movementSpeed: {
+    id: "movementSpeed",
+    disablePercent: true,
+    Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+    chance: 3
+  },
+  attackSpeed: {
+    id: "attackSpeed",
+    disablePercent: true,
+    Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+    chance: 3
   },
 } as any;
 
 const equipmentStatRandomization = {
   damage: {
     slash: {
+      id: "slash",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     crush: {
+      id: "crush",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     pierce: {
+      id: "pierce",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     magic: {
+      id: "magic",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     dark: {
+      id: "dark",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     divine: {
+      id: "divine",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     fire: {
+      id: "fire",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     lightning: {
+      id: "lightning",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
     ice: {
+      id: "ice",
       Value: [1, 2, 3, 4, 5],
       chance: 8
     },
   },
   armor: {
     physical: {
+      id: "physical",
       Value: [2, 4, 6, 8],
       chance: 20
     },
     magical: {
+      id: "magical",
       Value: [2, 4, 6, 8],
       chance: 20
     },
     elemental: {
+      id: "elemental",
       Value: [2, 4, 6, 8],
       chance: 20
     }
   },
   side: {
     str: {
+      id: "str",
       Value: [1, 2, 3, 4, 5],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 10
     },
     dex: {
+      id: "dex",
       Value: [1, 2, 3, 4, 5],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 10
     },
     vit: {
+      id: "vit",
       Value: [1, 2, 3, 4, 5],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 10
     },
     int: {
+      id: "int",
       Value: [1, 2, 3, 4, 5],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 10
     },
     cun: {
+      id: "cun",
       Value: [1, 2, 3, 4, 5],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 10
     },
     hpMax: {
+      id: "hpMax",
       Value: [4, 7, 10, 14, 17],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 7
     },
     mpMax: {
+      id: "mpMax",
       Value: [3, 5, 6, 9],
       Percent: [2, 3, 6, 8, 10, 13],
       chance: 7
     },
     critChance: {
+      id: "critChance",
       Percent: [1, 1.5, 2, 2.5, 3, 3.5, 4.1],
       disableValue: true,
       chance: 5
     },
     critDamage: {
+      id: "critDamage",
       Percent: [2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
       disableValue: true,
       chance: 5
     },
+    movementSpeed: {
+      id: "movementSpeed",
+      disablePercent: true,
+      Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+      chance: 3
+    },
     evasion: {
+      id: "evasion",
       disablePercent: true,
       Value: [1, 2, 3, 4, 5, 6],
       chance: 6
     },
     rangedDamage: {
+      id: "rangedDamage",
       disableValue: true,
       Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     meleeDamage: {
+      id: "meleeDamage",
       disableValue: true,
       Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     spellDamage: {
+      id: "spellDamage",
       disableValue: true,
       Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     resistAll: {
+      id: "resistAll",
       Value: [1, 2, 3, 4, 5],
       Percent: [1.5, 3, 4.5, 6, 7.5],
       chance: 2
+    },
+    attackSpeed: {
+      id: "attackSpeed",
+      disablePercent: true,
+      Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+      chance: 3
     },
   }
 } as any;
@@ -685,29 +744,28 @@ class Artifact extends Item {
     const baseItem = { ...items[this.id] };
     this.stats = { ...baseItem.stats } ?? {};
     this.artifactSet = baseItem.artifactSet;
-    this.rolledStats = base.rolledStats ? [...base.rolledStats] : [];
+    this.rolledStats = base.rolledStats || [];
     this.commands = {};
     if (setPrice > 0) this.price = setPrice;
 
     if (lang.language_id !== "english") this.name = lang[this.id + "_name"];
 
     if (this.rolledStats.length === 0 && !dontRollStats) {
-      Object.entries(artifactStatRandomization).forEach((stat: any) => {
-        if (this.rolledStats.length >= maxStatsForArtifactsToRoll[this.grade]) return;
-        const key = stat[0];
-        const data = stat[1];
-        if (random(100, 0) < data.chance) {
-          if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
-            this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
-          }
-          else if (!data.disableValue) {
-            this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
-          }
+      const amountOfStats = random(maxStatsForArtifactsToRoll[this.grade], 0);
+      for (let i = 0; i <= amountOfStats; i++) {
+        const randomStat = weightedRandom(Object.values(artifactStatRandomization));
+        const key = randomStat.id;
+        const data = randomStat;
+        if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
+          this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
         }
-      });
+        else if (!data.disableValue) {
+          this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+        }
+      }
     }
 
-    this.rolledStats.forEach((stat: any) => {
+    this.rolledStats?.forEach((stat: any) => {
       let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
       val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
       if (!this.stats[stat.stat]) this.stats[stat.stat] = val;

@@ -391,6 +391,7 @@ function initGame() {
     settings = new gameSettings(options);
     lang = eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
   }
+  else settings = new gameSettings(settings);
   state.menuOpen = true;
   state.titleScreen = true;
   gotoMainMenu(true);

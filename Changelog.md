@@ -8,6 +8,12 @@
 
 - Fixed hp regeneration being nerfed by a buff.
 - Chests now disappear in the minimap after looted.
+- Stat randomization now uses weights instead of absolutes
+  > All stats now have a more equal chance of appearing.  
+  > Before, the order in which stats were added to the game dictated their likelihood of rolling.
+- Fixed and finished speed
+  > If your attack speed is over 100%, you will sometimes attack twice or more in a round.
+  > Speed only applies to normal attack and move, not to abilities.
 
 # 1.0.8 ~ 6.3.2022
 
