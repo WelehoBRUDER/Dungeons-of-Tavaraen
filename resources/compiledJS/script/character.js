@@ -440,11 +440,14 @@ class Character {
             // @ts-expect-error
             const reach = this.id === "player" ? (_a = this.weapon) === null || _a === void 0 ? void 0 : _a.range : this.attackRange;
             let attacks = 1;
-            console.log(this);
             this.speed.attackFill += (this.getSpeed().attack - 100);
             while (this.speed.attackFill >= 100) {
                 this.speed.attackFill -= 100;
                 attacks++;
+            }
+            if (this.speed.attackFill <= -150) {
+                this.speed.attackFill += 200;
+                attacks--;
             }
             // @ts-expect-error
             if (((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.firesProjectile) || this.shootsProjectile) {

@@ -86,6 +86,19 @@ const statModifiers = {
             piercing_mana_bolt_cooldownV: 4
         }
     },
+    slow: {
+        id: "slow",
+        effects: {
+            movementSpeedV: -25,
+            attackSpeedV: -25
+        }
+    },
+    fast: {
+        id: "fast",
+        effects: {
+            movementSpeedV: 15
+        }
+    },
     resilience_of_the_lone_wanderer: {
         id: "resilience_of_the_lone_wanderer",
         desc: "lone_wanderer_desc",

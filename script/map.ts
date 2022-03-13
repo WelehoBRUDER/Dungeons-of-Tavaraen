@@ -800,6 +800,11 @@ document.addEventListener("keyup", (keyPress) => {
   }
   if (dirs[keyPress.key]) {
     if (canMove(shittyFix, dirs[keyPress.key]) && !rooted) {
+      if (player.speed.movementFill <= -100) {
+        player.speed.movementFill += 100;
+        advanceTurn();
+        return;
+      }
       player.cords = cordsFromDir(player.cords, dirs[keyPress.key]);
       moveMinimap();
       moveAreaMap();
@@ -869,6 +874,11 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
       await sleep(15);
+      if (!ability && player.speed.movementFill <= -100) {
+        player.speed.movementFill += 100;
+        advanceTurn();
+        break;
+      }
       let extraMove = false;
       if (!ability) {
         if (player.speed.movementFill >= 100) {
@@ -918,6 +928,10 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
   moving: for (let step of path) {
     if (canMoveTo(enemy, step)) {
       await sleep(20);
+      if (enemy.speed.movementFill <= -100) {
+        enemy.speed.movementFill += 100;
+        break moving;
+      }
       let increaseMovement = true;
       while (enemy.speed.movementFill >= 100) {
         enemy.speed.movementFill -= 100;

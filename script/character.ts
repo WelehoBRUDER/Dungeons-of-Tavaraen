@@ -522,11 +522,14 @@ class Character {
       // @ts-expect-error
       const reach: number = this.id === "player" ? this.weapon?.range : this.attackRange;
       let attacks: number = 1;
-      console.log(this);
       this.speed.attackFill += (this.getSpeed().attack - 100);
       while (this.speed.attackFill >= 100) {
         this.speed.attackFill -= 100;
         attacks++;
+      }
+      if (this.speed.attackFill <= -150) {
+        this.speed.attackFill += 200;
+        attacks--;
       }
       // @ts-expect-error
       if (this.weapon?.firesProjectile || this.shootsProjectile) {
