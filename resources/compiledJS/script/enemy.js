@@ -154,7 +154,10 @@ class Enemy extends Character {
                         if (settings.log_enemy_movement)
                             displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
                     }
-                    catch (_b) { }
+                    catch (err) {
+                        if (DEVMODE)
+                            displayText(`<c>red<c>${err}`);
+                    }
                     updateEnemiesTurn();
                 }
                 else

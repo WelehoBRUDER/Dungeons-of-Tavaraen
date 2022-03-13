@@ -610,7 +610,10 @@ function effectSyntax(effect, embed = false, effectId = "") {
         try {
             var _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
         }
-        catch (_j) { }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line hotbar:531`);
+        }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);
         let status = new statEffect(statusEffects[statusId], _abi.statusModifiers);
@@ -719,9 +722,11 @@ function displayText(txt) {
         worldTextContainer.style.pointerEvents = "none";
     }
     displayLatestWorldHistoryMessages();
-    const textElement = textSyntax(txt);
-    worldTextHistoryArray.push(textElement);
-    worldTextContainer.append(textElement);
+    if (txt !== "") {
+        const textElement = textSyntax(txt);
+        worldTextHistoryArray.push(textElement);
+        worldTextContainer.append(textElement);
+    }
     if (!state.displayingTextHistory)
         worldTextContainer.scrollBy(0, 1000);
     if (worldTextContainer.childNodes.length > 199)

@@ -360,7 +360,10 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
             const frame = menu.querySelector(`.${button.id}`);
             frame.remove();
         }
-        catch (_a) { }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line menu:398`);
+        }
     }
     if (escape)
         handleEscape();
@@ -490,7 +493,10 @@ function gotoSettingsMenu(inMainMenu = false) {
                         try {
                             child.classList.remove("selectedLang");
                         }
-                        catch (_a) { }
+                        catch (err) {
+                            if (DEVMODE)
+                                displayText(`<c>red<c>${err} at line menu:520`);
+                        }
                     });
                     lang = eval(language);
                     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);

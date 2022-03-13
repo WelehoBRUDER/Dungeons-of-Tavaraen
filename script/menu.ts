@@ -395,7 +395,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
     }
-    catch { }
+    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:398`); }
   }
   if (escape) handleEscape();
   hideHover();
@@ -517,7 +517,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         langButton.addEventListener("click", () => {
           container.childNodes.forEach((child: any) => {
             try { child.classList.remove("selectedLang"); }
-            catch { }
+            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:520`); }
           });
           lang = eval(language);
           tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);

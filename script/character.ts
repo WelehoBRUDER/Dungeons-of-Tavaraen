@@ -534,6 +534,7 @@ class Character {
       // @ts-expect-error
       if (this.weapon?.firesProjectile || this.shootsProjectile) {
         for (let i = attacks; i > 0; i--) {
+          if (target.stats.hp <= 0) break;
           // @ts-expect-error
           const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
           const isPlayer = this.id === "player";
@@ -543,6 +544,7 @@ class Character {
       }
       else {
         for (let i = attacks; i > 0; i--) {
+          if (target.stats.hp <= 0) break;
           // @ts-expect-error
           attackTarget(this, target, weaponReach(this, reach, target));
           regularAttack(this, target, this.abilities.find(e => e.id === "attack"));

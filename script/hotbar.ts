@@ -528,7 +528,7 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     try {
       var _abi: ability = new Ability(player.abilities?.find((__abi: ability) => __abi.id == id), player);
     }
-    catch { }
+    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line hotbar:531`); }
     if (!_abi) _abi = new Ability(abilities[id], dummy);
     let status: statusEffect = new statEffect(statusEffects[statusId], _abi.statusModifiers);
     if (_d.includes("attack_damage_multiplier")) {
@@ -609,7 +609,7 @@ function updateUI() {
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 
-const worldTextHistoryArray = [];
+const worldTextHistoryArray: Array[] = [];
 const worldTextHistoryMaximumSize = 200;
 const worldTextHistoryDisplayAutoSize = 12; // Display 12 latest messages without player input. Active for 15s every time a new message appears.
 const worldTextDisplayTime = 15000; // 15 seconds
@@ -623,9 +623,11 @@ function displayText(txt: string) {
     worldTextContainer.style.pointerEvents = "none";
   }
   displayLatestWorldHistoryMessages();
-  const textElement = textSyntax(txt);
-  worldTextHistoryArray.push(textElement);
-  worldTextContainer.append(textElement);
+  if (txt !== "") {
+    const textElement = textSyntax(txt);
+    worldTextHistoryArray.push(textElement);
+    worldTextContainer.append(textElement);
+  }
   if (!state.displayingTextHistory) worldTextContainer.scrollBy(0, 1000);
   if (worldTextContainer.childNodes.length > 199) worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
   if (worldTextHistoryArray.length > worldTextHistoryMaximumSize) worldTextHistoryArray.splice(0, 1);
@@ -641,6 +643,7 @@ function displayText(txt: string) {
     catch { }
   }, worldTextDisplayTime);
 }
+
 
 function displayLatestWorldHistoryMessages() {
   if (state.displayingTextHistory) return;

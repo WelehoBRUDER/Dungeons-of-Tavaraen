@@ -4,6 +4,17 @@ body {
   --blue: rgb(31, 77, 138);
 }
 
+* {
+  color: white;
+}
+
+input {
+  background: rgb(56, 56, 56);
+  height: 30px;
+  text-align: center;
+  width: 50px;
+}
+
 .mapContainer {
   position: absolute;
   top: 0px;
@@ -46,8 +57,8 @@ body {
 .leftContainer {
   position: absolute;
   left: 0px;
-  top: 0px;
-  height: 100%;
+  top: 50px;
+  height: 90%;
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -58,6 +69,7 @@ body {
     position: relative;
     left: 35px;
     margin-top: 35px;
+    padding: 0;
 
     > button {
       transition: 0.1s;

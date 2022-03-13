@@ -140,7 +140,10 @@ function selectEntry(entryElement, entry) {
     try {
         questList.childNodes.forEach((entry) => entry.classList.remove("selectedEntry"));
     }
-    catch (_a) { }
+    catch (err) {
+        if (DEVMODE)
+            displayText(`<c>red<c>${err}`);
+    }
     entryElement.classList.add("selectedEntry");
     defaultQuestSelected = player.questProgress.findIndex((prog) => prog.id == entry.id);
     createQuestData(entry);

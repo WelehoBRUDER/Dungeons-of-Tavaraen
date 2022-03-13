@@ -284,7 +284,14 @@ function clickListEntry(entry) {
     const id = entry.classList[0];
     const category = entry.classList[1];
     contentContainer.innerHTML = "";
-    let object = Object.assign({}, eval(category)[id]);
+    let object;
+    try {
+        object = Object.assign({}, eval(category)[id]);
+    }
+    catch (err) {
+        if (DEVMODE)
+            displayText(`<c>red<c>${err} at line codex:268`);
+    }
     if (category === "enemies") {
         createEnemyInfo(object);
     }

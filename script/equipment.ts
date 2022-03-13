@@ -246,20 +246,22 @@ class Weapon extends Item {
         }
       }
     }
-
-    this.rolledStats?.forEach((stat: any) => {
-      if (stat.damage) {
-        let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
-        if (!this.damages[stat.damage]) this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
-        else this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
-      }
-      else {
-        let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
-        val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
-        if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
-        else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
-      }
-    });
+    try {
+      this.rolledStats?.forEach((stat: any) => {
+        if (stat.damage) {
+          let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
+          if (!this.damages[stat.damage]) this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
+          else this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
+        }
+        else {
+          let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+          val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+          if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
+          else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
+        }
+      });
+    }
+    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line equipment:264`); }
 
     // Assign correct name based on stat effects.
     if (this.rolledStats.length > 0) {
@@ -1103,7 +1105,7 @@ function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, con
   try {
     document.querySelector(".itemSelected").classList.remove("itemSelected");
   }
-  catch { }
+  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line equipment:1108`); }
   if (Event.shiftKey) return;
   if (context != "PLAYER_EQUIPMENT") itemObject.classList.add("itemSelected");
   contextMenu.style.left = `${Event.x}px`;
@@ -1141,7 +1143,7 @@ function removeContextMenu(Event: MouseEvent) {
     try {
       document.querySelector(".itemSelected").classList.remove("itemSelected");
     }
-    catch { }
+    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line equipment:1146`); }
     contextMenu.textContent = "";
   }
 }

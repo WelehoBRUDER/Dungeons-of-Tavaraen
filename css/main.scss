@@ -28,6 +28,10 @@ body {
   }
 }
 
+* {
+  color: #fff;
+}
+
 ::-webkit-scrollbar {
   width: 0;
   background: transparent;
@@ -1491,8 +1495,8 @@ body {
     transform: scale(0);
 
     .merchantInv {
-      width: calc(816px * var(--ui-scale));
-      height: calc(1000px * var(--ui-scale));
+      width: 42.5%;
+      height: 100%;
       max-height: 100%;
       position: absolute;
       left: 0;
@@ -1500,8 +1504,8 @@ body {
     }
 
     .playerInv {
-      width: calc(816px * var(--ui-scale));
-      height: calc(1000px * var(--ui-scale));
+      width: 42.5%;
+      height: 100%;
       max-height: 100%;
       position: absolute;
       right: 0;
@@ -1522,10 +1526,10 @@ body {
       background-image: $greyBgFade;
       background-size: cover;
       background-position: inherit;
-      width: calc(288px * var(--ui-scale));
+      width: 15%;
       height: 100%;
       position: absolute;
-      left: calc(816px * var(--ui-scale));
+      left: 42.5%;
       box-shadow: inset 0 0 calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(56, 56, 56);
       user-select: none;
       top: 0;

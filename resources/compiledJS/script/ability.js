@@ -274,6 +274,8 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                         total["effects"][__key].status = effectId;
                     }
                     else {
+                        if (!total[__key])
+                            total[__key] = { value: 0, modif: 1 };
                         if (key.endsWith("V"))
                             total[__key].value += value;
                         else if (key.endsWith("P") && value < 0)
@@ -311,6 +313,8 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                             total["effects"][__key].status = effectId;
                         }
                         else {
+                            if (!total[__key])
+                                total[__key] = { value: 0, modif: 1 };
                             if (key.endsWith("V"))
                                 total[__key].value += value;
                             else if (key.endsWith("P") && value < 0)
@@ -344,6 +348,8 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                         total["effects"][__key].status = effectId;
                     }
                     else {
+                        if (!total[__key])
+                            total[__key] = { value: 0, modif: 1 };
                         if (key.endsWith("V"))
                             total[__key].value += value;
                         else if (key.endsWith("P") && value < 0)
@@ -375,6 +381,8 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
                                 total["effects"][__key].modif += (1 + value / 100);
                         }
                         else {
+                            if (!total[__key])
+                                total[__key] = { value: 0, modif: 1 };
                             if (key.endsWith("V"))
                                 total[__key].value += value;
                             else if (key.endsWith("P") && value < 0)

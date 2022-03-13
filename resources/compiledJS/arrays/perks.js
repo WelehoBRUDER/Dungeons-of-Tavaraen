@@ -701,6 +701,7 @@ const perksArray = {
                 effects: {
                     shadow_step_use_rangeP: 50,
                     shadow_step_cooldownP: -22,
+                    movementSpeedV: 10,
                     evasionV: 3
                 },
                 tree: "rogue",

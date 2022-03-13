@@ -142,23 +142,29 @@ class Weapon extends Item {
                 }
             }
         }
-        (_k = this.rolledStats) === null || _k === void 0 ? void 0 : _k.forEach((stat) => {
-            if (stat.damage) {
-                let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
-                if (!this.damages[stat.damage])
-                    this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
-                else
-                    this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
-            }
-            else {
-                let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
-                val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
-                if (!this.stats[stat.stat])
-                    this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
-                else
-                    this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
-            }
-        });
+        try {
+            (_k = this.rolledStats) === null || _k === void 0 ? void 0 : _k.forEach((stat) => {
+                if (stat.damage) {
+                    let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
+                    if (!this.damages[stat.damage])
+                        this.damages[stat.damage] = Math.floor(val * gradeStatMultis[this.grade]);
+                    else
+                        this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
+                }
+                else {
+                    let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+                    val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+                    if (!this.stats[stat.stat])
+                        this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
+                    else
+                        this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
+                }
+            });
+        }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line equipment:264`);
+        }
         // Assign correct name based on stat effects.
         if (this.rolledStats.length > 0) {
             let name = "";
@@ -1008,7 +1014,10 @@ function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest 
     try {
         document.querySelector(".itemSelected").classList.remove("itemSelected");
     }
-    catch (_a) { }
+    catch (err) {
+        if (DEVMODE)
+            displayText(`<c>red<c>${err} at line equipment:1108`);
+    }
     if (Event.shiftKey)
         return;
     if (context != "PLAYER_EQUIPMENT")
@@ -1047,7 +1056,10 @@ function removeContextMenu(Event) {
         try {
             document.querySelector(".itemSelected").classList.remove("itemSelected");
         }
-        catch (_a) { }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line equipment:1146`);
+        }
         contextMenu.textContent = "";
     }
 }

@@ -452,6 +452,8 @@ class Character {
             // @ts-expect-error
             if (((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.firesProjectile) || this.shootsProjectile) {
                 for (let i = attacks; i > 0; i--) {
+                    if (target.stats.hp <= 0)
+                        break;
                     // @ts-expect-error
                     const projectile = ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.firesProjectile) || this.shootsProjectile;
                     const isPlayer = this.id === "player";
@@ -461,6 +463,8 @@ class Character {
             }
             else {
                 for (let i = attacks; i > 0; i--) {
+                    if (target.stats.hp <= 0)
+                        break;
                     // @ts-expect-error
                     attackTarget(this, target, weaponReach(this, reach, target));
                     regularAttack(this, target, this.abilities.find(e => e.id === "attack"));
