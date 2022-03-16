@@ -28,6 +28,10 @@ body {
   }
 }
 
+* {
+  color: #fff;
+}
+
 ::-webkit-scrollbar {
   width: 0;
   background: transparent;
@@ -46,6 +50,22 @@ body {
   background-size: cover;
   background-position: center;
   user-select: none;
+  color: #fff;
+
+  .negative {
+    color: rgb(150, 58, 16);
+    text-shadow: -1px 1px 4px rgb(179, 72, 23);
+  }
+
+  .inactive {
+    color: rgb(206, 107, 25);
+    text-shadow: -1px 1px 4px rgb(180, 104, 17);
+  }
+
+  .positive {
+    color: rgb(16, 150, 56);
+    text-shadow: -1px 1px 4px rgb(23, 179, 36);
+  }
 
   .closeWindowButton {
     transition: filter 0.08s;
@@ -56,7 +76,7 @@ body {
     background: rgba(143, 12, 12, 0.75);
     box-shadow: inset 0 0 4px 4px rgba(125, 10, 10, 0.66);
     border-radius: 50%;
-    color: white;
+
     position: absolute;
     right: calc(-4px * var(--ui-scale));
     top: calc(-4px * var(--ui-scale));
@@ -179,7 +199,6 @@ body {
       }
 
       p {
-        color: white;
         font-size: calc(40px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         top: 50%;
@@ -274,7 +293,7 @@ body {
         top: calc(50%);
         left: 50%;
         transform: translateX(-50%) translateY(-120%);
-        color: white;
+
         font-size: calc(30px * var(--ui-scale));
         text-shadow: 0px 0px 2px black;
         white-space: nowrap;
@@ -358,7 +377,7 @@ body {
         .summonName {
           position: absolute;
           font-size: calc(13px * var(--ui-scale));
-          color: white;
+
           left: calc(72px * var(--ui-scale));
           top: 0;
           white-space: nowrap;
@@ -378,7 +397,7 @@ body {
           background: rgba(16, 10, 75, 0.55);
           padding: calc(3px * var(--ui-scale));
           font-size: calc(14px * var(--ui-scale));
-          color: white;
+
           position: absolute;
           left: calc(45px * var(--ui-scale));
           top: calc(-15px * var(--ui-scale));
@@ -586,21 +605,6 @@ body {
     transform: scale(0);
     user-select: none;
 
-    .negative {
-      color: rgb(150, 58, 16);
-      text-shadow: -1px 1px 4px rgb(179, 72, 23);
-    }
-
-    .inactive {
-      color: rgb(206, 107, 25);
-      text-shadow: -1px 1px 4px rgb(180, 104, 17);
-    }
-
-    .positive {
-      color: rgb(16, 150, 56);
-      text-shadow: -1px 1px 4px rgb(23, 179, 36);
-    }
-
     .generalInfo {
       width: max-content;
       height: max-content;
@@ -636,24 +640,39 @@ body {
         position: relative;
         left: calc(25px * var(--ui-scale));
         top: 0px;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         text-align: center;
         vertical-align: middle;
+        width: 75%;
         margin: 0;
         padding: 0;
         height: calc(36px * var(--ui-scale));
-        width: auto;
 
-        img {
-          width: calc(32px * var(--ui-scale));
-          height: calc(32px * var(--ui-scale));
+        div {
+          display: flex;
+          width: min-content;
+          margin: 0;
+          padding: 2px;
+          box-sizing: border-box;
+          border: 2px solid transparent;
+          img {
+            width: calc(32px * var(--ui-scale));
+            height: calc(32px * var(--ui-scale));
+            filter: drop-shadow(0 0 3px goldenrod);
+          }
+
+          p {
+            font-size: calc(28px * var(--ui-scale));
+            vertical-align: middle;
+            margin-top: 0px;
+            margin: 0;
+            padding: 0;
+          }
         }
 
-        p {
-          color: white;
-          font-size: calc(28px * var(--ui-scale));
-          vertical-align: middle;
-          margin-top: 0px;
+        div:hover {
+          border: 2px solid white;
         }
       }
     }
@@ -763,7 +782,6 @@ body {
       margin: 0;
       span {
         margin: 0;
-        color: white;
         font-size: calc(22px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
@@ -779,7 +797,6 @@ body {
 
   .closestEnemyDistance {
     font-size: calc(32px * var(--ui-scale));
-    color: white;
     position: absolute;
     left: 50%;
     bottom: calc((10% + 30px) * var(--ui-scale));
@@ -791,7 +808,6 @@ body {
 
   .interactPrompt {
     font-size: calc(32px * var(--ui-scale));
-    color: white;
     position: absolute;
     left: 50%;
     bottom: calc((15% + 32px) * var(--ui-scale));
@@ -833,7 +849,6 @@ body {
       transform: translateX(-50%) translateY(-50%);
       span {
         margin: 0;
-        color: white;
         font-size: 25px;
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
@@ -895,7 +910,6 @@ body {
 
     p {
       font-size: calc(28px * var(--ui-scale));
-      color: white;
       margin: 0;
     }
 
@@ -903,7 +917,6 @@ body {
       margin: 0;
       span {
         margin: 0;
-        color: white;
         font-size: calc(22px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         text-shadow: 0px 0px 8px black;
@@ -937,7 +950,7 @@ body {
     z-index: 60;
     display: none;
     pointer-events: none;
-    color: white;
+
     font-size: 22px;
     line-height: 16px;
     pre {
@@ -982,7 +995,6 @@ body {
       margin-top: 0px;
       margin-bottom: 0px;
       span {
-        color: white;
         font-size: calc(15px * var(--ui-scale));
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         white-space: normal;
@@ -1035,7 +1047,7 @@ body {
 
       p {
         font-size: calc(18px * var(--ui-scale));
-        color: white;
+
         top: 0;
         margin: 0px;
         border-radius: calc(8px * var(--ui-scale));
@@ -1104,7 +1116,7 @@ body {
           font-size: calc(15px * var(--ui-scale));
           height: calc(36px * var(--ui-scale));
           margin: 0px;
-          color: white;
+
           top: 0px;
           border-radius: calc(8px * var(--ui-scale));
           overflow: hidden;
@@ -1171,7 +1183,7 @@ body {
     button {
       transition: 0.13s;
       font-size: calc(16px * var(--ui-scale));
-      color: white;
+
       background: $greyBgFade;
       background-size: inherit;
       background-position: inherit;
@@ -1216,7 +1228,6 @@ body {
       }
 
       p {
-        color: white;
         font-size: calc(40px * var(--ui-scale));
         text-shadow: 0px 0px 4px black;
         top: 50%;
@@ -1275,7 +1286,8 @@ body {
       right: calc(10px * var(--ui-scale));
       overflow: hidden;
 
-      .minimapLayer {
+      .minimapLayer,
+      .minimapUpdateLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -1341,7 +1353,6 @@ body {
     transform: scale(0);
 
     .dialogCharName {
-      color: white;
       background: rgba(10, 10, 10, 0.9);
       text-shadow: 0px 0px 8px black;
       box-shadow: 0 0 9px 5px rgba(24, 24, 24, 0.95);
@@ -1399,7 +1410,7 @@ body {
           0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
         border-radius: calc(6px * var(--ui-scale));
         background: rgba(58, 58, 58, 0.75);
-        color: white;
+
         font-size: calc(17px * var(--ui-scale));
         cursor: pointer;
 
@@ -1484,8 +1495,8 @@ body {
     transform: scale(0);
 
     .merchantInv {
-      width: calc(816px * var(--ui-scale));
-      height: calc(1000px * var(--ui-scale));
+      width: 42.5%;
+      height: 100%;
       max-height: 100%;
       position: absolute;
       left: 0;
@@ -1493,8 +1504,8 @@ body {
     }
 
     .playerInv {
-      width: calc(816px * var(--ui-scale));
-      height: calc(1000px * var(--ui-scale));
+      width: 42.5%;
+      height: 100%;
       max-height: 100%;
       position: absolute;
       right: 0;
@@ -1515,10 +1526,10 @@ body {
       background-image: $greyBgFade;
       background-size: cover;
       background-position: inherit;
-      width: calc(288px * var(--ui-scale));
+      width: 15%;
       height: 100%;
       position: absolute;
-      left: calc(816px * var(--ui-scale));
+      left: 42.5%;
       box-shadow: inset 0 0 calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(56, 56, 56);
       user-select: none;
       top: 0;
@@ -1590,7 +1601,7 @@ body {
           margin: 0;
           span {
             margin: 0;
-            color: white;
+
             font-size: calc(36px * var(--ui-scale));
             font-family: monospace;
             font-variant-numeric: tabular-nums;
@@ -1622,7 +1633,7 @@ body {
           left: 50%;
           transform: translateX(-50%);
           background: rgb(7, 33, 65);
-          color: white;
+
           outline: none;
           border: none;
           box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(2, 3, 80);
@@ -1642,7 +1653,7 @@ body {
           border-radius: 25%;
           font-size: calc(24px * var(--ui-scale));
           font-family: Montserrat;
-          color: white;
+
           cursor: pointer;
         }
 
@@ -1659,7 +1670,7 @@ body {
         border: calc(2px * var(--ui-scale)) solid white;
         width: min-content;
         padding: 2px;
-        color: white;
+
         user-select: none;
         position: absolute;
         top: 57.5%;
@@ -1780,7 +1791,7 @@ body {
         animation-duration: 0.175s;
 
         font-size: 26px;
-        color: white;
+
         padding: 15px;
         text-shadow: -4px 4px 8px black;
         border: 4px solid grey;
@@ -1913,7 +1924,7 @@ body {
         margin: 0;
         span {
           margin: 0;
-          color: white;
+
           font-size: calc(22px * var(--ui-scale));
           font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
           text-shadow: 0px 0px 8px black;

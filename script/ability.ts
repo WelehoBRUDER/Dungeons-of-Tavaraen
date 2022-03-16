@@ -353,6 +353,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
             total["effects"][__key].status = effectId;
           }
           else {
+            if (!total[__key]) total[__key] = { value: 0, modif: 1 };
             if (key.endsWith("V")) total[__key].value += value;
             else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
             else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
@@ -384,6 +385,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
               total["effects"][__key].status = effectId;
             }
             else {
+              if (!total[__key]) total[__key] = { value: 0, modif: 1 };
               if (key.endsWith("V")) total[__key].value += value;
               else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
               else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
@@ -411,6 +413,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
             total["effects"][__key].status = effectId;
           }
           else {
+            if (!total[__key]) total[__key] = { value: 0, modif: 1 };
             if (key.endsWith("V")) total[__key].value += value;
             else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
             else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
@@ -435,6 +438,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
               else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
             }
             else {
+              if (!total[__key]) total[__key] = { value: 0, modif: 1 };
               if (key.endsWith("V")) total[__key].value += value;
               else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
               else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);

@@ -24,8 +24,11 @@ class perk {
             base_ = Object.assign({}, dummyPerk);
         }
         const basePerk = Object.assign({}, base_);
-        if (!basePerk)
+        if (!basePerk) {
             console.error("Perk invalid! Most likely id is wrong!");
+            console.log(this);
+            displayText(`<c>red<c>Perk ${this.id} is invalid! Check console for more info.`);
+        }
         this.name = basePerk.name;
         this.desc = basePerk.desc;
         this.commands = (_a = Object.assign({}, basePerk.commands)) !== null && _a !== void 0 ? _a : {};

@@ -261,7 +261,11 @@ function clickListEntry(entry: HTMLLIElement) {
   const id = entry.classList[0];
   const category = entry.classList[1];
   contentContainer.innerHTML = "";
-  let object: any = { ...eval(category)[id] };
+  let object: any;
+  try {
+    object = { ...eval(category)[id] };
+  }
+  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line codex:268`); }
   if (category === "enemies") {
     createEnemyInfo(object);
   }

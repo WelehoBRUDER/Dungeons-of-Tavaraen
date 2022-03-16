@@ -77,6 +77,9 @@ let enemySpawnLevel = 1;
 let selectedEnemyCords = null;
 let enemySelect = null;
 let chestSelect = null;
+document
+  .querySelector("#enemySpawnLevel")
+  .addEventListener("change", (e) => (enemySpawnLevel = +e.target.value));
 const spriteMap_tiles = document.querySelector(".tileAtlas");
 function createMap() {
   const newSize = baseSize * zoomLevel;

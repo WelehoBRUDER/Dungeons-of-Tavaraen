@@ -29,7 +29,7 @@ let settings = new gameSettings({
     log_enemy_movement: false,
     toggle_minimap: true,
     hide_helmet: false,
-    randomize_items: false,
+    randomize_items: true,
     hotkey_inv: "i",
     hotkey_char: "c",
     hotkey_perk: "p",
@@ -305,6 +305,31 @@ const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");
 const dim = document.querySelector(".dim");
 const mainMenuButtons = mainMenu.querySelector(".menuButtons");
+function weightedRandom(Array) {
+    var _a;
+    let table = [...Array];
+    let max = 0;
+    for (let i = 0; i < table.length; i++) {
+        if (((_a = table[i]) === null || _a === void 0 ? void 0 : _a.type) == "gold")
+            continue;
+        table[i].dynamicChance = 0;
+        if (table[i - 1])
+            table[i].dynamicChance = table[i - 1].dynamicChance;
+        else
+            table[i].dynamicChance = 0;
+        table[i].dynamicChance += table[i].chance;
+        max = table[i].dynamicChance;
+    }
+    let value = Math.floor(random(max, 0));
+    let result;
+    for (let item of table) {
+        if (item.dynamicChance >= value) {
+            result = item;
+            break;
+        }
+    }
+    return result;
+}
 function openGameMenu() {
     var _a;
     menu.textContent = "";
@@ -338,7 +363,10 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
             const frame = menu.querySelector(`.${button.id}`);
             frame.remove();
         }
-        catch (_a) { }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line menu:398`);
+        }
     }
     if (escape)
         handleEscape();
@@ -468,7 +496,10 @@ function gotoSettingsMenu(inMainMenu = false) {
                         try {
                             child.classList.remove("selectedLang");
                         }
-                        catch (_a) { }
+                        catch (err) {
+                            if (DEVMODE)
+                                displayText(`<c>red<c>${err} at line menu:520`);
+                        }
                     });
                     lang = eval(language);
                     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
@@ -514,9 +545,9 @@ function trimPlayerObjectForSaveFile(playerObject) {
         if (itm.stackable || itm.type === "consumable")
             trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
         else if (itm.level)
-            trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: (_a = itm.rolledStats) !== null && _a !== void 0 ? _a : null };
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: (_a = itm.rolledStats) !== null && _a !== void 0 ? _a : [] };
         else
-            trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: (_b = itm.rolledStats) !== null && _b !== void 0 ? _b : null };
+            trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: (_b = itm.rolledStats) !== null && _b !== void 0 ? _b : [] };
     });
     trimmed.abilities.forEach((abi, index) => {
         // @ts-ignore
@@ -524,9 +555,9 @@ function trimPlayerObjectForSaveFile(playerObject) {
     });
     trimmed.allModifiers = {};
     equipSlots.forEach((slot) => {
-        var _a, _b;
+        var _a, _b, _c;
         if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
-            trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: (_b = trimmed[slot].level) !== null && _b !== void 0 ? _b : 0 };
+            trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: (_b = trimmed[slot].level) !== null && _b !== void 0 ? _b : 0, rolledStats: (_c = trimmed[slot].rolledStats) !== null && _c !== void 0 ? _c : [] };
         }
     });
     trimmed.perks.forEach((perk, index) => {

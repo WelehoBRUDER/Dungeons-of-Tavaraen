@@ -95,15 +95,11 @@ class Summon extends Character {
                 }
                 // Check if enemy should shoot the this.chosenTarget
                 else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords, true)) {
-                    fireProjectile(this.cords, this.chosenTarget.cords, this.shootsProjectile, abilities.attack, false, this);
+                    this.doNormalAttack(this.chosenTarget);
                 }
                 // Check if enemy should instead punch the this.chosenTarget (and is in range)
                 else if (!this.shootsProjectile && generatePath(this.cords, this.chosenTarget.cords, this.canFly, true) <= this.attackRange) {
-                    // regular attack for now
-                    // @ts-ignore
-                    attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
-                    // @ts-ignore
-                    regularAttack(this, this.chosenTarget, this.abilities[0]);
+                    this.doNormalAttack(this.chosenTarget);
                 }
                 // If there's no offensive action to be taken, just move towards the this.chosenTarget.
                 else if (!this.isRooted()) {

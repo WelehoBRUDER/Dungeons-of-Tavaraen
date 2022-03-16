@@ -1,12 +1,36 @@
-# 1.0.8 ~ 2.3.2022
+# 1.0.9 ~ 13.3.2022
 
 ### Patch
 
 ## New Additions
 
+- Added 1 new weapons
+- Added 1 new armor sets
+
+## Fixes & Tweaks
+
+- Fixed hp regeneration being nerfed by a buff.
+- Chests now disappear in the minimap after looted.
+- Stat randomization now uses weights instead of absolutes
+  > All stats now have a more equal chance of appearing.  
+  > Before, the order in which stats were added to the game dictated their likelihood of rolling.
+- Fixed and finished speed
+  > If your attack speed is over 100%, you will sometimes attack twice or more in a round.
+  > Speed only applies to normal attack and move, not to abilities.
+- Fixed an error that occurred when purchasing perk `Smoke & Mirrors`.
+- Log now compiles uninterrupted movement actions to one line, making it much cleaner.
+- Item stat randomization is now by default enabled.
+- Slightly improved scaling of merchant window.
+
+# 1.0.8 ~ 6.3.2022
+
+### Patch - Map & Movement
+
+## New Additions
+
 - Abilities can now be targeted and used with keyboard.
 - Speed:
-  > Speed is a new stat determines how fast you can move / attack.
+  > Speed is a new stat that determines how fast you can move / attack.
   > Movement speed unsurprisingly modifies your movement while attack speed does the same for attacks.
   > Currently only movement speed is working, and is very rough.
 - Added 1 new item.

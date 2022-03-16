@@ -293,7 +293,8 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
-            { id: "cornered_animal" }
+            { id: "cornered_animal" },
+            { id: "fast" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -364,7 +365,8 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
-            { id: "cornered_animal" }
+            { id: "cornered_animal" },
+            { id: "fast" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -436,7 +438,8 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
-            { id: "cornered_animal" }
+            { id: "cornered_animal" },
+            { id: "fast" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1424,6 +1427,7 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
+            { id: "slow" }
         ],
         retreatLimit: 0,
         statsPerLevel: {
@@ -1492,6 +1496,7 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
+            { id: "slow" }
         ],
         retreatLimit: 0,
         statsPerLevel: {

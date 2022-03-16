@@ -1,3 +1,37 @@
+# 1.0.9 ~ 6.3.2022
+
+### Patch
+
+## New Additions
+
+## Fixes & Tweaks
+
+- Fixed hp regeneration being nerfed by a buff.
+- Chests now disappear in the minimap after looted.
+
+# 1.0.8 ~ 6.3.2022
+
+### Patch - Map & Movement
+
+## New Additions
+
+- Abilities can now be targeted and used with keyboard.
+- Speed:
+  > Speed is a new stat determines how fast you can move / attack.
+  > Movement speed unsurprisingly modifies your movement while attack speed does the same for attacks.
+  > Currently only movement speed is working, and is very rough.
+- Added 1 new item.
+- Added 2 new enemies.
+- Added an area map that can be opened with "M".
+
+## Fixes & Tweaks
+
+- Merchant items no longer roll random stats before they are bought.
+- Fixed error caused by broken enemy loot.
+- Fixed minimap sometimes not rendering.
+- Fixed some status modifiers not applying correctly.
+- Made movement animation slightly faster.
+
 # 1.0.7 ~ 24.2.2022
 
 ### Patch - The Roguelikery

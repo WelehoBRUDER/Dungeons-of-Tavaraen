@@ -610,7 +610,10 @@ function effectSyntax(effect, embed = false, effectId = "") {
         try {
             var _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
         }
-        catch (_j) { }
+        catch (err) {
+            if (DEVMODE)
+                displayText(`<c>red<c>${err} at line hotbar:531`);
+        }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);
         let status = new statEffect(statusEffects[statusId], _abi.statusModifiers);
@@ -719,9 +722,11 @@ function displayText(txt) {
         worldTextContainer.style.pointerEvents = "none";
     }
     displayLatestWorldHistoryMessages();
-    const textElement = textSyntax(txt);
-    worldTextHistoryArray.push(textElement);
-    worldTextContainer.append(textElement);
+    if (txt !== "") {
+        const textElement = textSyntax(txt);
+        worldTextHistoryArray.push(textElement);
+        worldTextContainer.append(textElement);
+    }
     if (!state.displayingTextHistory)
         worldTextContainer.scrollBy(0, 1000);
     if (worldTextContainer.childNodes.length > 199)
@@ -909,6 +914,15 @@ function renderCharacter() {
     const charHealthImage = document.createElement("img");
     const charMana = document.createElement("p");
     const charManaImage = document.createElement("img");
+    const charAttackSpeed = document.createElement("p");
+    const charAttackSpeedImage = document.createElement("img");
+    const charMovementSpeed = document.createElement("p");
+    const charMovementSpeedImage = document.createElement("img");
+    const hpContainer = document.createElement("div");
+    const mpContainer = document.createElement("div");
+    const attackContainer = document.createElement("div");
+    const movementContainer = document.createElement("div");
+    const { attack, movement } = player.getSpeed();
     charName.classList.add("charName");
     charRaceLevel.classList.add("charRaceLevel");
     charHealthContainer.classList.add("charHealthContainer");
@@ -917,10 +931,28 @@ function renderCharacter() {
     charRaceLevel.textContent = `Lvl ${player.level.level}, ${lang[player.race + "_name"]}`;
     charHealth.textContent = `${Math.round(player.stats.hp)}/${player.getHpMax()}`;
     charMana.textContent = `${Math.round(player.stats.mp)}/${player.getMpMax()}`;
+    charAttackSpeed.textContent = `${attack}%`;
+    charMovementSpeed.textContent = `${movement}%`;
     charHealthImage.src = "resources/icons/health.png";
     charManaImage.src = "resources/icons/mana.png";
-    charHealthContainer.append(charHealthImage, charHealth);
-    charManaContainer.append(charManaImage, charMana);
+    charAttackSpeedImage.src = icons.attackSpeed_icon;
+    charMovementSpeedImage.src = icons.movementSpeed_icon;
+    if (attack > 100)
+        charAttackSpeed.classList.add("positive");
+    else if (attack < 100)
+        charAttackSpeed.classList.add("negative");
+    if (movement > 100)
+        charMovementSpeed.classList.add("positive");
+    else if (movement < 100)
+        charMovementSpeed.classList.add("negative");
+    hpContainer.append(charHealthImage, charHealth);
+    mpContainer.append(charManaImage, charMana);
+    attackContainer.append(charAttackSpeedImage, charAttackSpeed);
+    movementContainer.append(charMovementSpeedImage, charMovementSpeed);
+    charHealthContainer.append(hpContainer, attackContainer);
+    charManaContainer.append(mpContainer, movementContainer);
+    tooltip(attackContainer, lang["atk_speed_tt"]);
+    tooltip(movementContainer, lang["mov_speed_tt"]);
     generalInfo.append(charName, charRaceLevel, charHealthContainer, charManaContainer);
     const coreStats = document.createElement("div");
     const coreResistances = document.createElement("div");

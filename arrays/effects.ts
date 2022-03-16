@@ -24,7 +24,9 @@ const statusEffects = {
     effects: {
       strV: -5,
       dexV: -5,
-      sightV: -1
+      sightV: -1,
+      movementSpeedV: -10,
+      attackSpeedV: -10
     },
     last: {
       total: 5,
@@ -46,7 +48,9 @@ const statusEffects = {
       strV: -3,
       dexV: -3,
       intV: -3,
-      damageP: -20
+      damageP: -20,
+      movementSpeedV: -20,
+      attackSpeedV: -20
     },
     last: {
       total: 4,
@@ -102,7 +106,9 @@ const statusEffects = {
       damageP: -15,
       hitChanceV: -10,
       evasionV: -10,
-      fireResistV: -10
+      fireResistV: -10,
+      movementSpeedV: -30,
+      attackSpeedV: -15
     },
     last: {
       total: 4,
@@ -157,6 +163,7 @@ const statusEffects = {
       crushDamageP: 9,
       slashDamageP: 9,
       pierceDamageP: 7,
+      attackSpeedV: 30
     },
     silence: true,
     last: {
@@ -208,6 +215,8 @@ const statusEffects = {
     effects: {
       meleeDamageP: 30,
       strP: 40,
+      movementSpeedV: 20,
+      attackSpeedV: 20,
       barbarian_charge_cooldownP: -75,
       physicalDefP: -100,
       magicalDefP: -100,
@@ -397,19 +406,6 @@ const statusEffects = {
     textIcon: icons.health_cost_icon,
     icon: "resources/icons/health_cost.png"
   },
-  summoned: {
-    id: "summoned",
-    name: "Summoned",
-    effects: {
-
-    },
-    last: {
-      total: 25,
-      current: 25
-    },
-    textIcon: "resources/icons/portal.png",
-    icon: "resources/icons/portal.png"
-  }
 } as any;
 
 // this allows player to deal more damage to specific enemies.

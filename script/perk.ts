@@ -38,7 +38,11 @@ class perk {
       base_ = { ...dummyPerk };
     }
     const basePerk = { ...base_ };
-    if (!basePerk) console.error("Perk invalid! Most likely id is wrong!");
+    if (!basePerk) {
+      console.error("Perk invalid! Most likely id is wrong!");
+      console.log(this);
+      displayText(`<c>red<c>Perk ${this.id} is invalid! Check console for more info.`);
+    }
     this.name = basePerk.name;
     this.desc = basePerk.desc;
     this.commands = { ...basePerk.commands } ?? {};

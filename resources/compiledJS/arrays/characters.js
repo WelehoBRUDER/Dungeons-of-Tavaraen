@@ -62,6 +62,7 @@ const NPCInventories = {
     blacksmithMaroch: {
         normal: [
             { id: "longBow", unique: true, price: 1000 },
+            Object.assign(Object.assign({}, items["dualDaggers"]), { unique: false, price: 315 }),
             Object.assign(Object.assign({}, items["crimsonStaff"]), { unique: false, price: 800 }),
             Object.assign(Object.assign({}, items["ironHelmet"]), { unique: false, price: 225 }),
             Object.assign(Object.assign({}, items["ironArmor"]), { unique: false, price: 500 }),
