@@ -62,6 +62,7 @@ const NPCInventories = {
   blacksmithMaroch: {
     normal: [
       { id: "longBow", unique: true, price: 1000 },
+      { ...items["dualDaggers"], unique: false, price: 315 },
       { ...items["crimsonStaff"], unique: false, price: 800 },
       { ...items["ironHelmet"], unique: false, price: 225 },
       { ...items["ironArmor"], unique: false, price: 500 },

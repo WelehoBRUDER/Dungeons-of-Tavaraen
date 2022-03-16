@@ -17,6 +17,11 @@ const lootPools = {
         { type: "armor", amount: [1, 1], item: "leatherBracers", chance: 6 },
         { type: "armor", amount: [1, 1], item: "leatherHelmet", chance: 6 },
         { type: "armor", amount: [1, 1], item: "leatherBoots", chance: 6 },
+        { type: "armor", amount: [1, 1], item: "initiateRobe", chance: 10 },
+        { type: "armor", amount: [1, 1], item: "initiatePants", chance: 6 },
+        { type: "armor", amount: [1, 1], item: "initiateGloves", chance: 6 },
+        { type: "armor", amount: [1, 1], item: "initiateHood", chance: 6 },
+        { type: "armor", amount: [1, 1], item: "initiateShoes", chance: 6 },
         { type: "armor", amount: [1, 1], item: "ironHelmet", chance: 2 },
         { type: "weapon", amount: [1, 1], item: "stick", chance: 20 },
         { type: "weapon", amount: [1, 1], item: "dagger", chance: 20 },
@@ -82,6 +87,7 @@ const chestTemplates = {
         respawnTime: 1000,
         lootPool: "lichLoot",
         itemsGenerate: [2, 3],
+        useOldPattern: true,
         sinceOpened: -1
     },
     knightChest: {
@@ -94,6 +100,7 @@ const chestTemplates = {
         respawnTime: 1000,
         lootPool: "knightLoot",
         itemsGenerate: [5, 6],
+        useOldPattern: true,
         sinceOpened: -1
     }
 };
@@ -112,15 +119,38 @@ class treasureChest {
         this.loot = base.loot;
         this.itemsGenerate = base.itemsGenerate;
         this.sinceOpened = (_f = base.sinceOpened) !== null && _f !== void 0 ? _f : -1;
+        this.useOldPattern = base.useOldPattern || false;
         if (!this.loot) {
             const pool = [...lootPools[this.lootPool]];
             const min = this.itemsGenerate[0];
             const max = this.itemsGenerate[1];
             this.loot = [];
-            pool.forEach((obj) => {
-                if (random(100, 0) <= obj.chance) {
-                    var itm;
-                    // @ts-ignore
+            if (this.useOldPattern) {
+                pool.forEach((obj) => {
+                    if (random(100, 0) <= obj.chance) {
+                        var itm;
+                        // @ts-ignore
+                        if (obj.type == "weapon")
+                            itm = new Weapon(Object.assign({}, items[obj.item]));
+                        else if (obj.type == "armor")
+                            itm = new Armor(Object.assign({}, items[obj.item]));
+                        else if (obj.type == "artifact")
+                            itm = new Artifact(Object.assign({}, items[obj.item]));
+                        else if (obj.type == "consumable")
+                            itm = new Consumable(Object.assign({}, items[obj.item]));
+                        if (itm.stacks)
+                            itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
+                        if (this.loot.length < max)
+                            this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                    }
+                    else if (obj.type == "gold") {
+                        let amount = random(obj.amount[1], obj.amount[0]);
+                        this.gold = Math.floor(amount);
+                    }
+                });
+                if (this.loot.length < min) {
+                    let obj = pool[Math.floor(random(pool.length - 2, 0))];
+                    let itm;
                     if (obj.type == "weapon")
                         itm = new Weapon(Object.assign({}, items[obj.item]));
                     else if (obj.type == "armor")
@@ -131,28 +161,31 @@ class treasureChest {
                         itm = new Consumable(Object.assign({}, items[obj.item]));
                     if (itm.stacks)
                         itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
-                    if (this.loot.length < max)
-                        this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                    this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
                 }
-                else if (obj.type == "gold") {
-                    let amount = random(obj.amount[1], obj.amount[0]);
+            }
+            else {
+                const itemsAmount = random(max, min);
+                for (let i = 0; i <= itemsAmount; i++) {
+                    let obj = weightedRandom(pool);
+                    let itm;
+                    if (obj.type == "weapon")
+                        itm = new Weapon(Object.assign({}, items[obj.item]));
+                    else if (obj.type == "armor")
+                        itm = new Armor(Object.assign({}, items[obj.item]));
+                    else if (obj.type == "artifact")
+                        itm = new Artifact(Object.assign({}, items[obj.item]));
+                    else if (obj.type == "consumable")
+                        itm = new Consumable(Object.assign({}, items[obj.item]));
+                    if (itm.stacks)
+                        itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
+                    this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                }
+                let gold = pool.find(t => t.type == "gold");
+                if (gold) {
+                    let amount = random(gold.amount[1], gold.amount[0]);
                     this.gold = Math.floor(amount);
                 }
-            });
-            if (this.loot.length < min) {
-                let obj = pool[Math.floor(random(pool.length - 2, 0))];
-                let itm;
-                if (obj.type == "weapon")
-                    itm = new Weapon(Object.assign({}, items[obj.item]));
-                else if (obj.type == "armor")
-                    itm = new Armor(Object.assign({}, items[obj.item]));
-                else if (obj.type == "artifact")
-                    itm = new Artifact(Object.assign({}, items[obj.item]));
-                else if (obj.type == "consumable")
-                    itm = new Consumable(Object.assign({}, items[obj.item]));
-                if (itm.stacks)
-                    itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
-                this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
             }
         }
         this.lootChest = () => {

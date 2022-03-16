@@ -306,9 +306,12 @@ const menu = document.querySelector(".gameMenu");
 const dim = document.querySelector(".dim");
 const mainMenuButtons = mainMenu.querySelector(".menuButtons");
 function weightedRandom(Array) {
+    var _a;
     let table = [...Array];
     let max = 0;
     for (let i = 0; i < table.length; i++) {
+        if (((_a = table[i]) === null || _a === void 0 ? void 0 : _a.type) == "gold")
+            continue;
         table[i].dynamicChance = 0;
         if (table[i - 1])
             table[i].dynamicChance = table[i - 1].dynamicChance;

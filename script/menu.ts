@@ -347,6 +347,7 @@ function weightedRandom(Array: Array<any>) {
   let table: Array<any> = [...Array];
   let max = 0;
   for (let i = 0; i < table.length; i++) {
+    if (table[i]?.type == "gold") continue;
     table[i].dynamicChance = 0;
     if (table[i - 1]) table[i].dynamicChance = table[i - 1].dynamicChance;
     else table[i].dynamicChance = 0;

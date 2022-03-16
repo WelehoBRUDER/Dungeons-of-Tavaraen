@@ -36,6 +36,7 @@ const items = {
     stats: {
       attackSpeedV: 25
     },
+    twoHanded: true,
     price: 70,
     weight: 2.3,
     type: "weapon",
