@@ -80,7 +80,7 @@ let chestSelect = null;
 document
   .querySelector("#enemySpawnLevel")
   .addEventListener("change", (e) => (enemySpawnLevel = +e.target.value));
-const spriteMap_tiles = document.querySelector(".tileAtlas");
+const _spriteMap_tiles = document.querySelector(".tileAtlas");
 function createMap() {
   const newSize = baseSize * zoomLevel;
   const karttaSpriteMaaraY =
@@ -121,7 +121,7 @@ function createMap() {
 
       if (sprite) {
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           sprite.x,
           sprite.y,
           128,
@@ -135,7 +135,7 @@ function createMap() {
       }
       if (clutterSprite) {
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           clutterSprite.x,
           clutterSprite.y,
           128,
@@ -185,7 +185,7 @@ function createMap() {
       ) {
         const shrineSprite = staticTiles[7].spriteMap;
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           shrineSprite.x,
           shrineSprite.y,
           128,
@@ -351,7 +351,7 @@ function piirraSelect({ x, y }) {
     if (brush.tile?.spriteMap) {
       selectCtx.globalAlpha = 0.5;
       selectCtx.drawImage(
-        spriteMap_tiles,
+        _spriteMap_tiles,
         brush.tile?.spriteMap.x,
         brush.tile?.spriteMap.y,
         128,
@@ -366,7 +366,7 @@ function piirraSelect({ x, y }) {
     if (brush.clutter?.spriteMap) {
       selectCtx.globalAlpha = 0.5;
       selectCtx.drawImage(
-        spriteMap_tiles,
+        _spriteMap_tiles,
         brush.clutter?.spriteMap.x,
         brush.clutter?.spriteMap.y,
         128,
@@ -490,7 +490,7 @@ function drawOnMapsGrid({ x, y, x2 = x, y2 = y }) {
 
       if (sprite) {
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           sprite.x,
           sprite.y,
           128,
@@ -503,7 +503,7 @@ function drawOnMapsGrid({ x, y, x2 = x, y2 = y }) {
       }
       if (clutterSprite) {
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           clutterSprite.x,
           clutterSprite.y,
           128,
@@ -539,7 +539,7 @@ function drawOnMapsGrid({ x, y, x2 = x, y2 = y }) {
       ) {
         const shrineSprite = staticTiles[7].spriteMap;
         ctx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           shrineSprite.x,
           shrineSprite.y,
           128,
@@ -826,7 +826,7 @@ function createSmallMap(canvas, map) {
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
         smallCtx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           sprite.x,
           sprite.y,
           128,
@@ -840,7 +840,7 @@ function createSmallMap(canvas, map) {
       }
       if (clutterSprite) {
         smallCtx.drawImage(
-          spriteMap_tiles,
+          _spriteMap_tiles,
           clutterSprite.x,
           clutterSprite.y,
           128,

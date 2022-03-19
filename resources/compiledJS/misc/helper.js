@@ -1,0 +1,100 @@
+"use strict";
+let helper = {
+    weightedRandom: function (Array) {
+        var _a;
+        let table = [...Array];
+        let max = 0;
+        for (let i = 0; i < table.length; i++) {
+            if (((_a = table[i]) === null || _a === void 0 ? void 0 : _a.type) == "gold")
+                continue;
+            table[i].dynamicChance = 0;
+            if (table[i - 1])
+                table[i].dynamicChance = table[i - 1].dynamicChance;
+            else
+                table[i].dynamicChance = 0;
+            table[i].dynamicChance += table[i].chance;
+            max = table[i].dynamicChance;
+        }
+        let value = Math.floor(random(max, 0));
+        let result;
+        for (let item of table) {
+            if (item.dynamicChance >= value) {
+                result = item;
+                break;
+            }
+        }
+        return result;
+    },
+    trimPlayerObjectForSaveFile: function (playerObject) {
+        const trimmed = Object.assign({}, playerObject);
+        trimmed.inventory.forEach((itm, index) => {
+            var _a, _b;
+            if (itm.stackable || itm.type === "consumable")
+                trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
+            else if (itm.level)
+                trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: (_a = itm.rolledStats) !== null && _a !== void 0 ? _a : [] };
+            else
+                trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: (_b = itm.rolledStats) !== null && _b !== void 0 ? _b : [] };
+        });
+        trimmed.abilities.forEach((abi, index) => {
+            // @ts-ignore
+            trimmed.abilities[index] = { id: abi.id, equippedSlot: abi.equippedSlot };
+        });
+        trimmed.allModifiers = {};
+        equipSlots.forEach((slot) => {
+            var _a, _b, _c;
+            if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
+                trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: (_b = trimmed[slot].level) !== null && _b !== void 0 ? _b : 0, rolledStats: (_c = trimmed[slot].rolledStats) !== null && _c !== void 0 ? _c : [] };
+            }
+        });
+        trimmed.perks.forEach((perk, index) => {
+            trimmed.perks[index] = { id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted };
+        });
+        return Object.assign({}, trimmed);
+    },
+    purgeDeadEnemies: function () {
+        fallenEnemies.forEach(deadFoe => {
+            maps.forEach((mp, index) => {
+                if (deadFoe.spawnMap == index) {
+                    let purgeList = [];
+                    mp.enemies.forEach((en, _index) => {
+                        if (en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
+                            purgeList.push(_index);
+                        }
+                    });
+                    for (let __index of purgeList) {
+                        maps[index].enemies.splice(__index, 1);
+                    }
+                }
+            });
+        });
+    },
+    reviveAllDeadEnemies: function () {
+        fallenEnemies.forEach(deadFoe => {
+            maps.forEach((mp, index) => {
+                if (deadFoe.spawnMap == index) {
+                    let foe = new Enemy(Object.assign(Object.assign({}, enemies[deadFoe.id]), { cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level }));
+                    foe.restore();
+                    maps[index].enemies.push(new Enemy(Object.assign({}, foe)));
+                }
+            });
+        });
+    },
+    killAllQuestEnemies: function () {
+        maps.forEach((mp, index) => {
+            var _a;
+            for (let i = mp.enemies.length - 1; i >= 0; i--) {
+                if (((_a = mp.enemies[i].questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1)
+                    mp.enemies.splice(i, 1);
+            }
+        });
+    },
+    resetAllLivingEnemiesInAllMaps: function () {
+        maps.forEach((map) => {
+            map.enemies.forEach((enemy) => {
+                enemy.restore();
+            });
+        });
+    }
+};
+//# sourceMappingURL=helper.js.map

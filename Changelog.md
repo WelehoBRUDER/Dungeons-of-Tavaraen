@@ -1,4 +1,14 @@
-# 1.0.9 ~ 13.3.2022
+# 1.1 ~ 17.3.2022
+
+### Major update
+
+## New Additions
+
+## Fixes & Tweaks
+
+- Completely refactored code base to make working with it easier.
+
+# 1.0.9 ~ 16.3.2022
 
 ### Patch
 
