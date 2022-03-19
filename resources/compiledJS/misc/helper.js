@@ -1,4 +1,6 @@
 "use strict";
+/* Helper object contains multiple misc functions used throughout the code */
+/* Helper should be expanded whenever the same function must be repeated in multiple files */
 let helper = {
     weightedRandom: function (Array) {
         var _a;
@@ -15,7 +17,7 @@ let helper = {
             table[i].dynamicChance += table[i].chance;
             max = table[i].dynamicChance;
         }
-        let value = Math.floor(random(max, 0));
+        let value = Math.floor(helper.random(max, 0));
         let result;
         for (let item of table) {
             if (item.dynamicChance >= value) {
@@ -24,6 +26,16 @@ let helper = {
             }
         }
         return result;
+    },
+    random: function (max, min = -100) {
+        return (Math.random() * (max - min) + min);
+    },
+    roundFloat: function (value, decimals = 2) {
+        let rounded = Math.pow(10, decimals);
+        return +(Math.round(value * rounded) / rounded).toFixed(decimals);
+    },
+    sleep: function (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     },
     trimPlayerObjectForSaveFile: function (playerObject) {
         const trimmed = Object.assign({}, playerObject);

@@ -2,6 +2,7 @@
 var _a, _b, _c;
 (_b = (_a = document.querySelector(".playerInventory")) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".slot")) === null || _b === void 0 ? void 0 : _b.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 (_c = document.querySelector(".playerInventory")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", e => removeContextMenu(e));
+let invScroll = 0;
 function renderInventory() {
     state.invOpen = true;
     updatePlayerInventoryIndexes();

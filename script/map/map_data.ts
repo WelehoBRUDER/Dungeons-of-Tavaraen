@@ -144,35 +144,35 @@ class treasureChest {
       this.loot = [];
       if (this.useOldPattern) {
         pool.forEach((obj: any) => {
-          if (random(100, 0) <= obj.chance) {
+          if (helper.random(100, 0) <= obj.chance) {
             var itm: any;
             // @ts-ignore
             if (obj.type == "weapon") itm = new Weapon({ ...items[obj.item] });
             else if (obj.type == "armor") itm = new Armor({ ...items[obj.item] });
             else if (obj.type == "artifact") itm = new Artifact({ ...items[obj.item] });
             else if (obj.type == "consumable") itm = new Consumable({ ...items[obj.item] });
-            if (itm.stacks) itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
+            if (itm.stacks) itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
             if (this.loot.length < max) this.loot.push({ ...itm, dataIndex: this.loot.length });
           }
           else if (obj.type == "gold") {
-            let amount = random(obj.amount[1], obj.amount[0]);
+            let amount = helper.random(obj.amount[1], obj.amount[0]);
             this.gold = Math.floor(amount);
           }
         });
         if (this.loot.length < min) {
-          let obj = pool[Math.floor(random(pool.length - 2, 0))];
+          let obj = pool[Math.floor(helper.random(pool.length - 2, 0))];
           let itm: any;
           if (obj.type == "weapon") itm = new Weapon({ ...items[obj.item] });
           else if (obj.type == "armor") itm = new Armor({ ...items[obj.item] });
           else if (obj.type == "artifact") itm = new Artifact({ ...items[obj.item] });
           else if (obj.type == "consumable") itm = new Consumable({ ...items[obj.item] });
-          if (itm.stacks) itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
+          if (itm.stacks) itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
           this.loot.push({ ...itm, dataIndex: this.loot.length });
         }
       }
 
       else {
-        const itemsAmount = random(max, min);
+        const itemsAmount = helper.random(max, min);
         for (let i = 0; i <= itemsAmount; i++) {
           let obj = helper.weightedRandom(pool);
           let itm: any;
@@ -180,12 +180,12 @@ class treasureChest {
           else if (obj.type == "armor") itm = new Armor({ ...items[obj.item] });
           else if (obj.type == "artifact") itm = new Artifact({ ...items[obj.item] });
           else if (obj.type == "consumable") itm = new Consumable({ ...items[obj.item] });
-          if (itm.stacks) itm.amount = Math.floor(random(obj.amount[1], obj.amount[0]));
+          if (itm.stacks) itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
           this.loot.push({ ...itm, dataIndex: this.loot.length });
         }
         let gold: any = pool.find(t => t.type == "gold");
         if (gold) {
-          let amount = random(gold.amount[1], gold.amount[0]);
+          let amount = helper.random(gold.amount[1], gold.amount[0]);
           this.gold = Math.floor(amount);
         }
       }
@@ -219,13 +219,13 @@ class treasureChest {
 function lootEnemy(enemy: Enemy) {
   enemy.loot.forEach((obj: any) => {
     if (obj.type == "gold") {
-      let amount = random(obj.amount[1], obj.amount[0]);
+      let amount = helper.random(obj.amount[1], obj.amount[0]);
       amount *= 1 + (enemy.level / 4.9);
       amount = Math.floor(amount);
       player.addGold(amount);
       spawnFloatingText(enemy.cords, `${amount}G`, "gold");
     }
-    else if (random(100, 0) <= obj.chance) {
+    else if (helper.random(100, 0) <= obj.chance) {
       var itm: any;
       // @ts-ignore
       if (obj.type == "weapon") itm = new Weapon({ ...items[obj.item] });
@@ -240,8 +240,8 @@ function lootEnemy(enemy: Enemy) {
 }
 
 function createDroppedItem(spawnLoc: tileObject, item: any) {
-  var xMod = random(0.7, 0.25);
-  var yMod = random(0.7, 0.25);
+  var xMod = helper.random(0.7, 0.25);
+  var yMod = helper.random(0.7, 0.25);
   itemData.push({ cords: { x: spawnLoc.x, y: spawnLoc.y }, itm: item, mapCords: { xMod: xMod, yMod: yMod }, map: currentMap });
   showInteractPrompt();
 }

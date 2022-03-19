@@ -13,16 +13,16 @@ class Artifact extends Item {
         if (lang.language_id !== "english")
             this.name = lang[this.id + "_name"];
         if (this.rolledStats.length === 0 && !dontRollStats) {
-            const amountOfStats = random(maxStatsForArtifactsToRoll[this.grade], 0);
+            const amountOfStats = helper.random(maxStatsForArtifactsToRoll[this.grade], 0);
             for (let i = 0; i <= amountOfStats; i++) {
                 const randomStat = helper.weightedRandom(Object.values(artifactStatRandomization));
                 const key = randomStat.id;
                 const data = randomStat;
                 if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
-                    this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
+                    this.rolledStats.push({ stat: key + "P", value: Math.floor(helper.random(data.Percent.length - 1, 0)) });
                 }
                 else if (!data.disableValue) {
-                    this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+                    this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
                 }
             }
         }

@@ -41,23 +41,23 @@ class Armor extends Item {
     // Randomization reintroduced
 
     if (this.rolledStats.length === 0 && settings.randomize_items && !dontRollStats) {
-      const amountOfMainStats = random(maxStatsForEquipmentToRoll[this.grade].main, 0);
+      const amountOfMainStats = helper.random(maxStatsForEquipmentToRoll[this.grade].main, 0);
       for (let i = 0; i <= amountOfMainStats; i++) {
         const randomStat = helper.weightedRandom(Object.values(equipmentStatRandomization.armor));
         const key = randomStat.id;
         const data = randomStat;
-        this.rolledStats.push({ armor: key, value: Math.floor(random(data.Value.length - 1, 0)) });
+        this.rolledStats.push({ armor: key, value: Math.floor(helper.random(data.Value.length - 1, 0)) });
       }
-      const amountOfSideStats = random(maxStatsForEquipmentToRoll[this.grade].side, 0);
+      const amountOfSideStats = helper.random(maxStatsForEquipmentToRoll[this.grade].side, 0);
       for (let i = 0; i <= amountOfSideStats; i++) {
         const randomStat = helper.weightedRandom(Object.values(equipmentStatRandomization.side));
         const key = randomStat.id;
         const data = randomStat;
         if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
-          this.rolledStats.push({ stat: key + "P", value: Math.floor(random(data.Percent.length - 1, 0)) });
+          this.rolledStats.push({ stat: key + "P", value: Math.floor(helper.random(data.Percent.length - 1, 0)) });
         }
         else if (!data.disableValue) {
-          this.rolledStats.push({ stat: key + "V", value: Math.floor(random(data.Value.length - 1, 0)) });
+          this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
         }
       }
     }

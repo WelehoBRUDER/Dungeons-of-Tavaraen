@@ -30,10 +30,6 @@ let dontMove = false;
 const zoomLevels = [0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
 var currentZoom = 1;
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 /* temporarily store highlight variables here */
 const highlight = {
   x: 0,
@@ -396,7 +392,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   if (isMovingCurrently) breakMoving = true;
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
-      await sleep(15);
+      await helper.sleep(15);
       if (!ability && player.speed.movementFill <= -100) {
         player.speed.movementFill += 100;
         advanceTurn();
@@ -458,7 +454,7 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
   let count: number = 0;
   moving: for (let step of path) {
     if (canMoveTo(enemy, step)) {
-      await sleep(20);
+      await helper.sleep(20);
       if (enemy.speed.movementFill <= -100) {
         enemy.speed.movementFill += 100;
         break moving;

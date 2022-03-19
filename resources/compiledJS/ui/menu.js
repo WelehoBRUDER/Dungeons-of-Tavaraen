@@ -265,7 +265,7 @@ async function gotoMainMenu(init = false) {
     menu.textContent = "";
     setTimeout(() => { dim.style.height = "0%"; }, 150);
     mainMenu.style.display = "block";
-    await sleep(10);
+    await helper.sleep(10);
     mainMenu.style.opacity = "1";
     mainMenuButtons.textContent = "";
     for (let button of mainButtons) {

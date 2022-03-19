@@ -2,9 +2,6 @@ interface icons {
   [melee: string]: string;
 }
 
-const equipmentSlots = ["chest", "legs", "gloves", "boots", "helmet", "weapon", "offhand", "artifact1", "artifact2", "artifact3"] as Array<string>;
-const random = (max: number, min: number = -100) => (Math.random() * (max - min) + min);
-
 const icons = {
   attack_damage_multiplier_icon: "resources/icons/atk.png",
   fighter_symbol_icon: "resources/icons/fighter_symbol_icon.png",

@@ -30,8 +30,4 @@ function updateDeveloperInformation() {
   `;
     devBox.append(textSyntax(txt));
 }
-function roundFloat(value, decimals = 2) {
-    let rounded = Math.pow(10, decimals);
-    return +(Math.round(value * rounded) / rounded).toFixed(decimals);
-}
 //# sourceMappingURL=dev.js.map

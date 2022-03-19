@@ -5,7 +5,13 @@ interface helper {
   reviveAllDeadEnemies: Function;
   killAllQuestEnemies: Function;
   resetAllLivingEnemiesInAllMaps: Function;
+  roundFloat: Function;
+  random: Function;
+  sleep: Function;
 }
+
+/* Helper object contains multiple misc functions used throughout the code */
+/* Helper should be expanded whenever the same function must be repeated in multiple files */
 
 let helper = {
   weightedRandom: function (Array: Array<any>) {
@@ -19,12 +25,22 @@ let helper = {
       table[i].dynamicChance += table[i].chance;
       max = table[i].dynamicChance;
     }
-    let value: number = Math.floor(random(max, 0));
+    let value: number = Math.floor(helper.random(max, 0));
     let result: any;
     for (let item of table) {
       if (item.dynamicChance >= value) { result = item; break; }
     }
     return result;
+  },
+  random: function (max: number, min: number = -100) {
+    return (Math.random() * (max - min) + min);
+  },
+  roundFloat: function (value: number, decimals: number = 2) {
+    let rounded = Math.pow(10, decimals);
+    return +(Math.round(value * rounded) / rounded).toFixed(decimals);
+  },
+  sleep: function (ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   },
   trimPlayerObjectForSaveFile: function (playerObject: PlayerCharacter) {
     const trimmed: PlayerCharacter = { ...playerObject };

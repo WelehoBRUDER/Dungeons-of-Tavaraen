@@ -8,7 +8,7 @@ class Item {
         this.name = baseItem.name;
         this.price = baseItem.price;
         this.amount = isNaN(base.amount) ? 1 : (_a = base.amount) !== null && _a !== void 0 ? _a : 1;
-        this.weight = roundFloat(baseItem.weight * this.amount);
+        this.weight = helper.roundFloat(baseItem.weight * this.amount);
         this.type = baseItem.type;
         this.img = baseItem.img;
         this.sprite = baseItem.sprite;

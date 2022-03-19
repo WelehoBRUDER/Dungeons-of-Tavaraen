@@ -278,8 +278,8 @@ class PlayerCharacter extends Character {
             this.isDead = true;
             spawnFloatingText(this.cords, lang["player_death"], "red", 32, 1800, 100);
             displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
-            const xpLoss = Math.floor(random(this.level.xp * 0.5, this.level.xp * 0.07));
-            const goldLoss = Math.floor(random(this.gold * 0.6, this.gold * 0.1));
+            const xpLoss = Math.floor(helper.random(this.level.xp * 0.5, this.level.xp * 0.07));
+            const goldLoss = Math.floor(helper.random(this.gold * 0.6, this.gold * 0.1));
             this.level.xp -= xpLoss;
             this.gold -= goldLoss;
             if (xpLoss > 0)

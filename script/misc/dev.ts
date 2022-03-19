@@ -29,9 +29,4 @@ function updateDeveloperInformation() {
   devBox.append(textSyntax(txt));
 }
 
-function roundFloat(value: number, decimals: number = 2) {
-  let rounded = Math.pow(10, decimals);
-  return +(Math.round(value * rounded) / rounded).toFixed(decimals);
-}
-
 

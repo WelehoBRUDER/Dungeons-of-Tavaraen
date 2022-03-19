@@ -11,8 +11,8 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
         floatingText.style.padding = "2px";
         floatingText.style.borderRadius = "5px";
         floatingText.style.textShadow = `0 0 12px ${color}`;
-        floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (random(2.5, 0.5))}px`;
-        floatingText.style.top = `${y + spriteSize / (random(4, 1))}px`;
+        floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (helper.random(2.5, 0.5))}px`;
+        floatingText.style.top = `${y + spriteSize / (helper.random(4, 1))}px`;
         floatingText.classList.add("floatingText");
         floatingText.style.animationDuration = `${ms / 1000}s`;
         document.body.append(floatingText);

@@ -34,14 +34,14 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     saveBg.offsetHeight; /* trigger reflow */
     // @ts-ignore
     saveBg.style.animation = null;
-    await sleep(5);
+    await helper.sleep(5);
   }
   saveNameInput.value = player.name + "_save";
   saves = saves.sort((x1, x2) => x2.time - x1.time);
   resetIds();
   let renderedSaves = 1;
   for (let save of saves) {
-    if (renderedSaves < 10 && animate) await sleep(110);
+    if (renderedSaves < 10 && animate) await helper.sleep(110);
     const saveContainer = document.createElement("div");
     const saveCanvas = document.createElement("canvas");
     const saveName = document.createElement("p");
@@ -177,7 +177,7 @@ async function closeSaveMenu() {
   saveBg.offsetHeight; /* trigger reflow */
   // @ts-ignore
   saveBg.style.animation = null;
-  await sleep(5);
+  await helper.sleep(5);
   saveBg.style.animationName = `slideToTop`;
   saveBg.style.display = "none";
   setTimeout(() => { dim.style.height = "0%"; }, 5);

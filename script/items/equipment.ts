@@ -1,4 +1,4 @@
-let invScroll = 0;
+const equipmentSlots = ["chest", "legs", "gloves", "boots", "helmet", "weapon", "offhand", "artifact1", "artifact2", "artifact3"] as Array<string>;
 
 const grade_vals = {
   common: 10,

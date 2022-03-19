@@ -344,7 +344,7 @@ class Character {
           const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
           const isPlayer = this.id === "player";
           fireProjectile(this.cords, target.cords, projectile, this.abilities.find(e => e.id === "attack"), isPlayer, this);
-          await sleep(110);
+          await helper.sleep(110);
         }
       }
       else {
@@ -353,7 +353,7 @@ class Character {
           // @ts-expect-error
           attackTarget(this, target, weaponReach(this, reach, target));
           regularAttack(this, target, this.abilities.find(e => e.id === "attack"));
-          await sleep(110);
+          await helper.sleep(110);
         }
       }
       if (this.id === "player") advanceTurn();

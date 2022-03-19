@@ -114,10 +114,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     const attackerStats = attacker.getStats();
     const targetResists = target.getResists();
     const targetArmor = target.getArmor();
-    const critRolled = attackerStats.critChance >= random(100, 0);
+    const critRolled = attackerStats.critChance >= helper.random(100, 0);
     const hitChance = attacker.getHitchance().chance;
     const evasion = target.getHitchance().evasion;
-    const evade = (evasion + random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + random(hitChance * 0.3, hitChance * -0.6) + 20);
+    const evade = (evasion + helper.random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + helper.random(hitChance * 0.3, hitChance * -0.6) + 20);
     let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
     if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
         if (ability.health_cost)
@@ -143,7 +143,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         ability.statusesEnemy.forEach((status) => {
             const _Effect = new statEffect(Object.assign({}, statusEffects[status]), ability.statusModifiers);
             const resist = target.getStatusResists()[_Effect.type];
-            const resisted = resist + random(9, -9) > ability.status_power + random(18, -18);
+            const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
                 let missing = true;
                 target.statusEffects.forEach((effect) => {
@@ -259,7 +259,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             target.tempAggro = 12;
             target.tempAggroLast = 6;
         }
-        dmg = Math.floor(dmg * random(1.2, 0.8));
+        dmg = Math.floor(dmg * helper.random(1.2, 0.8));
         if (evade)
             dmg = Math.floor(dmg / 2);
         if (dmg < 1)
@@ -358,7 +358,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 layer.style.animationName = `screenHurt`;
             }, 110);
         }
-        dmg = Math.floor(dmg * random(1.2, 0.8));
+        dmg = Math.floor(dmg * helper.random(1.2, 0.8));
         if (evade)
             dmg = Math.floor(dmg / 2);
         if (dmg < 1)
@@ -422,7 +422,7 @@ function threatDistance(targets, from) {
     targets.forEach(target => {
         var _a;
         let dist = +generatePath(from.cords, target.cords, from.canFly, true);
-        let threat = (target.getThreat() + random(18, -18)) / dist;
+        let threat = (target.getThreat() + helper.random(18, -18)) / dist;
         if (threat > highestThreat && dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
             highestThreat = threat;
             chosenTarget = target;

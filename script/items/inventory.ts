@@ -1,5 +1,6 @@
 document.querySelector<HTMLDivElement>(".playerInventory")?.querySelectorAll<HTMLDivElement>(".slot")?.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 document.querySelector<HTMLDivElement>(".playerInventory")?.addEventListener("click", e => removeContextMenu(e));
+let invScroll = 0;
 
 function renderInventory() {
   state.invOpen = true;
