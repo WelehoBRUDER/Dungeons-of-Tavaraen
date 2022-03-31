@@ -20,6 +20,8 @@ class Consumable extends Item {
     this.usesTotal = baseItem.usesTotal ?? 1;
     this.usesRemaining = base.usesRemaining ?? 1;
     this.equippedSlot = base.equippedSlot ?? -1;
+    this.statusesUser = baseItem.statusesUser ?? [];
+    this.modifiers = getAbiStatusModifiers(dummy, "attack", "dazed");
     this.stats = {};
     this.commands = {};
     this.name = lang[this.id + "_name"] ?? baseItem.name;

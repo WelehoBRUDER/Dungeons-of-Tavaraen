@@ -23,7 +23,7 @@ class Enemy extends Character {
         this.level = (_k = base.level) !== null && _k !== void 0 ? _k : 1;
         this.isUnique = (_l = base.isUnique) !== null && _l !== void 0 ? _l : false;
         this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 15))) : defaultModel.xp;
-        this.statsPerLevel = (_m = Object.assign({}, defaultModel.statsPerLevel)) !== null && _m !== void 0 ? _m : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+        this.levelingTemplate = (_m = defaultModel.levelingTemplate) !== null && _m !== void 0 ? _m : "balanced";
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;
@@ -38,13 +38,14 @@ class Enemy extends Character {
         this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         if (!this.hasBeenLeveled && this.level > 1) {
             this.updateStatModifiers();
-            for (let i = 1; i < this.level; i++) {
-                Object.entries(this.statsPerLevel).forEach((stat) => {
-                    this.stats[stat[0]] += stat[1];
-                });
+            const points = (this.level - 1) * 3;
+            const template = enemyLevelingTemplates[this.levelingTemplate];
+            for (let i = 1; i < points; i++) {
+                const stat = helper.weightedRandom(template).stat;
+                this.stats[stat]++;
             }
             Object.entries(this.damages).forEach((dmg) => {
-                this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 30)) + 1;
+                this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + (this.level - 1) / 50)) + 1;
             });
             this["stats"]["hp"] = this.getHpMax();
             this["stats"]["mp"] = this.getMpMax();

@@ -220,6 +220,7 @@ const finnish = {
     manaScrollI_name: "Taianpalautuksen Loitsukirja I",
     healingPotion_weak_name: "Parantava Eliksiiri (Heikko)",
     manaPotion_weak_name: "Taikaapalauttava Eliksiiri (Heikko)",
+    beer_name: "Kalja",
     dagger_name: "Tikari",
     dual_daggers_name: "Tikari Pari",
     stick_name: "Keppi",

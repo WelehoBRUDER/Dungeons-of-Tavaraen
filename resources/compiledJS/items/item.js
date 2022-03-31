@@ -46,7 +46,7 @@ const grades = {
     }
 };
 function itemTT(item) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     var text = "";
     if (!item.grade)
         return;
@@ -147,6 +147,13 @@ function itemTT(item) {
     if (((_k = Object.values(item.commands)) === null || _k === void 0 ? void 0 : _k.length) > 0) {
         Object.entries(item.commands).forEach((eff) => text += `${commandSyntax(eff[0], eff[1])}\n`);
     }
+    if (((_l = item.statusesUser) === null || _l === void 0 ? void 0 : _l.length) > 0) {
+        text += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
+        item.statusesUser.forEach((status) => {
+            text += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            text += statTT(new statEffect(statusEffects[status], item.modifiers), true);
+        });
+    }
     if (item.range > 0)
         text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;
     if (item.healValue)
@@ -173,12 +180,12 @@ function itemTT(item) {
         text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
         let sets = player.getArtifactSetBonuses(true);
         text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
-        Object.entries((_l = artifactSets[item.artifactSet]) === null || _l === void 0 ? void 0 : _l.twoPieceEffect).forEach((effect) => {
+        Object.entries((_m = artifactSets[item.artifactSet]) === null || _m === void 0 ? void 0 : _m.twoPieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });
         text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
-        Object.entries((_m = artifactSets[item.artifactSet]) === null || _m === void 0 ? void 0 : _m.threePieceEffect).forEach((effect) => {
+        Object.entries((_o = artifactSets[item.artifactSet]) === null || _o === void 0 ? void 0 : _o.threePieceEffect).forEach((effect) => {
             if (effect[1] !== 0)
                 text += effectSyntax(effect, true, "");
         });

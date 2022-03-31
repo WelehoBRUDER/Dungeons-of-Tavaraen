@@ -163,5 +163,6 @@ const icons = {
     warning_icon: "resources/icons/warn.png",
     movementSpeed_icon: "resources/icons/speed.png",
     attackSpeed_icon: "resources/icons/speed.png",
+    liquid_courage_icon: "resources/icons/drunk.png",
 };
 //# sourceMappingURL=icons.js.map

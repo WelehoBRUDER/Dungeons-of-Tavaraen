@@ -706,7 +706,7 @@ const maps = [
             shrines: [
       {cords: { x: 20, y: 72 }}, 
       {cords: { x: 37, y: 83 }}, 
-      {cords: { x: 90, y: 65 }}, 
+      {cords: { x: 91, y: 65 }}, 
     ],
         },{
             name: "Testing Dungeon",

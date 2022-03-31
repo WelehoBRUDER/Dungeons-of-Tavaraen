@@ -207,6 +207,13 @@ function itemTT(item: any) {
   if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
   }
+  if (item.statusesUser?.length > 0) {
+    text += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
+    item.statusesUser.forEach((status: string) => {
+      text += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+      text += statTT(new statEffect(statusEffects[status], item.modifiers), true);
+    });
+  }
   if (item.range > 0) text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;
   if (item.healValue) text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
   if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;

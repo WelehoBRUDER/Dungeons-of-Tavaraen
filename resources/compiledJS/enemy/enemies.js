@@ -62,10 +62,7 @@ const enemies = {
             new Ability(abilities.attack, dummy),
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 1,
-            vit: 1
-        },
+        levelingTemplate: "slime_default",
         loot: [
             { type: "gold", amount: [1, 5] }
         ]
@@ -128,10 +125,7 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 1,
-            vit: 1
-        },
+        levelingTemplate: "slime_default",
         loot: [
             { type: "gold", amount: [4, 11] }
         ]
@@ -194,10 +188,7 @@ const enemies = {
             new Ability(abilities.attack, dummy)
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 1,
-            vit: 1
-        },
+        levelingTemplate: "slime_default",
         loot: [
             { type: "gold", amount: [4, 11] }
         ]
@@ -263,11 +254,7 @@ const enemies = {
             { id: "fast" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 1,
-            dex: 1,
-            vit: 2
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
             { type: "gold", amount: [2, 11] }
@@ -335,11 +322,7 @@ const enemies = {
             { id: "fast" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 2,
-            dex: 1,
-            vit: 1
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
             { type: "gold", amount: [2, 11] }
@@ -408,11 +391,7 @@ const enemies = {
             { id: "fast" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 1,
-            dex: 2,
-            vit: 1
-        },
+        levelingTemplate: "beast_ranged",
         loot: [
             { type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25 },
             { type: "gold", amount: [2, 11] }
@@ -476,11 +455,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 2,
-            dex: 1,
-            vit: 1
-        },
+        levelingTemplate: "skeleton_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
             { type: "gold", amount: [4, 15] }
@@ -545,11 +520,7 @@ const enemies = {
             { id: "no_natural_regen" },
             { id: "magically_impotent" },
         ],
-        statsPerLevel: {
-            str: 1,
-            dex: 2,
-            vit: 1
-        },
+        levelingTemplate: "skeleton_ranged",
         retreatLimit: 0,
         loot: [
             { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20 },
@@ -615,11 +586,7 @@ const enemies = {
         statModifiers: [
             { id: "magical_regen" },
         ],
-        statsPerLevel: {
-            dex: 1,
-            int: 2,
-            vit: 1
-        },
+        levelingTemplate: "skeleton_mage",
         retreatLimit: 0,
         loot: [
             { type: "gold", amount: [4, 15] }
@@ -687,11 +654,7 @@ const enemies = {
             { id: "magical_regen" },
             { id: "weaker_natural_ability" }
         ],
-        statsPerLevel: {
-            dex: 2,
-            int: 2,
-            vit: 1
-        },
+        levelingTemplate: "skeleton_mage",
         retreatLimit: 0,
         loot: [
             { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5 },
@@ -759,11 +722,7 @@ const enemies = {
             { id: "no_natural_regen" },
             { id: "weaker_natural_ability" }
         ],
-        statsPerLevel: {
-            str: 2,
-            vit: 2,
-            cun: 1
-        },
+        levelingTemplate: "berserker_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 15 },
             { type: "weapon", amount: [1, 1], item: "stick", chance: 20 },
@@ -827,11 +786,7 @@ const enemies = {
         statModifiers: [
             { id: "no_natural_regen" },
         ],
-        statsPerLevel: {
-            dex: 2,
-            vit: 1,
-            cun: 2
-        },
+        levelingTemplate: "berserker_ranged",
         shootsProjectile: "hunterJavelinProjectile",
         loot: [
             { type: "gold", amount: [6, 18] }
@@ -900,11 +855,7 @@ const enemies = {
             { id: "orc_frenzy", },
             { id: "orc_resilience", }
         ],
-        statsPerLevel: {
-            str: 2,
-            vit: 2,
-            cun: 1
-        },
+        levelingTemplate: "berserker_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15 },
             { type: "armor", amount: [1, 1], item: "ironShield", chance: 10 },
@@ -974,11 +925,7 @@ const enemies = {
             { id: "orc_frenzy", },
             { id: "orc_resilience", }
         ],
-        statsPerLevel: {
-            str: 2,
-            vit: 2,
-            cun: 1
-        },
+        levelingTemplate: "bulwark",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 15 },
             { type: "armor", amount: [1, 1], item: "silverShield", chance: 8 },
@@ -1049,11 +996,7 @@ const enemies = {
             { id: "orc_frenzy", },
             { id: "orc_resilience", }
         ],
-        statsPerLevel: {
-            str: 3,
-            vit: 3,
-            cun: 1
-        },
+        levelingTemplate: "berserker_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "galadorSpear", chance: 100 },
             { type: "gold", amount: [180, 260] }
@@ -1119,11 +1062,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 3,
-            dex: 0,
-            vit: 3
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "gold", amount: [22, 44] }
         ]
@@ -1188,11 +1127,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 3,
-            dex: 0,
-            vit: 4
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "gold", amount: [22, 44] }
         ]
@@ -1256,11 +1191,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 4,
-            dex: 0,
-            vit: 3
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
             { type: "gold", amount: [26, 51] }
@@ -1325,11 +1256,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 4,
-            dex: 0,
-            vit: 4
-        },
+        levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
             { type: "gold", amount: [53, 129] }
@@ -1396,10 +1323,7 @@ const enemies = {
             { id: "slow" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 4,
-            vit: 4
-        },
+        levelingTemplate: "bulwark",
         loot: [
             { type: "gold", amount: [65, 150] }
         ]
@@ -1465,10 +1389,7 @@ const enemies = {
             { id: "slow" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 4,
-            vit: 4
-        },
+        levelingTemplate: "bulwark",
         loot: [
             { type: "weapon", amount: [1, 1], item: "stoneHalberd", chance: 12 },
             { type: "gold", amount: [90, 210] }
@@ -1535,10 +1456,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 2,
-            vit: 2
-        },
+        levelingTemplate: "balanced",
         loot: [
             { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
             { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
@@ -1612,11 +1530,7 @@ const enemies = {
             { id: "magically_impotent" },
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 2,
-            vit: 1,
-            cun: 1
-        },
+        levelingTemplate: "magical_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
             { type: "offhand", amount: [1, 1], item: "silverShield", chance: 10 },
@@ -1692,10 +1606,7 @@ const enemies = {
             { id: "weaker_natural_ability" }
         ],
         retreatLimit: 0,
-        statsPerLevel: {
-            str: 3,
-            vit: 1
-        },
+        levelingTemplate: "magical_melee",
         loot: [
             { type: "gold", amount: [288, 541] }
         ]

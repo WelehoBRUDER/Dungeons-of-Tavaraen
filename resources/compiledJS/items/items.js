@@ -1424,6 +1424,21 @@ const items = {
         manaValue: 40,
         stacks: true,
         spriteMap: { x: 256, y: 384 }
+    },
+    beer: {
+        id: "beer",
+        name: "Beer",
+        img: "resources/icons/beer.png",
+        sprite: "",
+        price: 60,
+        weight: 0.5,
+        type: "consumable",
+        grade: "common",
+        slot: "",
+        equippedSlot: -1,
+        statusesUser: ["liquid_courage"],
+        stacks: true,
+        spriteMap: { x: 256, y: 384 }
     }
 };
 //# sourceMappingURL=items.js.map

@@ -202,6 +202,22 @@ class Character {
                 }
             });
         };
+        this.addEffect = (effect, modifiers = {}) => {
+            if (!(effect === null || effect === void 0 ? void 0 : effect.id)) {
+                effect = new statEffect(Object.assign({}, statusEffects[effect]), modifiers);
+            }
+            let missing = true;
+            this.statusEffects.forEach((_effect) => {
+                if (_effect.id == effect.id) {
+                    _effect.last.current = effect.last.total;
+                    missing = false;
+                    return;
+                }
+            });
+            if (missing) {
+                this.statusEffects.push(Object.assign({}, effect));
+            }
+        };
         this.doNormalAttack = async (target) => {
             var _a, _b, _c;
             // @ts-expect-error

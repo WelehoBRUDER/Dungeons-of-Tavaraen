@@ -124,6 +124,11 @@ function useConsumable(itm) {
     player.stats.mp += itm.manaValue;
     spawnFloatingText(player.cords, itm.manaValue.toString(), "cyan", 36, 1000, 200);
   }
+  if (itm.statusesUser) {
+    itm.statusesUser.forEach(status => {
+      player.addEffect(status, itm.modifiers);
+    });
+  }
   displayText(`<c>cyan<c>[ACTION] <c>white<c>${lang["useConsumable"]}`);
   if (itm.stacks) {
     itm.amount--;

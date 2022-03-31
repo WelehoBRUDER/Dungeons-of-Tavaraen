@@ -21,7 +21,7 @@ class statEffect {
         this.break_concentration = (_c = defaultEffect.break_concentration) !== null && _c !== void 0 ? _c : false;
         function effectsInit(effects, id) {
             let total = effects;
-            Object.entries(modifiers.effects).forEach((eff) => {
+            Object.entries(modifiers === null || modifiers === void 0 ? void 0 : modifiers.effects).forEach((eff) => {
                 const key = eff[0];
                 const val = eff[1].value;
                 const mod = eff[1].modif;

@@ -77,6 +77,7 @@ interface characterObject {
   getHitchance?: Function;
   isRooted?: Function;
   inventory?: any;
+  addEffect?: Function;
 }
 
 interface statusObject {
@@ -149,6 +150,7 @@ class Character {
   speed?: any;
   getSpeed?: Function;
   doNormalAttack?: Function;
+  addEffect?: Function;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -323,6 +325,23 @@ class Character {
       });
     };
 
+    this.addEffect = (effect, modifiers = {}) => {
+      if (!effect?.id) {
+        effect = new statEffect({ ...statusEffects[effect] }, modifiers);
+      }
+      let missing = true;
+      this.statusEffects.forEach((_effect: statEffect) => {
+        if (_effect.id == effect.id) {
+          _effect.last.current = effect.last.total;
+          missing = false;
+          return;
+        }
+      });
+      if (missing) {
+        this.statusEffects.push({ ...effect });
+      }
+    };
+
     this.doNormalAttack = async (target: any) => {
       // @ts-expect-error
       const reach: number = this.id === "player" ? this.weapon?.range : this.attackRange;
@@ -494,4 +513,5 @@ const baseStats = [
 //     hp: 10,
 //     mp: 5
 //   }
+
 // })

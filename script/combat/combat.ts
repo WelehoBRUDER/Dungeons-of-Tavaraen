@@ -51,15 +51,9 @@ function buffOrHeal(character: characterObject, ability: ability) {
   }
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
-      if (!character.statusEffects.find((eff: statEffect) => eff.id == status)) {
-        // @ts-ignore
-        character.statusEffects.push(new statEffect({ ...statusEffects[status] }, ability.statusModifiers));
-        if (character.id == player.id) character.statusEffects.find((eff: statEffect) => eff.id == status).last.current -= 1;
-      } else {
-        character.statusEffects.find((eff: statEffect) => eff.id == status).last.current += statusEffects[status].last.total;
-      }
-      // @ts-ignore
-      statusEffects[status].last.current = statusEffects[status].last.total;
+      const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+      if (character.id === "player") _Effect.last.current -= 1;
+      character.addEffect(_Effect);
       spawnFloatingText(character.cords, ability.line, "crimson", 36);
       let string: string = "";
       if (character.id == "player") string = lang[ability.id + "_action_desc_pl"];
@@ -127,17 +121,7 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       const resist = target.getStatusResists()[_Effect.type];
       const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
       if (!resisted) {
-        let missing = true;
-        target.statusEffects.forEach((effect: statEffect) => {
-          if (effect.id == status) {
-            effect.last.current += _Effect.last.total;
-            missing = false;
-            return;
-          }
-        });
-        if (missing) {
-          target.statusEffects.push({ ..._Effect });
-        }
+        target.addEffect(_Effect);
       }
       else {
         spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
@@ -146,25 +130,22 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   }
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
+      const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+      if (attacker.id === "player") _Effect.last.current -= 1;
       if (!attacker.statusEffects.find((eff: statEffect) => eff.id == status)) {
-        // @ts-ignore
-        attacker.statusEffects.push(new statEffect({ ...statusEffects[status] }, ability.statusModifiers));
-        if (attacker.id == player.id) attacker.statusEffects.find((eff: statEffect) => eff.id == status).last.current -= 1;
-      } else {
-        attacker.statusEffects.find((eff: statEffect) => eff.id == status).last.current += statusEffects[status].last.total;
-      }
-      // @ts-ignore
-      statusEffects[status].last.current = statusEffects[status].last.total;
-      spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
-      if (!isAoe) {
-        let string: string = "";
-        if (attacker.id == "player") string = lang[ability.id + "_action_desc_pl"];
-        else string = lang[ability.id + "_action_desc"];
-        if (attacker.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${string}`);
-        else displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
-      }
+        attacker.addEffect(_Effect);
+        spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
+        if (!isAoe) {
+          let string: string = "";
+          if (attacker.id == "player") string = lang[ability.id + "_action_desc_pl"];
+          else string = lang[ability.id + "_action_desc"];
+          if (attacker.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${string}`);
+          else displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
+        }
+      };
     });
   }
+
   if (target.isFoe) {
     let dmg: number = 0;
     if (!ability.damages) {

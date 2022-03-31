@@ -407,6 +407,23 @@ const statusEffects = {
         textIcon: icons.health_cost_icon,
         icon: "resources/icons/health_cost.png"
     },
+    liquid_courage: {
+        id: "liquid_courage",
+        name: "Liquid Courage",
+        effects: {
+            expGainP: 25,
+            hpMaxP: 5,
+            damageP: -10,
+            hitChanceV: -5,
+            evasionV: -5
+        },
+        last: {
+            total: 50,
+            current: 50
+        },
+        textIcon: icons.liquid_courage_icon,
+        icon: "resources/icons/drunk.png"
+    },
 };
 // this allows player to deal more damage to specific enemies.
 // extends to races too, but no TT

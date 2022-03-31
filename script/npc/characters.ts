@@ -57,6 +57,7 @@ const NPCInventories = {
       { ...items["apprenticeBoots"], unique: false, price: 500 },
       { id: "healingPotion_weak", unique: false, price: 250 },
       { id: "manaPotion_weak", unique: false, price: 250 },
+      { id: "beer", unique: false, price: 70 },
     ],
   },
   blacksmithMaroch: {
