@@ -88,6 +88,7 @@ function activateShrine() {
                 player.stats.mp = player.getMpMax();
                 player.respawnPoint.cords = shrine.cords;
                 player.usedShrines.push({ cords: shrine.cords, map: currentMap });
+                player.statusEffects = [];
                 spawnFloatingText(player.cords, lang["shrine_activated"], "lime", 30, 500, 75);
                 updateUI();
                 modifyCanvas();

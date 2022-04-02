@@ -220,11 +220,17 @@ function generateEffects() {
   const effects = <HTMLDivElement>document.querySelector(".playerEffects");
   effects.textContent = "";
   player.statusEffects.forEach((effect: statEffect) => {
+    const wrapper = document.createElement("div");
     const img = document.createElement("img");
+    const bg = document.createElement("div");
+    wrapper.classList.add("status");
     img.classList.add("status");
+    bg.classList.add("status-bg");
+    bg.style.height = `${Math.min((effect.last.current / effect.last.total) * 100, 100)}%`;
     img.src = effect.icon;
-    tooltip(img, statTT(effect));
-    effects.append(img);
+    wrapper.append(img, bg);
+    tooltip(wrapper, statTT(effect));
+    effects.append(wrapper);
   });
 }
 

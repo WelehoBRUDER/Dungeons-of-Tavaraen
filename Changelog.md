@@ -3,12 +3,15 @@
 ### Major update
 
 ## New Additions
+
 - Added 1 new consumable
 
 ## Fixes & Tweaks
 
 - Completely refactored code base to make working with it easier.
 - Status effects no longer add more time when gained, instead resetting the timer.
+- Status effect time remaining is now visualised with a red background.
+- Resting at a shrine now clears all status effects.
 
 # 1.0.9 ~ 16.3.2022
 

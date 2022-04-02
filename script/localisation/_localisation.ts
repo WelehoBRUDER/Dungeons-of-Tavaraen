@@ -654,6 +654,8 @@ const finnish = {
   effect_heightened_senses_desc: "Aistisi kiehuvat rajoillaan ja tunnet ympäristösi kuin omat taskusi.",
   effect_paralyzed_name: "Lamautunut",
   effect_paralyzed_desc: "Et kykene käyttämään yhtäkään lihasta kehossasi.",
+  effect_liquid_courage_name: "Humalan Huippu",
+  effect_liquid_courage_desc: "Alkoholin vaikutus rohkeuttaa henkeäsi, mutta hidastaa kehoasi.",
 
   // Abilities and stuff
   attack_action_desc_pl: "Teet [DMG] vahinkoa hahmoon [TARGET] hyökkäykselläsi.",
@@ -1518,6 +1520,8 @@ const english = {
   effect_heightened_senses_desc: "Your senses have peaked, making you more aware",
   effect_paralyzed_name: "Paralyzed",
   effect_paralyzed_desc: "You are paralyzed and can't move a muscle.",
+  effect_liquid_courage_name: "Liquid Courage",
+  effect_liquid_courage_desc: "You are feeling a little more confident.",
 
   // Abilities and stuff
   attack_action_desc_pl: "<c>yellow<c>You<c>white<c> connect an attack against [TARGET] and harm them for [DMG] damage.",
