@@ -1,4 +1,4 @@
-# 1.1 ~ 17.3.2022
+# 1.1 ~ 7.4.2022
 
 ### Major update
 
@@ -12,6 +12,9 @@
 - Status effects no longer add more time when gained, instead resetting the timer.
 - Status effect time remaining is now visualised with a red background.
 - Resting at a shrine now clears all status effects.
+- Summons now despawn on player death.
+- Codex now displays hover info instead of nothing when opening items and perks.
+- Rebalanced some items.
 
 # 1.0.9 ~ 16.3.2022
 

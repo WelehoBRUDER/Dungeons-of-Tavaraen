@@ -533,6 +533,7 @@ function respawnPlayer() {
     state.inCombat = false;
     state.isSelected = false;
     state.abiSelected = {};
+    combatSummons = [];
     enemiesHadTurn = 0;
     turnOver = true;
     player.updateAbilities();

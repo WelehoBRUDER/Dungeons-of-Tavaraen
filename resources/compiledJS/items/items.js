@@ -19,6 +19,9 @@ const items = {
         range: 1,
         img: "resources/icons/weapon_dagger.png",
         sprite: "rustyDagger",
+        stats: {
+            attackSpeedV: 25
+        },
         price: 10,
         weight: 1.2,
         type: "weapon",

@@ -142,6 +142,24 @@ function clickListEntry(entry) {
     if (category === "enemies") {
         createEnemyInfo(object);
     }
+    else if (category === "items") {
+        createItemInfo(object);
+    }
+    else if (category.includes("perks")) {
+        createPerkInfo(object);
+    }
+    // else if (category === "npcs") {
+    //   createNPCInfo(object);
+    // }
+    // else if (category === "quests") {
+    //   createQuestInfo(object);
+    // }
+    // else if (category === "encounters") {
+    //   createEncounterInfo(object);
+    // }
+    // else if (category === "achievements") {
+    //   createAchievementInfo(object);
+    // }
     // let text = `<f>30px<f><c>silver<c>${object.name}`;
     // text += `\n<i>${object.img ?? object.icon}<i>`;
     //contentContainer.append(textSyntax(text));
