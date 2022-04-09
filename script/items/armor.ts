@@ -60,6 +60,7 @@ class Armor extends Item {
           this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
         }
       }
+      console.log(this.rolledStats);
     }
 
     this.rolledStats?.forEach((stat: any) => {
@@ -69,7 +70,7 @@ class Armor extends Item {
         else this.armor[stat.armor] += Math.floor(val * gradeStatMultis[this.grade]);
       }
       else {
-        let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+        let val = equipmentStatRandomization["side"][stat.stat.substring(0, stat.stat.length - 1)];
         val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
         if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
         else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);

@@ -70,7 +70,7 @@ class Weapon extends Item {
           else this.damages[stat.damage] += Math.floor(val * gradeStatMultis[this.grade]);
         }
         else {
-          let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+          let val = equipmentStatRandomization["side"][stat.stat.substring(0, stat.stat.length - 1)];
           val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
           if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
           else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
