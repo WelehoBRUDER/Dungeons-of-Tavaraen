@@ -61,6 +61,8 @@ let brush = {
   clutter: null,
 };
 
+let misc_brush = null;
+
 let select = {
   x: null,
   y: null,
@@ -118,6 +120,12 @@ function createMap() {
         chestSpriteId != null
           ? document.querySelector("." + chestSpriteId)
           : null;
+      const entranceId =
+        editingMap?.entranceMap?.[offsetMapAloitusY + y]?.[
+          offsetMapAloitusX + x
+        ]?.sprite;
+      const entranceImg =
+        entranceId != null ? document.querySelector("." + entranceId) : null;
 
       if (sprite) {
         ctx.drawImage(
@@ -208,6 +216,15 @@ function createMap() {
           newSize
         );
       }
+      if (entranceImg) {
+        ctx.drawImage(
+          entranceImg,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
+      }
     }
   }
 
@@ -255,12 +272,69 @@ function createMap() {
         if (!editingMap.chestMap[valittuY]) editingMap.chestMap[valittuY] = [];
         editingMap.chestMap[valittuY][valittuX] = new treasureChest({
           ...chestTemplates[chestSelect.id],
+          spawnMap: editingMap.id,
+          cords: { x: valittuX, y: valittuY },
         });
+      } else if (misc_brush !== null) {
+        if (misc_brush == "shrine") {
+          if (!editingMap.shrineMap[valittuY])
+            if (!editingMap.shrineMap?.[valittuY])
+              editingMap.shrineMap[valittuY] = [];
+          editingMap.shrineMap[valittuY][valittuX] = {
+            cords: { x: valittuX, y: valittuY },
+          };
+        } else if (misc_brush == "message") {
+          if (!editingMap.messageMap[valittuY])
+            editingMap.messageMap[valittuY] = [];
+          let message_id = prompt("Message ID");
+          if (!message_id || message_id == "") {
+            console.log("Cancelled");
+          } else {
+            editingMap.messageMap[valittuY][valittuX] = {
+              id: message_id,
+              cords: { x: valittuX, y: valittuY },
+            };
+          }
+        } else if (misc_brush == "entrance") {
+          if (!editingMap.entranceMap[valittuY])
+            editingMap.entranceMap[valittuY] = [];
+          let entrance_id = prompt("Entrance ID");
+          let entrance_to = prompt(
+            "Specify the id of the map this entrance leads to"
+          );
+          let entrance_x = +prompt(
+            "Specify the x coordinate of where this entrance leads to"
+          );
+          let entrance_y = +prompt(
+            "Specify the y coordinate of where this entrance leads to"
+          );
+          let use_default = confirm("Use default entrance sprite?");
+          let entrance_sprite = "entrance";
+          if (!use_default) {
+            entrance_sprite = prompt("Specify the entrance sprite to be used");
+          }
+          if (!entrance_id || entrance_id == "") {
+            console.log("Cancelled");
+          } else {
+            editingMap.entranceMap[valittuY][valittuX] = {
+              id: entrance_id,
+              path: {
+                to: entrance_to,
+                cords: { x: entrance_x, y: entrance_y },
+              },
+              cords: { x: valittuX, y: valittuY },
+              sprite: entrance_sprite,
+            };
+          }
+        }
       } else if (editingMap.vihuMap?.[valittuY]?.[valittuX]?.id) {
         let vihu = editingMap.vihuMap[valittuY][valittuX];
         console.log("klikkasit vihua " + vihu.id);
         selectedEnemyCords = vihu.cords;
         editEnemyStats(vihu);
+      } else if (editingMap.shrineMap?.[valittuY]?.[valittuX]) {
+        console.log("pyhäkkö poistettu");
+        delete editingMap.shrineMap[valittuY][valittuX];
       } else {
         selectedEnemyCords = null;
       }
@@ -661,6 +735,17 @@ function printMap() {
     });
   });
   pyhäkötArray += "\t]";
+  let reititArray = `[\n`;
+  editingMap.entranceMap?.forEach((rivi, y) => {
+    rivi.forEach((reitti, x) => {
+      let text = `cords: { x: ${x}, y: ${y} }`;
+      reititArray +=
+        "\t\t" +
+        `{id: "${reitti.id}", path: {to: "${reitti.path.to}", cords: {x: ${reitti.path.cords.x}, y: ${reitti.path.cords.y}}}, ${text}}` +
+        ", \n";
+    });
+  });
+  reititArray += "\t]";
   let editingMapText = `{
     \tname: "${editingMap.name}",
     \tarea: "${editingMap.area}",
@@ -671,6 +756,7 @@ function printMap() {
     \ttreasureChests: ${arkutArray},
     \tmessages: ${viestitArray},
     \tshrines: ${pyhäkötArray},
+    \tentrances: ${reititArray}
     },`;
   let totalText = "";
   let addMap = true;
@@ -792,6 +878,12 @@ function importThisMap(index) {
     if (!editingMap.messageMap[y]) editingMap.messageMap[y] = [];
     editingMap.messageMap[y][x] = msg;
   });
+  editingMap.entrances?.forEach(({ ...entrance }) => {
+    let y = entrance.cords.y;
+    let x = entrance.cords.x;
+    if (!editingMap.entranceMap[y]) editingMap.entranceMap[y] = [];
+    editingMap.entranceMap[y][x] = entrance;
+  });
   cam.x = Math.ceil(editingMap.base[0].length / 2);
   cam.y = Math.ceil(editingMap.base.length / 2);
   createMap();
@@ -902,6 +994,7 @@ function confirmMapCreate() {
   editingMap.vihuMap = [];
   editingMap.messageMap = [];
   editingMap.shrineMap = [];
+  editingMap.entranceMap = [];
 
   cam.x = Math.ceil(width / 2);
   cam.y = Math.ceil(height / 2);
@@ -935,33 +1028,36 @@ function mapProps() {
   let clu = editingMap.clutter[select.y]?.[select.x];
   let text = document.createElement("pre");
   text.textContent = `
-CamX: ${cam.x}
-CamY: ${cam.y}
+    CamX: ${cam.x}
+    CamY: ${cam.y}
 
-MapWidth: ${editingMap.base[0].length}
-MapHeight: ${editingMap.base.length}
-MapArea: ${editingMap.base.length * editingMap.base[0].length + " tiles"}
-MapId: ${editingMap.id}
+    MapWidth: ${editingMap.base[0].length}
+    MapHeight: ${editingMap.base.length}
+    MapArea: ${editingMap.base.length * editingMap.base[0].length + " tiles"}
+    MapId: ${editingMap.id}
 
-SelectedX: ${select.x}
-SelectedY: ${select.y}
-TileName: ${tiles[pos]?.name ? tiles[pos].name : "Void"}
-TileId: ${tiles[pos]?.id != null ? tiles[pos].id : "-1"} 
-isWall: ${tiles[pos]?.isWall ? tiles[pos].isWall : "false"}
-isLedge: ${tiles[pos]?.isLedge ? tiles[pos].isLedge : "false"}
+    SelectedX: ${select.x}
+    SelectedY: ${select.y}
+    TileName: ${tiles[pos]?.name ? tiles[pos].name : "Void"}
+    TileId: ${tiles[pos]?.id != null ? tiles[pos].id : "-1"} 
+    isWall: ${tiles[pos]?.isWall ? tiles[pos].isWall : "false"}
+    isLedge: ${tiles[pos]?.isLedge ? tiles[pos].isLedge : "false"}
 
-${clutters[clu]?.name && clu != 0 ? "Clutter: " + clutters[clu].name : ""}
-${
-  clutters[clu]?.isWall != null && clu != 0
-    ? "isWall: " + clutters[clu].isWall
-    : ""
-}
+    ${clutters[clu]?.name && clu != 0 ? "Clutter: " + clutters[clu].name : ""}
+    ${
+      clutters[clu]?.isWall != null && clu != 0
+        ? "isWall: " + clutters[clu].isWall
+        : ""
+    }
 
-BrushTile: ${brush.tile !== null ? brush?.tile.name : "not selected"}
-BrushClutter: ${brush.clutter !== null ? brush?.clutter.name : "not selected"}
-EnemySelect: ${enemySelect !== null ? enemySelect.id : "not selected"}
-ChestSelect: ${chestSelect !== null ? chestSelect.id : "not selected"}
-`;
+    BrushTile: ${brush.tile !== null ? brush?.tile.name : "not selected"}
+    BrushClutter: ${
+      brush.clutter !== null ? brush?.clutter.name : "not selected"
+    }
+    EnemySelect: ${enemySelect !== null ? enemySelect.id : "not selected"}
+    ChestSelect: ${chestSelect !== null ? chestSelect.id : "not selected"}
+    MiscBrush: ${misc_brush !== null ? misc_brush : "not selected"}
+    `;
   document.querySelector("#tileProperties").appendChild(text);
 }
 
@@ -1389,10 +1485,33 @@ function testaaKopio() {
   console.log(vihu2);
 }
 
+function addShrine() {
+  misc_brush = "shrine";
+  mapProps();
+}
+
+function addMessage() {
+  misc_brush = "message";
+  mapProps();
+}
+
+function addEntrance() {
+  misc_brush = "entrance";
+  mapProps();
+}
+
+function clearMiscBrush() {
+  misc_brush = null;
+  mapProps();
+}
+
 function saveMapToMemory() {
   let saveMap = { ...editingMap };
   const enemyArray = [];
   const chestArray = [];
+  const shrineArray = [];
+  const messageArray = [];
+  const entranceArray = [];
   saveMap.vihuMap.map((_en) =>
     _en.map((en) => {
       if (en == null) return;
@@ -1415,12 +1534,44 @@ function saveMapToMemory() {
       chestArray.push(chest);
     })
   );
+  saveMap.shrineMap.map((_shrine) =>
+    _shrine.map((shrine) => {
+      let _shrine = { ...shrine };
+      shrine = {};
+      shrine.cords = _shrine.cords;
+      shrineArray.push(shrine);
+    })
+  );
+  saveMap.messageMap.map((_message) =>
+    _message.map((message) => {
+      let _message = { ...message };
+      message = {};
+      message.id = _message.id;
+      message.cords = _message.cords;
+      messageArray.push(message);
+    })
+  );
+  saveMap.entranceMap.map((_entrance) =>
+    _entrance.map((entrance) => {
+      let _entrance = { ...entrance };
+      entrance = {};
+      entrance.id = _entrance.id;
+      entrance.sprite = _entrance.sprite;
+      entrance.path = _entrance.path;
+      entrance.cords = _entrance.cords;
+      entranceArray.push(entrance);
+    })
+  );
   saveMap.vihuMap = null;
   saveMap.chestMap = null;
   saveMap.messageMap = null;
   saveMap.shrineMap = null;
+  saveMap.entranceMap = null;
   saveMap.enemies = enemyArray;
   saveMap.treasureChests = chestArray;
+  saveMap.shrines = shrineArray;
+  saveMap.messages = messageArray;
+  saveMap.entrances = entranceArray;
   localStorage.setItem("DOT_editor_current_map", JSON.stringify(saveMap));
 }
 
@@ -1444,11 +1595,13 @@ function loadMapFromMemory() {
       cords: chest.cords,
     });
   });
+  console.log(loadedMap);
   editingMap = { ...loadedMap };
   editingMap.vihuMap = [];
   editingMap.chestMap = [];
   editingMap.shrineMap = [];
   editingMap.messageMap = [];
+  editingMap.entranceMap = [];
   editingMap?.enemies?.forEach(({ ...vihu }) => {
     let y = vihu.cords.y;
     let x = vihu.cords.x;
@@ -1460,6 +1613,7 @@ function loadMapFromMemory() {
     let x = chest.cords.x;
     if (!editingMap.chestMap[y]) editingMap.chestMap[y] = [];
     editingMap.chestMap[y][x] = chest;
+    console.log(editingMap.chestMap);
   });
   editingMap?.shrines?.forEach(({ ...shrine }) => {
     let y = shrine.cords.y;
@@ -1472,6 +1626,12 @@ function loadMapFromMemory() {
     let x = msg.cords.x;
     if (!editingMap.messageMap[y]) editingMap.messageMap[y] = [];
     editingMap.messageMap[y][x] = msg;
+  });
+  editingMap?.entrances?.forEach(({ ...entrance }) => {
+    let y = entrance.cords.y;
+    let x = entrance.cords.x;
+    if (!editingMap.entranceMap[y]) editingMap.entranceMap[y] = [];
+    editingMap.entranceMap[y][x] = entrance;
   });
   cam.x = Math.ceil(editingMap.base[0].length / 2);
   cam.y = Math.ceil(editingMap.base.length / 2);

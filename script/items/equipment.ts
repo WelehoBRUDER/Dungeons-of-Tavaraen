@@ -163,162 +163,162 @@ const equipmentStatRandomization = {
   damage: {
     slash: {
       id: "slash",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-3, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     crush: {
       id: "crush",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-3, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     pierce: {
       id: "pierce",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-3, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     magic: {
       id: "magic",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-3, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     dark: {
       id: "dark",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     divine: {
       id: "divine",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     fire: {
       id: "fire",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     lightning: {
       id: "lightning",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
     ice: {
       id: "ice",
-      Value: [1, 2, 3, 4, 5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
       chance: 8
     },
   },
   armor: {
     physical: {
       id: "physical",
-      Value: [2, 4, 6, 8],
+      Value: [-4, -2, 2, 4, 6, 8],
       chance: 20
     },
     magical: {
       id: "magical",
-      Value: [2, 4, 6, 8],
+      Value: [-4, -2, 2, 4, 6, 8],
       chance: 20
     },
     elemental: {
       id: "elemental",
-      Value: [2, 4, 6, 8],
+      Value: [-4, -2, 2, 4, 6, 8],
       chance: 20
     }
   },
   side: {
     str: {
       id: "str",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-4, -2, 2, 3, 6, 8, 10, 13],
       chance: 10
     },
     dex: {
       id: "dex",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-4, -2, 2, 3, 6, 8, 10, 13],
       chance: 10
     },
     vit: {
       id: "vit",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-4, -2, 2, 3, 6, 8, 10, 13],
       chance: 10
     },
     int: {
       id: "int",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-4, -2, 2, 3, 6, 8, 10, 13],
       chance: 10
     },
     cun: {
       id: "cun",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-4, -2, 2, 3, 6, 8, 10, 13],
       chance: 10
     },
     hpMax: {
       id: "hpMax",
-      Value: [4, 7, 10, 14, 17],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-5, -2, 4, 7, 10, 14, 17],
+      Percent: [-6, -3, 2, 3, 6, 8, 10, 13],
       chance: 7
     },
     mpMax: {
       id: "mpMax",
-      Value: [3, 5, 6, 9],
-      Percent: [2, 3, 6, 8, 10, 13],
+      Value: [-5, -2, 3, 5, 6, 9],
+      Percent: [-6, -3, 2, 3, 6, 8, 10, 13],
       chance: 7
     },
     critChance: {
       id: "critChance",
-      Percent: [1, 1.5, 2, 2.5, 3, 3.5, 4.1],
+      Percent: [-1.5, -0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.1],
       disableValue: true,
       chance: 5
     },
     critDamage: {
       id: "critDamage",
-      Percent: [2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
+      Percent: [-2, -1, 2, 3.3, 4.7, 5.6, 7.4, 9.3, 10],
       disableValue: true,
       chance: 5
     },
     movementSpeed: {
       id: "movementSpeed",
       disablePercent: true,
-      Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+      Value: [-5, -2, 2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
       chance: 3
     },
     evasion: {
       id: "evasion",
       disablePercent: true,
-      Value: [1, 2, 3, 4, 5, 6],
+      Value: [-2, -1, 1, 2, 3, 4, 5, 6],
       chance: 6
     },
     rangedDamage: {
       id: "rangedDamage",
       disableValue: true,
-      Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+      Percent: [-1.5, -0.7, 0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     meleeDamage: {
       id: "meleeDamage",
       disableValue: true,
-      Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+      Percent: [-1.5, -0.7, 0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     spellDamage: {
       id: "spellDamage",
       disableValue: true,
-      Percent: [0.5, 1.5, 2.7, 3.8, 4.5, 5],
+      Percent: [-1.5, -0.7, 0.5, 1.5, 2.7, 3.8, 4.5, 5],
       chance: 3
     },
     resistAll: {
       id: "resistAll",
-      Value: [1, 2, 3, 4, 5],
-      Percent: [1.5, 3, 4.5, 6, 7.5],
+      Value: [-2, -1, 1, 2, 3, 4, 5],
+      Percent: [-3, -1, 1.5, 3, 4.5, 6, 7.5],
       chance: 2
     },
     attackSpeed: {
       id: "attackSpeed",
       disablePercent: true,
-      Value: [2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
+      Value: [-5, -2, 2, 5, 7, 8, 10, 12, 13, 14, 15, 16],
       chance: 3
     },
   }

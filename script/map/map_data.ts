@@ -207,7 +207,7 @@ class treasureChest {
         document.body.addEventListener("keyup", e => fastGrabTreasure(e, this), once);
       }
       else {
-        lootedChests.push({ cords: { ...this.cords }, sinceOpened: 0, map: this.map });
+        lootedChests.push({ cords: { ...this.cords }, sinceOpened: 0, map: currentMap });
         showInteractPrompt();
         modifyCanvas();
         closeInventory();

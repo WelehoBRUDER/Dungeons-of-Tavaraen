@@ -5,6 +5,7 @@
 ## New Additions
 
 - Added 1 new consumable
+- Added tutorial map
 
 ## Fixes & Tweaks
 
@@ -15,6 +16,7 @@
 - Summons now despawn on player death.
 - Codex now displays hover info instead of nothing when opening items and perks.
 - Rebalanced some items.
+- Randomly generated stats can now be detrimental.
 
 # 1.0.9 ~ 16.3.2022
 

@@ -135,6 +135,42 @@ const tiles = [
     isWall: false,
     spriteMap: { x: 2176, y: 0 },
     id: 8
+  },
+  {
+    name: "Stone",
+    img: "resources/tiles/stone.png",
+    sprite: ".tile9",
+    isLedge: false,
+    isWall: false,
+    spriteMap: { x: 2304, y: 0 },
+    id: 9
+  },
+  {
+    name: "Cracked Stone",
+    img: "resources/tiles/cracked_stone.png",
+    sprite: ".tile10",
+    isLedge: false,
+    isWall: false,
+    spriteMap: { x: 2432, y: 0 },
+    id: 10
+  },
+  {
+    name: "Stone Wall",
+    img: "resources/tiles/stone_wall.png",
+    sprite: ".tile11",
+    isLedge: false,
+    isWall: false,
+    spriteMap: { x: 2560, y: 0 },
+    id: 11
+  },
+  {
+    name: "Void",
+    img: "resources/tiles/void.png",
+    sprite: ".tile0",
+    isLedge: true,
+    isWall: true,
+    spriteMap: { x: 2688, y: 0 },
+    id: 12
   }
 ] as any;
 const clutters = [
@@ -150,7 +186,7 @@ const clutters = [
     img: "resources/tiles/tree_1.png",
     sprite: ".clutter1",
     isWall: true,
-    spriteMap: { x: 2304, y: 0 },
+    spriteMap: { x: 2816, y: 0 },
     id: 1
   },
   {
@@ -158,7 +194,7 @@ const clutters = [
     img: "resources/tiles/tree_2.png",
     sprite: ".clutter2",
     isWall: true,
-    spriteMap: { x: 2432, y: 0 },
+    spriteMap: { x: 2944, y: 0 },
     id: 2
   },
   {
@@ -166,7 +202,7 @@ const clutters = [
     img: "resources/tiles/tree_3.png",
     sprite: ".clutter3",
     isWall: true,
-    spriteMap: { x: 2560, y: 0 },
+    spriteMap: { x: 0, y: 128 },
     id: 3
   }
 ] as any;

@@ -53,6 +53,7 @@ interface mapObject {
   shrines: Array<any>;
   treasureChests: Array<any>;
   messages: Array<any>;
+  entrances: Array<any>;
 }
 interface tileObject {
   x: number;
@@ -144,6 +145,15 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       var tileX = (msg.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
       var tileY = (msg.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       baseCtx?.drawImage(message, tileX, tileY, spriteSize, spriteSize);
+    }
+  });
+
+  map?.entrances?.forEach((entrance: any) => {
+    if ((sightMap[entrance.cords.y]?.[entrance.cords.x] == "x")) {
+      const entranceSprite = document.querySelector<HTMLImageElement>(`.sprites .${entrance.sprite}`);
+      var tileX = (entrance.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var tileY = (entrance.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      baseCtx?.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
     }
   });
 

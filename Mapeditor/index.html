@@ -39,6 +39,15 @@
     <div id="tilesContainer"></div>
   </div>
 
+  <div class="miscButtons">
+    <button class="addShrine" onclick="addShrine()">AddShrine</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
+    <button class="addMessage" onclick="addMessage()">AddMessage</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
+    <button class="addEntrance" onclick="addEntrance()">AddEntrance</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
+  </div>
+
   <div class="importMapBox" style="display: none">
     <div class="importContainer"></div>
     <button class="cancelButton" onclick="dontImportMap()">Cancel</button>
@@ -117,6 +126,7 @@
   <!-- Map Tiles  -->
   <img src="../resources/tiles/tileMap.png" alt="" class="tileAtlas sprite">
   <img src="../resources/tiles/message.png" alt="" class="messageTile sprite">
+  <img src="../resources/tiles/entrance.png" alt="" class="entrance sprite">
 
   <!-- Clutters -->
   <img src="../resources/tiles/treasure_chest_1.png" alt="" class="treasureChest1 sprite">
@@ -138,8 +148,8 @@
 <script src="/resources/compiledJS/map/static_maps.js"></script>
 <script src="/resources/compiledJS/misc/helper.js"></script>
 <script src="/resources/compiledJS/misc/commands.js"></script>
-<script src="/resources/compiledJS/misc/dev.js"></script>
 <script src="/resources/compiledJS/ui/settings.js"></script>
+<script src="/resources/compiledJS/enemy/enemy_leveling.js"></script>
 
 <!-- Localisation files -->
 <script src="/resources/compiledJS/localisation/_localisation.js"></script>
@@ -162,7 +172,6 @@
 <script src="/resources/compiledJS/perk/perks.js"></script>
 <script src="/resources/compiledJS/ui/tooltip.js"></script>
 <script src="/resources/compiledJS/ui/menu_buttons.js"></script>
-<script src="/resources/compiledJS/ui/save.js"></script>
 
 <!-- Important Classes -->
 <script src="/resources/compiledJS/skills & effects/ability.js"></script>
@@ -176,43 +185,17 @@
 <script src="/resources/compiledJS/character/character.js"></script>
 <script src="/resources/compiledJS/enemy/enemy.js"></script>
 <script src="/resources/compiledJS/character/player.js"></script>
-<script src="/resources/compiledJS/perk/perk.js"></script>
 <script src="/resources/compiledJS/summon/summon.js"></script>
-<script src="/resources/compiledJS/quest/quest.js"></script>
 <script src="/resources/compiledJS/map/map_data.js"></script>
 
 <!-- Important data / arrays -->
 <script src="/resources/compiledJS/summon/summons.js"></script>
 <script src="/resources/compiledJS/enemy/enemies.js"></script>
 
-<!-- Important functions -->
-<script src="/resources/compiledJS/items/inventory.js"></script>
-
 <!-- Map rendering -->
 <script src="/resources/compiledJS/map/maps.js"></script>
-<script src="/resources/compiledJS/map/map_misc.js"></script>
-<script src="/resources/compiledJS/map/interact.js"></script>
-<script src="/resources/compiledJS/map/map_mini.js"></script>
-<script src="/resources/compiledJS/map/map.js"></script>
-<script src="/resources/compiledJS/map/controls.js"></script>
-<script src="/resources/compiledJS/map/path.js"></script>
-<script src="/resources/compiledJS/map/render_player.js"></script>
 
-<!-- Menu functions -->
-<script src="/resources/compiledJS/ui/menu.js"></script>
 
-<!-- NPC characters -->
-<script src="/resources/compiledJS/npc/character_interactions.js"></script>
-<script src="/resources/compiledJS/npc/merchant.js"></script>
-<script src="/resources/compiledJS/npc/smith.js"></script>
-<script src="/resources/compiledJS/npc/npc.js"></script>
-<script src="/resources/compiledJS/npc/characters.js"></script>
-
-<!-- UI related things -->
-<script src="/resources/compiledJS/ui/tooltip.js"></script>
-<script src="/resources/compiledJS/ui/hotbar.js"></script>
-<script src="/resources/compiledJS/ui/log.js"></script>
-<script src="/resources/compiledJS/ui/player_window.js"></script>
 
 
 

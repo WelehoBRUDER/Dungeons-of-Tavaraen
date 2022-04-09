@@ -56,7 +56,7 @@ window.addEventListener("resize", modifyCanvas);
 (_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
 let sightMap;
 function renderMap(map, createNewSightMap = false) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     baseCanvas.width = baseCanvas.width; // Clears the canvas
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
@@ -128,6 +128,15 @@ function renderMap(map, createNewSightMap = false) {
             var tileX = (msg.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             var tileY = (msg.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
+        }
+    });
+    (_j = map === null || map === void 0 ? void 0 : map.entrances) === null || _j === void 0 ? void 0 : _j.forEach((entrance) => {
+        var _a;
+        if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
+            const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
+            var tileX = (entrance.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (entrance.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
         }
     });
     /* Render Enemies */
