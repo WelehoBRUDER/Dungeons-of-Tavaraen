@@ -60,7 +60,6 @@ class Armor extends Item {
           this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
         }
       }
-      console.log(this.rolledStats);
     }
 
     this.rolledStats?.forEach((stat: any) => {

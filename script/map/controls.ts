@@ -157,11 +157,21 @@ function movementCheck(keyPress) {
       const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
       if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
     });
+    maps[currentMap].entrances?.some((entrance: entrance) => {
+      if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+        loadingScreen.style.display = "flex";
+        loadingText.textContent = "Loading map...";
+        setTimeout(() => changeMap(entrance), 0);
+        return;
+      }
+
+    });
     if (!state.textWindowOpen && !state.invOpen) {
       talkToCharacter();
     }
   }
 }
+console.log(loadingScreen);
 
 function useAbiTargetingWithKeyboard() {
   let targetingEnemy = false;

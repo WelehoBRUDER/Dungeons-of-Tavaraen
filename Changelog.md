@@ -17,6 +17,7 @@
 - Codex now displays hover info instead of nothing when opening items and perks.
 - Rebalanced some items.
 - Randomly generated stats can now be detrimental.
+- Enemies no longer aggro through walls.
 
 # 1.0.9 ~ 16.3.2022
 

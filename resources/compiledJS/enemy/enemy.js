@@ -261,21 +261,24 @@ class Enemy extends Character {
         };
         this.aggro = () => {
             var _a, _b;
-            // @ts-ignore
             let targets = combatSummons.concat([player]);
             let target = threatDistance(targets, this);
             let range = this.aggroRange + this.tempAggro;
-            // @ts-ignore
             if (target) {
+                // This is checked twice for performance reasons.
+                // First to see if the target is in range with an inaccurate but very cheap calculation.
+                // Second to see if the target is in range with a more accurate but more expensive calculation.
                 if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
-                    let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.id];
-                    if (encounter < 1 || !encounter) {
-                        player.entitiesEverEncountered.enemies[this.id] = 1;
-                        displayText("New enemy encountered!");
-                        displayText(this.id + " added to codex.");
-                        spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
+                    if (generatePath(this.cords, target.cords, this.canFly).length <= range) {
+                        let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.id];
+                        if (encounter < 1 || !encounter) {
+                            player.entitiesEverEncountered.enemies[this.id] = 1;
+                            displayText("New enemy encountered!");
+                            displayText(this.id + " added to codex.");
+                            spawnFloatingText(this.cords, "NEW ENEMY ENCOUNTER", "yellow", 22, 2000, 0);
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
             return false;

@@ -27,7 +27,7 @@
     top: 0;
     user-select: none;
 
-    background: url(../resources/ui/menu_button.png);
+    background: url(/resources/ui/menu_button.png);
     background-size: 100% 100%;
 
     box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
@@ -421,7 +421,7 @@
   background: black;
   opacity: 0;
   display: none;
-  background: url(../resources/ui/main_menu_screen.png);
+  background: url(/resources/ui/main_menu_screen.png);
   background-size: cover;
   z-index: 50 !important;
 
@@ -453,7 +453,7 @@
       top: 0;
       user-select: none;
 
-      background: url(../resources/ui/menu_button.png);
+      background: url(/resources/ui/menu_button.png);
       background-size: 100% 100%;
 
       box-shadow: -3px 3px 6px 6px rgba(124, 47, 11, 0.75);
@@ -826,7 +826,7 @@
       top: 0;
       user-select: none;
 
-      background: url(../resources/ui/menu_button.png);
+      background: url(/resources/ui/menu_button.png);
       background-size: 100% 100%;
 
       box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);

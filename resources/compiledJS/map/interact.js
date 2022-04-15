@@ -1,5 +1,10 @@
 "use strict";
+const areaTitle = document.querySelector(".area-name");
+const areaTitleText = areaTitle.querySelector(".title");
+const loadingScreen = document.querySelector(".loading");
+const loadingText = loadingScreen.querySelector(".loading-text");
 function showInteractPrompt() {
+    var _a;
     const interactPrompt = document.querySelector(".interactPrompt");
     let foundPrompt = false;
     let interactKey = settings["hotkey_interact"] == " " ? lang["space_key"] : settings["hotkey_interact"].toUpperCase();
@@ -32,6 +37,14 @@ function showInteractPrompt() {
             if (dist < 3) {
                 foundPrompt = true;
                 interactPrompt.textContent = `[${interactKey}] ` + lang["talk_to_npc"] + ` ${lang[npc.id + "_name"]}`;
+            }
+        });
+    }
+    if (!foundPrompt) {
+        (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+            if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+                foundPrompt = true;
+                interactPrompt.textContent = `[${interactKey}] ` + lang["enter_area"];
             }
         });
     }
@@ -115,7 +128,7 @@ function mapHover(event) {
     renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
-    var _a, _b;
+    var _a, _b, _c;
     if (state.clicked || player.isDead)
         return;
     if (state.invOpen || (event.button != 0 && event.button != 2)) {
@@ -163,10 +176,17 @@ function clickMap(event) {
     });
     maps[currentMap].treasureChests.some((chest) => {
         if (chest.cords.x === x && chest.cords.y === y) {
-            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
                 chest.lootChest();
                 return true;
+            }
+        }
+    });
+    (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+        if (entrance.cords.x == x && entrance.cords.y == y) {
+            if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+                return changeMap(entrance);
             }
         }
     });
@@ -225,7 +245,7 @@ function clickMap(event) {
         }
     }
     ;
-    if (state.isSelected && ((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && ((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.aoe_size) > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: x, y: y }).length <= state.abiSelected.use_range) {
             move = false;
@@ -244,7 +264,7 @@ function clickMap(event) {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (((_b = state.abiSelected.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+        if (((_c = state.abiSelected.statusesUser) === null || _c === void 0 ? void 0 : _c.length) > 0) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
@@ -275,5 +295,76 @@ function clickMap(event) {
         advanceTurn();
         state.abiSelected = {};
     }
+}
+function changeMap(entrance) {
+    const id = maps.findIndex((m) => m.id == entrance.path.to);
+    if (id == -1) {
+        displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
+        return;
+    }
+    ;
+    currentMap = id;
+    player.cords = entrance.path.cords;
+    turnOver = true;
+    enemiesHadTurn = 0;
+    state.inCombat = false;
+    executeLoad();
+    areaName(maps[currentMap].name);
+}
+async function executeLoad() {
+    loadingText.textContent = "Loading minimap assets...";
+    loadMiscMaps().then(() => {
+        setLoadingText("Loading static map assets...").then(() => {
+            loadStaticMaps().then(() => {
+                setLoadingText("Loading UI...").then(() => {
+                    loadUI().then(() => {
+                        setLoadingText("Loading full map...").then(() => {
+                            loadingScreen.style.display = "none";
+                        });
+                    });
+                });
+            });
+        });
+    });
+}
+function setLoadingText(text) {
+    return new Promise((resolve) => {
+        loadingText.textContent = text;
+        setTimeout(() => resolve(""), 10);
+    });
+}
+function loadMiscMaps() {
+    return new Promise((resolve, reject) => {
+        loadingText.textContent = "Loading minimap assets...";
+        renderMinimap(maps[currentMap]);
+        renderAreaMap(maps[currentMap]);
+        resolve("rendered misc maps");
+    });
+}
+function loadStaticMaps() {
+    return new Promise((resolve, reject) => {
+        createStaticMap();
+        resolve("rendered static maps");
+    });
+}
+function loadUI() {
+    return new Promise((resolve, reject) => {
+        updateUI();
+        resolve("loaded UI");
+    });
+}
+function loadFullMap() {
+    return new Promise((resolve, reject) => {
+        modifyCanvas();
+        resolve("loaded full map");
+    });
+}
+function areaName(name) {
+    areaTitleText.textContent = name;
+    areaTitle.style.animation = 'none';
+    areaTitle.offsetHeight; /* trigger reflow */
+    areaTitle.style.animation = null;
+    areaTitle.style.animationName = `charHurt`;
+    areaTitle.style.animationName = "fadeInFadeOut";
 }
 //# sourceMappingURL=interact.js.map

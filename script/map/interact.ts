@@ -1,4 +1,7 @@
-
+const areaTitle = document.querySelector<HTMLDivElement>(".area-name");
+const areaTitleText = areaTitle.querySelector<HTMLTitleElement>(".title");
+const loadingScreen = document.querySelector<HTMLDivElement>(".loading");
+const loadingText = loadingScreen.querySelector<HTMLTitleElement>(".loading-text");
 function showInteractPrompt() {
   const interactPrompt = document.querySelector(".interactPrompt");
   let foundPrompt = false;
@@ -32,6 +35,14 @@ function showInteractPrompt() {
       if (dist < 3) {
         foundPrompt = true;
         interactPrompt.textContent = `[${interactKey}] ` + lang["talk_to_npc"] + ` ${lang[npc.id + "_name"]}`;
+      }
+    });
+  }
+  if (!foundPrompt) {
+    maps[currentMap].entrances?.some((entrance: entrance) => {
+      if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+        foundPrompt = true;
+        interactPrompt.textContent = `[${interactKey}] ` + lang["enter_area"];
       }
     });
   }
@@ -116,6 +127,22 @@ function mapHover(event: MouseEvent) {
   renderTileHover({ x: x, y: y }, event);
 }
 
+interface entrance {
+  id: string;
+  sprite: string;
+  path: { cords: tileObject, to: string; };
+  cords: tileObject;
+}
+
+interface message {
+  id: string;
+  cords: tileObject;
+}
+
+interface shrine {
+  cords: tileObject;
+}
+
 function clickMap(event: MouseEvent) {
   if (state.clicked || player.isDead) return;
   if (state.invOpen || (event.button != 0 && event.button != 2)) {
@@ -148,13 +175,13 @@ function clickMap(event: MouseEvent) {
       return true;
     }
   });
-  maps[currentMap].shrines.some((shrine: any) => {
+  maps[currentMap].shrines.some((shrine: shrine) => {
     if (shrine.cords.x == x && shrine.cords.y == y) {
       activateShrine();
       return true;
     }
   });
-  maps[currentMap].messages.some((msg: any) => {
+  maps[currentMap].messages.some((msg: message) => {
     if (msg.cords.x == x && msg.cords.y == y && msg.cords.x === player.cords.x && msg.cords.y === player.cords.y) {
       readMessage();
       return true;
@@ -162,10 +189,17 @@ function clickMap(event: MouseEvent) {
   });
   maps[currentMap].treasureChests.some((chest: treasureChest) => {
     if (chest.cords.x === x && chest.cords.y === y) {
-      const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+      const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
       if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
         chest.lootChest();
         return true;
+      }
+    }
+  });
+  maps[currentMap].entrances?.some((entrance: entrance) => {
+    if (entrance.cords.x == x && entrance.cords.y == y) {
+      if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+        return changeMap(entrance);
       }
     }
   });
@@ -267,4 +301,88 @@ function clickMap(event: MouseEvent) {
     advanceTurn();
     state.abiSelected = {};
   }
+}
+
+function changeMap(entrance: entrance) {
+  const id = maps.findIndex((m: mapObject) => m.id == entrance.path.to);
+  if (id == -1) {
+    displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
+    return;
+  };
+  currentMap = id;
+  player.cords = entrance.path.cords;
+  turnOver = true;
+  enemiesHadTurn = 0;
+  state.inCombat = false;
+  executeLoad();
+  areaName(maps[currentMap].name);
+}
+
+async function executeLoad() {
+  loadingText.textContent = "Loading minimap assets...";
+  loadMiscMaps().then(() => {
+    setLoadingText("Loading static map assets...").then(() => {
+      loadStaticMaps().then(() => {
+        setLoadingText("Loading UI...").then(() => {
+          loadUI().then(() => {
+            setLoadingText("Loading full map...").then(() => {
+              loadingScreen.style.display = "none";
+            });
+          });
+        });
+      });
+    });
+  }
+  );
+}
+
+function setLoadingText(text: string) {
+  return new Promise((resolve) => {
+    loadingText.textContent = text;
+    setTimeout(() => resolve(""), 10);
+  }
+  );
+}
+
+function loadMiscMaps() {
+  return new Promise((resolve, reject) => {
+    loadingText.textContent = "Loading minimap assets...";
+    renderMinimap(maps[currentMap]);
+    renderAreaMap(maps[currentMap]);
+    resolve("rendered misc maps");
+  }
+  );
+}
+
+function loadStaticMaps() {
+  return new Promise((resolve, reject) => {
+    createStaticMap();
+    resolve("rendered static maps");
+  }
+  );
+}
+
+function loadUI() {
+  return new Promise((resolve, reject) => {
+    updateUI();
+    resolve("loaded UI");
+  }
+  );
+}
+
+function loadFullMap() {
+  return new Promise((resolve, reject) => {
+    modifyCanvas();
+    resolve("loaded full map");
+  }
+  );
+}
+
+function areaName(name: string) {
+  areaTitleText.textContent = name;
+  areaTitle.style.animation = 'none';
+  areaTitle.offsetHeight; /* trigger reflow */
+  areaTitle.style.animation = null;
+  areaTitle.style.animationName = `charHurt`;
+  areaTitle.style.animationName = "fadeInFadeOut";
 }

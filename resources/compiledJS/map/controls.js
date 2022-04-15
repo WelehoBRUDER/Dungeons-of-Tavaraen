@@ -98,7 +98,7 @@ function hotkeyCheck(e) {
     }
 }
 function movementCheck(keyPress) {
-    var _a, _b;
+    var _a, _b, _c;
     const rooted = player.isRooted();
     if (!turnOver || state.dialogWindow || state.storeOpen)
         return;
@@ -182,11 +182,20 @@ function movementCheck(keyPress) {
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
                 chest.lootChest();
         });
+        (_c = maps[currentMap].entrances) === null || _c === void 0 ? void 0 : _c.some((entrance) => {
+            if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+                loadingScreen.style.display = "flex";
+                loadingText.textContent = "Loading map...";
+                setTimeout(() => changeMap(entrance), 0);
+                return;
+            }
+        });
         if (!state.textWindowOpen && !state.invOpen) {
             talkToCharacter();
         }
     }
 }
+console.log(loadingScreen);
 function useAbiTargetingWithKeyboard() {
     var _a, _b;
     let targetingEnemy = false;

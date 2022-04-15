@@ -397,7 +397,7 @@ function commandRemoveAbility(cmd) {
 let player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 41, y: 169 },
+    cords: { x: 30, y: 105 },
     stats: {
         str: 1,
         dex: 1,
@@ -481,7 +481,7 @@ let player = new PlayerCharacter({
     gold: 50,
     sp: 5,
     pp: 1,
-    respawnPoint: { cords: { x: 41, y: 169 } },
+    respawnPoint: { cords: { x: 29, y: 105 } },
     usedShrines: [],
     grave: null,
     flags: {},

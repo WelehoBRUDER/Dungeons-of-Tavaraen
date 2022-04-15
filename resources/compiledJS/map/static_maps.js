@@ -51,7 +51,7 @@ function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
     }
 }
 // This should be called once when entering a new map.
-// It returns nothing, instead updating 2 existing variables.
+// It returns nothing, instead updating 3 existing variables.
 let staticMap_normal = [];
 let staticMap_flying = [];
 let sightMap_empty = [];

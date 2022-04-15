@@ -49,6 +49,8 @@ const selectCanvas = document.querySelector("#selecting");
 const selectCtx = selectCanvas.getContext("2d");
 const enemyCanvas = document.querySelector("#enemyLayer");
 const enemyCtx = enemyCanvas.getContext("2d");
+const effectCanvas = document.querySelector("#effectLayer");
+const effectCtx = effectCanvas.getContext("2d");
 let zoomLevel = 1;
 let baseSize = 64;
 let cam = {
@@ -207,6 +209,17 @@ function createMap() {
       if (
         editingMap.messageMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
       ) {
+        ctx.fillStyle = "white";
+        ctx;
+        ctx.fillText(
+          `${
+            editingMap.messageMap[offsetMapAloitusY + y][offsetMapAloitusX + x]
+              .id
+          }`,
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize * 1.2
+        );
         const message = document.querySelector(".messageTile");
         ctx.drawImage(
           message,
@@ -243,6 +256,21 @@ function createMap() {
         Math.floor((offsetX + venytysOffsetX) / venytysX) + offsetMapAloitusX,
       valittuY =
         Math.floor((offsetY + venytysOffsetY) / venytysY) + offsetMapAloitusY;
+
+    if (editingMap.vihuMap[valittuY]?.[valittuX]?.id != null) {
+      const enemy = editingMap.vihuMap[valittuY]?.[valittuX];
+      if (
+        currentAggro.cords.x != enemy.cords.x ||
+        currentAggro.cords.y != enemy.cords.y
+      ) {
+        calculateEnemyAggroArea(enemy);
+      } else {
+        if (!currentAggro.rendered) renderEnemyAggroArea();
+      }
+    } else {
+      currentAggro.rendered = false;
+      effectCanvas.width = effectCanvas.width;
+    }
 
     if ((buttons == 1 && type !== "click") || type == "click") {
       if (editingMap.base?.[valittuY]?.[valittuX] === undefined) return;
@@ -738,7 +766,7 @@ function printMap() {
   let reititArray = `[\n`;
   editingMap.entranceMap?.forEach((rivi, y) => {
     rivi.forEach((reitti, x) => {
-      let text = `cords: { x: ${x}, y: ${y} }`;
+      let text = `cords: { x: ${x}, y: ${y} }, sprite: "entrance"`;
       reititArray +=
         "\t\t" +
         `{id: "${reitti.id}", path: {to: "${reitti.path.to}", cords: {x: ${reitti.path.cords.x}, y: ${reitti.path.cords.y}}}, ${text}}` +
@@ -854,6 +882,7 @@ function importThisMap(index) {
   editingMap.chestMap = [];
   editingMap.shrineMap = [];
   editingMap.messageMap = [];
+  editingMap.entranceMap = [];
   editingMap.enemies.forEach(({ ...vihu }) => {
     let y = vihu.cords.y;
     let x = vihu.cords.x;
@@ -881,6 +910,7 @@ function importThisMap(index) {
   editingMap.entrances?.forEach(({ ...entrance }) => {
     let y = entrance.cords.y;
     let x = entrance.cords.x;
+    console.log(editingMap);
     if (!editingMap.entranceMap[y]) editingMap.entranceMap[y] = [];
     editingMap.entranceMap[y][x] = entrance;
   });
@@ -1246,7 +1276,6 @@ function selectTile(id) {
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
   brush.tile = copy(tiles.find((tile) => tile.name == id));
   let index = tiles.findIndex((tile) => tile.name == id);
-  console.log(index);
   lisaaCtrlZ({ event: "brush", run: copy(brush) });
   if (select.x2 != null && select.y2 != null) {
     lisaaCtrlZ({ event: "tileMap", run: { map: copy(editingMap.base) } });
@@ -1595,7 +1624,6 @@ function loadMapFromMemory() {
       cords: chest.cords,
     });
   });
-  console.log(loadedMap);
   editingMap = { ...loadedMap };
   editingMap.vihuMap = [];
   editingMap.chestMap = [];
@@ -1613,7 +1641,6 @@ function loadMapFromMemory() {
     let x = chest.cords.x;
     if (!editingMap.chestMap[y]) editingMap.chestMap[y] = [];
     editingMap.chestMap[y][x] = chest;
-    console.log(editingMap.chestMap);
   });
   editingMap?.shrines?.forEach(({ ...shrine }) => {
     let y = shrine.cords.y;
@@ -1638,6 +1665,89 @@ function loadMapFromMemory() {
   createMap();
   ctrlZArray = [];
   ctrlZIndex = -1;
+}
+const currentAggro = {
+  map: [],
+  cords: { x: -1, y: -1 },
+  rendered: false,
+};
+function calculateEnemyAggroArea(enemy) {
+  let aggroArea = new Array(editingMap.base.length)
+    .fill(0)
+    .map(() => new Array(editingMap.base[0].length).fill(0));
+  let aggroLength = enemy.aggroRange;
+  let cords = enemy.cords;
+  const newSize = baseSize * zoomLevel;
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
+  for (
+    let y = enemy.cords.y - aggroLength;
+    y < enemy.cords.y + aggroLength;
+    y++
+  ) {
+    for (
+      let x = enemy.cords.x - aggroLength;
+      x < enemy.cords.x + aggroLength;
+      x++
+    ) {
+      if (y > aggroArea.length - 1 || y < 0) {
+        continue;
+      }
+      if (x > aggroArea[0].length - 1 || x < 0) {
+        continue;
+      }
+      aggroArea[y][x] = "x";
+    }
+  }
+  currentAggro.map = aggroArea;
+  currentAggro.cords = cords;
+  currentAggro.rendered = false;
+  renderEnemyAggroArea();
+  return aggroArea;
+}
+
+function renderEnemyAggroArea() {
+  let aggroArea = currentAggro.map;
+  const newSize = baseSize * zoomLevel;
+  const karttaSpriteMaaraY =
+    Math.ceil(canvas.height / newSize) +
+    (1 - (Math.ceil(canvas.height / newSize) % 2));
+  const karttaSpriteMaaraX =
+    Math.ceil(canvas.width / newSize) +
+    (1 - (Math.ceil(canvas.width / newSize) % 2));
+  const karttaOffsetX = (karttaSpriteMaaraX * newSize - canvas.width) / 2;
+  const karttaOffsetY = (karttaSpriteMaaraY * newSize - canvas.height) / 2;
+  const offsetMapAloitusY = cam.y - Math.floor(karttaSpriteMaaraY / 2);
+  const offsetMapAloitusX = cam.x - Math.floor(karttaSpriteMaaraX / 2);
+  effectCanvas.width = effectCanvas.width; // Reset canvas
+  for (let y = 0; y < karttaSpriteMaaraY; y++) {
+    for (let x = 0; x < karttaSpriteMaaraX; x++) {
+      let mapY = y + offsetMapAloitusY;
+      let mapX = x + offsetMapAloitusX;
+      if (
+        mapY > aggroArea.length - 1 ||
+        mapY < 0 ||
+        mapX > aggroArea[0].length - 1 ||
+        mapX < 0
+      ) {
+        continue;
+      }
+      if (aggroArea[mapY][mapX] === "x") {
+        effectCtx.fillStyle = "rgba(255,0,0,0.5)";
+        effectCtx.fillRect(
+          x * newSize - karttaOffsetX,
+          y * newSize - karttaOffsetY,
+          newSize,
+          newSize
+        );
+      }
+    }
+  }
+  currentAggro.rendered = true;
 }
 
 loadMapFromMemory();

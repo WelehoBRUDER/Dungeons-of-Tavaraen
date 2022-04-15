@@ -39,7 +39,6 @@ class Armor extends Item {
                     this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
                 }
             }
-            console.log(this.rolledStats);
         }
         (_l = this.rolledStats) === null || _l === void 0 ? void 0 : _l.forEach((stat) => {
             if (stat.armor) {

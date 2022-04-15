@@ -20,7 +20,6 @@
     opacity: 0;
   }
 }
-
 @keyframes attackNorth {
   0% {
     margin-top: 0px;
@@ -35,7 +34,6 @@
     margin-top: 0px;
   }
 }
-
 @keyframes attackNorthEast {
   0% {
     margin-top: 0px;
@@ -54,7 +52,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes attackEast {
   0% {
     margin-left: 0px;
@@ -69,7 +66,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes attackSouthEast {
   0% {
     margin-top: 0px;
@@ -88,7 +84,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes attackSouth {
   0% {
     margin-top: 0px;
@@ -103,7 +98,6 @@
     margin-top: 0px;
   }
 }
-
 @keyframes attackSouthWest {
   0% {
     margin-top: 0px;
@@ -122,7 +116,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes attackWest {
   0% {
     margin-left: 0px;
@@ -137,7 +130,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes attackNorthWest {
   0% {
     margin-top: 0px;
@@ -156,7 +148,6 @@
     margin-left: 0px;
   }
 }
-
 @keyframes screenHurt {
   0% {
     box-shadow: inset 0 0 2px 2px rgb(122, 14, 14);
@@ -171,7 +162,6 @@
     box-shadow: inset 0 0 2px 2px rgb(122, 14, 14);
   }
 }
-
 @keyframes charHurt {
   0% {
     filter: drop-shadow(0px 0px 0px rgb(122, 14, 14));
@@ -186,7 +176,6 @@
     filter: drop-shadow(0px 0px 0px rgb(122, 14, 14));
   }
 }
-
 @keyframes shakeObject {
   0% {
     margin-left: -4px;
@@ -213,47 +202,38 @@
     margin-top: -2px;
   }
 }
-
 @keyframes popIn {
   0% {
     transform: scale(0);
   }
-
   100% {
     transform: scale(1);
   }
 }
-
 @keyframes popOut {
   0% {
     transform: scale(1);
   }
-
   100% {
     transform: scale(0);
   }
 }
-
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
-
 @keyframes slideFromRight {
   0% {
     left: 100%;
   }
-
   100% {
     left: 0%;
   }
 }
-
 @keyframes slideFromTop {
   0% {
     top: -90%;
@@ -262,7 +242,6 @@
     top: 10%;
   }
 }
-
 @keyframes slideToTop {
   0% {
     top: 10%;
@@ -271,7 +250,6 @@
     top: -90%;
   }
 }
-
 @keyframes fadeInFadeOut {
   0% {
     opacity: 0;
@@ -285,4 +263,4 @@
   100% {
     opacity: 0;
   }
-}
+}/*# sourceMappingURL=animations.css.map */

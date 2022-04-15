@@ -1,16 +1,26 @@
 @font-face {
   font-family: "Montserrat";
-  src: url(../resources/font/Montserrat/Montserrat-Light.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
   font-family: "Montserrat-Thin";
-  src: url(../resources/font/Montserrat/Montserrat-Thin.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-Thin.ttf);
 }
 
 @font-face {
   font-family: "Montserrat-Light";
-  src: url(../resources/font/Montserrat/Montserrat-ExtraLight.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-ExtraLight.ttf);
+}
+
+@font-face {
+  font-family: "OptimusPrinceps";
+  src: url(/resources/font/OptimusPrinceps/OptimusPrinceps.ttf);
+}
+
+@font-face {
+  font-family: "OptimusPrinceps-Bold";
+  src: url(/resources/font/OptimusPrinceps/OptimusPrincepsSemiBold.ttf);
 }
 
 body {
@@ -51,6 +61,52 @@ body {
   background-position: center;
   user-select: none;
   color: #fff;
+
+  .loading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(/resources/ui/main_menu_screen.png);
+    background-size: cover;
+    z-index: 66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+
+    h1.loading-text {
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #000;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .area-name {
+    position: absolute;
+    top: calc(50% - 96px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+    padding: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0;
+    animation-delay: 1.2s;
+    animation-duration: 5.7s;
+    .title {
+      font-family: OptimusPrinceps;
+      font-weight: 300;
+      font-size: calc(114px * var(--ui-scale));
+      text-shadow: 0 calc(6px * var(--ui-scale)) calc(18px * var(--ui-scale)) #000;
+    }
+  }
 
   .negative {
     color: rgb(150, 58, 16);
@@ -94,12 +150,12 @@ body {
 
   animation-duration: 0.15s;
 
-  $redBgSolid: url("../resources/ui/large_background_red.png");
-  $greyBgSolid: url("../resources/ui/large_background_grey.png");
-  $goldBgSolid: url("../resources/ui/large_background_gold.png");
-  $redBgFade: url("../resources/ui/large_background_redFade.png");
-  $greyBgFade: url("../resources/ui/large_background_greyFade.png");
-  $goldBgFade: url("../resources/ui/large_background_goldFade.png");
+  $redBgSolid: url("/resources/ui/large_background_red.png");
+  $greyBgSolid: url("/resources/ui/large_background_grey.png");
+  $goldBgSolid: url("/resources/ui/large_background_gold.png");
+  $redBgFade: url("/resources/ui/large_background_redFade.png");
+  $greyBgFade: url("/resources/ui/large_background_greyFade.png");
+  $goldBgFade: url("/resources/ui/large_background_goldFade.png");
 
   .canvasLayers {
     width: 100%;
@@ -870,7 +926,7 @@ body {
     height: calc(192px * var(--ui-scale));
     overflow: hidden;
     border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
-    background: url(../resources/ui/red_background.png);
+    background: url(/resources/ui/red_background.png);
     background-size: cover;
     position: absolute;
     left: 0;
@@ -1390,7 +1446,7 @@ body {
       height: calc(192px * var(--ui-scale));
       overflow: hidden;
       border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
-      background: url(../resources/ui/red_background.png);
+      background: url(/resources/ui/red_background.png);
       border-radius: 4px;
       background-size: cover;
       position: absolute;
@@ -1822,7 +1878,7 @@ body {
         transform: translateX(-50%);
         user-select: none;
 
-        background: url(../resources/ui/menu_button.png);
+        background: url(/resources/ui/menu_button.png);
         background-size: 100% 100%;
 
         box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);

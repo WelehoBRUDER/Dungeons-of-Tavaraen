@@ -22,7 +22,7 @@ const spriteMap_tiles = <HTMLImageElement>document.querySelector(".spriteMap_til
 const spriteMap_items = <HTMLImageElement>document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
-var currentMap = 2;
+var currentMap = 4;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
@@ -128,7 +128,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   });
 
   map.treasureChests.forEach((chest: treasureChest) => {
-    const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+    const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
     if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
       if (!lootedChest) {
         const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);

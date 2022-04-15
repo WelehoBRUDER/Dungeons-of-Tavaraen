@@ -160,7 +160,7 @@ const tiles = [
         img: "resources/tiles/stone_wall.png",
         sprite: ".tile11",
         isLedge: false,
-        isWall: false,
+        isWall: true,
         spriteMap: { x: 2560, y: 0 },
         id: 11
     },
