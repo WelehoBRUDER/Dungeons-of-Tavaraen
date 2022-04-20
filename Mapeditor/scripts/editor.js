@@ -51,6 +51,8 @@ const enemyCanvas = document.querySelector("#enemyLayer");
 const enemyCtx = enemyCanvas.getContext("2d");
 const effectCanvas = document.querySelector("#effectLayer");
 const effectCtx = effectCanvas.getContext("2d");
+const textCanvas = document.querySelector("#textLayer");
+const textCtx = textCanvas.getContext("2d");
 let zoomLevel = 1;
 let baseSize = 64;
 let cam = {
@@ -101,6 +103,11 @@ function createMap() {
   mapProps();
 
   canvas.width = canvas.width; // Reset canvas
+  textCanvas.width = textCanvas.width; // Reset canvas
+  textCtx.textAlign = "center";
+  textCtx.font = `${20 * zoomLevel}px Arial`;
+  textCtx.shadowBlur = "5";
+  textCtx.shadowColor = "black";
   for (let y = 0; y < karttaSpriteMaaraY; y++) {
     for (let x = 0; x < karttaSpriteMaaraX; x++) {
       const imgId =
@@ -158,19 +165,19 @@ function createMap() {
         //ctx.drawImage(clutterImg, x * newSize - karttaOffsetX, y * newSize - karttaOffsetY, newSize, newSize);
       }
       if (enemyImg) {
-        ctx.font = `${newSize / 3}px Arial`;
-        ctx.fillStyle = "white";
+        const txt = `Level ${
+          editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
+            ?.level
+        }`;
+        textCtx.fillStyle = "white";
         if (
           editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
             ?.isUnique
         )
-          ctx.fillStyle = "red";
-        ctx.fillText(
-          `Level ${
-            editingMap.vihuMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
-              ?.level
-          }`,
-          x * newSize - karttaOffsetX,
+          textCtx.fillStyle = "red";
+        textCtx.fillText(
+          txt,
+          x * newSize - karttaOffsetX + newSize / 2,
           y * newSize - karttaOffsetY
         );
         ctx.drawImage(
@@ -182,6 +189,14 @@ function createMap() {
         );
       }
       if (chestImg) {
+        const txt =
+          editingMap.chestMap[offsetMapAloitusY + y][offsetMapAloitusX + x].id;
+        textCtx.fillStyle = "white";
+        textCtx.fillText(
+          txt,
+          x * newSize - karttaOffsetX + newSize / 2,
+          y * newSize - karttaOffsetY
+        );
         ctx.drawImage(
           chestImg,
           x * newSize - karttaOffsetX,
@@ -209,16 +224,14 @@ function createMap() {
       if (
         editingMap.messageMap[offsetMapAloitusY + y]?.[offsetMapAloitusX + x]
       ) {
-        ctx.fillStyle = "white";
-        ctx;
-        ctx.fillText(
-          `${
-            editingMap.messageMap[offsetMapAloitusY + y][offsetMapAloitusX + x]
-              .id
-          }`,
-          x * newSize - karttaOffsetX,
-          y * newSize - karttaOffsetY,
-          newSize * 1.2
+        const txt =
+          editingMap.messageMap[offsetMapAloitusY + y][offsetMapAloitusX + x]
+            .id;
+        textCtx.fillStyle = "white";
+        textCtx.fillText(
+          txt,
+          x * newSize - karttaOffsetX + newSize / 2,
+          y * newSize - karttaOffsetY
         );
         const message = document.querySelector(".messageTile");
         ctx.drawImage(
@@ -1675,7 +1688,7 @@ function calculateEnemyAggroArea(enemy) {
   let aggroArea = new Array(editingMap.base.length)
     .fill(0)
     .map(() => new Array(editingMap.base[0].length).fill(0));
-  let aggroLength = enemy.aggroRange;
+  let aggroLength = enemy.aggroRange * 0.5;
   let cords = enemy.cords;
   const newSize = baseSize * zoomLevel;
   const karttaSpriteMaaraY =

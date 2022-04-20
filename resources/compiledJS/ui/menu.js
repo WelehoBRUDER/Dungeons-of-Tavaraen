@@ -312,7 +312,7 @@ function LoadSlot(data) {
     closeGameMenu();
     resetAllChests();
     createStaticMap();
-    modifyCanvas();
+    modifyCanvas(true);
     updateUI();
 }
 function openTextWindow(txt) {

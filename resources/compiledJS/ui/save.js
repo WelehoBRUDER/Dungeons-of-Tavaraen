@@ -125,7 +125,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             closeGameMenu();
             resetAllChests();
             createStaticMap();
-            modifyCanvas();
+            modifyCanvas(true);
             updateUI();
         });
         deleteGame.addEventListener("click", () => {

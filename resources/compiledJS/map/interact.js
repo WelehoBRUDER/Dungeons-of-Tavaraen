@@ -186,6 +186,9 @@ function clickMap(event) {
     (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
         if (entrance.cords.x == x && entrance.cords.y == y) {
             if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+                dontMove = true;
+                loadingScreen.style.display = "flex";
+                loadingText.textContent = "Loading map...";
                 return changeMap(entrance);
             }
         }
@@ -203,6 +206,8 @@ function clickMap(event) {
             }
         });
     }
+    if (dontMove)
+        return;
     let move = true;
     let targetingEnemy = false;
     for (let enemy of maps[currentMap].enemies) {
@@ -304,7 +309,7 @@ function changeMap(entrance) {
     }
     ;
     currentMap = id;
-    player.cords = entrance.path.cords;
+    player.cords = Object.assign({}, entrance.path.cords);
     turnOver = true;
     enemiesHadTurn = 0;
     state.inCombat = false;
@@ -318,9 +323,8 @@ async function executeLoad() {
             loadStaticMaps().then(() => {
                 setLoadingText("Loading UI...").then(() => {
                     loadUI().then(() => {
-                        setLoadingText("Loading full map...").then(() => {
-                            loadingScreen.style.display = "none";
-                        });
+                        loadingScreen.style.display = "none";
+                        modifyCanvas(true);
                     });
                 });
             });
@@ -344,6 +348,7 @@ function loadMiscMaps() {
 function loadStaticMaps() {
     return new Promise((resolve, reject) => {
         createStaticMap();
+        convertEnemyStatModifiers();
         resolve("rendered static maps");
     });
 }
@@ -351,12 +356,6 @@ function loadUI() {
     return new Promise((resolve, reject) => {
         updateUI();
         resolve("loaded UI");
-    });
-}
-function loadFullMap() {
-    return new Promise((resolve, reject) => {
-        modifyCanvas();
-        resolve("loaded full map");
     });
 }
 function areaName(name) {

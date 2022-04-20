@@ -2215,7 +2215,7 @@ const maps = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
         enemies: [
-            new Enemy(Object.assign(Object.assign({}, enemies["skeletonMage"]), { cords: { x: 10, y: 8 }, spawnCords: { x: 10, y: 8 }, level: 10, isUnique: false, spawnMap: "cave_of_awakening" })),
+            new Enemy(Object.assign(Object.assign({}, enemies["skeletonLich"]), { cords: { x: 10, y: 8 }, spawnCords: { x: 10, y: 8 }, level: 15, isUnique: false, spawnMap: "cave_of_awakening" })),
             new Enemy(Object.assign(Object.assign({}, enemies["greySlime"]), { cords: { x: 56, y: 15 }, spawnCords: { x: 56, y: 15 }, level: 1, isUnique: false, spawnMap: "cave_of_awakening" })),
             new Enemy(Object.assign(Object.assign({}, enemies["flamingSlime"]), { cords: { x: 50, y: 18 }, spawnCords: { x: 50, y: 18 }, level: 1, isUnique: false, spawnMap: "cave_of_awakening" })),
             new Enemy(Object.assign(Object.assign({}, enemies["flamingSlime"]), { cords: { x: 11, y: 29 }, spawnCords: { x: 11, y: 29 }, level: 6, isUnique: false, spawnMap: "cave_of_awakening" })),
@@ -2241,7 +2241,13 @@ const maps = [
             new Enemy(Object.assign(Object.assign({}, enemies["greySlime"]), { cords: { x: 16, y: 105 }, spawnCords: { x: 16, y: 105 }, level: 1, isUnique: false, spawnMap: "cave_of_awakening" })),
         ],
         treasureChests: [
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 9, y: 5 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["lichChest"]), { cords: { x: 10, y: 5 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 11, y: 5 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 44, y: 9 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 41, y: 62 } })),
             new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 6, y: 92 } })),
+            new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 54, y: 92 } })),
             new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 8, y: 98 } })),
             new treasureChest(Object.assign(Object.assign({}, chestTemplates["defaultChest"]), { cords: { x: 30, y: 99 } })),
         ],

@@ -299,7 +299,7 @@ function LoadSlot(data: any) {
   closeGameMenu();
   resetAllChests();
   createStaticMap();
-  modifyCanvas();
+  modifyCanvas(true);
   updateUI();
 }
 

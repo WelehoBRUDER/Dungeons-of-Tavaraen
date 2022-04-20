@@ -6,6 +6,7 @@
 
 - Added 1 new consumable
 - Added tutorial map
+- Added `entrances` which are gateways to adjacent maps
 
 ## Fixes & Tweaks
 
@@ -18,6 +19,8 @@
 - Rebalanced some items.
 - Randomly generated stats can now be detrimental.
 - Enemies no longer aggro through walls.
+- Optimized helper functions.
+- Fixed sight map not being generated when loading a map.
 
 # 1.0.9 ~ 16.3.2022
 
