@@ -55,7 +55,7 @@ const finnish = {
     tutorial_avoiding_foes: "<c>white<c>Jokaisen olennon kanssa ei tarvitse painia.\n\nAloitat kyvyn <c>gold<c>Vetäydy<c>white<c> kanssa. Tämä kyky mahdollistaa tukalista tilanteista pakenemisen.\n\nAnalysoi tilanteesi ja valitse taisto tai pako.",
     tutorial_return_later: "<c>white<c>Tunnet <c>red<c>karmivan<c>white<c> olemuksen luolan lopusta.\n\nTämä uhka kannattaisi välttää kunnes olet vahvempi.",
     tutorial_shrines: "<c>white<c>Näet <c>gold<c>Pyhökän<c>white<c> edessäsi.\n\nPyhäköt <c>gold<c>palauttavat<c>white<c> taikasi ja terveytesi, sekä asettavat syntymis pisteesi.",
-    tutorial_entrances: "<c>gold<c>Eteenkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi eteenkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
+    tutorial_entrances: "<c>gold<c>Sisäänkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi sisäänkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
     // Technical stuff
     changeWordOrder: true,
     mana: "Taika",
@@ -451,6 +451,7 @@ const finnish = {
     sell_item: "Myy esine",
     quest_added: "<c>goldenrod<c>Tehtävä '<c>gold<c>[QUEST]<c>goldenrod<c>' alkanut!",
     revive: "Olet herännyt henkiin pyhäköllä!",
+    enter_area: "Astu sisälle",
     // Character names
     testMerchant_name: "Karl Bauer",
     blacksmithMaroch_name: "Maroch",
@@ -1272,6 +1273,7 @@ const english = {
     sell_item: "Sell item",
     quest_added: "<c>goldenrod<c>Quest '<c>gold<c>[QUEST]<c>goldenrod<c>' has begun!",
     revive: "You have been revived at a shrine!",
+    enter_area: "Enter area",
     // Character names
     testMerchant_name: "Karl Bauer",
     blacksmithMaroch_name: "Maroch",

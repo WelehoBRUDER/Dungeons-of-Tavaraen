@@ -171,7 +171,6 @@ function movementCheck(keyPress) {
     }
   }
 }
-console.log(loadingScreen);
 
 function useAbiTargetingWithKeyboard() {
   let targetingEnemy = false;

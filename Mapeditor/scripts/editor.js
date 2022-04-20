@@ -845,6 +845,15 @@ function printMap() {
         shrineArray += "\t\t" + `{${text}}` + ", \n";
       });
       shrineArray += "\t]";
+      let entranceArray = `[\n`;
+      map.entrances?.forEach((entrance) => {
+        let text = `cords: { x: ${entrance.cords.x}, y: ${entrance.cords.y} }, sprite: "entrance"`;
+        entranceArray +=
+          "\t\t" +
+          `{id: "${entrance.id}", path: {to: "${entrance.path.to}", cords: {x: ${entrance.path.cords.x}, y: ${entrance.path.cords.y}}}, ${text}}` +
+          ", \n";
+      });
+      entranceArray += "\t]";
       totalText += `{
         \tname: "${map.name}",
         \tarea: "${map.area}",
@@ -855,6 +864,7 @@ function printMap() {
         \ttreasureChests: ${chestArray},
         \tmessages: ${messageArray},
         \tshrines: ${shrineArray},
+        \tentrances: ${entranceArray}
       },`;
     }
   });

@@ -311,6 +311,7 @@ function changeMap(entrance: entrance) {
   const id = maps.findIndex((m: mapObject) => m.id == entrance.path.to);
   if (id == -1) {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
+    loadingScreen.style.display = "none";
     return;
   };
   currentMap = id;
