@@ -55,6 +55,7 @@ function setFlag(str: string, value: any, override: boolean = false) {
 class Npc {
   [id: string]: any;
   sprite: string;
+  img: string;
   greeting: string;
   pronounSet: string;
   currentMap: number;
@@ -64,10 +65,11 @@ class Npc {
   constructor(base: Npc) {
     this.id = base.id;
     this.sprite = base.sprite;
+    this.img = base.img;
     this.greeting = base.greeting;
     this.pronounSet = base.pronounSet;
     this.currentMap = base.currentMap;
-    this.currentCords = base.currentCords;
+    this.currentCords = { ...base.currentCords };
     this.conditionalMaps = base.conditionalMaps;
     this.conditionalCords = base.conditionalCords;
   }

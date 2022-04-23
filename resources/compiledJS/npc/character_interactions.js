@@ -226,6 +226,21 @@ const characterInteractions = {
                 ],
             },
         ],
+    },
+    warriorThrisna: {
+        always: [
+            {
+                name: "warriorThrisna_store",
+                type: "openStore",
+                action: { type: "store", id: "warriorThrisna_store_normal" }
+            },
+            {
+                name: "leaveDialog",
+                type: "exit",
+                action: { type: "exit" },
+                displayAtBottom: true,
+            }
+        ],
     }
 };
 //# sourceMappingURL=character_interactions.js.map

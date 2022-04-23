@@ -24,7 +24,7 @@ const spriteMap_tiles = document.querySelector(".spriteMap_tiles");
 const spriteMap_items = document.querySelector(".spriteMap_items");
 baseCanvas.addEventListener("mousemove", mapHover);
 baseCanvas.addEventListener("mouseup", clickMap);
-var currentMap = 4;
+var currentMap = 3;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;

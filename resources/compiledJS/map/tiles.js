@@ -170,9 +170,17 @@ const tiles = [
         sprite: ".tile0",
         isLedge: true,
         isWall: true,
-        spriteMap: { x: 2688, y: 0 },
+        spriteMap: { x: 2816, y: 0 },
         id: 12
-    }
+    },
+    {
+        name: "Wood",
+        img: "resources/tiles/wood.png",
+        isLedge: false,
+        isWall: true,
+        id: 13,
+        spriteMap: { x: 2688, y: 0 }
+    },
 ];
 const clutters = [
     {
@@ -187,7 +195,7 @@ const clutters = [
         img: "resources/tiles/tree_1.png",
         sprite: ".clutter1",
         isWall: true,
-        spriteMap: { x: 2816, y: 0 },
+        spriteMap: { x: 2944, y: 0 },
         id: 1
     },
     {
@@ -195,7 +203,7 @@ const clutters = [
         img: "resources/tiles/tree_2.png",
         sprite: ".clutter2",
         isWall: true,
-        spriteMap: { x: 2944, y: 0 },
+        spriteMap: { x: 0, y: 128 },
         id: 2
     },
     {
@@ -203,7 +211,7 @@ const clutters = [
         img: "resources/tiles/tree_3.png",
         sprite: ".clutter3",
         isWall: true,
-        spriteMap: { x: 0, y: 128 },
+        spriteMap: { x: 128, y: 128 },
         id: 3
     }
 ];

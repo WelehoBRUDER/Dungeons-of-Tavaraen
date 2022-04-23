@@ -475,6 +475,7 @@ const finnish = {
   // Character names
   testMerchant_name: "Karl Bauer",
   blacksmithMaroch_name: "Maroch",
+  warriorThrisna_name: "Thrisna",
 
   // Passive abilities
   resilience_of_the_lone_wanderer_name: "Kulkijan Sinnikkyys",
@@ -1339,6 +1340,7 @@ const english = {
   // Character names
   testMerchant_name: "Karl Bauer",
   blacksmithMaroch_name: "Maroch",
+  warriorThrisna_name: "Thrisna",
 
   // Artifacts
   part_of_set: "Part of",

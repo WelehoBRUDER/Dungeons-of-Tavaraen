@@ -51,7 +51,7 @@ let helper = {
     });
     trimmed.abilities.forEach((abi: any, index: number) => {
       // @ts-ignore
-      trimmed.abilities[index] = { id: abi.id, equippedSlot: abi.equippedSlot };
+      trimmed.abilities[index] = { id: abi.id, equippedSlot: abi.equippedSlot, onCooldown: abi.onCooldown };
     });
     trimmed.allModifiers = {};
     equipSlots.forEach((slot: string) => {

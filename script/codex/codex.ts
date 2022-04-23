@@ -1,59 +1,108 @@
 const codexWindow = document.querySelector<HTMLDivElement>(".codexWindow");
 const listContainer = codexWindow.querySelector(".contentList");
 const contentContainer = codexWindow.querySelector(".contentContainer");
+
+const codexHistory = {} as any;
+
 function openIngameCodex() {
   state.codexOpen = true;
   codexWindow.style.transform = "scale(1)";
   codexWindow.style.opacity = "1";
   listContainer.innerHTML = "";
-  Object.values(codex).forEach((codexEntry: any) => {
-    const title = document.createElement("ul");
-    title.textContent = codexEntry.title;
-    title.classList.add("title");
-    title.addEventListener("mouseup", e => animateTitle(e, title));
-    let needsEncounter = codexEntry.needs_encounter ?? true;
-    if (codexEntry.import_from_array) {
-      Object.values({ ...eval(codexEntry.import_from_array) }).forEach((entry: any, index: number) => {
-        if (entry.id.includes("error")) return;
-        createCodexEntry(codexEntry, entry, needsEncounter, title, index);
-      });
-    }
-    else if (codexEntry.sub_categories) {
-      Object.values(codexEntry.sub_categories).forEach((subCategory: any) => {
-        createSubCategoryEntry(codexEntry, subCategory, needsEncounter, title);
-      });
-    }
-    listContainer.append(title);
-  });
-  const defaultHeight = 30;
-  listContainer.childNodes.forEach((listPart: any) => {
-    listPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-    let extraHeight = 0;
-    let subListsHeight = 0;
-    listPart.childNodes.forEach((subListPart: any) => {
-      if (!subListPart.style) return;
-      subListPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-      extraHeight += defaultHeight * settings.ui_scale / 100;
-      if (subListPart.childNodes?.[1]?.classList.contains("subList")) {
-        let subListHeight = 0;
-        subListPart.childNodes[1].childNodes.forEach((subListObject: any) => {
-          if (!subListObject.style) return;
-          subListObject.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-          subListsHeight += defaultHeight * settings.ui_scale / 100;
-          subListHeight += defaultHeight * settings.ui_scale / 100;
-        });
-        subListPart.childNodes[1].style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-        subListPart.childNodes[1].style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + subListHeight}px`;
-        subListPart.style.maxHeight = `${(defaultHeight * 2) * settings.ui_scale / 100 + subListHeight}px`;
-      }
-    });
-    extraHeight += subListsHeight;
-    listPart.style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + extraHeight}px`;
+  if (codexHistory["displayed"]?.id) {
+    const { category, object } = codexHistory["displayed"];
+    handleDisplayEntry(category, object);
+  }
+  Object.values(codex).forEach((entry: any) => {
+    loopCodex(entry);
   });
 }
 
+function loopCodex(entry: any) {
+  const fullEntry = document.createElement("div");
+  const title = document.createElement("div");
+  const titleText = document.createElement("p");
+  const titleArrow = document.createElement("span");
+  const content = document.createElement("div");
+  const maxHeight = 780 * settings.ui_scale / 100;
+  fullEntry.classList.add("codex-entry");
+  fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
+  title.classList.add("entry-title");
+  content.classList.add("entry-content");
+  titleText.textContent = entry.title;
+  titleArrow.textContent = ">";
+  if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+    content.style.height = "auto";
+    titleArrow.style.transform = "rotate(90deg)";
+  } else {
+    codexHistory[entry.title.replaceAll(" ", "_")] = false;
+  }
+  let animator: ReturnType<typeof setTimeout> = undefined;
+  title.onclick = () => {
+    codexHistory[entry.title.replaceAll(" ", "_")] = !codexHistory[entry.title.replaceAll(" ", "_")];
+    if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+      clearTimeout(animator);
+      content.style.height = "auto";
+      const height = content.getBoundingClientRect().height; // Get height of content with dirty trick
+      const totalHeight = height > maxHeight ? maxHeight : height; // Limit height to max visible height
+      const transitionTime = totalHeight; // Set transition time to height of content in ms
+      if (entry.parent !== "NONE" && entry.parent) {
+        const parent = document.querySelector<HTMLDivElement>(`.codex-entry.${entry.parent.replaceAll(" ", "_")}`);
+        if (parent) {
+          parent.querySelector<HTMLDivElement>(".entry-content").style.height = `auto`;
+        }
+      }
+      content.style.height = "0px";
+      content.style.transition = `${transitionTime}ms`;
+      titleArrow.style.transform = "rotate(90deg)";
+      animator = setTimeout(() => content.style.height = `${totalHeight}px`, 0);
+      animator = setTimeout(() => {
+        content.style.transition = "";
+        content.style.height = `${height}px`;
+      }, transitionTime);
+    } else {
+      clearTimeout(animator);
+      titleArrow.style.transform = "rotate(0deg)";
+      const height = content.getBoundingClientRect().height; // Get height of content with dirty trick
+      const totalHeight = height > maxHeight ? maxHeight : height; // Limit height to max visible height
+      const transitionTime = totalHeight; // Set transition time to height of content in ms
+      content.style.height = `${totalHeight}px`;
+      content.style.transition = `${transitionTime}ms`;
+      if (entry.parent !== "NONE" && entry.parent) {
+        const parent = document.querySelector<HTMLDivElement>(`.codex-entry.${entry.parent.replaceAll(" ", "_")}`);
+        if (parent) {
+          parent.querySelector<HTMLDivElement>(".entry-content").style.height = `auto`;
+        }
+      }
+      animator = setTimeout(() => content.style.height = "0px", 0);
+      animator = setTimeout(() => {
+        content.style.transition = "";
+      }, transitionTime);
+    }
+  };
+  title.append(titleText, titleArrow);
+  fullEntry.append(title, content);
+  if (entry.parent === "NONE") {
+    listContainer.append(fullEntry);
+  }
+  else {
+    listContainer.querySelector(`.${entry?.parent?.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
+  }
+  if (entry.import_from_array) {
+    Object.values({ ...eval(entry.import_from_array) }).forEach((_entry: any, index: number) => {
+      if (_entry.id.includes("error")) return;
+      createCodexEntry(entry, _entry, entry.needsEncounter, content, index);
+    });
+  }
+  else {
+    entry?.content?.forEach((content: any) => {
+      loopCodex(content);
+    });
+  }
+}
+
 function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, title: HTMLElement, index: number) {
-  const entryElement = document.createElement("li");
+  const entryElement = document.createElement("div");
   const entryText = document.createElement("p");
   let playerHasEntry = false;
   if (player?.entitiesEverEncountered[codexEntry?.import_from_array]?.[entry.id]) playerHasEntry = true;
@@ -64,6 +113,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (DEVMODE) playerHasEntry = true;
   if (codexEntry.import_from_array == "items") index--;
   entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
+  entryElement.classList.add("entry-item");
   entryElement.classList.add(entry.id);
   entryElement.classList.add(codexEntry.import_from_array);
   if (!playerHasEntry) {
@@ -77,50 +127,36 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
     icon.style.left = `-${15 * settings.ui_scale / 100}px`;
     entryElement.append(icon);
   }
+  entryElement.onclick = () => {
+    clickListEntry(entryElement);
+  };
+  if (codexHistory["displayed"]?.id === entry.id) {
+    entryElement.classList.add("displayed");
+  }
   entryElement.style.maxHeight = `${30 * settings.ui_scale / 100}px`;
   entryElement.append(entryText);
+  tooltip(entryElement, displayName);
   title.append(entryElement);
 }
 
-function createSubCategoryEntry(codexEntry: any, subCategory: any, needsEncounter: boolean, title: HTMLElement) {
-  const entryElement = document.createElement("li");
-  let playerHasEntry = false;
-  if (player?.entitiesEverEncountered[codexEntry?.import_from_array]?.[subCategory.id]) playerHasEntry = true;
-  if (!needsEncounter) playerHasEntry = true;
-  let displayName = lang[subCategory.title + "_title"];
-  if (!displayName) displayName = subCategory.title;
-  entryElement.textContent = playerHasEntry ? displayName : "???";
-  entryElement.classList.add("title");
-  entryElement.classList.add("subCategory");
-  if (!playerHasEntry) {
-    entryElement.classList.add("noEntry");
-  }
-  const subList = document.createElement("ul");
-  subList.classList.add("subList");
-  if (subCategory.content) {
-    subCategory.content.forEach((item: any, index: number) => {
-      createCodexEntry(subCategory, item, needsEncounter, subList, index);
-    });
-  }
-  if (subCategory.import_from_array) {
-    Object.values({ ...eval(subCategory.import_from_array) }).forEach((entry: any, index: number) => {
-      createCodexEntry(subCategory, entry, needsEncounter, subList, index);
-    });
-  }
-  entryElement.append(subList);
-  title.append(entryElement);
-}
-
-function clickListEntry(entry: HTMLLIElement) {
+function clickListEntry(entry: HTMLDivElement) {
   if (entry.classList.contains("noEntry")) return;
-  const id = entry.classList[0];
-  const category = entry.classList[1];
+  const id = entry.classList[1];
+  const category = entry.classList[2];
+  entry.classList.add("displayed");
+  document.querySelector(`.${codexHistory["displayed"]?.id}`)?.classList?.remove("displayed");
   contentContainer.innerHTML = "";
   let object: any;
   try {
     object = { ...eval(category)[id] };
   }
-  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line codex:268`); }
+  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line codex:177`); }
+  codexHistory["displayed"] = { id: id, category: category, object: { ...object } };
+  handleDisplayEntry(category, object);
+
+}
+
+function handleDisplayEntry(category: string, object: any) {
   if (category === "enemies") {
     createEnemyInfo(object);
   }
@@ -142,9 +178,6 @@ function clickListEntry(entry: HTMLLIElement) {
   // else if (category === "achievements") {
   //   createAchievementInfo(object);
   // }
-  // let text = `<f>30px<f><c>silver<c>${object.name}`;
-  // text += `\n<i>${object.img ?? object.icon}<i>`;
-  //contentContainer.append(textSyntax(text));
 }
 
 function closeCodex() {
@@ -152,15 +185,3 @@ function closeCodex() {
   codexWindow.style.transform = "scale(0)";
   codexWindow.style.opacity = "0";
 }
-
-// let one = {id: "one"};
-// let two = {id2: "two"};
-// let three = Object.assign({}, one, two);
-// console.log(three);
-
-// var o1 = { a: 1 };
-// var o2 = { b: 2 };
-// var o3 = { c: 3 };
-
-// var obj = Object.assign({}, o1, o2, o3);
-// console.log(obj); // { a: 1, b: 2, c: 3 }

@@ -2,64 +2,110 @@
 const codexWindow = document.querySelector(".codexWindow");
 const listContainer = codexWindow.querySelector(".contentList");
 const contentContainer = codexWindow.querySelector(".contentContainer");
+const codexHistory = {};
 function openIngameCodex() {
+    var _a;
     state.codexOpen = true;
     codexWindow.style.transform = "scale(1)";
     codexWindow.style.opacity = "1";
     listContainer.innerHTML = "";
-    Object.values(codex).forEach((codexEntry) => {
-        var _a;
-        const title = document.createElement("ul");
-        title.textContent = codexEntry.title;
-        title.classList.add("title");
-        title.addEventListener("mouseup", e => animateTitle(e, title));
-        let needsEncounter = (_a = codexEntry.needs_encounter) !== null && _a !== void 0 ? _a : true;
-        if (codexEntry.import_from_array) {
-            Object.values(Object.assign({}, eval(codexEntry.import_from_array))).forEach((entry, index) => {
-                if (entry.id.includes("error"))
-                    return;
-                createCodexEntry(codexEntry, entry, needsEncounter, title, index);
-            });
-        }
-        else if (codexEntry.sub_categories) {
-            Object.values(codexEntry.sub_categories).forEach((subCategory) => {
-                createSubCategoryEntry(codexEntry, subCategory, needsEncounter, title);
-            });
-        }
-        listContainer.append(title);
-    });
-    const defaultHeight = 30;
-    listContainer.childNodes.forEach((listPart) => {
-        listPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-        let extraHeight = 0;
-        let subListsHeight = 0;
-        listPart.childNodes.forEach((subListPart) => {
-            var _a, _b;
-            if (!subListPart.style)
-                return;
-            subListPart.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-            extraHeight += defaultHeight * settings.ui_scale / 100;
-            if ((_b = (_a = subListPart.childNodes) === null || _a === void 0 ? void 0 : _a[1]) === null || _b === void 0 ? void 0 : _b.classList.contains("subList")) {
-                let subListHeight = 0;
-                subListPart.childNodes[1].childNodes.forEach((subListObject) => {
-                    if (!subListObject.style)
-                        return;
-                    subListObject.style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-                    subListsHeight += defaultHeight * settings.ui_scale / 100;
-                    subListHeight += defaultHeight * settings.ui_scale / 100;
-                });
-                subListPart.childNodes[1].style.height = `${defaultHeight * settings.ui_scale / 100}px`;
-                subListPart.childNodes[1].style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + subListHeight}px`;
-                subListPart.style.maxHeight = `${(defaultHeight * 2) * settings.ui_scale / 100 + subListHeight}px`;
-            }
-        });
-        extraHeight += subListsHeight;
-        listPart.style.maxHeight = `${defaultHeight * settings.ui_scale / 100 + extraHeight}px`;
+    if ((_a = codexHistory["displayed"]) === null || _a === void 0 ? void 0 : _a.id) {
+        const { category, object } = codexHistory["displayed"];
+        handleDisplayEntry(category, object);
+    }
+    Object.values(codex).forEach((entry) => {
+        loopCodex(entry);
     });
 }
+function loopCodex(entry) {
+    var _a, _b;
+    const fullEntry = document.createElement("div");
+    const title = document.createElement("div");
+    const titleText = document.createElement("p");
+    const titleArrow = document.createElement("span");
+    const content = document.createElement("div");
+    const maxHeight = 780 * settings.ui_scale / 100;
+    fullEntry.classList.add("codex-entry");
+    fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
+    title.classList.add("entry-title");
+    content.classList.add("entry-content");
+    titleText.textContent = entry.title;
+    titleArrow.textContent = ">";
+    if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+        content.style.height = "auto";
+        titleArrow.style.transform = "rotate(90deg)";
+    }
+    else {
+        codexHistory[entry.title.replaceAll(" ", "_")] = false;
+    }
+    let animator = undefined;
+    title.onclick = () => {
+        codexHistory[entry.title.replaceAll(" ", "_")] = !codexHistory[entry.title.replaceAll(" ", "_")];
+        if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+            clearTimeout(animator);
+            content.style.height = "auto";
+            const height = content.getBoundingClientRect().height; // Get height of content with dirty trick
+            const totalHeight = height > maxHeight ? maxHeight : height; // Limit height to max visible height
+            const transitionTime = totalHeight; // Set transition time to height of content in ms
+            if (entry.parent !== "NONE" && entry.parent) {
+                const parent = document.querySelector(`.codex-entry.${entry.parent.replaceAll(" ", "_")}`);
+                if (parent) {
+                    parent.querySelector(".entry-content").style.height = `auto`;
+                }
+            }
+            content.style.height = "0px";
+            content.style.transition = `${transitionTime}ms`;
+            titleArrow.style.transform = "rotate(90deg)";
+            animator = setTimeout(() => content.style.height = `${totalHeight}px`, 0);
+            animator = setTimeout(() => {
+                content.style.transition = "";
+                content.style.height = `${height}px`;
+            }, transitionTime);
+        }
+        else {
+            clearTimeout(animator);
+            titleArrow.style.transform = "rotate(0deg)";
+            const height = content.getBoundingClientRect().height; // Get height of content with dirty trick
+            const totalHeight = height > maxHeight ? maxHeight : height; // Limit height to max visible height
+            const transitionTime = totalHeight; // Set transition time to height of content in ms
+            content.style.height = `${totalHeight}px`;
+            content.style.transition = `${transitionTime}ms`;
+            if (entry.parent !== "NONE" && entry.parent) {
+                const parent = document.querySelector(`.codex-entry.${entry.parent.replaceAll(" ", "_")}`);
+                if (parent) {
+                    parent.querySelector(".entry-content").style.height = `auto`;
+                }
+            }
+            animator = setTimeout(() => content.style.height = "0px", 0);
+            animator = setTimeout(() => {
+                content.style.transition = "";
+            }, transitionTime);
+        }
+    };
+    title.append(titleText, titleArrow);
+    fullEntry.append(title, content);
+    if (entry.parent === "NONE") {
+        listContainer.append(fullEntry);
+    }
+    else {
+        listContainer.querySelector(`.${(_a = entry === null || entry === void 0 ? void 0 : entry.parent) === null || _a === void 0 ? void 0 : _a.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
+    }
+    if (entry.import_from_array) {
+        Object.values(Object.assign({}, eval(entry.import_from_array))).forEach((_entry, index) => {
+            if (_entry.id.includes("error"))
+                return;
+            createCodexEntry(entry, _entry, entry.needsEncounter, content, index);
+        });
+    }
+    else {
+        (_b = entry === null || entry === void 0 ? void 0 : entry.content) === null || _b === void 0 ? void 0 : _b.forEach((content) => {
+            loopCodex(content);
+        });
+    }
+}
 function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
-    var _a, _b, _c;
-    const entryElement = document.createElement("li");
+    var _a, _b, _c, _d;
+    const entryElement = document.createElement("div");
     const entryText = document.createElement("p");
     let playerHasEntry = false;
     if ((_a = player === null || player === void 0 ? void 0 : player.entitiesEverEncountered[codexEntry === null || codexEntry === void 0 ? void 0 : codexEntry.import_from_array]) === null || _a === void 0 ? void 0 : _a[entry.id])
@@ -76,6 +122,7 @@ function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
     if (codexEntry.import_from_array == "items")
         index--;
     entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
+    entryElement.classList.add("entry-item");
     entryElement.classList.add(entry.id);
     entryElement.classList.add(codexEntry.import_from_array);
     if (!playerHasEntry) {
@@ -89,47 +136,25 @@ function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
         icon.style.left = `-${15 * settings.ui_scale / 100}px`;
         entryElement.append(icon);
     }
+    entryElement.onclick = () => {
+        clickListEntry(entryElement);
+    };
+    if (((_d = codexHistory["displayed"]) === null || _d === void 0 ? void 0 : _d.id) === entry.id) {
+        entryElement.classList.add("displayed");
+    }
     entryElement.style.maxHeight = `${30 * settings.ui_scale / 100}px`;
     entryElement.append(entryText);
-    title.append(entryElement);
-}
-function createSubCategoryEntry(codexEntry, subCategory, needsEncounter, title) {
-    var _a;
-    const entryElement = document.createElement("li");
-    let playerHasEntry = false;
-    if ((_a = player === null || player === void 0 ? void 0 : player.entitiesEverEncountered[codexEntry === null || codexEntry === void 0 ? void 0 : codexEntry.import_from_array]) === null || _a === void 0 ? void 0 : _a[subCategory.id])
-        playerHasEntry = true;
-    if (!needsEncounter)
-        playerHasEntry = true;
-    let displayName = lang[subCategory.title + "_title"];
-    if (!displayName)
-        displayName = subCategory.title;
-    entryElement.textContent = playerHasEntry ? displayName : "???";
-    entryElement.classList.add("title");
-    entryElement.classList.add("subCategory");
-    if (!playerHasEntry) {
-        entryElement.classList.add("noEntry");
-    }
-    const subList = document.createElement("ul");
-    subList.classList.add("subList");
-    if (subCategory.content) {
-        subCategory.content.forEach((item, index) => {
-            createCodexEntry(subCategory, item, needsEncounter, subList, index);
-        });
-    }
-    if (subCategory.import_from_array) {
-        Object.values(Object.assign({}, eval(subCategory.import_from_array))).forEach((entry, index) => {
-            createCodexEntry(subCategory, entry, needsEncounter, subList, index);
-        });
-    }
-    entryElement.append(subList);
+    tooltip(entryElement, displayName);
     title.append(entryElement);
 }
 function clickListEntry(entry) {
+    var _a, _b, _c;
     if (entry.classList.contains("noEntry"))
         return;
-    const id = entry.classList[0];
-    const category = entry.classList[1];
+    const id = entry.classList[1];
+    const category = entry.classList[2];
+    entry.classList.add("displayed");
+    (_c = (_b = document.querySelector(`.${(_a = codexHistory["displayed"]) === null || _a === void 0 ? void 0 : _a.id}`)) === null || _b === void 0 ? void 0 : _b.classList) === null || _c === void 0 ? void 0 : _c.remove("displayed");
     contentContainer.innerHTML = "";
     let object;
     try {
@@ -137,8 +162,12 @@ function clickListEntry(entry) {
     }
     catch (err) {
         if (DEVMODE)
-            displayText(`<c>red<c>${err} at line codex:268`);
+            displayText(`<c>red<c>${err} at line codex:177`);
     }
+    codexHistory["displayed"] = { id: id, category: category, object: Object.assign({}, object) };
+    handleDisplayEntry(category, object);
+}
+function handleDisplayEntry(category, object) {
     if (category === "enemies") {
         createEnemyInfo(object);
     }
@@ -160,22 +189,10 @@ function clickListEntry(entry) {
     // else if (category === "achievements") {
     //   createAchievementInfo(object);
     // }
-    // let text = `<f>30px<f><c>silver<c>${object.name}`;
-    // text += `\n<i>${object.img ?? object.icon}<i>`;
-    //contentContainer.append(textSyntax(text));
 }
 function closeCodex() {
     state.codexOpen = false;
     codexWindow.style.transform = "scale(0)";
     codexWindow.style.opacity = "0";
 }
-// let one = {id: "one"};
-// let two = {id2: "two"};
-// let three = Object.assign({}, one, two);
-// console.log(three);
-// var o1 = { a: 1 };
-// var o2 = { b: 2 };
-// var o3 = { c: 3 };
-// var obj = Object.assign({}, o1, o2, o3);
-// console.log(obj); // { a: 1, b: 2, c: 3 }
 //# sourceMappingURL=codex.js.map

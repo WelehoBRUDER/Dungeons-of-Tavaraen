@@ -16,6 +16,7 @@ const NPCcharacters = [
     new Npc({
         id: "testMerchant",
         sprite: "villageMan",
+        img: "resources/tiles/characters/generic_village_man.png",
         greeting: "generic_hail_friend",
         pronounSet: "masculine",
         currentMap: 2,
@@ -25,11 +26,23 @@ const NPCcharacters = [
     }),
     new Npc({
         id: "blacksmithMaroch",
-        sprite: "norsemanBerserk",
+        sprite: "blacksmithMaroch",
+        img: "resources/tiles/characters/blacksmith_maroch.png",
         greeting: "generic_hail_friend",
         pronounSet: "masculine",
-        currentMap: 2,
-        currentCords: { x: 37, y: 168 },
+        currentMap: 3,
+        currentCords: { x: 179, y: 24 },
+        conditionalMaps: [],
+        conditionalCords: []
+    }),
+    new Npc({
+        id: "warriorThrisna",
+        sprite: "orcLady",
+        img: "resources/tiles/characters/orc_warrior_lady.png",
+        greeting: "generic_hail_friend",
+        pronounSet: "feminine",
+        currentMap: 3,
+        currentCords: { x: 179, y: 38 },
         conditionalMaps: [],
         conditionalCords: []
     }),
@@ -76,6 +89,14 @@ const NPCInventories = {
             Object.assign(Object.assign({}, items["rangerPants"]), { unique: false, price: 1200 }),
             Object.assign(Object.assign({}, items["rangerBoots"]), { unique: false, price: 600 }),
             Object.assign(Object.assign({}, items["ironShield"]), { unique: false, price: 400 }),
+        ]
+    },
+    warriorThrisna: {
+        normal: [
+            Object.assign(Object.assign({}, items["orcishAxe"]), { unique: false, price: 425 }),
+            Object.assign(Object.assign({}, items["warriorsTalisman"]), { unique: false, price: 300 }),
+            Object.assign(Object.assign({}, items["warriorsRing"]), { unique: false, price: 300 }),
+            Object.assign(Object.assign({}, items["warriorsEmblem"]), { unique: false, price: 300 }),
         ]
     }
 };

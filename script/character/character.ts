@@ -259,7 +259,6 @@ class Character {
 
     this.getRegen = () => {
       let stats = this.getStats();
-      if (this.id.includes("Statue")) console.log(this.allModifiers);
       if (!this.allModifiers["regenHpV"]) this.allModifiers["regenHpV"] = 0;
       if (!this.allModifiers["regenHpP"]) this.allModifiers["regenHpP"] = 1;
       if (!this.allModifiers["regenMpV"]) this.allModifiers["regenMpV"] = 0;

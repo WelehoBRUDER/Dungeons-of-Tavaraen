@@ -56,10 +56,11 @@ class Npc {
     constructor(base) {
         this.id = base.id;
         this.sprite = base.sprite;
+        this.img = base.img;
         this.greeting = base.greeting;
         this.pronounSet = base.pronounSet;
         this.currentMap = base.currentMap;
-        this.currentCords = base.currentCords;
+        this.currentCords = Object.assign({}, base.currentCords);
         this.conditionalMaps = base.conditionalMaps;
         this.conditionalCords = base.conditionalCords;
     }

@@ -1445,7 +1445,7 @@ const enemies = {
     type: "wraith",
     race: "human",
     img: "resources/tiles/enemies/knight_sword_shield.png",
-    aggroRange: 14,
+    aggroRange: 11,
     attackRange: 1,
     canFly: false,
     abilities: [

@@ -703,6 +703,19 @@ function hotkey(e) {
     if (editingMap.vihuMap?.[select.y]?.[select.x]?.id) {
       delete editingMap.vihuMap[select.y][select.x];
     }
+    editingMap.vihuMap?.map((y) =>
+      y.map((x) => {
+        if (
+          x.cords.y >= select.y &&
+          x.cords.x >= select.x &&
+          x.cords.y <= select.y2 &&
+          x.cords.x <= select.x2
+        ) {
+          console.log("?");
+          delete editingMap.vihuMap[x.cords.y][x.cords.x];
+        }
+      })
+    );
     createMap();
   }
 
@@ -1698,7 +1711,7 @@ function calculateEnemyAggroArea(enemy) {
   let aggroArea = new Array(editingMap.base.length)
     .fill(0)
     .map(() => new Array(editingMap.base[0].length).fill(0));
-  let aggroLength = enemy.aggroRange * 0.5;
+  let aggroLength = Math.ceil(enemy.aggroRange * 0.5);
   let cords = enemy.cords;
   const newSize = baseSize * zoomLevel;
   const karttaSpriteMaaraY =
