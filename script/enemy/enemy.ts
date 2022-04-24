@@ -97,7 +97,7 @@ class Enemy extends Character {
     this.hasBeenLeveled = base.hasBeenLeveled ?? false;
     this.level = base.level ?? 1;
     this.isUnique = base.isUnique ?? false;
-    this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 15))) : defaultModel.xp;
+    this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 5))) : defaultModel.xp;
     this.levelingTemplate = defaultModel.levelingTemplate ?? "balanced";
     this.retreatPath = [];
     this.retreatIndex = 0;
@@ -113,7 +113,7 @@ class Enemy extends Character {
     this.indexInBaseArray = Object.keys(enemies).findIndex((en: string) => en == this.id);
 
     if (!this.hasBeenLeveled && this.level > 1) {
-      this.updateStatModifiers();
+      this.updatetraits();
       const points = (this.level - 1) * 3;
       const template = enemyLevelingTemplates[this.levelingTemplate];
       for (let i = 1; i < points; i++) {
@@ -159,7 +159,7 @@ class Enemy extends Character {
       // }
       if (this.stats.hp > this.getHpMax()) this.stats.hp = this.getHpMax();
       if (this.stats.mp > this.getMpMax()) this.stats.mp = this.getMpMax();
-      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget.stats.hp <= 0) {
+      if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget?.stats?.hp <= 0) {
         // @ts-ignore
         let targets = combatSummons.concat([player]);
         this.chosenTarget = threatDistance(targets, this);
@@ -280,7 +280,6 @@ class Enemy extends Character {
     };
 
     this.kill = () => {
-      console.log("???");
       player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
       this.spawnMap = currentMap;
       const index: number = maps[currentMap].enemies.findIndex((e: any) => e.cords == this.cords);
@@ -314,7 +313,7 @@ class Enemy extends Character {
     };
 
     this.restore = () => {
-      this.updateStatModifiers();
+      this.updatetraits();
       this.stats.hp = this.getHpMax();
       this.stats.mp = this.getMpMax();
       this.statusEffects = [];
@@ -332,7 +331,7 @@ class Enemy extends Character {
       if (target) {
         // This is checked twice for performance reasons.
         // First to see if the target is in range with an inaccurate but very cheap calculation.
-        // Second to see if the target is in range with a more accurate but more expensive calculation.
+        // Second to see if the target is in range and there is a path of valid length with a more accurate but more expensive calculation.
         if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
           if (generatePath(this.cords, target.cords, this.canFly).length <= range) {
             let encounter = player.entitiesEverEncountered?.enemies?.[this.id];

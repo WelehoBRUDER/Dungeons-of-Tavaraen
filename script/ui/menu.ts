@@ -268,29 +268,48 @@ async function gotoMainMenu(init: boolean = false) {
   }
 }
 
-function convertEnemyStatModifiers() {
+function convertEnemytraits() {
   maps.forEach((mp: any) => {
     mp.enemies.map((en: any) => {
-      en.updateStatModifiers();
+      en.updatetraits();
     });
   });
 }
 
 function LoadSlot(data: any) {
+  loadingScreen.style.display = "flex";
+  loadingText.textContent = "Loading save...";
+  let foundMap;
+  let _pl;
+  let _itmData;
+  let _falEnemies;
+  let _loot;
+  try {
+    _pl = new PlayerCharacter({ ...GetKey("player", data).data });
+    _itmData = GetKey("itemData", data).data;
+    _falEnemies = GetKey("enemies", data).data;
+    _loot = GetKey("lootedChests", data).data;
+    foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
+    if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
+    Object.entries(_pl.classes.main.statBonuses).forEach((stat: any) => { }); // dirty trick to catch invalid save
+  }
+  catch {
+    console.log("?!");
+    loadingScreen.style.display = "none";
+    return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
+  }
   helper.reviveAllDeadEnemies();
-  player = new PlayerCharacter({ ...GetKey("player", data).data });
-  itemData = GetKey("itemData", data).data;
-  fallenEnemies = GetKey("enemies", data).data;
-  lootedChests = GetKey("lootedChests", data).data;
-  let foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
-  if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
+  player = _pl;
+  itemData = _itmData;
+  lootedChests = _loot;
+  fallenEnemies = _falEnemies;
   currentMap = foundMap;
   tree = player.classes.main.perkTree;
   turnOver = true;
   enemiesHadTurn = 0;
   state.inCombat = false;
   player.updatePerks(true);
-  player.updateStatModifiers();
+  player.updatetraits();
   player.updateAbilities();
   helper.purgeDeadEnemies();
   helper.killAllQuestEnemies();
@@ -301,6 +320,7 @@ function LoadSlot(data: any) {
   createStaticMap();
   modifyCanvas(true);
   updateUI();
+  loadingScreen.style.display = "none";
 }
 
 function openTextWindow(txt: string) {

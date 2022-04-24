@@ -92,34 +92,56 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       player.updateAbilities();
       gotoSaveMenu(false, false);
     });
-    loadGame.addEventListener("click", () => {
+    loadGame.addEventListener("click", async () => {
+      loadingScreen.style.display = "flex";
+      loadingText.textContent = "Loading save...";
+      await helper.sleep(5);
+      let fm;
+      let pl;
+      let fe;
+      let id;
+      let lc;
+      try {
+        fm = maps.findIndex((map: any) => map.id == save.save.currentMap);
+        if (fm == -1) fm = save.save.currentMap;
+        pl = new PlayerCharacter({ ...save.save.player });
+        fe = [...save.save.fallenEnemies];
+        id = [...save.save.itemData];
+        lc = [...save.save.lootedChests];
+        pl.updatePerks(true);
+        pl.updatetraits();
+        pl.updateAbilities();
+      }
+      catch {
+        loadingScreen.style.display = "none";
+        return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
+      }
+      player = pl;
+      fallenEnemies = fe;
+      itemData = id;
+      lootedChests = lc;
       helper.reviveAllDeadEnemies();
-      player = new PlayerCharacter({ ...save.save.player });
-      fallenEnemies = [...save.save.fallenEnemies];
-      itemData = [...save.save.itemData];
-      if (save.save.lootedChests) lootedChests = [...save.save.lootedChests] ?? [];
-      let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
-      if (foundMap == -1) foundMap = save.save.currentMap;
-      currentMap = foundMap;
+      currentMap = fm;
       tree = player.classes.main.perkTree;
       turnOver = true;
       enemiesHadTurn = 0;
       state.inCombat = false;
       player.updatePerks(true);
-      player.updateStatModifiers();
+      player.updatetraits();
       player.updateAbilities();
       renderMinimap(maps[currentMap]);
       renderAreaMap(maps[currentMap]);
       helper.purgeDeadEnemies();
       helper.killAllQuestEnemies();
       spawnQuestMonsters();
-      convertEnemyStatModifiers();
-      handleEscape();
+      convertEnemytraits();
       closeGameMenu();
       resetAllChests();
       createStaticMap();
       modifyCanvas(true);
       updateUI();
+      handleEscape();
+      loadingScreen.style.display = "none";
     });
     deleteGame.addEventListener("click", () => {
       saves.splice(save.id, 1);
@@ -129,7 +151,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
     renderedPlayer.updatePerks(true, true);
-    renderedPlayer.updateStatModifiers();
+    renderedPlayer.updatetraits();
     renderedPlayer.updateAbilities(true);
     let saveTime = new Date(save.time);
     let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -145,7 +167,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
     let verColor: string = "lime";
     let addVersionWarning: boolean = false;
-    if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version) {
+    if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
       verColor = "orange";
       addVersionWarning = true;
     }
@@ -333,4 +355,12 @@ function GetKey(key: string, table: any) {
       return { ...object };
     }
   }
+}
+
+function warningMessage(txt: string) {
+  let warning = document.querySelector<HTMLDivElement>(".warningWindow");
+  warning.style.transform = "scale(1)";
+  warning.innerHTML = "";
+  warning.append(textSyntax(txt));
+  setTimeout(() => { warning.style.transform = "scale(0)"; }, 5000);
 }

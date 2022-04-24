@@ -646,7 +646,7 @@ body {
 .main .playerWindow .coreStatsTitle,
 .main .playerWindow .coreResistancesTitle,
 .main .playerWindow .statusResistancesTitle,
-.main .playerWindow .passiveAbilitiesTitle {
+.main .playerWindow .traitsTitle {
   text-align: center;
   width: calc(300px * var(--ui-scale));
   font-size: calc(32px * var(--ui-scale));
@@ -665,7 +665,7 @@ body {
 .main .playerWindow .coreStats,
 .main .playerWindow .coreResistances,
 .main .playerWindow .statusResistances,
-.main .playerWindow .passiveAbilities {
+.main .playerWindow .traits {
   position: absolute;
   height: auto;
   max-height: calc(420px * var(--ui-scale));
@@ -680,7 +680,7 @@ body {
 .main .playerWindow .coreStats div,
 .main .playerWindow .coreResistances div,
 .main .playerWindow .statusResistances div,
-.main .playerWindow .passiveAbilities div {
+.main .playerWindow .traits div {
   width: 100%;
   height: auto;
   display: flex;
@@ -695,7 +695,7 @@ body {
 .main .playerWindow .coreStats div img,
 .main .playerWindow .coreResistances div img,
 .main .playerWindow .statusResistances div img,
-.main .playerWindow .passiveAbilities div img {
+.main .playerWindow .traits div img {
   width: calc(42px * var(--ui-scale));
   height: calc(42px * var(--ui-scale));
   margin: 0;
@@ -703,7 +703,7 @@ body {
 .main .playerWindow .coreStats div p,
 .main .playerWindow .coreResistances div p,
 .main .playerWindow .statusResistances div p,
-.main .playerWindow .passiveAbilities div p {
+.main .playerWindow .traits div p {
   margin: 0;
   margin-top: calc(6px * var(--ui-scale));
   overflow: hidden;
@@ -711,7 +711,7 @@ body {
 .main .playerWindow .coreStats div span,
 .main .playerWindow .coreResistances div span,
 .main .playerWindow .statusResistances div span,
-.main .playerWindow .passiveAbilities div span {
+.main .playerWindow .traits div span {
   position: absolute;
   right: calc(10px * var(--ui-scale));
   margin: 0;
@@ -720,13 +720,13 @@ body {
 .main .playerWindow .coreStats div:nth-child(odd),
 .main .playerWindow .coreResistances div:nth-child(odd),
 .main .playerWindow .statusResistances div:nth-child(odd),
-.main .playerWindow .passiveAbilities div:nth-child(odd) {
+.main .playerWindow .traits div:nth-child(odd) {
   background: rgba(160, 160, 160, 0.05);
 }
 .main .playerWindow .coreStats div:hover,
 .main .playerWindow .coreResistances div:hover,
 .main .playerWindow .statusResistances div:hover,
-.main .playerWindow .passiveAbilities div:hover {
+.main .playerWindow .traits div:hover {
   filter: brightness(1.1);
   border: calc(2px * var(--ui-scale)) solid rgba(200, 200, 200, 0.75);
 }
@@ -738,16 +738,16 @@ body {
 .main .playerWindow .statusResistancesTitle {
   left: calc(725px * var(--ui-scale));
 }
-.main .playerWindow .passiveAbilities,
-.main .playerWindow .passiveAbilitiesTitle {
+.main .playerWindow .traits,
+.main .playerWindow .traitsTitle {
   left: calc(1075px * var(--ui-scale));
 }
-.main .playerWindow .passiveAbilities p,
-.main .playerWindow .passiveAbilitiesTitle p {
+.main .playerWindow .traits p,
+.main .playerWindow .traitsTitle p {
   font-size: calc(22px * var(--ui-scale));
 }
-.main .playerWindow .passiveAbilities img,
-.main .playerWindow .passiveAbilitiesTitle img {
+.main .playerWindow .traits img,
+.main .playerWindow .traitsTitle img {
   width: calc(36px * var(--ui-scale));
   height: calc(36px * var(--ui-scale));
 }

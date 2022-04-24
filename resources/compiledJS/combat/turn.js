@@ -31,7 +31,7 @@ async function advanceTurn() {
                 return;
             }
         }
-        summon.updateStatModifiers();
+        summon.updatetraits();
         summon.updateAbilities();
         summon.decideAction();
         summon.effects();

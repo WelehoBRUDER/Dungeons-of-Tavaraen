@@ -139,23 +139,23 @@ function renderCharacter() {
     const coreStats = document.createElement("div");
     const coreResistances = document.createElement("div");
     const statusResistances = document.createElement("div");
-    const passiveAbilities = document.createElement("div");
+    const traits = document.createElement("div");
     const coreStatsTitle = document.createElement("p");
     const coreResistancesTitle = document.createElement("p");
     const statusResistancesTitle = document.createElement("p");
-    const passiveAbilitiesTitle = document.createElement("p");
+    const traitsTitle = document.createElement("p");
     coreStatsTitle.classList.add("coreStatsTitle");
     coreStatsTitle.textContent = lang["core_stats"];
     coreResistancesTitle.classList.add("coreResistancesTitle");
     coreResistancesTitle.textContent = lang["core_resistances"];
     statusResistancesTitle.classList.add("statusResistancesTitle");
     statusResistancesTitle.textContent = lang["status_resistances"];
-    passiveAbilitiesTitle.classList.add("passiveAbilitiesTitle");
-    passiveAbilitiesTitle.textContent = lang["passives"];
+    traitsTitle.classList.add("traitsTitle");
+    traitsTitle.textContent = lang["passives"];
     coreStats.classList.add("coreStats");
     coreResistances.classList.add("coreResistances");
     statusResistances.classList.add("statusResistances");
-    passiveAbilities.classList.add("passiveAbilities");
+    traits.classList.add("traits");
     let allMods = "<f>20px<f>All modifiers: §\n";
     // This convoluted mess allows us to "sort" an object.
     const modsToSort = [];
@@ -189,8 +189,8 @@ function renderCharacter() {
     Object.entries(playerStatusResists).forEach((stat) => {
         statusResistances.append(createStatusResistanceDisplay(stat));
     });
-    player.statModifiers.forEach((mod) => {
-        passiveAbilities.append(createStatModifierDisplay(mod));
+    player.traits.forEach((mod) => {
+        traits.append(createStatModifierDisplay(mod));
     });
     var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
     Object.entries(player.getResists()).forEach(resistance => {
@@ -211,7 +211,7 @@ function renderCharacter() {
     pc.style.left = "24px";
     pc.style.top = "24px";
     tooltip(statusResistances, lang["stat_resist_tt"]);
-    bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances, passiveAbilitiesTitle, passiveAbilities);
+    bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances, traitsTitle, traits);
 }
 function closeCharacter() {
     state.charOpen = false;

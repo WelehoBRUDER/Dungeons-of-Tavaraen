@@ -22,7 +22,7 @@ class Enemy extends Character {
         this.hasBeenLeveled = (_j = base.hasBeenLeveled) !== null && _j !== void 0 ? _j : false;
         this.level = (_k = base.level) !== null && _k !== void 0 ? _k : 1;
         this.isUnique = (_l = base.isUnique) !== null && _l !== void 0 ? _l : false;
-        this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 15))) : defaultModel.xp;
+        this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 5))) : defaultModel.xp;
         this.levelingTemplate = (_m = defaultModel.levelingTemplate) !== null && _m !== void 0 ? _m : "balanced";
         this.retreatPath = [];
         this.retreatIndex = 0;
@@ -37,7 +37,7 @@ class Enemy extends Character {
         this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
         this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         if (!this.hasBeenLeveled && this.level > 1) {
-            this.updateStatModifiers();
+            this.updatetraits();
             const points = (this.level - 1) * 3;
             const template = enemyLevelingTemplates[this.levelingTemplate];
             for (let i = 1; i < points; i++) {
@@ -52,7 +52,7 @@ class Enemy extends Character {
             this.hasBeenLeveled = true;
         }
         this.decideAction = async () => {
-            var _a;
+            var _a, _b, _c;
             if (this.tempAggroLast > 0) {
                 this.tempAggroLast--;
                 if (this.tempAggroLast <= 0)
@@ -85,7 +85,7 @@ class Enemy extends Character {
                 this.stats.hp = this.getHpMax();
             if (this.stats.mp > this.getMpMax())
                 this.stats.mp = this.getMpMax();
-            if (this.currentTargetInterval <= 0 || this.chosenTarget == null || this.chosenTarget.stats.hp <= 0) {
+            if (this.currentTargetInterval <= 0 || this.chosenTarget == null || ((_b = (_a = this.chosenTarget) === null || _a === void 0 ? void 0 : _a.stats) === null || _b === void 0 ? void 0 : _b.hp) <= 0) {
                 // @ts-ignore
                 let targets = combatSummons.concat([player]);
                 this.chosenTarget = threatDistance(targets, this);
@@ -153,7 +153,7 @@ class Enemy extends Character {
                             this.cords.y = path[0].y;
                         }
                         if (settings.log_enemy_movement)
-                            displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
+                            displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_c = lang[this.id + "_name"]) !== null && _c !== void 0 ? _c : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
                     }
                     catch (err) {
                         if (DEVMODE)
@@ -211,7 +211,6 @@ class Enemy extends Character {
         };
         this.kill = () => {
             var _a;
-            console.log("???");
             player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);
@@ -249,7 +248,7 @@ class Enemy extends Character {
             player.lvlUp();
         };
         this.restore = () => {
-            this.updateStatModifiers();
+            this.updatetraits();
             this.stats.hp = this.getHpMax();
             this.stats.mp = this.getMpMax();
             this.statusEffects = [];
@@ -267,7 +266,7 @@ class Enemy extends Character {
             if (target) {
                 // This is checked twice for performance reasons.
                 // First to see if the target is in range with an inaccurate but very cheap calculation.
-                // Second to see if the target is in range with a more accurate but more expensive calculation.
+                // Second to see if the target is in range and there is a path of valid length with a more accurate but more expensive calculation.
                 if (generatePath(this.cords, target.cords, this.canFly, true) <= range) {
                     if (generatePath(this.cords, target.cords, this.canFly).length <= range) {
                         let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.enemies) === null || _b === void 0 ? void 0 : _b[this.id];

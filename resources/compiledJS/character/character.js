@@ -15,7 +15,7 @@ class Character {
         this.armor = (_c = Object.assign({}, base.armor)) !== null && _c !== void 0 ? _c : { physical: 0, magical: 0, elemental: 0 };
         this.resistances = Object.assign({}, base.resistances);
         this.statusResistances = Object.assign({}, base.statusResistances);
-        this.statModifiers = base.statModifiers ? [...base.statModifiers] : [];
+        this.traits = base.traits ? [...base.traits] : [];
         this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
         this.threat = (_d = base.threat) !== null && _d !== void 0 ? _d : 25;
         this.regen = (_e = base.regen) !== null && _e !== void 0 ? _e : { hp: 0, mp: 0 };
@@ -345,12 +345,12 @@ class Character {
             if ((_p = this.artifact3) === null || _p === void 0 ? void 0 : _p.type)
                 this.artifact3 = new Artifact(Object.assign({}, this.artifact3));
         };
-        this.updateStatModifiers = () => {
-            this.statModifiers.forEach((mod, index) => {
+        this.updatetraits = () => {
+            this.traits.forEach((mod, index) => {
                 if (mod.name)
                     mod.id = mod.name.replaceAll(" ", "_").toLowerCase();
                 let modifier = new PermanentStatModifier(mod);
-                this.statModifiers[index] = modifier;
+                this.traits[index] = modifier;
             });
         };
     }

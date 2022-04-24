@@ -54,7 +54,7 @@ interface characterObject {
   regen?: any;
   hit?: any;
   threat: number;
-  statModifiers?: any;
+  traits?: any;
   statusEffects?: any;
   getStats?: Function;
   getResists?: Function;
@@ -121,7 +121,7 @@ class Character {
   kill?: Function;
   xp?: number;
   threat: number;
-  statModifiers?: any;
+  traits?: any;
   statusEffects?: any;
   getStats?: Function;
   getResists?: Function;
@@ -129,7 +129,7 @@ class Character {
   getStatusResists?: Function;
   effects?: Function;
   updateAbilities?: Function;
-  updateStatModifiers?: Function;
+  updatetraits?: Function;
   aura?: string;
   regen?: any;
   hit?: any;
@@ -159,7 +159,7 @@ class Character {
     this.armor = { ...base.armor } ?? { physical: 0, magical: 0, elemental: 0 };
     this.resistances = { ...base.resistances };
     this.statusResistances = { ...base.statusResistances };
-    this.statModifiers = base.statModifiers ? [...base.statModifiers] : [];
+    this.traits = base.traits ? [...base.traits] : [];
     this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
     this.threat = base.threat ?? 25;
     this.regen = base.regen ?? { hp: 0, mp: 0 };
@@ -446,11 +446,11 @@ class Character {
       if (this.artifact3?.type) this.artifact3 = new Artifact({ ...this.artifact3 });
     };
 
-    this.updateStatModifiers = () => {
-      this.statModifiers.forEach((mod: PermanentStatModifier, index: number) => {
+    this.updatetraits = () => {
+      this.traits.forEach((mod: PermanentStatModifier, index: number) => {
         if (mod.name) mod.id = mod.name.replaceAll(" ", "_").toLowerCase();
         let modifier = new PermanentStatModifier(mod);
-        this.statModifiers[index] = modifier;
+        this.traits[index] = modifier;
       });
     };
   }

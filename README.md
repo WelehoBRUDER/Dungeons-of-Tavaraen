@@ -1,3 +1,33 @@
+# 1.1 ~ 24.4.2022
+
+### Major update
+
+## New Additions
+
+- Added 1 new consumable.
+- Added tutorial map.
+- Added `Central Heere` map.
+- Added `entrances` which are gateways to adjacent maps.
+- Added new character `Thrisna`. She runs a store in the village of Myre.
+
+## Fixes & Tweaks
+
+- Completely refactored code base to make working with it easier.
+- Status effects no longer add more time when gained, instead resetting the timer.
+- Status effect time remaining is now visualised with a red background.
+- Resting at a shrine now clears all status effects.
+- Summons now despawn on player death.
+- Codex now displays hover info instead of nothing when opening items and perks.´
+- Improved codex functionality and cleaned up code.
+- Clicking enemy with wheel will open its codex entry.
+- Rebalanced some items.
+- Randomly generated stats can now be detrimental.
+- Enemies no longer aggro through walls.
+- Optimized helper functions.
+- Fixed sight map not being generated when loading a map.
+- Fixed cooldowns resetting when loading saved game.
+- `Passive abilities` are now called `Traits`.
+
 # 1.0.9 ~ 16.3.2022
 
 ### Patch

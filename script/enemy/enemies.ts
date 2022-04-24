@@ -46,7 +46,7 @@ const enemies = {
       chance: 30,
       evasion: 0
     },
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" }
     ],
@@ -109,7 +109,7 @@ const enemies = {
       chance: 30,
       evasion: 0
     },
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" }
     ],
@@ -172,7 +172,7 @@ const enemies = {
       chance: 30,
       evasion: 0
     },
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" }
     ],
@@ -249,7 +249,7 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
       { id: "cornered_animal" },
@@ -317,7 +317,7 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.battle_fury, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
       { id: "cornered_animal" },
@@ -386,7 +386,7 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.poisoned_arrow, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
       { id: "cornered_animal" },
@@ -452,7 +452,7 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
     ],
@@ -518,7 +518,7 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.sundering_arrow, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
     ],
@@ -585,7 +585,7 @@ const enemies = {
       new Ability(abilities.blight, dummy),
     ],
     threat: 20,
-    statModifiers: [
+    traits: [
       { id: "magical_regen" },
     ],
     levelingTemplate: "skeleton_mage",
@@ -652,7 +652,7 @@ const enemies = {
       new Ability(abilities.blight, dummy),
       new Ability(abilities.fireball, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "magical_regen" },
       { id: "weaker_natural_ability" }
     ],
@@ -720,9 +720,10 @@ const enemies = {
       new Ability(abilities.attack, dummy),
       new Ability(abilities.charge, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
-      { id: "weaker_natural_ability" }
+      { id: "weaker_natural_ability" },
+      { id: "magically_impotent" },
     ],
     levelingTemplate: "berserker_melee",
     loot: [
@@ -785,8 +786,9 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
+      { id: "magically_impotent" },
     ],
     levelingTemplate: "berserker_ranged",
     shootsProjectile: "hunterJavelinProjectile",
@@ -851,7 +853,7 @@ const enemies = {
       new Ability(abilities.charge, dummy),
       new Ability(abilities.barbarian_rage, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "low_natural_regen" },
       { id: "weaker_natural_ability" },
       { id: "orc_frenzy", },
@@ -921,7 +923,7 @@ const enemies = {
       new Ability(abilities.challenge, dummy),
       new Ability(abilities.barbarian_rage, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "low_natural_regen" },
       { id: "weaker_natural_ability" },
       { id: "orc_frenzy", },
@@ -992,7 +994,7 @@ const enemies = {
       new Ability(abilities.charge, dummy),
       new Ability(abilities.barbarian_rage, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "low_natural_regen" },
       { id: "weaker_natural_ability" },
       { id: "orc_frenzy", },
@@ -1059,7 +1061,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.2,
-    statModifiers: [
+    traits: [
       { id: "troll_regeneration" },
       { id: "magically_impotent" },
     ],
@@ -1124,7 +1126,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.2,
-    statModifiers: [
+    traits: [
       { id: "troll_regeneration" },
       { id: "magically_impotent" },
     ],
@@ -1188,7 +1190,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.2,
-    statModifiers: [
+    traits: [
       { id: "troll_regeneration" },
       { id: "magically_impotent" },
     ],
@@ -1253,7 +1255,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.2,
-    statModifiers: [
+    traits: [
       { id: "troll_regeneration" },
       { id: "magically_impotent" },
     ],
@@ -1319,7 +1321,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.33,
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
       { id: "slow" }
@@ -1385,7 +1387,7 @@ const enemies = {
       new Ability(abilities.attack, dummy)
     ],
     scale: 1.33,
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
       { id: "slow" }
@@ -1453,7 +1455,7 @@ const enemies = {
       new Ability(abilities.challenge, dummy),
       new Ability(abilities.chivalrious_blow, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "no_natural_regen" },
       { id: "magically_impotent" },
     ],
@@ -1527,7 +1529,7 @@ const enemies = {
       new Ability(abilities.challenge, dummy),
       new Ability(abilities.chivalrious_blow, dummy)
     ],
-    statModifiers: [
+    traits: [
       { id: "low_natural_regen" },
       { id: "magically_impotent" },
     ],
@@ -1603,7 +1605,7 @@ const enemies = {
       new Ability(abilities.piercing_mana_bolt, dummy),
       new Ability(abilities.reap, dummy),
     ],
-    statModifiers: [
+    traits: [
       { id: "medium_natural_regen" },
       { id: "weaker_natural_ability" }
     ],

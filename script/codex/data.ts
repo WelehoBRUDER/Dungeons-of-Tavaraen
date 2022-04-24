@@ -3,13 +3,22 @@ const codex = {
     title: "ITEMS",
     parent: "NONE",
     no_img: true,
+    needs_encounter: true,
     import_from_array: "items"
   },
   enemies: {
     title: "ENEMIES",
     parent: "NONE",
     no_img: true,
+    needs_encounter: true,
     import_from_array: "enemies"
+  },
+  summons: {
+    title: "SUMMONS",
+    parent: "NONE",
+    no_img: true,
+    needs_encounter: true,
+    import_from_array: "summons"
   },
   classes: {
     title: "CLASSES",

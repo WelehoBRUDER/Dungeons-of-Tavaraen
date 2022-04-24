@@ -200,7 +200,7 @@ function getAbiModifiers(char, id) {
             }
         });
     });
-    (_b = char.statModifiers) === null || _b === void 0 ? void 0 : _b.forEach((stat) => {
+    (_b = char.traits) === null || _b === void 0 ? void 0 : _b.forEach((stat) => {
         let apply = true;
         if (stat.conditions) {
             apply = statConditions(stat.conditions, char);
@@ -287,7 +287,7 @@ function getAbiStatusModifiers(char, abilityId, effectId) {
             }
         });
     });
-    (_a = char.statModifiers) === null || _a === void 0 ? void 0 : _a.forEach((stat) => {
+    (_a = char.traits) === null || _a === void 0 ? void 0 : _a.forEach((stat) => {
         let apply = true;
         if (stat.conditions) {
             apply = statConditions(stat.conditions, char);

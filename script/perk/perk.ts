@@ -24,7 +24,7 @@ class perk {
   effects?: any;
   commandsExecuted?: boolean;
   pos: tileObject;
-  statModifiers?: Array<any>;
+  traits?: Array<any>;
   relative_to?: any;
   requires: Array<string>;
   icon: string;
@@ -51,7 +51,7 @@ class perk {
     this.pos = basePerk.pos;
     this.relative_to = basePerk.relative_to ?? "";
     this.requires = basePerk.requires ?? [];
-    this.statModifiers = basePerk.statModifiers ?? [];
+    this.traits = basePerk.traits ?? [];
     this.icon = basePerk.icon;
     this.tree = basePerk.tree;
     this.available = () => {
@@ -82,17 +82,17 @@ class perk {
         if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
           player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
         }
-        this.statModifiers.forEach((stat: any) => {
+        this.traits.forEach((stat: any) => {
           let add = true;
-          player.statModifiers.some((mod: PermanentStatModifier) => {
+          player.traits.some((mod: PermanentStatModifier) => {
             if (mod.id === stat.id) {
               add = false;
               return true;
             }
           });
-          if (add) player.statModifiers.push(stat);
+          if (add) player.traits.push(stat);
         });
-        player.updateStatModifiers();
+        player.updatetraits();
         player.updatePerks();
         player.updateAbilities();
         lvl_history.perks.push(this.id);
@@ -318,8 +318,8 @@ function perkTT(perk: perk) {
     txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
     Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
   }
-  if (perk.statModifiers) {
-    perk.statModifiers.forEach((statModif: any) => {
+  if (perk.traits) {
+    perk.traits.forEach((statModif: any) => {
       txt += statModifTT(statModif);
     });
   }
@@ -387,9 +387,9 @@ function action2(e: MouseEvent) {
 function undoChanges() {
   lvl_history.perks.forEach((prk: string) => {
     let index = player.perks.findIndex((_prk: any) => _prk.id == prk);
-    player.perks[index].statModifiers.forEach((rem: any) => {
-      const modIndex = player.statModifiers.findIndex((stat: any) => stat.id === rem.id);
-      player.statModifiers.splice(modIndex, 1);
+    player.perks[index].traits.forEach((rem: any) => {
+      const modIndex = player.traits.findIndex((stat: any) => stat.id === rem.id);
+      player.traits.splice(modIndex, 1);
     });
     player.perks.splice(index, 1);
   });

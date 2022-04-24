@@ -31,13 +31,13 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite + sex);
     ctx?.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
+  if (!player.legs?.sprite || (sex === "Female" && !player.chest?.sprite)) {
+    const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
+    ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  }
   if (player.legs?.sprite) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite + sex);
     ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  }
-  else if (!player.legs?.sprite || (sex === "Female" && !player.chest?.sprite)) {
-    const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
-    ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
   }
   if (player.chest?.sprite) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite + sex);
@@ -85,14 +85,15 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
       const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.boots.sprite + sex);
       ctx?.drawImage(bootsModel, x, y, size, size);
     }
+    if (!playerModel.legs?.sprite || (player.sex === "female" && !player.chest?.sprite)) {
+      const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
+      ctx?.drawImage(leggings, x, y, size, size);
+    }
     if (playerModel.legs?.sprite) {
       const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
       ctx?.drawImage(leggingsModel, x, y, size, size);
     }
-    else if (!playerModel.legs?.sprite || (player.sex === "female" && !player.chest?.sprite)) {
-      const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
-      ctx?.drawImage(leggings, x, y, size, size);
-    }
+
     if (playerModel.chest?.sprite) {
       const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.chest.sprite + sex);
       ctx?.drawImage(chestModel, x, y, size, size);

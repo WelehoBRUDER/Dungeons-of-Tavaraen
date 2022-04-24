@@ -736,7 +736,7 @@ body {
     .coreStatsTitle,
     .coreResistancesTitle,
     .statusResistancesTitle,
-    .passiveAbilitiesTitle {
+    .traitsTitle {
       text-align: center;
       width: calc(300px * var(--ui-scale));
       font-size: calc(32px * var(--ui-scale));
@@ -756,7 +756,7 @@ body {
     .coreStats,
     .coreResistances,
     .statusResistances,
-    .passiveAbilities {
+    .traits {
       position: absolute;
       height: auto;
       max-height: calc(420px * var(--ui-scale));
@@ -820,8 +820,8 @@ body {
       left: calc(725px * var(--ui-scale));
     }
 
-    .passiveAbilities,
-    .passiveAbilitiesTitle {
+    .traits,
+    .traitsTitle {
       left: calc(1075px * var(--ui-scale));
 
       p {

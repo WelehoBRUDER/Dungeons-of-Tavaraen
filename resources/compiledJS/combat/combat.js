@@ -194,10 +194,21 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let penetration = ability.resistance_penetration / 100;
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
+                console.log("<--------------------->");
+                console.log("pen", penetration, "def", defense, "res", resistance);
+                console.log("bonus", bonus);
+                console.log("dmg before", dmg);
+                if (isNaN(val))
+                    val = 0;
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                console.log("val", val);
+                console.log("mod", mod);
+                console.log("dmg after mods", dmg);
+                console.log("num", num);
                 if (attackTypeDamageModifier > 0)
                     dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
+                console.log("final dmg", dmg);
             });
         }
         else {
@@ -410,7 +421,7 @@ function threatDistance(targets, from) {
     return chosenTarget;
 }
 function summonUnit(ability, cords) {
-    var _a;
+    var _a, _b, _c;
     state.isSelected = false;
     state.abiSelected = {};
     if (ability.cooldown)
@@ -445,9 +456,9 @@ function summonUnit(ability, cords) {
         });
     });
     let newSummon = new Summon(Object.assign({}, Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
-    newSummon.updateStatModifiers();
+    newSummon.updatetraits();
     newSummon.restore(true);
-    newSummon.statModifiers.push({ id: "buffs_from_player", effects: Object.assign({}, playerBuffs) });
+    newSummon.traits.push({ id: "buffs_from_player", effects: Object.assign({}, playerBuffs) });
     if (ability.summon_status)
         newSummon.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.summon_status]), ability.statusModifiers));
     combatSummons.push(Object.assign({}, newSummon));
@@ -455,6 +466,13 @@ function summonUnit(ability, cords) {
         ability.statusesUser.forEach((status) => {
             player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[status]), { last: ability.summon_last - 1 }), ability.statusModifiers));
         });
+    }
+    let encounter = (_c = (_b = player.entitiesEverEncountered) === null || _b === void 0 ? void 0 : _b.summons) === null || _c === void 0 ? void 0 : _c[newSummon.id];
+    if (encounter < 1 || !encounter) {
+        player.entitiesEverEncountered.enemies[newSummon.id] = 1;
+        displayText("New creature encountered!");
+        displayText(newSummon.id + " added to codex.");
+        spawnFloatingText(newSummon.cords, "NEW CREATURE ENCOUNTER", "yellow", 22, 2000, 0);
     }
     modifyCanvas();
 }

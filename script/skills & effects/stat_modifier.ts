@@ -1,6 +1,6 @@
 /* Permanent stat modifiers, everything stored in one file */
 
-const statModifiers = {
+const traits = {
   no_natural_regen: {
     id: "no_natural_regen",
     effects: {
@@ -82,7 +82,7 @@ const statModifiers = {
       fireball_cooldownV: 5,
       charge_cooldownV: 2,
       charge_use_rangeV: -1,
-      rage_cooldownV: 5,
+      battle_fury_cooldownV: 5,
       piercing_mana_bolt_cooldownV: 4
     }
   },
@@ -256,7 +256,7 @@ class PermanentStatModifier {
   desc?: string;
   constructor(base: PermanentStatModifier) {
     this.id = base.id;
-    const baseModifier = { ...statModifiers[this.id] };
+    const baseModifier = { ...traits[this.id] };
     if (!baseModifier) throw new Error("Invalid modifier id!");
     this.conditions = baseModifier.conditions ?? null;
     this.effects = baseModifier.effects ?? {};

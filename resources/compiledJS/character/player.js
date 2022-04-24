@@ -35,7 +35,7 @@ class PlayerCharacter extends Character {
         this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
         this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
-        this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {} };
+        this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
         this.fistDmg = () => {
             let damages = {};
@@ -76,16 +76,16 @@ class PlayerCharacter extends Character {
                 }
                 prk.commandsExecuted = cmdsEx;
                 this.perks[index] = Object.assign({}, prk);
-                prk.statModifiers.forEach((stat) => {
+                prk.traits.forEach((stat) => {
                     let add = true;
-                    player.statModifiers.some((mod) => {
+                    player.traits.some((mod) => {
                         if (mod.id === stat.id) {
                             add = false;
                             return true;
                         }
                     });
                     if (add)
-                        this.statModifiers.push(stat);
+                        this.traits.push(stat);
                 });
             });
             for (let i = this.perks.length - 1; i >= 0; i--) {
@@ -214,8 +214,8 @@ class PlayerCharacter extends Character {
                 updateUI();
             }
             // Add racial bonus
-            if (this.level.level >= 10 && this.statModifiers.findIndex((m) => m.id === `racial_ability_${this.race}_1`) === -1) {
-                this.statModifiers.push(new PermanentStatModifier(statModifiers[`racial_ability_${this.race}_1`]));
+            if (this.level.level >= 10 && this.traits.findIndex((m) => m.id === `racial_ability_${this.race}_1`) === -1) {
+                this.traits.push(new PermanentStatModifier(traits[`racial_ability_${this.race}_1`]));
                 spawnFloatingText(this.cords, "RACIAL ABILITY!", "lime", 50, 2000, 450);
             }
         };
@@ -437,7 +437,7 @@ let player = new PlayerCharacter({
         level: 1
     },
     classes: {
-        main: new combatClass(combatClasses["rogueClass"]),
+        main: new combatClass(combatClasses["barbarianClass"]),
         sub: null
     },
     sprite: ".player",
@@ -463,7 +463,7 @@ let player = new PlayerCharacter({
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
     ],
-    statModifiers: [
+    traits: [
         { id: "resilience_of_the_lone_wanderer" },
     ],
     regen: {
@@ -545,7 +545,7 @@ function respawnPlayer() {
     displayText(`[WORLD] ${lang["revive"]}`);
     spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
-player.updateStatModifiers();
+player.updatetraits();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 //# sourceMappingURL=player.js.map

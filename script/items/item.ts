@@ -106,7 +106,7 @@ interface defenseClass {
   elemental: number;
 }
 
-interface statModifiers {
+interface traits {
   [strV: string]: number;
   strP?: number;
   vitV?: number;

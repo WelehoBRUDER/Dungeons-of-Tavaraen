@@ -1,6 +1,11 @@
-# 1.1 ~ 23 .4.2022
+# 1.1 ~ 24.4.2022
 
 ### Major update
+
+## CAUTION
+
+It's highly recommended to start a new game for this update.
+The new changes can be gamebreaking.
 
 ## New Additions
 
@@ -19,12 +24,15 @@
 - Summons now despawn on player death.
 - Codex now displays hover info instead of nothing when opening items and perks.´
 - Improved codex functionality and cleaned up code.
+- Clicking enemy with wheel will open its codex entry.
 - Rebalanced some items.
 - Randomly generated stats can now be detrimental.
 - Enemies no longer aggro through walls.
 - Optimized helper functions.
 - Fixed sight map not being generated when loading a map.
 - Fixed cooldowns resetting when loading saved game.
+- `Passive abilities` are now called `Traits`.
+- Female characters no longer render nude when wearing only pants.
 
 # 1.0.9 ~ 16.3.2022
 

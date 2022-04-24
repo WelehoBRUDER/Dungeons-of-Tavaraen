@@ -34,13 +34,13 @@ function renderPlayerModel(size, canvas, ctx) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite + sex);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
-    if ((_e = player.legs) === null || _e === void 0 ? void 0 : _e.sprite) {
-        const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    }
-    else if (!((_f = player.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (sex === "Female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
+    if (!((_e = player.legs) === null || _e === void 0 ? void 0 : _e.sprite) || (sex === "Female" && !((_f = player.chest) === null || _f === void 0 ? void 0 : _f.sprite))) {
         const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    }
+    if ((_g = player.legs) === null || _g === void 0 ? void 0 : _g.sprite) {
+        const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite + sex);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
     }
     if ((_h = player.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite + sex);
@@ -89,13 +89,13 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
             const bootsModel = document.querySelector(".sprites ." + playerModel.boots.sprite + sex);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, x, y, size, size);
         }
-        if ((_e = playerModel.legs) === null || _e === void 0 ? void 0 : _e.sprite) {
-            const leggingsModel = document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
-        }
-        else if (!((_f = playerModel.legs) === null || _f === void 0 ? void 0 : _f.sprite) || (player.sex === "female" && !((_g = player.chest) === null || _g === void 0 ? void 0 : _g.sprite))) {
+        if (!((_e = playerModel.legs) === null || _e === void 0 ? void 0 : _e.sprite) || (player.sex === "female" && !((_f = player.chest) === null || _f === void 0 ? void 0 : _f.sprite))) {
             const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, x, y, size, size);
+        }
+        if ((_g = playerModel.legs) === null || _g === void 0 ? void 0 : _g.sprite) {
+            const leggingsModel = document.querySelector(".sprites ." + playerModel.legs.sprite + sex);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, x, y, size, size);
         }
         if ((_h = playerModel.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
             const chestModel = document.querySelector(".sprites ." + playerModel.chest.sprite + sex);

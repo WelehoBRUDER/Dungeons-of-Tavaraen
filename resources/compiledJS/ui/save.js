@@ -96,37 +96,57 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             player.updateAbilities();
             gotoSaveMenu(false, false);
         });
-        loadGame.addEventListener("click", () => {
-            var _a;
+        loadGame.addEventListener("click", async () => {
+            loadingScreen.style.display = "flex";
+            loadingText.textContent = "Loading save...";
+            await helper.sleep(5);
+            let fm;
+            let pl;
+            let fe;
+            let id;
+            let lc;
+            try {
+                fm = maps.findIndex((map) => map.id == save.save.currentMap);
+                if (fm == -1)
+                    fm = save.save.currentMap;
+                pl = new PlayerCharacter(Object.assign({}, save.save.player));
+                fe = [...save.save.fallenEnemies];
+                id = [...save.save.itemData];
+                lc = [...save.save.lootedChests];
+                pl.updatePerks(true);
+                pl.updatetraits();
+                pl.updateAbilities();
+            }
+            catch (_a) {
+                loadingScreen.style.display = "none";
+                return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
+            }
+            player = pl;
+            fallenEnemies = fe;
+            itemData = id;
+            lootedChests = lc;
             helper.reviveAllDeadEnemies();
-            player = new PlayerCharacter(Object.assign({}, save.save.player));
-            fallenEnemies = [...save.save.fallenEnemies];
-            itemData = [...save.save.itemData];
-            if (save.save.lootedChests)
-                lootedChests = (_a = [...save.save.lootedChests]) !== null && _a !== void 0 ? _a : [];
-            let foundMap = maps.findIndex((map) => map.id == save.save.currentMap);
-            if (foundMap == -1)
-                foundMap = save.save.currentMap;
-            currentMap = foundMap;
+            currentMap = fm;
             tree = player.classes.main.perkTree;
             turnOver = true;
             enemiesHadTurn = 0;
             state.inCombat = false;
             player.updatePerks(true);
-            player.updateStatModifiers();
+            player.updatetraits();
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
             helper.purgeDeadEnemies();
             helper.killAllQuestEnemies();
             spawnQuestMonsters();
-            convertEnemyStatModifiers();
-            handleEscape();
+            convertEnemytraits();
             closeGameMenu();
             resetAllChests();
             createStaticMap();
             modifyCanvas(true);
             updateUI();
+            handleEscape();
+            loadingScreen.style.display = "none";
         });
         deleteGame.addEventListener("click", () => {
             saves.splice(save.id, 1);
@@ -136,7 +156,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         });
         let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
         renderedPlayer.updatePerks(true, true);
-        renderedPlayer.updateStatModifiers();
+        renderedPlayer.updatetraits();
         renderedPlayer.updateAbilities(true);
         let saveTime = new Date(save.time);
         let saveDateString = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -153,7 +173,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
         let verColor = "lime";
         let addVersionWarning = false;
-        if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version) {
+        if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
             verColor = "orange";
             addVersionWarning = true;
         }
@@ -328,5 +348,12 @@ function GetKey(key, table) {
             return Object.assign({}, object);
         }
     }
+}
+function warningMessage(txt) {
+    let warning = document.querySelector(".warningWindow");
+    warning.style.transform = "scale(1)";
+    warning.innerHTML = "";
+    warning.append(textSyntax(txt));
+    setTimeout(() => { warning.style.transform = "scale(0)"; }, 5000);
 }
 //# sourceMappingURL=save.js.map

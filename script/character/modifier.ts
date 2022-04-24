@@ -44,7 +44,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
   obj["spellDamageP"] = 1;
   obj["movementSpeedV"] = 0;
   obj["attackSpeedV"] = 0;
-  char.statModifiers.forEach((mod: any) => {
+  char.traits.forEach((mod: any) => {
     let apply = true;
     if (mod.conditions && withConditions) {
       apply = statConditions(mod.conditions, char);
@@ -100,13 +100,13 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 function getModifiers(char: any, stat: string, withConditions = true) {
   let val = 0;
   let modif = 1;
-  char.statModifiers.forEach((mod: any) => {
+  char.traits.forEach((mod: any) => {
     let apply = true;
     if (mod.conditions && withConditions) {
       apply = statConditions(mod.conditions, char);
     }
     if (mod.conditions && !withConditions) apply = false;
-    if (apply) {
+    if (apply && mod.effects) {
       Object.entries(mod.effects).forEach((eff: any) => {
         if (eff[0].startsWith(stat)) {
           if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);
@@ -117,6 +117,7 @@ function getModifiers(char: any, stat: string, withConditions = true) {
     }
   });
   char.statusEffects.forEach((mod: any) => {
+    if (!mod.effects) return;
     Object.entries(mod.effects).forEach((eff: any) => {
       if (eff[0].startsWith(stat)) {
         if (eff[0] == stat + "P" && eff[1] < 0) modif *= (1 + eff[1] / 100);

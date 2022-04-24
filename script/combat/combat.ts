@@ -168,9 +168,19 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         let penetration = ability.resistance_penetration / 100;
         let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
         let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
+        console.log("<--------------------->");
+        console.log("pen", penetration, "def", defense, "res", resistance);
+        console.log("bonus", bonus);
+        console.log("dmg before", dmg);
+        if (isNaN(val)) val = 0;
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+        console.log("val", val);
+        console.log("mod", mod);
+        console.log("dmg after mods", dmg);
+        console.log("num", num);
         if (attackTypeDamageModifier > 0) dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
+        console.log("final dmg", dmg);
       });
     } else {
       Object.entries(ability.get_true_damage(attacker)).forEach((value: any) => {
@@ -395,15 +405,22 @@ function summonUnit(ability: ability, cords: tileObject) {
     });
   });
   let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
-  newSummon.updateStatModifiers();
+  newSummon.updatetraits();
   newSummon.restore(true);
-  newSummon.statModifiers.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
+  newSummon.traits.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
   if (ability.summon_status) newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
   combatSummons.push({ ...newSummon });
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
       player.statusEffects.push(new statEffect({ ...statusEffects[status], last: ability.summon_last - 1 }, ability.statusModifiers));
     });
+  }
+  let encounter = player.entitiesEverEncountered?.summons?.[newSummon.id];
+  if (encounter < 1 || !encounter) {
+    player.entitiesEverEncountered.enemies[newSummon.id] = 1;
+    displayText("New creature encountered!");
+    displayText(newSummon.id + " added to codex.");
+    spawnFloatingText(newSummon.cords, "NEW CREATURE ENCOUNTER", "yellow", 22, 2000, 0);
   }
   modifyCanvas();
 }

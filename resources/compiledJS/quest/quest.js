@@ -236,7 +236,7 @@ function spawnQuestMonsters() {
                 if (!foundUniqueMob) {
                     let spawnMap = maps.find((m) => m.id == enemy.map);
                     spawnMap.enemies.push(new Enemy(Object.assign(Object.assign({}, enemies[enemy.enemy]), { cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } })));
-                    spawnMap.enemies[spawnMap.enemies.length - 1].updateStatModifiers();
+                    spawnMap.enemies[spawnMap.enemies.length - 1].updatetraits();
                 }
             });
         }

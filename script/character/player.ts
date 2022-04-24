@@ -48,6 +48,7 @@ interface levelObject {
 interface entityMemory {
   [items: string]: any;
   enemies: any;
+  summons: any;
 }
 
 class PlayerCharacter extends Character {
@@ -129,7 +130,7 @@ class PlayerCharacter extends Character {
     this.oldCords = { ...base.oldCords } ?? this.cords;
     this.flags = { ...base.flags } ?? [];
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
-    this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {} } as entityMemory;
+    this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} } as entityMemory;
     this.sex = base.sex ?? "male";
 
     this.fistDmg = () => {
@@ -172,15 +173,15 @@ class PlayerCharacter extends Character {
         }
         prk.commandsExecuted = cmdsEx;
         this.perks[index] = { ...prk };
-        prk.statModifiers.forEach((stat: any) => {
+        prk.traits.forEach((stat: any) => {
           let add = true;
-          player.statModifiers.some((mod: PermanentStatModifier) => {
+          player.traits.some((mod: PermanentStatModifier) => {
             if (mod.id === stat.id) {
               add = false;
               return true;
             }
           });
-          if (add) this.statModifiers.push(stat);
+          if (add) this.traits.push(stat);
         });
       });
       for (let i = this.perks.length - 1; i >= 0; i--) {
@@ -298,8 +299,8 @@ class PlayerCharacter extends Character {
         updateUI();
       }
       // Add racial bonus
-      if (this.level.level >= 10 && this.statModifiers.findIndex((m: any) => m.id === `racial_ability_${this.race}_1`) === -1) {
-        this.statModifiers.push(new PermanentStatModifier(statModifiers[`racial_ability_${this.race}_1`]));
+      if (this.level.level >= 10 && this.traits.findIndex((m: any) => m.id === `racial_ability_${this.race}_1`) === -1) {
+        this.traits.push(new PermanentStatModifier(traits[`racial_ability_${this.race}_1`]));
         spawnFloatingText(this.cords, "RACIAL ABILITY!", "lime", 50, 2000, 450);
       }
     };
@@ -503,7 +504,7 @@ let player = new PlayerCharacter({
     level: 1
   },
   classes: {
-    main: new combatClass(combatClasses["rogueClass"]),
+    main: new combatClass(combatClasses["barbarianClass"]),
     sub: null
   },
   sprite: ".player",
@@ -529,7 +530,7 @@ let player = new PlayerCharacter({
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
     new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
-  statModifiers: [
+  traits: [
     { id: "resilience_of_the_lone_wanderer" },
   ],
   regen: {
@@ -613,7 +614,7 @@ function respawnPlayer() {
   displayText(`[WORLD] ${lang["revive"]}`);
   spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
-player.updateStatModifiers();
+player.updatetraits();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 

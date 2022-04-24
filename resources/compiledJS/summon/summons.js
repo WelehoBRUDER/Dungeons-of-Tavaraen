@@ -52,7 +52,7 @@ const summons = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
-        statModifiers: [
+        traits: [
             {
                 id: "magically_impotent",
             }
@@ -117,7 +117,7 @@ const summons = {
             new Ability(abilities.blight, dummy),
             new Ability(abilities.fireball, dummy)
         ],
-        statModifiers: [
+        traits: [
             {
                 id: "weaker_natural_ability",
             }
@@ -177,7 +177,7 @@ const summons = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
-        statModifiers: [
+        traits: [
             {
                 id: "magically_impotent",
             }
@@ -239,7 +239,7 @@ const summons = {
         attackRange: 1,
         canFly: false,
         abilities: [],
-        statModifiers: [
+        traits: [
             {
                 id: "magically_impotent",
             }
@@ -363,7 +363,7 @@ const summons = {
         abilities: [
             new Ability(abilities.attack, dummy)
         ],
-        statModifiers: [
+        traits: [
             {
                 id: "magically_impotent",
             }

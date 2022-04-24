@@ -1527,7 +1527,7 @@ const maps = [
     ],
             entrances: [
       {id: "passage_of_abandoned_fort", path: {to: "central_heere", cords: {x: 4, y: 155}}, cords: { x: 150, y: 144 }, sprite: "entrance"}, 
-      {id: "heere_cave_entrance", path: {to: "cave_of_beginning", cords: {x: 39, y: 2}}, cords: { x: 41, y: 169 }, sprite: "entrance"}, 
+      {id: "heere_cave_entrance", path: {to: "cave_of_awakening", cords: {x: 39, y: 2}}, cords: { x: 41, y: 169 }, sprite: "entrance"}, 
     ]
         },{
         name: "Central Heere",

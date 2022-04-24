@@ -4,19 +4,32 @@ const listContainer = codexWindow.querySelector(".contentList");
 const contentContainer = codexWindow.querySelector(".contentContainer");
 const codexHistory = {};
 function openIngameCodex() {
-    var _a;
+    var _a, _b;
     state.codexOpen = true;
     codexWindow.style.transform = "scale(1)";
     codexWindow.style.opacity = "1";
     listContainer.innerHTML = "";
+    /* If an entry has been selected before, display it now */
     if ((_a = codexHistory["displayed"]) === null || _a === void 0 ? void 0 : _a.id) {
         const { category, object } = codexHistory["displayed"];
         handleDisplayEntry(category, object);
     }
+    /* Recursion to support dynamic nesting */
     Object.values(codex).forEach((entry) => {
         loopCodex(entry);
     });
+    /* Make sure to scroll until previosly selected entry is in screen */
+    if ((_b = codexHistory["displayed"]) === null || _b === void 0 ? void 0 : _b.object) {
+        const { object } = codexHistory["displayed"];
+        const entry = listContainer.querySelector(`.${object.id}`);
+        scrollEntryToView(entry);
+    }
 }
+/*
+  This is a recursive function, meaning that it calls itself.
+  It is used to loop through the codex and create entries.
+  It also handles animation.
+*/
 function loopCodex(entry) {
     var _a, _b;
     const fullEntry = document.createElement("div");
@@ -24,7 +37,7 @@ function loopCodex(entry) {
     const titleText = document.createElement("p");
     const titleArrow = document.createElement("span");
     const content = document.createElement("div");
-    const maxHeight = 780 * settings.ui_scale / 100;
+    const maxHeight = 780 * settings.ui_scale / 100; // Max height of the content container
     fullEntry.classList.add("codex-entry");
     fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
     title.classList.add("entry-title");
@@ -94,7 +107,7 @@ function loopCodex(entry) {
         Object.values(Object.assign({}, eval(entry.import_from_array))).forEach((_entry, index) => {
             if (_entry.id.includes("error"))
                 return;
-            createCodexEntry(entry, _entry, entry.needsEncounter, content, index);
+            createCodexEntry(entry, _entry, entry.needs_encounter, content, index);
         });
     }
     else {
@@ -144,7 +157,8 @@ function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
     }
     entryElement.style.maxHeight = `${30 * settings.ui_scale / 100}px`;
     entryElement.append(entryText);
-    tooltip(entryElement, displayName);
+    const hoverText = playerHasEntry ? displayName : lang["no_entry"];
+    tooltip(entryElement, hoverText);
     title.append(entryElement);
 }
 function clickListEntry(entry) {
@@ -168,7 +182,8 @@ function clickListEntry(entry) {
     handleDisplayEntry(category, object);
 }
 function handleDisplayEntry(category, object) {
-    if (category === "enemies") {
+    contentContainer.innerHTML = "";
+    if (category === "enemies" || category === "summons") {
         createEnemyInfo(object);
     }
     else if (category === "items") {
@@ -189,6 +204,30 @@ function handleDisplayEntry(category, object) {
     // else if (category === "achievements") {
     //   createAchievementInfo(object);
     // }
+}
+function openCodexToPage(path, displayed) {
+    path.forEach(step => {
+        codexHistory[step] = true;
+    });
+    codexHistory["displayed"] = displayed;
+    openIngameCodex();
+    const entry = listContainer.querySelector(`.${displayed.id}`);
+    scrollEntryToView(entry);
+}
+function scrollEntryToView(entry) {
+    const posInList = entry.offsetTop;
+    const scrollHeight = getParentOffset(entry, posInList);
+    if (scrollHeight) {
+        listContainer.scrollTo({ top: scrollHeight, behavior: "smooth" });
+    }
+}
+// Typescript doesn't like recursive functions so I'm putting this here
+// @ts-ignore
+function getParentOffset(child, val) {
+    if (!child.parentElement.classList.contains("contentList")) {
+        return getParentOffset(child.parentElement, val + child.parentElement.offsetTop);
+    }
+    return val;
 }
 function closeCodex() {
     state.codexOpen = false;

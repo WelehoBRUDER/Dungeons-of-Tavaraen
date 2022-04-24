@@ -145,7 +145,7 @@ interface shrine {
 
 function clickMap(event: MouseEvent) {
   if (state.clicked || player.isDead) return;
-  if (state.invOpen || (event.button != 0 && event.button != 2)) {
+  if (state.invOpen || (event.button != 0 && event.button != 1 && event.button != 2)) {
     closeInventory();
     return;
   }
@@ -155,7 +155,7 @@ function clickMap(event: MouseEvent) {
   const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
   const x = lX + player.cords.x;
   const y = lY + player.cords.y;
-  if (event.button == 2) {
+  if (event.button === 2) {
     state.isSelected = false;
     state.abiSelected = {};
     updateUI();
@@ -167,6 +167,20 @@ function clickMap(event: MouseEvent) {
   } 1;
   if (dontMove) {
     dontMove = false;
+    return;
+  }
+  if (event.button === 1) {
+    state.isSelected = false;
+    state.abiSelected = {};
+    updateUI();
+    mapSelection.x = null;
+    mapSelection.y = null;
+    renderTileHover({ x: x, y: y }, event);
+    maps[currentMap].enemies.some((en: Enemy) => {
+      if (en.cords.x === x && en.cords.y === y) {
+        return openCodexToPage(["ENEMIES"], { id: en.id, category: "enemies", object: en });
+      }
+    });
     return;
   }
   itemData.some((item: any) => {
@@ -361,7 +375,7 @@ function loadMiscMaps() {
 function loadStaticMaps() {
   return new Promise((resolve, reject) => {
     createStaticMap();
-    convertEnemyStatModifiers();
+    convertEnemytraits();
     resolve("rendered static maps");
   }
   );

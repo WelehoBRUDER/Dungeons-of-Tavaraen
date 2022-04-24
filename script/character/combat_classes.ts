@@ -61,7 +61,7 @@ const combatClasses = {
 
 class combatClass {
   [id: string]: string | any;
-  statBonuses: statModifiers;
+  statBonuses: traits;
   color: string;
   icon: string;
   perkTree: string;

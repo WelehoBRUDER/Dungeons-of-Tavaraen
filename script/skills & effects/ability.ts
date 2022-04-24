@@ -289,7 +289,7 @@ function getAbiModifiers(char: characterObject, id: string) {
       }
     });
   });
-  char.statModifiers?.forEach((stat: statEffect) => {
+  char.traits?.forEach((stat: statEffect) => {
     let apply = true;
     if (stat.conditions) {
       apply = statConditions(stat.conditions, char);
@@ -362,7 +362,7 @@ function getAbiStatusModifiers(char: characterObject, abilityId: string, effectI
       }
     });
   });
-  char.statModifiers?.forEach((stat: statEffect) => {
+  char.traits?.forEach((stat: statEffect) => {
     let apply = true;
     if (stat.conditions) {
       apply = statConditions(stat.conditions, char);

@@ -2,7 +2,7 @@
 const emptyModel = {
     id: "player",
     name: "",
-    cords: { x: 41, y: 169 },
+    cords: { x: 30, y: 105 },
     stats: {
         str: 1,
         dex: 1,
@@ -64,7 +64,7 @@ const emptyModel = {
         new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
         new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
     ],
-    statModifiers: [
+    traits: [
         {
             id: "resilience_of_the_lone_wanderer",
         }
@@ -83,7 +83,7 @@ const emptyModel = {
     gold: 50,
     sp: 5,
     pp: 1,
-    respawnPoint: { cords: { x: 41, y: 169 } },
+    respawnPoint: { cords: { x: 29, y: 105 } },
     usedShrines: [],
     flags: {},
     questProgress: [],
@@ -197,7 +197,7 @@ creation.querySelector(".nameInput").addEventListener("keyup", (key) => {
     checkIfCanStartGame();
 });
 function beginGame() {
-    player.updateStatModifiers();
+    player.updatetraits();
     player.updateAbilities();
     creation.style.opacity = "0";
     setTimeout(() => { creation.style.display = "none"; }, 750);
@@ -212,18 +212,18 @@ function beginGame() {
     turnOver = true;
     enemiesHadTurn = 0;
     lootedChests = [];
-    currentMap = 2;
+    currentMap = 4;
     state.inCombat = false;
     resetAllChests();
     handleEscape();
     createStaticMap();
-    modifyCanvas();
     renderMinimap(maps[currentMap]);
     renderAreaMap(maps[currentMap]);
     moveMinimap();
+    modifyCanvas(true);
     setTimeout(() => {
         openLevelingScreen();
-    }, 50);
+    }, 0);
 }
 function checkIfCanStartGame() {
     let canStart = false;

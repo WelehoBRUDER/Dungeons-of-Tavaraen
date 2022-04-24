@@ -1,6 +1,6 @@
-function createEnemyInfo(enemy: Enemy) {
-  enemy = new Enemy(enemy);
-  enemy.updateStatModifiers();
+function createEnemyInfo(enemy: Enemy | any) {
+  enemy = enemy.isFoe ? new Enemy(enemy) : new Summon(enemy);
+  enemy.updatetraits();
   let totalDmg = 0;
   Object.values(enemy.damages).forEach((dmg: any) => totalDmg += dmg);
   const enemyStats = enemy.getStats();
@@ -19,7 +19,7 @@ function createEnemyInfo(enemy: Enemy) {
   const enemyCoreStatsContainer = document.createElement("div");
   const enemyResistsContainer = document.createElement("div");
   const enemyStatusResistsContainer = document.createElement("div");
-  const enemyPassiveAbilitiesContainer = document.createElement("div");
+  const enemytraitsContainer = document.createElement("div");
   const enemySkillsContainer = document.createElement("div");
   imageContainer.classList.add("entryImage");
   enemyName.classList.add("entryTitle");
@@ -31,15 +31,15 @@ function createEnemyInfo(enemy: Enemy) {
   enemyCoreStatsContainer.classList.add("coreStats");
   enemyResistsContainer.classList.add("coreResists");
   enemyStatusResistsContainer.classList.add("statResists");
-  enemyPassiveAbilitiesContainer.classList.add("passives");
+  enemytraitsContainer.classList.add("passives");
   enemySkillsContainer.classList.add("skills");
   enemyImage.src = enemy.img;
   enemyName.textContent = lang[enemy.id + "_name"];
   enemyHealth.append(textSyntax(`<i>${icons.health}<i>${enemy.getHpMax()}`));
   enemyMana.append(textSyntax(`<i>${icons.mana}<i>${enemy.getMpMax()}`));
   enemyDamage.append(textSyntax(`<i>${icons.damage}<i>${totalDmg}`));
-  enemyType.append(textSyntax(`${lang["type"]}:<i>${icons[enemy.type + "_type_icon"]}<i>${lang["singular_type_" + enemy.type]}`));
-  enemyRace.append(textSyntax(`${lang["choose_race"]}:<i>${icons[enemy.race + "_race_icon"]}<i>${lang["singular_race_" + enemy.race]}`));
+  enemyType.append(textSyntax(`${lang["type"]}:<i>${icons[enemy.type + "_type_icon"] || icons.damage}<i>${lang["singular_type_" + enemy.type] || enemy.type}`));
+  enemyRace.append(textSyntax(`${lang["choose_race"]}:<i>${icons[enemy.race + "_race_icon"] || icons.damage}<i>${lang["singular_race_" + enemy.race] || enemy.race}`));
   Object.entries(enemyCoreStats).map((stat: any) => {
     enemyCoreStatsContainer.append(createStatDisplay(stat));
   });
@@ -49,8 +49,8 @@ function createEnemyInfo(enemy: Enemy) {
   Object.entries(enemyStatusResists).map((stat: any) => {
     enemyStatusResistsContainer.append(createStatusResistanceDisplay(stat));
   });
-  enemy.statModifiers.map((mod: PermanentStatModifier) => {
-    enemyPassiveAbilitiesContainer.append(createStatModifierDisplay(mod));
+  enemy.traits.map((mod: PermanentStatModifier) => {
+    enemytraitsContainer.append(createStatModifierDisplay(mod));
   });
   enemy.abilities.map((abi: Ability) => {
     if (abi.id != "attack") {
@@ -67,6 +67,6 @@ function createEnemyInfo(enemy: Enemy) {
     }
   });
   imageContainer.append(enemyImage);
-  contentContainer.append(imageContainer, enemyName, enemyHealth, enemyMana, enemyDamage, enemyType, enemyRace, enemyCoreStatsContainer, enemyResistsContainer, enemyStatusResistsContainer, enemyPassiveAbilitiesContainer, enemySkillsContainer);
+  contentContainer.append(imageContainer, enemyName, enemyHealth, enemyMana, enemyDamage, enemyType, enemyRace, enemyCoreStatsContainer, enemyResistsContainer, enemyStatusResistsContainer, enemytraitsContainer, enemySkillsContainer);
 
 }

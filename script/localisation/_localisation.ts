@@ -16,7 +16,7 @@ const finnish = {
   core_stats: "Yleiset statsit",
   core_resistances: "puolustukset",
   status_resistances: "vastustuskyky",
-  passives: "Passiiviset Kyvyt",
+  passives: "Piirteet",
   poison_status: "Myrkky",
   burning_status: "Palaminen",
   curse_status: "Kirous",
@@ -349,6 +349,8 @@ const finnish = {
   wildStoneTroll_name: "Villi Kivipeikko",
   troll_name: "Peikko",
   stoneTroll_name: "Kivipeikko",
+  stoneStatue_name: "Kivisoturi",
+  stoneStatueHalberd_name: "Panssaroitu Kivisoturi",
   enthralledKnight_name: "Hurmattu Ritari",
   spectralKnight_name: "Aave Ritari",
 
@@ -439,7 +441,7 @@ const finnish = {
   hp_less_than: "Terveys alle",
   mp_more_than: "Taika yli",
   mp_less_than: "Taika alle",
-  passive: "Passiivinen kyky",
+  passive: "Piirre",
   too_much_weight: "Kannat liikaa painoa! Pudota jotain!",
   summons_unit: "Kutsuu hahmon",
   summon_level: "Kutsutun hahmon taso",
@@ -471,6 +473,7 @@ const finnish = {
   quest_added: "<c>goldenrod<c>Tehtävä '<c>gold<c>[QUEST]<c>goldenrod<c>' alkanut!",
   revive: "Olet herännyt henkiin pyhäköllä!",
   enter_area: "Astu sisälle", // kassun käännös
+  no_entry: "Et ole vielä löytänyt tätä asiaa...",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -1012,7 +1015,7 @@ const english = {
   core_stats: "Core stats",
   core_resistances: "Core resistances",
   status_resistances: "Status Resists",
-  passives: "Passive Abilities",
+  passives: "Traits",
   poison_status: "Poison",
   burning_status: "Burning",
   curse_status: "Curse",
@@ -1213,6 +1216,8 @@ const english = {
   wildStoneTroll_name: "Wild Stone Troll",
   troll_name: "Troll",
   stoneTroll_name: "Stone Troll",
+  stoneStatue_name: "Stone Statue",
+  stoneStatueHalberd_name: "Armored Stone Statue",
   enthralledKnight_name: "Enthralled Knight",
   spectralKnight_name: "Spectral Knight",
 
@@ -1304,7 +1309,7 @@ const english = {
   hp_less_than: "Health less than",
   mp_more_than: "Mana more than",
   mp_less_than: "Mana less than",
-  passive: "Passive ability",
+  passive: "Trait",
   too_much_weight: "You're carrying too much to move! Drop something!",
   summons_unit: "Summons unit",
   summon_level: "Summoned unit level",
@@ -1336,6 +1341,7 @@ const english = {
   quest_added: "<c>goldenrod<c>Quest '<c>gold<c>[QUEST]<c>goldenrod<c>' has begun!",
   revive: "You have been revived at a shrine!",
   enter_area: "Enter area",
+  no_entry: "You have not yet discovered this...",
 
   // Character names
   testMerchant_name: "Karl Bauer",

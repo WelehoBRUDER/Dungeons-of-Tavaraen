@@ -37,7 +37,7 @@ class perk {
         this.pos = basePerk.pos;
         this.relative_to = (_d = basePerk.relative_to) !== null && _d !== void 0 ? _d : "";
         this.requires = (_e = basePerk.requires) !== null && _e !== void 0 ? _e : [];
-        this.statModifiers = (_f = basePerk.statModifiers) !== null && _f !== void 0 ? _f : [];
+        this.traits = (_f = basePerk.traits) !== null && _f !== void 0 ? _f : [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
         this.available = () => {
@@ -76,18 +76,18 @@ class perk {
                 if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != ((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.sub) === null || _b === void 0 ? void 0 : _b.perkTree)) {
                     player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
                 }
-                this.statModifiers.forEach((stat) => {
+                this.traits.forEach((stat) => {
                     let add = true;
-                    player.statModifiers.some((mod) => {
+                    player.traits.some((mod) => {
                         if (mod.id === stat.id) {
                             add = false;
                             return true;
                         }
                     });
                     if (add)
-                        player.statModifiers.push(stat);
+                        player.traits.push(stat);
                 });
-                player.updateStatModifiers();
+                player.updatetraits();
                 player.updatePerks();
                 player.updateAbilities();
                 lvl_history.perks.push(this.id);
@@ -318,8 +318,8 @@ function perkTT(perk) {
         txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
         Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
     }
-    if (perk.statModifiers) {
-        perk.statModifiers.forEach((statModif) => {
+    if (perk.traits) {
+        perk.traits.forEach((statModif) => {
             txt += statModifTT(statModif);
         });
     }
@@ -383,9 +383,9 @@ function action2(e) {
 function undoChanges() {
     lvl_history.perks.forEach((prk) => {
         let index = player.perks.findIndex((_prk) => _prk.id == prk);
-        player.perks[index].statModifiers.forEach((rem) => {
-            const modIndex = player.statModifiers.findIndex((stat) => stat.id === rem.id);
-            player.statModifiers.splice(modIndex, 1);
+        player.perks[index].traits.forEach((rem) => {
+            const modIndex = player.traits.findIndex((stat) => stat.id === rem.id);
+            player.traits.splice(modIndex, 1);
         });
         player.perks.splice(index, 1);
     });

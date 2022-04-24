@@ -15,7 +15,7 @@ class Weapon extends Item {
   damages: damageClass;
   range: number;
   firesProjectile?: string;
-  stats?: statModifiers;
+  stats?: traits;
   commands?: any;
   statStrings?: any;
   fullPrice?: Function;

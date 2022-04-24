@@ -16,7 +16,7 @@ const perksArray = {
                 commands: {
                     add_ability_piercing_mana_bolt: 1
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "frantic_mana_recovery",
                     }
@@ -48,7 +48,7 @@ const perksArray = {
                     magicDamageP: 5,
                     mpMaxP: 3
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "heightened_casting",
                     }
@@ -411,7 +411,7 @@ const perksArray = {
                     charge_cooldownV: -3,
                     hitChanceV: 7
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "warrior_instinct",
                     }
@@ -436,7 +436,7 @@ const perksArray = {
                 effects: {
                     strV: 1,
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "blood_rage_1",
                     },
@@ -541,7 +541,7 @@ const perksArray = {
                 effects: {
                     evasionV: 2
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "sense_of_danger_1",
                     }
@@ -559,7 +559,7 @@ const perksArray = {
                 effects: {
                     strV: 1
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "reckless_1",
                     }
@@ -578,7 +578,7 @@ const perksArray = {
                     vitV: 1,
                     strV: 1
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "reckless_2",
                     },
@@ -776,7 +776,7 @@ const perksArray = {
                 effects: {
                     dexV: 5
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "confident_shot",
                     }
@@ -1024,7 +1024,7 @@ const perksArray = {
                 effects: {
                     dexV: 1
                 },
-                statModifiers: [
+                traits: [
                     {
                         id: "mark_of_hunter",
                     }
@@ -1238,7 +1238,7 @@ const dummyPerk = {
 };
 /* OUTDATED */
 // This is an example of a passive ability
-// statModifiers: [
+// traits: [
 //   {
 //     id: "frenzy",
 //     conditions: {
@@ -1252,7 +1252,7 @@ const dummyPerk = {
 //   }
 // ],
 /* NEW */
-// statModifiers: [
+// traits: [
 // { id: "frenzy" }
 //],
 // DEFINED IN statModifier.ts

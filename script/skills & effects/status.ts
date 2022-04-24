@@ -13,7 +13,7 @@ interface statusEffect {
   [id: string]: any;
   name: string;
   dot?: DoT;
-  effects?: statModifiers;
+  effects?: traits;
   last: statusTime;
   type: string;
   onRemove?: Function;
@@ -28,7 +28,7 @@ class statEffect {
   [id: string]: string | any;
   name: string;
   dot?: DoT;
-  effects?: statModifiers;
+  effects?: traits;
   last: statusTime;
   type: string;
   onRemove?: Function;
