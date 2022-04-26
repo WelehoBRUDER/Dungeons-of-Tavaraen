@@ -9,6 +9,7 @@ const dialogLang = {
         neutral_hisHer: "Hänen",
         leaveDialog: "Näkemisiin!",
         generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Tervehdys kamu! On hyvä nähdä etteivät kaikki ole menettäneet järkeään. \nJos olet kiinnostunut tarjoamastani asioista, niin totta ihmeessä mainitse siitä!"`,
+        thrisna_welcome: `<css>font-style: italic;<css><c>silver<c>"Hei uusi asiakas! Olet löytänyt tiesti Thrisnan Varusteliikkeeseen. \nTarjoan vain parhaita ja kestävimpiä varusteita, tutkippa tarjoukseni huolella."`,
         testMerchant_store: "Näytä tuotteesi",
         testMerchant_business: "Kuinka hyvin kauppa käy?",
         testMerchant_defeated_the_slimes: "Päihitin ryöväri limat",
@@ -22,7 +23,8 @@ const dialogLang = {
         testMerchant_decline_quest_2: "En kerkeä juuri nyt.",
         testMerchant_defeated_the_slimes_2: "Mukiloin muutaman liman.",
         blacksmithMaroch_store: "Tarvitsen varusteita",
-        blacksmithMaroch_smithing: "Paranna varusteitani"
+        blacksmithMaroch_smithing: "Paranna varusteitani",
+        warriorThrisna_store: "Tarvitsen vahvoja varusteita",
     },
     english: {
         masculine_heShe: "He",
@@ -33,6 +35,7 @@ const dialogLang = {
         neutral_hisHer: "Their",
         leaveDialog: "Goodbye!",
         generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Hail friend! It's good to see someone who can think for themself, I've seen far too many of the corrupted for my own good. \nAnyway, if you're interested in what I've got, just say the word."`,
+        thrisna_welcome: `<css>font-style: italic;<css><c>silver<c>"Hey there customer, you've found Thrisna's Equipment store. \nYou'll find only the strongest and most reliable masterworks here."`,
         testMerchant_store: "Show me your wares",
         testMerchant_business: "How's business?",
         testMerchant_defeated_the_slimes: "I defeated the slimes",
@@ -46,7 +49,8 @@ const dialogLang = {
         testMerchant_decline_quest_2: "No time for this now.",
         testMerchant_defeated_the_slimes_2: "I've beaten a few slimes.",
         blacksmithMaroch_store: "I need equipment",
-        blacksmithMaroch_smithing: "I need upgrades"
+        blacksmithMaroch_smithing: "I need upgrades",
+        warriorThrisna_store: "I need strong equipment",
     }
 };
 //# sourceMappingURL=dialog_localisation.js.map

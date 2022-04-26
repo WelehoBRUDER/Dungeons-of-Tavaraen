@@ -42,7 +42,7 @@ function loopCodex(entry: any) {
   fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
   title.classList.add("entry-title");
   content.classList.add("entry-content");
-  titleText.textContent = entry.title;
+  titleText.textContent = codexLang[lang.language_id][entry.title + "_title"] ?? entry.title;
   titleArrow.textContent = ">";
   if (codexHistory[entry.title.replaceAll(" ", "_")]) {
     content.style.height = "auto";
@@ -103,7 +103,7 @@ function loopCodex(entry: any) {
   }
   if (entry.import_from_array) {
     Object.values({ ...eval(entry.import_from_array) }).forEach((_entry: any, index: number) => {
-      if (_entry.id.includes("error")) return;
+      if (_entry.id.includes("error") || _entry.id == "attack") return;
       createCodexEntry(entry, _entry, entry.needs_encounter, content, index);
     });
   }
@@ -124,7 +124,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (!displayName) displayName = lang[entry.id];
   if (!displayName) displayName = entry.name ?? entry.title;
   if (DEVMODE) playerHasEntry = true;
-  if (codexEntry.import_from_array == "items") index--;
+  if (codexEntry.import_from_array == "items" || codexEntry.import_from_array == "abilities") index--;
   entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
   entryElement.classList.add("entry-item");
   entryElement.classList.add(entry.id);
@@ -180,6 +180,9 @@ function handleDisplayEntry(category: string, object: any) {
   }
   else if (category.includes("perks")) {
     createPerkInfo(object);
+  }
+  else if (category === "abilities") {
+    createAbilityInfo(object);
   }
   // else if (category === "npcs") {
   //   createNPCInfo(object);

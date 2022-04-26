@@ -6,6 +6,7 @@ let invScroll = 0;
 function renderInventory() {
     state.invOpen = true;
     updatePlayerInventoryIndexes();
+    contextMenu.textContent = "";
     hideHover();
     const inventory = document.querySelector(".playerInventory");
     inventory.style.transform = "scale(1)";
@@ -40,6 +41,7 @@ function renderInventory() {
 function closeInventory() {
     state.invOpen = false;
     hideHover();
+    contextMenu.textContent = "";
     document.querySelector(".worldText").style.opacity = "1";
     const inventory = document.querySelector(".playerInventory");
     inventory.style.transform = "scale(0)";
@@ -183,16 +185,11 @@ function sellItem(e, itm) {
     addItemToSelling(itm);
 }
 function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest = null, dataIndex = -1) {
+    var _a, _b;
     if (item.id == "A0_error")
         return;
     contextMenu.textContent = "";
-    try {
-        document.querySelector(".itemSelected").classList.remove("itemSelected");
-    }
-    catch (err) {
-        if (DEVMODE)
-            displayText(`<c>red<c>${err} at line equipment:1108`);
-    }
+    (_b = (_a = document.querySelector(".itemSelected")) === null || _a === void 0 ? void 0 : _a.classList) === null || _b === void 0 ? void 0 : _b.remove("itemSelected");
     if (Event.shiftKey)
         return;
     if (context != "PLAYER_EQUIPMENT")
@@ -225,16 +222,11 @@ function fastDrop(Event, itm) {
         player.drop(itm);
     }
 }
-function removeContextMenu(Event) {
+function removeContextMenu(Event = null) {
+    var _a, _b;
     let target = Event.target;
     if (target.className.includes("itemList") || target.className.includes("playerInventory")) {
-        try {
-            document.querySelector(".itemSelected").classList.remove("itemSelected");
-        }
-        catch (err) {
-            if (DEVMODE)
-                displayText(`<c>red<c>${err} at line equipment:1146`);
-        }
+        (_b = (_a = document.querySelector(".itemSelected")) === null || _a === void 0 ? void 0 : _a.classList) === null || _b === void 0 ? void 0 : _b.remove("itemSelected");
         contextMenu.textContent = "";
     }
 }

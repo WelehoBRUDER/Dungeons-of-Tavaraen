@@ -39,7 +39,7 @@ const NPCcharacters = [
         id: "warriorThrisna",
         sprite: "orcLady",
         img: "resources/tiles/characters/orc_warrior_lady.png",
-        greeting: "generic_hail_friend",
+        greeting: "thrisna_welcome",
         pronounSet: "feminine",
         currentMap: 3,
         currentCords: { x: 179, y: 38 },
@@ -70,7 +70,6 @@ const NPCInventories = {
             Object.assign(Object.assign({}, items["apprenticeBoots"]), { unique: false, price: 500 }),
             { id: "healingPotion_weak", unique: false, price: 250 },
             { id: "manaPotion_weak", unique: false, price: 250 },
-            { id: "beer", unique: false, price: 70 },
         ],
     },
     blacksmithMaroch: {
@@ -94,9 +93,13 @@ const NPCInventories = {
     warriorThrisna: {
         normal: [
             Object.assign(Object.assign({}, items["orcishAxe"]), { unique: false, price: 425 }),
+            Object.assign(Object.assign({}, items["silverSword"]), { unique: false, price: 1200 }),
+            Object.assign(Object.assign({}, items["pikeMore"]), { unique: false, price: 1170 }),
+            Object.assign(Object.assign({}, items["galadorSpear"]), { unique: false, price: 1900 }),
             Object.assign(Object.assign({}, items["warriorsTalisman"]), { unique: false, price: 300 }),
             Object.assign(Object.assign({}, items["warriorsRing"]), { unique: false, price: 300 }),
             Object.assign(Object.assign({}, items["warriorsEmblem"]), { unique: false, price: 300 }),
+            { id: "beer", unique: false, price: 70 },
         ]
     }
 };

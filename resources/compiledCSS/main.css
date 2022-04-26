@@ -182,7 +182,8 @@ body {
   transform: translateX(-50%);
   bottom: calc(100px * var(--ui-scale));
   background: rgb(10, 10, 10);
-  box-shadow: inset 0px 0px calc(8px * var(--ui-scale)) calc(6px * var(--ui-scale)) rgb(21, 21, 21);
+  box-shadow: inset 0px 0px calc(8px * var(--ui-scale))
+    calc(6px * var(--ui-scale)) rgb(21, 21, 21);
   border: calc(4px * var(--ui-scale)) solid rgb(0, 0, 0);
   border-radius: calc(8px * var(--ui-scale));
 }
@@ -200,7 +201,8 @@ body {
   transform: translateX(-50%);
   bottom: calc(-10px * var(--ui-scale));
   border: calc(8px * var(--ui-scale)) solid rgb(37, 25, 14);
-  box-shadow: inset 0px 0px calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(46, 46, 46);
+  box-shadow: inset 0px 0px calc(18px * var(--ui-scale))
+    calc(12px * var(--ui-scale)) rgb(46, 46, 46);
   border-radius: calc(12px * var(--ui-scale));
   display: flex;
 }
@@ -1243,7 +1245,8 @@ body {
   background: rgba(75, 20, 20, 0.95);
   border-radius: 50%;
   margin: calc(8px * var(--ui-scale));
-  box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 6px 4px rgb(39, 39, 39);
+  box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95),
+    0 0 6px 4px rgb(39, 39, 39);
   border: calc(3px * var(--ui-scale)) solid rgb(59, 59, 59);
 }
 .main .rightTop .playerButtons .screenButton img {
@@ -1253,7 +1256,8 @@ body {
 }
 .main .rightTop .playerButtons .screenButton:hover {
   background: rgba(122, 33, 33, 0.95);
-  box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 10px 8px rgb(39, 39, 39);
+  box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95),
+    0 0 10px 8px rgb(39, 39, 39);
 }
 .main .dialogWindow {
   transition: 0.36s;
@@ -1324,7 +1328,8 @@ body {
   margin-top: calc(3px * var(--ui-scale));
   padding-top: calc(8px * var(--ui-scale));
   padding-bottom: calc(8px * var(--ui-scale));
-  box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83), 0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
+  box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83),
+    0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
   border-radius: calc(6px * var(--ui-scale));
   background: rgba(58, 58, 58, 0.75);
   font-size: calc(17px * var(--ui-scale));
@@ -1431,7 +1436,8 @@ body {
   height: 100%;
   position: absolute;
   left: 42.5%;
-  box-shadow: inset 0 0 calc(18px * var(--ui-scale)) calc(12px * var(--ui-scale)) rgb(56, 56, 56);
+  box-shadow: inset 0 0 calc(18px * var(--ui-scale))
+    calc(12px * var(--ui-scale)) rgb(56, 56, 56);
   user-select: none;
   top: 0;
 }
@@ -1440,7 +1446,8 @@ body {
   width: 80%;
   height: 20%;
   background: rgba(25, 25, 25, 0.25);
-  box-shadow: inset 0 0 calc(12px * var(--ui-scale)) calc(10px * var(--ui-scale)) rgba(20, 20, 20, 0.33);
+  box-shadow: inset 0 0 calc(12px * var(--ui-scale))
+    calc(10px * var(--ui-scale)) rgba(20, 20, 20, 0.33);
   border: 4px solid rgb(10, 10, 10);
   box-sizing: border-box;
   position: absolute;
@@ -1515,7 +1522,9 @@ body {
   width: calc(250px * var(--ui-scale));
   height: calc(110px * var(--ui-scale));
   background: rgb(39, 39, 39);
-  box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15), 0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
+  box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale))
+      rgb(15, 15, 15),
+    0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1529,7 +1538,8 @@ body {
   background: rgb(7, 33, 65);
   outline: none;
   border: none;
-  box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(2, 3, 80);
+  box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale))
+    rgb(2, 3, 80);
   font-size: calc(24px * var(--ui-scale));
   max-width: 25%;
 }
@@ -1541,7 +1551,8 @@ body {
   transform: translateX(-50%);
   background: rgb(42, 134, 42);
   padding: calc(4px * var(--ui-scale));
-  box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(4, 49, 14);
+  box-shadow: 0 0 calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale))
+    rgb(4, 49, 14);
   border-radius: 25%;
   font-size: calc(24px * var(--ui-scale));
   font-family: Montserrat;
@@ -1757,15 +1768,18 @@ body {
   line-height: calc(24px * var(--ui-scale));
 }
 .main .questJournalWindow .questList p:hover {
-  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale))
+    rgba(218, 165, 32, 0.8);
 }
 .main .questJournalWindow .questList .selectedEntry {
   text-decoration: underline;
-  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale))
+    rgba(218, 165, 32, 0.8);
 }
 .main .questJournalWindow .questList .selectedEntry:hover {
   text-decoration: underline;
-  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.9);
+  box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale))
+    rgba(218, 165, 32, 0.9);
 }
 .main .questJournalWindow .questInfo {
   width: 70%;
@@ -1815,4 +1829,4 @@ body {
   margin-left: -3px;
   margin-top: -6px;
   z-index: 5;
-}/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */

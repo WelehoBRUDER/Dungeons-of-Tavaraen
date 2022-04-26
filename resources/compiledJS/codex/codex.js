@@ -31,7 +31,7 @@ function openIngameCodex() {
   It also handles animation.
 */
 function loopCodex(entry) {
-    var _a, _b;
+    var _a, _b, _c;
     const fullEntry = document.createElement("div");
     const title = document.createElement("div");
     const titleText = document.createElement("p");
@@ -42,7 +42,7 @@ function loopCodex(entry) {
     fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
     title.classList.add("entry-title");
     content.classList.add("entry-content");
-    titleText.textContent = entry.title;
+    titleText.textContent = (_a = codexLang[lang.language_id][entry.title + "_title"]) !== null && _a !== void 0 ? _a : entry.title;
     titleArrow.textContent = ">";
     if (codexHistory[entry.title.replaceAll(" ", "_")]) {
         content.style.height = "auto";
@@ -101,17 +101,17 @@ function loopCodex(entry) {
         listContainer.append(fullEntry);
     }
     else {
-        listContainer.querySelector(`.${(_a = entry === null || entry === void 0 ? void 0 : entry.parent) === null || _a === void 0 ? void 0 : _a.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
+        listContainer.querySelector(`.${(_b = entry === null || entry === void 0 ? void 0 : entry.parent) === null || _b === void 0 ? void 0 : _b.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
     }
     if (entry.import_from_array) {
         Object.values(Object.assign({}, eval(entry.import_from_array))).forEach((_entry, index) => {
-            if (_entry.id.includes("error"))
+            if (_entry.id.includes("error") || _entry.id == "attack")
                 return;
             createCodexEntry(entry, _entry, entry.needs_encounter, content, index);
         });
     }
     else {
-        (_b = entry === null || entry === void 0 ? void 0 : entry.content) === null || _b === void 0 ? void 0 : _b.forEach((content) => {
+        (_c = entry === null || entry === void 0 ? void 0 : entry.content) === null || _c === void 0 ? void 0 : _c.forEach((content) => {
             loopCodex(content);
         });
     }
@@ -132,7 +132,7 @@ function createCodexEntry(codexEntry, entry, needsEncounter, title, index) {
         displayName = (_b = entry.name) !== null && _b !== void 0 ? _b : entry.title;
     if (DEVMODE)
         playerHasEntry = true;
-    if (codexEntry.import_from_array == "items")
+    if (codexEntry.import_from_array == "items" || codexEntry.import_from_array == "abilities")
         index--;
     entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
     entryElement.classList.add("entry-item");
@@ -191,6 +191,9 @@ function handleDisplayEntry(category, object) {
     }
     else if (category.includes("perks")) {
         createPerkInfo(object);
+    }
+    else if (category === "abilities") {
+        createAbilityInfo(object);
     }
     // else if (category === "npcs") {
     //   createNPCInfo(object);

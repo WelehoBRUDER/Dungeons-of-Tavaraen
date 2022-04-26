@@ -100,6 +100,13 @@ const codex = {
       }
     ]
   },
+  abilities: {
+    title: "ABILITIES",
+    parent: "NONE",
+    no_img: true,
+    needs_encounter: false,
+    import_from_array: "abilities"
+  },
   characters: {
     title: "CHARACTERS",
     parent: "NONE",

@@ -5,6 +5,7 @@ let invScroll = 0;
 function renderInventory() {
   state.invOpen = true;
   updatePlayerInventoryIndexes();
+  contextMenu.textContent = "";
   hideHover();
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
   inventory.style.transform = "scale(1)";
@@ -40,6 +41,7 @@ function renderInventory() {
 function closeInventory() {
   state.invOpen = false;
   hideHover();
+  contextMenu.textContent = "";
   document.querySelector<HTMLDivElement>(".worldText").style.opacity = "1";
   const inventory = document.querySelector<HTMLDivElement>(".playerInventory");
   inventory.style.transform = "scale(0)";
@@ -182,10 +184,7 @@ function sellItem(e: MouseEvent, itm: any) {
 function clickItem(Event: MouseEvent, item: any, itemObject: HTMLDivElement, context: string = "PLAYER_INVENTORY", chest: any = null, dataIndex: number = -1) {
   if (item.id == "A0_error") return;
   contextMenu.textContent = "";
-  try {
-    document.querySelector(".itemSelected").classList.remove("itemSelected");
-  }
-  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line equipment:1108`); }
+  document.querySelector(".itemSelected")?.classList?.remove("itemSelected");
   if (Event.shiftKey) return;
   if (context != "PLAYER_EQUIPMENT") itemObject.classList.add("itemSelected");
   contextMenu.style.left = `${Event.x}px`;
@@ -217,13 +216,10 @@ function fastDrop(Event: MouseEvent, itm: any) {
   }
 }
 
-function removeContextMenu(Event: MouseEvent) {
+function removeContextMenu(Event: MouseEvent = null) {
   let target: any = Event.target;
   if (target.className.includes("itemList") || target.className.includes("playerInventory")) {
-    try {
-      document.querySelector(".itemSelected").classList.remove("itemSelected");
-    }
-    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line equipment:1146`); }
+    document.querySelector(".itemSelected")?.classList?.remove("itemSelected");
     contextMenu.textContent = "";
   }
 }

@@ -121,6 +121,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 loadingScreen.style.display = "none";
                 return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
             }
+            closeSaveMenu();
             player = pl;
             fallenEnemies = fe;
             itemData = id;

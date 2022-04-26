@@ -10,4 +10,15 @@ function createPerkInfo(_perk) {
     tempWrapper.append(textSyntax(perkTT(new perk(_perk))));
     contentContainer.append(tempWrapper, imageContainer);
 }
+function createAbilityInfo(_ability) {
+    const imageContainer = document.createElement("div");
+    const abilityImage = document.createElement("img");
+    const tempWrapper = document.createElement("div");
+    imageContainer.classList.add("entryImage");
+    abilityImage.src = _ability.icon;
+    imageContainer.append(abilityImage);
+    tempWrapper.classList.add("tempWrapper");
+    tempWrapper.append(textSyntax(abiTT(new Ability(_ability, dummy))));
+    contentContainer.append(tempWrapper, imageContainer);
+}
 //# sourceMappingURL=perk_entry.js.map

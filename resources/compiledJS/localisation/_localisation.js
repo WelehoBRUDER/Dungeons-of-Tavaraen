@@ -56,6 +56,8 @@ const finnish = {
     tutorial_return_later: "<c>white<c>Tunnet <c>red<c>karmivan<c>white<c> olemuksen luolan lopusta.\n\nTämä uhka kannattaisi välttää kunnes olet vahvempi.",
     tutorial_shrines: "<c>white<c>Näet <c>gold<c>Pyhökän<c>white<c> edessäsi.\n\nPyhäköt <c>gold<c>palauttavat<c>white<c> taikasi ja terveytesi, sekä asettavat syntymis pisteesi.",
     tutorial_entrances: "<c>gold<c>Sisäänkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi sisäänkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
+    enter_fort_of_the_dead: "<c>white<c>Kylmä hiki valuu otsallasi astuessasi Kuolleiden Linnoitukseen.\n\nTämä linna hylättiin aikoja sitten, jäljellä ovat enää vaeltavat luurangot joiden puhdistus jää harteillesi.",
+    village_of_myre: "<c>gold<c>Myren Kylä",
     // Technical stuff
     changeWordOrder: true,
     mana: "Taika",
@@ -1011,6 +1013,8 @@ const english = {
     tutorial_return_later: "<c>white<c>You feel an <c>red<c>ominious<c>white<c> presence from the end of the cave.\n\nYou should pass by it for now and return when you're stronger.",
     tutorial_shrines: "<c>white<c>You see a <c>gold<c>Shrine<c>white<c> in the distance.\n\nShrines are used to <c>gold<c>restore<c>white<c> your health and mana, as well as to set your spawn point.",
     tutorial_entrances: "<c>gold<c>Entrances<c>white<c> are routes that connect maps.\n\nTo use one, simply <c>gold<c>click<c>white<c> on it while standing on the same tile.",
+    enter_fort_of_the_dead: "<c>white<c>You feel shivers down your spine as you enter the fort of the dead.\n\nThis place has long been abandoned and is home only to the undead menace you must cleanse.",
+    village_of_myre: "<c>gold<c>Myre Village",
     // Technical stuff
     changeWordOrder: false,
     mana: "mana",
