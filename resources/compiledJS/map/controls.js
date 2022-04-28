@@ -156,20 +156,14 @@ function movementCheck(keyPress) {
             if (!extraMove)
                 advanceTurn();
         }
-        else if (canMove(shittyFix, dirs[keyPress.key]) && rooted) {
-            advanceTurn();
-            state.abiSelected = {};
+        else if (target) {
+            if (weaponReach(player, player.weapon.range, target)) {
+                player.doNormalAttack(target);
+            }
         }
         else {
-            if (target) {
-                if (weaponReach(player, player.weapon.range, target)) {
-                    player.doNormalAttack(target);
-                }
-            }
-            else {
-                state.abiSelected = {};
-                advanceTurn();
-            }
+            advanceTurn();
+            state.abiSelected = {};
         }
     }
     else if (keyPress.key == settings.hotkey_interact) {

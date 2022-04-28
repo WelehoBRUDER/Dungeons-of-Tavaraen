@@ -40,9 +40,12 @@ body {
 
 * {
   color: #fff;
+  scrollbar-width: none;
+  scrollbar-color: none;
 }
 
-::-webkit-scrollbar {
+::-webkit-scrollbar,
+::-moz {
   width: 0;
   background: transparent;
 }
@@ -1979,11 +1982,6 @@ body {
       position: relative;
       user-select: none;
       border: calc(4px * var(--ui-scale)) solid rgb(50, 50, 50);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: hidden;
 
       p {
         width: calc(100% - 28px * var(--ui-scale));

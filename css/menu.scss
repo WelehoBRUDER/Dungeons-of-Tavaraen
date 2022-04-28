@@ -63,6 +63,7 @@
   user-select: none;
   overflow: hidden;
   overflow-y: auto;
+  white-space: nowrap;
 
   .toggle {
     transition: 0.03s;
@@ -157,7 +158,8 @@
       box-shadow: 0 0 2px 2px rgb(177, 164, 160);
     }
 
-    input::-webkit-slider-thumb {
+    input::-webkit-slider-thumb,
+    input::-moz-range-thumb {
       -webkit-appearance: none; /* Override default look */
       appearance: none;
       width: 20px; /* Set a specific slider handle width */
@@ -167,7 +169,8 @@
       cursor: pointer; /* Cursor on hover */
       box-shadow: -200px 0 0 200px #bb581f;
     }
-    input::-webkit-slider-runnable-track {
+    input::-webkit-slider-runnable-track,
+    input::-moz-range-progress {
       height: 20px;
       -webkit-appearance: none;
       color: #13bba4;

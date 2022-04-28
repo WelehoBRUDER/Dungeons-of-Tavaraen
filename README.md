@@ -1,14 +1,23 @@
-# 1.1 ~ 24.4.2022
+# 1.1 ~ 28.4.2022
 
 ### Major update
+
+## CAUTION
+
+It's highly recommended to start a new game for this update.
+The new changes can be gamebreaking.
 
 ## New Additions
 
 - Added 1 new consumable.
 - Added tutorial map.
 - Added `Central Heere` map.
+- Added `Eastern Heere` map.
 - Added `entrances` which are gateways to adjacent maps.
 - Added new character `Thrisna`. She runs a store in the village of Myre.
+- Expanded codex with new information.
+- Enemies now start respawning once you're in a different map.
+  > Currently takes 200 turns per enemy.
 
 ## Fixes & Tweaks
 
@@ -27,6 +36,9 @@
 - Fixed sight map not being generated when loading a map.
 - Fixed cooldowns resetting when loading saved game.
 - `Passive abilities` are now called `Traits`.
+- Female characters no longer render nude when wearing only pants.
+- Added a lot of missing localisation.
+- Renamed male orcs.
 
 # 1.0.9 ~ 16.3.2022
 
@@ -34,7 +46,7 @@
 
 ## New Additions
 
-- Added 1 new weapons
+- Added 1 new weaponsa
 - Added 1 new armor sets
 
 ## Fixes & Tweaks

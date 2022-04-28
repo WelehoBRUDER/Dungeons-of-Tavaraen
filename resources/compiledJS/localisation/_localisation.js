@@ -58,6 +58,9 @@ const finnish = {
     tutorial_entrances: "<c>gold<c>Sisäänkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi sisäänkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
     enter_fort_of_the_dead: "<c>white<c>Kylmä hiki valuu otsallasi astuessasi Kuolleiden Linnoitukseen.\n\nTämä linna hylättiin aikoja sitten, jäljellä ovat enää vaeltavat luurangot joiden puhdistus jää harteillesi.",
     village_of_myre: "<c>gold<c>Myren Kylä",
+    welcome_to_eastern_heere: "<c>white<c>Olet saapunut saaren itäiseen päätyyn.\n\nViimeinen koettelemuksesi ennen itse mantereelle pääsyä löytyy täältä.",
+    lair_of_the_boss: "<c>white<c>Edessäsi aukeaa linnoitus jonka keskellä on ylivoimainen epäkuollut.\n\n<c>crimson<c>Tämä vihollinen on vahvin olento saarella, valmistaudu viimeiseen taisteluusi.",
+    playtest_beaten: "<c>white<c>Olet päihittänyt testaus version!\n\n<c>gold<c>Onnittelut!<c>white<c>",
     // Technical stuff
     changeWordOrder: true,
     mana: "Taika",
@@ -1015,6 +1018,9 @@ const english = {
     tutorial_entrances: "<c>gold<c>Entrances<c>white<c> are routes that connect maps.\n\nTo use one, simply <c>gold<c>click<c>white<c> on it while standing on the same tile.",
     enter_fort_of_the_dead: "<c>white<c>You feel shivers down your spine as you enter the fort of the dead.\n\nThis place has long been abandoned and is home only to the undead menace you must cleanse.",
     village_of_myre: "<c>gold<c>Myre Village",
+    welcome_to_eastern_heere: "<c>white<c>You have arrived at the eastern end of the island.\n\nHere you shall face your final trial before you can enter the continent proper.",
+    lair_of_the_boss: "<c>white<c>You have arrived at the lair of an undead above the rest.\n\n<c>crimson<c>Be prepared, this is the final battle on Heere.",
+    playtest_beaten: "<c>white<c>You have completed the playtest!\n\n<c>gold<c>Congratulations!<c>white<c>",
     // Technical stuff
     changeWordOrder: false,
     mana: "mana",

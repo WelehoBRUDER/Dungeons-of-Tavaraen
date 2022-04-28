@@ -56,6 +56,7 @@
   user-select: none;
   overflow: hidden;
   overflow-y: auto;
+  white-space: nowrap;
 }
 .settingsMenu .toggle {
   transition: 0.03s;
@@ -141,7 +142,8 @@
   background: rgb(61, 60, 60);
   box-shadow: 0 0 2px 2px rgb(177, 164, 160);
 }
-.settingsMenu .sliderContainer input::-webkit-slider-thumb {
+.settingsMenu .sliderContainer input::-webkit-slider-thumb,
+.settingsMenu .sliderContainer input::-moz-range-thumb {
   -webkit-appearance: none;
   /* Override default look */
   appearance: none;
@@ -155,7 +157,8 @@
   /* Cursor on hover */
   box-shadow: -200px 0 0 200px #bb581f;
 }
-.settingsMenu .sliderContainer input::-webkit-slider-runnable-track {
+.settingsMenu .sliderContainer input::-webkit-slider-runnable-track,
+.settingsMenu .sliderContainer input::-moz-range-progress {
   height: 20px;
   -webkit-appearance: none;
   color: #13bba4;
