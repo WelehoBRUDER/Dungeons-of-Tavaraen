@@ -27,7 +27,7 @@
     top: 0;
     user-select: none;
 
-    background: url(/resources/ui/menu_button.png);
+    background: url(../ui/menu_button.png);
     background-size: 100% 100%;
 
     box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
@@ -158,7 +158,17 @@
       box-shadow: 0 0 2px 2px rgb(177, 164, 160);
     }
 
-    input::-webkit-slider-thumb,
+    input::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
+      appearance: none;
+      width: 20px; /* Set a specific slider handle width */
+      height: 20px; /* Slider handle height */
+      background: #6e2d07;
+      box-shadow: inset 0 0 3px 3px #833f18, 0 0 3px 3px rgb(211, 67, 10);
+      cursor: pointer; /* Cursor on hover */
+      box-shadow: -200px 0 0 200px #bb581f;
+    }
+
     input::-moz-range-thumb {
       -webkit-appearance: none; /* Override default look */
       appearance: none;
@@ -169,6 +179,7 @@
       cursor: pointer; /* Cursor on hover */
       box-shadow: -200px 0 0 200px #bb581f;
     }
+
     input::-webkit-slider-runnable-track,
     input::-moz-range-progress {
       height: 20px;
@@ -471,7 +482,7 @@
   background: black;
   opacity: 0;
   display: none;
-  background: url(/resources/ui/main_menu_screen.png);
+  background: url(../ui/main_menu_screen.png);
   background-size: cover;
   z-index: 50 !important;
 
@@ -503,7 +514,7 @@
       top: 0;
       user-select: none;
 
-      background: url(/resources/ui/menu_button.png);
+      background: url(../ui/menu_button.png);
       background-size: 100% 100%;
 
       box-shadow: -3px 3px 6px 6px rgba(124, 47, 11, 0.75);
@@ -876,7 +887,7 @@
       top: 0;
       user-select: none;
 
-      background: url(/resources/ui/menu_button.png);
+      background: url(../ui/menu_button.png);
       background-size: 100% 100%;
 
       box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
