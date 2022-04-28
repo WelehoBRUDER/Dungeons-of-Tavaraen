@@ -15,7 +15,7 @@
 
 </html>
 
-<script src="resources/compiledJS/arrays/tiles.js"></script>
+<script src="resources/compiledJS/map/tiles.js"></script>
 
 <script>
   const canvas = document.querySelector(".canvas");
@@ -31,12 +31,12 @@
       const x = (index % onRow) * 128;
       const y = Math.floor(index / onRow) * 128;
       ctx.drawImage(img, x, y, 128, 128);
-    })
+    });
   });
   // const _items = {...items};
-  const _staticTiles = [ ...staticTiles ];
-  const _tiles = [ ...tiles ];
-  const _clutters = [ ...clutters ];
+  const _staticTiles = [...staticTiles];
+  const _tiles = [...tiles];
+  const _clutters = [...clutters];
   // Object.entries(_items).forEach((itm, index) => { // Assigns position on the atlas
   //   const item = itm[1];
   //   const x = (index % onRow) * 128;
@@ -47,19 +47,19 @@
     if (i < _staticTiles.length) {
       const x = (i % onRow) * 128;
       const y = Math.floor(i / onRow) * 128;
-      _staticTiles[i].spriteMap = {x: x, y: y};
+      _staticTiles[i].spriteMap = { x: x, y: y };
       _staticTiles[i].id = i;
     }
     else if (i < (_tiles.length + _staticTiles.length)) {
       const x = (i % onRow) * 128;
       const y = Math.floor(i / onRow) * 128;
-      _tiles[i - _staticTiles.length].spriteMap = {x: x, y: y};
+      _tiles[i - _staticTiles.length].spriteMap = { x: x, y: y };
       _tiles[i - _staticTiles.length].id = i - _staticTiles.length;
     }
     else {
       const x = (i % onRow) * 128;
       const y = Math.floor(i / onRow) * 128;
-      _clutters[i - (_staticTiles.length + _tiles.length) + 1].spriteMap = {x: x, y: y};
+      _clutters[i - (_staticTiles.length + _tiles.length) + 1].spriteMap = { x: x, y: y };
       _clutters[i - (_staticTiles.length + _tiles.length) + 1].id = i - (_staticTiles.length + _tiles.length) + 1;
     }
   }

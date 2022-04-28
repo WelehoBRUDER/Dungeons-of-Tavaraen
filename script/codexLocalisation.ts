@@ -1,4 +1,0 @@
-const codexLang = {
-  finnish: {},
-  english: {}
-};

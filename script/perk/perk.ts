@@ -1,0 +1,411 @@
+var perksData: Array<any> = [];
+var perks: Array<any> = [];
+var tree = player.classes.main.perkTree;
+const lvl_history = {
+  perks: [],
+  stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
+  pp: 0,
+  sp: 0
+} as any;
+
+const perkColors = {
+  necromancer: "#20142e",
+  sorcerer: "#183952",
+  fighter: "#5e2813",
+  barbarian: "#5c2323",
+  rogue: "#2b2b2b",
+} as any;
+
+class perk {
+  [id: string]: any;
+  name: string;
+  desc: string;
+  commands?: any;
+  effects?: any;
+  commandsExecuted?: boolean;
+  pos: tileObject;
+  traits?: Array<any>;
+  relative_to?: any;
+  requires: Array<string>;
+  icon: string;
+  available: Function;
+  bought: Function;
+  tree: string;
+  constructor(base: perk) {
+    this.id = base.id;
+    let base_ = perksArray[base.tree || tree]["perks"][this.id];
+    if (!base_ && this.id) {
+      base_ = { ...dummyPerk };
+    }
+    const basePerk = { ...base_ };
+    if (!basePerk) {
+      console.error("Perk invalid! Most likely id is wrong!");
+      console.log(this);
+      displayText(`<c>red<c>Perk ${this.id} is invalid! Check console for more info.`);
+    }
+    this.name = basePerk.name;
+    this.desc = basePerk.desc;
+    this.commands = { ...basePerk.commands } ?? {};
+    this.effects = { ...basePerk.effects } ?? {};
+    this.commandsExecuted = base.commandsExecuted ?? false;
+    this.pos = basePerk.pos;
+    this.relative_to = basePerk.relative_to ?? "";
+    this.requires = basePerk.requires ?? [];
+    this.traits = basePerk.traits ?? [];
+    this.icon = basePerk.icon;
+    this.tree = basePerk.tree;
+    this.available = () => {
+      if (player.pp <= 0 && !this.bought()) return false;
+      if (this.requires?.length > 0) {
+        let needed = this.requires?.length;
+        let cur = 0;
+        this.requires?.forEach(req => {
+          player.perks.forEach(prk => { prk.id == req ? cur++ : ''; });
+        });
+        if (cur >= needed) return true;
+      }
+      if (this.requires?.length <= 0) return true;
+      return false;
+    };
+    this.bought = () => {
+      let isBought = false;
+      player.perks.forEach(prk => {
+        if (prk.id == this.id) { isBought = true; return; };
+      });
+      return isBought;
+    };
+
+    this.buy = () => {
+      if (this.available() && !this.bought()) {
+        player.perks.push(new perk({ ...this }));
+        player.pp--;
+        if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
+          player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
+        }
+        this.traits.forEach((stat: any) => {
+          let add = true;
+          player.traits.some((mod: PermanentStatModifier) => {
+            if (mod.id === stat.id) {
+              add = false;
+              return true;
+            }
+          });
+          if (add) player.traits.push(stat);
+        });
+        player.updatetraits();
+        player.updatePerks();
+        player.updateAbilities();
+        lvl_history.perks.push(this.id);
+        lvl_history.pp++;
+        formPerks();
+        formStatUpgrades();
+      }
+    };
+  }
+}
+
+function changePerkTree(newTree: string) {
+  tree = newTree;
+  formPerks(null, true);
+}
+
+const perkScroll = {
+  x: 0,
+  y: 0
+};
+
+function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
+  perks = [];
+  const bg = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
+  const staticBg = document.querySelector<HTMLDivElement>(".playerLeveling .perksStatic");
+  const perkTreesContainer = document.querySelector<HTMLDivElement>(".playerLeveling .perkTreesContainer");
+  const perkArea = bg.querySelector<HTMLDivElement>(".container");
+  // const leftScroll = perkArea.scrollLeft;
+  // const topScroll = perkArea.scrollTop;
+  perkArea.innerHTML = "";
+  Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
+    perks.push(new perk(_perk[1]));
+  });
+  hideHover();
+  const baseSize: number = 128;
+  const baseImg: number = 104;
+  const baseFont: number = 12;
+  const lineSize: number = 64;
+  const lineWidth: number = 10;
+  const points = document.createElement("p");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  points.textContent = lang["perk_points"] + ": " + player.pp.toString();
+  points.classList.add("perkPoints");
+  staticBg.textContent = "";
+  perkTreesContainer.textContent = "";
+  Object.entries(combatClasses).forEach((combatClassObject: any) => {
+    const combatClass = combatClassObject[1];
+    if ((player.classes.main?.id && player.classes.sub?.id) || player.level.level < 10) {
+      if (combatClass.id != player.classes.main.id && combatClass.id != player.classes?.sub?.id) return;
+    }
+    const classButtonContainer = document.createElement("div");
+    const combatClassName = document.createElement("p");
+    const combatClassIcon = document.createElement("img");
+    if (combatClass.perkTree == tree) {
+      classButtonContainer.classList.add("goldenBorder");
+    }
+    else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
+      classButtonContainer.classList.add("greyedOut");
+    }
+    classButtonContainer.addEventListener("click", a => changePerkTree(combatClass.perkTree));
+    classButtonContainer.classList.add("classButtonContainer");
+    combatClassName.textContent = lang[combatClass.id + "_name"];
+    combatClassIcon.src = combatClass.icon;
+    classButtonContainer.style.background = combatClass.color;
+    classButtonContainer.append(combatClassIcon, combatClassName);
+    perkTreesContainer.append(classButtonContainer);
+  });
+  const classButtonContainer = document.createElement("div");
+  const combatClassName = document.createElement("p");
+  const combatClassIcon = document.createElement("img");
+  classButtonContainer.addEventListener("click", a => changePerkTree("adventurer_shared"));
+  classButtonContainer.classList.add("classButtonContainer");
+  combatClassName.textContent = lang["adventurerPerks"];
+  combatClassIcon.src = "resources/icons/adventurer.png";
+  classButtonContainer.style.background = "rgb(100, 52, 5)";
+  if (tree == "adventurer_shared") {
+    classButtonContainer.classList.add("goldenBorder");
+  }
+  classButtonContainer.append(combatClassIcon, combatClassName);
+  perkTreesContainer.append(classButtonContainer);
+  staticBg.append(points);
+  perks.forEach((_perk: perk) => {
+    const perk = document.createElement("div");
+    const img = document.createElement("img");
+    const name = document.createElement("p");
+    perk.classList.add("perkBg");
+    perk.classList.add(`${_perk.id}`);
+    perk.style.backgroundColor = perkColors[tree];
+    img.src = _perk.icon;
+    name.textContent = lang[_perk.id + "_name"] ?? _perk.id;
+    tooltip(perk, perkTT(_perk));
+    perk.style.width = `${baseSize}px`;
+    perk.style.height = `${baseSize}px`;
+    img.style.width = `${baseImg}px`;
+    img.style.height = `${baseImg}px`;
+    name.style.fontSize = `${baseFont}px`;
+    perk.addEventListener("click", a => _perk.buy());
+    if (_perk.bought()) perk.classList.add("perkBought");
+    if (!_perk.available()) {
+      perk.classList.add("perkUnavailable");
+    }
+    if (_perk.relative_to) {
+      let found = perkArea.querySelector<HTMLDivElement>(`.${_perk.relative_to}`);
+      perk.style.left = `${(_perk.pos.x * baseSize) + found.offsetLeft}px`;
+      perk.style.top = `${(_perk.pos.y * baseSize) + found.offsetTop}px`;
+    }
+    else {
+      perk.style.left = `${(_perk.pos.x * baseSize)}px`;
+      perk.style.top = `${(_perk.pos.y * baseSize)}px`;
+    }
+
+    perk.append(img, name);
+    perkArea.append(perk, svg);
+  });
+  perks.forEach((_perk: perk) => {
+    let perk = perkArea.querySelector<HTMLDivElement>(`.${_perk.id}`);
+    if (_perk.requires) {
+      _perk.requires.forEach((req: string) => {
+        let found = perkArea.querySelector<HTMLDivElement>(`.${req}`);
+        let color = "rgb(65, 65, 65)";
+        let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        if (_perk.bought()) color = "gold";
+        else if (!_perk.available()) color = "rgb(40, 40, 40)";
+        line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", `${lineWidth}px`);
+        svg.appendChild(line);
+      });
+    }
+  });
+  perkArea.style.transform = `scale(${currentZoomBG})`;
+  svg.setAttribute('width', "4000");
+  svg.setAttribute('height', "4000");
+  if (!scrollDefault) background.scrollTo(perkScroll.x, perkScroll.y);
+  else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
+  /* Making a proper zoom has defeated me, it will simply not center on mouse, ever. */
+}
+
+function formStatUpgrades() {
+  const bg = document.querySelector<HTMLDivElement>(".playerLeveling .stats");
+  const points = document.createElement("p");
+  const undo = document.createElement("div");
+  const baseStats = ["str", "dex", "vit", "int", "cun"];
+  bg.innerHTML = "";
+  points.textContent = lang["stat_points"] + ": " + player.sp.toString();
+  points.classList.add("statPoints");
+  /* Form stats */
+  const container = document.createElement("div");
+  container.classList.add("statContainer");
+  undo.classList.add("undo");
+  undo.textContent = "Undo changes";
+  baseStats.forEach(stat => {
+    const base = document.createElement("div");
+    const baseImg = document.createElement("img");
+    const baseText = document.createElement("p");
+    const baseNumber = document.createElement("p");
+    const upgrade = document.createElement("span");
+    base.classList.add("statUp");
+    baseImg.src = icons[stat];
+    baseText.textContent = lang[stat];
+    baseNumber.textContent = player.getBaseStats()[stat].toString();
+    upgrade.textContent = "+";
+    upgrade.addEventListener("click", a => upStat(stat));
+    tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
+    if (player.sp <= 0) upgrade.style.transform = "scale(0)";
+    base.append(baseImg, baseText, baseNumber, upgrade);
+    container.append(base);
+  });
+  undo.addEventListener("click", undoChanges);
+  bg.append(points, container, undo);
+}
+
+function upStat(stat: string) {
+  if (player.sp >= 1) {
+    player.sp--;
+    player.stats[stat]++;
+    lvl_history.stats[stat]++;
+    lvl_history.sp++;
+    formStatUpgrades();
+  }
+}
+
+function openLevelingScreen() {
+  hideHover();
+  const lvling = document.querySelector<HTMLDivElement>(".playerLeveling");
+  lvling.style.transform = "scale(1)";
+  document.querySelector<HTMLDivElement>(".worldText").style.opacity = "0";
+  lvl_history.perks = [];
+  lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+  lvl_history.pp = 0;
+  lvl_history.sp = 0;
+  formPerks();
+  formStatUpgrades();
+  state.perkOpen = true;
+}
+
+function perkTT(perk: perk) {
+  var txt: string = "";
+  txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
+  txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
+  if (DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
+  if (perk.requires?.length > 0) {
+    txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
+    perk.requires.forEach(req => {
+      let found = false;
+      player.perks.forEach((prk: perk) => {
+        if (prk.id == req) {
+          found = true;
+        }
+      });
+      txt += `<c> ${found ? "lime" : "red"}<c>${lang[req + "_name"] ?? req}, `;
+    });
+    txt = txt.substring(0, txt.length - 2);
+    txt += "§";
+  }
+  if (Object.values(perk.commands).length > 0) {
+    Object.entries(perk.commands).forEach((com: any) => txt += commandSyntax(com[0], com[1]));
+  }
+  if (Object.values(perk.effects).length > 0) {
+    txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
+    Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
+  }
+  if (perk.traits) {
+    perk.traits.forEach((statModif: any) => {
+      txt += statModifTT(statModif);
+    });
+  }
+  return txt;
+}
+
+function statModifTT(statModif: any) {
+  statModif = new PermanentStatModifier({ ...statModif });
+  let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
+  if (statModif.desc) txt += `§<c>silver<c><f>13px<f>"${lang[statModif.desc]}"\n§`;
+  if (statModif.conditions) {
+    txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
+    Object.entries(statModif.conditions).forEach(cond => {
+      const key = cond[0];
+      const val = cond[1];
+      txt += `<c>white<c><f>13px<f>${lang[key]} ${val}%\n`;
+    });
+  }
+  txt += `<c>white<c><f>15px<f>${lang["status_effects"]}:\n`;
+  Object.entries(statModif.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
+  return txt;
+}
+
+const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
+var currentZoomBG = 1;
+
+const background = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
+background.addEventListener('mousedown', action1);
+background.addEventListener('mousemove', action2);
+background.addEventListener("wheel", changeZoomLevelBG);
+// @ts-expect-error
+function changeZoomLevelBG(e) {
+  if (e.deltaY > 0) {
+    currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) - 1] || zoomLevelsBG[0];
+  } else {
+    currentZoomBG = zoomLevelsBG[zoomLevelsBG.indexOf(currentZoomBG) + 1] || zoomLevelsBG[zoomLevelsBG.length - 1];
+  }
+  formPerks(e);
+}
+
+let mouseX = 0;
+let mouseY = 0;
+let bgPosX = 0;
+let bgPosY = 0;
+let eAction: MouseEvent = null;
+
+function action1(e: MouseEvent) {
+  mouseX = e.x;
+  mouseY = e.y;
+  eAction = e;
+  bgPosX = background.scrollLeft;
+  bgPosY = background.scrollTop;
+}
+
+function action2(e: MouseEvent) {
+  if (e.buttons == 1) {
+    let offsetX = e.x - mouseX;
+    let offsetY = e.y - mouseY;
+    background.scrollTo(bgPosX - offsetX, bgPosY - offsetY);
+    perkScroll.x = bgPosX - offsetX;
+    perkScroll.y = bgPosY - offsetY;
+  }
+}
+
+function undoChanges() {
+  lvl_history.perks.forEach((prk: string) => {
+    let index = player.perks.findIndex((_prk: any) => _prk.id == prk);
+    player.perks[index].traits.forEach((rem: any) => {
+      const modIndex = player.traits.findIndex((stat: any) => stat.id === rem.id);
+      player.traits.splice(modIndex, 1);
+    });
+    player.perks.splice(index, 1);
+  });
+  Object.entries(lvl_history.stats).forEach((stat: any) => {
+    const id = stat[0];
+    const val = stat[1];
+    player.stats[id] -= val;
+  });
+  player.sp += lvl_history.sp;
+  player.pp += lvl_history.pp;
+  lvl_history.perks = [];
+  lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+  lvl_history.pp = 0;
+  lvl_history.sp = 0;
+  formPerks();
+  formStatUpgrades();
+}
+
+//formPerks();

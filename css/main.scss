@@ -1,16 +1,26 @@
 @font-face {
   font-family: "Montserrat";
-  src: url(../resources/font/Montserrat/Montserrat-Light.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-Light.ttf);
 }
 
 @font-face {
   font-family: "Montserrat-Thin";
-  src: url(../resources/font/Montserrat/Montserrat-Thin.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-Thin.ttf);
 }
 
 @font-face {
   font-family: "Montserrat-Light";
-  src: url(../resources/font/Montserrat/Montserrat-ExtraLight.ttf);
+  src: url(/resources/font/Montserrat/Montserrat-ExtraLight.ttf);
+}
+
+@font-face {
+  font-family: "OptimusPrinceps";
+  src: url(/resources/font/OptimusPrinceps/OptimusPrinceps.ttf);
+}
+
+@font-face {
+  font-family: "OptimusPrinceps-Bold";
+  src: url(/resources/font/OptimusPrinceps/OptimusPrincepsSemiBold.ttf);
 }
 
 body {
@@ -30,9 +40,12 @@ body {
 
 * {
   color: #fff;
+  scrollbar-width: none;
+  scrollbar-color: none;
 }
 
-::-webkit-scrollbar {
+::-webkit-scrollbar,
+::-moz {
   width: 0;
   background: transparent;
 }
@@ -51,6 +64,52 @@ body {
   background-position: center;
   user-select: none;
   color: #fff;
+
+  .loading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(/resources/ui/main_menu_screen.png);
+    background-size: cover;
+    z-index: 66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+
+    h1.loading-text {
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #000;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .area-name {
+    position: absolute;
+    top: calc(50% - 96px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+    padding: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0;
+    animation-delay: 1.2s;
+    animation-duration: 5.7s;
+    .title {
+      font-family: OptimusPrinceps;
+      font-weight: 300;
+      font-size: calc(114px * var(--ui-scale));
+      text-shadow: 0 calc(6px * var(--ui-scale)) calc(18px * var(--ui-scale)) #000;
+    }
+  }
 
   .negative {
     color: rgb(150, 58, 16);
@@ -94,12 +153,12 @@ body {
 
   animation-duration: 0.15s;
 
-  $redBgSolid: url("../resources/ui/large_background_red.png");
-  $greyBgSolid: url("../resources/ui/large_background_grey.png");
-  $goldBgSolid: url("../resources/ui/large_background_gold.png");
-  $redBgFade: url("../resources/ui/large_background_redFade.png");
-  $greyBgFade: url("../resources/ui/large_background_greyFade.png");
-  $goldBgFade: url("../resources/ui/large_background_goldFade.png");
+  $redBgSolid: url("/resources/ui/large_background_red.png");
+  $greyBgSolid: url("/resources/ui/large_background_grey.png");
+  $goldBgSolid: url("/resources/ui/large_background_gold.png");
+  $redBgFade: url("/resources/ui/large_background_redFade.png");
+  $greyBgFade: url("/resources/ui/large_background_greyFade.png");
+  $goldBgFade: url("/resources/ui/large_background_goldFade.png");
 
   .canvasLayers {
     width: 100%;
@@ -680,7 +739,7 @@ body {
     .coreStatsTitle,
     .coreResistancesTitle,
     .statusResistancesTitle,
-    .passiveAbilitiesTitle {
+    .traitsTitle {
       text-align: center;
       width: calc(300px * var(--ui-scale));
       font-size: calc(32px * var(--ui-scale));
@@ -700,7 +759,7 @@ body {
     .coreStats,
     .coreResistances,
     .statusResistances,
-    .passiveAbilities {
+    .traits {
       position: absolute;
       height: auto;
       max-height: calc(420px * var(--ui-scale));
@@ -764,8 +823,8 @@ body {
       left: calc(725px * var(--ui-scale));
     }
 
-    .passiveAbilities,
-    .passiveAbilitiesTitle {
+    .traits,
+    .traitsTitle {
       left: calc(1075px * var(--ui-scale));
 
       p {
@@ -839,10 +898,9 @@ body {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: auto;
+      width: 80%;
       height: auto;
-      max-width: 80%;
-      max-height: 80%;
+      max-height: 90%;
       overflow: hidden;
       overflow-y: auto;
       border: 2px solid rgb(60, 60, 60);
@@ -870,7 +928,7 @@ body {
     height: calc(192px * var(--ui-scale));
     overflow: hidden;
     border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
-    background: url(../resources/ui/red_background.png);
+    background: url(/resources/ui/red_background.png);
     background-size: cover;
     position: absolute;
     left: 0;
@@ -891,8 +949,25 @@ body {
     z-index: 2;
 
     .status {
+      position: relative;
       width: calc(76px * var(--ui-scale));
       margin: calc(8px * var(--ui-scale));
+
+      img.status,
+      div.status-bg {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        padding: 0;
+      }
+
+      div.status-bg {
+        width: 100%;
+        height: 100%;
+        background: rgba(116, 14, 14, 0.5);
+        margin: calc(8px * var(--ui-scale));
+        border-radius: 10%;
+      }
     }
   }
 
@@ -1373,7 +1448,7 @@ body {
       height: calc(192px * var(--ui-scale));
       overflow: hidden;
       border: calc(4px * var(--ui-scale)) solid rgb(201, 152, 47);
-      background: url(../resources/ui/red_background.png);
+      background: url(/resources/ui/red_background.png);
       border-radius: 4px;
       background-size: cover;
       position: absolute;
@@ -1805,7 +1880,7 @@ body {
         transform: translateX(-50%);
         user-select: none;
 
-        background: url(../resources/ui/menu_button.png);
+        background: url(/resources/ui/menu_button.png);
         background-size: 100% 100%;
 
         box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
@@ -1878,19 +1953,42 @@ body {
     z-index: 8;
     opacity: 0;
     transform: scale(0);
+    display: flex;
+    flex-wrap: wrap;
+
+    .questHeader {
+      width: 100%;
+      height: calc(50px * var(--ui-scale));
+      background: rgba(5, 5, 5, 0.95);
+      border: calc(6px * var(--ui-scale)) solid rgb(50, 50, 50);
+      box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .questHeaderText {
+        font-size: calc(32px * var(--ui-scale));
+        color: goldenrod;
+        text-shadow: -2px 2px calc(3px * var(--ui-scale)) rgb(119, 101, 1);
+        padding: 0;
+        margin: 0;
+      }
+    }
 
     .questList {
-      width: 30%;
-      height: 90%;
-      position: absolute;
-      left: 0;
-      top: 5%;
+      box-sizing: border-box;
+      width: 40%;
+      height: calc(100% - 62px * var(--ui-scale));
+      position: relative;
       user-select: none;
+      border: calc(4px * var(--ui-scale)) solid rgb(50, 50, 50);
 
       p {
+        width: calc(100% - 28px * var(--ui-scale));
         transition: 0.05s;
         margin: 0;
-        margin-top: calc(5px * var(--ui-scale));
+        padding: calc(5px * var(--ui-scale));
+        margin-top: calc(10px * var(--ui-scale));
         color: rgb(255, 136, 0);
         font-size: calc(24px * var(--ui-scale));
         font-family: Montserrat;
@@ -1899,27 +1997,30 @@ body {
       }
 
       p:hover {
-        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
       }
 
       .selectedEntry {
         text-decoration: underline;
-        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgba(218, 165, 32, 0.8);
       }
 
       .selectedEntry:hover {
         text-decoration: underline;
-        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(7px * var(--ui-scale)) rgba(218, 165, 32, 0.9);
+        box-shadow: 0 0 calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgba(218, 165, 32, 0.9);
       }
     }
 
     .questInfo {
-      width: 70%;
-      height: 100%;
-      position: absolute;
-      left: 30%;
-      top: 0;
-      box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+      box-sizing: border-box;
+      width: 60%;
+      height: calc(100% - 62px * var(--ui-scale));
+      position: relative;
+      border: calc(4px * var(--ui-scale)) solid rgb(50, 50, 50);
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
       pre {
         margin: 0;
         span {

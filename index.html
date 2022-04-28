@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/codex.css">
-  <link rel="stylesheet" href="css/menu.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/perks.css">
+  <link rel="stylesheet" href="/resources/compiledCSS/animations.css">
+  <link rel="stylesheet" href="/resources/compiledCSS/menu.css">
+  <link rel="stylesheet" href="/resources/compiledCSS/main.css">
+  <link rel="stylesheet" href="/resources/compiledCSS/perks.css">
+  <link rel="stylesheet" href="/resources/compiledCSS/codex.css">
   <title>Dungeons of Tavaraen - In Development</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -17,6 +17,12 @@
 
 <body>
   <div class="main">
+    <div class="loading">
+      <h1 class="loading-text"></h1>
+    </div>
+    <div class="area-name">
+      <h1 class="title">Tavaraen</h1>
+    </div>
     <div class="devTools">
       <div class="devInfo"></div>
     </div>
@@ -143,6 +149,7 @@
     <p class="closestEnemyDistance"></p>
     <p class="interactPrompt"></p>
     <div class="textWindow"></div>
+    <div class="warningWindow"></div>
     <div class="playerWindow"></div>
     <div class="playerEffects"></div>
     <div class="playerLeveling">
@@ -164,6 +171,9 @@
     </div>
     <div class="questJournalWindow">
       <div class="closeWindowButton" onclick="closePlayerQuests()">X</div>
+      <div class="questHeader">
+        <p class="questHeaderText">Quests</p>
+      </div>
       <div class="questList"></div>
       <div class="questInfo"></div>
     </div>
@@ -335,12 +345,12 @@
   <img src="resources/tiles/player/ranger_armor.png" alt="" class="rangerArmor sprite">
   <img src="resources/tiles/player/ranger_boots.png" alt="" class="rangerBoots sprite">
   <img src="resources/tiles/player/ranger_pants.png" alt="" class="rangerPants sprite">
-  <img src="resources/tiles/player/ranger_gloves.png" alt="" class=rangerGloves sprite">
+  <img src="resources/tiles/player/ranger_gloves.png" alt="" class="rangerGloves sprite">
   <img src="resources/tiles/player/ranger_hood.png" alt="" class="rangerHood sprite">
   <img src="resources/tiles/player/initiate_robe.png" alt="" class="initiateRobe sprite">
   <img src="resources/tiles/player/initiate_shoes.png" alt="" class="initiateShoes sprite">
   <img src="resources/tiles/player/initiate_pants.png" alt="" class="initiatePants sprite">
-  <img src="resources/tiles/player/initiate_gloves.png" alt="" class=initiateGloves sprite">
+  <img src="resources/tiles/player/initiate_gloves.png" alt="" class="initiateGloves sprite">
   <img src="resources/tiles/player/initiate_hood.png" alt="" class="initiateHood sprite">
   <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" class="kasDJ sprite">
   <!-- Female Clothes Variants -->
@@ -373,12 +383,12 @@
   <img src="resources/tiles/player/ranger_armor_female.png" alt="" class="rangerArmorFemale sprite">
   <img src="resources/tiles/player/ranger_boots_female.png" alt="" class="rangerBootsFemale sprite">
   <img src="resources/tiles/player/ranger_pants_female.png" alt="" class="rangerPantsFemale sprite">
-  <img src="resources/tiles/player/ranger_gloves_female.png" alt="" class=rangerGlovesFemale sprite">
+  <img src="resources/tiles/player/ranger_gloves_female.png" alt="" class="rangerGlovesFemale sprite">
   <img src="resources/tiles/player/ranger_hood_female.png" alt="" class="rangerHoodFemale sprite">
   <img src="resources/tiles/player/initiate_robe_female.png" alt="" class="initiateRobeFemale sprite">
   <img src="resources/tiles/player/initiate_shoes_female.png" alt="" class="initiateShoesFemale sprite">
   <img src="resources/tiles/player/initiate_pants_female.png" alt="" class="initiatePantsFemale sprite">
-  <img src="resources/tiles/player/initiate_gloves_female.png" alt="" class=initiateGlovesFemale sprite">
+  <img src="resources/tiles/player/initiate_gloves_female.png" alt="" class="initiateGlovesFemale sprite">
   <img src="resources/tiles/player/initiate_hood_female.png" alt="" class="initiateHoodFemale sprite">
   <img src="resources/tiles/player/enchanted_cap_of_skeletal_might.png" alt="" class="kasDJFemale sprite">
 
@@ -456,8 +466,9 @@
   <img src="resources/tiles/enemies/soul_wraith.png" alt="" class="soulWraith sprite">
 
   <!-- Characters -->
-  <img src="resources/tiles/characters/generic_village_man.png" alt="" class="villageMan sprite">
-  <img src="resources/tiles/characters/orc_warrior_lady.png" alt="" class="orcLady sprite">
+  <img src="/resources/tiles/characters/generic_village_man.png" alt="" class="villageMan sprite">
+  <img src="/resources/tiles/characters/orc_warrior_lady.png" alt="" class="orcLady sprite">
+  <img src="/resources/tiles/characters/blacksmith_maroch.png" alt="" class="blacksmithMaroch sprite">
 
   <!-- Health & Mana Bars -->
   <img src="resources/tiles/enemies/healthBackground.png" alt="" class="hpBg sprite">
@@ -471,6 +482,7 @@
   <img src="resources/tiles/shrine.png" alt="" class="shrineTile sprite">
   <img src="resources/tiles/shrine_lit.png" alt="" class="shrineLitTile sprite">
   <img src="resources/tiles/message.png" alt="" class="messageTile sprite">
+  <img src="resources/tiles/entrance.png" alt="" class="entrance sprite">
   <img src="resources/tiles/water.png" alt="" class="tile0 sprite">
   <img src="resources/tiles/grass.png" alt="" class="tile1 sprite">
   <img src="resources/tiles/dirt.png" alt="" class="tile2 sprite">
@@ -493,41 +505,108 @@
 </div>
 
 </html>
-<script src="resources/compiledJS/script/syntax.js"></script>
-<script src="resources/compiledJS/script/drag.js"></script>
-<script src="resources/compiledJS/arrays/tiles.js"></script>
-<script src="resources/compiledJS/arrays/icons.js"></script>
-<script src="resources/compiledJS/script/localisation.js"></script>
-<script src="resources/compiledJS/script/dialogLocalisation.js"></script>
-<script src="resources/compiledJS/script/questLocalisation.js"></script>
-<script src="resources/compiledJS/script/codexLocalisation.js"></script>
-<script src="resources/compiledJS/script/menu.js"></script>
-<script src="resources/compiledJS/script/dev.js"></script>
-<script src="resources/compiledJS/arrays/perks.js"></script>
-<script src="resources/compiledJS/arrays/effects.js"></script>
-<script src="resources/compiledJS/arrays/abilities.js"></script>
-<script src="resources/compiledJS/script/ability.js"></script>
-<script src="resources/compiledJS/script/statModifier.js"></script>
-<script src="resources/compiledJS/script/npc.js"></script>
-<script src="resources/compiledJS/script/quest.js"></script>
-<script src="resources/compiledJS/script/character.js"></script>
-<script src="resources/compiledJS/arrays/enemies.js"></script>
-<script src="resources/compiledJS/arrays/summons.js"></script>
-<script src="resources/compiledJS/arrays/items.js"></script>
-<script src="resources/compiledJS/arrays/characters.js"></script>
-<script src="resources/compiledJS/arrays/characterInteractions.js"></script>
-<script src="resources/compiledJS/script/equipment.js"></script>
-<script src="resources/compiledJS/script/status.js"></script>
-<script src="resources/compiledJS/script/combatClasses.js"></script>
-<script src="resources/compiledJS/script/summon.js"></script>
-<script src="resources/compiledJS/script/player.js"></script>
-<script src="resources/compiledJS/script/enemy.js"></script>
-<script src="resources/compiledJS/script/mapData.js"></script>
-<script src="resources/compiledJS/arrays/maps.js"></script>
-<script src="resources/compiledJS/script/map.js"></script>
-<script src="resources/compiledJS/script/commands.js"></script>
-<script src="resources/compiledJS/script/combat.js"></script>
-<script src="resources/compiledJS/script/hotbar.js"></script>
-<script src="resources/compiledJS/script/perk.js"></script>
-<script src="resources/compiledJS/script/codex.js"></script>
-<script src="resources/compiledJS/script/startGame.js"></script>
+
+<!-- CODEBASE HAS BEEN REFACTORED! -->
+<!-- THERE ARE A LOT OF NEW FILES AND AS SUCH LOADING THEM IS NOW SPLIT TO MULTIPLE BLOCKS -->
+
+<!-- Most crucial files, these must be loaded before all others -->
+<script src="/resources/compiledJS/ui/syntax.js"></script>
+<script src="/resources/compiledJS/ui/drag.js"></script>
+<script src="/resources/compiledJS/ui/icons.js"></script>
+<script src="/resources/compiledJS/map/tiles.js"></script>
+<script src="/resources/compiledJS/map/static_maps.js"></script>
+<script src="/resources/compiledJS/misc/helper.js"></script>
+<script src="/resources/compiledJS/misc/commands.js"></script>
+<script src="/resources/compiledJS/misc/dev.js"></script>
+<script src="/resources/compiledJS/ui/settings.js"></script>
+
+<!-- Localisation files -->
+<script src="/resources/compiledJS/localisation/_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/codex_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/dialog_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/quest_localisation.js"></script>
+
+<!-- Mostly harmless files -->
+<script src="/resources/compiledJS/character/combat_classes.js"></script>
+<script src="/resources/compiledJS/character/race.js"></script>
+<script src="/resources/compiledJS/character/sort.js"></script>
+<script src="/resources/compiledJS/character/modifier.js"></script>
+<script src="/resources/compiledJS/codex/data.js"></script>
+<script src="/resources/compiledJS/combat/effects.js"></script>
+<script src="/resources/compiledJS/combat/animation.js"></script>
+<script src="/resources/compiledJS/items/items.js"></script>
+<script src="/resources/compiledJS/skills & effects/abilities.js"></script>
+<script src="/resources/compiledJS/skills & effects/effects.js"></script>
+<script src="/resources/compiledJS/skills & effects/stat_modifier.js"></script>
+<script src="/resources/compiledJS/perk/perks.js"></script>
+<script src="/resources/compiledJS/ui/tooltip.js"></script>
+<script src="/resources/compiledJS/ui/menu_buttons.js"></script>
+<script src="/resources/compiledJS/ui/save.js"></script>
+<script src="/resources/compiledJS/enemy/enemy_leveling.js"></script>
+
+<!-- Important Classes -->
+<script src="/resources/compiledJS/skills & effects/ability.js"></script>
+<script src="/resources/compiledJS/skills & effects/status.js"></script>
+<script src="/resources/compiledJS/items/item.js"></script>
+<script src="/resources/compiledJS/items/equipment.js"></script>
+<script src="/resources/compiledJS/items/consumable.js"></script>
+<script src="/resources/compiledJS/items/artifact.js"></script>
+<script src="/resources/compiledJS/items/armor.js"></script>
+<script src="/resources/compiledJS/items/weapon.js"></script>
+<script src="/resources/compiledJS/character/character.js"></script>
+<script src="/resources/compiledJS/enemy/enemy.js"></script>
+<script src="/resources/compiledJS/character/player.js"></script>
+<script src="/resources/compiledJS/perk/perk.js"></script>
+<script src="/resources/compiledJS/summon/summon.js"></script>
+<script src="/resources/compiledJS/quest/quest.js"></script>
+<script src="/resources/compiledJS/map/map_data.js"></script>
+
+<!-- Important data / arrays -->
+<script src="/resources/compiledJS/summon/summons.js"></script>
+<script src="/resources/compiledJS/enemy/enemies.js"></script>
+
+<!-- Important functions -->
+<script src="/resources/compiledJS/items/inventory.js"></script>
+
+<!-- Map rendering -->
+<script src="/resources/compiledJS/map/maps.js"></script>
+<script src="/resources/compiledJS/map/map_misc.js"></script>
+<script src="/resources/compiledJS/map/interact.js"></script>
+<script src="/resources/compiledJS/map/map_mini.js"></script>
+<script src="/resources/compiledJS/map/map.js"></script>
+<script src="/resources/compiledJS/map/controls.js"></script>
+<script src="/resources/compiledJS/map/path.js"></script>
+<script src="/resources/compiledJS/map/render_player.js"></script>
+
+<!-- Menu functions -->
+<script src="/resources/compiledJS/ui/menu.js"></script>
+
+<!-- NPC characters -->
+<script src="/resources/compiledJS/npc/character_interactions.js"></script>
+<script src="/resources/compiledJS/npc/merchant.js"></script>
+<script src="/resources/compiledJS/npc/smith.js"></script>
+<script src="/resources/compiledJS/npc/npc.js"></script>
+<script src="/resources/compiledJS/npc/characters.js"></script>
+
+<!-- UI related things -->
+<script src="/resources/compiledJS/ui/tooltip.js"></script>
+<script src="/resources/compiledJS/ui/hotbar.js"></script>
+<script src="/resources/compiledJS/ui/log.js"></script>
+<script src="/resources/compiledJS/ui/player_window.js"></script>
+
+<!-- Combat -->
+<script src="/resources/compiledJS/combat/animation.js"></script>
+<script src="/resources/compiledJS/combat/effects.js"></script>
+<script src="/resources/compiledJS/combat/turn.js"></script>
+<script src="/resources/compiledJS/combat/combat.js"></script>
+
+
+<!-- Codex -->
+<script src="/resources/compiledJS/codex/animation.js"></script>
+<script src="/resources/compiledJS/codex/enemy_entry.js"></script>
+<script src="/resources/compiledJS/codex/item_entry.js"></script>
+<script src="/resources/compiledJS/codex/perk_entry.js"></script>
+<script src="/resources/compiledJS/codex/codex.js"></script>
+
+<!-- Begin game -->
+<script src="/resources/compiledJS/game/start_game.js"></script>

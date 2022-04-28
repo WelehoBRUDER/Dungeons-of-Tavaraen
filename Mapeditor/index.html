@@ -12,6 +12,8 @@
   <div class="mapContainer">
     <canvas id="mainMap" width="1280px" height="896px"></canvas>
     <canvas id="enemyLayer" width="1280px" height="896px"></canvas>
+    <canvas id="effectLayer" width="1280px" height="896px"></canvas>
+    <canvas id="textLayer" width="1280px" height="896px"></canvas>
     <canvas id="selecting" width="1280px" height="896px"></canvas>
   </div>
   <div id="tileProperties"></div>
@@ -37,6 +39,15 @@
       <i class="gg-trash" onclick="clearChestSelect()"></i>
     </div>
     <div id="tilesContainer"></div>
+  </div>
+
+  <div class="miscButtons">
+    <button class="addShrine" onclick="addShrine()">AddShrine</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
+    <button class="addMessage" onclick="addMessage()">AddMessage</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
+    <button class="addEntrance" onclick="addEntrance()">AddEntrance</button>
+    <i class="gg-trash" onclick="clearMiscBrush()"></i>
   </div>
 
   <div class="importMapBox" style="display: none">
@@ -117,29 +128,84 @@
   <!-- Map Tiles  -->
   <img src="../resources/tiles/tileMap.png" alt="" class="tileAtlas sprite">
   <img src="../resources/tiles/message.png" alt="" class="messageTile sprite">
+  <img src="../resources/tiles/entrance.png" alt="" class="entrance sprite">
 
   <!-- Clutters -->
   <img src="../resources/tiles/treasure_chest_1.png" alt="" class="treasureChest1 sprite">
   <img src="../resources/tiles/treasure_chest_2.png" alt="" class="treasureChest2 sprite">
   <img src="../resources/tiles/treasure_chest_magical.png" alt="" class="treasureChestMagical sprite">
+
+  <!-- Characters -->
+  <img src="/resources/tiles/characters/generic_village_man.png" alt="" class="villageMan sprite">
+  <img src="/resources/tiles/characters/orc_warrior_lady.png" alt="" class="orcLady sprite">
+  <img src="/resources/tiles/characters/blacksmith_maroch.png" alt="" class="blacksmithMaroch sprite">
 </div>
 
 
 <script src="scripts/spreadSheets.js"></script>
-<script src="../resources/compiledJS/arrays/tiles.js"></script>
-<script src="../resources/compiledJS/arrays/icons.js"></script>
-<script src="../resources/compiledJS/script/menu.js"></script>
-<script src="../resources/compiledJS/script/localisation.js"></script>
-<script src="../resources/compiledJS/arrays/items.js"></script>
-<script src="../resources/compiledJS/arrays/perks.js"></script>
-<script src="../resources/compiledJS/script/ability.js"></script>
-<script src="../resources/compiledJS/script/statModifier.js"></script>
-<script src="../resources/compiledJS/script/character.js"></script>
-<script src="../resources/compiledJS/arrays/abilities.js"></script>
-<script src="../resources/compiledJS/arrays/enemies.js"></script>
-<script src="../resources/compiledJS/script/dev.js"></script>
-<script src="../resources/compiledJS/script/enemy.js"></script>
-<script src="../resources/compiledJS/script/equipment.js"></script>
-<script src="../resources/compiledJS/script/mapData.js"></script>
-<script src="../resources/compiledJS/arrays/maps.js"></script>
+
+<!-- CODEBASE HAS BEEN REFACTORED! -->
+<!-- THERE ARE A LOT OF NEW FILES AND AS SUCH LOADING THEM IS NOW SPLIT TO MULTIPLE BLOCKS -->
+
+<!-- Most crucial files, these must be loaded before all others -->
+<script src="/resources/compiledJS/ui/syntax.js"></script>
+<script src="/resources/compiledJS/ui/drag.js"></script>
+<script src="/resources/compiledJS/ui/icons.js"></script>
+<script src="/resources/compiledJS/map/tiles.js"></script>
+<script src="/resources/compiledJS/map/static_maps.js"></script>
+<script src="/resources/compiledJS/misc/helper.js"></script>
+<script src="/resources/compiledJS/misc/commands.js"></script>
+<script src="/resources/compiledJS/ui/settings.js"></script>
+<script src="/resources/compiledJS/enemy/enemy_leveling.js"></script>
+
+<!-- Localisation files -->
+<script src="/resources/compiledJS/localisation/_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/codex_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/dialog_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/quest_localisation.js"></script>
+
+<!-- Mostly harmless files -->
+<script src="/resources/compiledJS/character/combat_classes.js"></script>
+<script src="/resources/compiledJS/character/race.js"></script>
+<script src="/resources/compiledJS/character/sort.js"></script>
+<script src="/resources/compiledJS/character/modifier.js"></script>
+<script src="/resources/compiledJS/codex/data.js"></script>
+<script src="/resources/compiledJS/combat/effects.js"></script>
+<script src="/resources/compiledJS/combat/animation.js"></script>
+<script src="/resources/compiledJS/items/items.js"></script>
+<script src="/resources/compiledJS/skills & effects/abilities.js"></script>
+<script src="/resources/compiledJS/skills & effects/effects.js"></script>
+<script src="/resources/compiledJS/skills & effects/stat_modifier.js"></script>
+<script src="/resources/compiledJS/perk/perks.js"></script>
+<script src="/resources/compiledJS/ui/tooltip.js"></script>
+<script src="/resources/compiledJS/ui/menu_buttons.js"></script>
+
+<!-- Important Classes -->
+<script src="/resources/compiledJS/skills & effects/ability.js"></script>
+<script src="/resources/compiledJS/skills & effects/status.js"></script>
+<script src="/resources/compiledJS/items/item.js"></script>
+<script src="/resources/compiledJS/items/equipment.js"></script>
+<script src="/resources/compiledJS/items/consumable.js"></script>
+<script src="/resources/compiledJS/items/artifact.js"></script>
+<script src="/resources/compiledJS/items/armor.js"></script>
+<script src="/resources/compiledJS/items/weapon.js"></script>
+<script src="/resources/compiledJS/character/character.js"></script>
+<script src="/resources/compiledJS/enemy/enemy.js"></script>
+<script src="/resources/compiledJS/character/player.js"></script>
+<script src="/resources/compiledJS/summon/summon.js"></script>
+<script src="/resources/compiledJS/map/map_data.js"></script>
+<script src="/resources/compiledJS/npc/npc.js"></script>
+
+<!-- Important data / arrays -->
+<script src="/resources/compiledJS/summon/summons.js"></script>
+<script src="/resources/compiledJS/enemy/enemies.js"></script>
+<script src="/resources/compiledJS/npc/characters.js"></script>
+
+<!-- Map rendering -->
+<script src="/resources/compiledJS/map/maps.js"></script>
+
+
+
+
+
 <script src="scripts/editor.js"></script>

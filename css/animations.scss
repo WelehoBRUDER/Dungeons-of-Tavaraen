@@ -1,6 +1,6 @@
 .floatingText {
   animation-name: floatUp;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   position: absolute;
   left: 0;
   top: 0;
@@ -35,7 +35,6 @@
     margin-top: 0px;
   }
 }
-
 
 @keyframes attackNorthEast {
   0% {
@@ -239,7 +238,7 @@
   0% {
     opacity: 0;
   }
-  
+
   100% {
     opacity: 1;
   }
@@ -270,5 +269,20 @@
   }
   100% {
     top: -90%;
+  }
+}
+
+@keyframes fadeInFadeOut {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
