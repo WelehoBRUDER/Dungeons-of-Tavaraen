@@ -1804,4 +1804,4 @@ const english = {
     ui_scale: "<f>16px<f>Scales UI-elements based on multiplier.\nChange this value if UI is too large or small.",
 };
 var lang = english;
-//# sourceMappingURL=_localisation.js.map
+//# sourceMappingURL=aa_localisation.js.map
