@@ -194,17 +194,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let penetration = ability.resistance_penetration / 100;
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                console.log("<--------------------->");
-                console.log("pen", penetration, "def", defense, "res", resistance);
-                console.log("bonus", bonus);
-                console.log("dmg before", dmg);
                 if (isNaN(val))
                     val = 0;
                 dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                console.log("val", val);
-                console.log("mod", mod);
-                console.log("dmg after mods", dmg);
-                console.log("num", num);
                 if (attackTypeDamageModifier > 0)
                     dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);

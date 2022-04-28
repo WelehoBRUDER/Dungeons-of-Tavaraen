@@ -1,7 +1,7 @@
 "use strict";
 class PlayerCharacter extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
         super(base);
         this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
@@ -37,6 +37,7 @@ class PlayerCharacter extends Character {
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
         this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
+        this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -397,7 +398,7 @@ function commandRemoveAbility(cmd) {
 let player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 175, y: 46 },
+    cords: { x: 197, y: 163 },
     stats: {
         str: 1,
         dex: 1,

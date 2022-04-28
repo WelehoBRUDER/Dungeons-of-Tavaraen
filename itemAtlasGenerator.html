@@ -1,47 +1,50 @@
 <!-- THIS PROGRAM AUTOMATICALLY GENERATES AN ITEM ATLAS AND ASSIGNS POSITIONS TO ALL ITEMS -->
 <!DOCTYPE html>
 <html lang="fi">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CANVAS HOMMA</title>
 </head>
+
 <body>
   <canvas class="canvas" width="3072" height="3072"></canvas>
 </body>
+
 </html>
 
-<script src="resources/compiledJS/arrays/items.js"></script>
+<script src="resources/compiledJS/items/items.js"></script>
 
 <script>
   const canvas = document.querySelector(".canvas");
   const ctx = canvas.getContext("2d");
   const onRow = 24;
-  Object.entries(items).forEach((itm, index)=> { // Draws the actual atlas
+  Object.entries(items).forEach((itm, index) => { // Draws the actual atlas
     const item = itm[1];
     const img = new Image();
     img.src = item.img;
-    img.addEventListener("load", ()=>{
+    img.addEventListener("load", () => {
       const x = (index % onRow) * 128;
       const y = Math.floor(index / onRow) * 128;
       ctx.drawImage(img, x, y, 128, 128);
     });
   });
-  const _items = {...items};
+  const _items = { ...items };
   Object.entries(_items).forEach((itm, index) => { // Assigns position on the atlas
     const item = itm[1];
     const x = (index % onRow) * 128;
     const y = Math.floor(index / onRow) * 128;
-    item.spriteMap = {x: x, y: y};
+    item.spriteMap = { x: x, y: y };
   });
   let rawITEMS = JSON.stringify(_items, (key, value) => { //  Prints finished JS to console for copy & paste
-    if(key == "value") return `§'[` + value.join(`, `) + `]'§`;
-    if(parseInt(key) >= 0 || key == "spriteMap" || key == "damages" || key == "resistances" || key == "requiresStats") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
-    if(key == "damagesTemplate" || key == "statsTemplate" || key == "resistancesTemplate") return;
+    if (key == "value") return `§'[` + value.join(`, `) + `]'§`;
+    if (parseInt(key) >= 0 || key == "spriteMap" || key == "damages" || key == "resistances" || key == "requiresStats") return `§'` + JSON.stringify(value).replaceAll(`"`, `'`).replaceAll(`,`, `, `) + `'§`;
+    if (key == "damagesTemplate" || key == "statsTemplate" || key == "resistancesTemplate") return;
     return value;
-  } , 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
-  rawITEMS.replace(/\\"/g,"\uFFFF");
+  }, 1).replaceAll(`'`, `"`).replaceAll(`"§"`, "");
+  rawITEMS.replace(/\\"/g, "\uFFFF");
   let unquoted = rawITEMS.replace(/"([^"]+)":/g, '$1:').replace(/\uFFFF/g, '\\\"');
   console.log("const items = " + unquoted + " as any;");
 </script>

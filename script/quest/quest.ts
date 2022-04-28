@@ -110,16 +110,19 @@ class Quest {
 const journalWindow = <HTMLDivElement>document.querySelector(".questJournalWindow");
 const questList = <HTMLDivElement>journalWindow.querySelector(".questList");
 const questInfo = <HTMLDivElement>journalWindow.querySelector(".questInfo");
-let defaultQuestSelected: number = 0;
 function renderPlayerQuests() {
   state.journalOpen = true;
   journalWindow.style.transform = "scale(1)";
   journalWindow.style.opacity = "1";
   questList.innerHTML = "";
   questInfo.innerHTML = "";
-  player.questProgress.forEach((set: any) => {
+  journalWindow.querySelector(".questHeaderText").textContent = questLang[lang.language_id].quests_title;
+  player.questProgress.forEach((set: any, index: number) => {
     createQuestFromIds(set);
-    if (set.id == defaultQuestSelected) createQuestData(set);
+    if (index == player.activeQuest) {
+      // @ts-ignore
+      selectEntry(questList.childNodes[questList.childNodes.length - 1], set);
+    };
   });
 }
 
@@ -147,12 +150,13 @@ function selectEntry(entryElement: HTMLParagraphElement, entry: any) {
   }
   catch (err) { if (DEVMODE) displayText(`<c>red<c>${err}`); }
   entryElement.classList.add("selectedEntry");
-  defaultQuestSelected = player.questProgress.findIndex((prog: any) => prog.id == entry.id);
+  player.activeQuest = player.questProgress.findIndex((prog: any) => prog.id == entry.id);
   createQuestData(entry);
 }
 
 function createQuestData(entry: any) {
   questInfo.innerHTML = "";
+  const loc = questLang[lang.language_id];
   let quest = new Quest(Object.values(quests)[entry.id]);
   let title = questLang[lang.language_id][quest.id + "_name"] || quest.id;
   let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${title}`;
@@ -161,7 +165,7 @@ function createQuestData(entry: any) {
     if (ObjectiveIndex > entry.obj) return;
     let objectiveDoneAlready: boolean = false;
     if (entry.obj > ObjectiveIndex) objectiveDoneAlready = true;
-    text += `\n<c>grey<c>"${currentTask.desc}"`;
+    text += `\n<c>grey<c>"${loc[currentTask.desc] ?? currentTask.desc}"`;
     if (currentTask.objective == "killEnemies") {
       if (currentTask.spawnUnique) {
         let amounts: any = {};

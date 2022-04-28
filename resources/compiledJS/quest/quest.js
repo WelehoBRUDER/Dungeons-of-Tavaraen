@@ -106,17 +106,20 @@ class Quest {
 const journalWindow = document.querySelector(".questJournalWindow");
 const questList = journalWindow.querySelector(".questList");
 const questInfo = journalWindow.querySelector(".questInfo");
-let defaultQuestSelected = 0;
 function renderPlayerQuests() {
     state.journalOpen = true;
     journalWindow.style.transform = "scale(1)";
     journalWindow.style.opacity = "1";
     questList.innerHTML = "";
     questInfo.innerHTML = "";
-    player.questProgress.forEach((set) => {
+    journalWindow.querySelector(".questHeaderText").textContent = questLang[lang.language_id].quests_title;
+    player.questProgress.forEach((set, index) => {
         createQuestFromIds(set);
-        if (set.id == defaultQuestSelected)
-            createQuestData(set);
+        if (index == player.activeQuest) {
+            // @ts-ignore
+            selectEntry(questList.childNodes[questList.childNodes.length - 1], set);
+        }
+        ;
     });
 }
 function closePlayerQuests() {
@@ -145,22 +148,24 @@ function selectEntry(entryElement, entry) {
             displayText(`<c>red<c>${err}`);
     }
     entryElement.classList.add("selectedEntry");
-    defaultQuestSelected = player.questProgress.findIndex((prog) => prog.id == entry.id);
+    player.activeQuest = player.questProgress.findIndex((prog) => prog.id == entry.id);
     createQuestData(entry);
 }
 function createQuestData(entry) {
     questInfo.innerHTML = "";
+    const loc = questLang[lang.language_id];
     let quest = new Quest(Object.values(quests)[entry.id]);
     let title = questLang[lang.language_id][quest.id + "_name"] || quest.id;
     let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${title}`;
     //let currentTask = quest.objectives[entry.obj];
     quest.objectives.forEach((currentTask, ObjectiveIndex) => {
+        var _a;
         if (ObjectiveIndex > entry.obj)
             return;
         let objectiveDoneAlready = false;
         if (entry.obj > ObjectiveIndex)
             objectiveDoneAlready = true;
-        text += `\n<c>grey<c>"${currentTask.desc}"`;
+        text += `\n<c>grey<c>"${(_a = loc[currentTask.desc]) !== null && _a !== void 0 ? _a : currentTask.desc}"`;
         if (currentTask.objective == "killEnemies") {
             if (currentTask.spawnUnique) {
                 let amounts = {};

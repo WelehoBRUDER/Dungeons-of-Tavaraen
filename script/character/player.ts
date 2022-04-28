@@ -36,6 +36,7 @@ interface playerChar extends characterObject {
   addGold?: Function;
   questProgress?: Array<any>;
   entitiesEverEncountered?: entityMemory;
+  activeQuest?: number;
 }
 
 interface levelObject {
@@ -96,6 +97,7 @@ class PlayerCharacter extends Character {
   questProgress?: Array<any>;
   entitiesEverEncountered: entityMemory;
   sex: string;
+  activeQuest?: number;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -132,6 +134,7 @@ class PlayerCharacter extends Character {
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
     this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} } as entityMemory;
     this.sex = base.sex ?? "male";
+    this.activeQuest = base.activeQuest ?? -1;
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -464,7 +467,7 @@ function commandRemoveAbility(cmd: any) {
 let player = new PlayerCharacter({
   id: "player",
   name: "Varien Loreanus",
-  cords: { x: 175, y: 46 },
+  cords: { x: 197, y: 163 },
   stats: {
     str: 1,
     dex: 1,

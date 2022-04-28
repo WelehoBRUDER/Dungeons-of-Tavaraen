@@ -224,7 +224,7 @@ class Enemy extends Character {
                 updateQuestProgress({ id: index, quest: Object.keys(quests)[player.questProgress[index].id] });
             }
             else
-                fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique });
+                fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique, turnsToRes: 200 });
             player.questProgress.forEach((prog) => {
                 var _a;
                 let questFind = Object.values(quests)[prog.id];

@@ -55,6 +55,19 @@ async function advanceTurn() {
   showInteractPrompt();
   setTimeout(modifyCanvas, 500);
   updateUI();
+  if (fallenEnemies.length > 0) {
+    fallenEnemies.some((enemy, index) => {
+      if (enemy.spawnMap !== currentMap && !enemy.isUnique) {
+        if (!enemy.turnsToRes) enemy.turnsToRes = 200;
+        enemy.turnsToRes--;
+        if (enemy.turnsToRes <= 0) {
+          maps[enemy.spawnMap].enemies.push(new Enemy({ ...enemies[enemy.id], level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap }));
+          fallenEnemies.splice(index, 1);
+        }
+        return true;
+      }
+    });
+  }
   if (map.enemies.length == 0) turnOver = true;
   if (player.stats.hp > player.getHpMax()) {
     player.stats.hp = player.getHpMax();

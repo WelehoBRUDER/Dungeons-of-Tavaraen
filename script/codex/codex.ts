@@ -38,22 +38,23 @@ function loopCodex(entry: any) {
   const titleArrow = document.createElement("span");
   const content = document.createElement("div");
   const maxHeight = 780 * settings.ui_scale / 100; // Max height of the content container
+  const entryTitle = entry.title.replaceAll(" ", "_");
   fullEntry.classList.add("codex-entry");
-  fullEntry.classList.add(entry.title.replaceAll(" ", "_"));
+  fullEntry.classList.add(entryTitle);
   title.classList.add("entry-title");
   content.classList.add("entry-content");
-  titleText.textContent = codexLang[lang.language_id][entry.title + "_title"] ?? entry.title;
+  titleText.textContent = codexLang[lang.language_id][entryTitle + "_title"] ?? entry.title;
   titleArrow.textContent = ">";
-  if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+  if (codexHistory[entryTitle]) {
     content.style.height = "auto";
     titleArrow.style.transform = "rotate(90deg)";
   } else {
-    codexHistory[entry.title.replaceAll(" ", "_")] = false;
+    codexHistory[entryTitle] = false;
   }
   let animator: ReturnType<typeof setTimeout> = undefined;
   title.onclick = () => {
-    codexHistory[entry.title.replaceAll(" ", "_")] = !codexHistory[entry.title.replaceAll(" ", "_")];
-    if (codexHistory[entry.title.replaceAll(" ", "_")]) {
+    codexHistory[entryTitle] = !codexHistory[entryTitle];
+    if (codexHistory[entryTitle]) {
       clearTimeout(animator);
       content.style.height = "auto";
       const height = content.getBoundingClientRect().height; // Get height of content with dirty trick
