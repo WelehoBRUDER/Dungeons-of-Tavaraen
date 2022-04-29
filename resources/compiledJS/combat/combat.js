@@ -200,7 +200,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 if (attackTypeDamageModifier > 0)
                     dmg *= attackTypeDamageModifier;
                 dmg = Math.floor(dmg * resistance);
-                console.log("final dmg", dmg);
             });
         }
         else {

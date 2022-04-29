@@ -172,7 +172,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
         if (attackTypeDamageModifier > 0) dmg *= attackTypeDamageModifier;
         dmg = Math.floor(dmg * resistance);
-        console.log("final dmg", dmg);
       });
     } else {
       Object.entries(ability.get_true_damage(attacker)).forEach((value: any) => {

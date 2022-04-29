@@ -100,6 +100,7 @@ function activateShrine() {
         player.stats.hp = player.getHpMax();
         player.stats.mp = player.getMpMax();
         player.respawnPoint.cords = shrine.cords;
+        player.respawnPoint.map = currentMap;
         player.usedShrines.push({ cords: shrine.cords, map: currentMap });
         player.statusEffects = [];
         spawnFloatingText(player.cords, lang["shrine_activated"], "lime", 30, 500, 75);
@@ -333,6 +334,12 @@ function changeMap(entrance: entrance) {
   turnOver = true;
   enemiesHadTurn = 0;
   state.inCombat = false;
+  executeLoad();
+  areaName(maps[currentMap].name);
+}
+
+function loadMap(map: number) {
+  currentMap = map;
   executeLoad();
   areaName(maps[currentMap].name);
 }

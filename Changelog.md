@@ -39,6 +39,7 @@ The new changes can be gamebreaking.
 - Female characters no longer render nude when wearing only pants.
 - Added a lot of missing localisation.
 - Renamed male orcs.
+- Slightly rebalanced slime resistance values.
 
 # 1.0.9 ~ 16.3.2022
 

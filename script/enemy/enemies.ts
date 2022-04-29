@@ -85,15 +85,15 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 40,
-      crush: 40,
-      pierce: 40,
-      magic: 20,
-      dark: 10,
-      divine: 10,
+      slash: 0,
+      crush: 0,
+      pierce: 0,
+      magic: 0,
+      dark: 0,
+      divine: 0,
       fire: 340,
-      lightning: -30,
-      ice: -40
+      lightning: -20,
+      ice: -50
     },
     statusResistances: {
       poison: 0,
@@ -148,13 +148,13 @@ const enemies = {
       mpMax: 0
     },
     resistances: {
-      slash: 40,
-      crush: 40,
-      pierce: 40,
-      magic: 10,
-      dark: 10,
-      divine: 10,
-      fire: -30,
+      slash: 0,
+      crush: 0,
+      pierce: 0,
+      magic: 0,
+      dark: 0,
+      divine: 0,
+      fire: -50,
       lightning: 340,
       ice: -20
     },

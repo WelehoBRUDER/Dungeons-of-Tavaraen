@@ -353,7 +353,6 @@ class PlayerCharacter extends Character {
         return;
       }
       if (this.isDead) return;
-      // handle death logic once we get there ;)
       this.isDead = true;
       spawnFloatingText(this.cords, lang["player_death"], "red", 32, 1800, 100);
       displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
@@ -363,7 +362,7 @@ class PlayerCharacter extends Character {
       this.gold -= goldLoss;
       if (xpLoss > 0) spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
       if (goldLoss > 0) spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
-      this.grave = { cords: { ...this.cords }, xp: xpLoss, gold: goldLoss };
+      this.grave = { cords: { ...this.cords }, xp: xpLoss, gold: goldLoss, map: currentMap };
       this.usedShrines = [];
       setTimeout(modifyCanvas, 300);
       //displayText("PAINA [R] JA RESPAWNAAT");
@@ -611,9 +610,16 @@ function respawnPlayer() {
   player.updateAbilities();
   player.abilities.forEach(abi => abi.onCooldown = 0);
   player.statusEffects = [];
-  updateUI();
+  if (currentMap !== player.respawnPoint.map && player.respawnPoint.map) {
+    loadingScreen.style.display = "block";
+    loadMap(player.respawnPoint.map);
+  }
+  else {
+    loadingScreen.style.display = "none";
+    modifyCanvas(true);
+    updateUI();
+  }
   helper.resetAllLivingEnemiesInAllMaps();
-  modifyCanvas(true);
   displayText(`[WORLD] ${lang["revive"]}`);
   spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
