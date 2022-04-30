@@ -35,6 +35,7 @@ interface enemy extends characterObject {
   distToPlayer?: Function;
   questSpawn?: any;
   indexInBaseArray?: number;
+  index?: number;
 }
 
 class Enemy extends Character {
@@ -76,6 +77,7 @@ class Enemy extends Character {
   distToPlayer?: Function;
   questSpawn?: any;
   indexInBaseArray?: number;
+  index?: number;
   constructor(base: enemy) {
     super(base);
     const defaultModel: any = { ...enemies[base.id] };
@@ -111,6 +113,7 @@ class Enemy extends Character {
     this.oldCords = { ...base.oldCords } ?? { ...this.cords };
     this.questSpawn = { ...base.questSpawn } ?? null;
     this.indexInBaseArray = Object.keys(enemies).findIndex((en: string) => en == this.id);
+    this.index = base.index ?? -1;
 
     if (!this.hasBeenLeveled && this.level > 1) {
       this.updateTraits();
@@ -309,6 +312,7 @@ class Enemy extends Character {
       });
       maps[currentMap].enemies.splice(index, 1);
       this.alive = false;
+      document.querySelector(`.enemy${this.index}`).remove();
       player.lvlUp();
     };
 

@@ -233,6 +233,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 layer.offsetHeight; /* trigger reflow */
                 layer.style.animation = null;
                 layer.style.animationName = `charHurt`;
+                layer.width = layer.width;
+                // @ts-ignore
+                renderSingleEnemy(target, layer);
             }
             catch (_a) { }
         }, 110);

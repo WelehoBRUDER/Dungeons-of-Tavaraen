@@ -70,7 +70,7 @@ function changeZoomLevel({ deltaY }) {
   } else {
     currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) + 1] || zoomLevels[zoomLevels.length - 1];
   }
-  modifyCanvas(true);
+  if (currentZoom !== oldZoom) modifyCanvas(true);
 }
 
 // @ts-expect-error
@@ -78,66 +78,72 @@ window.addEventListener("resize", modifyCanvas);
 document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
 let sightMap: any;
+let oldCords: tileObject = { x: 0, y: 0 };
+let oldZoom: number = 0;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
-
-  baseCanvas.width = baseCanvas.width; // Clears the canvas
-  outLineCanvas.width = outLineCanvas.width; // Clears the canvas
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-
   if (createNewSightMap) sightMap = createSightMap(player.cords, player.sight());
   if (!sightMap) return;
 
-  /* Render the base layer */
-  for (let y = 0; y < spriteLimitY; y++) {
-    for (let x = 0; x < spriteLimitX; x++) {
-      if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
-      if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
-      const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-      const tile = tiles[imgId];
-      const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
-      const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
-      const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-      // @ts-expect-error
-      const clutterSprite = clutters[clutterId]?.spriteMap;
-      const fog = { x: 256, y: 0 };
-      if (sprite) {
-        baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-      }
-      if (tile.isWall && settings.draw_wall_outlines) {
-        const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
-        const tileSouth = tiles[+map.base?.[mapOffsetStartY + y + 1]?.[mapOffsetStartX + x]];
-        const tileWest = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x - 1]];
-        const tileEast = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x + 1]];
-        const drawOutlines = { n: !tileNorth?.isWall, s: !tileSouth?.isWall, e: !tileEast?.isWall, w: !tileWest?.isWall };
-        Object.entries(drawOutlines).map(([dir, draw]) => {
-          if (dir === "n" && draw) {
-            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
-          }
-          else if (dir === "s" && draw) {
-            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
-          }
-          else if (dir === "e" && draw) {
-            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
-          }
-          else if (dir === "w" && draw) {
-            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
-          }
-        });
-      }
-      if (player.grave) {
-        if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-          baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+  if (oldCords.x == player.cords.x && oldCords.y == player.cords.y && oldZoom == currentZoom) return;
+  else {
+    oldCords = { ...player.cords };
+    oldZoom = currentZoom;
+    /* Render the base layer */
+    baseCanvas.width = baseCanvas.width; // Clears the canvas
+    outLineCanvas.width = outLineCanvas.width; // Clears the canvas
+    for (let y = 0; y < spriteLimitY; y++) {
+      for (let x = 0; x < spriteLimitX; x++) {
+        if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
+        if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
+        const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
+        const tile = tiles[imgId];
+        const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
+        const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
+        const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
+        // @ts-expect-error
+        const clutterSprite = clutters[clutterId]?.spriteMap;
+        const fog = { x: 256, y: 0 };
+        if (sprite) {
+          baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
         }
-      }
-      if (clutterSprite) {
-        baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-      }
-      if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-        baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+        if (tile.isWall && settings.draw_wall_outlines) {
+          const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
+          const tileSouth = tiles[+map.base?.[mapOffsetStartY + y + 1]?.[mapOffsetStartX + x]];
+          const tileWest = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x - 1]];
+          const tileEast = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x + 1]];
+          const drawOutlines = { n: !tileNorth?.isWall, s: !tileSouth?.isWall, e: !tileEast?.isWall, w: !tileWest?.isWall };
+          Object.entries(drawOutlines).map(([dir, draw]) => {
+            if (dir === "n" && draw) {
+              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+            }
+            else if (dir === "s" && draw) {
+              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+            }
+            else if (dir === "e" && draw) {
+              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+            }
+            else if (dir === "w" && draw) {
+              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+            }
+          });
+        }
+        if (player.grave) {
+          if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
+            baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+          }
+        }
+        if (clutterSprite) {
+          baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+        }
+        if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
+          baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+        }
       }
     }
   }
+
 
   map.shrines.forEach((checkpoint: any) => {
     if ((sightMap[checkpoint.cords.y]?.[checkpoint.cords.x] == "x")) {
@@ -189,6 +195,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     const canvas = document.createElement("canvas");
     // @ts-ignore
     canvas.classList = `enemy${index} layer`;
+    enemy.index = index;
     const ctx = canvas.getContext("2d");
     const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
     canvas.width = innerWidth;
@@ -481,7 +488,46 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   }
 }
 
-async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, ability: Ability = null, maxRange: number = 99) {
+function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
+  if (!enemy.alive || sightMap[enemy.cords.y]?.[enemy.cords.x] != "x") return;
+  const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+  var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+  var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+  const ctx = canvas.getContext("2d");
+  const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  if (enemyImg) {
+    /* Render hp bar */
+    const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
+    const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
+    const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
+    console.log(enemy.hpRemain());
+    ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    /* Render enemy on top of hp bar */
+    ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    if (enemy.questSpawn?.quest > -1) {
+      ctx.font = `${spriteSize / 1.9}px Arial`;
+      ctx.fillStyle = "goldenrod";
+      ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+    }
+    let statCount = 0;
+    enemy.statusEffects.forEach((effect: statEffect) => {
+      if (statCount > 4) return;
+      let img = new Image(32, 32);
+      img.src = effect.icon;
+      img.addEventListener("load", e => {
+        ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
+        img = null;
+        statCount++;
+      });
+    });
+  }
+}
+
+async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null, maxRange: number = 99) {
   // @ts-ignore
   const path: any = generatePath(enemy.cords, goal, false);
   let count: number = 0;
@@ -503,7 +549,9 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
       }
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
-      //modifyCanvas();
+      const enemyCanvas: HTMLCanvasElement = document.querySelector(`.enemy${enemy.index}`);
+      enemyCanvas.width = enemyCanvas.width;
+      renderSingleEnemy(enemy, enemyCanvas);
       count++;
       if (count > maxRange) break moving;
     }
@@ -516,16 +564,8 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
 }
 
 function modifyCanvas(createNewSightMap: boolean = false) {
-  const layers = Array.from(document.querySelectorAll("canvas.layer"));
   moveMinimap();
-  moveAreaMap();
-  for (let canvas of layers) {
-    // @ts-ignore
-    canvas.width = innerWidth;
-    // @ts-ignore
-    canvas.height = innerHeight;
-  }
-  // @ts-ignore
+  //moveAreaMap();
   renderMap(maps[currentMap], createNewSightMap);
 }
 

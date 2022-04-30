@@ -13,6 +13,7 @@
 - Camera can now be offset from the player.
 - Maximum upgrade level is now +10 instead of infinite.
 - Fixed duplication bug when filtering items.
+- Massive performance boost.
 
 # 1.1 ~ 28.4.2022
 

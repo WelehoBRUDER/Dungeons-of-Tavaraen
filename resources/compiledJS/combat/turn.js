@@ -70,7 +70,7 @@ async function advanceTurn() {
     updateUI();
     document.querySelector(".closestEnemyDistance").textContent = lang["closest_enemy"] + closestEnemyDistance;
     showInteractPrompt();
-    setTimeout(modifyCanvas, 500);
+    //setTimeout(modifyCanvas, 500);
     updateUI();
     if (fallenEnemies.length > 0) {
         fallenEnemies.some((enemy, index) => {

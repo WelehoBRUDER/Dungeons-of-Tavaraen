@@ -151,16 +151,16 @@ function moveAreaMap() {
     areaMapContainer.style.display = "none";
   }
   const spriteSize = 11.97;
-  areaMapUpdateCanvas.width = areaMapUpdateCanvas.width;
-  maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
-    const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-    if (!lootedChest) {
-      const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-      var tileX = chest.cords.x * spriteSize;
-      var tileY = chest.cords.y * spriteSize;
-      areaMapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
-    }
-  });
+  //areaMapUpdateCanvas.width = areaMapUpdateCanvas.width;
+  // maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
+  //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+  //   if (!lootedChest) {
+  //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
+  //     var tileX = chest.cords.x * spriteSize;
+  //     var tileY = chest.cords.y * spriteSize;
+  //     areaMapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+  //   }
+  // });
   areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
   areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
   areaMapUpdateCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;

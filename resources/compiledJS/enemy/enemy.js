@@ -1,7 +1,7 @@
 "use strict";
 class Enemy extends Character {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
         super(base);
         const defaultModel = Object.assign({}, enemies[base.id]);
         this.sprite = defaultModel.sprite;
@@ -36,6 +36,7 @@ class Enemy extends Character {
         this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
         this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
         this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
+        this.index = (_s = base.index) !== null && _s !== void 0 ? _s : -1;
         if (!this.hasBeenLeveled && this.level > 1) {
             this.updateTraits();
             const points = (this.level - 1) * 3;
@@ -245,6 +246,7 @@ class Enemy extends Character {
             });
             maps[currentMap].enemies.splice(index, 1);
             this.alive = false;
+            document.querySelector(`.enemy${this.index}`).remove();
             player.lvlUp();
         };
         this.restore = () => {

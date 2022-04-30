@@ -1842,6 +1842,7 @@ body {
   width: 60%;
   height: 80%;
   overflow: hidden;
+  display: none;
 }
 .main .areaMap canvas {
   position: absolute;

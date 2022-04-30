@@ -202,6 +202,9 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         layer.offsetHeight; /* trigger reflow */
         layer.style.animation = null;
         layer.style.animationName = `charHurt`;
+        layer.width = layer.width;
+        // @ts-ignore
+        renderSingleEnemy(target, layer);
       }
       catch { }
     }, 110);
