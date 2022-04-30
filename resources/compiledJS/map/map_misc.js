@@ -9,8 +9,8 @@ function spriteVariables() {
         spriteLimitY++;
     const mapOffsetX = (spriteLimitX * spriteSize - baseCanvas.width) / 2;
     const mapOffsetY = (spriteLimitY * spriteSize - baseCanvas.height) / 2;
-    const mapOffsetStartX = player.cords.x - Math.floor(spriteLimitX / 2);
-    const mapOffsetStartY = player.cords.y - Math.floor(spriteLimitY / 2);
+    const mapOffsetStartX = player.cords.x - settings.map_offset_x - Math.floor(spriteLimitX / 2);
+    const mapOffsetStartY = player.cords.y - settings.map_offset_y - Math.floor(spriteLimitY / 2);
     return { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY };
 }
 const checkDirs = {

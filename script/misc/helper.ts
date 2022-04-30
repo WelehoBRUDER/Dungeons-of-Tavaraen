@@ -46,8 +46,8 @@ let helper = {
     const trimmed: PlayerCharacter = { ...playerObject };
     trimmed.inventory.forEach((itm: any, index: number) => {
       if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
-      else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats ?? [] };
-      else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats ?? [] };
+      else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
+      else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats };
     });
     trimmed.abilities.forEach((abi: any, index: number) => {
       // @ts-ignore
@@ -56,7 +56,7 @@ let helper = {
     trimmed.allModifiers = {};
     equipSlots.forEach((slot: string) => {
       if (trimmed[slot]?.id) {
-        trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level ?? 0, rolledStats: trimmed[slot].rolledStats ?? [] };
+        trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level, rolledStats: trimmed[slot].rolledStats };
       }
     });
     trimmed.perks.forEach((perk: any, index: number) => {

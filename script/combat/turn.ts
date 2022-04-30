@@ -24,7 +24,7 @@ async function advanceTurn() {
         return;
       }
     }
-    summon.updatetraits();
+    summon.updateTraits();
     summon.updateAbilities();
     summon.decideAction();
     summon.effects();

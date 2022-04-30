@@ -143,7 +143,7 @@ function scaleUI(scale) {
     moveMinimap();
 }
 function gotoSettingsMenu(inMainMenu = false) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     selectingHotkey = "";
     state.optionsOpen = true;
     if (!inMainMenu)
@@ -165,6 +165,8 @@ function gotoSettingsMenu(inMainMenu = false) {
             container.addEventListener("click", tog => {
                 settings[_setting] = !settings[_setting];
                 moveMinimap();
+                if (_setting.includes("draw"))
+                    modifyCanvas();
                 if (settings[_setting])
                     toggleBox.textContent = "X";
                 else
@@ -224,10 +226,37 @@ function gotoSettingsMenu(inMainMenu = false) {
             container.append(text, slider);
             settingsBackground.append(container);
         }
+        else if (setting.type == "inputSliderReduced") {
+            container.classList.add("sliderContainer");
+            const text = document.createElement("p");
+            const slider = document.createElement("input");
+            const textVal = document.createElement("p");
+            slider.classList.add("slider");
+            textVal.classList.add("inputValue");
+            text.textContent = (_d = lang[setting.id]) !== null && _d !== void 0 ? _d : setting.id;
+            let _setting = setting.id.replace("setting_", "");
+            slider.type = "range";
+            slider.min = "-10";
+            slider.max = "10";
+            slider.value = settings[_setting].toString();
+            container.classList.add(_setting);
+            if (setting.tooltip) {
+                tooltip(container, lang[setting.tooltip]);
+            }
+            textVal.textContent = `${parseInt(slider.value).toString()}`;
+            slider.oninput = () => {
+                settings[_setting] = parseInt(slider.value);
+                modifyCanvas(true);
+                textVal.textContent = `${parseInt(slider.value).toString()}`;
+            };
+            text.append(textVal);
+            container.append(text, slider);
+            settingsBackground.append(container);
+        }
         else if (setting.type == "languageSelection") {
             container.classList.add("languageSelection");
             const text = document.createElement("p");
-            text.textContent = (_d = lang[setting.id]) !== null && _d !== void 0 ? _d : setting.id;
+            text.textContent = (_e = lang[setting.id]) !== null && _e !== void 0 ? _e : setting.id;
             container.append(text);
             languages.forEach((language) => {
                 const langButton = document.createElement("div");
@@ -284,11 +313,12 @@ async function gotoMainMenu(init = false) {
 function convertEnemytraits() {
     maps.forEach((mp) => {
         mp.enemies.map((en) => {
-            en.updatetraits();
+            en.updateTraits();
         });
     });
 }
 function LoadSlot(data) {
+    timePlayedNow = performance.now();
     loadingScreen.style.display = "flex";
     loadingText.textContent = "Loading save...";
     let foundMap;
@@ -297,6 +327,7 @@ function LoadSlot(data) {
     let _falEnemies;
     let _loot;
     try {
+        console.log((Object.assign({}, GetKey("player", data).data)));
         _pl = new PlayerCharacter(Object.assign({}, GetKey("player", data).data));
         _itmData = GetKey("itemData", data).data;
         _falEnemies = GetKey("enemies", data).data;
@@ -322,7 +353,7 @@ function LoadSlot(data) {
     enemiesHadTurn = 0;
     state.inCombat = false;
     player.updatePerks(true);
-    player.updatetraits();
+    player.updateTraits();
     player.updateAbilities();
     helper.purgeDeadEnemies();
     helper.killAllQuestEnemies();

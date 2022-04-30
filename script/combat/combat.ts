@@ -325,8 +325,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
 function tileCordsToScreen(cords: tileObject) {
   // This function returns screen pixel values from cords.
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-  const screenX = (cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-  const screenY = (cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+  const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+  const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
   return { screenX, screenY };
 }
 
@@ -396,7 +396,7 @@ function summonUnit(ability: ability, cords: tileObject) {
     });
   });
   let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
-  newSummon.updatetraits();
+  newSummon.updateTraits();
   newSummon.restore(true);
   newSummon.traits.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
   if (ability.summon_status) newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));

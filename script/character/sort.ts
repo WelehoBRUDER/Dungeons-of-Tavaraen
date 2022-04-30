@@ -10,6 +10,9 @@ function sortInventory(category: string, reverse: boolean, inventory: Array<any>
     inventory.sort((a, b) => worthSort(a, b, reverse));
   }
   else inventory.sort((a, b) => numberSort(a, b, category, reverse));
+  inventory.map((item, index: number) => {
+    return item.index = index;
+  });
   if (context.includes("SELLING")) createMerchantWindow(false, true);
   else if (context == "UPGRADE") createSmithingWindow(false);
   else renderInventory();

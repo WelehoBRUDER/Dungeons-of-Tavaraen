@@ -1,12 +1,18 @@
 //@ts-nocheck
 
+/* Prevent actions from being fired too rapidly when holding key down */
+let movementCooldown = false;
+let actionCooldown = false;
 /* For clarity movement and hotkeys are separated to two different functions */
-document.addEventListener("keyup", key => {
+document.addEventListener("keydown", key => {
   movementCheck(key);
   hotkeyCheck(key);
 });
 
 function hotkeyCheck(e) {
+  if (actionCooldown) return;
+  actionCooldown = true;
+  setTimeout(() => actionCooldown = false, 20);
   if (e.key == "r" && !state.savesOpen) {
     if (player.isDead) {
       respawnPlayer();
@@ -54,6 +60,7 @@ function hotkeyCheck(e) {
   }
   else if (state.invOpen || state.menuOpen) return;
   else if (number > -1 && e.shiftKey) {
+
     let abi = player.abilities.find(a => a.equippedSlot == number + 9);
     if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
 
@@ -79,6 +86,9 @@ function hotkeyCheck(e) {
 }
 
 function movementCheck(keyPress) {
+  if (movementCooldown) return;
+  movementCooldown = true;
+  setTimeout(() => movementCooldown = false, 20);
   const rooted = player.isRooted();
   if (!turnOver || state.dialogWindow || state.storeOpen) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right", [settings.hotkey_move_right_up]: "rightUp", [settings.hotkey_move_right_down]: "rightDown", [settings.hotkey_move_left_up]: "leftUp", [settings.hotkey_move_left_down]: "leftDown" } as any;

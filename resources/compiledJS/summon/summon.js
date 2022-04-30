@@ -38,7 +38,7 @@ class Summon extends Character {
             Object.entries(this.damages).forEach((dmg) => {
                 this.damages[dmg[0]] = Math.floor(this.damages[dmg[0]] * (1 + this.level / 17)) + 1;
             });
-            this.updatetraits();
+            this.updateTraits();
             this["stats"]["hp"] = this.getHpMax();
             this["stats"]["mp"] = this.getMpMax();
             this.hasBeenLeveled = true;

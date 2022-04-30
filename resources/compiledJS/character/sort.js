@@ -12,6 +12,9 @@ function sortInventory(category, reverse, inventory, context) {
     }
     else
         inventory.sort((a, b) => numberSort(a, b, category, reverse));
+    inventory.map((item, index) => {
+        return item.index = index;
+    });
     if (context.includes("SELLING"))
         createMerchantWindow(false, true);
     else if (context == "UPGRADE")

@@ -137,7 +137,7 @@ function itemTT(item) {
         let txt = "";
         (_h = Object.entries(item.requiresStats)) === null || _h === void 0 ? void 0 : _h.forEach((dmg) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
         txt = txt.substring(0, txt.length - 2);
-        text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
+        text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt}<c>white<c>)\n§`;
     }
     if (((_j = Object.values(item === null || item === void 0 ? void 0 : item.stats)) === null || _j === void 0 ? void 0 : _j.length) > 0) {
         text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;

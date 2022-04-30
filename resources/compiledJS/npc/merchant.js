@@ -118,8 +118,11 @@ function itemAmountSelector(item, selling = false) {
     const but = amountScreen.querySelector(".confirm");
     amountScreen.style.display = "block";
     input.value = item.amount;
+    input.min = "1";
+    input.max = selling ? item.amount : 999;
     but.onclick = () => {
         let value = parseInt(input.value);
+        console.log(value);
         if (value <= 0)
             value = 1;
         if (selling && value > item.amount)

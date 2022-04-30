@@ -17,6 +17,7 @@
 
 <body>
   <div class="main">
+    <p class="version-number">Ver. Alpha 1.1.1</p>
     <div class="loading">
       <h1 class="loading-text"></h1>
     </div>
@@ -28,6 +29,7 @@
     </div>
     <div class="canvasLayers">
       <canvas class="baseSheet layer" width="1920" height="1344"></canvas>
+      <canvas class="outLines layer" width="1920" height="1344"></canvas>
       <canvas class="mapData layer" width="1920" height="1344"></canvas>
       <div class="enemyLayers"></div>
       <div class="summonLayers"></div>
@@ -83,7 +85,7 @@
       </div>
     </div>
     <div class="playerInventory">
-      <div class="closeWindowButton" onclick="closeInventory()">X</div>
+      <div class="closeWindowButton" onclick="closeInventory()"><span>X</span></div>
       <div class="weapon slot"></div>
       <img src="resources/icons/weapon_blade.png" alt="" class="weaponBg slotImg">
       <div class="offhand slot"></div>
@@ -109,7 +111,7 @@
       <div class="items"></div>
     </div>
     <div class="storeWindow">
-      <div class="closeWindowButton" onclick="cancelTransaction()">X</div>
+      <div class="closeWindowButton" onclick="cancelTransaction()"><span>X</span></div>
       <div class="merchantInv"></div>
       <div class="playerInv"></div>
       <div class="confirmation">
@@ -123,7 +125,7 @@
         </div>
         <div class="price"></div>
         <div class="amountSelector">
-          <input type="number" class="amount">
+          <input type="number" min="1" class="amount">
           <div class="confirm">OK</div>
         </div>
         <div class="confirmButton" onclick="confirmTransaction()">CONFIRM</div>
@@ -131,7 +133,7 @@
       </div>
     </div>
     <div class="smithingWindow">
-      <div class="closeWindowButton" onclick="closeSmithingWindow()">X</div>
+      <div class="closeWindowButton" onclick="closeSmithingWindow()"><span>X</span></div>
       <div class="upgradeArea">
         <div class="upgradeSlot"></div>
         <div class="materialWrapper">
@@ -153,7 +155,7 @@
     <div class="playerWindow"></div>
     <div class="playerEffects"></div>
     <div class="playerLeveling">
-      <div class="closeWindowButton" onclick="closeLeveling()">X</div>
+      <div class="closeWindowButton" onclick="closeLeveling()"><span>X</span></div>
       <div class="perksStatic"></div>
       <div class="stats"></div>
       <div class="perks">
@@ -170,7 +172,7 @@
       <div class="dialogText"></div>
     </div>
     <div class="questJournalWindow">
-      <div class="closeWindowButton" onclick="closePlayerQuests()">X</div>
+      <div class="closeWindowButton" onclick="closePlayerQuests()"><span>X</span></div>
       <div class="questHeader">
         <p class="questHeaderText">Quests</p>
       </div>
@@ -178,7 +180,7 @@
       <div class="questInfo"></div>
     </div>
     <div class="codexWindow">
-      <div class="closeWindowButton" onclick="closeCodex()">X</div>
+      <div class="closeWindowButton" onclick="closeCodex()"><span>X</span></div>
       <div class="contentContainer"></div>
       <div class="contentList"></div>
     </div>

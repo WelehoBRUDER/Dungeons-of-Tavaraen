@@ -196,7 +196,7 @@ creation.querySelector<HTMLInputElement>(".nameInput").addEventListener("keyup",
 });
 
 function beginGame() {
-  player.updatetraits();
+  player.updateTraits();
   player.updateAbilities();
   creation.style.opacity = "0";
   setTimeout(() => { creation.style.display = "none"; }, 750);

@@ -1,5 +1,7 @@
 const baseCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const outLineCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .outLines");
+const outLineCtx = outLineCanvas.getContext("2d");
 const mapDataCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .mapData");
 const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .playerSheet");
@@ -79,9 +81,9 @@ let sightMap: any;
 function renderMap(map: mapObject, createNewSightMap: boolean = false) {
 
   baseCanvas.width = baseCanvas.width; // Clears the canvas
+  outLineCanvas.width = outLineCanvas.width; // Clears the canvas
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-
 
   if (createNewSightMap) sightMap = createSightMap(player.cords, player.sight());
   if (!sightMap) return;
@@ -91,8 +93,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     for (let x = 0; x < spriteLimitX; x++) {
       if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
       if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
-      const imgId = map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-      // @ts-expect-error
+      const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
+      const tile = tiles[imgId];
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
       const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
       const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
@@ -101,6 +103,27 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       const fog = { x: 256, y: 0 };
       if (sprite) {
         baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+      }
+      if (tile.isWall && settings.draw_wall_outlines) {
+        const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
+        const tileSouth = tiles[+map.base?.[mapOffsetStartY + y + 1]?.[mapOffsetStartX + x]];
+        const tileWest = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x - 1]];
+        const tileEast = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x + 1]];
+        const drawOutlines = { n: !tileNorth?.isWall, s: !tileSouth?.isWall, e: !tileEast?.isWall, w: !tileWest?.isWall };
+        Object.entries(drawOutlines).map(([dir, draw]) => {
+          if (dir === "n" && draw) {
+            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+          }
+          else if (dir === "s" && draw) {
+            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+          }
+          else if (dir === "e" && draw) {
+            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+          }
+          else if (dir === "w" && draw) {
+            outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+          }
+        });
       }
       if (player.grave) {
         if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
@@ -120,8 +143,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     if ((sightMap[checkpoint.cords.y]?.[checkpoint.cords.x] == "x")) {
       const shrine = document.querySelector<HTMLImageElement>(".sprites .shrineTile");
       const shrineLit = document.querySelector<HTMLImageElement>(".sprites .shrineLitTile");
-      var tileX = (checkpoint.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (checkpoint.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      var tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       if (player?.respawnPoint?.cords.x == checkpoint.cords.x && player?.respawnPoint?.cords.y == checkpoint.cords.y) baseCtx?.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
       else baseCtx?.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
     }
@@ -132,8 +155,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
       if (!lootedChest) {
         const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-        var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         baseCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
       }
     }
@@ -142,8 +165,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   map.messages.forEach((msg: any) => {
     if ((sightMap[msg.cords.y]?.[msg.cords.x] == "x")) {
       const message = document.querySelector<HTMLImageElement>(".messageTile");
-      var tileX = (msg.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (msg.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      var tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       baseCtx?.drawImage(message, tileX, tileY, spriteSize, spriteSize);
     }
   });
@@ -151,8 +174,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   map?.entrances?.forEach((entrance: any) => {
     if ((sightMap[entrance.cords.y]?.[entrance.cords.x] == "x")) {
       const entranceSprite = document.querySelector<HTMLImageElement>(`.sprites .${entrance.sprite}`);
-      var tileX = (entrance.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (entrance.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      var tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       baseCtx?.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
     }
   });
@@ -161,8 +184,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   enemyLayers.textContent = ""; // Delete enemy canvases
   map.enemies.forEach((enemy: any, index) => {
     if (!enemy.alive || sightMap[enemy.cords.y]?.[enemy.cords.x] != "x") return;
-    var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const canvas = document.createElement("canvas");
     // @ts-ignore
     canvas.classList = `enemy${index} layer`;
@@ -205,8 +228,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     if (npc.currentMap == currentMap) {
       if (sightMap[npc.currentCords.y]?.[npc.currentCords.x] == "x") {
         const charSprite = document.querySelector<HTMLImageElement>(`.sprites .${npc.sprite}`);
-        var tileX = (npc.currentCords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (npc.currentCords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var tileX = (npc.currentCords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (npc.currentCords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (charSprite) {
           baseCtx?.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
         }
@@ -218,8 +241,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   summonLayers.textContent = ""; // Delete summon canvases
   combatSummons.forEach((enemy: any, index) => {
     if (!enemy.alive) return;
-    var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const canvas = document.createElement("canvas");
     // @ts-ignore
     canvas.classList = `summon${index} layer`;
@@ -257,8 +280,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   itemData.forEach((item: any) => {
     if (item.map != currentMap) return;
     if (!item.itm) return;
-    var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    var tileX = (item.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    var tileY = (item.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const itemSprite = item.itm.spriteMap;
     if (sightMap[item.cords.y]?.[item.cords.x] == "x") {
       mapDataCtx.shadowColor = "#ffd900";
@@ -275,8 +298,8 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
 function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
   if (!baseCtx) throw new Error("2D context from base canvas is missing!");
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-  var tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-  var tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+  var tileX = (tile.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+  var tileY = (tile.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
 
   playerCanvas.width = playerCanvas.width;
   if (dontMove) {
@@ -317,9 +340,9 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
       let iteration: number = 0;
       path.forEach((step: any) => {
         iteration++;
-        if (step.x == player.cords.x && step.y == player.cords.y) return;
-        var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        if (step.x == player.cords.x + settings.map_offset_x && step.y == player.cords.y + settings.map_offset_y) return;
+        var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
           playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
         }
@@ -335,8 +358,8 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
       path.forEach((step: any) => {
         iteration++;
         if (step.x == player.cords.x && step.y == player.cords.y) return;
-        var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if ((step.blocked && step.x !== tile.x && step.y !== tile.y) || iteration > distance) {
           if (lastStep == 0) lastStep = iteration;
           playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
@@ -355,8 +378,8 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
       }
     }
     if (state.isSelected && state.abiSelected.summon_unit) {
-      var _tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var _tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+      var _tileX = (tile.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+      var _tileY = (tile.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       if (generatePath(player.cords, tile, player.canFly, true) <= state.abiSelected.use_range) {
         playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       } else playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
@@ -364,9 +387,9 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
     if (event.buttons == 1 && !state.isSelected) {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
       path.forEach((step: any) => {
-        if (step.x == player.cords.x && step.y == player.cords.y) return;
-        var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        if (step.x == player.cords.x + settings.map_offset_x && step.y == player.cords.y + settings.map_offset_y) return;
+        var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked) {
           playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
         }
@@ -380,7 +403,7 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
 
 function restoreGrave() {
   if (!player.grave) return;
-  if (player.cords.x == player.grave.cords.x && player.cords.y == player.grave.cords.y) {
+  if (player.cords.x + settings.map_offset_x == player.grave.cords.x && player.cords.y + settings.map_offset_y == player.grave.cords.y) {
     player.addGold(player.grave.gold);
     player.level.xp += player.grave.xp;
     player.grave = null;
@@ -402,7 +425,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   if (isMovingCurrently) breakMoving = true;
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
-      await helper.sleep(15);
+      await helper.sleep(5);
       if (!ability && player.speed.movementFill <= -100) {
         player.speed.movementFill += 100;
         advanceTurn();
@@ -480,7 +503,7 @@ async function moveEnemy(goal: tileObject, enemy: Enemy | characterObject, abili
       }
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
-      modifyCanvas();
+      //modifyCanvas();
       count++;
       if (count > maxRange) break moving;
     }

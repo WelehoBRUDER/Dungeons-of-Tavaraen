@@ -98,6 +98,7 @@ class PlayerCharacter extends Character {
   entitiesEverEncountered: entityMemory;
   sex: string;
   activeQuest?: number;
+  timePlayed?: number;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -135,6 +136,7 @@ class PlayerCharacter extends Character {
     this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} } as entityMemory;
     this.sex = base.sex ?? "male";
     this.activeQuest = base.activeQuest ?? -1;
+    this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
 
     this.fistDmg = () => {
       let damages = {} as damageClass;
@@ -466,7 +468,7 @@ function commandRemoveAbility(cmd: any) {
 let player = new PlayerCharacter({
   id: "player",
   name: "Varien Loreanus",
-  cords: { x: 197, y: 163 },
+  cords: { x: 175, y: 46 },
   stats: {
     str: 1,
     dex: 1,
@@ -623,7 +625,7 @@ function respawnPlayer() {
   displayText(`[WORLD] ${lang["revive"]}`);
   spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
-player.updatetraits();
+player.updateTraits();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 

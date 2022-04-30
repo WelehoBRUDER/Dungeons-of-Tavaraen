@@ -61,10 +61,7 @@ function isCanvasBlank(canvas) {
             .getImageData(0, 0, canvas.width, canvas.height).data
             .some(channel => channel !== 0);
     }
-    catch (err) {
-        if (DEVMODE)
-            displayText(`<c>red<c>${err} at line map:158`);
-    }
+    catch (err) { }
 }
 function moveMinimap() {
     if (isCanvasBlank(minimapCanvas))

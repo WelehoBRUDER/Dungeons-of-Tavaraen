@@ -1,5 +1,6 @@
 "use strict";
 let saveMenuScroll = 0;
+let timePlayedNow = 0;
 document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop);
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -77,6 +78,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         }
         saveOverwrite.addEventListener("click", () => {
             let saveData = {};
+            player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+            timePlayedNow = performance.now();
             saveData.player = helper.trimPlayerObjectForSaveFile(player);
             saveData.fallenEnemies = [...fallenEnemies];
             saveData.itemData = [...itemData];
@@ -97,6 +100,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(false, false);
         });
         loadGame.addEventListener("click", async () => {
+            timePlayedNow = performance.now();
             loadingScreen.style.display = "flex";
             loadingText.textContent = "Loading save...";
             await helper.sleep(5);
@@ -114,7 +118,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 id = [...save.save.itemData];
                 lc = [...save.save.lootedChests];
                 pl.updatePerks(true);
-                pl.updatetraits();
+                pl.updateTraits();
                 pl.updateAbilities();
             }
             catch (_a) {
@@ -133,7 +137,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             enemiesHadTurn = 0;
             state.inCombat = false;
             player.updatePerks(true);
-            player.updatetraits();
+            player.updateTraits();
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
@@ -157,7 +161,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         });
         let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
         renderedPlayer.updatePerks(true, true);
-        renderedPlayer.updatetraits();
+        renderedPlayer.updateTraits();
         renderedPlayer.updateAbilities(true);
         let saveTime = new Date(save.time);
         let saveDateString = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -171,6 +175,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
         totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
         totalText += `§\n${lang["map"]}: §<c>gold<c>${(_a = maps === null || maps === void 0 ? void 0 : maps[foundMap]) === null || _a === void 0 ? void 0 : _a.name}§ `;
+        totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
         totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
         let verColor = "lime";
         let addVersionWarning = false;
@@ -209,6 +214,23 @@ async function closeSaveMenu() {
     saveBg.style.animationName = `slideToTop`;
     saveBg.style.display = "none";
     setTimeout(() => { dim.style.height = "0%"; }, 5);
+}
+function secondsToHoursAndMinutes(seconds) {
+    if (seconds <= 0)
+        return undefined;
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds - (hours * 3600)) / 60);
+    let secondsLeft = seconds - (hours * 3600) - (minutes * 60);
+    // @ts-ignore
+    if (hours < 10)
+        hours = "0" + hours;
+    // @ts-ignore
+    if (minutes < 10)
+        minutes = "0" + minutes;
+    // @ts-ignore
+    if (secondsLeft < 10)
+        secondsLeft = "0" + secondsLeft;
+    return hours + ":" + minutes + ":" + secondsLeft;
 }
 let saves = [];
 let input = "";
@@ -252,11 +274,12 @@ function updatePlayerToPreventCrash() {
 }
 function createNewSaveGame() {
     const saveBg = document.querySelector(".savesMenu");
-    const savesArea = saveBg.querySelector(".saves");
     const saveNameInput = saveBg.querySelector(".saveName");
     let saveName = saveNameInput.value || player.name;
     let sortTime = +(new Date());
     let gameSave = {};
+    player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+    timePlayedNow = performance.now();
     gameSave.player = helper.trimPlayerObjectForSaveFile(player);
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
@@ -273,6 +296,8 @@ function createNewSaveGame() {
     gotoSaveMenu(false, false);
 }
 function saveToFile(input) {
+    player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+    timePlayedNow = performance.now();
     var saveData = (function () {
         let a = document.createElement("a");
         document.body.appendChild(a);
@@ -346,7 +371,7 @@ function LoadSlotPromptFile(name, data) {
 function GetKey(key, table) {
     for (let object of table) {
         if (object.key == key) {
-            return Object.assign({}, object);
+            return object;
         }
     }
 }

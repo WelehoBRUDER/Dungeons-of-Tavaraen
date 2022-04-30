@@ -129,7 +129,7 @@ class Character {
   getStatusResists?: Function;
   effects?: Function;
   updateAbilities?: Function;
-  updatetraits?: Function;
+  updateTraits?: Function;
   aura?: string;
   regen?: any;
   hit?: any;
@@ -446,7 +446,7 @@ class Character {
       if (this.artifact3?.type) this.artifact3 = new Artifact({ ...this.artifact3 });
     };
 
-    this.updatetraits = () => {
+    this.updateTraits = () => {
       this.traits.forEach((mod: PermanentStatModifier, index: number) => {
         if (mod.name) mod.id = mod.name.replaceAll(" ", "_").toLowerCase();
         let modifier = new PermanentStatModifier(mod);

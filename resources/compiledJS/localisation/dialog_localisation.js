@@ -9,7 +9,7 @@ const dialogLang = {
         neutral_hisHer: "Hänen",
         leaveDialog: "Näkemisiin!",
         generic_hail_friend: `<css>font-style: italic;<css><c>silver<c>"Tervehdys kamu! On hyvä nähdä etteivät kaikki ole menettäneet järkeään. \nJos olet kiinnostunut tarjoamastani asioista, niin totta ihmeessä mainitse siitä!"`,
-        thrisna_welcome: `<css>font-style: italic;<css><c>silver<c>"Hei uusi asiakas! Olet löytänyt tiesti Thrisnan Varusteliikkeeseen. \nTarjoan vain parhaita ja kestävimpiä varusteita, tutkippa tarjoukseni huolella."`,
+        thrisna_welcome: `<css>font-style: italic;<css><c>silver<c>"Hei uusi asiakas! Olet löytänyt tiesi Thrisnan Varusteliikkeeseen. \nTarjoan vain parhaita ja kestävimpiä varusteita, tutkippa tarjoukseni huolella."`,
         testMerchant_store: "Näytä tuotteesi",
         testMerchant_business: "Kuinka hyvin kauppa käy?",
         testMerchant_defeated_the_slimes: "Päihitin ryöväri limat",

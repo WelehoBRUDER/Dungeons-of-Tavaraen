@@ -1,7 +1,7 @@
 "use strict";
 function createEnemyInfo(enemy) {
     enemy = enemy.isFoe ? new Enemy(enemy) : new Summon(enemy);
-    enemy.updatetraits();
+    enemy.updateTraits();
     let totalDmg = 0;
     Object.values(enemy.damages).forEach((dmg) => totalDmg += dmg);
     const enemyStats = enemy.getStats();

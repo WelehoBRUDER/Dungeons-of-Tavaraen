@@ -7,49 +7,50 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
   const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
-
+  const posX = baseCanvas.width / 2 - size / 2 + (size * settings.map_offset_x);
+  const posY = baseCanvas.height / 2 - size / 2 + (size * settings.map_offset_y);
   player.statusEffects.forEach((eff: statEffect) => {
     if (eff.aura) {
       const aura = <HTMLImageElement>document.querySelector(".sprites ." + eff.aura);
-      ctx?.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+      ctx?.drawImage(aura, posX, posY, size, size);
     }
   });
-  ctx?.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  ctx?.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  ctx?.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  ctx?.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-  if (!player.helmet?.coversHair || settings["hide_helmet"]) ctx?.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+  ctx?.drawImage(bodyModel, posX, posY, size, size);
+  ctx?.drawImage(earModel, posX, posY, size, size);
+  ctx?.drawImage(eyeModel, posX, posY, size, size);
+  ctx?.drawImage(faceModel, posX, posY, size, size);
+  if (!player.helmet?.coversHair || settings["hide_helmet"]) ctx?.drawImage(hairModel, posX, posY, size, size);
   if (player.helmet?.sprite && !settings["hide_helmet"]) {
     const helmetModel = <HTMLImageElement>document.querySelector(".sprites ." + player.helmet.sprite + sex);
-    ctx?.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(helmetModel, posX, posY, size, size);
   }
   if (player.gloves?.sprite) {
     const glovesModel = <HTMLImageElement>document.querySelector(".sprites ." + player.gloves.sprite + sex);
-    ctx?.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(glovesModel, posX, posY, size, size);
   }
   if (player.boots?.sprite) {
     const bootsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.boots.sprite + sex);
-    ctx?.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(bootsModel, posX, posY, size, size);
   }
   if (!player.legs?.sprite || (sex === "Female" && !player.chest?.sprite)) {
     const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
-    ctx?.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(leggings, posX, posY, size, size);
   }
   if (player.legs?.sprite) {
     const leggingsModel = <HTMLImageElement>document.querySelector(".sprites ." + player.legs.sprite + sex);
-    ctx?.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(leggingsModel, posX, posY, size, size);
   }
   if (player.chest?.sprite) {
     const chestModel = <HTMLImageElement>document.querySelector(".sprites ." + player.chest.sprite + sex);
-    ctx?.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(chestModel, posX, posY, size, size);
   }
   if (player.weapon?.sprite) {
     const weaponModel = <HTMLImageElement>document.querySelector(".sprites ." + player.weapon.sprite);
-    ctx?.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(weaponModel, posX, posY, size, size);
   }
   if (player.offhand?.sprite) {
     const offhandModel = <HTMLImageElement>document.querySelector(".sprites ." + player.offhand.sprite);
-    ctx?.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx?.drawImage(offhandModel, posX, posY, size, size);
   }
 }
 

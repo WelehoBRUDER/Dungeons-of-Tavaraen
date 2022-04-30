@@ -84,7 +84,7 @@ function addMaterialItem(item: any) {
 }
 
 function upgrade() {
-  if (player.gold < upgradePrice()) return;
+  if (player.gold < upgradePrice() || pendingUpgrade.upgradeItem.level >= 10) return;
   if (pendingUpgrade.upgradeItem && pendingUpgrade.materials.length == 2) {
     pendingUpgrade.upgradeItem.level++;
     player.addGold(-upgradePrice());

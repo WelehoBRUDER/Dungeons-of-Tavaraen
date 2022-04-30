@@ -57,9 +57,24 @@ const menuSettings = [
         type: "toggle",
     },
     {
+        id: "setting_draw_wall_outlines",
+        tooltip: "draw_wall_outlines",
+        type: "toggle",
+    },
+    {
         id: "setting_ui_scale",
         tooltip: "ui_scale",
         type: "inputSlider",
+    },
+    {
+        id: "setting_map_offset_x",
+        tooltip: "map_offset_x",
+        type: "inputSliderReduced",
+    },
+    {
+        id: "setting_map_offset_y",
+        tooltip: "map_offset_y",
+        type: "inputSliderReduced",
     },
     {
         id: "setting_hotkey_inv",

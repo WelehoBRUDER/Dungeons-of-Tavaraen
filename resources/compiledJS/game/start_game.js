@@ -197,7 +197,7 @@ creation.querySelector(".nameInput").addEventListener("keyup", (key) => {
     checkIfCanStartGame();
 });
 function beginGame() {
-    player.updatetraits();
+    player.updateTraits();
     player.updateAbilities();
     creation.style.opacity = "0";
     setTimeout(() => { creation.style.display = "none"; }, 750);

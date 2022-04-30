@@ -87,7 +87,7 @@ class perk {
                     if (add)
                         player.traits.push(stat);
                 });
-                player.updatetraits();
+                player.updateTraits();
                 player.updatePerks();
                 player.updateAbilities();
                 lvl_history.perks.push(this.id);

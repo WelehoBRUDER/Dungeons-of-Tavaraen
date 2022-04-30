@@ -161,6 +161,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       container.addEventListener("click", tog => {
         settings[_setting] = !settings[_setting];
         moveMinimap();
+        if (_setting.includes("draw")) modifyCanvas();
         if (settings[_setting]) toggleBox.textContent = "X";
         else toggleBox.textContent = "";
       });
@@ -212,6 +213,33 @@ function gotoSettingsMenu(inMainMenu = false) {
       slider.oninput = () => {
         scaleUI(parseInt(slider.value) / 100);
         textVal.textContent = `${(parseInt(slider.value) / 100).toString()}x`;
+      };
+      text.append(textVal);
+      container.append(text, slider);
+      settingsBackground.append(container);
+    }
+    else if (setting.type == "inputSliderReduced") {
+      container.classList.add("sliderContainer");
+      const text = document.createElement("p");
+      const slider = document.createElement("input");
+      const textVal = document.createElement("p");
+      slider.classList.add("slider");
+      textVal.classList.add("inputValue");
+      text.textContent = lang[setting.id] ?? setting.id;
+      let _setting = setting.id.replace("setting_", "");
+      slider.type = "range";
+      slider.min = "-10";
+      slider.max = "10";
+      slider.value = settings[_setting].toString();
+      container.classList.add(_setting);
+      if (setting.tooltip) {
+        tooltip(container, lang[setting.tooltip]);
+      }
+      textVal.textContent = `${parseInt(slider.value).toString()}`;
+      slider.oninput = () => {
+        settings[_setting] = parseInt(slider.value);
+        modifyCanvas(true);
+        textVal.textContent = `${parseInt(slider.value).toString()}`;
       };
       text.append(textVal);
       container.append(text, slider);
@@ -271,12 +299,13 @@ async function gotoMainMenu(init: boolean = false) {
 function convertEnemytraits() {
   maps.forEach((mp: any) => {
     mp.enemies.map((en: any) => {
-      en.updatetraits();
+      en.updateTraits();
     });
   });
 }
 
 function LoadSlot(data: any) {
+  timePlayedNow = performance.now();
   loadingScreen.style.display = "flex";
   loadingText.textContent = "Loading save...";
   let foundMap;
@@ -285,6 +314,7 @@ function LoadSlot(data: any) {
   let _falEnemies;
   let _loot;
   try {
+    console.log(({ ...GetKey("player", data).data }));
     _pl = new PlayerCharacter({ ...GetKey("player", data).data });
     _itmData = GetKey("itemData", data).data;
     _falEnemies = GetKey("enemies", data).data;
@@ -309,7 +339,7 @@ function LoadSlot(data: any) {
   enemiesHadTurn = 0;
   state.inCombat = false;
   player.updatePerks(true);
-  player.updatetraits();
+  player.updateTraits();
   player.updateAbilities();
   helper.purgeDeadEnemies();
   helper.killAllQuestEnemies();

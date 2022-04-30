@@ -198,7 +198,7 @@ function itemTT(item: any) {
     let txt: string = "";
     Object.entries(item.requiresStats)?.forEach((dmg: any) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt})\n§`;
+    text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt}<c>white<c>)\n§`;
   }
   if (Object.values(item?.stats)?.length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;

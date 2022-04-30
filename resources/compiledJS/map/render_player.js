@@ -10,49 +10,51 @@ function renderPlayerModel(size, canvas, ctx) {
     const hairModel = document.querySelector(".sprites .hair" + player.hair);
     const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
     const faceModel = document.querySelector(".sprites .face" + player.face);
+    const posX = baseCanvas.width / 2 - size / 2 + (size * settings.map_offset_x);
+    const posY = baseCanvas.height / 2 - size / 2 + (size * settings.map_offset_y);
     player.statusEffects.forEach((eff) => {
         if (eff.aura) {
             const aura = document.querySelector(".sprites ." + eff.aura);
-            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(aura, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(aura, posX, posY, size, size);
         }
     });
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
-    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bodyModel, posX, posY, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(earModel, posX, posY, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(eyeModel, posX, posY, size, size);
+    ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(faceModel, posX, posY, size, size);
     if (!((_a = player.helmet) === null || _a === void 0 ? void 0 : _a.coversHair) || settings["hide_helmet"])
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hairModel, posX, posY, size, size);
     if (((_b = player.helmet) === null || _b === void 0 ? void 0 : _b.sprite) && !settings["hide_helmet"]) {
         const helmetModel = document.querySelector(".sprites ." + player.helmet.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(helmetModel, posX, posY, size, size);
     }
     if ((_c = player.gloves) === null || _c === void 0 ? void 0 : _c.sprite) {
         const glovesModel = document.querySelector(".sprites ." + player.gloves.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(glovesModel, posX, posY, size, size);
     }
     if ((_d = player.boots) === null || _d === void 0 ? void 0 : _d.sprite) {
         const bootsModel = document.querySelector(".sprites ." + player.boots.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(bootsModel, posX, posY, size, size);
     }
     if (!((_e = player.legs) === null || _e === void 0 ? void 0 : _e.sprite) || (sex === "Female" && !((_f = player.chest) === null || _f === void 0 ? void 0 : _f.sprite))) {
         const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggings, posX, posY, size, size);
     }
     if ((_g = player.legs) === null || _g === void 0 ? void 0 : _g.sprite) {
         const leggingsModel = document.querySelector(".sprites ." + player.legs.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(leggingsModel, posX, posY, size, size);
     }
     if ((_h = player.chest) === null || _h === void 0 ? void 0 : _h.sprite) {
         const chestModel = document.querySelector(".sprites ." + player.chest.sprite + sex);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(chestModel, posX, posY, size, size);
     }
     if ((_j = player.weapon) === null || _j === void 0 ? void 0 : _j.sprite) {
         const weaponModel = document.querySelector(".sprites ." + player.weapon.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(weaponModel, posX, posY, size, size);
     }
     if ((_k = player.offhand) === null || _k === void 0 ? void 0 : _k.sprite) {
         const offhandModel = document.querySelector(".sprites ." + player.offhand.sprite);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, baseCanvas.width / 2 - size / 2, baseCanvas.height / 2 - size / 2, size, size);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(offhandModel, posX, posY, size, size);
     }
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player, noClothes = false) {

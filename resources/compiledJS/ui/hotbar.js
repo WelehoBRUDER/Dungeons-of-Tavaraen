@@ -270,7 +270,7 @@ function updateUI() {
 }
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en) => {
-    en.updatetraits();
+    en.updateTraits();
     en.updateAbilities();
 });
 updateUI();

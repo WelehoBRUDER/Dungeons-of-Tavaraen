@@ -81,7 +81,7 @@ function addMaterialItem(item) {
     createSmithingWindow(false);
 }
 function upgrade() {
-    if (player.gold < upgradePrice())
+    if (player.gold < upgradePrice() || pendingUpgrade.upgradeItem.level >= 10)
         return;
     if (pendingUpgrade.upgradeItem && pendingUpgrade.materials.length == 2) {
         pendingUpgrade.upgradeItem.level++;

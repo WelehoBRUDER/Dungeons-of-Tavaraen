@@ -1,11 +1,18 @@
 "use strict";
 //@ts-nocheck
+/* Prevent actions from being fired too rapidly when holding key down */
+let movementCooldown = false;
+let actionCooldown = false;
 /* For clarity movement and hotkeys are separated to two different functions */
-document.addEventListener("keyup", key => {
+document.addEventListener("keydown", key => {
     movementCheck(key);
     hotkeyCheck(key);
 });
 function hotkeyCheck(e) {
+    if (actionCooldown)
+        return;
+    actionCooldown = true;
+    setTimeout(() => actionCooldown = false, 20);
     if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
             respawnPlayer();
@@ -99,6 +106,10 @@ function hotkeyCheck(e) {
 }
 function movementCheck(keyPress) {
     var _a, _b, _c;
+    if (movementCooldown)
+        return;
+    movementCooldown = true;
+    setTimeout(() => movementCooldown = false, 20);
     const rooted = player.isRooted();
     if (!turnOver || state.dialogWindow || state.storeOpen)
         return;

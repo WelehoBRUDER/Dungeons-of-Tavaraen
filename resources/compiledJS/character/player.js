@@ -38,6 +38,7 @@ class PlayerCharacter extends Character {
         this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
         this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
+        this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
@@ -397,7 +398,7 @@ function commandRemoveAbility(cmd) {
 let player = new PlayerCharacter({
     id: "player",
     name: "Varien Loreanus",
-    cords: { x: 197, y: 163 },
+    cords: { x: 175, y: 46 },
     stats: {
         str: 1,
         dex: 1,
@@ -552,7 +553,7 @@ function respawnPlayer() {
     displayText(`[WORLD] ${lang["revive"]}`);
     spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);
 }
-player.updatetraits();
+player.updateTraits();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
 //# sourceMappingURL=player.js.map

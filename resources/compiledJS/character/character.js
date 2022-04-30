@@ -345,7 +345,7 @@ class Character {
             if ((_p = this.artifact3) === null || _p === void 0 ? void 0 : _p.type)
                 this.artifact3 = new Artifact(Object.assign({}, this.artifact3));
         };
-        this.updatetraits = () => {
+        this.updateTraits = () => {
             this.traits.forEach((mod, index) => {
                 if (mod.name)
                     mod.id = mod.name.replaceAll(" ", "_").toLowerCase();

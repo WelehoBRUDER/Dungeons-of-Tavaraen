@@ -1,3 +1,19 @@
+# 1.1.1 ~ 30.4.2022
+
+### Patch
+
+## New Additions
+
+- Playtime is now tracked for all saves.
+
+## Fixes & Tweaks
+
+- Added toggleable outlines to walls.
+- Movement and action keys can now be held.
+- Camera can now be offset from the player.
+- Maximum upgrade level is now +10 instead of infinite.
+- Fixed duplication bug when filtering items.
+
 # 1.1 ~ 28.4.2022
 
 ### Major update

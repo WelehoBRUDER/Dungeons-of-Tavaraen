@@ -2,6 +2,8 @@
 var _a;
 const baseCanvas = document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const outLineCanvas = document.querySelector(".canvasLayers .outLines");
+const outLineCtx = outLineCanvas.getContext("2d");
 const mapDataCanvas = document.querySelector(".canvasLayers .mapData");
 const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = document.querySelector(".canvasLayers .playerSheet");
@@ -56,8 +58,9 @@ window.addEventListener("resize", modifyCanvas);
 (_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
 let sightMap;
 function renderMap(map, createNewSightMap = false) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
     baseCanvas.width = baseCanvas.width; // Clears the canvas
+    outLineCanvas.width = outLineCanvas.width; // Clears the canvas
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
@@ -72,8 +75,8 @@ function renderMap(map, createNewSightMap = false) {
                 continue;
             if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0)
                 continue;
-            const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x];
-            // @ts-expect-error
+            const imgId = +((_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]);
+            const tile = tiles[imgId];
             const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
             const grave = document.querySelector(`.sprites .deadModel`);
             const clutterId = (_f = (_e = map.clutter) === null || _e === void 0 ? void 0 : _e[mapOffsetStartY + y]) === null || _f === void 0 ? void 0 : _f[mapOffsetStartX + x];
@@ -83,6 +86,27 @@ function renderMap(map, createNewSightMap = false) {
             if (sprite) {
                 baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
+            if (tile.isWall && settings.draw_wall_outlines) {
+                const tileNorth = tiles[+((_j = (_h = map.base) === null || _h === void 0 ? void 0 : _h[mapOffsetStartY + y - 1]) === null || _j === void 0 ? void 0 : _j[mapOffsetStartX + x])];
+                const tileSouth = tiles[+((_l = (_k = map.base) === null || _k === void 0 ? void 0 : _k[mapOffsetStartY + y + 1]) === null || _l === void 0 ? void 0 : _l[mapOffsetStartX + x])];
+                const tileWest = tiles[+((_o = (_m = map.base) === null || _m === void 0 ? void 0 : _m[mapOffsetStartY + y]) === null || _o === void 0 ? void 0 : _o[mapOffsetStartX + x - 1])];
+                const tileEast = tiles[+((_q = (_p = map.base) === null || _p === void 0 ? void 0 : _p[mapOffsetStartY + y]) === null || _q === void 0 ? void 0 : _q[mapOffsetStartX + x + 1])];
+                const drawOutlines = { n: !(tileNorth === null || tileNorth === void 0 ? void 0 : tileNorth.isWall), s: !(tileSouth === null || tileSouth === void 0 ? void 0 : tileSouth.isWall), e: !(tileEast === null || tileEast === void 0 ? void 0 : tileEast.isWall), w: !(tileWest === null || tileWest === void 0 ? void 0 : tileWest.isWall) };
+                Object.entries(drawOutlines).map(([dir, draw]) => {
+                    if (dir === "n" && draw) {
+                        outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+                    }
+                    else if (dir === "s" && draw) {
+                        outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+                    }
+                    else if (dir === "e" && draw) {
+                        outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+                    }
+                    else if (dir === "w" && draw) {
+                        outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+                    }
+                });
+            }
             if (player.grave) {
                 if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
                     baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
@@ -91,7 +115,7 @@ function renderMap(map, createNewSightMap = false) {
             if (clutterSprite) {
                 baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
-            if (((_h = sightMap[mapOffsetStartY + y]) === null || _h === void 0 ? void 0 : _h[mapOffsetStartX + x]) != "x" && imgId) {
+            if (((_r = sightMap[mapOffsetStartY + y]) === null || _r === void 0 ? void 0 : _r[mapOffsetStartX + x]) != "x" && imgId) {
                 baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
             }
         }
@@ -101,8 +125,8 @@ function renderMap(map, createNewSightMap = false) {
         if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
             const shrine = document.querySelector(".sprites .shrineTile");
             const shrineLit = document.querySelector(".sprites .shrineLitTile");
-            var tileX = (checkpoint.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (checkpoint.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            var tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             if (((_b = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _b === void 0 ? void 0 : _b.cords.x) == checkpoint.cords.x && ((_c = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _c === void 0 ? void 0 : _c.cords.y) == checkpoint.cords.y)
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
             else
@@ -115,8 +139,8 @@ function renderMap(map, createNewSightMap = false) {
         if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
             if (!lootedChest) {
                 const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
-                var tileX = (chest.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var tileY = (chest.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                var tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
             }
         }
@@ -125,17 +149,17 @@ function renderMap(map, createNewSightMap = false) {
         var _a;
         if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
             const message = document.querySelector(".messageTile");
-            var tileX = (msg.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (msg.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            var tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
         }
     });
-    (_j = map === null || map === void 0 ? void 0 : map.entrances) === null || _j === void 0 ? void 0 : _j.forEach((entrance) => {
+    (_s = map === null || map === void 0 ? void 0 : map.entrances) === null || _s === void 0 ? void 0 : _s.forEach((entrance) => {
         var _a;
         if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
-            var tileX = (entrance.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (entrance.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            var tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
         }
     });
@@ -145,8 +169,8 @@ function renderMap(map, createNewSightMap = false) {
         var _a, _b;
         if (!enemy.alive || ((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) != "x")
             return;
-        var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         const canvas = document.createElement("canvas");
         // @ts-ignore
         canvas.classList = `enemy${index} layer`;
@@ -190,8 +214,8 @@ function renderMap(map, createNewSightMap = false) {
         if (npc.currentMap == currentMap) {
             if (((_a = sightMap[npc.currentCords.y]) === null || _a === void 0 ? void 0 : _a[npc.currentCords.x]) == "x") {
                 const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
-                var tileX = (npc.currentCords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var tileY = (npc.currentCords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                var tileX = (npc.currentCords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var tileY = (npc.currentCords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (charSprite) {
                     baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
                 }
@@ -204,8 +228,8 @@ function renderMap(map, createNewSightMap = false) {
         var _a;
         if (!enemy.alive)
             return;
-        var tileX = (enemy.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (enemy.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         const canvas = document.createElement("canvas");
         // @ts-ignore
         canvas.classList = `summon${index} layer`;
@@ -246,8 +270,8 @@ function renderMap(map, createNewSightMap = false) {
             return;
         if (!item.itm)
             return;
-        var tileX = (item.cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (item.cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+        var tileX = (item.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+        var tileY = (item.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         const itemSprite = item.itm.spriteMap;
         if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
             mapDataCtx.shadowColor = "#ffd900";
@@ -265,8 +289,8 @@ function renderTileHover(tile, event = { buttons: -1 }) {
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    var tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    var tileX = (tile.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    var tileY = (tile.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     playerCanvas.width = playerCanvas.width;
     if (dontMove) {
         renderPlayerModel(spriteSize, playerCanvas, playerCtx);
@@ -304,10 +328,10 @@ function renderTileHover(tile, event = { buttons: -1 }) {
             let iteration = 0;
             path.forEach((step) => {
                 iteration++;
-                if (step.x == player.cords.x && step.y == player.cords.y)
+                if (step.x == player.cords.x + settings.map_offset_x && step.y == player.cords.y + settings.map_offset_y)
                     return;
-                var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (iteration > distance) {
                     playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
                 }
@@ -325,8 +349,8 @@ function renderTileHover(tile, event = { buttons: -1 }) {
                 iteration++;
                 if (step.x == player.cords.x && step.y == player.cords.y)
                     return;
-                var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if ((step.blocked && step.x !== tile.x && step.y !== tile.y) || iteration > distance) {
                     if (lastStep == 0)
                         lastStep = iteration;
@@ -347,8 +371,8 @@ function renderTileHover(tile, event = { buttons: -1 }) {
             }
         }
         if (state.isSelected && state.abiSelected.summon_unit) {
-            var _tileX = (tile.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var _tileY = (tile.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            var _tileX = (tile.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            var _tileY = (tile.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             if (generatePath(player.cords, tile, player.canFly, true) <= state.abiSelected.use_range) {
                 playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             }
@@ -358,10 +382,10 @@ function renderTileHover(tile, event = { buttons: -1 }) {
         if (event.buttons == 1 && !state.isSelected) {
             const path = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
             path.forEach((step) => {
-                if (step.x == player.cords.x && step.y == player.cords.y)
+                if (step.x == player.cords.x + settings.map_offset_x && step.y == player.cords.y + settings.map_offset_y)
                     return;
-                var _tileX = (step.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var _tileY = (step.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 if (step.blocked) {
                     playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
                 }
@@ -379,7 +403,7 @@ function renderTileHover(tile, event = { buttons: -1 }) {
 function restoreGrave() {
     if (!player.grave)
         return;
-    if (player.cords.x == player.grave.cords.x && player.cords.y == player.grave.cords.y) {
+    if (player.cords.x + settings.map_offset_x == player.grave.cords.x && player.cords.y + settings.map_offset_y == player.grave.cords.y) {
         player.addGold(player.grave.gold);
         player.level.xp += player.grave.xp;
         player.grave = null;
@@ -402,7 +426,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         breakMoving = true;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
-            await helper.sleep(15);
+            await helper.sleep(5);
             if (!ability && player.speed.movementFill <= -100) {
                 player.speed.movementFill += 100;
                 advanceTurn();
@@ -489,7 +513,7 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
             }
             enemy.cords.x = step.x;
             enemy.cords.y = step.y;
-            modifyCanvas();
+            //modifyCanvas();
             count++;
             if (count > maxRange)
                 break moving;

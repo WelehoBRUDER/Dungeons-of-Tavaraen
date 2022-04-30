@@ -40,13 +40,12 @@ let helper = {
     trimPlayerObjectForSaveFile: function (playerObject) {
         const trimmed = Object.assign({}, playerObject);
         trimmed.inventory.forEach((itm, index) => {
-            var _a, _b;
             if (itm.stackable || itm.type === "consumable")
                 trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
             else if (itm.level)
-                trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: (_a = itm.rolledStats) !== null && _a !== void 0 ? _a : [] };
+                trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
             else
-                trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: (_b = itm.rolledStats) !== null && _b !== void 0 ? _b : [] };
+                trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats };
         });
         trimmed.abilities.forEach((abi, index) => {
             // @ts-ignore
@@ -54,9 +53,9 @@ let helper = {
         });
         trimmed.allModifiers = {};
         equipSlots.forEach((slot) => {
-            var _a, _b, _c;
+            var _a;
             if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
-                trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: (_b = trimmed[slot].level) !== null && _b !== void 0 ? _b : 0, rolledStats: (_c = trimmed[slot].rolledStats) !== null && _c !== void 0 ? _c : [] };
+                trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level, rolledStats: trimmed[slot].rolledStats };
             }
         });
         trimmed.perks.forEach((perk, index) => {

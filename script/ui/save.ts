@@ -1,4 +1,5 @@
 let saveMenuScroll = 0;
+let timePlayedNow = 0;
 document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop);
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   hideHover();
@@ -73,6 +74,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     }
     saveOverwrite.addEventListener("click", () => {
       let saveData = {} as any;
+      player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+      timePlayedNow = performance.now();
       saveData.player = helper.trimPlayerObjectForSaveFile(player);
       saveData.fallenEnemies = [...fallenEnemies];
       saveData.itemData = [...itemData];
@@ -93,6 +96,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       gotoSaveMenu(false, false);
     });
     loadGame.addEventListener("click", async () => {
+      timePlayedNow = performance.now();
       loadingScreen.style.display = "flex";
       loadingText.textContent = "Loading save...";
       await helper.sleep(5);
@@ -109,7 +113,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
         id = [...save.save.itemData];
         lc = [...save.save.lootedChests];
         pl.updatePerks(true);
-        pl.updatetraits();
+        pl.updateTraits();
         pl.updateAbilities();
       }
       catch {
@@ -128,7 +132,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       enemiesHadTurn = 0;
       state.inCombat = false;
       player.updatePerks(true);
-      player.updatetraits();
+      player.updateTraits();
       player.updateAbilities();
       renderMinimap(maps[currentMap]);
       renderAreaMap(maps[currentMap]);
@@ -152,7 +156,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     });
     let renderedPlayer = new PlayerCharacter({ ...save.save.player });
     renderedPlayer.updatePerks(true, true);
-    renderedPlayer.updatetraits();
+    renderedPlayer.updateTraits();
     renderedPlayer.updateAbilities(true);
     let saveTime = new Date(save.time);
     let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
@@ -165,6 +169,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
     totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
     totalText += `§\n${lang["map"]}: §<c>gold<c>${maps?.[foundMap]?.name}§ `;
+    totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
     totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
     let verColor: string = "lime";
     let addVersionWarning: boolean = false;
@@ -204,6 +209,20 @@ async function closeSaveMenu() {
   saveBg.style.animationName = `slideToTop`;
   saveBg.style.display = "none";
   setTimeout(() => { dim.style.height = "0%"; }, 5);
+}
+
+function secondsToHoursAndMinutes(seconds: number) {
+  if (seconds <= 0) return undefined;
+  let hours = Math.floor(seconds / 3600);
+  let minutes = Math.floor((seconds - (hours * 3600)) / 60);
+  let secondsLeft = seconds - (hours * 3600) - (minutes * 60);
+  // @ts-ignore
+  if (hours < 10) hours = "0" + hours;
+  // @ts-ignore
+  if (minutes < 10) minutes = "0" + minutes;
+  // @ts-ignore
+  if (secondsLeft < 10) secondsLeft = "0" + secondsLeft;
+  return hours + ":" + minutes + ":" + secondsLeft;
 }
 
 let saves: Array<any> = [];
@@ -249,11 +268,12 @@ function updatePlayerToPreventCrash() {
 
 function createNewSaveGame() {
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
-  const savesArea = saveBg.querySelector<HTMLDivElement>(".saves");
   const saveNameInput = saveBg.querySelector<HTMLInputElement>(".saveName");
   let saveName = saveNameInput.value || player.name;
   let sortTime = +(new Date());
   let gameSave = {} as any;
+  player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+  timePlayedNow = performance.now();
   gameSave.player = helper.trimPlayerObjectForSaveFile(player);
   gameSave.fallenEnemies = [...fallenEnemies];
   gameSave.itemData = [...itemData];
@@ -271,6 +291,8 @@ function createNewSaveGame() {
 }
 
 function saveToFile(input: string) {
+  player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
+  timePlayedNow = performance.now();
   var saveData = (function () {
     let a = document.createElement("a") as any;
     document.body.appendChild(a);
@@ -353,7 +375,7 @@ function LoadSlotPromptFile(name: string, data: any) {
 function GetKey(key: string, table: any) {
   for (let object of table) {
     if (object.key == key) {
-      return { ...object };
+      return object;
     }
   }
 }

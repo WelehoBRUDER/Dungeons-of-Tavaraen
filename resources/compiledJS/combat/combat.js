@@ -373,8 +373,8 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
 function tileCordsToScreen(cords) {
     // This function returns screen pixel values from cords.
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    const screenX = (cords.x - player.cords.x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    const screenY = (cords.y - player.cords.y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     return { screenX, screenY };
 }
 function collision(target, ability, isPlayer, attacker, theme) {
@@ -447,7 +447,7 @@ function summonUnit(ability, cords) {
         });
     });
     let newSummon = new Summon(Object.assign({}, Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
-    newSummon.updatetraits();
+    newSummon.updateTraits();
     newSummon.restore(true);
     newSummon.traits.push({ id: "buffs_from_player", effects: Object.assign({}, playerBuffs) });
     if (ability.summon_status)

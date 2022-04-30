@@ -101,6 +101,7 @@ class Armor extends Item {
       });
       name += `${langName}`;
       this.name = name;
+      if (this.level > 0) this.name += ` +${this.level}`;
     }
 
     if (setPrice > 0) this.fullPrice = () => { return this.price; };
