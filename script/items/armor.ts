@@ -61,20 +61,24 @@ class Armor extends Item {
         }
       }
     }
-
-    this.rolledStats?.forEach((stat: any) => {
-      if (stat.armor) {
-        let val = equipmentStatRandomization["armor"][stat.armor]["Value"][stat.value];
-        if (!this.armor[stat.armor]) this.armor[stat.armor] = Math.floor(val * gradeStatMultis[this.grade]);
-        else this.armor[stat.armor] += Math.floor(val * gradeStatMultis[this.grade]);
-      }
-      else {
-        let val = equipmentStatRandomization["side"][stat.stat.substring(0, stat.stat.length - 1)];
-        val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
-        if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
-        else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
-      }
-    });
+    try {
+      this.rolledStats?.forEach((stat: any) => {
+        if (stat.armor) {
+          let val = equipmentStatRandomization["armor"][stat.armor]["Value"][stat.value];
+          if (!this.armor[stat.armor]) this.armor[stat.armor] = Math.floor(val * gradeStatMultis[this.grade]);
+          else this.armor[stat.armor] += Math.floor(val * gradeStatMultis[this.grade]);
+        }
+        else {
+          let val = equipmentStatRandomization["side"][stat.stat.substring(0, stat.stat.length - 1)];
+          val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+          if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
+          else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
+        }
+      });
+    }
+    catch (err) {
+      if (DEVMODE) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
+    }
 
     if (this.rolledStats.length > 0) {
       let name: string = "";

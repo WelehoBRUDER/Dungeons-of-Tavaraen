@@ -30,13 +30,17 @@ class Artifact extends Item {
         }
       }
     }
-
-    this.rolledStats?.forEach((stat: any) => {
-      let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
-      val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
-      if (!this.stats[stat.stat]) this.stats[stat.stat] = val;
-      else this.stats[stat.stat] += val;
-    });
+    try {
+      this.rolledStats?.forEach((stat: any) => {
+        let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
+        val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
+        if (!this.stats[stat.stat]) this.stats[stat.stat] = val;
+        else this.stats[stat.stat] += val;
+      });
+    }
+    catch (err) {
+      if (DEVMODE) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
+    }
 
     if (setPrice > 0) this.fullPrice = () => { return this.price; };
     else {

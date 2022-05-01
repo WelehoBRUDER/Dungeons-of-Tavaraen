@@ -99,7 +99,7 @@ class Enemy extends Character {
                 let chosenAbility = this.chooseAbility();
                 let pathToTarget = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
                 let arrowPathToTarget = generateArrowPath(this.cords, this.chosenTarget.cords, false);
-                let missileWillLand = arrowHitsTarget(this.cords, this.chosenTarget.cords);
+                let missileWillLand = arrowHitsTarget(null, null, false, arrowPathToTarget);
                 let punchingDistance = generatePath(this.cords, this.chosenTarget.cords, this.canFly, true);
                 let pathDistance = pathToTarget.length;
                 let arrowPathDistance = arrowPathToTarget.length;

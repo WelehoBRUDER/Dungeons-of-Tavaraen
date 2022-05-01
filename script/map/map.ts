@@ -63,8 +63,7 @@ interface tileObject {
 }
 
 baseCanvas.addEventListener("wheel", changeZoomLevel);
-// @ts-expect-error
-function changeZoomLevel({ deltaY }) {
+function changeZoomLevel({ deltaY }: any) {
   if (deltaY > 0) {
     currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
   } else {
@@ -73,8 +72,7 @@ function changeZoomLevel({ deltaY }) {
   if (currentZoom !== oldZoom) modifyCanvas(true);
 }
 
-// @ts-expect-error
-window.addEventListener("resize", modifyCanvas);
+window.addEventListener("resize", resizeCanvas);
 document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
 let sightMap: any;
@@ -550,7 +548,10 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
       const enemyCanvas: HTMLCanvasElement = document.querySelector(`.enemy${enemy.index}`);
-      enemyCanvas.width = enemyCanvas.width;
+      try {
+        enemyCanvas.width = enemyCanvas.width;
+      }
+      catch { }
       renderSingleEnemy(enemy, enemyCanvas);
       count++;
       if (count > maxRange) break moving;
@@ -567,6 +568,16 @@ function modifyCanvas(createNewSightMap: boolean = false) {
   moveMinimap();
   //moveAreaMap();
   renderMap(maps[currentMap], createNewSightMap);
+}
+
+function resizeCanvas() {
+  const layers = Array.from(document.querySelectorAll("canvas.layer"));
+  layers.map((layer: any) => {
+    layer.width = innerWidth;
+    layer.height = innerHeight;
+  });
+  currentZoom -= 0.000001;
+  renderMap(maps[currentMap], true);
 }
 
 let highestWaitTime = 0;

@@ -43,7 +43,6 @@ const mapSelection = {
     disableHover: false
 };
 baseCanvas.addEventListener("wheel", changeZoomLevel);
-// @ts-expect-error
 function changeZoomLevel({ deltaY }) {
     if (deltaY > 0) {
         currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
@@ -54,8 +53,7 @@ function changeZoomLevel({ deltaY }) {
     if (currentZoom !== oldZoom)
         modifyCanvas(true);
 }
-// @ts-expect-error
-window.addEventListener("resize", modifyCanvas);
+window.addEventListener("resize", resizeCanvas);
 (_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
 let sightMap;
 let oldCords = { x: 0, y: 0 };
@@ -565,7 +563,10 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
             enemy.cords.x = step.x;
             enemy.cords.y = step.y;
             const enemyCanvas = document.querySelector(`.enemy${enemy.index}`);
-            enemyCanvas.width = enemyCanvas.width;
+            try {
+                enemyCanvas.width = enemyCanvas.width;
+            }
+            catch (_a) { }
             renderSingleEnemy(enemy, enemyCanvas);
             count++;
             if (count > maxRange)
@@ -582,6 +583,15 @@ function modifyCanvas(createNewSightMap = false) {
     moveMinimap();
     //moveAreaMap();
     renderMap(maps[currentMap], createNewSightMap);
+}
+function resizeCanvas() {
+    const layers = Array.from(document.querySelectorAll("canvas.layer"));
+    layers.map((layer) => {
+        layer.width = innerWidth;
+        layer.height = innerHeight;
+    });
+    currentZoom -= 0.000001;
+    renderMap(maps[currentMap], true);
 }
 let highestWaitTime = 0;
 //# sourceMappingURL=map.js.map

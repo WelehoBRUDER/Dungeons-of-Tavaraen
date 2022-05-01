@@ -61,7 +61,7 @@ class Weapon extends Item {
         }
         catch (err) {
             if (DEVMODE)
-                displayText(`<c>red<c>${err} at line equipment:264`);
+                displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
         }
         // Assign correct name based on stat effects.
         if (this.rolledStats.length > 0) {

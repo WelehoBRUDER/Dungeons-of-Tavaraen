@@ -20,7 +20,7 @@ function displayText(txt) {
     }
     if (!state.displayingTextHistory)
         worldTextContainer.scrollBy(0, 1000);
-    if (worldTextContainer.childNodes.length > 199)
+    if (worldTextContainer.childNodes.length > 99)
         worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
     if (worldTextHistoryArray.length > worldTextHistoryMaximumSize)
         worldTextHistoryArray.splice(0, 1);

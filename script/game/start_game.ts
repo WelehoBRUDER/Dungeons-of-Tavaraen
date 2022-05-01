@@ -219,7 +219,7 @@ function beginGame() {
   renderMinimap(maps[currentMap]);
   renderAreaMap(maps[currentMap]);
   moveMinimap();
-  modifyCanvas(true);
+  resizeCanvas();
   setTimeout(() => {
     openLevelingScreen();
   }, 0);
@@ -398,7 +398,7 @@ function initGame() {
   renderMinimap(maps[currentMap]);
   renderAreaMap(maps[currentMap]);
   createStaticMap();
-  modifyCanvas(true);
+  resizeCanvas();
   tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);

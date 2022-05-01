@@ -175,7 +175,7 @@ class Enemy extends Character {
         let chosenAbility = this.chooseAbility();
         let pathToTarget: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
         let arrowPathToTarget: any = generateArrowPath(this.cords, this.chosenTarget.cords, false);
-        let missileWillLand = arrowHitsTarget(this.cords, this.chosenTarget.cords);
+        let missileWillLand = arrowHitsTarget(null, null, false, arrowPathToTarget);
         let punchingDistance: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, true);
         let pathDistance: number = pathToTarget.length;
         let arrowPathDistance: number = arrowPathToTarget.length;

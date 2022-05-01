@@ -126,8 +126,14 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   return cords as any;
 }
 
-function arrowHitsTarget(start: tileObject, end: tileObject, isSummon: boolean = false) {
-  let path: any = generateArrowPath(start, end);
+function arrowHitsTarget(start: tileObject, end: tileObject, isSummon: boolean = false, useExistingPath: any = null) {
+  let path: any;
+  if (useExistingPath) {
+    path = useExistingPath;
+  }
+  else {
+    path = generateArrowPath(start, end);
+  }
   let hits = true;
   path.forEach((step: any) => {
     if (step.enemy && !isSummon) {
