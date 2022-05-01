@@ -162,6 +162,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         settings[_setting] = !settings[_setting];
         moveMinimap();
         if (_setting.includes("draw")) resizeCanvas();
+        if (_setting.includes("fps")) refreshLoop();
         if (settings[_setting]) toggleBox.textContent = "X";
         else toggleBox.textContent = "";
       });
@@ -238,7 +239,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       textVal.textContent = `${parseInt(slider.value).toString()}`;
       slider.oninput = () => {
         settings[_setting] = parseInt(slider.value);
-        modifyCanvas(true);
+        renderEntireMap(maps[currentMap]);
         textVal.textContent = `${parseInt(slider.value).toString()}`;
       };
       text.append(textVal);

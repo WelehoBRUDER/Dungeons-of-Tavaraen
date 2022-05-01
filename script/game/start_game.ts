@@ -395,14 +395,15 @@ function initGame() {
   state.menuOpen = true;
   state.titleScreen = true;
   gotoMainMenu(true);
-  renderMinimap(maps[currentMap]);
-  renderAreaMap(maps[currentMap]);
   createStaticMap();
   resizeCanvas();
+  renderMinimap(maps[currentMap]);
+  renderAreaMap(maps[currentMap]);
   tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
   tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+  setTimeout(() => document.querySelector<HTMLDivElement>(".loading").style.display = "none", 0);
 }
 
 document.addEventListener("DOMContentLoaded", initGame);

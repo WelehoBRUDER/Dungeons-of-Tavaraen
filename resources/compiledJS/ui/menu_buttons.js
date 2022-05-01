@@ -58,7 +58,10 @@ const menuSettings = [
     },
     {
         id: "setting_draw_wall_outlines",
-        tooltip: "draw_wall_outlines",
+        type: "toggle",
+    },
+    {
+        id: "setting_show_fps_counter",
         type: "toggle",
     },
     {
@@ -68,12 +71,10 @@ const menuSettings = [
     },
     {
         id: "setting_map_offset_x",
-        tooltip: "map_offset_x",
         type: "inputSliderReduced",
     },
     {
         id: "setting_map_offset_y",
-        tooltip: "map_offset_y",
         type: "inputSliderReduced",
     },
     {

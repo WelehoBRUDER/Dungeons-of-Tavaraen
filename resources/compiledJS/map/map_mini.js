@@ -55,17 +55,16 @@ function renderMinimap(map) {
     });
 }
 // Found this from google, the function returns true / false depending on whether or not the canvas is empty.
-function isCanvasBlank(canvas) {
-    try {
-        return !canvas.getContext('2d')
-            .getImageData(0, 0, canvas.width, canvas.height).data
-            .some(channel => channel !== 0);
-    }
-    catch (err) { }
-}
+// function isCanvasBlank(canvas: HTMLCanvasElement) {
+//   try {
+//     return !canvas.getContext('2d')
+//       .getImageData(0, 0, canvas.width, canvas.height).data
+//       .some(channel => channel !== 0);
+//   }
+//   catch (err) { }
+// }
 function moveMinimap() {
-    if (isCanvasBlank(minimapCanvas))
-        renderMinimap(maps[currentMap]);
+    // if (isCanvasBlank(minimapCanvas)) renderMinimap(maps[currentMap]);
     if (!settings.toggle_minimap) {
         minimapContainer.style.display = "none";
         return;
@@ -76,15 +75,15 @@ function moveMinimap() {
     const map = maps[currentMap];
     const spriteSize = 8;
     minimapUpdateCanvas.width = minimapUpdateCanvas.width;
-    map.treasureChests.forEach((chest) => {
-        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-        if (!lootedChest) {
-            const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
-            var tileX = chest.cords.x * spriteSize;
-            var tileY = chest.cords.y * spriteSize;
-            minimapUpdateCtx === null || minimapUpdateCtx === void 0 ? void 0 : minimapUpdateCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
-        }
-    });
+    // map.treasureChests.forEach((chest: treasureChest) => {
+    //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+    //   if (!lootedChest) {
+    //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
+    //     var tileX = chest.cords.x * spriteSize;
+    //     var tileY = chest.cords.y * spriteSize;
+    //     minimapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
+    //   }
+    // });
     minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
     minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
     minimapUpdateCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
@@ -140,8 +139,7 @@ function renderAreaMap(map) {
 }
 function moveAreaMap() {
     //const displayLimit = areaMapCalcDisplay();
-    if (isCanvasBlank(areaMapCanvas))
-        renderAreaMap(maps[currentMap]);
+    // if (isCanvasBlank(areaMapCanvas)) renderAreaMap(maps[currentMap]);
     if (state.areaMapOpen) {
         areaMapContainer.style.display = "block";
     }

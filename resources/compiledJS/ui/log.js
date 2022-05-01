@@ -87,6 +87,10 @@ const times = [];
 const fps = document.querySelector(".fps-counter");
 function refreshLoop() {
     window.requestAnimationFrame(() => {
+        if (!settings.show_fps_counter) {
+            fps.textContent = "";
+            return;
+        }
         const now = performance.now();
         while (times.length > 0 && times[0] <= now - 1000) {
             times.shift();

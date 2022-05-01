@@ -339,4 +339,6 @@ function effectSyntax(effect, embed = false, effectId = "") {
         text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
     return text;
 }
+document.querySelector(".loading").style.display = "flex";
+document.querySelector(".loading-text").textContent = "Loading...";
 //# sourceMappingURL=syntax.js.map

@@ -30,7 +30,7 @@ var currentMap = 3;
 var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
-const zoomLevels = [0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
+const zoomLevels = [0.2, 0.25, 0.27, 0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
 var currentZoom = 1;
 /* temporarily store highlight variables here */
 const highlight = {
@@ -373,7 +373,7 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
 }
 function modifyCanvas(createNewSightMap = false) {
     moveMinimap();
-    //moveAreaMap();
+    moveAreaMap();
     renderMap(maps[currentMap], createNewSightMap);
 }
 function resizeCanvas() {

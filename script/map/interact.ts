@@ -353,6 +353,8 @@ async function executeLoad() {
           loadUI().then(() => {
             loadingScreen.style.display = "none";
             modifyCanvas(true);
+            renderMinimap(maps[currentMap]);
+            renderAreaMap(maps[currentMap]);
           });
         });
       });

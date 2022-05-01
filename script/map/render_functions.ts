@@ -1,3 +1,4 @@
+let playerOldSight = player.sight();
 function renderEntireMap(map: mapObject) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   oldCords = { ...player.cords };
@@ -5,6 +6,7 @@ function renderEntireMap(map: mapObject) {
   /* Render the base layer */
   fogCanvas.width = fogCanvas.width;
   baseCanvas.width = baseCanvas.width;
+  generateFogMap();
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
       baseCtx.globalCompositeOperation = "destination-over";
@@ -17,7 +19,6 @@ function renderEntireMap(map: mapObject) {
       const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
       // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
-      const fog = { x: 256, y: 0 };
       if (sprite) {
         baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
       }
@@ -78,9 +79,6 @@ function renderEntireMap(map: mapObject) {
       }
       if (clutterSprite) {
         baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
-      }
-      if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-        fogCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
       }
     }
   }
@@ -262,32 +260,6 @@ function renderItemOnMap(item: any, spriteSize: number, sightMap: any) {
 
 function renderRow(map: mapObject, translateX: number, translateY: number) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-  // const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
-  //   return [translateX < 0 ? spriteLimitX - 1 : 0, i];
-  // });
-  // xArr.push(...xArr.map((v) => {
-  //   const x = v[0];
-  //   if (translateX < 0) {
-  //     return [v, [x - 1, v[1]]];
-  //   }
-  //   else {
-  //     return [v, [x + 1, v[1]]];
-  //   }
-  //   // @ts-expect-error
-  // }).flat());
-  // const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
-  //   return [i, translateY < 0 ? spriteLimitY - 1 : 0];
-  // });
-  // yArr.push(...yArr.map((v) => {
-  //   const y = v[1];
-  //   if (translateY < 0) {
-  //     return [v, [v[0], y - 1]];
-  //   }
-  //   else {
-  //     return [v, [v[0], y + 1]];
-  //   }
-  //   // @ts-expect-error
-  // }).flat());
 
   if (translateX !== 0) {
     for (let i = 0; i <= Math.abs(translateX); i++) {
@@ -306,9 +278,10 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     }
   }
 
-  // if (Math.abs(translateX) > 1 || Math.abs(translateY) > 1) {
-  //   alert("Error: Map is too big to render");
-  // }
+  if (player.sight() !== playerOldSight) {
+    sightMap = createSightMap(player.cords, player.sight());
+  }
+  playerOldSight = player.sight();
 
   function renderGrid(x: number, y: number) {
     baseCtx.globalCompositeOperation = "destination-over";
@@ -383,9 +356,6 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     if (clutterSprite) {
       baseCtx.globalCompositeOperation = "source-over";
       baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
-    }
-    if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-      fogCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
     }
 
 
@@ -463,4 +433,17 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     if (!item.itm) return;
     renderItemOnMap(item, spriteSize, sightMap);
   });
+}
+
+function generateFogMap() {
+  const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+  const fog = { x: 256, y: 0 };
+  for (let y = 0; y < spriteLimitY; y++) {
+    for (let x = 0; x < spriteLimitX; x++) {
+      if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x") {
+        fogCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+      }
+    }
+  }
+
 }
