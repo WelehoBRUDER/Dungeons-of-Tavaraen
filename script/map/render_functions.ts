@@ -265,9 +265,29 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
   const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
     return [translateX < 0 ? spriteLimitX - 1 : 0, i];
   });
+  xArr.push(...xArr.map((v) => {
+    const x = v[0];
+    if (translateX < 0) {
+      return [v, [x - 1, v[1]]];
+    }
+    else {
+      return [v, [x + 1, v[1]]];
+    }
+    // @ts-expect-error
+  }).flat());
   const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
     return [i, translateY < 0 ? spriteLimitY - 1 : 0];
   });
+  yArr.push(...yArr.map((v) => {
+    const y = v[1];
+    if (translateY < 0) {
+      return [v, [v[0], y - 1]];
+    }
+    else {
+      return [v, [v[0], y + 1]];
+    }
+    // @ts-expect-error
+  }).flat());
   const arr = [...xArr, ...yArr];
 
   for (const [x, y] of arr) {
