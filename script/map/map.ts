@@ -104,7 +104,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
         const clutterSprite = clutters[clutterId]?.spriteMap;
         const fog = { x: 256, y: 0 };
         if (sprite) {
-          baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+          baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 2), Math.round(spriteSize + 2));
         }
         if (tile.isWall && settings.draw_wall_outlines) {
           const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
@@ -113,30 +113,57 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
           const tileEast = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x + 1]];
           const drawOutlines = { n: !tileNorth?.isWall, s: !tileSouth?.isWall, e: !tileEast?.isWall, w: !tileWest?.isWall };
           Object.entries(drawOutlines).map(([dir, draw]) => {
+            let width = Math.round(spriteSize / 16 + 4);
+            let shortHeight = Math.round(spriteSize);
+            let height = shortHeight;
+
             if (dir === "n" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+              if (!drawOutlines["w"] && drawOutlines["n"]) {
+                outLineCtx.fillRect(Math.round((x * spriteSize - mapOffsetX) - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
+              }
+              else {
+                outLineCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), height, width);
+              }
             }
             else if (dir === "s" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
+              if (drawOutlines["s"] && !drawOutlines["e"]) {
+                outLineCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
+              }
+              else {
+                outLineCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height, width);
+              }
+
             }
             else if (dir === "e" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+              if (drawOutlines["e"] && !drawOutlines["n"]) {
+                outLineCtx.fillRect((Math.round(x * spriteSize - mapOffsetX) + shortHeight - width), Math.round((y * spriteSize - mapOffsetY) - width), width, height + width);
+              }
+              else {
+                outLineCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
+              }
+
             }
             else if (dir === "w" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
+              if (drawOutlines["w"] && !drawOutlines["s"]) {
+                outLineCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY), width, height + width);
+              }
+              else {
+                outLineCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
+              }
+
             }
           });
         }
         if (player.grave) {
           if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-            baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+            baseCtx.drawImage(grave, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 2), Math.round(spriteSize + 2));
           }
         }
         if (clutterSprite) {
-          baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+          baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 2), Math.round(spriteSize + 2));
         }
         if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-          baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
+          baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 2), Math.round(spriteSize + 2));
         }
       }
     }
@@ -204,7 +231,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
       const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
       const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
       ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-      ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+      ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
       ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
       /* Render enemy on top of hp bar */
       ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
@@ -349,7 +376,7 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
         var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
-          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
+          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
         }
         else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
@@ -468,14 +495,14 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
       else displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
     }
     if (state.inCombat && count == 1) {
-      if (Math.floor(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
+      if (Math.round(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * 0.5)} HP.`);
     }
     else if (state.inCombat && count > 1) {
-      let regen = Math.floor(player.hpRegen() * count - 1) + Math.floor(player.hpRegen() * 0.5);
+      let regen = Math.round(player.hpRegen() * count - 1) + Math.round(player.hpRegen() * 0.5);
       if (regen > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
       displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
     } else if (count > 0) {
-      if (Math.floor(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
+      if (Math.round(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * count)} HP.`);
     }
   }
   else if (!action) { advanceTurn(); state.abiSelected = {}; }
@@ -500,9 +527,8 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
     const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
     const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
     const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-    console.log(enemy.hpRemain());
     ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
     ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
     /* Render enemy on top of hp bar */
     ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
@@ -531,7 +557,7 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
   let count: number = 0;
   moving: for (let step of path) {
     if (canMoveTo(enemy, step)) {
-      await helper.sleep(20);
+      await helper.sleep(10);
       if (enemy.speed.movementFill <= -100) {
         enemy.speed.movementFill += 100;
         break moving;

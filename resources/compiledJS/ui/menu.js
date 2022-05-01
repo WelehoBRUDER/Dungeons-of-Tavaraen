@@ -166,7 +166,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                 settings[_setting] = !settings[_setting];
                 moveMinimap();
                 if (_setting.includes("draw"))
-                    modifyCanvas();
+                    resizeCanvas();
                 if (settings[_setting])
                     toggleBox.textContent = "X";
                 else
@@ -270,7 +270,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                         }
                         catch (err) {
                             if (DEVMODE)
-                                displayText(`<c>red<c>${err} at line menu:520`);
+                                displayText(`<c>red<c>${err} at line menu:260`);
                         }
                     });
                     lang = eval(language);

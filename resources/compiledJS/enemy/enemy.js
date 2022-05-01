@@ -152,6 +152,12 @@ class Enemy extends Character {
                         if ((path[0].x != player.cords.x || path[0].y != player.cords.y) && !willStack) {
                             this.cords.x = path[0].x;
                             this.cords.y = path[0].y;
+                            const enemyCanvas = document.querySelector(`.enemy${this.index}`);
+                            try {
+                                enemyCanvas.width = enemyCanvas.width;
+                            }
+                            catch (_d) { }
+                            renderSingleEnemy(this, enemyCanvas);
                         }
                         if (settings.log_enemy_movement)
                             displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${(_c = lang[this.id + "_name"]) !== null && _c !== void 0 ? _c : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);

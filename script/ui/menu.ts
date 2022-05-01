@@ -161,7 +161,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       container.addEventListener("click", tog => {
         settings[_setting] = !settings[_setting];
         moveMinimap();
-        if (_setting.includes("draw")) modifyCanvas();
+        if (_setting.includes("draw")) resizeCanvas();
         if (settings[_setting]) toggleBox.textContent = "X";
         else toggleBox.textContent = "";
       });
@@ -257,7 +257,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         langButton.addEventListener("click", () => {
           container.childNodes.forEach((child: any) => {
             try { child.classList.remove("selectedLang"); }
-            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:520`); }
+            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:260`); }
           });
           lang = eval(language);
           tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);

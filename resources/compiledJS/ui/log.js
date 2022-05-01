@@ -1,6 +1,6 @@
 "use strict";
 const worldTextHistoryArray = [];
-const worldTextHistoryMaximumSize = 200;
+const worldTextHistoryMaximumSize = 100;
 const worldTextHistoryDisplayAutoSize = 12; // Display 12 latest messages without player input. Active for 15s every time a new message appears.
 const worldTextDisplayTime = 15000; // 15 seconds
 const worldTextContainer = document.querySelector(".worldText");
