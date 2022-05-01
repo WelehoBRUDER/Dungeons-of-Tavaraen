@@ -220,7 +220,7 @@ function beginGame() {
     renderMinimap(maps[currentMap]);
     renderAreaMap(maps[currentMap]);
     moveMinimap();
-    modifyCanvas(true);
+    resizeCanvas();
     setTimeout(() => {
         openLevelingScreen();
     }, 0);
@@ -390,14 +390,15 @@ function initGame() {
     state.menuOpen = true;
     state.titleScreen = true;
     gotoMainMenu(true);
+    createStaticMap();
+    resizeCanvas();
     renderMinimap(maps[currentMap]);
     renderAreaMap(maps[currentMap]);
-    createStaticMap();
-    modifyCanvas(true);
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+    setTimeout(() => document.querySelector(".loading").style.display = "none", 0);
 }
 document.addEventListener("DOMContentLoaded", initGame);
 //# sourceMappingURL=start_game.js.map

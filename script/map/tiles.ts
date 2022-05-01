@@ -169,7 +169,7 @@ const tiles = [
     sprite: ".tile0",
     isLedge: true,
     isWall: true,
-    spriteMap: { x: 2816, y: 0 },
+    spriteMap: { x: 2688, y: 0 },
     id: 12
   },
   {
@@ -178,9 +178,8 @@ const tiles = [
     isLedge: false,
     isWall: true,
     id: 13,
-    spriteMap: { x: 2688, y: 0 }
-  },
-
+    spriteMap: { x: 2816, y: 0 }
+  }
 ] as any;
 const clutters = [
   {

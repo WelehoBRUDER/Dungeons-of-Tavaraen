@@ -6,6 +6,7 @@ class gameSettings {
         this.hide_helmet = base.hide_helmet || false;
         this.randomize_items = base.randomize_items || false;
         this.draw_wall_outlines = base.draw_wall_outlines || true;
+        this.show_fps_counter = base.show_fps_counter || true;
         this.hotkey_inv = base.hotkey_inv || "i";
         this.hotkey_char = base.hotkey_char || "c";
         this.hotkey_perk = base.hotkey_perk || "p";
@@ -34,6 +35,7 @@ let settings = new gameSettings({
     hide_helmet: false,
     randomize_items: true,
     draw_wall_outlines: true,
+    show_fps_counter: true,
     hotkey_inv: "i",
     hotkey_char: "c",
     hotkey_perk: "p",

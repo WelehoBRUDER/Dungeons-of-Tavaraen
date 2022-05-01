@@ -1,7 +1,7 @@
 const baseCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
-const outLineCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .outLines");
-const outLineCtx = outLineCanvas.getContext("2d");
+const fogCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .fog");
+const fogCtx = fogCanvas.getContext("2d");
 const mapDataCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .mapData");
 const mapDataCtx = mapDataCanvas.getContext("2d");
 const playerCanvas = <HTMLCanvasElement>document.querySelector(".canvasLayers .playerSheet");
@@ -29,7 +29,7 @@ var turnOver = true;
 var enemiesHadTurn = 0;
 let dontMove = false;
 
-const zoomLevels = [0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
+const zoomLevels = [0.2, 0.25, 0.27, 0.33, 0.36, 0.4, 0.44, 0.49, 0.55, 0.66, 0.75, 1, 1.25, 1.33, 1.5, 1.65, 1.8, 2, 2.2, 2.35, 2.5];
 var currentZoom = 1;
 
 /* temporarily store highlight variables here */
@@ -63,8 +63,7 @@ interface tileObject {
 }
 
 baseCanvas.addEventListener("wheel", changeZoomLevel);
-// @ts-expect-error
-function changeZoomLevel({ deltaY }) {
+function changeZoomLevel({ deltaY }: any) {
   if (deltaY > 0) {
     currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
   } else {
@@ -73,8 +72,7 @@ function changeZoomLevel({ deltaY }) {
   if (currentZoom !== oldZoom) modifyCanvas(true);
 }
 
-// @ts-expect-error
-window.addEventListener("resize", modifyCanvas);
+window.addEventListener("resize", resizeCanvas);
 document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
 
 let sightMap: any;
@@ -85,221 +83,23 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   if (createNewSightMap) sightMap = createSightMap(player.cords, player.sight());
   if (!sightMap) return;
-
-  if (oldCords.x == player.cords.x && oldCords.y == player.cords.y && oldZoom == currentZoom) return;
-  else {
+  let translateX = oldCords.x - player.cords.x;
+  let translateY = oldCords.y - player.cords.y;
+  //baseCtx.translate(translateX * spriteSize, translateY * spriteSize);
+  //oldCords.x == player.cords.x && oldCords.y == player.cords.y &&
+  if (oldCords.x === player.cords.x && oldCords.y === player.cords.y && oldZoom === currentZoom) return;
+  if (oldZoom == currentZoom) {
     oldCords = { ...player.cords };
     oldZoom = currentZoom;
-    /* Render the base layer */
-    baseCanvas.width = baseCanvas.width; // Clears the canvas
-    outLineCanvas.width = outLineCanvas.width; // Clears the canvas
-    for (let y = 0; y < spriteLimitY; y++) {
-      for (let x = 0; x < spriteLimitX; x++) {
-        if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
-        if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
-        const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-        const tile = tiles[imgId];
-        const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
-        const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
-        const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-        // @ts-expect-error
-        const clutterSprite = clutters[clutterId]?.spriteMap;
-        const fog = { x: 256, y: 0 };
-        if (sprite) {
-          baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-        }
-        if (tile.isWall && settings.draw_wall_outlines) {
-          const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
-          const tileSouth = tiles[+map.base?.[mapOffsetStartY + y + 1]?.[mapOffsetStartX + x]];
-          const tileWest = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x - 1]];
-          const tileEast = tiles[+map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x + 1]];
-          const drawOutlines = { n: !tileNorth?.isWall, s: !tileSouth?.isWall, e: !tileEast?.isWall, w: !tileWest?.isWall };
-          Object.entries(drawOutlines).map(([dir, draw]) => {
-            if (dir === "n" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
-            }
-            else if (dir === "s" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY) + spriteSize - Math.ceil(spriteSize / 16 + 2), spriteSize + 2, Math.ceil(spriteSize / 16 + 4));
-            }
-            else if (dir === "e" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) + spriteSize - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
-            }
-            else if (dir === "w" && draw) {
-              outLineCtx.fillRect(Math.floor(x * spriteSize - mapOffsetX) - Math.ceil(spriteSize / 16 + 2), Math.floor(y * spriteSize - mapOffsetY), Math.ceil(spriteSize / 16 + 4), spriteSize + 2);
-            }
-          });
-        }
-        if (player.grave) {
-          if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-            baseCtx.drawImage(grave, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-          }
-        }
-        if (clutterSprite) {
-          baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-        }
-        if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
-          baseCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.floor(x * spriteSize - mapOffsetX), Math.floor(y * spriteSize - mapOffsetY), Math.floor(spriteSize + 2), Math.floor(spriteSize + 2));
-        }
-      }
-    }
+    moveCanvas(translateX * spriteSize, translateY * spriteSize);
+    renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+    renderRow(map, translateX, translateY);
+    //renderTiles(map, spriteLimitX, spriteLimitY);
+    return;
   }
-
-
-  map.shrines.forEach((checkpoint: any) => {
-    if ((sightMap[checkpoint.cords.y]?.[checkpoint.cords.x] == "x")) {
-      const shrine = document.querySelector<HTMLImageElement>(".sprites .shrineTile");
-      const shrineLit = document.querySelector<HTMLImageElement>(".sprites .shrineLitTile");
-      var tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-      if (player?.respawnPoint?.cords.x == checkpoint.cords.x && player?.respawnPoint?.cords.y == checkpoint.cords.y) baseCtx?.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
-      else baseCtx?.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
-    }
-  });
-
-  map.treasureChests.forEach((chest: treasureChest) => {
-    const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
-    if ((sightMap[chest.cords.y]?.[chest.cords.x] == "x")) {
-      if (!lootedChest) {
-        const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-        var tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        baseCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
-      }
-    }
-  });
-
-  map.messages.forEach((msg: any) => {
-    if ((sightMap[msg.cords.y]?.[msg.cords.x] == "x")) {
-      const message = document.querySelector<HTMLImageElement>(".messageTile");
-      var tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-      baseCtx?.drawImage(message, tileX, tileY, spriteSize, spriteSize);
-    }
-  });
-
-  map?.entrances?.forEach((entrance: any) => {
-    if ((sightMap[entrance.cords.y]?.[entrance.cords.x] == "x")) {
-      const entranceSprite = document.querySelector<HTMLImageElement>(`.sprites .${entrance.sprite}`);
-      var tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-      var tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-      baseCtx?.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
-    }
-  });
-
-  /* Render Enemies */
-  enemyLayers.textContent = ""; // Delete enemy canvases
-  map.enemies.forEach((enemy: any, index) => {
-    if (!enemy.alive || sightMap[enemy.cords.y]?.[enemy.cords.x] != "x") return;
-    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    const canvas = document.createElement("canvas");
-    // @ts-ignore
-    canvas.classList = `enemy${index} layer`;
-    enemy.index = index;
-    const ctx = canvas.getContext("2d");
-    const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    if (enemyImg) {
-      /* Render hp bar */
-      const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
-      const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
-      const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-      ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-      ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
-      ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-      /* Render enemy on top of hp bar */
-      ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-      if (enemy.questSpawn?.quest > -1) {
-        ctx.font = `${spriteSize / 1.9}px Arial`;
-        ctx.fillStyle = "goldenrod";
-        ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
-      }
-      let statCount = 0;
-      enemy.statusEffects.forEach((effect: statEffect) => {
-        if (statCount > 4) return;
-        let img = new Image(32, 32);
-        img.src = effect.icon;
-        img.addEventListener("load", e => {
-          ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
-          img = null;
-          statCount++;
-        });
-      });
-    }
-    enemyLayers.append(canvas);
-  });
-
-  /* Render Characters */
-  NPCcharacters.forEach((npc: Npc) => {
-    if (npc.currentMap == currentMap) {
-      if (sightMap[npc.currentCords.y]?.[npc.currentCords.x] == "x") {
-        const charSprite = document.querySelector<HTMLImageElement>(`.sprites .${npc.sprite}`);
-        var tileX = (npc.currentCords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-        var tileY = (npc.currentCords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-        if (charSprite) {
-          baseCtx?.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
-        }
-      }
-    }
-  });
-
-  /* Render Summons */
-  summonLayers.textContent = ""; // Delete summon canvases
-  combatSummons.forEach((enemy: any, index) => {
-    if (!enemy.alive) return;
-    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    const canvas = document.createElement("canvas");
-    // @ts-ignore
-    canvas.classList = `summon${index} layer`;
-    const ctx = canvas.getContext("2d");
-    summonLayers.append(canvas);
-    const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    if (enemyImg && (sightMap[enemy.cords.y]?.[enemy.cords.x] == "x")) {
-      /* Render hp bar */
-      const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
-      const hpbar = <HTMLImageElement>document.querySelector(".hpBarAlly");
-      const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-      ctx?.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-      ctx?.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
-      ctx?.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
-      /* Render enemy on top of hp bar */
-      ctx?.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
-      let statCount = 0;
-      enemy.statusEffects.forEach((effect: statEffect) => {
-        if (statCount > 4) return;
-        let img = new Image(32, 32);
-        img.src = effect.icon;
-        img.addEventListener("load", e => {
-          ctx?.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
-          img = null;
-          statCount++;
-        });
-      });
-    }
-  });
-
-  /* Render Items */
-  mapDataCanvas.width = mapDataCanvas.width;
-  itemData.forEach((item: any) => {
-    if (item.map != currentMap) return;
-    if (!item.itm) return;
-    var tileX = (item.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (item.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    const itemSprite = item.itm.spriteMap;
-    if (sightMap[item.cords.y]?.[item.cords.x] == "x") {
-      mapDataCtx.shadowColor = "#ffd900";
-      mapDataCtx.shadowBlur = 6;
-      mapDataCtx.shadowOffsetX = 0;
-      mapDataCtx.shadowOffsetY = 0;
-      mapDataCtx?.drawImage(spriteMap_items, itemSprite.x, itemSprite.y, 128, 128, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
-    }
-  });
-  /* Render Player */
-  renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+  else {
+    renderEntireMap(map);
+  }
 }
 
 function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
@@ -351,7 +151,7 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
         var _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         var _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
-          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.floor(_tileX), Math.floor(_tileY), Math.floor(spriteSize + 1), Math.floor(spriteSize + 1));
+          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
         }
         else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
       });
@@ -470,14 +270,14 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
       else displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
     }
     if (state.inCombat && count == 1) {
-      if (Math.floor(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * 0.5)} HP.`);
+      if (Math.round(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * 0.5)} HP.`);
     }
     else if (state.inCombat && count > 1) {
-      let regen = Math.floor(player.hpRegen() * count - 1) + Math.floor(player.hpRegen() * 0.5);
+      let regen = Math.round(player.hpRegen() * count - 1) + Math.round(player.hpRegen() * 0.5);
       if (regen > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
       displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
     } else if (count > 0) {
-      if (Math.floor(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.floor(player.hpRegen() * count)} HP.`);
+      if (Math.round(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * count)} HP.`);
     }
   }
   else if (!action) { advanceTurn(); state.abiSelected = {}; }
@@ -502,9 +302,8 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
     const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
     const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
     const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-    console.log(enemy.hpRemain());
     ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.floor(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
     ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
     /* Render enemy on top of hp bar */
     ctx?.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
@@ -533,7 +332,7 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
   let count: number = 0;
   moving: for (let step of path) {
     if (canMoveTo(enemy, step)) {
-      await helper.sleep(20);
+      await helper.sleep(10);
       if (enemy.speed.movementFill <= -100) {
         enemy.speed.movementFill += 100;
         break moving;
@@ -550,7 +349,10 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
       const enemyCanvas: HTMLCanvasElement = document.querySelector(`.enemy${enemy.index}`);
-      enemyCanvas.width = enemyCanvas.width;
+      try {
+        enemyCanvas.width = enemyCanvas.width;
+      }
+      catch { }
       renderSingleEnemy(enemy, enemyCanvas);
       count++;
       if (count > maxRange) break moving;
@@ -565,8 +367,28 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
 
 function modifyCanvas(createNewSightMap: boolean = false) {
   moveMinimap();
-  //moveAreaMap();
+  moveAreaMap();
   renderMap(maps[currentMap], createNewSightMap);
+}
+
+function resizeCanvas() {
+  const layers = Array.from(document.querySelectorAll("canvas.layer"));
+  layers.map((layer: any) => {
+    layer.width = innerWidth;
+    layer.height = innerHeight;
+  });
+  currentZoom -= 0.000001;
+  renderMap(maps[currentMap], true);
+}
+
+function moveCanvas(x: number, y: number) {
+  const newBaseCanvas = document.createElement("canvas");
+  newBaseCanvas.width = baseCanvas.width;
+  newBaseCanvas.height = baseCanvas.height;
+  const newBaseCtx = newBaseCanvas.getContext("2d");
+  newBaseCtx?.drawImage(baseCanvas, 0, 0);
+  baseCanvas.width = baseCanvas.width;
+  baseCtx.drawImage(newBaseCanvas, x, y);
 }
 
 let highestWaitTime = 0;

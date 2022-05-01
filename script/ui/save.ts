@@ -42,7 +42,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   resetIds();
   let renderedSaves = 1;
   for (let save of saves) {
-    if (renderedSaves < 10 && animate) await helper.sleep(110);
+    if (renderedSaves < 10 && animate) await helper.sleep(80);
     const saveContainer = document.createElement("div");
     const saveCanvas = document.createElement("canvas");
     const saveName = document.createElement("p");
@@ -91,6 +91,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       saves[save.id].save = saveData;
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
       localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
+      player.updateTraits();
       player.updatePerks(true);
       player.updateAbilities();
       gotoSaveMenu(false, false);
@@ -112,8 +113,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
         fe = [...save.save.fallenEnemies];
         id = [...save.save.itemData];
         lc = [...save.save.lootedChests];
-        pl.updatePerks(true);
         pl.updateTraits();
+        pl.updatePerks(true);
         pl.updateAbilities();
       }
       catch {
@@ -131,8 +132,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       turnOver = true;
       enemiesHadTurn = 0;
       state.inCombat = false;
-      player.updatePerks(true);
       player.updateTraits();
+      player.updatePerks(true);
       player.updateAbilities();
       renderMinimap(maps[currentMap]);
       renderAreaMap(maps[currentMap]);
@@ -147,6 +148,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       updateUI();
       handleEscape();
       loadingScreen.style.display = "none";
+
     });
     deleteGame.addEventListener("click", () => {
       saves.splice(save.id, 1);
@@ -154,45 +156,47 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
       gotoSaveMenu(inMainMenu, false);
     });
-    let renderedPlayer = new PlayerCharacter({ ...save.save.player });
-    renderedPlayer.updatePerks(true, true);
-    renderedPlayer.updateTraits();
-    renderedPlayer.updateAbilities(true);
-    let saveTime = new Date(save.time);
-    let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
-    let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
-    let totalText = ``;
-    let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
-    let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
-    if (foundMap == -1) foundMap = save.save.currentMap;
-    totalText += save.text.split("||")[0];
-    totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
-    totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
-    totalText += `§\n${lang["map"]}: §<c>gold<c>${maps?.[foundMap]?.name}§ `;
-    totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
-    totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
-    let verColor: string = "lime";
-    let addVersionWarning: boolean = false;
-    if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
-      verColor = "orange";
-      addVersionWarning = true;
+    try {
+      let renderedPlayer = new PlayerCharacter({ ...save.save.player });
+      renderedPlayer.updateTraits();
+      renderedPlayer.updatePerks(true, true);
+      renderedPlayer.updateAbilities(true);
+      let saveTime = new Date(save.time);
+      let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+      let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
+      let totalText = ``;
+      let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
+      let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
+      if (foundMap == -1) foundMap = save.save.currentMap;
+      totalText += save.text.split("||")[0];
+      totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
+      totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
+      totalText += `§\n${lang["map"]}: §<c>gold<c>${maps?.[foundMap]?.name}§ `;
+      totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
+      totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
+      let verColor: string = "lime";
+      let addVersionWarning: boolean = false;
+      if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
+        verColor = "orange";
+        addVersionWarning = true;
+      }
+      let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
+      if (versionText.includes('undefined')) versionText = lang["old_save"];
+      totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
+      if (addVersionWarning) {
+        totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
+      }
+      saveName.append(textSyntax(totalText));
+      saveName.style.display = "flex";
+      renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
+      buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
+      saveContainer.append(saveCanvas, saveName, buttonsContainer);
+      savesArea.append(saveContainer);
+      if (addVersionWarning) {
+        tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
+      }
     }
-
-    let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
-    if (versionText.includes('undefined')) versionText = lang["old_save"];
-    totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
-    if (addVersionWarning) {
-      totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
-    }
-    saveName.append(textSyntax(totalText));
-    saveName.style.display = "flex";
-    renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
-    buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
-    saveContainer.append(saveCanvas, saveName, buttonsContainer);
-    savesArea.append(saveContainer);
-    if (addVersionWarning) {
-      tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
-    }
+    catch (err) { console.warn(err); }
   }
   savesArea.scrollBy(saveMenuScroll, saveMenuScroll);
 }
@@ -262,6 +266,7 @@ function resetIds() {
 }
 
 function updatePlayerToPreventCrash() {
+  player.updateTraits();
   player.updatePerks(true);
   player.updateAbilities();
 }
@@ -274,7 +279,7 @@ function createNewSaveGame() {
   let gameSave = {} as any;
   player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
   timePlayedNow = performance.now();
-  gameSave.player = helper.trimPlayerObjectForSaveFile(player);
+  gameSave.player = helper.trimPlayerObjectForSaveFile({ ...player });
   gameSave.fallenEnemies = [...fallenEnemies];
   gameSave.itemData = [...itemData];
   gameSave.currentMap = maps[currentMap].id;
@@ -336,6 +341,7 @@ function saveToFile(input: string) {
   let minutes: any = new Date().getMinutes();
   if (minutes < 10) minutes = `0${new Date().getMinutes()}`;
   saveData(saveArray, `DUNGEONS_OF_TAVARAEN-${input ?? player.name}-save_file-${new Date().getHours()}.${minutes}.txt`);
+  player.updateTraits();
   player.updatePerks(true);
   player.updateAbilities();
 }

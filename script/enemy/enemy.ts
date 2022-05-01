@@ -175,7 +175,7 @@ class Enemy extends Character {
         let chosenAbility = this.chooseAbility();
         let pathToTarget: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, false);
         let arrowPathToTarget: any = generateArrowPath(this.cords, this.chosenTarget.cords, false);
-        let missileWillLand = arrowHitsTarget(this.cords, this.chosenTarget.cords);
+        let missileWillLand = arrowHitsTarget(null, null, false, arrowPathToTarget);
         let punchingDistance: any = generatePath(this.cords, this.chosenTarget.cords, this.canFly, true);
         let pathDistance: number = pathToTarget.length;
         let arrowPathDistance: number = arrowPathToTarget.length;
@@ -227,6 +227,12 @@ class Enemy extends Character {
             if ((path[0].x != player.cords.x || path[0].y != player.cords.y) && !willStack) {
               this.cords.x = path[0].x;
               this.cords.y = path[0].y;
+              const enemyCanvas: HTMLCanvasElement = document.querySelector(`.enemy${this.index}`);
+              try {
+                enemyCanvas.width = enemyCanvas.width;
+              }
+              catch { }
+              renderSingleEnemy(this, enemyCanvas);
             }
             if (settings.log_enemy_movement) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[this.id + "_name"] ?? this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
           }

@@ -560,6 +560,8 @@ const finnish = {
   setting_toggle_minimap: "Minikartta pois/päällä",
   setting_hide_helmet: "Piilota kypärä",
   setting_randomize_items: "Satunnaiset tavaroiden statsit",
+  setting_draw_wall_outlines: "Piirrä reunat seinäruutuihin",
+  setting_show_fps_counter: "Näytä FPS-laskuri",
   setting_game_language: "Pelin kieli",
   setting_hotkey_inv: "Avaa inventaario",
   setting_hotkey_char: "Avaa hahmoruutu",
@@ -579,6 +581,8 @@ const finnish = {
   setting_hotkey_interact: "Poimi esine / käytä",
   setting_hotkey_open_world_messages: "Avaa teksti ikkuna",
   setting_ui_scale: "UI skaalaus",
+  setting_map_offset_x: "Siirrä kameraa x-akselilla",
+  setting_map_offset_y: "Siirrä kameraa y-akselilla",
 
   open_menu: "Avaa valikko",
 
@@ -1448,6 +1452,8 @@ const english = {
   setting_toggle_minimap: "Toggle minimap",
   setting_hide_helmet: "Hide helmet",
   setting_randomize_items: "Random equipment stats",
+  setting_draw_wall_outlines: "Draw outlines on walls",
+  setting_show_fps_counter: "Show fps-counter",
   setting_game_language: "Game language",
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",
@@ -1467,6 +1473,8 @@ const english = {
   setting_hotkey_interact: "Interact",
   setting_hotkey_open_world_messages: "Open text box",
   setting_ui_scale: "UI scaling",
+  setting_map_offset_x: "Offset camera horizontally",
+  setting_map_offset_y: "Offset camera vertically",
 
   open_menu: "Open game menu",
 

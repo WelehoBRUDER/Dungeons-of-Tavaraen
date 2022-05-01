@@ -1,6 +1,6 @@
 "use strict";
 function spriteVariables() {
-    const spriteSize = 128 * currentZoom;
+    const spriteSize = Math.round(128 * currentZoom);
     var spriteLimitX = Math.ceil(baseCanvas.width / spriteSize);
     var spriteLimitY = Math.ceil(baseCanvas.height / spriteSize);
     if (spriteLimitX % 2 == 0)

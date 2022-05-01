@@ -110,7 +110,7 @@ class Summon extends Character {
         // Check if it should be used
         if (chosenAbility && ((chosenAbility?.type == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords, true))) || chosenAbility.self_target)) {
           if (chosenAbility.type == "charge") {
-            moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
+            moveEnemy(this.chosenTarget.cords, this as any, chosenAbility, chosenAbility.use_range);
           }
           else if (chosenAbility.self_target) {
             buffOrHeal(this, chosenAbility);

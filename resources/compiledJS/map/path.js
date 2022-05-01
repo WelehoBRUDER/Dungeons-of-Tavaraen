@@ -140,8 +140,14 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     fieldMap = null;
     return cords;
 }
-function arrowHitsTarget(start, end, isSummon = false) {
-    let path = generateArrowPath(start, end);
+function arrowHitsTarget(start, end, isSummon = false, useExistingPath = null) {
+    let path;
+    if (useExistingPath) {
+        path = useExistingPath;
+    }
+    else {
+        path = generateArrowPath(start, end);
+    }
     let hits = true;
     path.forEach((step) => {
         if (step.enemy && !isSummon) {

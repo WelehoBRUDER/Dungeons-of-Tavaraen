@@ -1,6 +1,6 @@
 "use strict";
 const worldTextHistoryArray = [];
-const worldTextHistoryMaximumSize = 200;
+const worldTextHistoryMaximumSize = 100;
 const worldTextHistoryDisplayAutoSize = 12; // Display 12 latest messages without player input. Active for 15s every time a new message appears.
 const worldTextDisplayTime = 15000; // 15 seconds
 const worldTextContainer = document.querySelector(".worldText");
@@ -20,7 +20,7 @@ function displayText(txt) {
     }
     if (!state.displayingTextHistory)
         worldTextContainer.scrollBy(0, 1000);
-    if (worldTextContainer.childNodes.length > 199)
+    if (worldTextContainer.childNodes.length > 99)
         worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
     if (worldTextHistoryArray.length > worldTextHistoryMaximumSize)
         worldTextHistoryArray.splice(0, 1);
@@ -83,4 +83,22 @@ function scrollWorldText(num) {
     worldTextContainer.scrollBy(0, num);
     worldTextScroll = worldTextContainer.scrollTop;
 }
+const times = [];
+const fps = document.querySelector(".fps-counter");
+function refreshLoop() {
+    window.requestAnimationFrame(() => {
+        if (!settings.show_fps_counter) {
+            fps.textContent = "";
+            return;
+        }
+        const now = performance.now();
+        while (times.length > 0 && times[0] <= now - 1000) {
+            times.shift();
+        }
+        times.push(now);
+        fps.textContent = times.length.toString();
+        refreshLoop();
+    });
+}
+refreshLoop();
 //# sourceMappingURL=log.js.map

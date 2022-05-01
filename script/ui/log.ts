@@ -1,5 +1,5 @@
 const worldTextHistoryArray: Array<any> = [];
-const worldTextHistoryMaximumSize = 200;
+const worldTextHistoryMaximumSize = 100;
 const worldTextHistoryDisplayAutoSize = 12; // Display 12 latest messages without player input. Active for 15s every time a new message appears.
 const worldTextDisplayTime = 15000; // 15 seconds
 const worldTextContainer = document.querySelector<HTMLDivElement>(".worldText");
@@ -19,7 +19,7 @@ function displayText(txt: string) {
     worldTextContainer.append(textElement);
   }
   if (!state.displayingTextHistory) worldTextContainer.scrollBy(0, 1000);
-  if (worldTextContainer.childNodes.length > 199) worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
+  if (worldTextContainer.childNodes.length > 99) worldTextContainer.removeChild(worldTextContainer.childNodes[0]);
   if (worldTextHistoryArray.length > worldTextHistoryMaximumSize) worldTextHistoryArray.splice(0, 1);
   if (state.displayingTextHistory) return;
   setTimeout(() => {
@@ -76,3 +76,24 @@ function scrollWorldText(num: number) {
   worldTextContainer.scrollBy(0, num);
   worldTextScroll = worldTextContainer.scrollTop;
 }
+
+const times: Array<number> = [];
+
+const fps = document.querySelector<HTMLDivElement>(".fps-counter");
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    if (!settings.show_fps_counter) {
+      fps.textContent = "";
+      return;
+    }
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps.textContent = times.length.toString();
+    refreshLoop();
+  });
+}
+
+refreshLoop();

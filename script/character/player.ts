@@ -157,7 +157,7 @@ class PlayerCharacter extends Character {
 
     this.sight = () => {
       const { v: val, m: mod } = getModifiers(this, "sight");
-      return Math.floor((11 + val) * mod);
+      return Math.floor((15 + val) * mod);
     };
 
     this.drop = (itm: any, fromContextMenu: boolean = false) => {

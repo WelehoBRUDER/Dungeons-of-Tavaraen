@@ -60,7 +60,12 @@ let helper = {
       }
     });
     trimmed.perks.forEach((perk: any, index: number) => {
-      trimmed.perks[index] = { id: perk.id, tree: perk.tree, commandsExecuted: perk.commandsExecuted };
+      const perkObject: any = { id: perk.id, tree: perk.tree };
+      if (perk.commandsExecuted) perkObject.commandsExecuted = perk.commandsExecuted;
+      trimmed.perks[index] = perkObject;
+    });
+    trimmed.traits.forEach((trait: any, index: number) => {
+      trimmed.traits[index] = { id: trait.id };
     });
     return { ...trimmed };
   },

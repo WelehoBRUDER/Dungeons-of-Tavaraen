@@ -166,7 +166,9 @@ function gotoSettingsMenu(inMainMenu = false) {
                 settings[_setting] = !settings[_setting];
                 moveMinimap();
                 if (_setting.includes("draw"))
-                    modifyCanvas();
+                    resizeCanvas();
+                if (_setting.includes("fps"))
+                    refreshLoop();
                 if (settings[_setting])
                     toggleBox.textContent = "X";
                 else
@@ -246,7 +248,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             textVal.textContent = `${parseInt(slider.value).toString()}`;
             slider.oninput = () => {
                 settings[_setting] = parseInt(slider.value);
-                modifyCanvas(true);
+                renderEntireMap(maps[currentMap]);
                 textVal.textContent = `${parseInt(slider.value).toString()}`;
             };
             text.append(textVal);
@@ -270,7 +272,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                         }
                         catch (err) {
                             if (DEVMODE)
-                                displayText(`<c>red<c>${err} at line menu:520`);
+                                displayText(`<c>red<c>${err} at line menu:260`);
                         }
                     });
                     lang = eval(language);
@@ -327,18 +329,19 @@ function LoadSlot(data) {
     let _falEnemies;
     let _loot;
     try {
-        console.log((Object.assign({}, GetKey("player", data).data)));
         _pl = new PlayerCharacter(Object.assign({}, GetKey("player", data).data));
         _itmData = GetKey("itemData", data).data;
         _falEnemies = GetKey("enemies", data).data;
         _loot = GetKey("lootedChests", data).data;
+        _pl.updateTraits();
+        _pl.updatePerks(true);
+        _pl.updateAbilities();
         foundMap = maps.findIndex((map) => map.id == GetKey("currentMap", data).data);
         if (foundMap == -1)
             foundMap = GetKey("currentMap", data).data;
         Object.entries(_pl.classes.main.statBonuses).forEach((stat) => { }); // dirty trick to catch invalid save
     }
     catch (_a) {
-        console.log("?!");
         loadingScreen.style.display = "none";
         return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
     }
@@ -352,8 +355,8 @@ function LoadSlot(data) {
     turnOver = true;
     enemiesHadTurn = 0;
     state.inCombat = false;
-    player.updatePerks(true);
     player.updateTraits();
+    player.updatePerks(true);
     player.updateAbilities();
     helper.purgeDeadEnemies();
     helper.killAllQuestEnemies();
