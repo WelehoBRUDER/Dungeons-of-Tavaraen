@@ -46,7 +46,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
     let renderedSaves = 1;
     for (let save of saves) {
         if (renderedSaves < 10 && animate)
-            await helper.sleep(110);
+            await helper.sleep(80);
         const saveContainer = document.createElement("div");
         const saveCanvas = document.createElement("canvas");
         const saveName = document.createElement("p");
@@ -95,6 +95,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             saves[save.id].save = saveData;
             localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
             localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
+            player.updateTraits();
             player.updatePerks(true);
             player.updateAbilities();
             gotoSaveMenu(false, false);
@@ -117,8 +118,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 fe = [...save.save.fallenEnemies];
                 id = [...save.save.itemData];
                 lc = [...save.save.lootedChests];
-                pl.updatePerks(true);
                 pl.updateTraits();
+                pl.updatePerks(true);
                 pl.updateAbilities();
             }
             catch (_a) {
@@ -136,8 +137,8 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             turnOver = true;
             enemiesHadTurn = 0;
             state.inCombat = false;
-            player.updatePerks(true);
             player.updateTraits();
+            player.updatePerks(true);
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
@@ -159,45 +160,50 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             localStorage.setItem("DOT_game_saves", JSON.stringify(saves));
             gotoSaveMenu(inMainMenu, false);
         });
-        let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
-        renderedPlayer.updatePerks(true, true);
-        renderedPlayer.updateTraits();
-        renderedPlayer.updateAbilities(true);
-        let saveTime = new Date(save.time);
-        let saveDateString = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
-        let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
-        let totalText = ``;
-        let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
-        let foundMap = maps.findIndex((map) => map.id == save.save.currentMap);
-        if (foundMap == -1)
-            foundMap = save.save.currentMap;
-        totalText += save.text.split("||")[0];
-        totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
-        totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
-        totalText += `§\n${lang["map"]}: §<c>gold<c>${(_a = maps === null || maps === void 0 ? void 0 : maps[foundMap]) === null || _a === void 0 ? void 0 : _a.name}§ `;
-        totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
-        totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
-        let verColor = "lime";
-        let addVersionWarning = false;
-        if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
-            verColor = "orange";
-            addVersionWarning = true;
+        try {
+            let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
+            renderedPlayer.updateTraits();
+            renderedPlayer.updatePerks(true, true);
+            renderedPlayer.updateAbilities(true);
+            let saveTime = new Date(save.time);
+            let saveDateString = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+            let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
+            let totalText = ``;
+            let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
+            let foundMap = maps.findIndex((map) => map.id == save.save.currentMap);
+            if (foundMap == -1)
+                foundMap = save.save.currentMap;
+            totalText += save.text.split("||")[0];
+            totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
+            totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
+            totalText += `§\n${lang["map"]}: §<c>gold<c>${(_a = maps === null || maps === void 0 ? void 0 : maps[foundMap]) === null || _a === void 0 ? void 0 : _a.name}§ `;
+            totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
+            totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
+            let verColor = "lime";
+            let addVersionWarning = false;
+            if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
+                verColor = "orange";
+                addVersionWarning = true;
+            }
+            let versionText = `${(_c = (_b = save.save) === null || _b === void 0 ? void 0 : _b.version) === null || _c === void 0 ? void 0 : _c[0]}.${(_e = (_d = save.save) === null || _d === void 0 ? void 0 : _d.version) === null || _e === void 0 ? void 0 : _e[2]}.${(_g = (_f = save.save) === null || _f === void 0 ? void 0 : _f.version) === null || _g === void 0 ? void 0 : _g[3]}`;
+            if (versionText.includes('undefined'))
+                versionText = lang["old_save"];
+            totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
+            if (addVersionWarning) {
+                totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
+            }
+            saveName.append(textSyntax(totalText));
+            saveName.style.display = "flex";
+            renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
+            buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
+            saveContainer.append(saveCanvas, saveName, buttonsContainer);
+            savesArea.append(saveContainer);
+            if (addVersionWarning) {
+                tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
+            }
         }
-        let versionText = `${(_c = (_b = save.save) === null || _b === void 0 ? void 0 : _b.version) === null || _c === void 0 ? void 0 : _c[0]}.${(_e = (_d = save.save) === null || _d === void 0 ? void 0 : _d.version) === null || _e === void 0 ? void 0 : _e[2]}.${(_g = (_f = save.save) === null || _f === void 0 ? void 0 : _f.version) === null || _g === void 0 ? void 0 : _g[3]}`;
-        if (versionText.includes('undefined'))
-            versionText = lang["old_save"];
-        totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
-        if (addVersionWarning) {
-            totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
-        }
-        saveName.append(textSyntax(totalText));
-        saveName.style.display = "flex";
-        renderPlayerOutOfMap(148, saveCanvas, saveCtx, "center", renderedPlayer);
-        buttonsContainer.append(saveOverwrite, loadGame, deleteGame);
-        saveContainer.append(saveCanvas, saveName, buttonsContainer);
-        savesArea.append(saveContainer);
-        if (addVersionWarning) {
-            tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
+        catch (err) {
+            console.warn(err);
         }
     }
     savesArea.scrollBy(saveMenuScroll, saveMenuScroll);
@@ -269,6 +275,7 @@ function resetIds() {
     }
 }
 function updatePlayerToPreventCrash() {
+    player.updateTraits();
     player.updatePerks(true);
     player.updateAbilities();
 }
@@ -280,7 +287,7 @@ function createNewSaveGame() {
     let gameSave = {};
     player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
     timePlayedNow = performance.now();
-    gameSave.player = helper.trimPlayerObjectForSaveFile(player);
+    gameSave.player = helper.trimPlayerObjectForSaveFile(Object.assign({}, player));
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
     gameSave.currentMap = maps[currentMap].id;
@@ -340,6 +347,7 @@ function saveToFile(input) {
     if (minutes < 10)
         minutes = `0${new Date().getMinutes()}`;
     saveData(saveArray, `DUNGEONS_OF_TAVARAEN-${input !== null && input !== void 0 ? input : player.name}-save_file-${new Date().getHours()}.${minutes}.txt`);
+    player.updateTraits();
     player.updatePerks(true);
     player.updateAbilities();
 }

@@ -314,17 +314,18 @@ function LoadSlot(data: any) {
   let _falEnemies;
   let _loot;
   try {
-    console.log(({ ...GetKey("player", data).data }));
     _pl = new PlayerCharacter({ ...GetKey("player", data).data });
     _itmData = GetKey("itemData", data).data;
     _falEnemies = GetKey("enemies", data).data;
     _loot = GetKey("lootedChests", data).data;
+    _pl.updateTraits();
+    _pl.updatePerks(true);
+    _pl.updateAbilities();
     foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
     if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
     Object.entries(_pl.classes.main.statBonuses).forEach((stat: any) => { }); // dirty trick to catch invalid save
   }
   catch {
-    console.log("?!");
     loadingScreen.style.display = "none";
     return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
   }
@@ -338,8 +339,8 @@ function LoadSlot(data: any) {
   turnOver = true;
   enemiesHadTurn = 0;
   state.inCombat = false;
-  player.updatePerks(true);
   player.updateTraits();
+  player.updatePerks(true);
   player.updateAbilities();
   helper.purgeDeadEnemies();
   helper.killAllQuestEnemies();

@@ -242,7 +242,7 @@ function lootEnemy(enemy: Enemy) {
 function createDroppedItem(spawnLoc: tileObject, item: any) {
   var xMod = helper.random(0.7, 0.25);
   var yMod = helper.random(0.7, 0.25);
-  itemData.push({ cords: { x: spawnLoc.x, y: spawnLoc.y }, itm: item, mapCords: { xMod: xMod, yMod: yMod }, map: currentMap });
+  itemData.push({ cords: { x: spawnLoc.x, y: spawnLoc.y }, itm: item, mapCords: { xMod: xMod.toFixed(2), yMod: yMod.toFixed(2) }, map: currentMap });
   showInteractPrompt();
 }
 
