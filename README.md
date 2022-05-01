@@ -1,3 +1,32 @@
+# 1.1.1-performance ~ 1.5.2022
+
+This update wouldn't have been possible without the help of [kassu11](https://github.com/kassu11)!<br>
+He has been a great contributor to the development of this project and I'm very grateful for his support!<br>
+
+## Changes
+
+- Added fps counter to the top left corner
+- Fixed some localisation issues
+- Reworked rendering, giving a significant boost to performance
+- Increased base sight by 4 tiles
+
+# 1.1.1 ~ 30.4.2022
+
+### Patch
+
+## New Additions
+
+- Playtime is now tracked for all saves.
+
+## Fixes & Tweaks
+
+- Added toggleable outlines to walls.
+- Movement and action keys can now be held.
+- Camera can now be offset from the player.
+- Maximum upgrade level is now +10 instead of infinite.
+- Fixed duplication bug when filtering items.
+- Massive performance boost.
+
 # 1.1 ~ 28.4.2022
 
 ### Major update
