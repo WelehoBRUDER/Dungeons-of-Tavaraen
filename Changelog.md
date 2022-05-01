@@ -1,3 +1,11 @@
+# 1.1.1-performance ~ 1.5.2022
+
+## Changes
+
+- Added fps counter to the top left corner
+- Fixed some localisation issues
+- Reworked rendering, giving a significant boost to performance
+
 # 1.1.1 ~ 30.4.2022
 
 ### Patch

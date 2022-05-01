@@ -264,41 +264,64 @@ function renderItemOnMap(item, spriteSize, sightMap) {
     }
 }
 function renderRow(map, translateX, translateY) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
+    var _a;
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
-        return [translateX < 0 ? spriteLimitX - 1 : 0, i];
-    });
-    xArr.push(...xArr.map((v) => {
-        const x = v[0];
-        if (translateX < 0) {
-            return [v, [x - 1, v[1]]];
+    // const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
+    //   return [translateX < 0 ? spriteLimitX - 1 : 0, i];
+    // });
+    // xArr.push(...xArr.map((v) => {
+    //   const x = v[0];
+    //   if (translateX < 0) {
+    //     return [v, [x - 1, v[1]]];
+    //   }
+    //   else {
+    //     return [v, [x + 1, v[1]]];
+    //   }
+    //   // @ts-expect-error
+    // }).flat());
+    // const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
+    //   return [i, translateY < 0 ? spriteLimitY - 1 : 0];
+    // });
+    // yArr.push(...yArr.map((v) => {
+    //   const y = v[1];
+    //   if (translateY < 0) {
+    //     return [v, [v[0], y - 1]];
+    //   }
+    //   else {
+    //     return [v, [v[0], y + 1]];
+    //   }
+    //   // @ts-expect-error
+    // }).flat());
+    if (translateX !== 0) {
+        for (let i = 0; i <= Math.abs(translateX); i++) {
+            for (let y = 0; y < spriteLimitY; y++) {
+                if (translateX < 0)
+                    renderGrid(spriteLimitX - i - 1, y);
+                else
+                    renderGrid(i, y);
+            }
         }
-        else {
-            return [v, [x + 1, v[1]]];
+    }
+    if (translateY !== 0) {
+        for (let i = 0; i <= Math.abs(translateY); i++) {
+            for (let x = 0; x < spriteLimitX; x++) {
+                if (translateY < 0)
+                    renderGrid(x, spriteLimitY - i - 1);
+                else
+                    renderGrid(x, i);
+            }
         }
-        // @ts-expect-error
-    }).flat());
-    const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
-        return [i, translateY < 0 ? spriteLimitY - 1 : 0];
-    });
-    yArr.push(...yArr.map((v) => {
-        const y = v[1];
-        if (translateY < 0) {
-            return [v, [v[0], y - 1]];
-        }
-        else {
-            return [v, [v[0], y + 1]];
-        }
-        // @ts-expect-error
-    }).flat());
-    const arr = [...xArr, ...yArr];
-    for (const [x, y] of arr) {
+    }
+    // if (Math.abs(translateX) > 1 || Math.abs(translateY) > 1) {
+    //   alert("Error: Map is too big to render");
+    // }
+    function renderGrid(x, y) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
         baseCtx.globalCompositeOperation = "destination-over";
         if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0)
-            continue;
+            return;
         if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0)
-            continue;
+            return;
         const imgId = +((_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]);
         const tile = tiles[imgId];
         const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
@@ -404,7 +427,7 @@ function renderRow(map, translateX, translateY) {
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
         }
     });
-    (_s = map === null || map === void 0 ? void 0 : map.entrances) === null || _s === void 0 ? void 0 : _s.forEach((entrance) => {
+    (_a = map === null || map === void 0 ? void 0 : map.entrances) === null || _a === void 0 ? void 0 : _a.forEach((entrance) => {
         var _a;
         if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);

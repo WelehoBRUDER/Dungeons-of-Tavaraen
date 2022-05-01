@@ -64,10 +64,22 @@ body {
   user-select: none;
   color: #fff;
 
-  .version-number {
+  .fps-counter {
     position: absolute;
     top: -0.75em;
     left: 0;
+    font-size: 2.5em;
+    font-family: "OptimusPrinceps";
+    font-weight: bold;
+    color: #fff;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .version-number {
+    position: absolute;
+    top: -0.75em;
+    left: 12em;
     font-size: 1.25em;
     font-family: "OptimusPrinceps";
     font-weight: bold;

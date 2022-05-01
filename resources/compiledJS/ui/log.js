@@ -83,4 +83,18 @@ function scrollWorldText(num) {
     worldTextContainer.scrollBy(0, num);
     worldTextScroll = worldTextContainer.scrollTop;
 }
+const times = [];
+const fps = document.querySelector(".fps-counter");
+function refreshLoop() {
+    window.requestAnimationFrame(() => {
+        const now = performance.now();
+        while (times.length > 0 && times[0] <= now - 1000) {
+            times.shift();
+        }
+        times.push(now);
+        fps.textContent = times.length.toString();
+        refreshLoop();
+    });
+}
+refreshLoop();
 //# sourceMappingURL=log.js.map

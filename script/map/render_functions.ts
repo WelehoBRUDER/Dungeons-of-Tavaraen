@@ -262,38 +262,58 @@ function renderItemOnMap(item: any, spriteSize: number, sightMap: any) {
 
 function renderRow(map: mapObject, translateX: number, translateY: number) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-  const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
-    return [translateX < 0 ? spriteLimitX - 1 : 0, i];
-  });
-  xArr.push(...xArr.map((v) => {
-    const x = v[0];
-    if (translateX < 0) {
-      return [v, [x - 1, v[1]]];
-    }
-    else {
-      return [v, [x + 1, v[1]]];
-    }
-    // @ts-expect-error
-  }).flat());
-  const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
-    return [i, translateY < 0 ? spriteLimitY - 1 : 0];
-  });
-  yArr.push(...yArr.map((v) => {
-    const y = v[1];
-    if (translateY < 0) {
-      return [v, [v[0], y - 1]];
-    }
-    else {
-      return [v, [v[0], y + 1]];
-    }
-    // @ts-expect-error
-  }).flat());
-  const arr = [...xArr, ...yArr];
+  // const xArr = translateX == 0 ? [] : [...Array(spriteLimitY)].map((e, i) => {
+  //   return [translateX < 0 ? spriteLimitX - 1 : 0, i];
+  // });
+  // xArr.push(...xArr.map((v) => {
+  //   const x = v[0];
+  //   if (translateX < 0) {
+  //     return [v, [x - 1, v[1]]];
+  //   }
+  //   else {
+  //     return [v, [x + 1, v[1]]];
+  //   }
+  //   // @ts-expect-error
+  // }).flat());
+  // const yArr = translateY == 0 ? [] : [...Array(spriteLimitX)].map((e, i) => {
+  //   return [i, translateY < 0 ? spriteLimitY - 1 : 0];
+  // });
+  // yArr.push(...yArr.map((v) => {
+  //   const y = v[1];
+  //   if (translateY < 0) {
+  //     return [v, [v[0], y - 1]];
+  //   }
+  //   else {
+  //     return [v, [v[0], y + 1]];
+  //   }
+  //   // @ts-expect-error
+  // }).flat());
 
-  for (const [x, y] of arr) {
+  if (translateX !== 0) {
+    for (let i = 0; i <= Math.abs(translateX); i++) {
+      for (let y = 0; y < spriteLimitY; y++) {
+        if (translateX < 0) renderGrid(spriteLimitX - i - 1, y);
+        else renderGrid(i, y);
+      }
+    }
+  }
+  if (translateY !== 0) {
+    for (let i = 0; i <= Math.abs(translateY); i++) {
+      for (let x = 0; x < spriteLimitX; x++) {
+        if (translateY < 0) renderGrid(x, spriteLimitY - i - 1);
+        else renderGrid(x, i);
+      }
+    }
+  }
+
+  // if (Math.abs(translateX) > 1 || Math.abs(translateY) > 1) {
+  //   alert("Error: Map is too big to render");
+  // }
+
+  function renderGrid(x: number, y: number) {
     baseCtx.globalCompositeOperation = "destination-over";
-    if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) continue;
-    if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) continue;
+    if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) return;
+    if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) return;
     const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
     const tile = tiles[imgId];
     const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
@@ -367,6 +387,7 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x" && imgId) {
       fogCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
     }
+
 
   }
 

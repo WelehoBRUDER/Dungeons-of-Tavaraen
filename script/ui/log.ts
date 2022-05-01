@@ -76,3 +76,20 @@ function scrollWorldText(num: number) {
   worldTextContainer.scrollBy(0, num);
   worldTextScroll = worldTextContainer.scrollTop;
 }
+
+const times: Array<number> = [];
+
+const fps = document.querySelector<HTMLDivElement>(".fps-counter");
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps.textContent = times.length.toString();
+    refreshLoop();
+  });
+}
+
+refreshLoop();

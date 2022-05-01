@@ -87,6 +87,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
   let translateY = oldCords.y - player.cords.y;
   //baseCtx.translate(translateX * spriteSize, translateY * spriteSize);
   //oldCords.x == player.cords.x && oldCords.y == player.cords.y &&
+  if (oldCords.x === player.cords.x && oldCords.y === player.cords.y && oldZoom === currentZoom) return;
   if (oldZoom == currentZoom) {
     oldCords = { ...player.cords };
     oldZoom = currentZoom;
