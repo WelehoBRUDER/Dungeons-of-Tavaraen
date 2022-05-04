@@ -6,13 +6,50 @@ let actionCooldown = false;
 /* For clarity movement and hotkeys are separated to two different functions */
 document.addEventListener("keydown", key => {
     movementCheck(key);
+    hotbarKey(key);
+});
+document.addEventListener("keyup", key => {
     hotkeyCheck(key);
 });
-function hotkeyCheck(e) {
+function hotbarKey(e) {
     if (actionCooldown)
         return;
     actionCooldown = true;
-    setTimeout(() => actionCooldown = false, 20);
+    setTimeout(() => actionCooldown = false, 1);
+    const number = parseInt(e.keyCode) - 48;
+    if (number > -1 && e.shiftKey) {
+        let abi = player.abilities.find(a => a.equippedSlot == number + 9);
+        if (number == 0)
+            abi = player.abilities.find(a => a.equippedSlot == 19);
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number + 9);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 19);
+            if (itm)
+                useConsumable(itm);
+            return;
+        }
+        else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
+            useAbi(abi);
+    }
+    else if (number > -1 && !e.shiftKey) {
+        let abi = player.abilities.find(a => a.equippedSlot == number - 1);
+        if (number == 0)
+            abi = player.abilities.find(a => a.equippedSlot == 9);
+        if (!abi) {
+            let itm = player.inventory.find(a => a.equippedSlot == number - 1);
+            if (number == 0)
+                itm = player.inventory.find(a => a.equippedSlot == 9);
+            if (itm)
+                useConsumable(itm);
+            return;
+        }
+        if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
+            useAbi(abi);
+    }
+}
+function hotkeyCheck(e) {
+    var _a;
     if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
             respawnPlayer();
@@ -40,7 +77,6 @@ function hotkeyCheck(e) {
     }
     if (player.isDead || state.savesOpen)
         return;
-    const number = parseInt(e.keyCode) - 48;
     if (e.key == settings.hotkey_inv && !state.menuOpen) {
         if (!state.invOpen)
             renderInventory();
@@ -73,43 +109,35 @@ function hotkeyCheck(e) {
     }
     else if (state.invOpen || state.menuOpen)
         return;
-    else if (number > -1 && e.shiftKey) {
-        let abi = player.abilities.find(a => a.equippedSlot == number + 9);
-        if (number == 0)
-            abi = player.abilities.find(a => a.equippedSlot == 19);
-        if (!abi) {
-            let itm = player.inventory.find(a => a.equippedSlot == number + 9);
-            if (number == 0)
-                itm = player.inventory.find(a => a.equippedSlot == 19);
-            if (itm)
-                useConsumable(itm);
-            return;
+    else if (e.key == settings.hotkey_interact) {
+        activateShrine();
+        pickLoot();
+        readMessage();
+        restoreGrave();
+        maps[currentMap].treasureChests.forEach((chest) => {
+            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
+                chest.lootChest();
+        });
+        (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+            if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+                loadingScreen.style.display = "flex";
+                loadingText.textContent = "Loading map...";
+                setTimeout(() => changeMap(entrance), 0);
+                return;
+            }
+        });
+        if (!state.textWindowOpen && !state.invOpen) {
+            talkToCharacter();
         }
-        else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
-            useAbi(abi);
-    }
-    else if (number > -1 && !e.shiftKey) {
-        let abi = player.abilities.find(a => a.equippedSlot == number - 1);
-        if (number == 0)
-            abi = player.abilities.find(a => a.equippedSlot == 9);
-        if (!abi) {
-            let itm = player.inventory.find(a => a.equippedSlot == number - 1);
-            if (number == 0)
-                itm = player.inventory.find(a => a.equippedSlot == 9);
-            if (itm)
-                useConsumable(itm);
-            return;
-        }
-        if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true)))
-            useAbi(abi);
     }
 }
 function movementCheck(keyPress) {
-    var _a, _b, _c;
+    var _a, _b;
     if (movementCooldown)
         return;
     movementCooldown = true;
-    setTimeout(() => movementCooldown = false, 20);
+    setTimeout(() => movementCooldown = false, 1);
     const rooted = player.isRooted();
     if (!turnOver || state.dialogWindow || state.storeOpen)
         return;
@@ -175,28 +203,6 @@ function movementCheck(keyPress) {
         else {
             advanceTurn();
             state.abiSelected = {};
-        }
-    }
-    else if (keyPress.key == settings.hotkey_interact) {
-        activateShrine();
-        pickLoot();
-        readMessage();
-        restoreGrave();
-        maps[currentMap].treasureChests.forEach((chest) => {
-            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-            if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
-                chest.lootChest();
-        });
-        (_c = maps[currentMap].entrances) === null || _c === void 0 ? void 0 : _c.some((entrance) => {
-            if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
-                loadingScreen.style.display = "flex";
-                loadingText.textContent = "Loading map...";
-                setTimeout(() => changeMap(entrance), 0);
-                return;
-            }
-        });
-        if (!state.textWindowOpen && !state.invOpen) {
-            talkToCharacter();
         }
     }
 }

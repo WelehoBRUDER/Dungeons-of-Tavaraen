@@ -381,7 +381,7 @@ function classTT(data: any) {
   return txt;
 }
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 30; i++) {
   player.addItem({ ...randomProperty(items) });
 }
 

@@ -3,6 +3,7 @@ var _a, _b, _c;
 (_b = (_a = document.querySelector(".playerInventory")) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".slot")) === null || _b === void 0 ? void 0 : _b.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 (_c = document.querySelector(".playerInventory")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", e => removeContextMenu(e));
 let invScroll = 0;
+let sellingScroll = 0;
 function renderInventory() {
     state.invOpen = true;
     updatePlayerInventoryIndexes();
@@ -136,7 +137,7 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
             price = itm.fullPrice();
         }
         if (price > 999)
-            price = `${Math.round(price / 1000)}k`;
+            price = `${(price / 1000).toFixed(1)}k`;
         itemWorth.textContent = price;
         if (context == "PLAYER_INVENTORY") {
             itemObject.addEventListener("mousedown", e => player.equip(e, itm));
@@ -167,11 +168,19 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
         itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
         itemsList.append(itemObject);
     });
-    itemsList.addEventListener("wheel", deltaY => {
-        invScroll = itemsList.scrollTop;
-    });
+    if (context == "PLAYER_SELLING") {
+        itemsList.addEventListener("wheel", deltaY => {
+            sellingScroll = itemsList.scrollTop;
+        });
+        itemsList.scrollBy(sellingScroll, sellingScroll);
+    }
+    else {
+        itemsList.addEventListener("wheel", deltaY => {
+            invScroll = itemsList.scrollTop;
+        });
+        itemsList.scrollBy(invScroll, invScroll);
+    }
     container.append(itemsList, itemsListBar);
-    itemsList.scrollBy(invScroll, invScroll);
     return container;
 }
 function buyItem(e, itm) {

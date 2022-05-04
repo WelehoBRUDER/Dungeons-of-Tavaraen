@@ -1,6 +1,7 @@
 document.querySelector<HTMLDivElement>(".playerInventory")?.querySelectorAll<HTMLDivElement>(".slot")?.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
 document.querySelector<HTMLDivElement>(".playerInventory")?.addEventListener("click", e => removeContextMenu(e));
 let invScroll = 0;
+let sellingScroll = 0;
 
 function renderInventory() {
   state.invOpen = true;
@@ -131,7 +132,7 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     if (typeof itm.fullPrice === "function") {
       price = itm.fullPrice();
     }
-    if (price > 999) price = `${Math.round(price / 1000)}k`;
+    if (price > 999) price = `${(price / 1000).toFixed(1)}k`;
     itemWorth.textContent = price;
     if (context == "PLAYER_INVENTORY") {
       itemObject.addEventListener("mousedown", e => player.equip(e, itm));
@@ -162,11 +163,19 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
     itemObject.append(itemImage, itemName, itemType, itemRarity, itemWeight, itemWorth);
     itemsList.append(itemObject);
   });
-  itemsList.addEventListener("wheel", deltaY => {
-    invScroll = itemsList.scrollTop;
-  });
+  if (context == "PLAYER_SELLING") {
+    itemsList.addEventListener("wheel", deltaY => {
+      sellingScroll = itemsList.scrollTop;
+    });
+    itemsList.scrollBy(sellingScroll, sellingScroll);
+  }
+  else {
+    itemsList.addEventListener("wheel", deltaY => {
+      invScroll = itemsList.scrollTop;
+    });
+    itemsList.scrollBy(invScroll, invScroll);
+  }
   container.append(itemsList, itemsListBar);
-  itemsList.scrollBy(invScroll, invScroll);
   return container;
 }
 

@@ -180,6 +180,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 var _a, _b, _c;
                 const key = value[0];
                 const num = value[1];
+                let _dmg = num; // temp damage
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += attacker.allModifiers["damageV"];
                 mod *= attacker.allModifiers["damageP"];
@@ -196,16 +197,18 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
                 if (isNaN(val))
                     val = 0;
-                dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                _dmg = Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 if (attackTypeDamageModifier > 0)
-                    dmg *= attackTypeDamageModifier;
-                dmg = Math.floor(dmg * resistance);
+                    _dmg *= attackTypeDamageModifier;
+                _dmg = Math.floor(_dmg * resistance);
+                dmg += _dmg;
             });
         }
         else {
             Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
+                let _dmg = num; // temp damage
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += attacker.allModifiers["damageV"];
                 mod *= attacker.allModifiers["damageP"];
@@ -218,10 +221,11 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let penetration = ability.resistance_penetration / 100;
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
                 if (attackTypeDamageModifier > 0)
-                    dmg *= attackTypeDamageModifier;
-                dmg = Math.floor(dmg * resistance);
+                    _dmg *= attackTypeDamageModifier;
+                _dmg = Math.floor(_dmg * resistance);
+                dmg += _dmg;
             });
         }
         setTimeout((paskaFixi) => {
@@ -299,6 +303,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
+                let _dmg = num; // temp damage
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += attacker.allModifiers["damageV"];
                 mod *= attacker.allModifiers["damageP"];
@@ -307,8 +312,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let penetration = ability.resistance_penetration / 100;
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                dmg = Math.floor(dmg * resistance);
+                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                _dmg = Math.floor(_dmg * resistance);
+                dmg += _dmg;
             });
         }
         else {
@@ -316,6 +322,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 var _a;
                 const key = value[0];
                 const num = value[1];
+                let _dmg = num; // temp damage
                 let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
                 val += attacker.allModifiers["damageV"];
                 mod *= attacker.allModifiers["damageP"];
@@ -329,8 +336,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 let penetration = ability.resistance_penetration / 100;
                 let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
                 let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                dmg = Math.floor(dmg * resistance);
+                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
+                _dmg = Math.floor(_dmg * resistance);
+                dmg += _dmg;
             });
         }
         const layer = document.querySelector(".playerSheet");

@@ -452,4 +452,10 @@ function generateFogMap() {
         }
     }
 }
+function updateSingleTile(x, y, tile) {
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    const tileX = (x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    const tileY = (y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(spriteMap_tiles, tileX, tileY, spriteSize, spriteSize);
+}
 //# sourceMappingURL=render_functions.js.map

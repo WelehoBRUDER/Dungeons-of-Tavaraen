@@ -37,6 +37,8 @@ interface playerChar extends characterObject {
   questProgress?: Array<any>;
   entitiesEverEncountered?: entityMemory;
   activeQuest?: number;
+  timePlayed?: number;
+  calcDamage?: Function;
 }
 
 interface levelObject {
@@ -99,6 +101,7 @@ class PlayerCharacter extends Character {
   sex: string;
   activeQuest?: number;
   timePlayed?: number;
+  calcDamage?: Function;
   constructor(base: playerChar) {
     super(base);
     this.canFly = base.canFly ?? false;
@@ -435,6 +438,38 @@ class PlayerCharacter extends Character {
       if (isNaN(amnt)) amnt = 0;
       player.gold += amnt;
       document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
+    };
+
+    this.calcDamage = (base: boolean = false) => {
+      let dmg: number = 0;
+      if (base) {
+        if (this.weapon?.id) {
+          Object.values(this.weapon.damages).map((val: any) => {
+            return dmg += val;
+          });
+        }
+        else {
+          Object.values(this.fistDmg()).map((val: any) => {
+            return dmg += val;
+          });
+        };
+      }
+      else {
+        let damages: any = this.weapon?.id ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
+        console.log(damages);
+        const stats = this.getStats();
+        damages.map(([key, num]: any) => {
+          let { v: val, m: mod } = getModifiers(this, key + "Damage");
+          val += this.allModifiers["damageV"];
+          mod *= this.allModifiers["damageP"];
+          let bonus: number = 0;
+          bonus += num * stats[this.weapon?.statBonus] / 50;
+          if (isNaN(val)) val = 0;
+          console.log(Math.floor((num + val + bonus) * mod));
+          dmg += Math.floor((num + val + bonus) * mod);
+        });
+      }
+      return dmg;
     };
   }
 }

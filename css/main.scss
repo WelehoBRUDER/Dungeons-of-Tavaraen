@@ -721,24 +721,27 @@ body {
       .charHealthContainer,
       .charManaContainer {
         position: relative;
-        left: calc(25px * var(--ui-scale));
+        left: calc(5px * var(--ui-scale));
         top: 0px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        vertical-align: middle;
-        width: 75%;
+        width: 100%;
         margin: 0;
         padding: 0;
         height: calc(36px * var(--ui-scale));
 
         div {
           display: flex;
-          width: min-content;
+          justify-content: center;
+          align-items: center;
+          width: 30%;
           margin: 0;
           padding: 2px;
           box-sizing: border-box;
           border: 2px solid transparent;
+          text-align: center;
           img {
             width: calc(32px * var(--ui-scale));
             height: calc(32px * var(--ui-scale));
@@ -1657,10 +1660,10 @@ body {
 
         .area {
           width: 100%;
-          height: 100%;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          grid-template-rows: min-content;
+          max-height: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          height: auto;
           overflow: auto;
 
           div {

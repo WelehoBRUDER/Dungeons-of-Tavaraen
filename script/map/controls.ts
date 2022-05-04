@@ -6,60 +6,18 @@ let actionCooldown = false;
 /* For clarity movement and hotkeys are separated to two different functions */
 document.addEventListener("keydown", key => {
   movementCheck(key);
+  hotbarKey(key);
+});
+document.addEventListener("keyup", key => {
   hotkeyCheck(key);
 });
 
-function hotkeyCheck(e) {
+function hotbarKey(e) {
   if (actionCooldown) return;
   actionCooldown = true;
-  setTimeout(() => actionCooldown = false, 20);
-  if (e.key == "r" && !state.savesOpen) {
-    if (player.isDead) {
-      respawnPlayer();
-      return;
-    }
-  }
-  else if (e.key == "Escape") {
-    handleEscape();
-    return;
-  }
-  if (e.key == settings["hotkey_open_world_messages"]) {
-    if (state.displayingTextHistory) state.displayingTextHistory = false;
-    else state.displayingTextHistory = true;
-    displayAllTextHistory();
-    return;
-  }
-  if (e.key == settings["hotkey_ranged"]) {
-    state.rangedMode = !state.rangedMode;
-  }
-  if (e.key == settings["hotkey_area_map"]) {
-    state.areaMapOpen = !state.areaMapOpen;
-    moveAreaMap();
-  }
-  if (player.isDead || state.savesOpen) return;
+  setTimeout(() => actionCooldown = false, 1);
   const number: number = parseInt(e.keyCode) - 48;
-  if (e.key == settings.hotkey_inv && !state.menuOpen) {
-    if (!state.invOpen) renderInventory();
-    else closeInventory();
-  }
-  else if (e.key == settings.hotkey_char && !state.menuOpen) {
-    if (!state.charOpen) renderCharacter();
-    else closeCharacter();
-  }
-  else if (e.key == settings.hotkey_perk && !state.menuOpen) {
-    if (!state.perkOpen) openLevelingScreen();
-    else closeLeveling();
-  }
-  else if (e.key == settings.hotkey_journal && !state.menuOpen) {
-    if (!state.journalOpen) renderPlayerQuests();
-    else closePlayerQuests();
-  }
-  else if (e.key == settings.hotkey_codex && !state.menuOpen) {
-    if (!state.codexOpen) openIngameCodex();
-    else closeCodex();
-  }
-  else if (state.invOpen || state.menuOpen) return;
-  else if (number > -1 && e.shiftKey) {
+  if (number > -1 && e.shiftKey) {
 
     let abi = player.abilities.find(a => a.equippedSlot == number + 9);
     if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
@@ -85,10 +43,80 @@ function hotkeyCheck(e) {
   }
 }
 
+function hotkeyCheck(e) {
+  if (e.key == "r" && !state.savesOpen) {
+    if (player.isDead) {
+      respawnPlayer();
+      return;
+    }
+  }
+  else if (e.key == "Escape") {
+    handleEscape();
+    return;
+  }
+  if (e.key == settings["hotkey_open_world_messages"]) {
+    if (state.displayingTextHistory) state.displayingTextHistory = false;
+    else state.displayingTextHistory = true;
+    displayAllTextHistory();
+    return;
+  }
+  if (e.key == settings["hotkey_ranged"]) {
+    state.rangedMode = !state.rangedMode;
+  }
+  if (e.key == settings["hotkey_area_map"]) {
+    state.areaMapOpen = !state.areaMapOpen;
+    moveAreaMap();
+  }
+  if (player.isDead || state.savesOpen) return;
+  if (e.key == settings.hotkey_inv && !state.menuOpen) {
+    if (!state.invOpen) renderInventory();
+    else closeInventory();
+  }
+  else if (e.key == settings.hotkey_char && !state.menuOpen) {
+    if (!state.charOpen) renderCharacter();
+    else closeCharacter();
+  }
+  else if (e.key == settings.hotkey_perk && !state.menuOpen) {
+    if (!state.perkOpen) openLevelingScreen();
+    else closeLeveling();
+  }
+  else if (e.key == settings.hotkey_journal && !state.menuOpen) {
+    if (!state.journalOpen) renderPlayerQuests();
+    else closePlayerQuests();
+  }
+  else if (e.key == settings.hotkey_codex && !state.menuOpen) {
+    if (!state.codexOpen) openIngameCodex();
+    else closeCodex();
+  }
+  else if (state.invOpen || state.menuOpen) return;
+  else if (e.key == settings.hotkey_interact) {
+    activateShrine();
+    pickLoot();
+    readMessage();
+    restoreGrave();
+    maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
+      const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
+    });
+    maps[currentMap].entrances?.some((entrance: entrance) => {
+      if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
+        loadingScreen.style.display = "flex";
+        loadingText.textContent = "Loading map...";
+        setTimeout(() => changeMap(entrance), 0);
+        return;
+      }
+
+    });
+    if (!state.textWindowOpen && !state.invOpen) {
+      talkToCharacter();
+    }
+  }
+}
+
 function movementCheck(keyPress) {
   if (movementCooldown) return;
   movementCooldown = true;
-  setTimeout(() => movementCooldown = false, 20);
+  setTimeout(() => movementCooldown = false, 1);
   const rooted = player.isRooted();
   if (!turnOver || state.dialogWindow || state.storeOpen) return;
   let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right", [settings.hotkey_move_right_up]: "rightUp", [settings.hotkey_move_right_down]: "rightDown", [settings.hotkey_move_left_up]: "leftUp", [settings.hotkey_move_left_down]: "leftDown" } as any;
@@ -150,28 +178,6 @@ function movementCheck(keyPress) {
     else {
       advanceTurn();
       state.abiSelected = {};
-    }
-  }
-  else if (keyPress.key == settings.hotkey_interact) {
-    activateShrine();
-    pickLoot();
-    readMessage();
-    restoreGrave();
-    maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
-      const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
-      if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
-    });
-    maps[currentMap].entrances?.some((entrance: entrance) => {
-      if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
-        loadingScreen.style.display = "flex";
-        loadingText.textContent = "Loading map...";
-        setTimeout(() => changeMap(entrance), 0);
-        return;
-      }
-
-    });
-    if (!state.textWindowOpen && !state.invOpen) {
-      talkToCharacter();
     }
   }
 }

@@ -285,7 +285,7 @@ function grabLoot(e: MouseEvent, item: any, index: number, fromContextMenu: bool
   itemData.splice(index, 1);
   player.addItem(item);
   pickLoot();
-  modifyCanvas();
+  renderEntireMap(maps[currentMap]);
 }
 
 function fastGrabLoot(e: KeyboardEvent, totalArray: Array<any>) {
@@ -295,7 +295,7 @@ function fastGrabLoot(e: KeyboardEvent, totalArray: Array<any>) {
   player.addItem(item);
   pickLoot();
   showInteractPrompt();
-  modifyCanvas();
+  renderEntireMap(maps[currentMap]);
 }
 
 function grabTreasure(e: MouseEvent, item: any, chest: treasureChest, index: number, fromContextMenu: boolean = false) {
@@ -307,7 +307,7 @@ function grabTreasure(e: MouseEvent, item: any, chest: treasureChest, index: num
   player.addItem(item);
   chest.lootChest();
   showInteractPrompt();
-  modifyCanvas();
+  renderEntireMap(maps[currentMap]);
 }
 
 function fastGrabTreasure(e: KeyboardEvent, chest: treasureChest) {
@@ -315,7 +315,7 @@ function fastGrabTreasure(e: KeyboardEvent, chest: treasureChest) {
   player.addItem({ ...chest.loot[0] });
   chest.loot.splice(0, 1);
   chest.lootChest();
-  modifyCanvas();
+  renderEntireMap(maps[currentMap]);
 }
 
 function resetAllChests() {

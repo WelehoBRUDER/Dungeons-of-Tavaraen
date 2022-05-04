@@ -230,6 +230,7 @@ function clickMap(event) {
             if (!enemy.alive)
                 break;
             targetingEnemy = true;
+            move = false;
             if (state.isSelected) {
                 // @ts-expect-error
                 if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
@@ -260,7 +261,9 @@ function clickMap(event) {
                     player.doNormalAttack(enemy);
                 }
             }
-            move = false;
+            else {
+                move = true;
+            }
             break;
         }
     }

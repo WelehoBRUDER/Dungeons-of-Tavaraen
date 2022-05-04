@@ -96,12 +96,18 @@ function renderCharacter() {
     const charHealthImage = document.createElement("img");
     const charMana = document.createElement("p");
     const charManaImage = document.createElement("img");
+    const charBaseAttack = document.createElement("p");
+    const charBaseAttackImage = document.createElement("img");
+    const charTrueAttack = document.createElement("p");
+    const charTrueAttackImage = document.createElement("img");
     const charAttackSpeed = document.createElement("p");
     const charAttackSpeedImage = document.createElement("img");
     const charMovementSpeed = document.createElement("p");
     const charMovementSpeedImage = document.createElement("img");
     const hpContainer = document.createElement("div");
     const mpContainer = document.createElement("div");
+    const baseAttackContainer = document.createElement("div");
+    const trueAttackContainer = document.createElement("div");
     const attackContainer = document.createElement("div");
     const movementContainer = document.createElement("div");
     const { attack, movement } = player.getSpeed();
@@ -113,10 +119,14 @@ function renderCharacter() {
     charRaceLevel.textContent = `Lvl ${player.level.level}, ${lang[player.race + "_name"]}`;
     charHealth.textContent = `${Math.round(player.stats.hp)}/${player.getHpMax()}`;
     charMana.textContent = `${Math.round(player.stats.mp)}/${player.getMpMax()}`;
+    charBaseAttack.textContent = `${player.calcDamage(true)}`;
+    charTrueAttack.textContent = `${player.calcDamage()}`;
     charAttackSpeed.textContent = `${attack}%`;
     charMovementSpeed.textContent = `${movement}%`;
     charHealthImage.src = "resources/icons/health.png";
     charManaImage.src = "resources/icons/mana.png";
+    charBaseAttackImage.src = "resources/icons/damage.png";
+    charTrueAttackImage.src = "resources/icons/damage.png";
     charAttackSpeedImage.src = icons.attackSpeed_icon;
     charMovementSpeedImage.src = icons.movementSpeed_icon;
     if (attack > 100)
@@ -129,10 +139,12 @@ function renderCharacter() {
         charMovementSpeed.classList.add("negative");
     hpContainer.append(charHealthImage, charHealth);
     mpContainer.append(charManaImage, charMana);
+    baseAttackContainer.append(charBaseAttackImage, charBaseAttack);
+    trueAttackContainer.append(charTrueAttackImage, charTrueAttack);
     attackContainer.append(charAttackSpeedImage, charAttackSpeed);
     movementContainer.append(charMovementSpeedImage, charMovementSpeed);
-    charHealthContainer.append(hpContainer, attackContainer);
-    charManaContainer.append(mpContainer, movementContainer);
+    charHealthContainer.append(hpContainer, baseAttackContainer, attackContainer);
+    charManaContainer.append(mpContainer, trueAttackContainer, movementContainer);
     tooltip(attackContainer, lang["atk_speed_tt"]);
     tooltip(movementContainer, lang["mov_speed_tt"]);
     generalInfo.append(charName, charRaceLevel, charHealthContainer, charManaContainer);

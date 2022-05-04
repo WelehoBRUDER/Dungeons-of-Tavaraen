@@ -284,7 +284,7 @@ function grabLoot(e, item, index, fromContextMenu = false) {
     itemData.splice(index, 1);
     player.addItem(item);
     pickLoot();
-    modifyCanvas();
+    renderEntireMap(maps[currentMap]);
 }
 function fastGrabLoot(e, totalArray) {
     if (e.key !== settings.hotkey_interact)
@@ -294,7 +294,7 @@ function fastGrabLoot(e, totalArray) {
     player.addItem(item);
     pickLoot();
     showInteractPrompt();
-    modifyCanvas();
+    renderEntireMap(maps[currentMap]);
 }
 function grabTreasure(e, item, chest, index, fromContextMenu = false) {
     if (e.button !== 2 && !fromContextMenu)
@@ -306,7 +306,7 @@ function grabTreasure(e, item, chest, index, fromContextMenu = false) {
     player.addItem(item);
     chest.lootChest();
     showInteractPrompt();
-    modifyCanvas();
+    renderEntireMap(maps[currentMap]);
 }
 function fastGrabTreasure(e, chest) {
     if (e.key !== settings.hotkey_interact)
@@ -314,7 +314,7 @@ function fastGrabTreasure(e, chest) {
     player.addItem(Object.assign({}, chest.loot[0]));
     chest.loot.splice(0, 1);
     chest.lootChest();
-    modifyCanvas();
+    renderEntireMap(maps[currentMap]);
 }
 function resetAllChests() {
     maps.forEach((mp) => {

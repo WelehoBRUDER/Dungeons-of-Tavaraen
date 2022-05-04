@@ -365,6 +365,41 @@ class PlayerCharacter extends Character {
             player.gold += amnt;
             document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
         };
+        this.calcDamage = (base = false) => {
+            var _a, _b;
+            let dmg = 0;
+            if (base) {
+                if ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.id) {
+                    Object.values(this.weapon.damages).map((val) => {
+                        return dmg += val;
+                    });
+                }
+                else {
+                    Object.values(this.fistDmg()).map((val) => {
+                        return dmg += val;
+                    });
+                }
+                ;
+            }
+            else {
+                let damages = ((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.id) ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
+                console.log(damages);
+                const stats = this.getStats();
+                damages.map(([key, num]) => {
+                    var _a;
+                    let { v: val, m: mod } = getModifiers(this, key + "Damage");
+                    val += this.allModifiers["damageV"];
+                    mod *= this.allModifiers["damageP"];
+                    let bonus = 0;
+                    bonus += num * stats[(_a = this.weapon) === null || _a === void 0 ? void 0 : _a.statBonus] / 50;
+                    if (isNaN(val))
+                        val = 0;
+                    console.log(Math.floor((num + val + bonus) * mod));
+                    dmg += Math.floor((num + val + bonus) * mod);
+                });
+            }
+            return dmg;
+        };
     }
 }
 function nextLevel(level) {

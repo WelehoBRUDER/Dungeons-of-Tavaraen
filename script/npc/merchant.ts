@@ -30,6 +30,8 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
   if (!justSort) currentMerchantInventory = createMerchantItems(currentMerchant);
   merchantInv.append(createItems(currentMerchantInventory, "MERCHANT_SELLING", null, false));
   playerInv.append(createItems(player.inventory, "PLAYER_SELLING"));
+  console.log(playerInv.childNodes[0]);
+  playerInv.querySelector(".itemList").scrollBy(sellingScroll, sellingScroll);
   pendingBuyArea.innerHTML = "";
   pendingSellArea.innerHTML = "";
   let buyingPrice = 0;
@@ -56,11 +58,18 @@ function createMerchantWindow(resetInv: boolean = true, justSort: boolean = fals
     let pending = pendingItemsSelling[i];
     const itemFrame = document.createElement("div");
     const itemImg = document.createElement("img");
-    sellingPrice += pending.fullPrice() * pending.amount;
     itemFrame.classList.add("itmFrame");
     itemImg.src = pending.img;
     tooltip(itemFrame, itemTT(pending));
     itemFrame.append(itemImg);
+    if (pending.stacks) {
+      const itemAmnt = document.createElement("p");
+      itemAmnt.classList.add("itemAmount");
+      itemAmnt.textContent = pending.amount;
+      itemFrame.append(itemAmnt);
+      sellingPrice += Math.round(pending.price * pending.amount * 0.5);
+    }
+    else sellingPrice += Math.round(pending.fullPrice() * 0.5);
     itemFrame.addEventListener("mouseup", e => removeItemFromSelling(i));
     pendingSellArea.append(itemFrame);
   }
@@ -116,13 +125,14 @@ function itemAmountSelector(item: any, selling: boolean = false) {
   input.max = selling ? item.amount : 999;
   but.onclick = () => {
     let value = parseInt(input.value);
-    console.log(value);
     if (value <= 0) value = 1;
     if (selling && value > item.amount) value = item.amount;
     if (selling) {
-      pendingItemsSelling.push(item);
+      const _item = { ...item };
+      _item.amount = value;
+      pendingItemsSelling.push(_item);
       for (let i = 0; i < player.inventory.length; i++) {
-        if (player.inventory[i].id == item.id) {
+        if (player.inventory[i].id == _item.id) {
           if (value == item.amount) {
             player.inventory.splice(i, 1);
           }
