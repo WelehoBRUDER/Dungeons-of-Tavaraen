@@ -1,3 +1,27 @@
+# 1.1.2 ~ 7.5.2022
+
+### Patch
+
+## New Additions
+
+- Reworked the character creation screen
+  > Added a trait selection. Traits give characters powerful modifiers.
+- Added negative adjectives to describe items with negative effects.
+
+## Fixes & Tweaks
+
+- Opening loot pool no longer automatically loots first item.
+- Chests and items now update when looted.
+- Scroll now stays when selling items in merchant screen.
+- Fixed being able to sell negative amounts of items for massive profit.
+- Selling items now imposes a 50% penalty, meaning you sell at half price.
+- Clicking on a far away enemy now moves you towards it.
+- Slightly improved damage calculation.
+- Added base and true damage to character screen.
+- Improved save backwards compatibility.
+- Fixed a bug where traits would keep being added while loading a save.
+- Improved icons in the character screen.
+
 # 1.1.1-performance ~ 1.5.2022
 
 This update wouldn't have been possible without the help of [kassu11](https://github.com/kassu11)!<br>
