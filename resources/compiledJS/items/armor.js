@@ -65,7 +65,7 @@ class Armor extends Item {
         }
         if (this.rolledStats.length > 0) {
             let name = "";
-            const maxAdjectives = 3;
+            const maxAdjectives = 2;
             let adjectivesUsed = 0;
             const statKeys = [];
             Object.entries(this.stats).forEach((stat) => {
@@ -74,9 +74,9 @@ class Armor extends Item {
                 }
             });
             statKeys.sort((key1, key2) => {
-                if (key1.num > key2.num)
+                if (Math.abs(key1.num) > Math.abs(key2.num))
                     return -1;
-                else if (key2.num > key1.num)
+                else if (Math.abs(key2.num) > Math.abs(key1.num))
                     return 1;
                 else
                     return 0;
@@ -89,7 +89,7 @@ class Armor extends Item {
                     return;
                 adjectivesUsed++;
                 stat.key = stat.key.substring(0, stat.key.length - 1);
-                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective"]} `;
+                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
             });
             name += `${langName}`;
             this.name = name;

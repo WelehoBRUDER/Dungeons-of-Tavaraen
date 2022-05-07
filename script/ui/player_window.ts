@@ -15,7 +15,7 @@ function createArmorOrResistanceDisplay(stat: any, armor: boolean) {
   const key = stat[0];
   const val = stat[1];
   const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-  statImage.src = icons[key + (armor ? "_armor" : "")];
+  statImage.src = icons[key + (armor ? "_armor" : "Resist_icon")];
   statText.textContent = lang[key];
   statValue.textContent = val + (armor ? "" : "%");
   tooltip(statContainer, lang[armor ? key + "_tt" : "resistances_tt"] ?? "no tooltip");
@@ -121,7 +121,7 @@ function renderCharacter() {
   charHealthImage.src = "resources/icons/health.png";
   charManaImage.src = "resources/icons/mana.png";
   charBaseAttackImage.src = "resources/icons/damage.png";
-  charTrueAttackImage.src = "resources/icons/damage.png";
+  charTrueAttackImage.src = "resources/icons/atk.png";
   charAttackSpeedImage.src = icons.attackSpeed_icon;
   charMovementSpeedImage.src = icons.movementSpeed_icon;
   if (attack > 100) charAttackSpeed.classList.add("positive");
@@ -136,6 +136,8 @@ function renderCharacter() {
   movementContainer.append(charMovementSpeedImage, charMovementSpeed);
   charHealthContainer.append(hpContainer, baseAttackContainer, attackContainer);
   charManaContainer.append(mpContainer, trueAttackContainer, movementContainer);
+  tooltip(baseAttackContainer, lang["base_attack_tt"]);
+  tooltip(trueAttackContainer, lang["true_attack_tt"]);
   tooltip(attackContainer, lang["atk_speed_tt"]);
   tooltip(movementContainer, lang["mov_speed_tt"]);
   generalInfo.append(charName, charRaceLevel, charHealthContainer, charManaContainer);
@@ -192,22 +194,6 @@ function renderCharacter() {
   player.traits.forEach((mod: PermanentStatModifier) => {
     traits.append(createStatModifierDisplay(mod));
   });
-  var resistancesText = `<bcss>position: absolute; left: 24px; top: 500px;<bcss><f>32px<f>Core resistances§\n\n`;
-  Object.entries(player.getResists()).forEach(resistance => {
-    const str = resistance[0];
-    const val = resistance[1];
-    resistancesText += `<i>${icons[str + "_icon"]}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;
-  });
-  const resistances = textSyntax(resistancesText);
-  tooltip(resistances, "Resistance decreases incoming damage\n of its type by the indicated number.\n For example, 50% resistance means\n you take half damage.");
-  var effectResTxt = `<bcss>position: absolute; left: 364px; top: 298px;<bcss><f>32px<f>Status resistances§\n\n`;
-  Object.entries(player.getStatusResists()).forEach(resistance => {
-    const str = resistance[0];
-    const val = resistance[1];
-    effectResTxt += `<i>${icons[str] ? icons[str] : "resources/icons/damage_icon.png"}<i><c>white<c>${str}: <c>${val < 0 ? "crimson" : val > 0 ? "lime" : "white"}<c>${val}%\n`;
-  });
-  const effResistances = textSyntax(effectResTxt);
-  tooltip(effResistances, "Status resistance either decreases damage\n of its type by the indicated number\n or decreases the chance of the status effecting you.");
   pc.style.left = "24px";
   pc.style.top = "24px";
   tooltip(statusResistances, lang["stat_resist_tt"]);

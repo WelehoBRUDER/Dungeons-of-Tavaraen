@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="resources/compiledCSS/main.css">
   <link rel="stylesheet" href="resources/compiledCSS/perks.css">
   <link rel="stylesheet" href="resources/compiledCSS/codex.css">
+  <link rel="stylesheet" href="resources/compiledCSS/character_creation.css">
   <title>Dungeons of Tavaraen - In Development</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -228,33 +229,18 @@
     <div class="mainMenu">
       <div class="menuButtons"></div>
       <div class="characterCreation">
-        <div class="playerRenderer">
-          <canvas class="layerRender" width="256" height="256"></canvas>
+        <div class="content">
+          <div class="playerRenderer">
+            <canvas class="layerRender" width="256" height="256"></canvas>
+            <div class="player-sex-clothes">
+              <img src="resources/icons/male.png" alt="" class="male selected" onclick="changeSex('male')">
+              <img src="resources/icons/female.png" alt="" class="female" onclick="changeSex('female')">
+              <img src="resources/icons/clothToggle.png" alt="" class="toggleClothes" onclick="toggleClothes()">
+            </div>
+          </div>
+          <div class="creation-content"></div>
         </div>
-        <div class="cosmetics">
-          <div class="hair" onmousedown="changeHair(event)">hair 1</div>
-          <div class="eyes" onmousedown="changeEyes(event)">eyes 1</div>
-          <div class="face" onmousedown="changeFace(event)">face 1</div>
-        </div>
-        <div class="genderWrapper">
-          <img src="resources/icons/male.png" alt="" class="male selected" onclick="changeSex('male')">
-          <img src="resources/icons/female.png" alt="" class="female" onclick="changeSex('female')">
-        </div>
-        <img src="resources/icons/clothToggle.png" alt="" class="toggleClothes" onclick="toggleClothes()">
-        <div class="nameContainer">
-          <p class="nameText">Name</p>
-          <input type="text" class="nameInput" autocomplete="off" autocorrect="off" autocapitalize="off"
-            spellcheck="false">
-        </div>
-        <div class="raceSelection">
-          <p class="raceText">Character Race</p>
-          <div class="racesContainer"></div>
-        </div>
-        <div class="classSelection">
-          <p class="classText">Character Class</p>
-          <div class="classesContainer"></div>
-        </div>
-        <div class="startGame" onclick="beginGame()">Start</div>
+
       </div>
     </div>
     <div class="areaMap">

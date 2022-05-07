@@ -114,15 +114,29 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 fm = maps.findIndex((map) => map.id == save.save.currentMap);
                 if (fm == -1)
                     fm = save.save.currentMap;
+                if (fm < 0)
+                    throw Error("CAN'T FIND MAP!");
                 pl = new PlayerCharacter(Object.assign({}, save.save.player));
-                fe = [...save.save.fallenEnemies];
-                id = [...save.save.itemData];
-                lc = [...save.save.lootedChests];
+                fe = save.save.fallenEnemies ? [...save.save.fallenEnemies] : [];
+                id = save.save.itemData ? [...save.save.itemData] : [];
+                lc = save.save.lootedChests ? [...save.save.lootedChests] : [];
+                // update classes of all dropped items just in case
+                id.map((item) => {
+                    if (item.itm.type === "weapon")
+                        return item.itm = new Weapon(Object.assign({}, items[item.itm.id]));
+                    if (item.itm.type === "armor")
+                        return item.itm = new Armor(Object.assign({}, items[item.itm.id]));
+                    if (item.itm.type === "artifact")
+                        return item.itm = new Artifact(Object.assign({}, items[item.itm.id]));
+                    if (item.itm.type === "consumable")
+                        return item.itm = new Consumable(Object.assign({}, items[item.itm.id]));
+                });
                 pl.updateTraits();
                 pl.updatePerks(true);
                 pl.updateAbilities();
             }
-            catch (_a) {
+            catch (err) {
+                console.error(err.message);
                 loadingScreen.style.display = "none";
                 return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
             }
@@ -136,7 +150,10 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             tree = player.classes.main.perkTree;
             turnOver = true;
             enemiesHadTurn = 0;
+            actionCooldown = false;
+            movementCooldown = false;
             state.inCombat = false;
+            console.log("map", fm);
             player.updateTraits();
             player.updatePerks(true);
             player.updateAbilities();
@@ -152,6 +169,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             modifyCanvas(true);
             updateUI();
             handleEscape();
+            closeAllWindowsAndMenus();
             loadingScreen.style.display = "none";
         });
         deleteGame.addEventListener("click", () => {

@@ -1,0 +1,278 @@
+.characterCreation {
+  transition: 0.35s;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.95);
+  box-shadow: inset 0 0 24px 16px rgba(5, 5, 5, 0.975);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+}
+.characterCreation .content {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: calc(1200px * var(--ui-scale));
+  height: calc(800px * var(--ui-scale));
+}
+.characterCreation .content .playerRenderer {
+  width: calc(448px * var(--ui-scale));
+  height: calc(512px * var(--ui-scale));
+  position: absolute;
+  right: calc(-390px * var(--ui-scale));
+  top: calc(50px * var(--ui-scale));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.characterCreation .content .playerRenderer .layerRender {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.characterCreation .content .playerRenderer .player-sex-clothes img {
+  width: calc(64px * var(--ui-scale));
+  filter: brightness(0.5);
+}
+.characterCreation .content .playerRenderer .player-sex-clothes img:hover {
+  filter: drop-shadow(0 0 4px gold);
+}
+.characterCreation .content .playerRenderer .player-sex-clothes img.selected {
+  filter: brightness(1);
+}
+.characterCreation .content .creation-content {
+  position: relative;
+  left: calc(-80px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-race-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  padding: calc(20px * var(--ui-scale));
+  background: rgba(15, 15, 15, 0.95);
+  max-width: calc(1280px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-race-container .race-select {
+  font-size: calc(48px * var(--ui-scale));
+  font-family: OptimusPrinceps;
+  margin-right: calc(24px * var(--ui-scale));
+  color: gold;
+  text-shadow: 0 0 calc(8px * var(--ui-scale)) goldenrod;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-race-container .races {
+  display: flex;
+  height: min-content;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-race-container .races .race-pick {
+  transition: 50ms;
+  margin: 0 calc(12px * var(--ui-scale));
+  width: calc(120px * var(--ui-scale));
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: calc(4px * var(--ui-scale)) solid rgb(95, 95, 95);
+}
+.characterCreation .content .creation-content .char-race-container .races .race-pick p {
+  margin: 0;
+  padding: calc(4px * var(--ui-scale));
+  color: rgb(255, 255, 255);
+  font-size: calc(24px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-race-container .races .race-pick:hover, .characterCreation .content .creation-content .char-race-container .races .race-pick.selected {
+  background: rgba(0, 0, 0, 0.5);
+  border: calc(4px * var(--ui-scale)) solid white;
+  transform: scale(1.05);
+}
+.characterCreation .content .creation-content .char-race-container .races .race-pick:hover p, .characterCreation .content .creation-content .char-race-container .races .race-pick.selected p {
+  color: goldenrod;
+}
+.characterCreation .content .creation-content .char-class-container {
+  display: flex;
+  align-items: center;
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  padding: calc(20px * var(--ui-scale));
+  background: rgba(15, 15, 15, 0.95);
+  max-width: calc(1280px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-class-container .class-select {
+  font-size: calc(48px * var(--ui-scale));
+  font-family: OptimusPrinceps;
+  margin-right: calc(24px * var(--ui-scale));
+  color: gold;
+  text-shadow: 0 0 calc(8px * var(--ui-scale)) goldenrod;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-class-container .classes {
+  display: flex;
+  height: calc(400px * var(--ui-scale));
+  padding: 0;
+  overflow: hidden;
+}
+.characterCreation .content .creation-content .char-class-container .classes .class-pick {
+  transition: 50ms;
+  margin: 0 calc(20px * var(--ui-scale));
+  width: calc(180px * var(--ui-scale));
+  height: calc(350px * var(--ui-scale));
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: calc(4px * var(--ui-scale)) solid rgb(95, 95, 95);
+  box-shadow: calc(6px * var(--ui-scale)) calc(6px * var(--ui-scale)) calc(10px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgba(0, 0, 0, 0.4);
+}
+.characterCreation .content .creation-content .char-class-container .classes .class-pick p {
+  margin: 0;
+  padding: calc(4px * var(--ui-scale));
+  color: rgb(255, 255, 255);
+  font-size: calc(24px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-class-container .classes .class-pick img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.characterCreation .content .creation-content .char-class-container .classes .class-pick:hover, .characterCreation .content .creation-content .char-class-container .classes .class-pick.selected {
+  background: rgba(0, 0, 0, 0.5);
+  margin-top: calc(26px * var(--ui-scale));
+  border: calc(4px * var(--ui-scale)) solid goldenrod;
+  box-shadow: none;
+  filter: brightness(1.3);
+}
+.characterCreation .content .creation-content .char-class-container .classes .class-pick:hover p, .characterCreation .content .creation-content .char-class-container .classes .class-pick.selected p {
+  color: goldenrod;
+}
+.characterCreation .content .creation-content .char-traits-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  padding: calc(20px * var(--ui-scale));
+  background: rgba(15, 15, 15, 0.95);
+  max-width: calc(1280px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-traits-container .trait-select {
+  font-size: calc(48px * var(--ui-scale));
+  font-family: OptimusPrinceps;
+  margin-right: calc(24px * var(--ui-scale));
+  color: gold;
+  text-shadow: 0 0 calc(8px * var(--ui-scale)) goldenrod;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-traits-container .trait-picks-left {
+  position: absolute;
+  bottom: calc(120px * var(--ui-scale));
+  right: calc(20px * var(--ui-scale));
+  font-size: calc(25px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-traits-container .traits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  height: min-content;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-traits-container .traits .trait-pick {
+  transition: 50ms;
+  margin: calc(12px * var(--ui-scale));
+  width: calc(120px * var(--ui-scale));
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: calc(4px * var(--ui-scale)) solid rgb(95, 95, 95);
+}
+.characterCreation .content .creation-content .char-traits-container .traits .trait-pick p {
+  margin: 0;
+  padding: calc(4px * var(--ui-scale));
+  color: rgb(255, 255, 255);
+  font-size: calc(21px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-traits-container .traits .trait-pick:hover, .characterCreation .content .creation-content .char-traits-container .traits .trait-pick.selected {
+  background: rgba(0, 0, 0, 0.5);
+  border: calc(4px * var(--ui-scale)) solid white;
+  transform: scale(1.05);
+}
+.characterCreation .content .creation-content .char-traits-container .traits .trait-pick:hover p, .characterCreation .content .creation-content .char-traits-container .traits .trait-pick.selected p {
+  color: goldenrod;
+}
+.characterCreation .content .creation-content .char-appearance-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  padding: calc(20px * var(--ui-scale));
+  background: rgba(15, 15, 15, 0.95);
+  max-width: calc(1280px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-appearance-container .appearance-select {
+  font-size: calc(48px * var(--ui-scale));
+  font-family: OptimusPrinceps;
+  margin-right: calc(24px * var(--ui-scale));
+  color: gold;
+  text-shadow: 0 0 calc(8px * var(--ui-scale)) goldenrod;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-appearance-container .name-input {
+  width: calc(300px * var(--ui-scale));
+  background: rgba(5, 5, 5, 0.975);
+  border: calc(4px * var(--ui-scale)) solid goldenrod;
+  padding: calc(4px * var(--ui-scale));
+  font-size: calc(24px * var(--ui-scale));
+}
+.characterCreation .content .creation-content .char-appearance-container .appearances {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: min-content;
+  padding: 0;
+}
+.characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick {
+  position: relative;
+  transition: 50ms;
+  margin: calc(12px * var(--ui-scale));
+  width: calc(96px * var(--ui-scale));
+  height: calc(96px * var(--ui-scale));
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: rgba(95, 95, 95, 0.15);
+  border: calc(4px * var(--ui-scale)) solid rgb(95, 95, 95);
+  overflow: hidden;
+}
+.characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick img {
+  top: 10%;
+  position: absolute;
+  width: 400%;
+  height: 400%;
+}
+.characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick:hover, .characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick.selected {
+  background: rgba(95, 95, 95, 0.25);
+  border: calc(4px * var(--ui-scale)) solid white;
+  transform: scale(1.05);
+}
+.characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick:hover p, .characterCreation .content .creation-content .char-appearance-container .appearances .appearance-pick.selected p {
+  color: goldenrod;
+}
+.characterCreation .content .creation-content .continue-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.characterCreation .content .creation-content .continue-buttons div {
+  margin: calc(25px * var(--ui-scale)) calc(20px * var(--ui-scale));
+}/*# sourceMappingURL=character_creation.css.map */

@@ -45,6 +45,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
   obj["movementSpeedV"] = 0;
   obj["attackSpeedV"] = 0;
   char.traits.forEach((mod: any) => {
+    if (!mod.effects) return;
     let apply = true;
     if (mod.conditions && withConditions) {
       apply = statConditions(mod.conditions, char);
@@ -101,6 +102,7 @@ function getModifiers(char: any, stat: string, withConditions = true) {
   let val = 0;
   let modif = 1;
   char.traits.forEach((mod: any) => {
+    if (!mod.effects) return;
     let apply = true;
     if (mod.conditions && withConditions) {
       apply = statConditions(mod.conditions, char);

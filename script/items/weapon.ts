@@ -84,7 +84,7 @@ class Weapon extends Item {
     // Assign correct name based on stat effects.
     if (this.rolledStats.length > 0) {
       let name: string = "";
-      const maxAdjectives = 3;
+      const maxAdjectives = 2;
       let adjectivesUsed = 0;
       const statKeys: Array<any> = [];
       Object.entries(this.stats).forEach((stat: any) => {
@@ -93,8 +93,8 @@ class Weapon extends Item {
         }
       });
       statKeys.sort((key1: any, key2: any) => {
-        if (key1.num > key2.num) return -1;
-        else if (key2.num > key1.num) return 1;
+        if (Math.abs(key1.num) > Math.abs(key2.num)) return -1;
+        else if (Math.abs(key2.num) > Math.abs(key1.num)) return 1;
         else return 0;
       });
       let langName = lang[this.id + "_name"];
@@ -103,7 +103,7 @@ class Weapon extends Item {
         stat.key = stat.key.substring(0, stat.key.length - 1);
         if (adjectivesUsed >= maxAdjectives || name.includes(lang[stat.key + "_adjective"])) return;
         adjectivesUsed++;
-        name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective"]} `;
+        name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
       });
       name += `${langName}`;
       this.name = name;

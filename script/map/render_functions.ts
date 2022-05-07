@@ -285,6 +285,7 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
 
   function renderGrid(x: number, y: number) {
     baseCtx.globalCompositeOperation = "destination-over";
+    if (x < 0 || y < 0 || x >= spriteLimitX || y >= spriteLimitY) return;
     if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0) return;
     if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0) return;
     const imgId: number = +map.base?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];

@@ -352,6 +352,14 @@ class Character {
                 let modifier = new PermanentStatModifier(mod);
                 this.traits[index] = modifier;
             });
+            const purgeList = {};
+            for (let i = this.traits.length - 1; i >= 0; i--) {
+                if (!purgeList[this.traits[i].id])
+                    purgeList[this.traits[i].id] = 1;
+                else {
+                    this.traits.splice(i, 1);
+                }
+            }
         };
     }
 }

@@ -291,6 +291,8 @@ function renderRow(map, translateX, translateY) {
     function renderGrid(x, y) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         baseCtx.globalCompositeOperation = "destination-over";
+        if (x < 0 || y < 0 || x >= spriteLimitX || y >= spriteLimitY)
+            return;
         if (y + mapOffsetStartY > maps[currentMap].base.length - 1 || y + mapOffsetStartY < 0)
             return;
         if (x + mapOffsetStartX > maps[currentMap].base[y].length - 1 || x + mapOffsetStartX < 0)

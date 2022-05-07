@@ -42,6 +42,88 @@ body {
   background: transparent;
 }
 
+.menuButton,
+.red-button {
+  transition: 0.275s;
+  animation-name: popIn;
+  animation-duration: 0.275s;
+  font-size: calc(26px * var(--ui-scale));
+  color: white;
+  margin-top: calc(40px * var(--ui-scale));
+  margin-bottom: calc(40px * var(--ui-scale));
+  padding: calc(15px * var(--ui-scale));
+  text-shadow: -4px 4px 8px black;
+  border: calc(4px * var(--ui-scale)) solid grey;
+  text-align: center;
+  width: calc(305px * var(--ui-scale));
+  height: calc(30px * var(--ui-scale));
+  position: relative;
+  left: 0;
+  top: 0;
+  user-select: none;
+  background: url(../ui/menu_button.png);
+  background-size: 100% 100%;
+  box-shadow: -3px 3px 6px 6px rgba(124, 47, 11, 0.75);
+}
+.menuButton:not(.disabled):hover,
+.red-button:not(.disabled):hover {
+  top: 6px;
+  box-shadow: -2px 2px 3px 3px rgba(124, 47, 11, 0.75);
+}
+.menuButton:not(.disabled):active,
+.red-button:not(.disabled):active {
+  top: 8px;
+  box-shadow: -1px 1px 1px 1px rgba(124, 47, 11, 0.75);
+}
+.menuButton.no-anim,
+.red-button.no-anim {
+  animation: none;
+}
+.menuButton.disabled,
+.red-button.disabled {
+  filter: brightness(50%);
+  pointer-events: none;
+}
+
+.blue-button {
+  transition: 0.275s;
+  animation-name: popIn;
+  animation-duration: 0.275s;
+  font-size: calc(26px * var(--ui-scale));
+  color: white;
+  margin-top: calc(40px * var(--ui-scale));
+  margin-bottom: calc(40px * var(--ui-scale));
+  padding: calc(15px * var(--ui-scale));
+  text-shadow: -4px 4px 8px black;
+  border: calc(4px * var(--ui-scale)) solid grey;
+  text-align: center;
+  width: calc(305px * var(--ui-scale));
+  height: calc(30px * var(--ui-scale));
+  white-space: nowrap;
+  position: relative;
+  left: 0;
+  top: 0;
+  user-select: none;
+  background: url(../ui/menu_button.png);
+  background-size: 100% 100%;
+  box-shadow: -3px 3px 6px 6px rgba(11, 124, 124, 0.75);
+}
+.blue-button:not(.disabled):hover {
+  top: 6px;
+  box-shadow: -2px 2px 3px 3px rgba(11, 124, 124, 0.75);
+}
+.blue-button:not(.disabled):active {
+  top: 8px;
+  box-shadow: -1px 1px 1px 1px rgba(11, 124, 124, 0.75);
+}
+.blue-button.no-anim {
+  animation: none;
+}
+.blue-button.disabled {
+  filter: brightness(50%);
+  pointer-events: none;
+}
+
 .main {
   width: 100%;
   height: 100%;

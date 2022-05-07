@@ -67,6 +67,21 @@ function handleEscape() {
   if (player.isDead) spawnDeathScreen();
 }
 
+function closeAllWindowsAndMenus() {
+  state.menuOpen = false;
+  closeGameMenu(true, false, false);
+  closeSettingsMenu();
+  closeCharacter();
+  closeInventory();
+  closeLeveling();
+  closeSaveMenu();
+  closePlayerQuests();
+  closeCodex();
+  closeSmithingWindow();
+  closeTextWindow();
+  hideHover();
+}
+
 const languages = ["english", "finnish"] as any;
 
 const mainMenu = document.querySelector<HTMLDivElement>(".mainMenu");
@@ -80,7 +95,7 @@ function openGameMenu() {
   for (let button of menuOptions) {
     const frame = document.createElement("div");
     frame.textContent = lang[button.id] ?? button.id;
-    frame.classList.add("menuButton");
+    frame.classList.add("blue-button");
     frame.classList.add(button.id);
     if (button.action) {
       frame.addEventListener("click", () => button.action());
@@ -315,18 +330,38 @@ function LoadSlot(data: any) {
   let _falEnemies;
   let _loot;
   try {
+    foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
+    if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
+    if (foundMap < 0 || foundMap === undefined) throw Error("CAN'T FIND MAP!");
     _pl = new PlayerCharacter({ ...GetKey("player", data).data });
-    _itmData = GetKey("itemData", data).data;
-    _falEnemies = GetKey("enemies", data).data;
-    _loot = GetKey("lootedChests", data).data;
+    _itmData = GetKey("itemData", data).data ?? [];
+    _falEnemies = GetKey("enemies", data).data ?? [];
+    _loot = GetKey("lootedChests", data).data ?? [];
+    // update classes of all dropped items just in case
+    _itmData.map((item: any) => {
+      if (item.itm.type === "weapon") return item.itm = new Weapon({ ...items[item.itm.id] });
+      if (item.itm.type === "armor") return item.itm = new Armor({ ...items[item.itm.id] });
+      if (item.itm.type === "artifact") return item.itm = new Artifact({ ...items[item.itm.id] });
+      if (item.itm.type === "consumable") return item.itm = new Consumable({ ...items[item.itm.id] });
+    });
+    for (let i = _pl.traits?.length ?? 0; i >= 0; i--) {
+      // Find faulty trait
+      try {
+        if (Object.keys(_pl.traits[i].effects).length === 0) {
+          // literally do nothing
+        }
+      }
+      catch {
+        _pl.traits.splice(i, 1);
+      }
+    }
     _pl.updateTraits();
     _pl.updatePerks(true);
     _pl.updateAbilities();
-    foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
-    if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
     Object.entries(_pl.classes.main.statBonuses).forEach((stat: any) => { }); // dirty trick to catch invalid save
   }
-  catch {
+  catch (err: any) {
+    console.error(err);
     loadingScreen.style.display = "none";
     return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
   }

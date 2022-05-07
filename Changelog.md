@@ -4,6 +4,10 @@
 
 ## New Additions
 
+- Reworked the character creation screen
+  > Added a trait selection. Traits give characters powerful modifiers.
+- Added negative adjectives to describe items with negative effects.
+
 ## Fixes & Tweaks
 
 - Opening loot pool no longer automatically loots first item.
@@ -14,6 +18,9 @@
 - Clicking on a far away enemy now moves you towards it.
 - Slightly improved damage calculation.
 - Added base and true damage to character screen.
+- Improved save backwards compatibility.
+- Fixed a bug where traits would keep being added while loading a save.
+- Improved icons in the character screen.
 
 # 1.1.1-performance ~ 1.5.2022
 

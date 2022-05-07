@@ -74,20 +74,20 @@ class PlayerCharacter extends Character {
                 let cmdsEx = prk.commandsExecuted;
                 prk = new perk(Object.assign({}, perksArray[prk.tree]["perks"][prk.id]));
                 if (!cmdsEx && !dontExecuteCommands) {
+                    console.log("executing commands");
                     (_a = Object.entries(prk.commands)) === null || _a === void 0 ? void 0 : _a.forEach(cmd => { command(cmd); });
                 }
-                prk.commandsExecuted = cmdsEx;
+                prk.commandsExecuted = true;
                 this.perks[index] = Object.assign({}, prk);
                 prk.traits.forEach((stat) => {
-                    let add = true;
-                    player.traits.some((mod) => {
-                        if (mod.id === stat.id) {
-                            add = false;
-                            return true;
-                        }
-                    });
-                    if (add)
-                        this.traits.push(stat);
+                    console.log(player.traits);
+                    console.log(player.traits.findIndex((t) => t.id === stat.id));
+                    if (player.traits.findIndex((t) => t.id === stat.id) !== -1)
+                        return;
+                    else {
+                        console.log(stat, "MITÄ VITTUUA");
+                        this.traits.push(Object.assign({}, stat));
+                    }
                 });
             });
             for (let i = this.perks.length - 1; i >= 0; i--) {

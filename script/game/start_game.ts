@@ -47,8 +47,8 @@ const emptyModel = {
   chest: new Armor({ ...items.raggedShirt }),
   helmet: {},
   gloves: {},
-  legs: new Armor({ ...items.raggedBoots }),
-  boots: {},
+  legs: new Armor({ ...items.raggedPants }),
+  boots: new Armor({ ...items.raggedBoots }),
   offhand: {},
   artifact1: {},
   artifact2: {},
@@ -88,6 +88,7 @@ const emptyModel = {
   questProgress: [],
 } as playerChar;
 const creation = document.querySelector<HTMLDivElement>(".mainMenu .characterCreation");
+const content = creation.querySelector<HTMLDivElement>(".content .creation-content");
 const creationCanvas = creation.querySelector<HTMLCanvasElement>(".layerRender");
 const creationCtx = creationCanvas.getContext("2d");
 
@@ -144,56 +145,182 @@ const classEquipments = {
 } as any;
 
 var clothToggleCreation = false;
+// steps: class-race, appearance
+let creationStep = "class-race";
 function characterCreation(withAnimations = true) {
   if (withAnimations) {
     const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
     player = new PlayerCharacter({ ...copiedModel });
-    creation.style.display = "block";
+    creation.style.display = "flex";
+    traitPicks = 2;
+    creationStep = "class-race";
     setTimeout(() => { creation.style.opacity = "1"; }, 5);
   }
   checkIfCanStartGame();
+  content.innerHTML = ""; // Clear screen
+  if (creationStep === "class-race") {
+    classRaceSelection();
+  }
+  else if (creationStep === "appearance") {
+    appearanceSelection();
+  }
   renderPlayerOutOfMap(256, creationCanvas, creationCtx, "center", player, clothToggleCreation);
-  creation.querySelector(".nameText").textContent = lang["choose_name"] ?? "lang_choose_name";
-  creation.querySelector(".raceText").textContent = lang["choose_race"] ?? "lang_choose_race";
-  creation.querySelector(".classText").textContent = lang["choose_class"] ?? "lang_choose_class";
-  const raceContainer = creation.querySelector<HTMLDivElement>(".racesContainer");
-  const classContainer = creation.querySelector<HTMLDivElement>(".classesContainer");
-  raceContainer.textContent = "";
-  classContainer.textContent = "";
-  Object.entries(raceTexts).forEach((race: any) => {
-    const content = race[1];
-    const btn = document.createElement("div");
-    btn.textContent = lang[race[0] + "_name"] ?? content.name;
-    btn.classList.add("raceButton");
-    tooltip(btn, raceTT(race[0]));
-    if (player.race == race[0]) btn.style.border = "4px solid gold";
-    else {
-      btn.addEventListener("click", a => changeRace(race));
-    }
-    raceContainer.append(btn);
-  });
-  Object.values(combatClasses).forEach((combatClass: any) => {
-    const bg = document.createElement("div");
-    const title = document.createElement("p");
-    const icon = document.createElement("img");
-    bg.classList.add("classCard");
-    bg.style.background = combatClass.color;
-    title.textContent = lang[combatClass.id + "_name"];
-    icon.src = combatClass.icon;
-    tooltip(bg, classTT(combatClass));
-    if (player.classes?.main?.id == combatClass.id) bg.style.border = "4px solid gold";
-    else {
-      bg.addEventListener("click", a => changeClass(combatClass));
-    }
-    bg.append(title, icon);
-    classContainer.append(bg);
-  });
 }
 
-creation.querySelector<HTMLInputElement>(".nameInput").addEventListener("keyup", (key) => {
-  player.name = creation.querySelector<HTMLInputElement>(".nameInput").value;
-  checkIfCanStartGame();
-});
+const startingTraits = ["strong", "quick", "enduring", "intelligent", "stealthy", "lucky", "healthy", "wise", "regenerating", "magical", "adrenaline", "confident"];
+let traitPicks = 2;
+
+function classRaceSelection() {
+  content.innerHTML = `
+  <div class="char-race-container">
+    <h1 class="race-select">${lang.choose_race}</h1>
+    <div class="races">
+      ${Object.entries(raceTexts).map(([key, { name }]: any) => {
+    return `<div class="race-pick ${key} ${player.race === key ? "selected" : ""}" onclick="changeRace('${key}')"><p>${name}</p></div>`;
+  }).join("")}
+    </div>
+  </div>
+  <div class="char-class-container">
+    <h1 class="class-select">${lang.choose_class}</h1>
+    <div class="classes">
+      ${Object.values(combatClasses).map((combatClass: any) => {
+    return `<div class="class-pick ${combatClass.id} ${player.classes.main?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
+      <p>${lang[combatClass.id + "_name"]}</p>
+      <img src="${combatClass.icon}" alt="${combatClass.id}">
+    </div>`;
+  }).join("")}
+    </div>
+  </div>
+  <div class="char-traits-container">
+    <h1 class="trait-select">${lang.choose_traits ?? "lang.choose_traits"}</h1>
+    <p class="trait-picks-left">${traitPicks} points</p>
+    <div class="traits">
+      ${startingTraits.map((trait: string) => {
+    return `<div class="trait-pick ${trait} ${player.traits.findIndex((t: any) => t.id === trait) > -1 ? "selected" : ""}" onclick="changeTrait('${trait}')"><p>${lang[trait + "_name"] ?? trait}</p></div>`;
+  }).join("")}
+  </div>
+  </div>
+  <div class="continue-buttons">
+    <div class="blue-button no-anim ${canContinue() ? "" : "disabled"}" onclick="toggleStep()">Confirm</div>
+    <div class="red-button no-anim" onclick="closeCharacterCreation()">Cancel</div>
+  </div>
+  `;
+  Array.from(content.querySelector<HTMLDivElement>(".races").children).map((race: any) => {
+    tooltip(race, raceTT(race.classList[1]));
+  });
+  Array.from(content.querySelector<HTMLDivElement>(".classes").children).map((combatClass: any) => {
+    tooltip(combatClass, classTT(combatClasses[combatClass.classList[1]]));
+  });
+  Array.from(content.querySelector<HTMLDivElement>(".traits").children).map((trait: any) => {
+    tooltip(trait, statModifTT(traits[trait.classList[1]]));
+  }
+  );
+}
+
+function getHairArray() {
+  const hairArray = [];
+  for (let i = hairs[0]; i <= hairs[1]; i++) {
+    hairArray.push(i);
+  }
+  return hairArray;
+}
+
+function getEyesArray() {
+  const eyesArray = [];
+  for (let i = eyes[0]; i <= eyes[1]; i++) {
+    eyesArray.push(i);
+  }
+  return eyesArray;
+}
+
+function getFaceArray() {
+  const faceArray = [];
+  for (let i = faces[0]; i <= faces[1]; i++) {
+    faceArray.push(i);
+  }
+  return faceArray;
+}
+
+function getHairImg(hair: number) {
+  return `./resources/tiles/player/hair_${hair}.png`;
+}
+
+function getEyesImg(eyes: number) {
+  return `./resources/tiles/player/eyes_${eyes}.png`;
+}
+
+function getFaceImg(face: number) {
+  return `./resources/tiles/player/nose_mouth_${face}.png`;
+}
+
+function appearanceSelection() {
+  content.innerHTML = `
+  <div class="char-appearance-container">
+    <h1 class="appearance-select">${lang.choose_hair ?? "choose_hair"}</h1>
+    <div class="appearances">
+      ${getHairArray().map((hair: number) => {
+    return `<div  class="appearance-pick ${hair} ${player.hair === hair ? "selected" : ""}" onclick="changeHair(${hair})"><img src="${getHairImg(hair)}" alt="hair image ${hair}" ></div>`;
+  }).join("")}
+    </div>
+  </div>
+  <div class="char-appearance-container">
+  <h1 class="appearance-select">${lang.choose_eyes ?? "choose_eyes"}</h1>
+  <div class="appearances">
+    ${getEyesArray().map((eyes: number) => {
+    return `<div  class="appearance-pick ${eyes} ${player.eyes === eyes ? "selected" : ""}" onclick="changeEyes(${eyes})"><img src="${getEyesImg(eyes)}" alt="eyes image ${eyes}" ></div>`;
+  }).join("")}
+    </div>
+  </div>
+  <div class="char-appearance-container">
+    <h1 class="appearance-select">${lang.choose_face ?? "choose_face"}</h1>
+    <div class="appearances">
+      ${getFaceArray().map((face: number) => {
+    return `<div  class="appearance-pick ${face} ${player.face === face ? "selected" : ""}" onclick="changeFace(${face})"><img src="${getFaceImg(face)}" alt="face image ${face}" ></div>`;
+  }).join("")}
+    </div>
+  </div>
+  <div class="char-appearance-container">
+    <h1 class="appearance-select">${lang.choose_name ?? "choose_name"}</h1>
+    <input class="name-input" type="text" value="${player.name}" placeholder="Varien Loreanus" maxlength="24" oninput="changeName(this.value)">
+  </div>
+  <div class="continue-buttons">
+    <div class="blue-button no-anim ${canContinue() ? "" : "disabled"}" onclick="beginGame()">Confirm</div>
+    <div class="red-button no-anim" onclick="toggleStep()">Cancel</div>
+  </div>
+  `;
+}
+
+// creation.querySelector<HTMLInputElement>(".nameInput").addEventListener("keyup", (key) => {
+//   player.name = creation.querySelector<HTMLInputElement>(".nameInput").value;
+//   checkIfCanStartGame();
+// });
+
+function changeName(value: string) {
+  player.name = value;
+  if (canContinue()) {
+    document.querySelector(".continue-buttons .blue-button").classList.remove("disabled");
+  }
+  else {
+    document.querySelector(".continue-buttons .blue-button").classList.add("disabled");
+  }
+}
+
+function closeCharacterCreation() {
+  creation.style.opacity = "0";
+  setTimeout(() => { creation.style.display = "none"; }, 750);
+  gotoMainMenu(true);
+}
+
+function toggleStep() {
+  if (creationStep === "class-race") {
+    if (canContinue()) {
+      creationStep = "appearance";
+    }
+
+  }
+  else creationStep = "class-race";
+  characterCreation(false);
+}
 
 function beginGame() {
   player.updateTraits();
@@ -225,6 +352,26 @@ function beginGame() {
   }, 0);
 }
 
+function changeTrait(trait: string) {
+  if (traitPicks > 0) {
+    if (player.traits.findIndex((t: any) => t.id === trait) === -1) {
+      player.traits.push(traits[trait]);
+      traitPicks--;
+    }
+    else {
+      player.traits = player.traits.filter((t: any) => t.id !== trait);
+      traitPicks++;
+    }
+  }
+  else {
+    if (player.traits.findIndex((t: any) => t.id === trait) > -1) {
+      player.traits = player.traits.filter((t: any) => t.id !== trait);
+      traitPicks++;
+    }
+  }
+  characterCreation(false);
+}
+
 function checkIfCanStartGame() {
   let canStart = false;
   if (player.name.trim().length > 1 && player.classes.main) canStart = true;
@@ -237,88 +384,32 @@ function checkIfCanStartGame() {
   catch { }
 }
 
-function changeHair(e: MouseEvent) {
-  if (e.button === 0) {
-    if (player.hair + 1 <= hairs[1]) {
-      player.hair++;
-      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-      characterCreation(false);
-    }
-    else {
-      player.hair = hairs[0];
-      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-      characterCreation(false);
-    }
+function canContinue() {
+  if (creationStep === "class-race") {
+    if (!player.classes?.main?.id) return false;
+    if (traitPicks < 0 || traitPicks > 1) return false;
   }
-  else if (e.button === 2) {
-    if (player.hair - 1 >= hairs[0]) {
-      player.hair--;
-      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-      characterCreation(false);
-    }
-    else {
-      player.hair = hairs[1];
-      creation.querySelector(".hair").textContent = `hair ${player.hair}`;
-      characterCreation(false);
-    }
+  else {
+    if (player.name.trim().length <= 3 || player.name.length > 24) return false;
   }
+  return true;
 }
-function changeEyes(e: MouseEvent) {
-  if (e.button === 0) {
-    if (player.eyes + 1 <= eyes[1]) {
-      player.eyes++;
-      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-      characterCreation(false);
-    }
-    else {
-      player.eyes = eyes[0];
-      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-      characterCreation(false);
-    }
-  }
-  else if (e.button === 2) {
-    if (player.eyes - 1 >= eyes[0]) {
-      player.eyes--;
-      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-      characterCreation(false);
-    }
-    else {
-      player.eyes = eyes[1];
-      creation.querySelector(".eyes").textContent = `eyes ${player.eyes}`;
-      characterCreation(false);
-    }
-  }
+
+function changeHair(n: number) {
+  player.hair = n;
+  characterCreation(false);
 }
-function changeFace(e: MouseEvent) {
-  if (e.button === 0) {
-    if (player.face + 1 <= faces[1]) {
-      player.face++;
-      creation.querySelector(".face").textContent = `face ${player.face}`;
-      characterCreation(false);
-    }
-    else {
-      player.face = faces[0];
-      creation.querySelector(".face").textContent = `face ${player.face}`;
-      characterCreation(false);
-    }
-  }
-  else if (e.button === 2) {
-    if (player.face - 1 >= faces[0]) {
-      player.face--;
-      creation.querySelector(".face").textContent = `face ${player.face}`;
-      characterCreation(false);
-    }
-    else {
-      player.face = faces[1];
-      creation.querySelector(".face").textContent = `face ${player.face}`;
-      characterCreation(false);
-    }
-  }
+function changeEyes(n: number) {
+  player.eyes = n;
+  characterCreation(false);
+}
+function changeFace(n: number) {
+  player.face = n;
+  characterCreation(false);
 }
 
 function changeRace(race: any) {
-  player.race = race[0];
-  // @ts-ignore
+  player.race = race;
   player.raceEffect = raceEffects[player.race];
   characterCreation(false);
 }
@@ -336,8 +427,8 @@ function changeClass(_combatClass: any) {
 
 function changeSex(sex: string) {
   player.sex = sex;
-  document.querySelector(".genderWrapper .selected").classList.remove("selected");
-  document.querySelector(`.genderWrapper .${sex}`).classList.add("selected");
+  document.querySelector(".player-sex-clothes .selected").classList.remove("selected");
+  document.querySelector(`.player-sex-clothes .${sex}`).classList.add("selected");
   characterCreation(false);
   checkIfCanStartGame();
 }

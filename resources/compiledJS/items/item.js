@@ -192,4 +192,14 @@ function itemTT(item) {
     }
     return text;
 }
+function constructItem(item) {
+    if (item.type == "weapon")
+        return new Weapon(Object.assign({}, items[item.id]));
+    else if (item.type == "armor")
+        return new Armor(Object.assign({}, items[item.id]));
+    else if (item.type == "artifact")
+        return new Artifact(Object.assign({}, items[item.id]));
+    else if (item.type == "consumable")
+        return new Consumable(Object.assign({}, items[item.id]));
+}
 //# sourceMappingURL=item.js.map

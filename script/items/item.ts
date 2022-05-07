@@ -243,3 +243,10 @@ function itemTT(item: any) {
 
   return text;
 }
+
+function constructItem(item: any) {
+  if (item.type == "weapon") return new Weapon({ ...items[item.id] });
+  else if (item.type == "armor") return new Armor({ ...items[item.id] });
+  else if (item.type == "artifact") return new Artifact({ ...items[item.id] });
+  else if (item.type == "consumable") return new Consumable({ ...items[item.id] });
+}

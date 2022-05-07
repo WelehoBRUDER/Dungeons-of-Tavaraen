@@ -177,19 +177,19 @@ class PlayerCharacter extends Character {
         let cmdsEx = prk.commandsExecuted;
         prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
         if (!cmdsEx && !dontExecuteCommands) {
+          console.log("executing commands");
           Object.entries(prk.commands)?.forEach(cmd => { command(cmd); });
         }
-        prk.commandsExecuted = cmdsEx;
+        prk.commandsExecuted = true;
         this.perks[index] = { ...prk };
         prk.traits.forEach((stat: any) => {
-          let add = true;
-          player.traits.some((mod: PermanentStatModifier) => {
-            if (mod.id === stat.id) {
-              add = false;
-              return true;
-            }
-          });
-          if (add) this.traits.push(stat);
+          console.log(player.traits);
+          console.log(player.traits.findIndex((t: PermanentStatModifier) => t.id === stat.id));
+          if (player.traits.findIndex((t: PermanentStatModifier) => t.id === stat.id) !== -1) return;
+          else {
+            console.log(stat, "MITÄ VITTUUA");
+            this.traits.push({ ...stat });
+          }
         });
       });
       for (let i = this.perks.length - 1; i >= 0; i--) {

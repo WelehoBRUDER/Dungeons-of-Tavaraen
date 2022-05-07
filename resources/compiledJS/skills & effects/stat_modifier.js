@@ -246,7 +246,93 @@ const traits = {
         effects: {
             dexP: 20
         }
+    },
+    /* Starter trait choices */
+    enduring: {
+        id: "enduring",
+        effects: {
+            vitP: 10
+        }
+    },
+    strong: {
+        id: "strong",
+        effects: {
+            strP: 10
+        }
+    },
+    quick: {
+        id: "quick",
+        effects: {
+            dexP: 10
+        }
+    },
+    intelligent: {
+        id: "intelligent",
+        effects: {
+            intP: 10
+        }
+    },
+    stealthy: {
+        id: "stealthy",
+        effects: {
+            cunP: 10
+        }
+    },
+    lucky: {
+        id: "lucky",
+        effects: {
+            expGainP: 10
+        }
+    },
+    healthy: {
+        id: "healthy",
+        effects: {
+            hpMaxP: 10
+        }
+    },
+    wise: {
+        id: "wise",
+        effects: {
+            mpMaxP: 10
+        }
+    },
+    regenerating: {
+        id: "regenerating",
+        effects: {
+            regenHpP: 10
+        }
+    },
+    magical: {
+        id: "magical",
+        effects: {
+            regenMpP: 10
+        }
+    },
+    adrenaline: {
+        id: "adrenaline",
+        conditions: {
+            hp_less_than: 30,
+        },
+        effects: {
+            movementSpeedV: 15,
+            attackSpeedV: 15,
+            regenHpP: 15,
+            regenMpP: 15
+        }
+    },
+    confident: {
+        id: "confident",
+        conditions: {
+            hp_more_than: 80,
+            mp_more_than: 80
+        },
+        effects: {
+            hitChanceV: 10,
+            evasionV: 10,
+            damageP: 5
+        }
     }
+    /* End of starter trait choices */
 };
 class PermanentStatModifier {
     constructor(base) {
