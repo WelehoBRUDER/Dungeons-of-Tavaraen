@@ -87,6 +87,9 @@ const mainMenu = document.querySelector(".mainMenu");
 const menu = document.querySelector(".gameMenu");
 const dim = document.querySelector(".dim");
 const mainMenuButtons = mainMenu.querySelector(".menuButtons");
+const settingsBackground = document.querySelector(".settingsMenu");
+const settingsContent = settingsBackground.querySelector(".content");
+const settingsTopbar = settingsBackground.querySelector(".top-bar");
 function openGameMenu() {
     var _a;
     menu.textContent = "";
@@ -106,8 +109,8 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     const reverseOptions = [...menuOptions].reverse();
     if (!noDim) {
         setTimeout(() => { dim.style.height = "0%"; }, 5);
-        const settingsBackground = document.querySelector(".settingsMenu");
-        settingsBackground.textContent = "";
+        settingsContent.textContent = "";
+        settingsTopbar.style.height = "0px";
     }
     if (!keepMainMenu) {
         setTimeout(() => { mainMenu.style.display = "none"; }, 575);
@@ -145,8 +148,8 @@ window.addEventListener("keyup", (e) => {
     }
 });
 async function closeSettingsMenu() {
-    const settingsBackground = document.querySelector(".settingsMenu");
-    settingsBackground.textContent = "";
+    settingsContent.textContent = "";
+    settingsTopbar.style.height = "0px";
     state.optionsOpen = false;
     setTimeout(() => { dim.style.height = "0%"; }, 5);
     hideHover();
@@ -162,8 +165,8 @@ function gotoSettingsMenu(inMainMenu = false) {
     state.optionsOpen = true;
     if (!inMainMenu)
         closeGameMenu(true);
-    const settingsBackground = document.querySelector(".settingsMenu");
-    settingsBackground.textContent = "";
+    settingsTopbar.style.height = "32px";
+    settingsContent.textContent = "";
     for (let setting of menuSettings) {
         const container = document.createElement("div");
         if (setting.type == "toggle") {
@@ -192,7 +195,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                 tooltip(container, lang[setting.tooltip]);
             }
             container.append(text, toggleBox);
-            settingsBackground.append(container);
+            settingsContent.append(container);
         }
         else if (setting.type == "hotkey") {
             container.classList.add("hotkeySelection");
@@ -214,7 +217,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                 tooltip(container, lang[setting.tooltip]);
             }
             container.append(text, keyButton);
-            settingsBackground.append(container);
+            settingsContent.append(container);
         }
         else if (setting.type == "inputSlider") {
             container.classList.add("sliderContainer");
@@ -240,7 +243,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             };
             text.append(textVal);
             container.append(text, slider);
-            settingsBackground.append(container);
+            settingsContent.append(container);
         }
         else if (setting.type == "inputSliderReduced") {
             container.classList.add("sliderContainer");
@@ -267,7 +270,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             };
             text.append(textVal);
             container.append(text, slider);
-            settingsBackground.append(container);
+            settingsContent.append(container);
         }
         else if (setting.type == "languageSelection") {
             container.classList.add("languageSelection");
@@ -286,21 +289,25 @@ function gotoSettingsMenu(inMainMenu = false) {
                         }
                         catch (err) {
                             if (DEVMODE)
-                                displayText(`<c>red<c>${err} at line menu:260`);
+                                displayText(`<c>red<c>${err} at line menu:279`);
                         }
                     });
+                    settings.language = language;
                     lang = eval(language);
                     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
                     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
                     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
                     tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
                     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+                    tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+                    tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+                    tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
                     player.updateAbilities();
                     gotoSettingsMenu(true);
                 });
                 container.append(langButton);
             });
-            settingsBackground.append(container);
+            settingsContent.append(container);
         }
     }
 }
@@ -476,5 +483,61 @@ function calcLocalStorageUsedSpace() {
 }
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.substring(1);
+}
+function saveSettings() {
+    localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
+    localStorage.setItem("DOT_game_language", JSON.stringify(lang.language_id));
+}
+function saveSettingsFile() {
+    const saveData = (function () {
+        let link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style = "display: none";
+        return function (data, fileName) {
+            const json = JSON.stringify(data), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+    saveData(settings, "settings.json");
+}
+function loadSettingsFile() {
+    const fileInput = document.createElement("input");
+    fileInput.setAttribute('type', 'file');
+    fileInput.click();
+    fileInput.addEventListener("change", () => HandleSettingsFile(fileInput.files[0]));
+}
+function HandleSettingsFile(file) {
+    const reader = new FileReader();
+    let text = "";
+    // file reading finished successfully
+    reader.addEventListener('load', function (e) {
+        // contents of file in variable     
+        text = e.target.result;
+        FinishRead();
+    });
+    // read as text file
+    reader.readAsText(file);
+    function FinishRead() {
+        let Table = JSON.parse(text);
+        LoadSettings(file.name, Table);
+    }
+}
+function LoadSettings(name, settings) {
+    settings = new gameSettings(settings);
+    gotoSettingsMenu(state.titleScreen);
+    lang = eval(settings.language);
+    tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+    tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+    tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+    tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+    tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+    tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+    tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+    player.updateAbilities();
+    gotoSettingsMenu(true);
 }
 //# sourceMappingURL=menu.js.map

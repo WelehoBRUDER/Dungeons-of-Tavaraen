@@ -610,12 +610,15 @@ const finnish = {
   load_game: "Jatka peliä",
   delete_save: "Poista peli",
   create_save: "Luo uusi tallennus",
-  create_file: "Tallenna tiedostoon",
-  load_file: "Jatka peliä tiedostosta",
+  create_file: "Tallenna tiedostoon (lataa .txt tiedoston)",
+  load_file: "Jatka peliä tiedostosta (avaa valikon)",
   storage_used: "Tallennus tila",
   out_of_date: "\tVanhentunut \n\nTämä tallennus on vanhentunut, \nja täten ei välttämättä toimi oikein.",
   version: "Versio",
   old_save: "Vanha",
+  save_settings: "Tallenna asetukset",
+  save_settings_file: "Tallenna asetukset tiedostoon (lataa .json tiedoston)",
+  load_settings_file: "Lataa asetukset tiedostosta (avaa valikon)",
 
   // Grades
   common: "Yleinen",
@@ -1556,6 +1559,9 @@ const english = {
   out_of_date: "\tOut of date \n\nThis save is out of date, \nand thus may not work anymore.",
   version: "Version",
   old_save: "Old",
+  save_settings: "Save settings",
+  save_settings_file: "Save settings to file (downloads a .json file)",
+  load_settings_file: "Load settings from file (opens prompt)",
 
   // Grades
   common: "Common",

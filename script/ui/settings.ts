@@ -25,6 +25,7 @@ class gameSettings {
   hotkey_interact: string;
   hotkey_journal: string;
   hotkey_codex: string;
+  language: string;
   constructor(base: gameSettings) {
     this.log_enemy_movement = base.log_enemy_movement || false;
     this.toggle_minimap = base.toggle_minimap || true;
@@ -52,6 +53,7 @@ class gameSettings {
     this.hotkey_interact = base.hotkey_interact || " ";
     this.hotkey_journal = base.hotkey_journal || "j";
     this.hotkey_codex = base.hotkey_codex || "y";
+    this.language = base.language || "english";
   }
 }
 
@@ -82,6 +84,7 @@ let settings = new gameSettings({
   hotkey_open_world_messages: "Enter",
   hotkey_journal: "j",
   hotkey_codex: "y",
+  language: "english"
 });
 
 const state = {

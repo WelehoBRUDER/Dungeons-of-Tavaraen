@@ -1,3 +1,13 @@
+# 1.1.3 ~ 14.5.2022
+
+### Patch
+
+## New Additions
+
+## Fixes & Tweaks
+
+- Improved settings menu.
+
 # 1.1.2 ~ 7.5.2022
 
 ### Patch

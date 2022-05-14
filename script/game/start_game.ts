@@ -494,6 +494,9 @@ function initGame() {
   tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
   tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
   tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+  tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+  tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+  tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
   setTimeout(() => document.querySelector<HTMLDivElement>(".loading").style.display = "none", 0);
 }
 

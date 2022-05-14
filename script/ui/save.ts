@@ -311,17 +311,17 @@ function createNewSaveGame() {
 function saveToFile(input: string) {
   player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
   timePlayedNow = performance.now();
-  var saveData = (function () {
-    let a = document.createElement("a") as any;
-    document.body.appendChild(a);
-    a.style = "display: none";
+  const saveData = (function () {
+    let link = document.createElement("a") as any;
+    document.body.appendChild(link);
+    link.style = "display: none";
     return function (data: any, fileName: string) {
-      var json = JSON.stringify(data),
+      const json = JSON.stringify(data),
         blob = new Blob([json], { type: "octet/stream" }),
         url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
+      link.href = url;
+      link.download = fileName;
+      link.click();
       window.URL.revokeObjectURL(url);
     };
   }());

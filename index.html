@@ -204,7 +204,21 @@
 
     <div class="dim"></div>
     <div class="gameMenu"></div>
-    <div class="settingsMenu"></div>
+    <div class="settingsMenu">
+      <div class="top-bar">
+        <div class="save saveButton" onclick="saveSettings()">
+          <img src="resources/icons/save_game.png" alt="" class="src">
+        </div>
+        <div class="saveFile saveButton" onclick="saveSettingsFile()">
+          <img src="resources/icons/save_file.png" alt="" class="src">
+        </div>
+        <div class="loadFile saveButton" onclick="loadSettingsFile()">
+          <img src="resources/icons/load_file.png" alt="" class="src">
+        </div>
+        <div class="closeWindowButton" onclick="closeSettingsMenu()"><span>X</span></div>
+      </div>
+      <div class="content"></div>
+    </div>
     <div class="savesMenu">
       <div class="topBar">
         <input type="text" class="saveName" name="saveName"><br><br>
