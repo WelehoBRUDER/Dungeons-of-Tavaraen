@@ -328,7 +328,7 @@ function saveToFile(input) {
         document.body.appendChild(link);
         link.style = "display: none";
         return function (data, fileName) {
-            const json = JSON.stringify(data), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
+            const json = JSON.stringify(data, null, 2), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
             link.href = url;
             link.download = fileName;
             link.click();

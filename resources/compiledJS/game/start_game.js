@@ -480,6 +480,7 @@ function initGame() {
     tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+    loadMods();
     setTimeout(() => document.querySelector(".loading").style.display = "none", 0);
 }
 document.addEventListener("DOMContentLoaded", initGame);

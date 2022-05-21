@@ -316,7 +316,7 @@ function saveToFile(input: string) {
     document.body.appendChild(link);
     link.style = "display: none";
     return function (data: any, fileName: string) {
-      const json = JSON.stringify(data),
+      const json = JSON.stringify(data, null, 2),
         blob = new Blob([json], { type: "octet/stream" }),
         url = window.URL.createObjectURL(blob);
       link.href = url;

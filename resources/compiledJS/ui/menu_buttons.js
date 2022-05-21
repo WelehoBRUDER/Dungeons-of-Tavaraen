@@ -31,6 +31,10 @@ const mainButtons = [
         action: () => gotoSaveMenu(true)
     },
     {
+        id: "menu_mods",
+        action: () => gotoMods()
+    },
+    {
         id: "menu_options",
         action: () => gotoSettingsMenu(true)
     },
