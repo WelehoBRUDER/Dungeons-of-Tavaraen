@@ -38,6 +38,12 @@ body {
   }
 }
 
+.texture-sheet {
+  position: absolute;
+  pointer-events: none;
+  display: none;
+}
+
 * {
   color: #fff;
   scrollbar-width: none;

@@ -1,8 +1,11 @@
-# 1.1.3 ~ 14.5.2022
+# 1.1.3 ~ 22.5.2022
 
-### Patch
+### Update
 
 ## New Additions
+
+- Added modding support!<br>
+  -> [Modding Guide](https://github.com/WelehoBRUDER/Dungeons-of-Tavaraen#modding-guide) <-
 
 ## Fixes & Tweaks
 

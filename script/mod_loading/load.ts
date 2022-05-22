@@ -15,6 +15,10 @@ async function loadMods() {
     const JSONmod = await fetch(`${modPath}/mod.json`);
     const load: any = {};
     load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
+    load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
+    load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
+    load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
+    load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
     load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
     load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
     load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
@@ -25,11 +29,16 @@ async function loadMods() {
       loadModFile(path, mod, func);
     });
   });
+  loadTextures();
   lang = eval(settings.language);
 }
 
 const namesFromPaths = {
   "items.js": ["items"],
+  "enemies.js": ["enemies"],
+  "abilities.js": ["abilities"],
+  "status_effects.js": ["statusEffects"],
+  "traits.js": ["traits"],
   "aa_localisation.js": ["english", "finnish"],
   "codex_localisation.js": ["codexLang"],
   "dialog_localisation.js": ["dialogLang"],
@@ -65,7 +74,45 @@ async function loadModFile(path: string, modName: string, insertFunction: Functi
 function applyModItems(mod: string) {
   const itemsFromMod = eval(`${mod}_items`);
   Object.entries(itemsFromMod).forEach(([itemName, item]: any) => {
-    items[itemName] = { ...item };
+    let src = item.img;
+    if (src.startsWith("/")) {
+      src = `../../mods/${mod}${src}`;
+    }
+    items[itemName] = { ...item, img: src };
+  });
+}
+
+function applyModEnemies(mod: string) {
+  const enemiesFromMod = eval(`${mod}_enemies`);
+  Object.entries(enemiesFromMod).forEach(([enemyName, enemy]: any) => {
+    let src = enemy.img;
+    if (src.startsWith("/")) {
+      src = `../../mods/${mod}${src}`;
+    }
+    enemies[enemyName] = { ...enemy, img: src };
+  });
+}
+
+function applyModAbilities(mod: string) {
+  const abilitiesFromMod = eval(`${mod}_abilities`);
+  Object.entries(abilitiesFromMod).forEach(([abilityName, ability]: any) => {
+    let src = ability.img;
+    if (src.startsWith("/")) {
+      src = `../../mods/${mod}${src}`;
+    }
+    abilities[abilityName] = { ...ability, icon: src };
+  });
+}
+function applyModStatEffects(mod: string) {
+  const effectsFromMods = eval(`${mod}_statusEffects`);
+  Object.entries(effectsFromMods).forEach(([effectName, effect]: any) => {
+    statusEffects[effectName] = { ...effect };
+  });
+}
+function applyModTraits(mod: string) {
+  const traitsFromMod = eval(`${mod}_traits`);
+  Object.entries(traitsFromMod).forEach(([traitName, trait]: any) => {
+    traits[traitName] = { ...trait };
   });
 }
 
@@ -91,6 +138,30 @@ function applyModLocalisationGeneral(mod: string) {
   }
 }
 
-function applyModLocalisation() {
-  // TODO
+function applyModLocalisation(mod: string) {
+  let codexMod, dialogMod, questMod;
+  try {
+    codexMod = eval(`${mod}_codexLang`);
+    dialogMod = eval(`${mod}_dialogLang`);
+    questMod = eval(`${mod}_questLang`);
+  }
+  catch { }
+  if (codexMod) {
+    Object.entries(codexMod).forEach(([key, text]: any) => {
+      codexLang[key] = text;
+    }
+    );
+  }
+  if (dialogMod) {
+    Object.entries(dialogMod).forEach(([key, text]: any) => {
+      dialogLang[key] = text;
+    }
+    );
+  }
+  if (questMod) {
+    Object.entries(questMod).forEach(([key, text]: any) => {
+      questLang[key] = text;
+    }
+    );
+  }
 }

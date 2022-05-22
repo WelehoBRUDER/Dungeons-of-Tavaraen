@@ -4,9 +4,8 @@
       "format": "expanded",
       "extensionName": ".css",
       "savePath": "/resources/compiledCSS"
-  },
+    }
   ],
-  "liveSassCompile.settings.autoprefix": [
-  
-  ]
+  "liveSassCompile.settings.autoprefix": [],
+  "liveServer.settings.port": 5501
 }

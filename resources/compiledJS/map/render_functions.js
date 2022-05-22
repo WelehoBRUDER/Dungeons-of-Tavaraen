@@ -24,7 +24,7 @@ function renderEntireMap(map) {
             // @ts-expect-error
             const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
             if (sprite) {
-                baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+                baseCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
             }
             if (tile.isWall && settings.draw_wall_outlines) {
                 const tileNorth = tiles[+((_j = (_h = map.base) === null || _h === void 0 ? void 0 : _h[mapOffsetStartY + y - 1]) === null || _j === void 0 ? void 0 : _j[mapOffsetStartX + x])];
@@ -78,7 +78,7 @@ function renderEntireMap(map) {
                 }
             }
             if (clutterSprite) {
-                baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+                baseCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
             }
         }
     }
@@ -88,8 +88,8 @@ function renderEntireMap(map) {
         if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
             const shrine = document.querySelector(".sprites .shrineTile");
             const shrineLit = document.querySelector(".sprites .shrineLitTile");
-            var tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             if (((_b = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _b === void 0 ? void 0 : _b.cords.x) == checkpoint.cords.x && ((_c = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _c === void 0 ? void 0 : _c.cords.y) == checkpoint.cords.y)
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
             else
@@ -102,8 +102,8 @@ function renderEntireMap(map) {
         if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
             if (!lootedChest) {
                 const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
-                var tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                let tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                let tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
             }
         }
@@ -112,8 +112,8 @@ function renderEntireMap(map) {
         var _a;
         if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
             const message = document.querySelector(".messageTile");
-            var tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
         }
     });
@@ -121,8 +121,8 @@ function renderEntireMap(map) {
         var _a;
         if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
-            var tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
         }
     });
@@ -164,17 +164,18 @@ function renderEntireMap(map) {
 }
 function renderEnemyModel(enemy, index, spriteSize) {
     var _a;
-    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    let tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    let tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const canvas = document.createElement("canvas");
     // @ts-ignore
     canvas.classList = `enemy${index} layer`;
     enemy.index = index;
     const ctx = canvas.getContext("2d");
-    const enemyImg = document.querySelector(`.sprites .${enemy.sprite}`);
+    //const enemyImg = <HTMLImageElement>document.querySelector(`.sprites .${enemy.sprite}`);
+    const enemySprite = enemies[enemy.id].spriteMap;
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    if (enemyImg) {
+    if (enemySprite) {
         /* Render hp bar */
         const hpbg = document.querySelector(".hpBg");
         const hpbar = document.querySelector(".hpBar");
@@ -183,7 +184,7 @@ function renderEnemyModel(enemy, index, spriteSize) {
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         /* Render enemy on top of hp bar */
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, enemySprite.x, enemySprite.y, 128, 128, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         if (((_a = enemy.questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1) {
             ctx.font = `${spriteSize / 1.9}px Arial`;
             ctx.fillStyle = "goldenrod";
@@ -204,30 +205,30 @@ function renderEnemyModel(enemy, index, spriteSize) {
     }
     enemyLayers.append(canvas);
 }
-function renderSummonModel(enemy, index, spriteSize) {
+function renderSummonModel(summon, index, spriteSize) {
     var _a;
-    var tileX = (enemy.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (enemy.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    let tileX = (summon.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    let tileY = (summon.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     const canvas = document.createElement("canvas");
     // @ts-ignore
     canvas.classList = `summon${index} layer`;
     const ctx = canvas.getContext("2d");
     summonLayers.append(canvas);
-    const enemyImg = document.querySelector(`.sprites .${enemy.sprite}`);
+    const summonSprite = summons[summon.id].spriteMap;
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    if (enemyImg && (((_a = sightMap[enemy.cords.y]) === null || _a === void 0 ? void 0 : _a[enemy.cords.x]) == "x")) {
+    if (summonSprite && (((_a = sightMap[summon.cords.y]) === null || _a === void 0 ? void 0 : _a[summon.cords.x]) == "x")) {
         /* Render hp bar */
         const hpbg = document.querySelector(".hpBg");
         const hpbar = document.querySelector(".hpBarAlly");
         const hpborder = document.querySelector(".hpBorder");
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, enemy.hpRemain() * spriteSize / 100, spriteSize);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, summon.hpRemain() * spriteSize / 100, spriteSize);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
         /* Render enemy on top of hp bar */
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(enemyImg, tileX, tileY, spriteSize, spriteSize);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, summonSprite.x, summonSprite.y, 128, 128, tileX, tileY, spriteSize, spriteSize);
         let statCount = 0;
-        enemy.statusEffects.forEach((effect) => {
+        summon.statusEffects.forEach((effect) => {
             if (statCount > 4)
                 return;
             let img = new Image(32, 32);
@@ -242,23 +243,23 @@ function renderSummonModel(enemy, index, spriteSize) {
 }
 function renderCharacterModel(npc, spriteSize) {
     const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
-    var tileX = (npc.currentCords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (npc.currentCords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    let tileX = (npc.currentCords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    let tileY = (npc.currentCords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     if (charSprite) {
         baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
     }
 }
 function renderItemOnMap(item, spriteSize, sightMap) {
     var _a;
-    var tileX = (item.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    var tileY = (item.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
-    const itemSprite = item.itm.spriteMap;
+    let tileX = (item.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    let tileY = (item.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    const itemSprite = items[item.itm.id].spriteMap;
     if (((_a = sightMap[item.cords.y]) === null || _a === void 0 ? void 0 : _a[item.cords.x]) == "x") {
         mapDataCtx.shadowColor = "#ffd900";
         mapDataCtx.shadowBlur = 6;
         mapDataCtx.shadowOffsetX = 0;
         mapDataCtx.shadowOffsetY = 0;
-        mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(spriteMap_items, itemSprite.x, itemSprite.y, 128, 128, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+        mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(textureAtlas, itemSprite.x, itemSprite.y, 128, 128, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
     }
 }
 function renderRow(map, translateX, translateY) {
@@ -306,7 +307,7 @@ function renderRow(map, translateX, translateY) {
         const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
         const fog = { x: 256, y: 0 };
         if (sprite) {
-            baseCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+            baseCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
         }
         if (tile.isWall && settings.draw_wall_outlines) {
             const tileNorth = tiles[+((_j = (_h = map.base) === null || _h === void 0 ? void 0 : _h[mapOffsetStartY + y - 1]) === null || _j === void 0 ? void 0 : _j[mapOffsetStartX + x])];
@@ -361,7 +362,7 @@ function renderRow(map, translateX, translateY) {
         }
         if (clutterSprite) {
             baseCtx.globalCompositeOperation = "source-over";
-            baseCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+            baseCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
         }
     }
     baseCtx.globalCompositeOperation = "source-over";
@@ -370,8 +371,8 @@ function renderRow(map, translateX, translateY) {
         if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
             const shrine = document.querySelector(".sprites .shrineTile");
             const shrineLit = document.querySelector(".sprites .shrineLitTile");
-            var tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (checkpoint.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             if (((_b = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _b === void 0 ? void 0 : _b.cords.x) == checkpoint.cords.x && ((_c = player === null || player === void 0 ? void 0 : player.respawnPoint) === null || _c === void 0 ? void 0 : _c.cords.y) == checkpoint.cords.y)
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(shrineLit, tileX, tileY, spriteSize, spriteSize);
             else
@@ -384,8 +385,8 @@ function renderRow(map, translateX, translateY) {
         if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
             if (!lootedChest) {
                 const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
-                var tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-                var tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+                let tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+                let tileY = (chest.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
                 baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
             }
         }
@@ -394,8 +395,8 @@ function renderRow(map, translateX, translateY) {
         var _a;
         if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
             const message = document.querySelector(".messageTile");
-            var tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
         }
     });
@@ -403,8 +404,8 @@ function renderRow(map, translateX, translateY) {
         var _a;
         if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
-            var tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-            var tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+            let tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+            let tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
             baseCtx === null || baseCtx === void 0 ? void 0 : baseCtx.drawImage(entranceSprite, tileX, tileY, spriteSize, spriteSize);
         }
     });

@@ -349,7 +349,7 @@ var currentZoomBG = 1;
 const background = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
 background.addEventListener('mousedown', action1);
 background.addEventListener('mousemove', action2);
-background.addEventListener("wheel", changeZoomLevelBG);
+background.addEventListener("wheel", changeZoomLevelBG, { passive: true });
 // @ts-expect-error
 function changeZoomLevelBG(e) {
   if (e.deltaY > 0) {

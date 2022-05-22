@@ -184,7 +184,7 @@ const tiles = [
 const clutters = [
   {
     name: "Nothing",
-    img: "resources/tiles/void.png",
+    img: "resources/tiles/no_texture.png",
     sprite: ".tileVOID",
     isWall: false,
     spriteMap: null

@@ -166,13 +166,13 @@ function createItems(inventory: Array<any>, context: string = "PLAYER_INVENTORY"
   if (context == "PLAYER_SELLING") {
     itemsList.addEventListener("wheel", deltaY => {
       sellingScroll = itemsList.scrollTop;
-    });
+    }, {passive: true});
     itemsList.scrollBy(sellingScroll, sellingScroll);
   }
   else {
     itemsList.addEventListener("wheel", deltaY => {
       invScroll = itemsList.scrollTop;
-    });
+    }, {passive: true});
     itemsList.scrollBy(invScroll, invScroll);
   }
   container.append(itemsList, itemsListBar);

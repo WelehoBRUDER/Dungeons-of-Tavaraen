@@ -1,7 +1,7 @@
 "use strict";
 class Item {
     constructor(base) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g;
         this.id = base.id;
         // @ts-ignore
         const baseItem = Object.assign({}, items[this.id]);
@@ -21,6 +21,8 @@ class Item {
         this.mainTitle = (_d = baseItem.mainTitle) !== null && _d !== void 0 ? _d : true;
         this.stacks = (_e = baseItem.stacks) !== null && _e !== void 0 ? _e : false;
         this.indexInBaseArray = Object.keys(items).findIndex((item) => item == this.id);
+        this.equippedSprite = (_f = baseItem.equippedSprite) !== null && _f !== void 0 ? _f : null;
+        this.equippedSpriteFemale = (_g = baseItem.equippedSpriteFemale) !== null && _g !== void 0 ? _g : null;
     }
 }
 const grades = {

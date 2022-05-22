@@ -78,6 +78,7 @@ class Enemy extends Character {
   questSpawn?: any;
   indexInBaseArray?: number;
   index?: number;
+  spriteMap?: { x: number, y: number; };
   constructor(base: enemy) {
     super(base);
     const defaultModel: any = { ...enemies[base.id] };

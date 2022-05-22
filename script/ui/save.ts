@@ -1,6 +1,6 @@
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop);
+document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   hideHover();
   saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];

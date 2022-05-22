@@ -1,7 +1,7 @@
 "use strict";
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop);
+document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     hideHover();

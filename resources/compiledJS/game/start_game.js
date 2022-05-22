@@ -458,21 +458,22 @@ function classTT(data) {
 for (let i = 0; i < 30; i++) {
     player.addItem(Object.assign({}, randomProperty(items)));
 }
-function initGame() {
+async function initGame() {
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
     if (options) {
         settings = new gameSettings(options);
-        lang = eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
+        lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
     }
     else
         settings = new gameSettings(settings);
     state.menuOpen = true;
     state.titleScreen = true;
-    gotoMainMenu(true);
-    createStaticMap();
-    resizeCanvas();
-    renderMinimap(maps[currentMap]);
-    renderAreaMap(maps[currentMap]);
+    await gotoMainMenu(true);
+    document.querySelector(".loading-text").textContent = "Loading mods...";
+    await loadMods();
+    document.querySelector(".loading-text").textContent = "Updating player...";
+    await player.updateAbilities();
+    document.querySelector(".loading-text").textContent = "Creating tooltips....";
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -480,7 +481,20 @@ function initGame() {
     tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
-    loadMods();
+    try {
+        document.querySelector(".loading-text").textContent = "Loading textures...";
+        await loadTextures();
+        document.querySelector(".loading-text").textContent = "Creating static maps...";
+        await createStaticMap();
+        document.querySelector(".loading-text").textContent = "Rendering map...";
+        resizeCanvas();
+        renderMinimap(maps[currentMap]);
+        renderAreaMap(maps[currentMap]);
+    }
+    catch (err) {
+        console.warn("Failed renderming map", err);
+    }
+    document.querySelector(".loading-text").textContent = "Finishing load";
     setTimeout(() => document.querySelector(".loading").style.display = "none", 0);
 }
 document.addEventListener("DOMContentLoaded", initGame);

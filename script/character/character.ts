@@ -78,6 +78,7 @@ interface characterObject {
   isRooted?: Function;
   inventory?: any;
   addEffect?: Function;
+  spriteMap?: tileObject;
 }
 
 interface statusObject {
@@ -150,6 +151,7 @@ class Character {
   getSpeed?: Function;
   doNormalAttack?: Function;
   addEffect?: Function;
+  spriteMap?: tileObject;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -166,6 +168,7 @@ class Character {
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
     this.speed = base.speed ? { ...base.speed } : { ...baseSpeed };
+    this.spriteMap = base.spriteMap ? { ...base.spriteMap } : null;
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 

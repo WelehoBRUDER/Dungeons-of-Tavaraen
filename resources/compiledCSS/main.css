@@ -31,6 +31,12 @@ body {
   width: 0;
 }
 
+.texture-sheet {
+  position: absolute;
+  pointer-events: none;
+  display: none;
+}
+
 * {
   color: #fff;
   scrollbar-width: none;

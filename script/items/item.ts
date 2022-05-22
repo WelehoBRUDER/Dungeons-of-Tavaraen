@@ -14,6 +14,8 @@ interface itemClass {
   amount?: number;
   stacks?: boolean;
   indexInBaseArray?: number;
+  equippedSprite?: tileObject;
+  equippedSpriteFemale?: tileObject;
 }
 
 class Item {
@@ -34,6 +36,8 @@ class Item {
   amount?: number;
   stacks?: boolean;
   indexInBaseArray?: number;
+  equippedSprite?: tileObject;
+  equippedSpriteFemale?: tileObject;
   constructor(base: itemClass) {
     this.id = base.id;
     // @ts-ignore
@@ -54,6 +58,8 @@ class Item {
     this.mainTitle = baseItem.mainTitle ?? true;
     this.stacks = baseItem.stacks ?? false;
     this.indexInBaseArray = Object.keys(items).findIndex((item: string) => item == this.id);
+    this.equippedSprite = baseItem.equippedSprite ?? null;
+    this.equippedSpriteFemale = baseItem.equippedSpriteFemale ?? null;
   }
 }
 

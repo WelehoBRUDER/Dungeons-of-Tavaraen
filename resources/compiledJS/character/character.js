@@ -23,6 +23,7 @@ class Character {
         this.scale = (_g = base.scale) !== null && _g !== void 0 ? _g : 1;
         this.allModifiers = {};
         this.speed = base.speed ? Object.assign({}, base.speed) : Object.assign({}, baseSpeed);
+        this.spriteMap = base.spriteMap ? Object.assign({}, base.spriteMap) : null;
         if (Object.keys(this.armor).length < 1)
             this.armor = { physical: 0, magical: 0, elemental: 0 };
         this.getStats = (withConditions = true) => {

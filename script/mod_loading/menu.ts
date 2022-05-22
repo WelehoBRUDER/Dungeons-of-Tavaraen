@@ -7,7 +7,6 @@ function gotoMods() {
   modsWindow.style.display = "flex";
   modsWindowList.innerHTML = "";
   modsWindowInfo.innerHTML = "";
-  console.log("Loading mods...");
   console.log(modsInformation);
   modsInformation.forEach((mod: ModInfo) => {
     const modItem = document.createElement("div");
@@ -25,4 +24,8 @@ function gotoMods() {
     });
     modsWindowList.appendChild(modItem);
   });
+}
+
+function closeModsMenu() {
+  modsWindow.style.display = "none";
 }
