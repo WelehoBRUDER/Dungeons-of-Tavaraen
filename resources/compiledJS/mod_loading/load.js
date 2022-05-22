@@ -2,7 +2,7 @@
 ;
 const modsInformation = [];
 async function loadMods() {
-    const JSONdata = await fetch("../../mods_config.json");
+    const JSONdata = await fetch("mods_config.json");
     const modsConfig = await JSONdata.json();
     const list = modsConfig.list;
     list.forEach(async (mod) => {
@@ -24,7 +24,6 @@ async function loadMods() {
             loadModFile(path, mod, func);
         });
     });
-    loadTextures();
     lang = eval(settings.language);
 }
 const namesFromPaths = {

@@ -422,8 +422,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: calc(480px * var(--ui-scale));
-  height: calc(360px * var(--ui-scale));
+  width: calc(500px * var(--ui-scale));
+  height: calc(440px * var(--ui-scale));
   margin-top: calc(-180px * var(--ui-scale));
   margin-left: calc(-240px * var(--ui-scale));
   box-sizing: border-box;
@@ -434,19 +434,21 @@
   overflow: hidden;
   overflow-y: auto;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   z-index: 99;
 }
 .warningWindow pre {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80%;
+  position: relative;
+  width: 90%;
   height: auto;
+  padding: 3px;
   max-height: 90%;
   overflow: hidden;
   overflow-y: auto;
   border: 2px solid rgb(60, 60, 60);
-  transform: translateX(-50%) translateY(-50%);
 }
 .warningWindow pre span {
   margin: 0;
@@ -456,10 +458,14 @@
   line-height: 24px;
   white-space: pre-wrap;
   word-wrap: break-word;
+  user-select: all;
 }
 .warningWindow pre img {
   width: 34px;
   vertical-align: middle;
+}
+.warningWindow button.red-button {
+  height: auto;
 }
 
 .mainMenu {

@@ -404,5 +404,10 @@ function warningMessage(txt: string) {
   warning.style.transform = "scale(1)";
   warning.innerHTML = "";
   warning.append(textSyntax(txt));
-  setTimeout(() => { warning.style.transform = "scale(0)"; }, 5000);
+  warning.innerHTML += `<button class="red-button" onclick="closeWarning()">OK</div>`;
+}
+
+function closeWarning() {
+  let warning = document.querySelector<HTMLDivElement>(".warningWindow");
+  warning.style.transform = "scale(0)";
 }

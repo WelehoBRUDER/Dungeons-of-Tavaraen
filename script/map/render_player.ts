@@ -80,36 +80,36 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
   if (!playerModel.helmet?.coversHair || noClothes) ctx?.drawImage(hairModel, x, y, size, size);
   try {
     if (!noClothes) {
-      if (player.helmet?.sprite && !settings["hide_helmet"]) {
-        const helmetModel = sex === "Female" ? player.helmet.equippedSpriteFemale : player.helmet.equippedSprite;
+      if (playerModel.helmet?.sprite && !settings["hide_helmet"]) {
+        const helmetModel = sex === "Female" ? items[playerModel.helmet.id].equippedSpriteFemale : items[playerModel.helmet.id].equippedSprite;
         ctx?.drawImage(textureAtlas, helmetModel.x, helmetModel.y, 128, 128, x, y, size, size);
       }
-      if (player.gloves?.sprite) {
-        const glovesModel = sex === "Female" ? player.gloves.equippedSpriteFemale : player.gloves.equippedSprite;
+      if (playerModel.gloves?.sprite) {
+        const glovesModel = sex === "Female" ? items[playerModel.gloves.id].equippedSpriteFemale : items[playerModel.gloves.id].equippedSprite;
         ctx?.drawImage(textureAtlas, glovesModel.x, glovesModel.y, 128, 128, x, y, size, size);
       }
-      if (player.boots?.sprite) {
-        const bootsModel = sex === "Female" ? player.boots.equippedSpriteFemale : player.boots.equippedSprite;
+      if (playerModel.boots?.sprite) {
+        const bootsModel = sex === "Female" ? items[playerModel.boots.id].equippedSpriteFemale : items[playerModel.boots.id].equippedSprite;
         ctx?.drawImage(textureAtlas, bootsModel.x, bootsModel.y, 128, 128, x, y, size, size);
       }
-      if (!player.legs?.sprite || (sex === "Female" && !player.chest?.sprite)) {
-        const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(player.sex)}`);
+      if (!playerModel.legs?.sprite || (sex === "Female" && !playerModel.chest?.sprite)) {
+        const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(playerModel.sex)}`);
         ctx?.drawImage(leggings, x, y, size, size);
       }
-      if (player.legs?.sprite) {
-        const leggingsModel = sex === "Female" ? player.legs.equippedSpriteFemale : player.legs.equippedSprite;
+      if (playerModel.legs?.sprite) {
+        const leggingsModel = sex === "Female" ? items[playerModel.legs.id].equippedSpriteFemale : items[playerModel.legs.id].equippedSprite;
         ctx?.drawImage(textureAtlas, leggingsModel.x, leggingsModel.y, 128, 128, x, y, size, size);
       }
-      if (player.chest?.sprite) {
-        const chestModel = sex === "Female" ? player.chest.equippedSpriteFemale : player.chest.equippedSprite;
+      if (playerModel.chest?.sprite) {
+        const chestModel = sex === "Female" ? items[playerModel.chest.id].equippedSpriteFemale : items[playerModel.chest.id].equippedSprite;
         ctx?.drawImage(textureAtlas, chestModel.x, chestModel.y, 128, 128, x, y, size, size);
       }
-      if (player.weapon?.sprite) {
-        const weaponModel = player.weapon.equippedSprite;
+      if (playerModel.weapon?.sprite) {
+        const weaponModel = items[playerModel.weapon.id].equippedSprite;
         ctx?.drawImage(textureAtlas, weaponModel.x, weaponModel.y, 128, 128, x, y, size, size);
       }
-      if (player.offhand?.sprite) {
-        const offhandModel = player.offhand.equippedSprite;
+      if (playerModel.offhand?.sprite) {
+        const offhandModel = items[playerModel.offhand.id].equippedSprite;
         ctx?.drawImage(textureAtlas, offhandModel.x, offhandModel.y, 128, 128, x, y, size, size);
       }
     }

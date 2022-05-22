@@ -469,8 +469,15 @@ async function initGame() {
     state.menuOpen = true;
     state.titleScreen = true;
     await gotoMainMenu(true);
-    document.querySelector(".loading-text").textContent = "Loading mods...";
-    await loadMods();
+    try {
+        document.querySelector(".loading-text").textContent = "Loading mods...";
+        await loadMods();
+    }
+    catch (_a) {
+        warningMessage("<i>resources/icons/error.png<i>Could not load mods.\nThis is most likely caused by CORS blocking local file access.\nIf you wish to play with mods, you must set up a simple http server.\n Find out how here: §<c>cyan<c>https://github.com/http-party/http-server");
+    }
+    document.querySelector(".loading-text").textContent = "Loading textures...";
+    await loadTextures();
     document.querySelector(".loading-text").textContent = "Updating player...";
     await player.updateAbilities();
     document.querySelector(".loading-text").textContent = "Creating tooltips....";
@@ -482,8 +489,6 @@ async function initGame() {
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
     try {
-        document.querySelector(".loading-text").textContent = "Loading textures...";
-        await loadTextures();
         document.querySelector(".loading-text").textContent = "Creating static maps...";
         await createStaticMap();
         document.querySelector(".loading-text").textContent = "Rendering map...";

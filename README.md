@@ -8,7 +8,7 @@
 2. [Features](#features)
 3. [Modding Guide](#modding-guide)<br>
    3.1 [What is modding?](#what-is-modding)<br>
-   3.2 [Installing mods](#installing-mods)
+   3.2 [Installing mods](#installing-mods)<br>
    3.3 [Creating a mod](#creating-a-mod)
 
 ## Introduction

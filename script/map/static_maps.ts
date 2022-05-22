@@ -56,7 +56,6 @@ let staticMap_normal: Array<number[]> = [];
 let staticMap_flying: Array<number[]> = [];
 let sightMap_empty: Array<number[]> = [];
 async function createStaticMap() {
-  await loadTextures();
   staticMap_normal = maps[currentMap].base.map((yv: any, y: number) => yv.map((xv: any, x: number) => {
     if (tiles[xv].isWall || tiles[xv].isLedge) return 1;
     return 0;
