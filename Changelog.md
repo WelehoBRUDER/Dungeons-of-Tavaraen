@@ -1,6 +1,11 @@
-# 1.1.3 ~ 22.5.2022
+# 1.2.0 ~ 24.5.2022
 
-### Update
+### Major Update
+
+## CAUTION
+
+It's highly recommended to start a new game for this update.
+The new changes can be gamebreaking.
 
 ## New Additions
 
@@ -10,6 +15,7 @@
 ## Fixes & Tweaks
 
 - Improved settings menu.
+- Changed the way flags are stored, this can break older saves.
 
 # 1.1.2 ~ 7.5.2022
 

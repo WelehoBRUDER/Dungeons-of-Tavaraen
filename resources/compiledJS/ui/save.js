@@ -104,7 +104,9 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             timePlayedNow = performance.now();
             loadingScreen.style.display = "flex";
             loadingText.textContent = "Loading save...";
+            document.querySelector(".loading-bar-fill").style.width = "0%";
             await helper.sleep(5);
+            document.querySelector(".loading-bar-fill").style.width = "10%";
             let fm;
             let pl;
             let fe;
@@ -134,6 +136,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 pl.updateTraits();
                 pl.updatePerks(true);
                 pl.updateAbilities();
+                document.querySelector(".loading-bar-fill").style.width = "40%";
             }
             catch (err) {
                 console.error(err.message);
@@ -154,13 +157,16 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             movementCooldown = false;
             state.inCombat = false;
             console.log("map", fm);
+            document.querySelector(".loading-bar-fill").style.width = "70%";
             player.updateTraits();
             player.updatePerks(true);
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
+            document.querySelector(".loading-bar-fill").style.width = "85%";
             helper.purgeDeadEnemies();
             helper.killAllQuestEnemies();
+            document.querySelector(".loading-bar-fill").style.width = "90%";
             spawnQuestMonsters();
             convertEnemytraits();
             closeGameMenu();
@@ -170,6 +176,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             updateUI();
             handleEscape();
             closeAllWindowsAndMenus();
+            document.querySelector(".loading-bar-fill").style.width = "100%";
             loadingScreen.style.display = "none";
         });
         deleteGame.addEventListener("click", () => {

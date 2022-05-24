@@ -19,14 +19,17 @@ async function loadMods() {
     load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
     load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
     load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
+    load.modFlags = { path: `${modPath}/flags.js`, func: applyModFlags };
+    load.modCharacters = { path: `${modPath}/characters.js`, func: applyModCharacters };
+    load.modInteractions = { path: `${modPath}/character_interactions.js`, func: applyModInteractions };
     load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
     load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
     load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
     load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
     const modConfig: ModInfo = await JSONmod.json();
     modsInformation.push(modConfig);
-    Object.values(load).forEach(({ path, func }: any) => {
-      loadModFile(path, mod, func);
+    Object.values(load).forEach(async ({ path, func }: any) => {
+      await loadModFile(path, mod, func);
     });
   });
   lang = eval(settings.language);
@@ -38,11 +41,13 @@ const namesFromPaths = {
   "abilities.js": ["abilities"],
   "status_effects.js": ["statusEffects"],
   "traits.js": ["traits"],
+  "flags.js": ["flags"],
+  "characters.js": ["NPCcharacters", "NPCInventories"],
+  "character_interactions.js": ["characterInteractions"],
   "aa_localisation.js": ["english", "finnish"],
   "codex_localisation.js": ["codexLang"],
   "dialog_localisation.js": ["dialogLang"],
   "quest_localisation.js": ["questLang"],
-
 } as any;
 
 const replacePaths = (path: string) => {
@@ -63,7 +68,7 @@ async function loadModFile(path: string, modName: string, insertFunction: Functi
     const script = document.createElement("script");
     script.innerHTML = fileData;
     document.head.appendChild(script);
-    insertFunction(modName);
+    await insertFunction(modName);
   } catch (error) {
     console.warn(`Failed loading file for mod: ${modName}`);
     console.log(error);
@@ -77,7 +82,11 @@ function applyModItems(mod: string) {
     if (src.startsWith("/")) {
       src = `../../mods/${mod}${src}`;
     }
-    items[itemName] = { ...item, img: src };
+    let src2 = item.sprite;
+    if (src2.startsWith("/")) {
+      src2 = `../../mods/${mod}${src2}`;
+    }
+    items[itemName] = { ...item, img: src, sprite: src2 };
   });
 }
 
@@ -118,11 +127,8 @@ function applyModTraits(mod: string) {
 function applyModLocalisationGeneral(mod: string) {
   let finLoc;
   let engLoc;
-  try {
-    finLoc = eval(`${mod}_finnish`);
-    engLoc = eval(`${mod}_english`);
-  }
-  catch { }
+  try { finLoc = eval(`${mod}_finnish`); } catch { }
+  try { engLoc = eval(`${mod}_english`); } catch { }
   if (engLoc) {
     Object.entries(engLoc).forEach(([key, text]: any) => {
       english[key] = text;
@@ -139,12 +145,9 @@ function applyModLocalisationGeneral(mod: string) {
 
 function applyModLocalisation(mod: string) {
   let codexMod, dialogMod, questMod;
-  try {
-    codexMod = eval(`${mod}_codexLang`);
-    dialogMod = eval(`${mod}_dialogLang`);
-    questMod = eval(`${mod}_questLang`);
-  }
-  catch { }
+  try { codexMod = eval(`${mod}_codexLang`); } catch { }
+  try { dialogMod = eval(`${mod}_dialogLang`); } catch { }
+  try { questMod = eval(`${mod}_questLang`); } catch { }
   if (codexMod) {
     Object.entries(codexMod).forEach(([key, text]: any) => {
       codexLang[key] = text;
@@ -163,4 +166,34 @@ function applyModLocalisation(mod: string) {
     }
     );
   }
+}
+
+function applyModFlags(mod: string) {
+  const flagsFromMod = eval(`${mod}_flags`);
+  flags.concat(flagsFromMod);
+}
+
+function applyModCharacters(mod: string) {
+  let modChars, modInvs;
+  try { modChars = eval(`${mod}_NPCcharacters`); } catch { }
+  try { modInvs = eval(`${mod}_NPCInventories`); } catch { }
+  if (modChars) {
+    Object.entries(modChars).forEach(([key, char]: any) => {
+      NPCcharacters[key] = { ...char };
+    }
+    );
+  }
+  if (modInvs) {
+    Object.entries(modInvs).forEach(([key, inv]: any) => {
+      NPCInventories[key] = { ...inv };
+    }
+    );
+  }
+}
+
+function applyModInteractions(mod: string) {
+  const interactionsFromMod = eval(`${mod}_characterInteractions`);
+  Object.entries(interactionsFromMod).forEach(([key, interaction]: any) => {
+    characterInteractions[key] = { ...interaction };
+  });
 }

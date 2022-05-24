@@ -327,6 +327,7 @@ function changeMap(entrance) {
         return;
     }
     ;
+    document.querySelector(".loading-bar-fill").style.width = "0%";
     currentMap = id;
     player.cords = Object.assign({}, entrance.path.cords);
     turnOver = true;
@@ -342,11 +343,15 @@ function loadMap(map) {
 }
 async function executeLoad() {
     loadingText.textContent = "Loading minimap assets...";
+    document.querySelector(".loading-bar-fill").style.width = "10%";
     loadMiscMaps().then(() => {
         setLoadingText("Loading static map assets...").then(() => {
+            document.querySelector(".loading-bar-fill").style.width = "46%";
             loadStaticMaps().then(() => {
                 setLoadingText("Loading UI...").then(() => {
+                    document.querySelector(".loading-bar-fill").style.width = "64%";
                     loadUI().then(() => {
+                        document.querySelector(".loading-bar-fill").style.width = "80%";
                         loadingScreen.style.display = "none";
                         modifyCanvas(true);
                         renderMinimap(maps[currentMap]);

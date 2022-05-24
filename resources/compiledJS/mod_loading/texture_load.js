@@ -3,14 +3,16 @@ const texturesPerRow = 16;
 const textureAtlas = document.querySelector(".texture-sheet");
 const textureAtlasCtx = textureAtlas.getContext("2d");
 async function loadTextures() {
-    const textures = getTextures();
+    console.log("start load textures");
+    const textures = await getTextures();
     textureAtlas.width = texturesPerRow * 128;
     textureAtlas.height = textures.length * 128;
-    await textures.map(async (row, y) => {
+    textures.map(async (row, y) => {
         row.map(async (texture, x) => {
             const img = new Image();
             img.src = await texture.src;
             img.onload = async () => {
+                console.log(x, y);
                 textureAtlasCtx.drawImage(img, x * 128, y * 128, 128, 128);
             };
         });
@@ -19,7 +21,7 @@ async function loadTextures() {
         resolve(true);
     });
 }
-function getTextures() {
+async function getTextures() {
     const textures = [[]];
     let perRow = 0;
     Object.values(staticTiles).forEach(({ img }, id) => {
@@ -35,7 +37,6 @@ function getTextures() {
         addTexture(img);
     });
     Object.values(enemies).forEach(({ id, img }) => {
-        console.log(img);
         enemies[id].spriteMap = { x: perRow * 128, y: (textures.length - 1) * 128 };
         addTexture(img);
     });
@@ -58,7 +59,7 @@ function getTextures() {
         }
     });
     function addTexture(src) {
-        if (perRow >= texturesPerRow) {
+        if (perRow > texturesPerRow) {
             textures.push([]);
             perRow = 0;
         }

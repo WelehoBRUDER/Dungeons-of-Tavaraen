@@ -331,6 +331,7 @@ function LoadSlot(data: any) {
   timePlayedNow = performance.now();
   loadingScreen.style.display = "flex";
   loadingText.textContent = "Loading save...";
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "0%";
   let foundMap;
   let _pl;
   let _itmData;
@@ -387,6 +388,7 @@ function LoadSlot(data: any) {
   player.updateAbilities();
   helper.purgeDeadEnemies();
   helper.killAllQuestEnemies();
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "100%";
   spawnQuestMonsters();
   handleEscape();
   closeGameMenu();
