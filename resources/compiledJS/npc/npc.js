@@ -41,7 +41,7 @@ class Npc {
         this.greeting = base.greeting;
         this.pronounSet = base.pronounSet;
         this.currentMap = base.currentMap;
-        this.currentCords = Object.assign({}, base.currentCords);
+        this.currentCords = { ...base.currentCords };
         this.conditionalMaps = base.conditionalMaps;
         this.conditionalCords = base.conditionalCords;
     }

@@ -132,7 +132,7 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
             data.x += 1;
         }
         if (fieldMap[data.y][data.x] == v)
-            cords.push(Object.assign({}, data));
+            cords.push({ ...data });
         if (data.y == end.y && data.x == end.x)
             break siksakki;
     }
@@ -184,7 +184,7 @@ function generateArrowPath(start, end, distanceOnly = false) {
         player: false,
         summon: false
     };
-    const finalPath = [Object.assign({}, arrow)];
+    const finalPath = [{ ...arrow }];
     var rounderX = negativeX ? Math.ceil : Math.floor;
     var rounderY = negativeY ? Math.ceil : Math.floor;
     for (let i = 0; i < 100; i++) {
@@ -219,7 +219,7 @@ function generateArrowPath(start, end, distanceOnly = false) {
             arrow.player = true;
             arrow.blocked = true;
         }
-        finalPath.push(Object.assign({}, arrow));
+        finalPath.push({ ...arrow });
         arrow.enemy = false;
         if (rounderX(arrow.x) == end.x && rounderY(arrow.y) == end.y)
             break;

@@ -4,14 +4,14 @@ class Armor extends Item {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         super(base);
         // @ts-ignore
-        const baseItem = Object.assign({}, items[this.id]);
+        const baseItem = { ...items[this.id] };
         this.name = (_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : baseItem.name;
         this.level = (_b = base.level) !== null && _b !== void 0 ? _b : 0;
         this.maxLevel = (_c = baseItem.maxLevel) !== null && _c !== void 0 ? _c : 5;
-        this.armor = (_e = leveledStats(Object.assign({}, baseItem.armor), (_d = this.level) !== null && _d !== void 0 ? _d : 0)) !== null && _e !== void 0 ? _e : {};
-        this.resistances = (_g = leveledStats(Object.assign({}, baseItem.resistances), (_f = this.level) !== null && _f !== void 0 ? _f : 0)) !== null && _g !== void 0 ? _g : {};
-        this.stats = (_h = Object.assign({}, baseItem.stats)) !== null && _h !== void 0 ? _h : {};
-        this.commands = (_j = Object.assign({}, baseItem.commands)) !== null && _j !== void 0 ? _j : {};
+        this.armor = (_e = leveledStats({ ...baseItem.armor }, (_d = this.level) !== null && _d !== void 0 ? _d : 0)) !== null && _e !== void 0 ? _e : {};
+        this.resistances = (_g = leveledStats({ ...baseItem.resistances }, (_f = this.level) !== null && _f !== void 0 ? _f : 0)) !== null && _g !== void 0 ? _g : {};
+        this.stats = (_h = { ...baseItem.stats }) !== null && _h !== void 0 ? _h : {};
+        this.commands = (_j = { ...baseItem.commands }) !== null && _j !== void 0 ? _j : {};
         this.coversHair = (_k = baseItem.coversHair) !== null && _k !== void 0 ? _k : false;
         this.rolledStats = base.rolledStats || [];
         if (setPrice > 0)

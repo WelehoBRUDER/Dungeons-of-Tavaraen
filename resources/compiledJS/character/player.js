@@ -24,18 +24,18 @@ class PlayerCharacter extends Character {
         this.inventory = (_s = [...base.inventory]) !== null && _s !== void 0 ? _s : [];
         this.isDead = (_t = base.isDead) !== null && _t !== void 0 ? _t : false;
         this.grave = (_u = base.grave) !== null && _u !== void 0 ? _u : null;
-        this.respawnPoint = (_v = Object.assign({}, base.respawnPoint)) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
+        this.respawnPoint = (_v = { ...base.respawnPoint }) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
         this.gold = (_w = base.gold) !== null && _w !== void 0 ? _w : 0;
         this.perks = (_x = [...base.perks]) !== null && _x !== void 0 ? _x : [];
         this.sp = (_y = base.sp) !== null && _y !== void 0 ? _y : 0;
         this.pp = (_z = base.pp) !== null && _z !== void 0 ? _z : 0;
         this.usedShrines = (_0 = [...base.usedShrines]) !== null && _0 !== void 0 ? _0 : [];
         this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
-        this.classes = (_2 = Object.assign({}, base.classes)) !== null && _2 !== void 0 ? _2 : {};
-        this.oldCords = (_3 = Object.assign({}, base.oldCords)) !== null && _3 !== void 0 ? _3 : this.cords;
-        this.flags = (_4 = Object.assign({}, base.flags)) !== null && _4 !== void 0 ? _4 : [];
+        this.classes = (_2 = { ...base.classes }) !== null && _2 !== void 0 ? _2 : {};
+        this.oldCords = (_3 = { ...base.oldCords }) !== null && _3 !== void 0 ? _3 : this.cords;
+        this.flags = (_4 = { ...base.flags }) !== null && _4 !== void 0 ? _4 : [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
-        this.entitiesEverEncountered = base.entitiesEverEncountered ? Object.assign({}, base.entitiesEverEncountered) : { items: {}, enemies: {}, summons: {} };
+        this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
         this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
         this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
@@ -59,7 +59,7 @@ class PlayerCharacter extends Character {
             return Math.floor((15 + val) * mod);
         };
         this.drop = (itm, fromContextMenu = false) => {
-            const item = Object.assign({}, itm);
+            const item = { ...itm };
             this.inventory.splice(itm.index, 1);
             createDroppedItem(this.cords, item);
             renderInventory();
@@ -72,21 +72,18 @@ class PlayerCharacter extends Character {
             this.perks.forEach((prk, index) => {
                 var _a;
                 let cmdsEx = prk.commandsExecuted;
-                prk = new perk(Object.assign({}, perksArray[prk.tree]["perks"][prk.id]));
+                prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
                 if (!cmdsEx && !dontExecuteCommands) {
                     console.log("executing commands");
                     (_a = Object.entries(prk.commands)) === null || _a === void 0 ? void 0 : _a.forEach(cmd => { command(cmd); });
                 }
                 prk.commandsExecuted = true;
-                this.perks[index] = Object.assign({}, prk);
+                this.perks[index] = { ...prk };
                 prk.traits.forEach((stat) => {
-                    console.log(player.traits);
-                    console.log(player.traits.findIndex((t) => t.id === stat.id));
                     if (player.traits.findIndex((t) => t.id === stat.id) !== -1)
                         return;
                     else {
-                        console.log(stat, "MITÄ VITTUUA");
-                        this.traits.push(Object.assign({}, stat));
+                        this.traits.push({ ...stat });
                     }
                 });
             });
@@ -141,7 +138,7 @@ class PlayerCharacter extends Character {
                 renderInventory();
                 return;
             }
-            const itm = Object.assign({}, item);
+            const itm = { ...item };
             let canEquip = true;
             if (itm.requiresStats) {
                 const stats = this.getStats();
@@ -166,7 +163,7 @@ class PlayerCharacter extends Character {
                 shiftOffhand = false;
             else
                 this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
-            this[itm.slot] = Object.assign({}, itm);
+            this[itm.slot] = { ...itm };
             Object.entries(item.commands).forEach(cmd => command(cmd));
             if (item.twoHanded) {
                 if (shiftOffhand) {
@@ -244,7 +241,7 @@ class PlayerCharacter extends Character {
                 const key = set[0];
                 const amnt = set[1];
                 if (amnt > 1) {
-                    let curSet = Object.assign({}, artifactSets[key]);
+                    let curSet = { ...artifactSets[key] };
                     Object.entries(curSet.twoPieceEffect).forEach(stat => {
                         const statKey = stat[0];
                         const statVal = stat[1];
@@ -287,7 +284,7 @@ class PlayerCharacter extends Character {
                 spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
             if (goldLoss > 0)
                 spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
-            this.grave = { cords: Object.assign({}, this.cords), xp: xpLoss, gold: goldLoss, map: currentMap };
+            this.grave = { cords: { ...this.cords }, xp: xpLoss, gold: goldLoss, map: currentMap };
             this.usedShrines = [];
             setTimeout(modifyCanvas, 300);
             //displayText("PAINA [R] JA RESPAWNAAT");
@@ -296,7 +293,7 @@ class PlayerCharacter extends Character {
         };
         this.getBaseStats = () => {
             var _a, _b, _c, _d, _e, _f;
-            const vals = Object.assign({}, this.stats);
+            const vals = { ...this.stats };
             const mods = {};
             if ((_a = this.raceEffect) === null || _a === void 0 ? void 0 : _a.modifiers) {
                 Object.entries((_b = this.raceEffect) === null || _b === void 0 ? void 0 : _b.modifiers).forEach((eff) => {
@@ -345,10 +342,10 @@ class PlayerCharacter extends Character {
                     }
                 });
                 if (!wasAdded)
-                    this.inventory.push(Object.assign({}, itm));
+                    this.inventory.push({ ...itm });
             }
             else {
-                this.inventory.push(Object.assign({}, itm));
+                this.inventory.push({ ...itm });
             }
             let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b[itm.id];
             if (encounter < 1 || !encounter) {
@@ -383,7 +380,6 @@ class PlayerCharacter extends Character {
             }
             else {
                 let damages = ((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.id) ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
-                console.log(damages);
                 const stats = this.getStats();
                 damages.map(([key, num]) => {
                     var _a;
@@ -392,8 +388,16 @@ class PlayerCharacter extends Character {
                     mod *= this.allModifiers["damageP"];
                     let bonus = 0;
                     bonus += num * stats[(_a = this.weapon) === null || _a === void 0 ? void 0 : _a.statBonus] / 50;
+                    if (!this.weapon)
+                        bonus = num * stats["str"] / 50;
                     if (isNaN(val))
                         val = 0;
+                    if (isNaN(mod))
+                        mod = 1;
+                    if (isNaN(bonus))
+                        bonus = 0;
+                    if (isNaN(num))
+                        num = 0;
                     console.log(Math.floor((num + val + bonus) * mod));
                     dmg += Math.floor((num + val + bonus) * mod);
                 });
@@ -494,10 +498,10 @@ let player = new PlayerCharacter({
     canFly: false,
     perks: [],
     abilities: [
-        new Ability(Object.assign({}, abilities.attack), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
+        new Ability({ ...abilities.attack }, dummy),
+        new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
+        new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
+        new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
     ],
     traits: [
         { id: "resilience_of_the_lone_wanderer" },

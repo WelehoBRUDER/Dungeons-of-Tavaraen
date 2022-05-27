@@ -64,6 +64,9 @@ interface tileObject {
 
 baseCanvas.addEventListener("wheel", changeZoomLevel, { passive: true });
 function changeZoomLevel({ deltaY }: any) {
+  if (zoomLevels.indexOf(currentZoom) === -1) {
+    currentZoom = Math.round(currentZoom);
+  }
   if (deltaY > 0) {
     currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
   } else {

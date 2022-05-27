@@ -44,12 +44,12 @@ const emptyModel = {
     hair: 1,
     eyes: 1,
     face: 1,
-    weapon: new Weapon(Object.assign({}, items.stick)),
-    chest: new Armor(Object.assign({}, items.raggedShirt)),
+    weapon: new Weapon({ ...items.stick }),
+    chest: new Armor({ ...items.raggedShirt }),
     helmet: {},
     gloves: {},
-    legs: new Armor(Object.assign({}, items.raggedPants)),
-    boots: new Armor(Object.assign({}, items.raggedBoots)),
+    legs: new Armor({ ...items.raggedPants }),
+    boots: new Armor({ ...items.raggedBoots }),
     offhand: {},
     artifact1: {},
     artifact2: {},
@@ -59,10 +59,10 @@ const emptyModel = {
     canFly: false,
     perks: [],
     abilities: [
-        new Ability(Object.assign({}, abilities.attack), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.retreat), { equippedSlot: 0 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.first_aid), { equippedSlot: 1 }), dummy),
-        new Ability(Object.assign(Object.assign({}, abilities.defend), { equippedSlot: 2 }), dummy),
+        new Ability({ ...abilities.attack }, dummy),
+        new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
+        new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
+        new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
     ],
     traits: [
         {
@@ -97,48 +97,48 @@ const eyes = [1, 5];
 const faces = [1, 5];
 const classEquipments = {
     fighter: {
-        weapon: new Weapon(Object.assign({}, items.chippedBlade)),
-        chest: new Armor(Object.assign({}, items.raggedShirt)),
-        helmet: new Armor(Object.assign({}, items.leatherHelmet)),
+        weapon: new Weapon({ ...items.chippedBlade }),
+        chest: new Armor({ ...items.raggedShirt }),
+        helmet: new Armor({ ...items.leatherHelmet }),
         gloves: {},
-        legs: new Armor(Object.assign({}, items.raggedPants)),
-        boots: new Armor(Object.assign({}, items.raggedBoots)),
-        offhand: new Armor(Object.assign({}, items.woodenShield)),
+        legs: new Armor({ ...items.raggedPants }),
+        boots: new Armor({ ...items.raggedBoots }),
+        offhand: new Armor({ ...items.woodenShield }),
     },
     barbarian: {
-        weapon: new Weapon(Object.assign({}, items.chippedAxe)),
-        chest: new Armor(Object.assign({}, items.leatherChest)),
+        weapon: new Weapon({ ...items.chippedAxe }),
+        chest: new Armor({ ...items.leatherChest }),
         helmet: {},
-        gloves: new Armor(Object.assign({}, items.leatherBracers)),
-        legs: new Armor(Object.assign({}, items.raggedPants)),
-        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        gloves: new Armor({ ...items.leatherBracers }),
+        legs: new Armor({ ...items.raggedPants }),
+        boots: new Armor({ ...items.raggedBoots }),
         offhand: {},
     },
     sorcerer: {
-        weapon: new Weapon(Object.assign({}, items.apprenticeWand)),
-        chest: new Armor(Object.assign({}, items.raggedShirt)),
+        weapon: new Weapon({ ...items.apprenticeWand }),
+        chest: new Armor({ ...items.raggedShirt }),
         helmet: {},
-        gloves: new Armor(Object.assign({}, items.raggedGloves)),
-        legs: new Armor(Object.assign({}, items.raggedPants)),
-        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        gloves: new Armor({ ...items.raggedGloves }),
+        legs: new Armor({ ...items.raggedPants }),
+        boots: new Armor({ ...items.raggedBoots }),
         offhand: {},
     },
     rogue: {
-        weapon: new Weapon(Object.assign({}, items.dagger)),
-        chest: new Armor(Object.assign({}, items.raggedShirt)),
-        helmet: new Armor(Object.assign({}, items.raggedHood)),
-        gloves: new Armor(Object.assign({}, items.raggedGloves)),
-        legs: new Armor(Object.assign({}, items.raggedPants)),
-        boots: new Armor(Object.assign({}, items.raggedBoots)),
-        offhand: new Armor(Object.assign({}, items.parryingDagger)),
+        weapon: new Weapon({ ...items.dagger }),
+        chest: new Armor({ ...items.raggedShirt }),
+        helmet: new Armor({ ...items.raggedHood }),
+        gloves: new Armor({ ...items.raggedGloves }),
+        legs: new Armor({ ...items.raggedPants }),
+        boots: new Armor({ ...items.raggedBoots }),
+        offhand: new Armor({ ...items.parryingDagger }),
     },
     ranger: {
-        weapon: new Weapon(Object.assign({}, items.huntingBow)),
-        chest: new Armor(Object.assign({}, items.raggedShirt)),
-        helmet: new Armor(Object.assign({}, items.woolHat)),
-        gloves: new Armor(Object.assign({}, items.raggedGloves)),
-        legs: new Armor(Object.assign({}, items.raggedPants)),
-        boots: new Armor(Object.assign({}, items.raggedBoots)),
+        weapon: new Weapon({ ...items.huntingBow }),
+        chest: new Armor({ ...items.raggedShirt }),
+        helmet: new Armor({ ...items.woolHat }),
+        gloves: new Armor({ ...items.raggedGloves }),
+        legs: new Armor({ ...items.raggedPants }),
+        boots: new Armor({ ...items.raggedBoots }),
         offhand: {},
     }
 };
@@ -147,8 +147,8 @@ var clothToggleCreation = false;
 let creationStep = "class-race";
 function characterCreation(withAnimations = true) {
     if (withAnimations) {
-        const copiedModel = JSON.parse(JSON.stringify(Object.assign({}, emptyModel)));
-        player = new PlayerCharacter(Object.assign({}, copiedModel));
+        const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
+        player = new PlayerCharacter({ ...copiedModel });
         creation.style.display = "flex";
         traitPicks = 2;
         creationStep = "class-race";
@@ -406,7 +406,7 @@ function changeClass(_combatClass) {
     Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq) => {
         let id = eq[0];
         let val = eq[1];
-        player[id] = Object.assign({}, val);
+        player[id] = { ...val };
     });
     characterCreation(false);
     checkIfCanStartGame();
@@ -456,7 +456,7 @@ function classTT(data) {
     return txt;
 }
 for (let i = 0; i < 30; i++) {
-    player.addItem(Object.assign({}, randomProperty(items)));
+    player.addItem({ ...randomProperty(items) });
 }
 async function initGame() {
     document.querySelector(".loading-bar-fill").style.width = "0%";

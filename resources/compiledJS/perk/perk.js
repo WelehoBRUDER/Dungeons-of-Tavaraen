@@ -21,9 +21,9 @@ class perk {
         this.id = base.id;
         let base_ = perksArray[base.tree || tree]["perks"][this.id];
         if (!base_ && this.id) {
-            base_ = Object.assign({}, dummyPerk);
+            base_ = { ...dummyPerk };
         }
-        const basePerk = Object.assign({}, base_);
+        const basePerk = { ...base_ };
         if (!basePerk) {
             console.error("Perk invalid! Most likely id is wrong!");
             console.log(this);
@@ -31,8 +31,8 @@ class perk {
         }
         this.name = basePerk.name;
         this.desc = basePerk.desc;
-        this.commands = (_a = Object.assign({}, basePerk.commands)) !== null && _a !== void 0 ? _a : {};
-        this.effects = (_b = Object.assign({}, basePerk.effects)) !== null && _b !== void 0 ? _b : {};
+        this.commands = (_a = { ...basePerk.commands }) !== null && _a !== void 0 ? _a : {};
+        this.effects = (_b = { ...basePerk.effects }) !== null && _b !== void 0 ? _b : {};
         this.commandsExecuted = (_c = base.commandsExecuted) !== null && _c !== void 0 ? _c : false;
         this.pos = basePerk.pos;
         this.relative_to = (_d = basePerk.relative_to) !== null && _d !== void 0 ? _d : "";
@@ -71,7 +71,7 @@ class perk {
         this.buy = () => {
             var _a, _b;
             if (this.available() && !this.bought()) {
-                player.perks.push(new perk(Object.assign({}, this)));
+                player.perks.push(new perk({ ...this }));
                 player.pp--;
                 if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != ((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.sub) === null || _b === void 0 ? void 0 : _b.perkTree)) {
                     player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
@@ -327,7 +327,7 @@ function perkTT(perk) {
 }
 function statModifTT(statModif) {
     var _a;
-    statModif = new PermanentStatModifier(Object.assign({}, statModif));
+    statModif = new PermanentStatModifier({ ...statModif });
     let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${(_a = lang[statModif.id + "_name"]) !== null && _a !== void 0 ? _a : statModif.id}<c>white<c>'\n`;
     if (statModif.desc)
         txt += `§<c>silver<c><f>13px<f>"${lang[statModif.desc]}"\n§`;

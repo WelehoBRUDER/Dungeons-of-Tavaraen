@@ -38,7 +38,7 @@ let helper = {
         return new Promise(resolve => setTimeout(resolve, ms));
     },
     trimPlayerObjectForSaveFile: function (playerObject) {
-        const trimmed = Object.assign({}, playerObject);
+        const trimmed = { ...playerObject };
         trimmed.inventory.forEach((itm, index) => {
             if (itm.stackable || itm.type === "consumable")
                 trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
@@ -67,7 +67,7 @@ let helper = {
         trimmed.traits.forEach((trait, index) => {
             trimmed.traits[index] = { id: trait.id };
         });
-        return Object.assign({}, trimmed);
+        return { ...trimmed };
     },
     purgeDeadEnemies: function () {
         fallenEnemies.forEach(deadFoe => {
@@ -86,7 +86,7 @@ let helper = {
     reviveAllDeadEnemies: function () {
         fallenEnemies.forEach(deadFoe => {
             const map = maps[deadFoe.spawnMap];
-            const foe = new Enemy(Object.assign(Object.assign({}, enemies[deadFoe.id]), { cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level }));
+            const foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
             foe.restore();
             map.enemies.push(foe);
         });

@@ -73,10 +73,10 @@ class Ability {
         // @ts-ignorep
         const baseAbility = abilities[this.id];
         let statusModifiers = {};
-        (_a = baseAbility.statusesUser) === null || _a === void 0 ? void 0 : _a.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
-        (_b = baseAbility.statusesEnemy) === null || _b === void 0 ? void 0 : _b.forEach((str) => statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, str)));
+        (_a = baseAbility.statusesUser) === null || _a === void 0 ? void 0 : _a.forEach((str) => statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, str) });
+        (_b = baseAbility.statusesEnemy) === null || _b === void 0 ? void 0 : _b.forEach((str) => statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, str) });
         if (baseAbility.summon_status)
-            statusModifiers = Object.assign(Object.assign({}, statusModifiers), getAbiStatusModifiers(user, base.id, baseAbility.summon_status));
+            statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, baseAbility.summon_status) };
         this.name = baseAbility.name;
         this.mana_cost = (_c = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif)) !== null && _c !== void 0 ? _c : 0;
         this.health_cost = (_d = Math.floor((baseAbility.health_cost + values.health_cost.value) * values.health_cost.modif)) !== null && _d !== void 0 ? _d : 0;

@@ -57,7 +57,7 @@ function buffOrHeal(character, ability) {
     }
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect(Object.assign({}, statusEffects[status]), ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
             if (character.id === "player")
                 _Effect.last.current -= 1;
             character.addEffect(_Effect);
@@ -99,42 +99,21 @@ function buffOrHeal(character, ability) {
 }
 /* This function needs to be updated at some point */
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var _a, _b, _c, _d, _e;
     if (targetCords) {
         maps[currentMap].enemies.forEach((en) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
             target = en; });
     }
-    const attackerStats = attacker.getStats();
-    const targetResists = target.getResists();
-    const targetArmor = target.getArmor();
-    const critRolled = attackerStats.critChance >= helper.random(100, 0);
-    const hitChance = attacker.getHitchance().chance;
-    const evasion = target.getHitchance().evasion;
-    const evade = (evasion + helper.random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + helper.random(hitChance * 0.3, hitChance * -0.6) + 20);
-    let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
     if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
             attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
     }
-    if (attacker.id == "player") {
-        if (parseInt((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.range) > 2) {
-            if ((_b = player.allModifiers) === null || _b === void 0 ? void 0 : _b.rangedDamageP)
-                attackTypeDamageModifier += (_c = player.allModifiers) === null || _c === void 0 ? void 0 : _c.rangedDamageP;
-        }
-        else if (ability.mana_cost > 0) {
-            if ((_d = player.allModifiers) === null || _d === void 0 ? void 0 : _d.spellDamageP)
-                attackTypeDamageModifier += (_e = player.allModifiers) === null || _e === void 0 ? void 0 : _e.spellDamageP;
-        }
-        else {
-            if ((_f = player.allModifiers) === null || _f === void 0 ? void 0 : _f.meleeDamageP)
-                attackTypeDamageModifier += (_g = player.allModifiers) === null || _g === void 0 ? void 0 : _g.meleeDamageP;
-        }
-    }
-    if (((_h = ability.statusesEnemy) === null || _h === void 0 ? void 0 : _h.length) > 0) {
+    const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
+    if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
-            const _Effect = new statEffect(Object.assign({}, statusEffects[status]), ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
             const resist = target.getStatusResists()[_Effect.type];
             const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
@@ -145,9 +124,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             }
         });
     }
-    if (((_j = ability.statusesUser) === null || _j === void 0 ? void 0 : _j.length) > 0) {
+    if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect(Object.assign({}, statusEffects[status]), ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
             if (attacker.id === "player")
                 _Effect.last.current -= 1;
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
@@ -169,65 +148,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         });
     }
     if (target.isFoe) {
-        let dmg = 0;
-        if (!ability.damages) {
-            let _damages = (_k = attacker.weapon) === null || _k === void 0 ? void 0 : _k.damages;
-            if (!_damages && attacker.id == "player")
-                _damages = attacker.fistDmg();
-            else if (!_damages)
-                _damages = attacker.damages;
-            Object.entries(_damages).forEach((value) => {
-                var _a, _b, _c;
-                const key = value[0];
-                const num = value[1];
-                let _dmg = num; // temp damage
-                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += attacker.allModifiers["damageV"];
-                mod *= attacker.allModifiers["damageP"];
-                val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-                mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-                val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-                mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
-                let bonus = 0;
-                if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
-                    bonus = ability.damages[key];
-                bonus += num * attackerStats[((_c = (_b = attacker.weapon) === null || _b === void 0 ? void 0 : _b.statBonus) !== null && _c !== void 0 ? _c : attacker.firesProjectile) ? "dex" : "str"] / 50;
-                let penetration = ability.resistance_penetration / 100;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                if (isNaN(val))
-                    val = 0;
-                _dmg = Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                if (attackTypeDamageModifier > 0)
-                    _dmg *= attackTypeDamageModifier;
-                _dmg = Math.floor(_dmg * resistance);
-                dmg += _dmg;
-            });
-        }
-        else {
-            Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
-                const key = value[0];
-                const num = value[1];
-                let _dmg = num; // temp damage
-                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += attacker.allModifiers["damageV"];
-                mod *= attacker.allModifiers["damageP"];
-                val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-                mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-                val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-                mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
-                let bonus = 0;
-                bonus += num * attackerStats[ability.stat_bonus] / 50;
-                let penetration = ability.resistance_penetration / 100;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                if (attackTypeDamageModifier > 0)
-                    _dmg *= attackTypeDamageModifier;
-                _dmg = Math.floor(_dmg * resistance);
-                dmg += _dmg;
-            });
-        }
         setTimeout((paskaFixi) => {
             if (!enemyIndex(target.cords))
                 return;
@@ -247,11 +167,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             target.tempAggro = 12;
             target.tempAggroLast = 6;
         }
-        dmg = Math.floor(dmg * helper.random(1.2, 0.8));
-        if (evade)
-            dmg = Math.floor(dmg / 2);
-        if (dmg < 1)
-            dmg = 1;
         target.stats.hp -= dmg;
         if (critRolled)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
@@ -260,7 +175,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
         if (isAoe) {
-            let actionText = (_l = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _l !== void 0 ? _l : ability.action_desc_pl;
+            let actionText = (_c = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _c !== void 0 ? _c : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
@@ -272,7 +187,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 desc += "_pl";
                 ally = false;
             }
-            let actionText = (_m = lang[ability.id + desc]) !== null && _m !== void 0 ? _m : ability.action_desc_pl;
+            let actionText = (_d = lang[ability.id + desc]) !== null && _d !== void 0 ? _d : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
@@ -298,49 +213,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         }
     }
     else {
-        let dmg = 0;
-        if (ability.damages) {
-            Object.entries(ability.get_true_damage(attacker)).forEach((value) => {
-                const key = value[0];
-                const num = value[1];
-                let _dmg = num; // temp damage
-                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += attacker.allModifiers["damageV"];
-                mod *= attacker.allModifiers["damageP"];
-                let bonus = 0;
-                bonus += num * attackerStats[ability.stat_bonus] / 50;
-                let penetration = ability.resistance_penetration / 100;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                _dmg = Math.floor(_dmg * resistance);
-                dmg += _dmg;
-            });
-        }
-        else {
-            Object.entries(attacker.damages).forEach((value) => {
-                var _a;
-                const key = value[0];
-                const num = value[1];
-                let _dmg = num; // temp damage
-                let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-                val += attacker.allModifiers["damageV"];
-                mod *= attacker.allModifiers["damageP"];
-                let bonus = 0;
-                if ((_a = ability.damages) === null || _a === void 0 ? void 0 : _a[key])
-                    bonus = ability.damages[key];
-                if (attacker.shootsProjectile)
-                    bonus += num * attackerStats.dex / 50;
-                else
-                    bonus += num * attackerStats.str / 50;
-                let penetration = ability.resistance_penetration / 100;
-                let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-                let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-                _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-                _dmg = Math.floor(_dmg * resistance);
-                dmg += _dmg;
-            });
-        }
         const layer = document.querySelector(".playerSheet");
         if (target.id == "player") {
             setTimeout((paskaFixi) => {
@@ -350,11 +222,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 layer.style.animationName = `screenHurt`;
             }, 110);
         }
-        dmg = Math.floor(dmg * helper.random(1.2, 0.8));
-        if (evade)
-            dmg = Math.floor(dmg / 2);
-        if (dmg < 1)
-            dmg = 1;
         target.stats.hp -= dmg;
         if (critRolled)
             spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
@@ -362,7 +229,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
-        let actionText = (_o = lang[ability.id + "_action_desc"]) !== null && _o !== void 0 ? _o : "[TEXT NOT FOUND]";
+        let actionText = (_e = lang[ability.id + "_action_desc"]) !== null && _e !== void 0 ? _e : "[TEXT NOT FOUND]";
         let targetName = lang[target.id + "_name"];
         if (!targetName)
             targetName = player.name;
@@ -457,16 +324,16 @@ function summonUnit(ability, cords) {
             }
         });
     });
-    let newSummon = new Summon(Object.assign({}, Object.assign(Object.assign({}, summons[ability.summon_unit]), { level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: Object.assign({}, cords) })));
+    let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
     newSummon.updateTraits();
     newSummon.restore(true);
-    newSummon.traits.push({ id: "buffs_from_player", effects: Object.assign({}, playerBuffs) });
+    newSummon.traits.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
     if (ability.summon_status)
-        newSummon.statusEffects.push(new statEffect(Object.assign({}, statusEffects[ability.summon_status]), ability.statusModifiers));
-    combatSummons.push(Object.assign({}, newSummon));
+        newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
+    combatSummons.push({ ...newSummon });
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            player.statusEffects.push(new statEffect(Object.assign(Object.assign({}, statusEffects[status]), { last: ability.summon_last - 1 }), ability.statusModifiers));
+            player.statusEffects.push(new statEffect({ ...statusEffects[status], last: ability.summon_last - 1 }, ability.statusModifiers));
         });
     }
     let encounter = (_c = (_b = player.entitiesEverEncountered) === null || _b === void 0 ? void 0 : _b.summons) === null || _c === void 0 ? void 0 : _c[newSummon.id];

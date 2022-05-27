@@ -14,8 +14,13 @@ The new changes can be gamebreaking.
 
 ## Fixes & Tweaks
 
+- Updated typescript to compile to es2018 instead of es2017.
 - Improved settings menu.
 - Changed the way flags are stored, this can break older saves.
+- Reworked and streamlined damage calculation.
+- Level up button now shows "!" in red if you have unspent points.
+- Fixed items having an adjective called "undefined".
+- Fixed zoom level resetting to min when the game is loaded.
 
 # 1.1.2 ~ 7.5.2022
 

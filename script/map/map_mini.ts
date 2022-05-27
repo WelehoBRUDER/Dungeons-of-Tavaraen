@@ -22,10 +22,10 @@ function renderMinimap(map: mapObject) {
       // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        minimapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        minimapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
       }
       if (clutterSprite) {
-        minimapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        minimapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
       }
     }
   }
@@ -108,10 +108,10 @@ function renderAreaMap(map: mapObject) {
       // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        areaMapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        areaMapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
       }
       if (clutterSprite) {
-        areaMapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        areaMapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
       }
     }
   }

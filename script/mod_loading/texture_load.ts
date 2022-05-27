@@ -12,7 +12,6 @@ async function loadTextures() {
       const img = new Image();
       img.src = await texture.src;
       img.onload = async () => {
-        console.log(x, y);
         textureAtlasCtx.drawImage(img, x * 128, y * 128, 128, 128);
       };
     });

@@ -89,30 +89,13 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   if (targetCords) {
     maps[currentMap].enemies.forEach((en: any) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y) target = en; });
   }
-  const attackerStats = attacker.getStats();
-  const targetResists = target.getResists();
-  const targetArmor = target.getArmor();
-  const critRolled = attackerStats.critChance >= helper.random(100, 0);
-  const hitChance = attacker.getHitchance().chance;
-  const evasion = target.getHitchance().evasion;
-  const evade: boolean = (evasion + helper.random(evasion * 0.5, evasion * -0.5) + 10) > (hitChance + helper.random(hitChance * 0.3, hitChance * -0.6) + 20);
-  let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
 
   if (ability?.health_cost || ability?.health_cost_percentage) {
     if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
     if (ability.health_cost_percentage) attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
   }
-  if (attacker.id == "player") {
-    if (parseInt(player.weapon?.range) > 2) {
-      if (player.allModifiers?.rangedDamageP) attackTypeDamageModifier += player.allModifiers?.rangedDamageP;
-    }
-    else if (ability.mana_cost > 0) {
-      if (player.allModifiers?.spellDamageP) attackTypeDamageModifier += player.allModifiers?.spellDamageP;
-    }
-    else {
-      if (player.allModifiers?.meleeDamageP) attackTypeDamageModifier += player.allModifiers?.meleeDamageP;
-    }
-  }
+
+  const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
 
 
   if (ability.statusesEnemy?.length > 0) {
@@ -147,57 +130,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
   }
 
   if (target.isFoe) {
-    let dmg: number = 0;
-    if (!ability.damages) {
-      let _damages = attacker.weapon?.damages;
-      if (!_damages && attacker.id == "player") _damages = attacker.fistDmg();
-      else if (!_damages) _damages = attacker.damages;
-      Object.entries(_damages).forEach((value: any) => {
-        const key: string = value[0];
-        const num: number = value[1];
-        let _dmg: number = num; // temp damage
-        let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += attacker.allModifiers["damageV"];
-        mod *= attacker.allModifiers["damageP"];
-        val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-        mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-        val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-        mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
-        let bonus: number = 0;
-        if (ability.damages?.[key]) bonus = ability.damages[key];
-        bonus += num * attackerStats[attacker.weapon?.statBonus ?? attacker.firesProjectile ? "dex" : "str"] / 50;
-        let penetration = ability.resistance_penetration / 100;
-        let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-        let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-        if (isNaN(val)) val = 0;
-        _dmg = Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        if (attackTypeDamageModifier > 0) _dmg *= attackTypeDamageModifier;
-        _dmg = Math.floor(_dmg * resistance);
-        dmg += _dmg;
-      });
-    } else {
-      Object.entries(ability.get_true_damage(attacker)).forEach((value: any) => {
-        const key: string = value[0];
-        const num: number = value[1];
-        let _dmg: number = num; // temp damage
-        let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += attacker.allModifiers["damageV"];
-        mod *= attacker.allModifiers["damageP"];
-        val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-        mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-        val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-        mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
-        let bonus: number = 0;
-        bonus += num * attackerStats[ability.stat_bonus] / 50;
-        let penetration = ability.resistance_penetration / 100;
-        let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-        let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-        _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        if (attackTypeDamageModifier > 0) _dmg *= attackTypeDamageModifier;
-        _dmg = Math.floor(_dmg * resistance);
-        dmg += _dmg;
-      });
-    }
     setTimeout((paskaFixi: null) => {
       if (!enemyIndex(target.cords)) return;
       const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
@@ -216,9 +148,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       target.tempAggro = 12;
       target.tempAggroLast = 6;
     }
-    dmg = Math.floor(dmg * helper.random(1.2, 0.8));
-    if (evade) dmg = Math.floor(dmg / 2);
-    if (dmg < 1) dmg = 1;
     target.stats.hp -= dmg;
     if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
@@ -261,45 +190,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
       setTimeout(modifyCanvas, 100);
     }
   } else {
-    let dmg: number = 0;
-    if (ability.damages) {
-      Object.entries(ability.get_true_damage(attacker)).forEach((value: any) => {
-        const key: string = value[0];
-        const num: number = value[1];
-        let _dmg: number = num; // temp damage
-        let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += attacker.allModifiers["damageV"];
-        mod *= attacker.allModifiers["damageP"];
-        let bonus: number = 0;
-        bonus += num * attackerStats[ability.stat_bonus] / 50;
-        let penetration = ability.resistance_penetration / 100;
-        let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-        let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-        _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        _dmg = Math.floor(_dmg * resistance);
-        dmg += _dmg;
-      });
-    }
-    else {
-      Object.entries(attacker.damages).forEach((value: any) => {
-        const key: string = value[0];
-        const num: number = value[1];
-        let _dmg: number = num; // temp damage
-        let { v: val, m: mod } = getModifiers(attacker, key + "Damage");
-        val += attacker.allModifiers["damageV"];
-        mod *= attacker.allModifiers["damageP"];
-        let bonus: number = 0;
-        if (ability.damages?.[key]) bonus = ability.damages[key];
-        if (attacker.shootsProjectile) bonus += num * attackerStats.dex / 50;
-        else bonus += num * attackerStats.str / 50;
-        let penetration = ability.resistance_penetration / 100;
-        let defense = 1 - (targetArmor[damageCategories[key]] * 0.4 > 0 ? targetArmor[damageCategories[key]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[key]]) / 100;
-        let resistance = 1 - ((targetResists[key] > 0 ? targetResists[key] * (1 - penetration) : targetResists[key]) / 100);
-        _dmg += Math.floor((((num + val + bonus) * (mod)) * ability.damage_multiplier * (critRolled ? 1 + (attackerStats.critDamage / 100) : 1)) * defense);
-        _dmg = Math.floor(_dmg * resistance);
-        dmg += _dmg;
-      });
-    }
     const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
     if (target.id == "player") {
       setTimeout((paskaFixi: null) => {
@@ -309,9 +199,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
         layer.style.animationName = `screenHurt`;
       }, 110);
     }
-    dmg = Math.floor(dmg * helper.random(1.2, 0.8));
-    if (evade) dmg = Math.floor(dmg / 2);
-    if (dmg < 1) dmg = 1;
     target.stats.hp -= dmg;
     if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);

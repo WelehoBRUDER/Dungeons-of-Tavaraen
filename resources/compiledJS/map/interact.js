@@ -291,7 +291,7 @@ function clickMap(event) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
-                    player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[status]), state.abiSelected.statusModifiers));
+                    player.statusEffects.push(new statEffect({ ...statusEffects[status] }, state.abiSelected.statusModifiers));
                 }
                 else {
                     player.statusEffects.find((eff) => eff.id == status).last.current += statusEffects[status].last.total;
@@ -329,7 +329,7 @@ function changeMap(entrance) {
     ;
     document.querySelector(".loading-bar-fill").style.width = "0%";
     currentMap = id;
-    player.cords = Object.assign({}, entrance.path.cords);
+    player.cords = { ...entrance.path.cords };
     turnOver = true;
     enemiesHadTurn = 0;
     state.inCombat = false;

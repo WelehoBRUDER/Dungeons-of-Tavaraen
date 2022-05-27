@@ -11,19 +11,19 @@ class Character {
         this.id = base.id;
         this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
         this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
-        this.stats = Object.assign({}, base.stats);
-        this.armor = (_c = Object.assign({}, base.armor)) !== null && _c !== void 0 ? _c : { physical: 0, magical: 0, elemental: 0 };
-        this.resistances = Object.assign({}, base.resistances);
-        this.statusResistances = Object.assign({}, base.statusResistances);
+        this.stats = { ...base.stats };
+        this.armor = (_c = { ...base.armor }) !== null && _c !== void 0 ? _c : { physical: 0, magical: 0, elemental: 0 };
+        this.resistances = { ...base.resistances };
+        this.statusResistances = { ...base.statusResistances };
         this.traits = base.traits ? [...base.traits] : [];
         this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
         this.threat = (_d = base.threat) !== null && _d !== void 0 ? _d : 25;
         this.regen = (_e = base.regen) !== null && _e !== void 0 ? _e : { hp: 0, mp: 0 };
-        this.hit = (_f = Object.assign({}, base.hit)) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
+        this.hit = (_f = { ...base.hit }) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
         this.scale = (_g = base.scale) !== null && _g !== void 0 ? _g : 1;
         this.allModifiers = {};
-        this.speed = base.speed ? Object.assign({}, base.speed) : Object.assign({}, baseSpeed);
-        this.spriteMap = base.spriteMap ? Object.assign({}, base.spriteMap) : null;
+        this.speed = base.speed ? { ...base.speed } : { ...baseSpeed };
+        this.spriteMap = base.spriteMap ? { ...base.spriteMap } : null;
         if (Object.keys(this.armor).length < 1)
             this.armor = { physical: 0, magical: 0, elemental: 0 };
         this.getStats = (withConditions = true) => {
@@ -56,7 +56,7 @@ class Character {
             let speed = {};
             speed.movement = this.speed.movement + this.allModifiers["movementSpeedV"];
             speed.attack = this.speed.attack + this.allModifiers["attackSpeedV"];
-            return Object.assign({}, speed);
+            return { ...speed };
         };
         this.getHpMax = (withConditions = true) => {
             var _a, _b;
@@ -203,7 +203,7 @@ class Character {
         };
         this.addEffect = (effect, modifiers = {}) => {
             if (!(effect === null || effect === void 0 ? void 0 : effect.id)) {
-                effect = new statEffect(Object.assign({}, statusEffects[effect]), modifiers);
+                effect = new statEffect({ ...statusEffects[effect] }, modifiers);
             }
             let missing = true;
             this.statusEffects.forEach((_effect) => {
@@ -214,7 +214,7 @@ class Character {
                 }
             });
             if (missing) {
-                this.statusEffects.push(Object.assign({}, effect));
+                this.statusEffects.push({ ...effect });
             }
         };
         this.doNormalAttack = async (target) => {
@@ -302,21 +302,21 @@ class Character {
                 for (let i = 0; i < ((_b = this.inventory) === null || _b === void 0 ? void 0 : _b.length); i++) {
                     // If item is broken, default to error item
                     if (!this.inventory[i].id || !this.inventory[i].type) {
-                        this.inventory[i] = Object.assign({}, items.A0_error);
+                        this.inventory[i] = { ...items.A0_error };
                     }
                     // Manually refresh error items
                     if (this.inventory[i].id == "A0_error") {
-                        this.inventory[i] = Object.assign({}, items.A0_error);
+                        this.inventory[i] = { ...items.A0_error };
                     }
                     this.inventory[i].index = i;
                     if (this.inventory[i].type == "weapon")
-                        this.inventory[i] = new Weapon(Object.assign({}, this.inventory[i]));
+                        this.inventory[i] = new Weapon({ ...this.inventory[i] });
                     else if (this.inventory[i].type == "armor")
-                        this.inventory[i] = new Armor(Object.assign({}, this.inventory[i]));
+                        this.inventory[i] = new Armor({ ...this.inventory[i] });
                     else if (this.inventory[i].type == "consumable")
-                        this.inventory[i] = new Consumable(Object.assign({}, this.inventory[i]));
+                        this.inventory[i] = new Consumable({ ...this.inventory[i] });
                     else if (this.inventory[i].type == "artifact")
-                        this.inventory[i] = new Artifact(Object.assign({}, this.inventory[i]));
+                        this.inventory[i] = new Artifact({ ...this.inventory[i] });
                     if (!this.inventory[i].indexInBaseArray)
                         continue;
                     let encounter = (_d = (_c = player.entitiesEverEncountered) === null || _c === void 0 ? void 0 : _c.items) === null || _d === void 0 ? void 0 : _d[this.inventory[i].id];
@@ -326,25 +326,25 @@ class Character {
                 }
             }
             if ((_e = this.weapon) === null || _e === void 0 ? void 0 : _e.type)
-                this.weapon = new Weapon(Object.assign({}, this.weapon));
+                this.weapon = new Weapon({ ...this.weapon });
             if ((_f = this.offhand) === null || _f === void 0 ? void 0 : _f.type)
-                this.offhand = new Armor(Object.assign({}, this.offhand));
+                this.offhand = new Armor({ ...this.offhand });
             if ((_g = this.chest) === null || _g === void 0 ? void 0 : _g.type)
-                this.chest = new Armor(Object.assign({}, this.chest));
+                this.chest = new Armor({ ...this.chest });
             if ((_h = this.legs) === null || _h === void 0 ? void 0 : _h.type)
-                this.legs = new Armor(Object.assign({}, this.legs));
+                this.legs = new Armor({ ...this.legs });
             if ((_j = this.helmet) === null || _j === void 0 ? void 0 : _j.type)
-                this.helmet = new Armor(Object.assign({}, this.helmet));
+                this.helmet = new Armor({ ...this.helmet });
             if ((_k = this.gloves) === null || _k === void 0 ? void 0 : _k.type)
-                this.gloves = new Armor(Object.assign({}, this.gloves));
+                this.gloves = new Armor({ ...this.gloves });
             if ((_l = this.boots) === null || _l === void 0 ? void 0 : _l.type)
-                this.boots = new Armor(Object.assign({}, this.boots));
+                this.boots = new Armor({ ...this.boots });
             if ((_m = this.artifact1) === null || _m === void 0 ? void 0 : _m.type)
-                this.artifact1 = new Artifact(Object.assign({}, this.artifact1));
+                this.artifact1 = new Artifact({ ...this.artifact1 });
             if ((_o = this.artifact2) === null || _o === void 0 ? void 0 : _o.type)
-                this.artifact2 = new Artifact(Object.assign({}, this.artifact2));
+                this.artifact2 = new Artifact({ ...this.artifact2 });
             if ((_p = this.artifact3) === null || _p === void 0 ? void 0 : _p.type)
-                this.artifact3 = new Artifact(Object.assign({}, this.artifact3));
+                this.artifact3 = new Artifact({ ...this.artifact3 });
         };
         this.updateTraits = () => {
             this.traits.forEach((mod, index) => {

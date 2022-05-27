@@ -7,7 +7,7 @@ class Summon extends Character {
         this.aggroRange = (_a = base.aggroRange) !== null && _a !== void 0 ? _a : 5;
         this.attackRange = (_b = base.attackRange) !== null && _b !== void 0 ? _b : 1;
         this.tempAggro = 0;
-        this.damages = Object.assign({}, base.damages);
+        this.damages = { ...base.damages };
         this.firesProjectile = base.firesProjectile;
         this.canFly = (_c = base.canFly) !== null && _c !== void 0 ? _c : false;
         this.alive = (_d = base.alive) !== null && _d !== void 0 ? _d : true;
@@ -16,7 +16,7 @@ class Summon extends Character {
         this.hasBeenLeveled = (_f = base.hasBeenLeveled) !== null && _f !== void 0 ? _f : false;
         this.level = (_g = base.level) !== null && _g !== void 0 ? _g : 1;
         this.xp = this.level > 1 ? Math.floor(base.xp + (base.xp * this.level / 2.9)) : base.xp;
-        this.statsPerLevel = (_h = Object.assign({}, base.statsPerLevel)) !== null && _h !== void 0 ? _h : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+        this.statsPerLevel = (_h = { ...base.statsPerLevel }) !== null && _h !== void 0 ? _h : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;

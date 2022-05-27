@@ -357,20 +357,20 @@ function LoadSlot(data) {
             foundMap = GetKey("currentMap", data).data;
         if (foundMap < 0 || foundMap === undefined)
             throw Error("CAN'T FIND MAP!");
-        _pl = new PlayerCharacter(Object.assign({}, GetKey("player", data).data));
+        _pl = new PlayerCharacter({ ...GetKey("player", data).data });
         _itmData = (_a = GetKey("itemData", data).data) !== null && _a !== void 0 ? _a : [];
         _falEnemies = (_b = GetKey("enemies", data).data) !== null && _b !== void 0 ? _b : [];
         _loot = (_c = GetKey("lootedChests", data).data) !== null && _c !== void 0 ? _c : [];
         // update classes of all dropped items just in case
         _itmData.map((item) => {
             if (item.itm.type === "weapon")
-                return item.itm = new Weapon(Object.assign({}, items[item.itm.id]));
+                return item.itm = new Weapon({ ...items[item.itm.id] });
             if (item.itm.type === "armor")
-                return item.itm = new Armor(Object.assign({}, items[item.itm.id]));
+                return item.itm = new Armor({ ...items[item.itm.id] });
             if (item.itm.type === "artifact")
-                return item.itm = new Artifact(Object.assign({}, items[item.itm.id]));
+                return item.itm = new Artifact({ ...items[item.itm.id] });
             if (item.itm.type === "consumable")
-                return item.itm = new Consumable(Object.assign({}, items[item.itm.id]));
+                return item.itm = new Consumable({ ...items[item.itm.id] });
         });
         for (let i = (_e = (_d = _pl.traits) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0; i >= 0; i--) {
             // Find faulty trait

@@ -81,7 +81,7 @@ function renderCharacter() {
     bg.append(xBut);
     const playerStats = player.getStats();
     const hitChances = player.getHitchance();
-    const playerCoreStats = Object.assign(Object.assign({}, playerStats), hitChances);
+    const playerCoreStats = { ...playerStats, ...hitChances };
     const playerArmor = player.getArmor();
     const playerResists = player.getResists();
     const playerStatusResists = player.getStatusResists();
@@ -179,7 +179,7 @@ function renderCharacter() {
             return;
         else if (eff[1] === 0)
             return;
-        const displayEff = Object.assign({}, eff);
+        const displayEff = { ...eff };
         if (displayEff[0].endsWith("P") && !displayEff[0].includes("crit"))
             displayEff[1] = displayEff[1] * 100 - 100;
         modsToSort.push([displayEff[0], displayEff[1]]); // Copy object data to an Array

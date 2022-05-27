@@ -262,6 +262,7 @@ function updateUI() {
   generateHotbar();
   generateEffects();
   generateSummonList();
+  displayLevelNotification();
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 
@@ -271,6 +272,14 @@ maps[currentMap].enemies.forEach((en: Enemy) => {
   en.updateAbilities();
 });
 updateUI();
+
+function displayLevelNotification() {
+  const levelNotification = document.querySelector(".perScrb .notif");
+  if (player.pp > 0 || player.sp > 0) {
+    levelNotification.style.display = "block";
+  }
+  else levelNotification.style.display = "none";
+}
 
 
 tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);

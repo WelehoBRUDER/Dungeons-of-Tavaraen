@@ -108,7 +108,7 @@ function createMerchantItems(itemsInv) {
             addThisItem = false; });
         if (!addThisItem)
             continue;
-        let _item = Object.assign({}, items[item.id]);
+        let _item = { ...items[item.id] };
         let itm;
         if (_item.type == "consumable")
             itm = new Consumable(_item, item.price);
@@ -137,7 +137,7 @@ function itemAmountSelector(item, selling = false) {
         if (selling && value > item.amount)
             value = item.amount;
         if (selling) {
-            const _item = Object.assign({}, item);
+            const _item = { ...item };
             _item.amount = value;
             pendingItemsSelling.push(_item);
             for (let i = 0; i < player.inventory.length; i++) {

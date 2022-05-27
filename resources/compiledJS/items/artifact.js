@@ -3,8 +3,8 @@ class Artifact extends Item {
     constructor(base, setPrice = 0, dontRollStats = false) {
         var _a, _b;
         super(base);
-        const baseItem = Object.assign({}, items[this.id]);
-        this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
+        const baseItem = { ...items[this.id] };
+        this.stats = (_a = { ...baseItem.stats }) !== null && _a !== void 0 ? _a : {};
         this.artifactSet = baseItem.artifactSet;
         this.rolledStats = base.rolledStats || [];
         this.commands = {};

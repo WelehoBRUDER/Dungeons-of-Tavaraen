@@ -44,6 +44,9 @@ const mapSelection = {
 };
 baseCanvas.addEventListener("wheel", changeZoomLevel, { passive: true });
 function changeZoomLevel({ deltaY }) {
+    if (zoomLevels.indexOf(currentZoom) === -1) {
+        currentZoom = Math.round(currentZoom);
+    }
     if (deltaY > 0) {
         currentZoom = zoomLevels[zoomLevels.indexOf(currentZoom) - 1] || zoomLevels[0];
     }
@@ -73,7 +76,7 @@ function renderMap(map, createNewSightMap = false) {
     if (oldCords.x === player.cords.x && oldCords.y === player.cords.y && oldZoom === currentZoom)
         return;
     if (oldZoom == currentZoom) {
-        oldCords = Object.assign({}, player.cords);
+        oldCords = { ...player.cords };
         oldZoom = currentZoom;
         moveCanvas(translateX * spriteSize, translateY * spriteSize);
         renderPlayerModel(spriteSize, playerCanvas, playerCtx);

@@ -118,20 +118,20 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                     fm = save.save.currentMap;
                 if (fm < 0)
                     throw Error("CAN'T FIND MAP!");
-                pl = new PlayerCharacter(Object.assign({}, save.save.player));
+                pl = new PlayerCharacter({ ...save.save.player });
                 fe = save.save.fallenEnemies ? [...save.save.fallenEnemies] : [];
                 id = save.save.itemData ? [...save.save.itemData] : [];
                 lc = save.save.lootedChests ? [...save.save.lootedChests] : [];
                 // update classes of all dropped items just in case
                 id.map((item) => {
                     if (item.itm.type === "weapon")
-                        return item.itm = new Weapon(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Weapon({ ...items[item.itm.id] });
                     if (item.itm.type === "armor")
-                        return item.itm = new Armor(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Armor({ ...items[item.itm.id] });
                     if (item.itm.type === "artifact")
-                        return item.itm = new Artifact(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Artifact({ ...items[item.itm.id] });
                     if (item.itm.type === "consumable")
-                        return item.itm = new Consumable(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Consumable({ ...items[item.itm.id] });
                 });
                 pl.updateTraits();
                 pl.updatePerks(true);
@@ -186,7 +186,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(inMainMenu, false);
         });
         try {
-            let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
+            let renderedPlayer = new PlayerCharacter({ ...save.save.player });
             renderedPlayer.updateTraits();
             renderedPlayer.updatePerks(true, true);
             renderedPlayer.updateAbilities(true);
@@ -312,7 +312,7 @@ function createNewSaveGame() {
     let gameSave = {};
     player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
     timePlayedNow = performance.now();
-    gameSave.player = helper.trimPlayerObjectForSaveFile(Object.assign({}, player));
+    gameSave.player = helper.trimPlayerObjectForSaveFile({ ...player });
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
     gameSave.currentMap = maps[currentMap].id;

@@ -4,7 +4,7 @@ class Item {
         var _a, _b, _c, _d, _e, _f, _g;
         this.id = base.id;
         // @ts-ignore
-        const baseItem = Object.assign({}, items[this.id]);
+        const baseItem = { ...items[this.id] };
         this.name = baseItem.name;
         this.price = baseItem.price;
         this.amount = isNaN(base.amount) ? 1 : (_a = base.amount) !== null && _a !== void 0 ? _a : 1;
@@ -196,12 +196,12 @@ function itemTT(item) {
 }
 function constructItem(item) {
     if (item.type == "weapon")
-        return new Weapon(Object.assign({}, items[item.id]));
+        return new Weapon({ ...items[item.id] });
     else if (item.type == "armor")
-        return new Armor(Object.assign({}, items[item.id]));
+        return new Armor({ ...items[item.id] });
     else if (item.type == "artifact")
-        return new Artifact(Object.assign({}, items[item.id]));
+        return new Artifact({ ...items[item.id] });
     else if (item.type == "consumable")
-        return new Consumable(Object.assign({}, items[item.id]));
+        return new Consumable({ ...items[item.id] });
 }
 //# sourceMappingURL=item.js.map

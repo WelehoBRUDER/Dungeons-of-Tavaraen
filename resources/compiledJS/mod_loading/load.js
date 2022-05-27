@@ -79,7 +79,7 @@ function applyModItems(mod) {
         if (src2.startsWith("/")) {
             src2 = `../../mods/${mod}${src2}`;
         }
-        items[itemName] = Object.assign(Object.assign({}, item), { img: src, sprite: src2 });
+        items[itemName] = { ...item, img: src, sprite: src2 };
     });
 }
 function applyModEnemies(mod) {
@@ -89,7 +89,7 @@ function applyModEnemies(mod) {
         if (src.startsWith("/")) {
             src = `../../mods/${mod}${src}`;
         }
-        enemies[enemyName] = Object.assign(Object.assign({}, enemy), { img: src });
+        enemies[enemyName] = { ...enemy, img: src };
     });
 }
 function applyModAbilities(mod) {
@@ -99,19 +99,19 @@ function applyModAbilities(mod) {
         if (src.startsWith("/")) {
             src = `../../mods/${mod}${src}`;
         }
-        abilities[abilityName] = Object.assign(Object.assign({}, ability), { icon: src });
+        abilities[abilityName] = { ...ability, icon: src };
     });
 }
 function applyModStatEffects(mod) {
     const effectsFromMods = eval(`${mod}_statusEffects`);
     Object.entries(effectsFromMods).forEach(([effectName, effect]) => {
-        statusEffects[effectName] = Object.assign({}, effect);
+        statusEffects[effectName] = { ...effect };
     });
 }
 function applyModTraits(mod) {
     const traitsFromMod = eval(`${mod}_traits`);
     Object.entries(traitsFromMod).forEach(([traitName, trait]) => {
-        traits[traitName] = Object.assign({}, trait);
+        traits[traitName] = { ...trait };
     });
 }
 function applyModLocalisationGeneral(mod) {
@@ -182,19 +182,19 @@ function applyModCharacters(mod) {
     catch (_b) { }
     if (modChars) {
         Object.entries(modChars).forEach(([key, char]) => {
-            NPCcharacters[key] = Object.assign({}, char);
+            NPCcharacters[key] = { ...char };
         });
     }
     if (modInvs) {
         Object.entries(modInvs).forEach(([key, inv]) => {
-            NPCInventories[key] = Object.assign({}, inv);
+            NPCInventories[key] = { ...inv };
         });
     }
 }
 function applyModInteractions(mod) {
     const interactionsFromMod = eval(`${mod}_characterInteractions`);
     Object.entries(interactionsFromMod).forEach(([key, interaction]) => {
-        characterInteractions[key] = Object.assign({}, interaction);
+        characterInteractions[key] = { ...interaction };
     });
 }
 //# sourceMappingURL=load.js.map

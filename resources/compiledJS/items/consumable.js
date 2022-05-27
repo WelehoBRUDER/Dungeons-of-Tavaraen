@@ -3,7 +3,7 @@ class Consumable extends Item {
     constructor(base, setPrice = 0) {
         var _a, _b, _c, _d, _e;
         super(base);
-        const baseItem = Object.assign({}, items[this.id]);
+        const baseItem = { ...items[this.id] };
         this.status = baseItem.status;
         this.ability = baseItem.status;
         this.healValue = baseItem.healValue;
