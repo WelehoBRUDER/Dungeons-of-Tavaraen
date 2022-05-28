@@ -58,9 +58,7 @@ function renderPlayerModel(size, canvas, ctx) {
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, offhandModel.x, offhandModel.y, 128, 128, posX, posY, size, size);
         }
     }
-    catch (e) {
-        console.log(e);
-    }
+    catch (e) { }
 }
 function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = player, noClothes = false) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
@@ -119,9 +117,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
             }
         }
     }
-    catch (e) {
-        console.log(e);
-    }
+    catch (e) { }
 }
 function renderPlayerPortrait() {
     const portrait = document.createElement("div");

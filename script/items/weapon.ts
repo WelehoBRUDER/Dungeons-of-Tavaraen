@@ -103,7 +103,9 @@ class Weapon extends Item {
         stat.key = stat.key.substring(0, stat.key.length - 1);
         if (adjectivesUsed >= maxAdjectives || name.includes(lang[stat.key + "_adjective"])) return;
         adjectivesUsed++;
-        name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+        const key = `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+        if (key) name += key;
+        else adjectivesUsed--;
       });
       name += `${langName}`;
       this.name = name;

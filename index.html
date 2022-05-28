@@ -42,7 +42,6 @@
       <canvas class="fog layer" width="1920" height="1344"></canvas>
       <canvas class="playerSheet layer" width="1920" height="1344"></canvas>
     </div>
-    <canvas class="texture-sheet" width="1920" height="1344"></canvas>
     <div class="xpBar">
       <div class="barFill"></div>
     </div>
@@ -230,6 +229,7 @@
     </div>
     <div class="savesMenu">
       <div class="topBar">
+        <div class="closeWindowButton" onclick="closeSaveMenu()"><span>X</span></div>
         <input type="text" class="saveName" name="saveName"><br><br>
         <div class="saveGame saveButton">
           <img src="resources/icons/save_game.png" alt="" class="src">
@@ -271,15 +271,14 @@
       <canvas class="areaUpdateCanvas" width="360" height="240"></canvas>
     </div>
     <div class="mods-menu">
-      <div class="topBar">
-        <div class="closeWindowButton" onclick="closeModsMenu()"><span>X</span></div>
-      </div>
       <div class="content">
+        <div class="closeWindowButton" onclick="closeModsMenu()"><span>X</span></div>
         <div class="mods-list"></div>
         <div class="mod-info"></div>
       </div>
     </div>
   </div>
+  <canvas class="texture-sheet" width="1920" height="1344"></canvas>
 </body>
 
 <div class="sprites">

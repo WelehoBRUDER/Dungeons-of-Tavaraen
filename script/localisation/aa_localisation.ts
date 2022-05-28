@@ -487,6 +487,8 @@ const finnish = {
   revive: "Olet herännyt henkiin pyhäköllä!",
   enter_area: "Astu sisälle", // kassun käännös
   no_entry: "Et ole vielä löytänyt tätä asiaa...",
+  disable: "Poista käytöstä",
+  enable: "Ota käyttöön",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -573,6 +575,7 @@ const finnish = {
   menu_main_screen: "Päämenu",
   menu_new_game: "Uusi Peli",
   menu_load_game: "Lataa Peli",
+  menu_mods: "Modit",
 
   setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
   setting_toggle_minimap: "Minikartta pois/päällä",
@@ -658,6 +661,15 @@ const finnish = {
   damage_adjective: "Vahingoittava",
   movementSpeed_adjective: "Nopea",
   attackSpeed_adjective: "Kiireinen",
+  slashResist_adjective: "Suojeleva",
+  crushResist_adjective: "Suojeleva",
+  pierceResist_adjective: "Suojeleva",
+  magicResist_adjective: "Suojeleva",
+  darkResist_adjective: "Suojeleva",
+  divineResist_adjective: "Suojeleva",
+  fireResist_adjective: "Suojeleva",
+  iceResist_adjective: "Suojeleva",
+  lightningResist_adjective: "Suojeleva",
   // Negative adjectives
   str_adjective_negative: "Heikko",
   dex_adjective_negative: "Jähmeä",
@@ -689,6 +701,15 @@ const finnish = {
   damage_adjective_negative: "Lannistava",
   movementSpeed_adjective_negative: "Hidas",
   attackSpeed_adjective_negative: "Hidastava",
+  slashResist_adjective_negative: "Epäsuojeleva",
+  crushResist_adjective_negative: "Epäsuojeleva",
+  pierceResist_adjective_negative: "Epäsuojeleva",
+  magicResist_adjective_negative: "Epäsuojeleva",
+  darkResist_adjective_negative: "Epäsuojeleva",
+  divineResist_adjective_negative: "Epäsuojeleva",
+  fireResist_adjective_negative: "Epäsuojeleva",
+  iceResist_adjective_negative: "Epäsuojeleva",
+  lightningResist_adjective_negative: "Epäsuojeleva",
 
   // Statuses
   effect_defend_name: "Puolustaa",
@@ -1419,6 +1440,8 @@ const english = {
   revive: "You have been revived at a shrine!",
   enter_area: "Enter area",
   no_entry: "You have not yet discovered this...",
+  disable: "Disable",
+  enable: "Enable",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -1518,6 +1541,7 @@ const english = {
   menu_main_screen: "Main Menu",
   menu_new_game: "New Game",
   menu_load_game: "Load Game",
+  menu_mods: "Mods",
 
   setting_log_enemy_movement: "Log character movement",
   setting_toggle_minimap: "Toggle minimap",
@@ -1603,6 +1627,15 @@ const english = {
   damage_adjective: "Damaging",
   movementSpeed_adjective: "Quick",
   attackSpeed_adjective: "Hasty",
+  slashResist_adjective: "Shielding",
+  crushResist_adjective: "Shielding",
+  pierceResist_adjective: "Shielding",
+  magicResist_adjective: "Shielding",
+  darkResist_adjective: "Shielding",
+  divineResist_adjective: "Shielding",
+  fireResist_adjective: "Shielding",
+  iceResist_adjective: "Shielding",
+  lightningResist_adjective: "Shielding",
   // Negative adjectives
   str_adjective_negative: "Weak",
   dex_adjective_negative: "Sluggish",
@@ -1634,6 +1667,15 @@ const english = {
   damage_adjective_negative: "Enfeebling",
   movementSpeed_adjective_negative: "Slow",
   attackSpeed_adjective_negative: "Rigid",
+  slashResist_adjective_negative: "Susceptive",
+  crushResist_adjective_negative: "Susceptive",
+  pierceResist_adjective_negative: "Susceptive",
+  magicResist_adjective_negative: "Susceptive",
+  darkResist_adjective_negative: "Susceptive",
+  divineResist_adjective_negative: "Susceptive",
+  fireResist_adjective_negative: "Susceptive",
+  iceResist_adjective_negative: "Susceptive",
+  lightningResist_adjective_negative: "Susceptive",
 
   // Statuses
   effect_defend_name: "Defending",

@@ -54,9 +54,7 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
       ctx?.drawImage(textureAtlas, offhandModel.x, offhandModel.y, 128, 128, posX, posY, size, size);
     }
   }
-  catch (e) {
-    console.log(e);
-  }
+  catch (e) { }
 }
 
 
@@ -114,9 +112,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
       }
     }
   }
-  catch (e) {
-    console.log(e);
-  }
+  catch (e) { }
 }
 
 function renderPlayerPortrait() {

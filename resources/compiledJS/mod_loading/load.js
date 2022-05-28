@@ -1,6 +1,8 @@
 "use strict";
+var _a;
 ;
 const modsInformation = [];
+const modsSettings = (_a = JSON.parse(localStorage.getItem("DOT_game_mods"))) !== null && _a !== void 0 ? _a : {};
 async function loadMods() {
     const JSONdata = await fetch("mods_config.json");
     const modsConfig = await JSONdata.json();
@@ -9,6 +11,11 @@ async function loadMods() {
         const modPath = `../../mods/${mod}`;
         const JSONmod = await fetch(`${modPath}/mod.json`);
         const load = {};
+        const modConfig = await JSONmod.json();
+        modConfig.key = mod;
+        modsInformation.push(modConfig);
+        if ((modsSettings === null || modsSettings === void 0 ? void 0 : modsSettings[mod]) === false)
+            return;
         load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
         load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
         load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
@@ -21,8 +28,6 @@ async function loadMods() {
         load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
         load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
         load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
-        const modConfig = await JSONmod.json();
-        modsInformation.push(modConfig);
         Object.values(load).forEach(async ({ path, func }) => {
             await loadModFile(path, mod, func);
         });
