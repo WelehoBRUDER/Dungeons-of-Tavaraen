@@ -486,6 +486,10 @@ body {
       left: calc(45px * var(--ui-scale));
       top: calc(40px * var(--ui-scale));
       z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
 
       img {
         width: calc(192px * var(--ui-scale));
@@ -496,14 +500,16 @@ body {
       }
 
       .hpText {
-        position: absolute;
-        top: calc(50%);
-        left: 50%;
-        transform: translateX(-50%) translateY(-120%);
-
+        position: relative;
         font-size: calc(30px * var(--ui-scale));
         text-shadow: 0px 0px 2px black;
-        white-space: nowrap;
+        text-align: center;
+        margin-top: calc(43px * var(--ui-scale));
+
+        span {
+          opacity: 0.75;
+          font-size: calc(27px * var(--ui-scale));
+        }
       }
 
       .PlayerHpFill {

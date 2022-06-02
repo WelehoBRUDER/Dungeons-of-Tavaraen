@@ -61,7 +61,7 @@ async function getTextures() {
     };
     await addTexture(img);
   });
-  Object.values(enemies).forEach(async ({ id, img }: any) => {
+  Object.values(enemies).forEach(async ({ id, img }: any, index) => {
     enemies[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -69,6 +69,7 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
+    console.log(id);
     await addTexture(img);
   });
   Object.values(summons).forEach(async ({ id, img }: any) => {

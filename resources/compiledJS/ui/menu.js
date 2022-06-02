@@ -334,7 +334,7 @@ async function gotoMainMenu(init = false) {
     }
 }
 function convertEnemytraits() {
-    maps.forEach((mp) => {
+    Object.values(maps).forEach((mp) => {
         mp.enemies.map((en) => {
             en.updateTraits();
         });
@@ -352,8 +352,12 @@ function LoadSlot(data) {
     let _falEnemies;
     let _loot;
     try {
-        foundMap = maps.findIndex((map) => map.id == GetKey("currentMap", data).data);
-        if (foundMap == -1)
+        let key = GetKey("currentMap", data).data;
+        if (typeof key === "number") {
+            key = Object.keys(maps)[key];
+        }
+        foundMap = key;
+        if (!foundMap)
             foundMap = GetKey("currentMap", data).data;
         if (foundMap < 0 || foundMap === undefined)
             throw Error("CAN'T FIND MAP!");

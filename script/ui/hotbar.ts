@@ -256,6 +256,7 @@ function updateUI() {
   const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
   const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
   hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
+  hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
   hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
   mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
   ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();

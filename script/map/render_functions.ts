@@ -17,7 +17,6 @@ function renderEntireMap(map: mapObject) {
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
       const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
       const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-      // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
         baseCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
@@ -294,7 +293,6 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
     const grave = <HTMLImageElement>document.querySelector(`.sprites .deadModel`);
     const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
-    // @ts-expect-error
     const clutterSprite = clutters[clutterId]?.spriteMap;
     const fog = { x: 256, y: 0 };
     if (sprite) {

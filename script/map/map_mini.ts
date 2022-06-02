@@ -16,10 +16,8 @@ function renderMinimap(map: mapObject) {
   for (let y = 0; y < map.base.length; y++) {
     for (let x = 0; x < map.base[y].length; x++) {
       const imgId = map.base?.[y]?.[x];
-      // @ts-expect-error
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
       const clutterId = map.clutter?.[y]?.[x];
-      // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
         minimapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
@@ -102,10 +100,8 @@ function renderAreaMap(map: mapObject) {
   for (let y = 0; y < map.base.length; y++) {
     for (let x = 0; x < map.base[y].length; x++) {
       const imgId = map.base?.[y]?.[x];
-      // @ts-expect-error
       const sprite = tiles[imgId]?.spriteMap ?? { x: 128, y: 0 };
       const clutterId = map.clutter?.[y]?.[x];
-      // @ts-expect-error
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
         areaMapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);

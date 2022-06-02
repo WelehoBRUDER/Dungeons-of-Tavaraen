@@ -71,7 +71,9 @@ let helper = {
   },
   purgeDeadEnemies: function () {
     fallenEnemies.forEach(deadFoe => {
-      const map = maps[deadFoe.spawnMap];
+      let key = deadFoe.spawnMap;
+      if (typeof key === "number") key = Object.keys(maps)[key];
+      const map = maps[key];
       let purgeList: Array<number> = [];
       map.enemies.forEach((en: any, index: number) => {
         if (en.spawnCords.x == deadFoe.spawnCords.x && en.spawnCords.y == deadFoe.spawnCords.y) {
@@ -85,21 +87,23 @@ let helper = {
   },
   reviveAllDeadEnemies: function () {
     fallenEnemies.forEach(deadFoe => {
-      const map = maps[deadFoe.spawnMap];
+      let key = deadFoe.spawnMap;
+      if (typeof key === "number") key = Object.keys(maps)[key];
+      const map = maps[key];
       const foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
       foe.restore();
       map.enemies.push(foe);
     });
   },
   killAllQuestEnemies: function () {
-    maps.forEach((mp: any, index: number) => {
+    Object.values(maps).forEach((mp: any, index: number) => {
       for (let i = mp.enemies.length - 1; i >= 0; i--) {
         if (mp.enemies[i].questSpawn?.quest > -1) mp.enemies.splice(i, 1);
       }
     });
   },
   resetAllLivingEnemiesInAllMaps: function () {
-    maps.forEach((map: any) => {
+    Object.values(maps).forEach((map: any) => {
       map.enemies.forEach((enemy: Enemy) => {
         enemy.restore();
       }

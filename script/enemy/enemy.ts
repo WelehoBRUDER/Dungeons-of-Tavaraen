@@ -14,7 +14,7 @@ interface enemy extends characterObject {
   decideAction?: Function,
   aggro?: Function;
   spawnCords?: tileObject;
-  spawnMap?: number;
+  spawnMap?: string;
   loot: Array<any>;
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;
@@ -54,7 +54,7 @@ class Enemy extends Character {
   aggro: Function;
   retreatLimit: number;
   spawnCords?: tileObject;
-  spawnMap?: number;
+  spawnMap?: string;
   loot: Array<any>;
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;

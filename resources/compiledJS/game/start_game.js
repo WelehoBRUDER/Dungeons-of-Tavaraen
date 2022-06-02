@@ -325,7 +325,7 @@ function beginGame() {
     turnOver = true;
     enemiesHadTurn = 0;
     lootedChests = [];
-    currentMap = 4;
+    currentMap = "cave_of_awakening";
     state.inCombat = false;
     resetAllChests();
     handleEscape();

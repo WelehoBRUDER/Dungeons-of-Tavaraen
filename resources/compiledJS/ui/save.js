@@ -113,11 +113,15 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             let id;
             let lc;
             try {
-                fm = maps.findIndex((map) => map.id == save.save.currentMap);
-                if (fm == -1)
+                if (typeof save.save.currentMap === "number") {
+                    fm = Object.keys(maps)[save.save.currentMap];
+                }
+                if (!fm)
                     fm = save.save.currentMap;
-                if (fm < 0)
+                if (!fm)
                     throw Error("CAN'T FIND MAP!");
+                if (typeof fm === "number")
+                    fm = Object.keys(maps)[fm];
                 pl = new PlayerCharacter({ ...save.save.player });
                 fe = save.save.fallenEnemies ? [...save.save.fallenEnemies] : [];
                 id = save.save.itemData ? [...save.save.itemData] : [];
@@ -195,9 +199,15 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
             let totalText = ``;
             let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
-            let foundMap = maps.findIndex((map) => map.id == save.save.currentMap);
-            if (foundMap == -1)
+            let key = save.save.currentMap;
+            if (typeof key === "number") {
+                key = Object.keys(maps)[save.save.currentMap];
+            }
+            let foundMap = key;
+            if (!foundMap)
                 foundMap = save.save.currentMap;
+            if (!foundMap)
+                throw Error("CAN'T FIND MAP!");
             totalText += save.text.split("||")[0];
             totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
             totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;

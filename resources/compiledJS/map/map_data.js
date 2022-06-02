@@ -317,7 +317,7 @@ function fastGrabTreasure(e, chest) {
     renderEntireMap(maps[currentMap]);
 }
 function resetAllChests() {
-    maps.forEach((mp) => {
+    Object.values(maps).forEach((mp) => {
         mp.treasureChests.forEach((chest, index) => {
             chest.loot = null;
             mp.treasureChests[index] = new treasureChest({ ...chest });

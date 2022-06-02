@@ -320,8 +320,8 @@ function clickMap(event) {
     }
 }
 function changeMap(entrance) {
-    const id = maps.findIndex((m) => m.id == entrance.path.to);
-    if (id == -1) {
+    const id = entrance.path.to;
+    if (!id) {
         displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
         loadingScreen.style.display = "none";
         return;

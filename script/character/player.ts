@@ -648,6 +648,7 @@ function respawnPlayer() {
   player.abilities.forEach(abi => abi.onCooldown = 0);
   player.statusEffects = [];
   if (currentMap !== player.respawnPoint.map && player.respawnPoint.map) {
+    if (typeof player.respawnPoint.map === "number") player.respawnPoint.map = Object.keys(maps)[player.respawnPoint.map];
     loadingScreen.style.display = "block";
     loadMap(player.respawnPoint.map);
   }

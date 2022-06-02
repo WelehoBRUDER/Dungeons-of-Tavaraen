@@ -326,8 +326,8 @@ function clickMap(event: MouseEvent) {
 }
 
 function changeMap(entrance: entrance) {
-  const id = maps.findIndex((m: mapObject) => m.id == entrance.path.to);
-  if (id == -1) {
+  const id = entrance.path.to;
+  if (!id) {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
     loadingScreen.style.display = "none";
     return;
@@ -342,7 +342,7 @@ function changeMap(entrance: entrance) {
   areaName(maps[currentMap].name);
 }
 
-function loadMap(map: number) {
+function loadMap(map: string) {
   currentMap = map;
   executeLoad();
   areaName(maps[currentMap].name);

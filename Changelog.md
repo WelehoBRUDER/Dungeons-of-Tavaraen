@@ -11,6 +11,7 @@ The new changes can be gamebreaking.
 
 - Added modding support!<br>
   -> [Modding Guide](https://github.com/WelehoBRUDER/Dungeons-of-Tavaraen#modding-guide) <-
+- Reworked how maps are stored.
 
 ## Fixes & Tweaks
 
@@ -18,6 +19,7 @@ The new changes can be gamebreaking.
 - Improved settings menu.
 - Changed the way flags are stored, this can break older saves.
 - Reworked and streamlined damage calculation.
+- HP & MP regen can now be viewed in the character panel.
 - Level up button now shows "!" in red if you have unspent points.
 - Fixed items having an adjective called "undefined".
 - Fixed zoom level resetting to min when the game is loaded.

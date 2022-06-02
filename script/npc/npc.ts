@@ -36,7 +36,7 @@ class Npc {
   img: string;
   greeting: string;
   pronounSet: string;
-  currentMap: number;
+  currentMap: string;
   currentCords: tileObject;
   conditionalMaps: any;
   conditionalCords: any;
