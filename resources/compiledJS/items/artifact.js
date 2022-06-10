@@ -3,8 +3,8 @@ class Artifact extends Item {
     constructor(base, setPrice = 0, dontRollStats = false) {
         var _a, _b;
         super(base);
-        const baseItem = Object.assign({}, items[this.id]);
-        this.stats = (_a = Object.assign({}, baseItem.stats)) !== null && _a !== void 0 ? _a : {};
+        const baseItem = { ...items[this.id] };
+        this.stats = (_a = { ...baseItem.stats }) !== null && _a !== void 0 ? _a : {};
         this.artifactSet = baseItem.artifactSet;
         this.rolledStats = base.rolledStats || [];
         this.commands = {};
@@ -66,7 +66,11 @@ class Artifact extends Item {
                 if (adjectivesUsed >= maxAdjectives || name.includes(lang[stat.key + "_adjective"]))
                     return;
                 adjectivesUsed++;
-                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+                const key = `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+                if (key)
+                    name += key;
+                else
+                    adjectivesUsed--;
             });
             name += `${langName}`;
             this.name = name;

@@ -19,7 +19,7 @@ function renderInventory() {
         inventory.querySelector("." + slot + "Bg").style.opacity = "0.33";
         inventory.querySelector("." + slot).textContent = "";
         if (Object.values(player[slot]).length > 0) {
-            const _item = Object.assign({}, player[slot]);
+            const _item = { ...player[slot] };
             const img = document.createElement("img");
             const name = document.createElement("p");
             img.addEventListener("click", e => clickItem(e, player[slot], img, "PLAYER_EQUIPMENT"));
@@ -97,16 +97,16 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
         ;
         if (context == "UPGRADE" && (item.type == "artifact" || item.type == "consumable"))
             return;
-        let itm = Object.assign({}, item);
+        let itm = { ...item };
         if (resetItem) {
             if (itm.type == "weapon")
-                itm = new Weapon(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
+                itm = new Weapon({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "armor")
-                itm = new Armor(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
+                itm = new Armor({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "artifact")
-                itm = new Artifact(Object.assign({}, itm), 0, context === "MERCHANT_SELLING" ? true : false);
+                itm = new Artifact({ ...itm }, 0, context === "MERCHANT_SELLING" ? true : false);
             else if (itm.type == "consumable")
-                itm = new Consumable(Object.assign({}, itm));
+                itm = new Consumable({ ...itm });
         }
         const itemObject = document.createElement("div");
         const itemImage = document.createElement("img");
@@ -171,13 +171,13 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
     if (context == "PLAYER_SELLING") {
         itemsList.addEventListener("wheel", deltaY => {
             sellingScroll = itemsList.scrollTop;
-        });
+        }, { passive: true });
         itemsList.scrollBy(sellingScroll, sellingScroll);
     }
     else {
         itemsList.addEventListener("wheel", deltaY => {
             invScroll = itemsList.scrollTop;
-        });
+        }, { passive: true });
         itemsList.scrollBy(invScroll, invScroll);
     }
     container.append(itemsList, itemsListBar);

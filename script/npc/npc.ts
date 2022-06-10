@@ -1,53 +1,31 @@
 // THIS FILE CONTAINS THE LOGIC FOR FRIENDLY CHARACTERS //
 
-// Flags are stored as index (5: true, 0: 1) to save memory.
-// Function getFlag(str) will return the flag index.
-const flags: Array<string> =
-  [
-    "has_spoken_to_merchant",
-    "accepted_merchant_quest_1",
-    "defeated_robber_slimes_talk",
-    "completed_quest_defeat_slimes",
-    "has_heard_merchant_troubles",
-    "accepted_merchant_quest_2",
-    "exterminate_slimes_talk",
-    "completed_quest_defeat_slimes_2",
-    "maroch_slay_brethren_quest",
-    "brethren_slain_talk",
-    "completed_quest_slay_brethren"
-  ];
-
-// Returns flag index by searching with string.
+// Returns flag by searching with string.
 function getFlag(str: string) {
   str = str.toLowerCase();
-  for (let index = 0; index < flags.length; index++) {
-    if (str == flags[index].toLowerCase()) {
-      return index;
-    }
-  }
-  return -1;
+  return flags.find((flag: any) => flag.toLowerCase() == str) ?? -1;
 }
 // Either sets a flag to specified value, or modifies it.
 // If override is enabled, value is replaced instead of modified.
 // Boolean values can't be modified and will instead always be replaced (duh).
 function setFlag(str: string, value: any, override: boolean = false) {
-  let index = getFlag(str);
-  if (index > -1) {
-    if (player.flags?.[index]) {
-      if (override) player.flags[index] = value;
+  let flag = getFlag(str);
+  if (flag != -1) {
+    if (player.flags?.[flag]) {
+      if (override) player.flags[flag] = value;
       else {
         if (typeof value == "number") {
-          if (typeof player.flags[index] !== "number") player.flags[index] = 0;
-          player.flags[index] += value;
+          if (typeof player.flags[flag] !== "number") player.flags[flag] = 0;
+          player.flags[flag] += value;
         }
         else {
-          player.flags[index] = value;
+          player.flags[flag] = value;
         }
       }
     }
     else {
       console.log("adding new flag!");
-      player.flags[index] = value;
+      player.flags[flag] = value;
     }
   }
 }
@@ -58,7 +36,7 @@ class Npc {
   img: string;
   greeting: string;
   pronounSet: string;
-  currentMap: number;
+  currentMap: string;
   currentCords: tileObject;
   conditionalMaps: any;
   conditionalCords: any;

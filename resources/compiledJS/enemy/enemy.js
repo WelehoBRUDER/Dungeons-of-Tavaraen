@@ -3,19 +3,19 @@ class Enemy extends Character {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
         super(base);
-        const defaultModel = Object.assign({}, enemies[base.id]);
+        const defaultModel = { ...enemies[base.id] };
         this.sprite = defaultModel.sprite;
         this.aggroRange = (_b = (_a = defaultModel.aggroRange) !== null && _a !== void 0 ? _a : base.aggroRange) !== null && _b !== void 0 ? _b : 5;
         this.tempAggro = (_c = base.tempAggro) !== null && _c !== void 0 ? _c : 0;
         this.tempAggroLast = (_d = base.tempAggroLast) !== null && _d !== void 0 ? _d : 0;
         this.attackRange = (_e = defaultModel.attackRange) !== null && _e !== void 0 ? _e : 1;
-        this.damages = Object.assign({}, defaultModel.damages);
+        this.damages = { ...defaultModel.damages };
         this.isFoe = true;
         this.firesProjectile = defaultModel.firesProjectile;
         this.canFly = (_f = defaultModel.canFly) !== null && _f !== void 0 ? _f : false;
         this.alive = (_g = base.alive) !== null && _g !== void 0 ? _g : true;
         this.retreatLimit = (_h = base.retreatLimit) !== null && _h !== void 0 ? _h : 30;
-        this.spawnCords = Object.assign({}, base.spawnCords);
+        this.spawnCords = { ...base.spawnCords };
         this.spawnMap = base.spawnMap;
         this.loot = defaultModel.loot;
         this.shootsProjectile = defaultModel.shootsProjectile;
@@ -33,8 +33,8 @@ class Enemy extends Character {
         this.targetInterval = 4;
         this.currentTargetInterval = (_o = base.currentTargetInterval) !== null && _o !== void 0 ? _o : 0;
         this.chosenTarget = (_p = base.chosenTarget) !== null && _p !== void 0 ? _p : null;
-        this.oldCords = (_q = Object.assign({}, base.oldCords)) !== null && _q !== void 0 ? _q : Object.assign({}, this.cords);
-        this.questSpawn = (_r = Object.assign({}, base.questSpawn)) !== null && _r !== void 0 ? _r : null;
+        this.oldCords = (_q = { ...base.oldCords }) !== null && _q !== void 0 ? _q : { ...this.cords };
+        this.questSpawn = (_r = { ...base.questSpawn }) !== null && _r !== void 0 ? _r : null;
         this.indexInBaseArray = Object.keys(enemies).findIndex((en) => en == this.id);
         this.index = (_s = base.index) !== null && _s !== void 0 ? _s : -1;
         if (!this.hasBeenLeveled && this.level > 1) {

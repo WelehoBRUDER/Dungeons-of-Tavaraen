@@ -25,7 +25,7 @@ function calcDistance(startX, startY, endX, endY) {
     return xDist + yDist;
 }
 function cordsFromDir(cords, dir) {
-    let cord = Object.assign({}, cords);
+    let cord = { ...cords };
     if (dir == "up")
         cord.y--;
     else if (dir == "down")

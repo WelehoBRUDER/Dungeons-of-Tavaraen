@@ -55,7 +55,7 @@ function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
 let staticMap_normal = [];
 let staticMap_flying = [];
 let sightMap_empty = [];
-function createStaticMap() {
+async function createStaticMap() {
     staticMap_normal = maps[currentMap].base.map((yv, y) => yv.map((xv, x) => {
         if (tiles[xv].isWall || tiles[xv].isLedge)
             return 1;

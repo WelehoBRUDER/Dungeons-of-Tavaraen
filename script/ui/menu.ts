@@ -88,6 +88,9 @@ const mainMenu = document.querySelector<HTMLDivElement>(".mainMenu");
 const menu = document.querySelector<HTMLDivElement>(".gameMenu");
 const dim = document.querySelector<HTMLDivElement>(".dim");
 const mainMenuButtons = mainMenu.querySelector<HTMLDivElement>(".menuButtons");
+const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
+const settingsContent = settingsBackground.querySelector<HTMLDivElement>(".content");
+const settingsTopbar = settingsBackground.querySelector<HTMLDivElement>(".top-bar");
 
 function openGameMenu() {
   menu.textContent = "";
@@ -108,8 +111,8 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
   const reverseOptions = [...menuOptions].reverse();
   if (!noDim) {
     setTimeout(() => { dim.style.height = "0%"; }, 5);
-    const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
-    settingsBackground.textContent = "";
+    settingsContent.textContent = "";
+    settingsTopbar.style.height = "0px";
   }
   if (!keepMainMenu) {
     setTimeout(() => { mainMenu.style.display = "none"; }, 575);
@@ -144,8 +147,8 @@ window.addEventListener("keyup", (e) => {
 });
 
 async function closeSettingsMenu() {
-  const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
-  settingsBackground.textContent = "";
+  settingsContent.textContent = "";
+  settingsTopbar.style.height = "0px";
   state.optionsOpen = false;
   setTimeout(() => { dim.style.height = "0%"; }, 5);
   hideHover();
@@ -161,8 +164,8 @@ function gotoSettingsMenu(inMainMenu = false) {
   selectingHotkey = "";
   state.optionsOpen = true;
   if (!inMainMenu) closeGameMenu(true);
-  const settingsBackground = document.querySelector<HTMLDivElement>(".settingsMenu");
-  settingsBackground.textContent = "";
+  settingsTopbar.style.height = "32px";
+  settingsContent.textContent = "";
   for (let setting of menuSettings) {
     const container = document.createElement("div");
     if (setting.type == "toggle") {
@@ -185,7 +188,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         tooltip(container, lang[setting.tooltip]);
       }
       container.append(text, toggleBox);
-      settingsBackground.append(container);
+      settingsContent.append(container);
     }
     else if (setting.type == "hotkey") {
       container.classList.add("hotkeySelection");
@@ -206,7 +209,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         tooltip(container, lang[setting.tooltip]);
       }
       container.append(text, keyButton);
-      settingsBackground.append(container);
+      settingsContent.append(container);
     }
     else if (setting.type == "inputSlider") {
       container.classList.add("sliderContainer");
@@ -232,7 +235,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       };
       text.append(textVal);
       container.append(text, slider);
-      settingsBackground.append(container);
+      settingsContent.append(container);
     }
     else if (setting.type == "inputSliderReduced") {
       container.classList.add("sliderContainer");
@@ -259,7 +262,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       };
       text.append(textVal);
       container.append(text, slider);
-      settingsBackground.append(container);
+      settingsContent.append(container);
     }
     else if (setting.type == "languageSelection") {
       container.classList.add("languageSelection");
@@ -273,20 +276,24 @@ function gotoSettingsMenu(inMainMenu = false) {
         langButton.addEventListener("click", () => {
           container.childNodes.forEach((child: any) => {
             try { child.classList.remove("selectedLang"); }
-            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:260`); }
+            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:279`); }
           });
+          settings.language = language;
           lang = eval(language);
           tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
           tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
           tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
           tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
           tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+          tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+          tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+          tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
           player.updateAbilities();
           gotoSettingsMenu(true);
         });
         container.append(langButton);
       });
-      settingsBackground.append(container);
+      settingsContent.append(container);
     }
   }
 }
@@ -313,7 +320,7 @@ async function gotoMainMenu(init: boolean = false) {
 }
 
 function convertEnemytraits() {
-  maps.forEach((mp: any) => {
+  Object.values(maps).forEach((mp: any) => {
     mp.enemies.map((en: any) => {
       en.updateTraits();
     });
@@ -324,14 +331,19 @@ function LoadSlot(data: any) {
   timePlayedNow = performance.now();
   loadingScreen.style.display = "flex";
   loadingText.textContent = "Loading save...";
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "0%";
   let foundMap;
   let _pl;
   let _itmData;
   let _falEnemies;
   let _loot;
   try {
-    foundMap = maps.findIndex((map: any) => map.id == GetKey("currentMap", data).data);
-    if (foundMap == -1) foundMap = GetKey("currentMap", data).data;
+    let key = GetKey("currentMap", data).data;
+    if (typeof key === "number") {
+      key = Object.keys(maps)[key];
+    }
+    foundMap = key;
+    if (!foundMap) foundMap = GetKey("currentMap", data).data;
     if (foundMap < 0 || foundMap === undefined) throw Error("CAN'T FIND MAP!");
     _pl = new PlayerCharacter({ ...GetKey("player", data).data });
     _itmData = GetKey("itemData", data).data ?? [];
@@ -380,6 +392,7 @@ function LoadSlot(data: any) {
   player.updateAbilities();
   helper.purgeDeadEnemies();
   helper.killAllQuestEnemies();
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "100%";
   spawnQuestMonsters();
   handleEscape();
   closeGameMenu();
@@ -451,4 +464,70 @@ function calcLocalStorageUsedSpace() {
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.substring(1);
+}
+
+function saveSettings() {
+  localStorage.setItem("DOT_game_settings", JSON.stringify(settings));
+  localStorage.setItem("DOT_game_language", JSON.stringify(lang.language_id));
+}
+
+function saveSettingsFile() {
+  const saveData = (function () {
+    let link = document.createElement("a") as any;
+    document.body.appendChild(link);
+    link.style = "display: none";
+    return function (data: any, fileName: string) {
+      const json = JSON.stringify(data, null, 2),
+        blob = new Blob([json], { type: "octet/stream" }),
+        url = window.URL.createObjectURL(blob);
+      link.href = url;
+      link.download = fileName;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    };
+  }());
+  saveData(settings, "settings.json");
+}
+
+function loadSettingsFile() {
+  const fileInput = document.createElement("input");
+  fileInput.setAttribute('type', 'file');
+  fileInput.click();
+  fileInput.addEventListener("change", () => HandleSettingsFile(fileInput.files[0]));
+}
+
+function HandleSettingsFile(file: any) {
+  const reader = new FileReader();
+  let text = "";
+
+  // file reading finished successfully
+  reader.addEventListener('load', function (e) {
+    // contents of file in variable     
+    text = e.target.result as any;
+    FinishRead();
+  });
+
+  // read as text file
+  reader.readAsText(file);
+
+  function FinishRead() {
+    let Table = JSON.parse(text);
+    LoadSettings(file.name, Table);
+  }
+}
+
+function LoadSettings(name: string, settings: any) {
+  settings = new gameSettings(settings);
+  gotoSettingsMenu(state.titleScreen);
+  lang = eval(settings.language);
+  tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+  tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+  tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+  tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+  tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+  tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+  tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+  tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+  player.updateAbilities();
+  gotoSettingsMenu(true);
 }

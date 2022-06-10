@@ -252,16 +252,21 @@ function updateUI() {
   const ui = <HTMLDivElement>document.querySelector(".playerUI");
   if (!ui) throw new Error("UI NOT LOADED!");
   const hpText = <HTMLParagraphElement>ui.querySelector(".hpText");
+  const mpText = <HTMLParagraphElement>ui.querySelector(".mpText");
   const hpImg = <HTMLImageElement>ui.querySelector(".PlayerHpFill");
   const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
   const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
   hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
+  hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
+  mpText.textContent = `${Math.floor(player.stats.mp)} / ${player.getMpMax()}`;
+  mpText.innerHTML += ` <span>+${player.getRegen().mp.toFixed(2)}</span>`;
   hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
   mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
   ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();
   generateHotbar();
   generateEffects();
   generateSummonList();
+  displayLevelNotification();
   xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
 }
 
@@ -271,6 +276,14 @@ maps[currentMap].enemies.forEach((en: Enemy) => {
   en.updateAbilities();
 });
 updateUI();
+
+function displayLevelNotification() {
+  const levelNotification = document.querySelector(".perScrb .notif");
+  if (player.pp > 0 || player.sp > 0) {
+    levelNotification.style.display = "block";
+  }
+  else levelNotification.style.display = "none";
+}
 
 
 tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);

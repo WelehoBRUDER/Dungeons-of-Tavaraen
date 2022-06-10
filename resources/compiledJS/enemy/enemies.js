@@ -707,7 +707,6 @@ const enemies = {
         retreatLimit: 25,
         alive: true,
         xp: 37,
-        sprite: "norsemanBerserk",
         type: "barbarian",
         race: "human",
         img: "resources/tiles/enemies/norseman_berserk.png",

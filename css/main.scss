@@ -38,6 +38,12 @@ body {
   }
 }
 
+.texture-sheet {
+  position: absolute;
+  pointer-events: none;
+  display: none;
+}
+
 * {
   color: #fff;
   scrollbar-width: none;
@@ -204,6 +210,30 @@ body {
       text-align: center;
       margin: 0;
       padding: 0;
+    }
+
+    div.loading-bar {
+      width: 100%;
+      height: 60px;
+      background: rgb(20, 20, 20);
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+      animation: loading-bar 1.5s linear infinite;
+
+      div.loading-bar-fill {
+        transition: 200ms;
+        width: 0;
+        height: 100%;
+        background: rgb(38, 48, 194);
+        position: absolute;
+        left: 0;
+        top: 0;
+        animation: loading-bar-fill 1.5s linear infinite;
+      }
     }
   }
 
@@ -456,6 +486,10 @@ body {
       left: calc(45px * var(--ui-scale));
       top: calc(40px * var(--ui-scale));
       z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
 
       img {
         width: calc(192px * var(--ui-scale));
@@ -466,14 +500,16 @@ body {
       }
 
       .hpText {
-        position: absolute;
-        top: calc(50%);
-        left: 50%;
-        transform: translateX(-50%) translateY(-120%);
-
+        position: relative;
         font-size: calc(30px * var(--ui-scale));
         text-shadow: 0px 0px 2px black;
-        white-space: nowrap;
+        text-align: center;
+        margin-top: calc(43px * var(--ui-scale));
+
+        span {
+          opacity: 0.75;
+          font-size: calc(27px * var(--ui-scale));
+        }
       }
 
       .PlayerHpFill {
@@ -499,6 +535,27 @@ body {
         position: absolute;
         left: 0;
         top: 0;
+      }
+
+      .mpText {
+        position: absolute;
+        font-size: calc(18px * var(--ui-scale));
+        text-shadow: 0px 0px 2px black;
+        text-align: center;
+        margin-top: calc(43px * var(--ui-scale));
+        bottom: calc(-15px * var(--ui-scale));
+        white-space: nowrap;
+        left: 100%;
+        padding: calc(4px * var(--ui-scale));
+        background: rgba(25, 99, 196, 0.75);
+        border-radius: calc(4px * var(--ui-scale));
+        box-shadow: inset 0 0 calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(17, 73, 177),
+          0 0 calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(3, 14, 34);
+
+        span {
+          opacity: 0.75;
+          font-size: calc(18px * var(--ui-scale));
+        }
       }
 
       .PlayerMpBgImg {
@@ -1508,6 +1565,7 @@ body {
       grid-template-columns: repeat(4, 1fr);
 
       .screenButton {
+        position: relative;
         transition: 0.11s;
         width: calc(60px * var(--ui-scale));
         height: calc(60px * var(--ui-scale));
@@ -1521,6 +1579,16 @@ body {
           width: 100%;
           height: 100%;
           filter: drop-shadow(0 0 6px rgb(14, 13, 13)) grayscale(1) brightness(0.75);
+        }
+
+        .notif {
+          position: absolute;
+          bottom: -100%;
+          right: 0;
+          font-size: calc(50px * var(--ui-scale));
+          color: crimson;
+          text-shadow: 0 0 8px rgb(45, 15, 15);
+          display: none;
         }
       }
 

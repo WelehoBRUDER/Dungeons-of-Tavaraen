@@ -1,7 +1,7 @@
 "use strict";
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop);
+document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     hideHover();
@@ -104,36 +104,43 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             timePlayedNow = performance.now();
             loadingScreen.style.display = "flex";
             loadingText.textContent = "Loading save...";
+            document.querySelector(".loading-bar-fill").style.width = "0%";
             await helper.sleep(5);
+            document.querySelector(".loading-bar-fill").style.width = "10%";
             let fm;
             let pl;
             let fe;
             let id;
             let lc;
             try {
-                fm = maps.findIndex((map) => map.id == save.save.currentMap);
-                if (fm == -1)
+                if (typeof save.save.currentMap === "number") {
+                    fm = Object.keys(maps)[save.save.currentMap];
+                }
+                if (!fm)
                     fm = save.save.currentMap;
-                if (fm < 0)
+                if (!fm)
                     throw Error("CAN'T FIND MAP!");
-                pl = new PlayerCharacter(Object.assign({}, save.save.player));
+                if (typeof fm === "number")
+                    fm = Object.keys(maps)[fm];
+                pl = new PlayerCharacter({ ...save.save.player });
                 fe = save.save.fallenEnemies ? [...save.save.fallenEnemies] : [];
                 id = save.save.itemData ? [...save.save.itemData] : [];
                 lc = save.save.lootedChests ? [...save.save.lootedChests] : [];
                 // update classes of all dropped items just in case
                 id.map((item) => {
                     if (item.itm.type === "weapon")
-                        return item.itm = new Weapon(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Weapon({ ...items[item.itm.id] });
                     if (item.itm.type === "armor")
-                        return item.itm = new Armor(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Armor({ ...items[item.itm.id] });
                     if (item.itm.type === "artifact")
-                        return item.itm = new Artifact(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Artifact({ ...items[item.itm.id] });
                     if (item.itm.type === "consumable")
-                        return item.itm = new Consumable(Object.assign({}, items[item.itm.id]));
+                        return item.itm = new Consumable({ ...items[item.itm.id] });
                 });
                 pl.updateTraits();
                 pl.updatePerks(true);
                 pl.updateAbilities();
+                document.querySelector(".loading-bar-fill").style.width = "40%";
             }
             catch (err) {
                 console.error(err.message);
@@ -154,13 +161,16 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             movementCooldown = false;
             state.inCombat = false;
             console.log("map", fm);
+            document.querySelector(".loading-bar-fill").style.width = "70%";
             player.updateTraits();
             player.updatePerks(true);
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
+            document.querySelector(".loading-bar-fill").style.width = "85%";
             helper.purgeDeadEnemies();
             helper.killAllQuestEnemies();
+            document.querySelector(".loading-bar-fill").style.width = "90%";
             spawnQuestMonsters();
             convertEnemytraits();
             closeGameMenu();
@@ -170,6 +180,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             updateUI();
             handleEscape();
             closeAllWindowsAndMenus();
+            document.querySelector(".loading-bar-fill").style.width = "100%";
             loadingScreen.style.display = "none";
         });
         deleteGame.addEventListener("click", () => {
@@ -179,7 +190,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             gotoSaveMenu(inMainMenu, false);
         });
         try {
-            let renderedPlayer = new PlayerCharacter(Object.assign({}, save.save.player));
+            let renderedPlayer = new PlayerCharacter({ ...save.save.player });
             renderedPlayer.updateTraits();
             renderedPlayer.updatePerks(true, true);
             renderedPlayer.updateAbilities(true);
@@ -188,9 +199,15 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
             let totalText = ``;
             let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
-            let foundMap = maps.findIndex((map) => map.id == save.save.currentMap);
-            if (foundMap == -1)
+            let key = save.save.currentMap;
+            if (typeof key === "number") {
+                key = Object.keys(maps)[save.save.currentMap];
+            }
+            let foundMap = key;
+            if (!foundMap)
                 foundMap = save.save.currentMap;
+            if (!foundMap)
+                throw Error("CAN'T FIND MAP!");
             totalText += save.text.split("||")[0];
             totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
             totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
@@ -305,7 +322,7 @@ function createNewSaveGame() {
     let gameSave = {};
     player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
     timePlayedNow = performance.now();
-    gameSave.player = helper.trimPlayerObjectForSaveFile(Object.assign({}, player));
+    gameSave.player = helper.trimPlayerObjectForSaveFile({ ...player });
     gameSave.fallenEnemies = [...fallenEnemies];
     gameSave.itemData = [...itemData];
     gameSave.currentMap = maps[currentMap].id;
@@ -323,15 +340,15 @@ function createNewSaveGame() {
 function saveToFile(input) {
     player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
     timePlayedNow = performance.now();
-    var saveData = (function () {
-        let a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style = "display: none";
+    const saveData = (function () {
+        let link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style = "display: none";
         return function (data, fileName) {
-            var json = JSON.stringify(data), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = fileName;
-            a.click();
+            const json = JSON.stringify(data, null, 2), blob = new Blob([json], { type: "octet/stream" }), url = window.URL.createObjectURL(blob);
+            link.href = url;
+            link.download = fileName;
+            link.click();
             window.URL.revokeObjectURL(url);
         };
     }());
@@ -406,6 +423,10 @@ function warningMessage(txt) {
     warning.style.transform = "scale(1)";
     warning.innerHTML = "";
     warning.append(textSyntax(txt));
-    setTimeout(() => { warning.style.transform = "scale(0)"; }, 5000);
+    warning.innerHTML += `<button class="red-button" onclick="closeWarning()">OK</div>`;
+}
+function closeWarning() {
+    let warning = document.querySelector(".warningWindow");
+    warning.style.transform = "scale(0)";
 }
 //# sourceMappingURL=save.js.map

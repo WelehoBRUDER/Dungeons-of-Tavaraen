@@ -27,6 +27,7 @@ class gameSettings {
         this.hotkey_interact = base.hotkey_interact || " ";
         this.hotkey_journal = base.hotkey_journal || "j";
         this.hotkey_codex = base.hotkey_codex || "y";
+        this.language = base.language || "english";
     }
 }
 let settings = new gameSettings({
@@ -56,6 +57,7 @@ let settings = new gameSettings({
     hotkey_open_world_messages: "Enter",
     hotkey_journal: "j",
     hotkey_codex: "y",
+    language: "english"
 });
 const state = {
     inCombat: false,

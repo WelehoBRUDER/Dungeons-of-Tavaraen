@@ -1,3 +1,30 @@
+# 1.2.0 ~ 24.5.2022
+
+### Major Update
+
+## CAUTION
+
+It's highly recommended to start a new game for this update.
+The new changes can be gamebreaking.
+
+## New Additions
+
+- Added modding support!<br>
+  -> [Modding Guide](https://github.com/WelehoBRUDER/Dungeons-of-Tavaraen#modding-guide) <-
+- Reworked how maps are stored.
+
+## Fixes & Tweaks
+
+- Updated typescript to compile to es2018 instead of es2017.
+- Improved settings menu.
+- Changed the way flags are stored, this can break older saves.
+- Reworked and streamlined damage calculation.
+- MP value can now be seen in the ui.
+- HP & MP regen can now be viewed in the character panel.
+- Level up button now shows "!" in red if you have unspent points.
+- Fixed items having an adjective called "undefined".
+- Fixed zoom level resetting to min when the game is loaded.
+
 # 1.1.2 ~ 7.5.2022
 
 ### Patch

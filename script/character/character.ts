@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 interface stats {
   [str: string]: number;
   dex: number;
@@ -39,15 +39,15 @@ interface characterObject {
   statusResistances: statusResistances;
   abilities: ability[];
   weapon?: weaponClass | any;
-  offhand?: any;
+  offhand?: armorClass | any;
   chest?: armorClass | any;
   helmet?: armorClass | any;
   gloves?: armorClass | any;
   boots?: armorClass | any;
   legs?: armorClass | any;
-  artifact1?: any;
-  artifact2?: any;
-  artifact3?: any;
+  artifact1?: Artifact | any;
+  artifact2?: Artifact | any;
+  artifact3?: Artifact | any;
   isFoe?: boolean;
   kill?: Function;
   xp?: number;
@@ -78,6 +78,7 @@ interface characterObject {
   isRooted?: Function;
   inventory?: any;
   addEffect?: Function;
+  spriteMap?: tileObject;
 }
 
 interface statusObject {
@@ -96,7 +97,6 @@ const baseSpeed = {
   movementFill: 0,
   attackFill: 0
 } as any;
-
 
 class Character {
   id: string;
@@ -151,6 +151,7 @@ class Character {
   getSpeed?: Function;
   doNormalAttack?: Function;
   addEffect?: Function;
+  spriteMap?: tileObject;
   constructor(base: characterObject) {
     this.id = base.id;
     this.name = base.name ?? "name_404";
@@ -167,6 +168,7 @@ class Character {
     this.scale = base.scale ?? 1;
     this.allModifiers = {};
     this.speed = base.speed ? { ...base.speed } : { ...baseSpeed };
+    this.spriteMap = base.spriteMap ? { ...base.spriteMap } : null;
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 

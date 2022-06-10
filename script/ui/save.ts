@@ -1,6 +1,6 @@
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop);
+document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   hideHover();
   saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
@@ -100,16 +100,21 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       timePlayedNow = performance.now();
       loadingScreen.style.display = "flex";
       loadingText.textContent = "Loading save...";
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "0%";
       await helper.sleep(5);
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "10%";
       let fm;
       let pl;
       let fe;
       let id;
       let lc;
       try {
-        fm = maps.findIndex((map: any) => map.id == save.save.currentMap);
-        if (fm == -1) fm = save.save.currentMap;
-        if (fm < 0) throw Error("CAN'T FIND MAP!");
+        if (typeof save.save.currentMap === "number") {
+          fm = Object.keys(maps)[save.save.currentMap];
+        }
+        if (!fm) fm = save.save.currentMap;
+        if (!fm) throw Error("CAN'T FIND MAP!");
+        if (typeof fm === "number") fm = Object.keys(maps)[fm];
         pl = new PlayerCharacter({ ...save.save.player });
         fe = save.save.fallenEnemies ? [...save.save.fallenEnemies] : [];
         id = save.save.itemData ? [...save.save.itemData] : [];
@@ -124,6 +129,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
         pl.updateTraits();
         pl.updatePerks(true);
         pl.updateAbilities();
+        document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "40%";
       }
       catch (err: any) {
         console.error(err.message);
@@ -144,13 +150,16 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       movementCooldown = false;
       state.inCombat = false;
       console.log("map", fm);
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "70%";
       player.updateTraits();
       player.updatePerks(true);
       player.updateAbilities();
       renderMinimap(maps[currentMap]);
       renderAreaMap(maps[currentMap]);
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "85%";
       helper.purgeDeadEnemies();
       helper.killAllQuestEnemies();
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "90%";
       spawnQuestMonsters();
       convertEnemytraits();
       closeGameMenu();
@@ -160,6 +169,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       updateUI();
       handleEscape();
       closeAllWindowsAndMenus();
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "100%";
       loadingScreen.style.display = "none";
 
     });
@@ -179,8 +189,13 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
       let totalText = ``;
       let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
-      let foundMap = maps.findIndex((map: any) => map.id == save.save.currentMap);
-      if (foundMap == -1) foundMap = save.save.currentMap;
+      let key = save.save.currentMap;
+      if (typeof key === "number") {
+        key = Object.keys(maps)[save.save.currentMap];
+      }
+      let foundMap = key;
+      if (!foundMap) foundMap = save.save.currentMap;
+      if (!foundMap) throw Error("CAN'T FIND MAP!");
       totalText += save.text.split("||")[0];
       totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
       totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
@@ -311,17 +326,17 @@ function createNewSaveGame() {
 function saveToFile(input: string) {
   player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
   timePlayedNow = performance.now();
-  var saveData = (function () {
-    let a = document.createElement("a") as any;
-    document.body.appendChild(a);
-    a.style = "display: none";
+  const saveData = (function () {
+    let link = document.createElement("a") as any;
+    document.body.appendChild(link);
+    link.style = "display: none";
     return function (data: any, fileName: string) {
-      var json = JSON.stringify(data),
+      const json = JSON.stringify(data, null, 2),
         blob = new Blob([json], { type: "octet/stream" }),
         url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
+      link.href = url;
+      link.download = fileName;
+      link.click();
       window.URL.revokeObjectURL(url);
     };
   }());
@@ -404,5 +419,10 @@ function warningMessage(txt: string) {
   warning.style.transform = "scale(1)";
   warning.innerHTML = "";
   warning.append(textSyntax(txt));
-  setTimeout(() => { warning.style.transform = "scale(0)"; }, 5000);
+  warning.innerHTML += `<button class="red-button" onclick="closeWarning()">OK</div>`;
+}
+
+function closeWarning() {
+  let warning = document.querySelector<HTMLDivElement>(".warningWindow");
+  warning.style.transform = "scale(0)";
 }

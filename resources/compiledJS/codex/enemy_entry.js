@@ -6,7 +6,7 @@ function createEnemyInfo(enemy) {
     Object.values(enemy.damages).forEach((dmg) => totalDmg += dmg);
     const enemyStats = enemy.getStats();
     const hitChances = enemy.getHitchance();
-    const enemyCoreStats = Object.assign(Object.assign({}, enemyStats), hitChances);
+    const enemyCoreStats = { ...enemyStats, ...hitChances };
     const enemyResists = enemy.getResists();
     const enemyStatusResists = enemy.getStatusResists();
     const imageContainer = document.createElement("div");

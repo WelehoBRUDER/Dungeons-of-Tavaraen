@@ -183,11 +183,8 @@ class PlayerCharacter extends Character {
         prk.commandsExecuted = true;
         this.perks[index] = { ...prk };
         prk.traits.forEach((stat: any) => {
-          console.log(player.traits);
-          console.log(player.traits.findIndex((t: PermanentStatModifier) => t.id === stat.id));
           if (player.traits.findIndex((t: PermanentStatModifier) => t.id === stat.id) !== -1) return;
           else {
-            console.log(stat, "MITÄ VITTUUA");
             this.traits.push({ ...stat });
           }
         });
@@ -456,7 +453,6 @@ class PlayerCharacter extends Character {
       }
       else {
         let damages: any = this.weapon?.id ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
-        console.log(damages);
         const stats = this.getStats();
         damages.map(([key, num]: any) => {
           let { v: val, m: mod } = getModifiers(this, key + "Damage");
@@ -464,7 +460,11 @@ class PlayerCharacter extends Character {
           mod *= this.allModifiers["damageP"];
           let bonus: number = 0;
           bonus += num * stats[this.weapon?.statBonus] / 50;
+          if (!this.weapon) bonus = num * stats["str"] / 50;
           if (isNaN(val)) val = 0;
+          if (isNaN(mod)) mod = 1;
+          if (isNaN(bonus)) bonus = 0;
+          if (isNaN(num)) num = 0;
           console.log(Math.floor((num + val + bonus) * mod));
           dmg += Math.floor((num + val + bonus) * mod);
         });
@@ -648,6 +648,7 @@ function respawnPlayer() {
   player.abilities.forEach(abi => abi.onCooldown = 0);
   player.statusEffects = [];
   if (currentMap !== player.respawnPoint.map && player.respawnPoint.map) {
+    if (typeof player.respawnPoint.map === "number") player.respawnPoint.map = Object.keys(maps)[player.respawnPoint.map];
     loadingScreen.style.display = "block";
     loadMap(player.respawnPoint.map);
   }

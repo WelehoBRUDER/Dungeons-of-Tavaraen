@@ -17,16 +17,14 @@ function renderMinimap(map) {
     for (let y = 0; y < map.base.length; y++) {
         for (let x = 0; x < map.base[y].length; x++) {
             const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b[x];
-            // @ts-expect-error
             const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
             const clutterId = (_f = (_e = map.clutter) === null || _e === void 0 ? void 0 : _e[y]) === null || _f === void 0 ? void 0 : _f[x];
-            // @ts-expect-error
             const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
             if (sprite) {
-                minimapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+                minimapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
             }
             if (clutterSprite) {
-                minimapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+                minimapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
             }
         }
     }
@@ -100,16 +98,14 @@ function renderAreaMap(map) {
     for (let y = 0; y < map.base.length; y++) {
         for (let x = 0; x < map.base[y].length; x++) {
             const imgId = (_b = (_a = map.base) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b[x];
-            // @ts-expect-error
             const sprite = (_d = (_c = tiles[imgId]) === null || _c === void 0 ? void 0 : _c.spriteMap) !== null && _d !== void 0 ? _d : { x: 128, y: 0 };
             const clutterId = (_f = (_e = map.clutter) === null || _e === void 0 ? void 0 : _e[y]) === null || _f === void 0 ? void 0 : _f[x];
-            // @ts-expect-error
             const clutterSprite = (_g = clutters[clutterId]) === null || _g === void 0 ? void 0 : _g.spriteMap;
             if (sprite) {
-                areaMapCtx.drawImage(spriteMap_tiles, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+                areaMapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
             }
             if (clutterSprite) {
-                areaMapCtx.drawImage(spriteMap_tiles, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+                areaMapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
             }
         }
     }

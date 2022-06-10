@@ -14,7 +14,7 @@ interface enemy extends characterObject {
   decideAction?: Function,
   aggro?: Function;
   spawnCords?: tileObject;
-  spawnMap?: number;
+  spawnMap?: string;
   loot: Array<any>;
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;
@@ -54,7 +54,7 @@ class Enemy extends Character {
   aggro: Function;
   retreatLimit: number;
   spawnCords?: tileObject;
-  spawnMap?: number;
+  spawnMap?: string;
   loot: Array<any>;
   shootsProjectile?: string;
   hasBeenLeveled?: boolean;
@@ -78,6 +78,7 @@ class Enemy extends Character {
   questSpawn?: any;
   indexInBaseArray?: number;
   index?: number;
+  spriteMap?: { x: number, y: number; };
   constructor(base: enemy) {
     super(base);
     const defaultModel: any = { ...enemies[base.id] };

@@ -487,6 +487,8 @@ const finnish = {
   revive: "Olet herännyt henkiin pyhäköllä!",
   enter_area: "Astu sisälle", // kassun käännös
   no_entry: "Et ole vielä löytänyt tätä asiaa...",
+  disable: "Poista käytöstä",
+  enable: "Ota käyttöön",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -573,6 +575,7 @@ const finnish = {
   menu_main_screen: "Päämenu",
   menu_new_game: "Uusi Peli",
   menu_load_game: "Lataa Peli",
+  menu_mods: "Modit",
 
   setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
   setting_toggle_minimap: "Minikartta pois/päällä",
@@ -610,12 +613,15 @@ const finnish = {
   load_game: "Jatka peliä",
   delete_save: "Poista peli",
   create_save: "Luo uusi tallennus",
-  create_file: "Tallenna tiedostoon",
-  load_file: "Jatka peliä tiedostosta",
+  create_file: "Tallenna tiedostoon (lataa .txt tiedoston)",
+  load_file: "Jatka peliä tiedostosta (avaa valikon)",
   storage_used: "Tallennus tila",
   out_of_date: "\tVanhentunut \n\nTämä tallennus on vanhentunut, \nja täten ei välttämättä toimi oikein.",
   version: "Versio",
   old_save: "Vanha",
+  save_settings: "Tallenna asetukset",
+  save_settings_file: "Tallenna asetukset tiedostoon (lataa .json tiedoston)",
+  load_settings_file: "Lataa asetukset tiedostosta (avaa valikon)",
 
   // Grades
   common: "Yleinen",
@@ -632,6 +638,7 @@ const finnish = {
   cun_adjective: "Ovela",
   mpMax_adjective: "Henkinen",
   hpMax_adjective: "Terve",
+  attack_damage_multiplier_adjective: "Voimakas",
   spellDamage_adjective: "Maaginen",
   rangedDamage_adjective: "Kaukainen",
   meleeDamage_adjective: "Fyysinen",
@@ -654,6 +661,15 @@ const finnish = {
   damage_adjective: "Vahingoittava",
   movementSpeed_adjective: "Nopea",
   attackSpeed_adjective: "Kiireinen",
+  slashResist_adjective: "Suojeleva",
+  crushResist_adjective: "Suojeleva",
+  pierceResist_adjective: "Suojeleva",
+  magicResist_adjective: "Suojeleva",
+  darkResist_adjective: "Suojeleva",
+  divineResist_adjective: "Suojeleva",
+  fireResist_adjective: "Suojeleva",
+  iceResist_adjective: "Suojeleva",
+  lightningResist_adjective: "Suojeleva",
   // Negative adjectives
   str_adjective_negative: "Heikko",
   dex_adjective_negative: "Jähmeä",
@@ -662,6 +678,7 @@ const finnish = {
   cun_adjective_negative: "Yksinkertainen",
   mpMax_adjective_negative: "Heikentävä",
   hpMax_adjective_negative: "Lamaannuttava",
+  attack_damage_multiplier_adjective_negative: "Mitätön",
   spellDamage_adjective_negative: "Taian-vastainen",
   rangedDamage_adjective_negative: "Lähinäköinen",
   meleeDamage_adjective_negative: "Herkkä",
@@ -684,6 +701,15 @@ const finnish = {
   damage_adjective_negative: "Lannistava",
   movementSpeed_adjective_negative: "Hidas",
   attackSpeed_adjective_negative: "Hidastava",
+  slashResist_adjective_negative: "Epäsuojeleva",
+  crushResist_adjective_negative: "Epäsuojeleva",
+  pierceResist_adjective_negative: "Epäsuojeleva",
+  magicResist_adjective_negative: "Epäsuojeleva",
+  darkResist_adjective_negative: "Epäsuojeleva",
+  divineResist_adjective_negative: "Epäsuojeleva",
+  fireResist_adjective_negative: "Epäsuojeleva",
+  iceResist_adjective_negative: "Epäsuojeleva",
+  lightningResist_adjective_negative: "Epäsuojeleva",
 
   // Statuses
   effect_defend_name: "Puolustaa",
@@ -1414,6 +1440,8 @@ const english = {
   revive: "You have been revived at a shrine!",
   enter_area: "Enter area",
   no_entry: "You have not yet discovered this...",
+  disable: "Disable",
+  enable: "Enable",
 
   // Character names
   testMerchant_name: "Karl Bauer",
@@ -1513,6 +1541,7 @@ const english = {
   menu_main_screen: "Main Menu",
   menu_new_game: "New Game",
   menu_load_game: "Load Game",
+  menu_mods: "Mods",
 
   setting_log_enemy_movement: "Log character movement",
   setting_toggle_minimap: "Toggle minimap",
@@ -1556,6 +1585,9 @@ const english = {
   out_of_date: "\tOut of date \n\nThis save is out of date, \nand thus may not work anymore.",
   version: "Version",
   old_save: "Old",
+  save_settings: "Save settings",
+  save_settings_file: "Save settings to file (downloads a .json file)",
+  load_settings_file: "Load settings from file (opens prompt)",
 
   // Grades
   common: "Common",
@@ -1572,6 +1604,7 @@ const english = {
   cun_adjective: "Cunning",
   mpMax_adjective: "Spiritual",
   hpMax_adjective: "Healthy",
+  attack_damage_multiplier_adjective: "Powerful",
   spellDamage_adjective: "Magically Oriented",
   rangedDamage_adjective: "Range Oriented",
   meleeDamage_adjective: "Physically Oriented",
@@ -1594,6 +1627,15 @@ const english = {
   damage_adjective: "Damaging",
   movementSpeed_adjective: "Quick",
   attackSpeed_adjective: "Hasty",
+  slashResist_adjective: "Shielding",
+  crushResist_adjective: "Shielding",
+  pierceResist_adjective: "Shielding",
+  magicResist_adjective: "Shielding",
+  darkResist_adjective: "Shielding",
+  divineResist_adjective: "Shielding",
+  fireResist_adjective: "Shielding",
+  iceResist_adjective: "Shielding",
+  lightningResist_adjective: "Shielding",
   // Negative adjectives
   str_adjective_negative: "Weak",
   dex_adjective_negative: "Sluggish",
@@ -1602,6 +1644,7 @@ const english = {
   cun_adjective_negative: "Simple",
   mpMax_adjective_negative: "Draining",
   hpMax_adjective_negative: "Debilitating",
+  attack_damage_multiplier_adjective_negative: "Weak",
   spellDamage_adjective_negative: "Anti-magical",
   rangedDamage_adjective_negative: "Near Sighted",
   meleeDamage_adjective_negative: "Frail",
@@ -1624,6 +1667,15 @@ const english = {
   damage_adjective_negative: "Enfeebling",
   movementSpeed_adjective_negative: "Slow",
   attackSpeed_adjective_negative: "Rigid",
+  slashResist_adjective_negative: "Susceptive",
+  crushResist_adjective_negative: "Susceptive",
+  pierceResist_adjective_negative: "Susceptive",
+  magicResist_adjective_negative: "Susceptive",
+  darkResist_adjective_negative: "Susceptive",
+  divineResist_adjective_negative: "Susceptive",
+  fireResist_adjective_negative: "Susceptive",
+  iceResist_adjective_negative: "Susceptive",
+  lightningResist_adjective_negative: "Susceptive",
 
   // Statuses
   effect_defend_name: "Defending",

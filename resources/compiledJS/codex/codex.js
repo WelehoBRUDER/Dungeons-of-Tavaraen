@@ -105,7 +105,7 @@ function loopCodex(entry) {
         listContainer.querySelector(`.${(_b = entry === null || entry === void 0 ? void 0 : entry.parent) === null || _b === void 0 ? void 0 : _b.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
     }
     if (entry.import_from_array) {
-        Object.values(Object.assign({}, eval(entry.import_from_array))).forEach((_entry, index) => {
+        Object.values({ ...eval(entry.import_from_array) }).forEach((_entry, index) => {
             if (_entry.id.includes("error") || _entry.id == "attack")
                 return;
             createCodexEntry(entry, _entry, entry.needs_encounter, content, index);
@@ -173,13 +173,13 @@ function clickListEntry(entry) {
     contentContainer.innerHTML = "";
     let object;
     try {
-        object = Object.assign({}, eval(category)[id]);
+        object = { ...eval(category)[id] };
     }
     catch (err) {
         if (DEVMODE)
             displayText(`<c>red<c>${err} at line codex:177`);
     }
-    codexHistory["displayed"] = { id: id, category: category, object: Object.assign({}, object) };
+    codexHistory["displayed"] = { id: id, category: category, object: { ...object } };
     handleDisplayEntry(category, object);
 }
 function handleDisplayEntry(category, object) {

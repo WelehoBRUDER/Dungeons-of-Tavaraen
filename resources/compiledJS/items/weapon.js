@@ -3,16 +3,16 @@ class Weapon extends Item {
     constructor(base, setPrice = 0, dontRollStats = false) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
-        const baseItem = Object.assign({}, items[this.id]);
+        const baseItem = { ...items[this.id] };
         this.name = (_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : baseItem.name;
         this.level = (_b = base.level) !== null && _b !== void 0 ? _b : 0;
         this.maxLevel = (_c = baseItem.maxLevel) !== null && _c !== void 0 ? _c : 5;
         this.range = baseItem.range;
         this.firesProjectile = baseItem.firesProjectile;
         this.twoHanded = (_d = baseItem.twoHanded) !== null && _d !== void 0 ? _d : false;
-        this.damages = (_f = leveledStats(Object.assign({}, baseItem.damages), (_e = this.level) !== null && _e !== void 0 ? _e : 0)) !== null && _f !== void 0 ? _f : {};
-        this.stats = (_g = Object.assign({}, baseItem.stats)) !== null && _g !== void 0 ? _g : {};
-        this.commands = (_h = Object.assign({}, baseItem.commands)) !== null && _h !== void 0 ? _h : {};
+        this.damages = (_f = leveledStats({ ...baseItem.damages }, (_e = this.level) !== null && _e !== void 0 ? _e : 0)) !== null && _f !== void 0 ? _f : {};
+        this.stats = (_g = { ...baseItem.stats }) !== null && _g !== void 0 ? _g : {};
+        this.commands = (_h = { ...baseItem.commands }) !== null && _h !== void 0 ? _h : {};
         this.statBonus = (_j = baseItem.statBonus) !== null && _j !== void 0 ? _j : "str";
         this.rolledStats = base.rolledStats || [];
         if (setPrice > 0)
@@ -90,7 +90,11 @@ class Weapon extends Item {
                 if (adjectivesUsed >= maxAdjectives || name.includes(lang[stat.key + "_adjective"]))
                     return;
                 adjectivesUsed++;
-                name += `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+                const key = `${adjectivesUsed === 1 ? " " : ""}${lang[stat.key + "_adjective" + `${stat.num < 0 ? "_negative" : ""}`]} `;
+                if (key)
+                    name += key;
+                else
+                    adjectivesUsed--;
             });
             name += `${langName}`;
             this.name = name;

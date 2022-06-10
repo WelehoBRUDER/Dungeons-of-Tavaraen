@@ -230,11 +230,11 @@ function spawnQuestMonsters() {
       let uniques = uniqueQuestSpawns[obj.spawnUnique];
       uniques.forEach((enemy: any, index: number) => {
         let foundUniqueMob = false;
-        maps.find((m: any) => m.id == enemy.map).enemies.forEach((en: any) => {
+        maps[enemy.map].enemies.forEach((en: any) => {
           if (en.spawnCords.x == enemy.pos.x && en.spawnCords.y == enemy.pos.y) foundUniqueMob = true;
         });
         if (!foundUniqueMob) {
-          let spawnMap = maps.find((m: any) => m.id == enemy.map);
+          let spawnMap = maps[enemy.map];
           spawnMap.enemies.push(new Enemy({ ...enemies[enemy.enemy], cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } }));
           spawnMap.enemies[spawnMap.enemies.length - 1].updateTraits();
         }

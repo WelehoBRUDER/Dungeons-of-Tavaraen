@@ -5,7 +5,7 @@
     sprite: "villageMan", Sprite works identically to enemies, but try to make unique ones :D
     greeting: "generic", Greeting is the id of the opening dialog displayed when speaking to this character, before choosing any dialog options.
     pronounSet: "neutral", He/She/They, obviosly does not apply to Finnish.
-    currentMap: 0, Which map the character appears in right now
+    currentMap: "cave_of_awakening", Which map the character appears in right now
     currentCords: {x: 16, y: 74}, Where on the map the character appears right now
     conditionalMaps: [], List of maps the character will appear in the future
     conditionalCords: [] List of the places where the character will appear in
@@ -18,7 +18,7 @@ const NPCcharacters = [
     img: "resources/tiles/characters/generic_village_man.png",
     greeting: "generic_hail_friend",
     pronounSet: "masculine",
-    currentMap: 2,
+    currentMap: "western_heere_coast",
     currentCords: { x: 45, y: 168 },
     conditionalMaps: [],
     conditionalCords: []
@@ -29,7 +29,7 @@ const NPCcharacters = [
     img: "resources/tiles/characters/blacksmith_maroch.png",
     greeting: "generic_hail_friend",
     pronounSet: "masculine",
-    currentMap: 3,
+    currentMap: "central_heere",
     currentCords: { x: 179, y: 24 },
     conditionalMaps: [],
     conditionalCords: []
@@ -40,7 +40,7 @@ const NPCcharacters = [
     img: "resources/tiles/characters/orc_warrior_lady.png",
     greeting: "thrisna_welcome",
     pronounSet: "feminine",
-    currentMap: 3,
+    currentMap: "central_heere",
     currentCords: { x: 179, y: 38 },
     conditionalMaps: [],
     conditionalCords: []

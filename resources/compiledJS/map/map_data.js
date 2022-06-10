@@ -110,7 +110,7 @@ class treasureChest {
         this.id = base.id;
         if (!this.id)
             throw new Error("NO ID");
-        this.cords = Object.assign({}, base.cords);
+        this.cords = { ...base.cords };
         this.map = (_a = base.map) !== null && _a !== void 0 ? _a : 0;
         this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : "treasureChest1";
         this.isUnique = (_c = base.isUnique) !== null && _c !== void 0 ? _c : false;
@@ -131,17 +131,17 @@ class treasureChest {
                         var itm;
                         // @ts-ignore
                         if (obj.type == "weapon")
-                            itm = new Weapon(Object.assign({}, items[obj.item]));
+                            itm = new Weapon({ ...items[obj.item] });
                         else if (obj.type == "armor")
-                            itm = new Armor(Object.assign({}, items[obj.item]));
+                            itm = new Armor({ ...items[obj.item] });
                         else if (obj.type == "artifact")
-                            itm = new Artifact(Object.assign({}, items[obj.item]));
+                            itm = new Artifact({ ...items[obj.item] });
                         else if (obj.type == "consumable")
-                            itm = new Consumable(Object.assign({}, items[obj.item]));
+                            itm = new Consumable({ ...items[obj.item] });
                         if (itm.stacks)
                             itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
                         if (this.loot.length < max)
-                            this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                            this.loot.push({ ...itm, dataIndex: this.loot.length });
                     }
                     else if (obj.type == "gold") {
                         let amount = helper.random(obj.amount[1], obj.amount[0]);
@@ -152,16 +152,16 @@ class treasureChest {
                     let obj = pool[Math.floor(helper.random(pool.length - 2, 0))];
                     let itm;
                     if (obj.type == "weapon")
-                        itm = new Weapon(Object.assign({}, items[obj.item]));
+                        itm = new Weapon({ ...items[obj.item] });
                     else if (obj.type == "armor")
-                        itm = new Armor(Object.assign({}, items[obj.item]));
+                        itm = new Armor({ ...items[obj.item] });
                     else if (obj.type == "artifact")
-                        itm = new Artifact(Object.assign({}, items[obj.item]));
+                        itm = new Artifact({ ...items[obj.item] });
                     else if (obj.type == "consumable")
-                        itm = new Consumable(Object.assign({}, items[obj.item]));
+                        itm = new Consumable({ ...items[obj.item] });
                     if (itm.stacks)
                         itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
-                    this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                    this.loot.push({ ...itm, dataIndex: this.loot.length });
                 }
             }
             else {
@@ -170,16 +170,16 @@ class treasureChest {
                     let obj = helper.weightedRandom(pool);
                     let itm;
                     if (obj.type == "weapon")
-                        itm = new Weapon(Object.assign({}, items[obj.item]));
+                        itm = new Weapon({ ...items[obj.item] });
                     else if (obj.type == "armor")
-                        itm = new Armor(Object.assign({}, items[obj.item]));
+                        itm = new Armor({ ...items[obj.item] });
                     else if (obj.type == "artifact")
-                        itm = new Artifact(Object.assign({}, items[obj.item]));
+                        itm = new Artifact({ ...items[obj.item] });
                     else if (obj.type == "consumable")
-                        itm = new Consumable(Object.assign({}, items[obj.item]));
+                        itm = new Consumable({ ...items[obj.item] });
                     if (itm.stacks)
                         itm.amount = Math.floor(helper.random(obj.amount[1], obj.amount[0]));
-                    this.loot.push(Object.assign(Object.assign({}, itm), { dataIndex: this.loot.length }));
+                    this.loot.push({ ...itm, dataIndex: this.loot.length });
                 }
                 let gold = pool.find(t => t.type == "gold");
                 if (gold) {
@@ -204,7 +204,7 @@ class treasureChest {
                 document.body.addEventListener("keyup", e => fastGrabTreasure(e, this), once);
             }
             else {
-                lootedChests.push({ cords: Object.assign({}, this.cords), sinceOpened: 0, map: currentMap });
+                lootedChests.push({ cords: { ...this.cords }, sinceOpened: 0, map: currentMap });
                 showInteractPrompt();
                 modifyCanvas();
                 closeInventory();
@@ -225,13 +225,13 @@ function lootEnemy(enemy) {
             var itm;
             // @ts-ignore
             if (obj.type == "weapon")
-                itm = new Weapon(Object.assign({}, items[obj.item]));
+                itm = new Weapon({ ...items[obj.item] });
             else if (obj.type == "armor" || obj.type == "offhand")
-                itm = new Armor(Object.assign({}, items[obj.item]));
+                itm = new Armor({ ...items[obj.item] });
             else if (obj.type == "artifact")
-                itm = new Artifact(Object.assign({}, items[obj.item]));
+                itm = new Artifact({ ...items[obj.item] });
             else if (obj.type == "consumable")
-                itm = new Consumable(Object.assign({}, items[obj.item]));
+                itm = new Consumable({ ...items[obj.item] });
             else
                 itm = items["A0_error"];
             createDroppedItem(enemy.cords, itm);
@@ -249,7 +249,7 @@ function pickLoot() {
     let totalArray = [];
     itemData.forEach((item, index) => {
         if (item.cords.x == player.cords.x && item.cords.y == player.cords.y && currentMap == item.map) {
-            totalArray.push(Object.assign(Object.assign({}, item.itm), { dataIndex: index }));
+            totalArray.push({ ...item.itm, dataIndex: index });
         }
     });
     if (totalArray.length > 0) {
@@ -311,16 +311,16 @@ function grabTreasure(e, item, chest, index, fromContextMenu = false) {
 function fastGrabTreasure(e, chest) {
     if (e.key !== settings.hotkey_interact)
         return;
-    player.addItem(Object.assign({}, chest.loot[0]));
+    player.addItem({ ...chest.loot[0] });
     chest.loot.splice(0, 1);
     chest.lootChest();
     renderEntireMap(maps[currentMap]);
 }
 function resetAllChests() {
-    maps.forEach((mp) => {
+    Object.values(maps).forEach((mp) => {
         mp.treasureChests.forEach((chest, index) => {
             chest.loot = null;
-            mp.treasureChests[index] = new treasureChest(Object.assign({}, chest));
+            mp.treasureChests[index] = new treasureChest({ ...chest });
         });
     });
 }

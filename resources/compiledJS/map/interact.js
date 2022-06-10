@@ -291,7 +291,7 @@ function clickMap(event) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
-                    player.statusEffects.push(new statEffect(Object.assign({}, statusEffects[status]), state.abiSelected.statusModifiers));
+                    player.statusEffects.push(new statEffect({ ...statusEffects[status] }, state.abiSelected.statusModifiers));
                 }
                 else {
                     player.statusEffects.find((eff) => eff.id == status).last.current += statusEffects[status].last.total;
@@ -320,15 +320,16 @@ function clickMap(event) {
     }
 }
 function changeMap(entrance) {
-    const id = maps.findIndex((m) => m.id == entrance.path.to);
-    if (id == -1) {
+    const id = entrance.path.to;
+    if (!id) {
         displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
         loadingScreen.style.display = "none";
         return;
     }
     ;
+    document.querySelector(".loading-bar-fill").style.width = "0%";
     currentMap = id;
-    player.cords = Object.assign({}, entrance.path.cords);
+    player.cords = { ...entrance.path.cords };
     turnOver = true;
     enemiesHadTurn = 0;
     state.inCombat = false;
@@ -342,11 +343,15 @@ function loadMap(map) {
 }
 async function executeLoad() {
     loadingText.textContent = "Loading minimap assets...";
+    document.querySelector(".loading-bar-fill").style.width = "10%";
     loadMiscMaps().then(() => {
         setLoadingText("Loading static map assets...").then(() => {
+            document.querySelector(".loading-bar-fill").style.width = "46%";
             loadStaticMaps().then(() => {
                 setLoadingText("Loading UI...").then(() => {
+                    document.querySelector(".loading-bar-fill").style.width = "64%";
                     loadUI().then(() => {
+                        document.querySelector(".loading-bar-fill").style.width = "80%";
                         loadingScreen.style.display = "none";
                         modifyCanvas(true);
                         renderMinimap(maps[currentMap]);

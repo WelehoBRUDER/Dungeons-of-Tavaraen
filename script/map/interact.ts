@@ -326,12 +326,13 @@ function clickMap(event: MouseEvent) {
 }
 
 function changeMap(entrance: entrance) {
-  const id = maps.findIndex((m: mapObject) => m.id == entrance.path.to);
-  if (id == -1) {
+  const id = entrance.path.to;
+  if (!id) {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["map_not_found"]}`);
     loadingScreen.style.display = "none";
     return;
   };
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "0%";
   currentMap = id;
   player.cords = { ...entrance.path.cords };
   turnOver = true;
@@ -341,7 +342,7 @@ function changeMap(entrance: entrance) {
   areaName(maps[currentMap].name);
 }
 
-function loadMap(map: number) {
+function loadMap(map: string) {
   currentMap = map;
   executeLoad();
   areaName(maps[currentMap].name);
@@ -349,11 +350,15 @@ function loadMap(map: number) {
 
 async function executeLoad() {
   loadingText.textContent = "Loading minimap assets...";
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "10%";
   loadMiscMaps().then(() => {
     setLoadingText("Loading static map assets...").then(() => {
+      document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "46%";
       loadStaticMaps().then(() => {
         setLoadingText("Loading UI...").then(() => {
+          document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "64%";
           loadUI().then(() => {
+            document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "80%";
             loadingScreen.style.display = "none";
             modifyCanvas(true);
             renderMinimap(maps[currentMap]);

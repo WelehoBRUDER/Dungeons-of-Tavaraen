@@ -43,7 +43,7 @@ function displayLatestWorldHistoryMessages() {
 
 worldTextContainer.addEventListener("wheel", () => {
   worldTextScroll = worldTextContainer.scrollTop;
-});
+}, { passive: true });
 
 function displayAllTextHistory() {
   worldTextContainer.style.transition = `0.25s`;

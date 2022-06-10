@@ -8,8 +8,8 @@ class statEffect {
         const defaultEffect = statusEffects[base.id];
         this.id = defaultEffect.id;
         this.name = defaultEffect.name;
-        this.dot = setDOT(Object.assign({}, defaultEffect.dot));
-        this.effects = effectsInit(Object.assign({}, defaultEffect.effects), this.id);
+        this.dot = setDOT({ ...defaultEffect.dot });
+        this.effects = effectsInit({ ...defaultEffect.effects }, this.id);
         this.last = { total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif) };
         this.rooted = defaultEffect.rooted;
         this.type = defaultEffect.type;

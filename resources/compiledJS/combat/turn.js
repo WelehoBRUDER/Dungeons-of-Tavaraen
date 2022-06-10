@@ -79,7 +79,7 @@ async function advanceTurn() {
                     enemy.turnsToRes = 200;
                 enemy.turnsToRes--;
                 if (enemy.turnsToRes <= 0) {
-                    maps[enemy.spawnMap].enemies.push(new Enemy(Object.assign(Object.assign({}, enemies[enemy.id]), { level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap })));
+                    maps[enemy.spawnMap].enemies.push(new Enemy({ ...enemies[enemy.id], level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap }));
                     fallenEnemies.splice(index, 1);
                 }
                 return true;

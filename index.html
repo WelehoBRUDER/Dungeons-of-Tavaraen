@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="resources/compiledCSS/perks.css">
   <link rel="stylesheet" href="resources/compiledCSS/codex.css">
   <link rel="stylesheet" href="resources/compiledCSS/character_creation.css">
+  <link rel="stylesheet" href="resources/compiledCSS/mods.css">
   <title>Dungeons of Tavaraen - In Development</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -18,10 +19,13 @@
 
 <body>
   <div class="main">
-    <p class="version-number">Ver. Alpha 1.1.2</p>
+    <p class="version-number">Ver. Alpha 1.2</p>
     <h1 class="fps-counter">9999</h1>
     <div class="loading">
       <h1 class="loading-text"></h1>
+      <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+      </div>
     </div>
     <div class="area-name">
       <h1 class="title">Tavaraen</h1>
@@ -51,18 +55,22 @@
       <div class="playerButtons">
         <div class="screenButton invScrb" onclick="renderInventory()">
           <img src="resources/icons/inventory.png" alt="">
+          <p class="notif">!</p>
         </div>
         <div class="screenButton chaScrb" onclick="renderCharacter()">
           <img src="resources/icons/character.png" alt="">
         </div>
         <div class="screenButton perScrb" onclick="openLevelingScreen()">
           <img src="resources/icons/perks.png" alt="">
+          <p class="notif">!</p>
         </div>
         <div class="screenButton jorScrb" onclick="renderPlayerQuests()">
           <img src="resources/icons/emblem_of_scholar.png" alt="">
+          <p class="notif">!</p>
         </div>
         <div class="screenButton codScrb" onclick="openIngameCodex()">
           <img src="resources/icons/warn.png" alt="">
+          <p class="notif">!</p>
         </div>
         <div class="screenButton escScrb" onclick="handleEscape()">
           <img src="resources/icons/menu.png" alt="">
@@ -78,6 +86,7 @@
       <div class="playerMpBg">
         <img src="resources/ui/mana_bg.png" alt="" class="PlayerMpBgImg">
         <img src="resources/ui/mana.png" alt="" class="PlayerMpFill">
+        <p class="mpText">50/50</p>
       </div>
       <div class="goldContainer">
         <img src="resources/icons/goldPile.png" alt="" class="playerGoldIcon">
@@ -204,9 +213,24 @@
 
     <div class="dim"></div>
     <div class="gameMenu"></div>
-    <div class="settingsMenu"></div>
+    <div class="settingsMenu">
+      <div class="top-bar">
+        <div class="save saveButton" onclick="saveSettings()">
+          <img src="resources/icons/save_game.png" alt="" class="src">
+        </div>
+        <div class="saveFile saveButton" onclick="saveSettingsFile()">
+          <img src="resources/icons/save_file.png" alt="" class="src">
+        </div>
+        <div class="loadFile saveButton" onclick="loadSettingsFile()">
+          <img src="resources/icons/load_file.png" alt="" class="src">
+        </div>
+        <div class="closeWindowButton" onclick="closeSettingsMenu()"><span>X</span></div>
+      </div>
+      <div class="content"></div>
+    </div>
     <div class="savesMenu">
       <div class="topBar">
+        <div class="closeWindowButton" onclick="closeSaveMenu()"><span>X</span></div>
         <input type="text" class="saveName" name="saveName"><br><br>
         <div class="saveGame saveButton">
           <img src="resources/icons/save_game.png" alt="" class="src">
@@ -240,7 +264,6 @@
           </div>
           <div class="creation-content"></div>
         </div>
-
       </div>
     </div>
     <div class="areaMap">
@@ -248,7 +271,15 @@
       <canvas class="areaCanvas" width="360" height="240"></canvas>
       <canvas class="areaUpdateCanvas" width="360" height="240"></canvas>
     </div>
+    <div class="mods-menu">
+      <div class="content">
+        <div class="closeWindowButton" onclick="closeModsMenu()"><span>X</span></div>
+        <div class="mods-list"></div>
+        <div class="mod-info"></div>
+      </div>
+    </div>
   </div>
+  <canvas class="texture-sheet" width="1920" height="1344"></canvas>
 </body>
 
 <div class="sprites">
@@ -508,6 +539,10 @@
 <script src="resources/compiledJS/misc/commands.js"></script>
 <script src="resources/compiledJS/misc/dev.js"></script>
 <script src="resources/compiledJS/ui/settings.js"></script>
+<script src="resources/compiledJS/mod_loading/load.js"></script>
+<script src="resources/compiledJS/mod_loading/menu.js"></script>
+<script src="resources/compiledJS/mod_loading/texture_load.js"></script>
+<script src="resources/compiledJS/npc/flags.js"></script>
 
 <!-- Localisation files -->
 <script src="resources/compiledJS/localisation/aa_localisation.js"></script>
@@ -557,6 +592,15 @@
 <!-- Important functions -->
 <script src="resources/compiledJS/items/inventory.js"></script>
 
+<!-- Import every single map -->
+<!-- This takes a lot of space -->
+<script src="script/map/maps/test_dungeon_0.js"></script>
+<script src="script/map/maps/test_dungeon_1.js"></script>
+<script src="script/map/maps/cave_of_awakening.js"></script>
+<script src="script/map/maps/western_heere_coast.js"></script>
+<script src="script/map/maps/central_heere.js"></script>
+<script src="script/map/maps/eastern_heere.js"></script>
+
 <!-- Map rendering -->
 <script src="resources/compiledJS/map/maps.js"></script>
 <script src="resources/compiledJS/map/map_misc.js"></script>
@@ -588,6 +632,7 @@
 <script src="resources/compiledJS/combat/animation.js"></script>
 <script src="resources/compiledJS/combat/effects.js"></script>
 <script src="resources/compiledJS/combat/turn.js"></script>
+<script src="resources/compiledJS/combat/damage.js"></script>
 <script src="resources/compiledJS/combat/combat.js"></script>
 
 

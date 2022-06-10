@@ -709,7 +709,6 @@ const enemies = {
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
     alive: true,
     xp: 37,
-    sprite: "norsemanBerserk",
     type: "barbarian",
     race: "human",
     img: "resources/tiles/enemies/norseman_berserk.png",
