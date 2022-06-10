@@ -31,8 +31,20 @@ async function loadMods() {
         Object.values(load).forEach(async ({ path, func }) => {
             await loadModFile(path, mod, func);
         });
+        if (modConfig.maps) {
+            // @ts-ignore
+            loadMaps(modConfig.maps, modPath, mod).then(() => {
+                // @ts-ignore
+                applyModMaps(mod, modConfig.maps);
+            });
+        }
     });
     lang = eval(settings.language);
+}
+function loadMaps(maps, modPath, mod) {
+    return Promise.all(maps.map(async (map) => {
+        await loadModMapFile(`${modPath}/maps/${map}.js`, mod, map);
+    }));
 }
 const namesFromPaths = {
     "items.js": ["items"],
@@ -200,6 +212,60 @@ function applyModInteractions(mod) {
     const interactionsFromMod = eval(`${mod}_characterInteractions`);
     Object.entries(interactionsFromMod).forEach(([key, interaction]) => {
         characterInteractions[key] = { ...interaction };
+    });
+}
+async function loadModMapFile(path, mod, id) {
+    const file = await fetch(path);
+    if (file.status === 404)
+        return;
+    let fileData = await file.text();
+    fileData = fileData.split(`${id}`).join(`${mod}_${id}`);
+    const script = document.createElement("script");
+    script.innerHTML = fileData;
+    document.head.appendChild(script);
+    Promise.resolve("ok");
+}
+const replace_in_map = {
+    enemies: true,
+    treasureChests: true,
+    messages: true,
+    shrines: true,
+    entrances: true
+};
+function applyModMaps(mod, maps_array) {
+    maps_array.forEach((map) => {
+        let mod_map;
+        try {
+            mod_map = eval(`${mod}_${map}`);
+        }
+        catch (err) {
+            console.log(err);
+        }
+        if (mod_map) {
+            if (!mod_map.DONT_REPLACE_EXISTING) {
+                maps[map] = { ...mod_map };
+            }
+            else {
+                Object.entries(mod_map).forEach(([key, data]) => {
+                    if (!maps[map][key]) {
+                        maps[map][key] = data;
+                    }
+                    else if (replace_in_map[key]) {
+                        if (mod_map["DONT_REPLACE_" + key.toUpperCase()]) {
+                            data.forEach((obj) => {
+                                maps[map][key].push(obj);
+                            });
+                        }
+                        else {
+                            maps[map][key] = data;
+                        }
+                    }
+                    else {
+                        maps[map][key] = data;
+                    }
+                });
+            }
+        }
     });
 }
 //# sourceMappingURL=load.js.map

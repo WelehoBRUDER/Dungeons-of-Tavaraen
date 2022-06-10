@@ -229,3 +229,25 @@ items.sword = {
   - For example, the key **sword** needs to be **sword_name**.
 
 - You have now finished your first mod! Share it on discord or something!
+
+## Map modding
+
+Map modding is not yet fully supported, so this section will only list some tips and rules.
+
+- The current map editor is not yet updated to support map modding.
+  > It can still be useful for editing maps, but you'll have to sort through the save output manually.
+- In order for maps to be loaded by the game, you must add
+
+  ```json
+  "maps": ["map_1", "map_2", "map_3"]
+  ```
+
+  To the **mod.json** file.
+
+- The **maps** property is an array of map names.
+
+  > The map names **must** be the same as the map files.
+
+- All maps must be in the **maps** folder within your mod directory.
+
+Don't be afraid to experiment, the worst thing you can do is break the game!

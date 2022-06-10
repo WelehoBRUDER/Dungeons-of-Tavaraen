@@ -19,6 +19,7 @@ The new changes can be gamebreaking.
 - Improved settings menu.
 - Changed the way flags are stored, this can break older saves.
 - Reworked and streamlined damage calculation.
+- MP value can now be seen in the ui.
 - HP & MP regen can now be viewed in the character panel.
 - Level up button now shows "!" in red if you have unspent points.
 - Fixed items having an adjective called "undefined".

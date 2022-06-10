@@ -470,6 +470,24 @@ body {
   left: 0;
   top: 0;
 }
+.main .playerUI .playerMpBg .mpText {
+  position: absolute;
+  font-size: calc(18px * var(--ui-scale));
+  text-shadow: 0px 0px 2px black;
+  text-align: center;
+  margin-top: calc(43px * var(--ui-scale));
+  bottom: calc(-15px * var(--ui-scale));
+  white-space: nowrap;
+  left: 100%;
+  padding: calc(4px * var(--ui-scale));
+  background: rgba(25, 99, 196, 0.75);
+  border-radius: calc(4px * var(--ui-scale));
+  box-shadow: inset 0 0 calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(17, 73, 177), 0 0 calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(3, 14, 34);
+}
+.main .playerUI .playerMpBg .mpText span {
+  opacity: 0.75;
+  font-size: calc(18px * var(--ui-scale));
+}
 .main .playerUI .playerMpBg .PlayerMpBgImg {
   filter: brightness(0.5);
 }

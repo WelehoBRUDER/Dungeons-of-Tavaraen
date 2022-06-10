@@ -252,11 +252,14 @@ function updateUI() {
   const ui = <HTMLDivElement>document.querySelector(".playerUI");
   if (!ui) throw new Error("UI NOT LOADED!");
   const hpText = <HTMLParagraphElement>ui.querySelector(".hpText");
+  const mpText = <HTMLParagraphElement>ui.querySelector(".mpText");
   const hpImg = <HTMLImageElement>ui.querySelector(".PlayerHpFill");
   const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
   const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
   hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
   hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
+  mpText.textContent = `${Math.floor(player.stats.mp)} / ${player.getMpMax()}`;
+  mpText.innerHTML += ` <span>+${player.getRegen().mp.toFixed(2)}</span>`;
   hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
   mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
   ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();

@@ -45,7 +45,7 @@ const mapSelection = {
 } as any;
 
 interface mapObject {
-  name: string,
+  [name: string]: any,
   id: string,
   voidTexture?: string;
   base: Array<number[]>,

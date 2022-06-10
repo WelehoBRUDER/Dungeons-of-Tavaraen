@@ -1,10 +1,9 @@
-const texturesPerRow = 16;
+const texturesPerRow = 15;
 const textureAtlas: HTMLCanvasElement =
   document.querySelector(".texture-sheet");
 const textureAtlasCtx: CanvasRenderingContext2D = textureAtlas.getContext("2d");
 
 async function loadTextures() {
-  console.log("start load textures");
   const textures = await getTextures();
   textureAtlas.width = texturesPerRow * 128;
   textureAtlas.height = textures.length * 128;
@@ -18,7 +17,6 @@ async function loadTextures() {
     });
   });
   return new Promise((resolve) => {
-    console.log("finished loading textures");
     resolve(true);
   });
 }
@@ -31,7 +29,7 @@ interface Texture {
 async function getTextures() {
   const textures: [][] = [[]];
   let perRow = 0;
-  Object.values(staticTiles).forEach(async ({ img }: any, id) => {
+  Object.values(staticTiles).forEach(({ img }: any, id) => {
     staticTiles[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -39,9 +37,9 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    await addTexture(img);
+    addTexture(img);
   });
-  Object.values(tiles).forEach(async ({ img }: any, id) => {
+  Object.values(tiles).forEach(({ img }: any, id) => {
     tiles[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -49,9 +47,9 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    await addTexture(img);
+    addTexture(img);
   });
-  Object.values(clutters).forEach(async ({ img }: any, id) => {
+  Object.values(clutters).forEach(({ img }: any, id) => {
     clutters[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -59,9 +57,9 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    await addTexture(img);
+    addTexture(img);
   });
-  Object.values(enemies).forEach(async ({ id, img }: any, index) => {
+  Object.values(enemies).forEach(({ id, img }: any, index) => {
     enemies[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -69,10 +67,9 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    console.log(id);
-    await addTexture(img);
+    addTexture(img);
   });
-  Object.values(summons).forEach(async ({ id, img }: any) => {
+  Object.values(summons).forEach(({ id, img }: any) => {
     summons[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -80,9 +77,9 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    await addTexture(img);
+    addTexture(img);
   });
-  Object.values(items).forEach(async ({ id, img, sprite, type, slot }: any) => {
+  Object.values(items).forEach(({ id, img, sprite, type, slot }: any) => {
     items[id].spriteMap = {
       x: perRow * 128 > 1920 ? 0 : perRow * 128,
       y:
@@ -90,7 +87,7 @@ async function getTextures() {
           ? textures.length * 128
           : (textures.length - 1) * 128,
     };
-    await addTexture(img);
+    addTexture(img);
     if (type === "weapon" || slot === "offhand") {
       items[id].equippedSprite = {
         x: perRow * 128 > 1920 ? 0 : perRow * 128,
@@ -99,7 +96,7 @@ async function getTextures() {
             ? textures.length * 128
             : (textures.length - 1) * 128,
       };
-      await addTexture(sprite);
+      addTexture(sprite);
     } else if (type === "armor") {
       items[id].equippedSprite = {
         x: perRow * 128 > 1920 ? 0 : perRow * 128,
@@ -108,7 +105,7 @@ async function getTextures() {
             ? textures.length * 128
             : (textures.length - 1) * 128,
       };
-      await addTexture(sprite);
+      addTexture(sprite);
       items[id].equippedSpriteFemale = {
         x: perRow * 128 > 1920 ? 0 : perRow * 128,
         y:
@@ -116,7 +113,7 @@ async function getTextures() {
             ? textures.length * 128
             : (textures.length - 1) * 128,
       };
-      await addTexture(sprite.replace(".", "_female."));
+      addTexture(sprite.replace(".", "_female."));
     }
   });
   function addTexture(src: string) {

@@ -35,8 +35,21 @@ async function loadMods() {
     Object.values(load).forEach(async ({ path, func }: any) => {
       await loadModFile(path, mod, func);
     });
+    if (modConfig.maps) {
+      // @ts-ignore
+      loadMaps(modConfig.maps, modPath, mod).then(() => {
+        // @ts-ignore
+        applyModMaps(mod, modConfig.maps);
+      });
+    }
   });
   lang = eval(settings.language);
+}
+
+function loadMaps(maps: string[], modPath: string, mod: string) {
+  return Promise.all(maps.map(async (map: string) => {
+    await loadModMapFile(`${modPath}/maps/${map}.js`, mod, map);
+  }));
 }
 
 const namesFromPaths = {
@@ -201,3 +214,55 @@ function applyModInteractions(mod: string) {
     characterInteractions[key] = { ...interaction };
   });
 }
+
+async function loadModMapFile(path: string, mod: string, id: string) {
+  const file = await fetch(path);
+  if (file.status === 404) return;
+  let fileData = await file.text();
+  fileData = fileData.split(`${id}`).join(`${mod}_${id}`);
+  const script = document.createElement("script");
+  script.innerHTML = fileData;
+  document.head.appendChild(script);
+  Promise.resolve("ok");
+}
+
+const replace_in_map: any = {
+  enemies: true,
+  treasureChests: true,
+  messages: true,
+  shrines: true,
+  entrances: true
+};
+
+function applyModMaps(mod: string, maps_array: string[]) {
+  maps_array.forEach((map: string) => {
+    let mod_map: any;
+    try { mod_map = eval(`${mod}_${map}`); } catch (err) { console.log(err); }
+    if (mod_map) {
+      if (!mod_map.DONT_REPLACE_EXISTING) {
+        maps[map] = { ...mod_map };
+      }
+      else {
+        Object.entries(mod_map).forEach(([key, data]: [string, any]) => {
+          if (!maps[map][key]) {
+            maps[map][key] = data;
+          }
+          else if (replace_in_map[key]) {
+            if (mod_map["DONT_REPLACE_" + key.toUpperCase()]) {
+              data.forEach((obj: any) => {
+                maps[map][key].push(obj);
+              });
+            }
+            else {
+              maps[map][key] = data;
+            }
+          }
+          else {
+            maps[map][key] = data;
+          }
+        });
+      }
+    }
+  });
+}
+

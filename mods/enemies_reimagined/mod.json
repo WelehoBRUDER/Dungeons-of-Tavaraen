@@ -2,5 +2,6 @@
   "name": "Weleho's Enemies Reimagined",
   "description": "Do you feel like the enemies in the aren't exciting enough? Then this is the mod for you! Nearly all enemies have been given new textures, abilities, stats and improved ai!",
   "version": "0.0.1",
-  "author": "WelehoBRUDER"
+  "author": "WelehoBRUDER",
+  "maps": ["central_heere"]
 }
