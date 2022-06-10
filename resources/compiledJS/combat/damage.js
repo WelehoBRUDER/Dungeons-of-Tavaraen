@@ -30,7 +30,7 @@ function calculateDamage(attacker, target, ability) {
         }
     }
     // Get base damages that will be used for the calculation
-    const baseDamages = ability.damages ? ability.get_true_damage() : getAttackerDamages(attacker);
+    const baseDamages = ability.damages ? ability.get_true_damage(attacker) : getAttackerDamages(attacker);
     // Start calculating damage
     Object.entries(baseDamages).map(([damageType, damageValue]) => {
         var _a;

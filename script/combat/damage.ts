@@ -30,8 +30,7 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
   }
 
   // Get base damages that will be used for the calculation
-  const baseDamages: damageClass = ability.damages ? ability.get_true_damage() : getAttackerDamages(attacker);
-
+  const baseDamages: damageClass = ability.damages ? ability.get_true_damage(attacker) : getAttackerDamages(attacker);
   // Start calculating damage
   Object.entries(baseDamages).map(([damageType, damageValue]) => {
     // Get base damage modifiers
@@ -66,6 +65,7 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
     if (isNaN(val)) val = 0;
     if (isNaN(defense)) defense = 1;
     if (isNaN(resistance)) resistance = 1;
+
 
     // Calculate final damage
     let baseValue: number = damageValue + val + bonus;

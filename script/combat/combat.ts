@@ -94,7 +94,6 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
     if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
     if (ability.health_cost_percentage) attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
   }
-
   const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
 
 
