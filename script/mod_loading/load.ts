@@ -17,6 +17,7 @@ async function loadMods() {
     const JSONmod = await fetch(`${modPath}/mod.json`);
     const load: any = {};
     const modConfig: ModInfo = await JSONmod.json();
+    mod = mod.replace(/\s|-/g, "_");
     modConfig.key = mod;
     modsInformation.push(modConfig);
     if (modsSettings?.[mod] === false) return;
