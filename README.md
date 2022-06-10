@@ -181,7 +181,7 @@ items.sword = {
     { ...items["healingPotion_weak"], unique: false, price: 250 },
     { ...items["manaPotion_weak"], unique: false, price: 250 },
     ],
-  },
+  };
 ```
 
 - You can add your new item anywhere you'd like in the inventory.
@@ -189,7 +189,7 @@ items.sword = {
 - The **price** property is the price this merchant wants for the item.
 
 - If you load into the game and get the item, you'll see that it's invisible.
-- This is because we haven't yet created any texturs for the item.
+- This is because we haven't yet created any textures for the item.
 - We could simply reuse textures from the game, but it's better to create your own textures.<br>
   Otherwise it could get hard to identify items in a playthrough.
 
