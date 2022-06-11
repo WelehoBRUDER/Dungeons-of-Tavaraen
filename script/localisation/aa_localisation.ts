@@ -434,6 +434,7 @@ const finnish = {
   shrine_used: "Pyhäkön voimat ovat jo kulutettu...",
   add_ability: "Lisää kyvyn",
   requires: "Vaatii",
+  mutually_exclusive: "Toistensa poissulkeva",
   critChance: "Krit mahdollisuus",
   critDamage: "Krit voima",
   resistAll: "Puolustusvoima",
@@ -958,6 +959,10 @@ const finnish = {
   absorber_of_life_force_desc: "Kuolleiden voiman vienti pitää kehosi taistelu kunnossa, tarvitsematta lepoa.",
   fighting_with_your_voice_name: "Veteraanin Iltahuuto",
   fighting_with_your_voice_desc: "Välillä kaikki mitä tarvitset on kannustava huuto.",
+  bulwark_name: "Puolustaja",
+  bulwark_desc: "Kestävyytesi tekee sinusta vakaan seinän joka pysäyttää jokaisen uhan.\nTaistelija tyyppisi on nyt <c>gold<c>Puolustaja<c>silver<c>",
+  warrior_name: "Soturi",
+  warrior_desc: "Paras puolustus on reipas hyökkäys.\nTaistelija tyyppisi on nyt <c>gold<c>Soturi<c>silver<c>",
 
   // ROGUE
   way_of_the_rogue_name: "Varjoinen Tie",
@@ -1368,7 +1373,7 @@ const english = {
   exit: "EXIT",
 
   // Misc
-  attack_name: "base attack damage",
+  attack_name: "Base Attack Damage",
   cures_statuses: "Cures",
   resistance: "Resistances",
   physical: "Physical Armor",
@@ -1387,6 +1392,7 @@ const english = {
   shrine_used: "Shrine's power has already been spent...",
   add_ability: "Grants ability",
   requires: "Requires",
+  mutually_exclusive: "Mutually exclusive with",
   critChance: "Crit Chance",
   critDamage: "Crit Damage",
   resistAll: "All Resistances",
@@ -1924,6 +1930,10 @@ const english = {
   absorber_of_life_force_desc: "When there's no chance for rest between combats, \none must reinvigorate oneself from combat itself.",
   fighting_with_your_voice_name: "A Helping Voice",
   fighting_with_your_voice_desc: "Sometimes all you need to push forward is an encouraging shout.",
+  bulwark_name: "Bulwark",
+  bulwark_desc: "Your endurance makes you an impregnable fortress\n upon which waves of your foes will break.\nWill make your specialization <c>gold<c>Bulwark<c>silver<c>",
+  warrior_name: "Warrior",
+  warrior_desc: "You will keep your foes on the defensive with a spirited offensive.\nWill make your specialization <c>gold<c>Warrior<c>silver<c>",
 
   // ROGUE
   way_of_the_rogue_name: "Way of the Rogue",

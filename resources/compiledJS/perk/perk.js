@@ -17,7 +17,7 @@ const perkColors = {
 };
 class perk {
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         this.id = base.id;
         let base_ = perksArray[base.tree || tree]["perks"][this.id];
         if (!base_ && this.id) {
@@ -37,11 +37,12 @@ class perk {
         this.pos = basePerk.pos;
         this.relative_to = (_d = basePerk.relative_to) !== null && _d !== void 0 ? _d : "";
         this.requires = (_e = basePerk.requires) !== null && _e !== void 0 ? _e : [];
-        this.traits = (_f = basePerk.traits) !== null && _f !== void 0 ? _f : [];
+        this.mutually_exclusive = (_f = basePerk.mutually_exclusive) !== null && _f !== void 0 ? _f : [];
+        this.traits = (_g = basePerk.traits) !== null && _g !== void 0 ? _g : [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
         this.available = () => {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e;
             if (player.pp <= 0 && !this.bought())
                 return false;
             if (((_a = this.requires) === null || _a === void 0 ? void 0 : _a.length) > 0) {
@@ -53,13 +54,21 @@ class perk {
                 if (cur >= needed)
                     return true;
             }
-            if (((_d = this.requires) === null || _d === void 0 ? void 0 : _d.length) <= 0)
+            if (((_d = this.mutually_exclusive) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+                const result = !this.mutually_exclusive.some((mut) => {
+                    if (player.perks.indexOf((p) => p.id == mut) > -1)
+                        return true;
+                });
+                return result;
+            }
+            ;
+            if (((_e = this.requires) === null || _e === void 0 ? void 0 : _e.length) <= 0)
                 return true;
             return false;
         };
         this.bought = () => {
             let isBought = false;
-            player.perks.forEach(prk => {
+            player.perks.some(prk => {
                 if (prk.id == this.id) {
                     isBought = true;
                     return;
@@ -222,6 +231,37 @@ function formPerks(e = null, scrollDefault = false) {
                 svg.appendChild(line);
             });
         }
+        if (_perk.mutually_exclusive) {
+            _perk.mutually_exclusive.forEach((mutex) => {
+                let found = perkArea.querySelector(`.${mutex}`);
+                let color = "rgb(25, 25, 25)";
+                let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                let image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+                const startX = +perk.style.left.replace(/\D/g, '') + (lineSize);
+                const startY = +perk.style.top.replace(/\D/g, '') + (lineSize);
+                let endX = +found.style.left.replace(/\D/g, '') + (lineSize);
+                let endY = +found.style.top.replace(/\D/g, '') + (lineSize);
+                let centre = { x: (startX + endX) / 2, y: (startY + endY) / 2 };
+                if (endX - startX < 0)
+                    endX = centre.x + 48;
+                else
+                    endX = centre.x - 48;
+                endY = centre.y;
+                line.setAttribute('x1', `${startX}px`);
+                line.setAttribute('y1', `${startY}px`);
+                line.setAttribute('x2', `${endX}px`);
+                line.setAttribute('y2', `${endY}px`);
+                line.setAttribute("stroke", color);
+                line.setAttribute("stroke-width", `${lineWidth}px`);
+                image.setAttribute("x", `${centre.x - 32}px`);
+                image.setAttribute("y", `${centre.y - 32}px`);
+                image.setAttribute("width", `${64}px`);
+                image.setAttribute("height", `${64}px`);
+                image.setAttributeNS("http://www.w3.org/1999/xlink", "href", "resources/icons/exclusive.png");
+                svg.appendChild(line);
+                svg.appendChild(image);
+            });
+        }
     });
     perkArea.style.transform = `scale(${currentZoomBG})`;
     svg.setAttribute('width', "4000");
@@ -290,7 +330,7 @@ function openLevelingScreen() {
     state.perkOpen = true;
 }
 function perkTT(perk) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     var txt = "";
     txt += `\t<f>21px<f>${(_a = lang[perk.id + "_name"]) !== null && _a !== void 0 ? _a : perk.id}\t\n`;
     txt += `<f>15px<f><c>silver<c>"${(_b = lang[perk.id + "_desc"]) !== null && _b !== void 0 ? _b : perk.id + "_desc"}"<c>white<c>\n`;
@@ -307,6 +347,21 @@ function perkTT(perk) {
                 }
             });
             txt += `<c> ${found ? "lime" : "red"}<c>${(_a = lang[req + "_name"]) !== null && _a !== void 0 ? _a : req}, `;
+        });
+        txt = txt.substring(0, txt.length - 2);
+        txt += "§";
+    }
+    if (((_d = perk.mutually_exclusive) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+        txt += `§\n<f>16px<f><c>white<c>${lang["mutually_exclusive"]}:  `;
+        perk.mutually_exclusive.forEach(req => {
+            var _a;
+            let found = false;
+            player.perks.forEach((prk) => {
+                if (prk.id == req) {
+                    found = true;
+                }
+            });
+            txt += `<c> ${found ? "red" : "lime"}<c>${(_a = lang[req + "_name"]) !== null && _a !== void 0 ? _a : req}, `;
         });
         txt = txt.substring(0, txt.length - 2);
         txt += "§";

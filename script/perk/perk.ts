@@ -27,6 +27,7 @@ class perk {
   traits?: Array<any>;
   relative_to?: any;
   requires: Array<string>;
+  mutually_exclusive?: Array<string>;
   icon: string;
   available: Function;
   bought: Function;
@@ -51,6 +52,7 @@ class perk {
     this.pos = basePerk.pos;
     this.relative_to = basePerk.relative_to ?? "";
     this.requires = basePerk.requires ?? [];
+    this.mutually_exclusive = basePerk.mutually_exclusive ?? [];
     this.traits = basePerk.traits ?? [];
     this.icon = basePerk.icon;
     this.tree = basePerk.tree;
@@ -64,12 +66,18 @@ class perk {
         });
         if (cur >= needed) return true;
       }
+      if (this.mutually_exclusive?.length > 0) {
+        const result = !this.mutually_exclusive.some((mut: string) => {
+          if (player.perks.indexOf((p: perk) => p.id == mut) > -1) return true;
+        });
+        return result;
+      };
       if (this.requires?.length <= 0) return true;
       return false;
     };
     this.bought = () => {
       let isBought = false;
-      player.perks.forEach(prk => {
+      player.perks.some(prk => {
         if (prk.id == this.id) { isBought = true; return; };
       });
       return isBought;
@@ -225,6 +233,35 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
         svg.appendChild(line);
       });
     }
+    if (_perk.mutually_exclusive) {
+      _perk.mutually_exclusive.forEach((mutex: string) => {
+        let found = perkArea.querySelector<HTMLDivElement>(`.${mutex}`);
+        let color = "rgb(25, 25, 25)";
+        let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        let image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        const startX = +perk.style.left.replace(/\D/g, '') + (lineSize);
+        const startY = +perk.style.top.replace(/\D/g, '') + (lineSize);
+        let endX = +found.style.left.replace(/\D/g, '') + (lineSize);
+        let endY = +found.style.top.replace(/\D/g, '') + (lineSize);
+        let centre = { x: (startX + endX) / 2, y: (startY + endY) / 2 };
+        if (endX - startX < 0) endX = centre.x + 48;
+        else endX = centre.x - 48;
+        endY = centre.y;
+        line.setAttribute('x1', `${startX}px`);
+        line.setAttribute('y1', `${startY}px`);
+        line.setAttribute('x2', `${endX}px`);
+        line.setAttribute('y2', `${endY}px`);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", `${lineWidth}px`);
+        image.setAttribute("x", `${centre.x - 32}px`);
+        image.setAttribute("y", `${centre.y - 32}px`);
+        image.setAttribute("width", `${64}px`);
+        image.setAttribute("height", `${64}px`);
+        image.setAttributeNS("http://www.w3.org/1999/xlink", "href", "resources/icons/exclusive.png");
+        svg.appendChild(line);
+        svg.appendChild(image);
+      });
+    }
   });
   perkArea.style.transform = `scale(${currentZoomBG})`;
   svg.setAttribute('width', "4000");
@@ -307,6 +344,20 @@ function perkTT(perk: perk) {
         }
       });
       txt += `<c> ${found ? "lime" : "red"}<c>${lang[req + "_name"] ?? req}, `;
+    });
+    txt = txt.substring(0, txt.length - 2);
+    txt += "§";
+  }
+  if (perk.mutually_exclusive?.length > 0) {
+    txt += `§\n<f>16px<f><c>white<c>${lang["mutually_exclusive"]}:  `;
+    perk.mutually_exclusive.forEach(req => {
+      let found = false;
+      player.perks.forEach((prk: perk) => {
+        if (prk.id == req) {
+          found = true;
+        }
+      });
+      txt += `<c> ${found ? "red" : "lime"}<c>${lang[req + "_name"] ?? req}, `;
     });
     txt = txt.substring(0, txt.length - 2);
     txt += "§";

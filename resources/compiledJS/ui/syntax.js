@@ -206,15 +206,15 @@ function effectSyntax(effect, embed = false, effectId = "") {
     var _a, _b, _c, _e, _f, _g, _h;
     let text = "";
     const rawKey = effect[0];
-    var value = effect[1];
-    var flipColor = false;
-    var key = rawKey.substring(0, rawKey.length - 1);
-    var key_ = key;
-    var tailEnd = "";
-    var lastBit = "";
+    let value = effect[1];
+    let flipColor = false;
+    let key = rawKey.substring(0, rawKey.length - 1);
+    let key_ = key;
+    let tailEnd = "";
+    let lastBit = "";
     const _key = key;
-    var frontImg = "";
-    var backImg = "";
+    let frontImg = "";
+    let backImg = "";
     if (key.includes("Resist")) {
         key = key.replace("Resist", "");
         key_ = key;
@@ -261,7 +261,7 @@ function effectSyntax(effect, embed = false, effectId = "") {
         else
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
         try {
-            var _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
+            let _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
         }
         catch (err) {
             if (DEVMODE)
@@ -327,16 +327,19 @@ function effectSyntax(effect, embed = false, effectId = "") {
         key = lang[key + "_def"];
     else if (lang[key])
         key = lang[key];
-    var img = icons[_key + "_icon"];
+    let img = icons[_key + "_icon"];
+    tailEnd = tailEnd.trim() + " ";
+    if (tailEnd.length < 2)
+        tailEnd = "";
     if (!img)
         img = icons[key_ + tailEnd + "_icon"];
     if (!img)
         img = icons[key_ + "_icon"];
     if (value < 0) {
-        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>${lang["decreases"]}  <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd}${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
     }
     else
-        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd} ${lang["by"]}${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
+        text += `§${embed ? " " : ""}<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>${lang["increases"]} <i>${frontImg === "" ? img : frontImg}<i>${key} ${backImg ? backImg : ""}${tailEnd}${lang["by"]}+${rawKey.endsWith("P") ? value.toFixed(1) + "%" : value.toFixed(1)} ${lastBit}\n`;
     return text;
 }
 document.querySelector(".loading").style.display = "flex";

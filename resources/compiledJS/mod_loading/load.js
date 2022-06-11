@@ -8,7 +8,7 @@ async function loadMods() {
     const modsConfig = await JSONdata.json();
     const list = modsConfig.list;
     list.forEach(async (mod) => {
-        const modPath = `../../mods/${mod}`;
+        const modPath = `/mods/${mod}`;
         const JSONmod = await fetch(`${modPath}/mod.json`);
         const load = {};
         const modConfig = await JSONmod.json();
@@ -33,9 +33,7 @@ async function loadMods() {
             await loadModFile(path, mod, func);
         });
         if (modConfig.maps) {
-            // @ts-ignore
             loadMaps(modConfig.maps, modPath, mod).then(() => {
-                // @ts-ignore
                 applyModMaps(mod, modConfig.maps);
             });
         }

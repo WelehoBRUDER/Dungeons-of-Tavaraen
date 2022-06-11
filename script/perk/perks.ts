@@ -265,7 +265,8 @@ const perksArray = {
         name: "Fighter's Vitality",
         desc: "",
         effects: {
-          hpMaxV: 25
+          hpMaxV: 10,
+          regenHpV: 0.5
         },
         relative_to: "battle_sense",
         requires: ["battle_sense"],
@@ -293,7 +294,8 @@ const perksArray = {
         desc: "",
         effects: {
           resistAllV: 5,
-          evasionV: 2
+          evasionV: 2,
+          regenHpV: 0.25
         },
         relative_to: "patient_blow",
         requires: ["patient_blow"],
@@ -324,6 +326,7 @@ const perksArray = {
         effects: {
           strV: 2,
           vitV: 2,
+          regenHpV: 0.25
         },
         relative_to: "fighters_vitality",
         requires: ["fighters_vitality"],
@@ -420,6 +423,42 @@ const perksArray = {
         tree: "fighter",
         pos: { x: 0, y: 2 },
         icon: "resources/icons/concentrated_warrior.png"
+      },
+      bulwark: {
+        id: "bulwark",
+        name: "Bulwark",
+        desc: "",
+        effects: {
+          physicalDefV: 10,
+          magicalDefV: 5,
+          elementalDefV: 5,
+          regenHpV: 1.5,
+          evasionV: 5
+        },
+        relative_to: "concentrated_warrior",
+        requires: ["concentrated_warrior", "absorber_of_life_force"],
+        mutually_exclusive: ["warrior"],
+        tree: "fighter",
+        pos: { x: -2, y: 2 },
+        icon: "resources/icons/shield_symbol.png"
+      },
+      warrior: {
+        id: "warrior",
+        name: "Warrior",
+        desc: "",
+        effects: {
+          slashDamageP: 5,
+          crushDamageP: 5,
+          pierceDamageP: 5,
+          meleeDamageP: 10,
+          hitChanceV: 5
+        },
+        relative_to: "concentrated_warrior",
+        requires: ["concentrated_warrior", "fighting_with_your_voice"],
+        mutually_exclusive: ["bulwark"],
+        tree: "fighter",
+        pos: { x: 2, y: 2 },
+        icon: "resources/icons/melee_damage.png"
       },
     }
   },
