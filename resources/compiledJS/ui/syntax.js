@@ -260,12 +260,13 @@ function effectSyntax(effect, embed = false, effectId = "") {
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
         else
             backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
+        let _abi;
         try {
-            let _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
+            _abi = new Ability((_c = player.abilities) === null || _c === void 0 ? void 0 : _c.find((__abi) => __abi.id == id), player);
         }
         catch (err) {
             if (DEVMODE)
-                displayText(`<c>red<c>${err} at line hotbar:531`);
+                displayText(`<c>red<c>${err} at line syntax:220`);
         }
         if (!_abi)
             _abi = new Ability(abilities[id], dummy);

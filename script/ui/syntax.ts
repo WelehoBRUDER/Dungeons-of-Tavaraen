@@ -212,10 +212,11 @@ function effectSyntax(effect: any, embed: boolean = false, effectId: string = ""
     frontImg = abilities[id]?.icon ?? icons.damage;
     if (value < 0) backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "lime" : "red"}<c><f>${embed ? "15px" : "18px"}<f>`;
     else backImg = `<i>${icons[key_ + "_icon"]}<i>§<c>${flipColor ? "red" : "lime"}<c><f>${embed ? "15px" : "18px"}<f>`;
+    let _abi: ability;
     try {
-      let _abi: ability = new Ability(player.abilities?.find((__abi: ability) => __abi.id == id), player);
+      _abi = new Ability(player.abilities?.find((__abi: ability) => __abi.id == id), player);
     }
-    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line hotbar:531`); }
+    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line syntax:220`); }
     if (!_abi) _abi = new Ability(abilities[id], dummy);
     let status: statusEffect = new statEffect(statusEffects[statusId], _abi.statusModifiers);
     if (_d.includes("attack_damage_multiplier")) {
