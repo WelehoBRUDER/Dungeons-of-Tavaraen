@@ -239,9 +239,9 @@ const statusEffects = {
     id: "sneaky_stabbing",
     name: "Sneaky Stabbing",
     effects: {
-      critChanceP: 15,
-      critDamageP: 30,
-      damageP: 8
+      critChanceP: 10,
+      critDamageP: 20,
+      damageP: 5
     },
     last: {
       total: 7,

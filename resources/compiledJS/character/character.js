@@ -113,8 +113,8 @@ class Character {
             Object.keys(this.armor).forEach((armor) => {
                 const { v: val, m: mod } = getModifiers(this, armor + "Def");
                 armors[armor] = Math.floor((this.armor[armor] + val) * mod);
-                if (armors[armor] > 200)
-                    armors[armor] = 200;
+                if (armors[armor] > 300)
+                    armors[armor] = 300;
             });
             return armors;
         };
@@ -136,8 +136,8 @@ class Character {
             if (!this.allModifiers["regenMpP"])
                 this.allModifiers["regenMpP"] = 1;
             let reg = { hp: 0, mp: 0 };
-            reg["hp"] = ((this.regen["hp"] + this.getHpMax() * 0.0025 + this.allModifiers["regenHpV"]) * this.allModifiers["regenHpP"]) * (1 + stats.vit / 100);
-            reg["mp"] = ((this.regen["mp"] + this.getMpMax() * 0.0025 + this.allModifiers["regenMpV"]) * this.allModifiers["regenMpP"]) * (1 + stats.int / 100);
+            reg["hp"] = ((this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) * this.allModifiers["regenHpP"]) * (1 + stats.vit / 100);
+            reg["mp"] = ((this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) * this.allModifiers["regenMpP"]) * (1 + stats.int / 100);
             if (reg["hp"] < 0)
                 reg["hp"] = 0;
             if (reg["mp"] < 0)

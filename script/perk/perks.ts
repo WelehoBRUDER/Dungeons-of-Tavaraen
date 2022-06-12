@@ -738,9 +738,9 @@ const perksArray = {
         desc: "",
         effects: {
           shadow_step_use_rangeP: 50,
-          shadow_step_cooldownP: -22,
+          shadow_step_cooldownP: -10,
           movementSpeedV: 10,
-          evasionV: 3
+          evasionV: 2
         },
         tree: "rogue",
         relative_to: "weakpoint_spotter",
@@ -798,8 +798,8 @@ const perksArray = {
         name: "Simple Strokes",
         desc: "",
         effects: {
-          attack_damage_multiplierP: 13,
-          hitChanceV: 3
+          attack_damage_multiplierP: 10,
+          hitChanceV: 2
         },
         tree: "rogue",
         relative_to: "glass_cannon",

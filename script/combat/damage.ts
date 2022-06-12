@@ -56,7 +56,7 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
 
 
     // Calculate defenses
-    let defense = 1 - (targetArmor[damageCategories[damageType]] * 0.4 > 0 ? targetArmor[damageCategories[damageType]] * 0.4 * (1 - penetration) : targetArmor[damageCategories[damageType]]) / 100;
+    let defense = 1 - (targetArmor[damageCategories[damageType]] * 0.25 > 0 ? targetArmor[damageCategories[damageType]] * 0.25 * (1 - penetration) : targetArmor[damageCategories[damageType]]) / 100;
     let resistance = 1 - ((targetResists[damageType] > 0 ? targetResists[damageType] * (1 - penetration) : targetResists[damageType]) / 100);
 
 

@@ -219,6 +219,7 @@ function restoreGrave() {
 let isMovingCurrently = false;
 let breakMoving = false;
 async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
+    var _a, _b;
     if (goal.x < 0 || goal.x > maps[currentMap].base[0].length - 1 || goal.y < 0 || goal.y > maps[currentMap].base.length - 1)
         return;
     if (!turnOver || player.isDead)
@@ -262,7 +263,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
     if (!ability) {
         if (count > 1) {
             let i = worldTextHistoryArray.length - 1;
-            if (worldTextHistoryArray[i].innerText.includes("[MOVEMENT]")) {
+            if ((_b = (_a = worldTextHistoryArray[i]) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.includes("[MOVEMENT]")) {
                 const totalCount = (+worldTextHistoryArray[i].innerText.split(" ")[3] + count).toString();
                 worldTextHistoryArray[i] = textSyntax(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${totalCount} turn(s).`);
                 displayText("");

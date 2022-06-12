@@ -266,7 +266,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   if (!ability) {
     if (count > 1) {
       let i = worldTextHistoryArray.length - 1;
-      if (worldTextHistoryArray[i].innerText.includes("[MOVEMENT]")) {
+      if (worldTextHistoryArray[i]?.innerText?.includes("[MOVEMENT]")) {
         const totalCount = (+worldTextHistoryArray[i].innerText.split(" ")[3] + count).toString();
         worldTextHistoryArray[i] = textSyntax(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${totalCount} turn(s).`);
         displayText("");

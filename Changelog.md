@@ -1,3 +1,23 @@
+# 1.2.1 ~ 12.6.2022
+
+### Minor Update
+
+## New Additions
+
+## Fixes & Tweaks
+
+- Rebalanced some abilities:
+  - **Shadow Step**: Increased cooldown by 2 turns
+  - **Barbarian Charge**: Increased cooldown by 1 turn
+  - **Sneaky Stabbing**: Increased cooldown by 2 turns
+- Nerfed Rogue class.
+- Fixed perks being available without meeting requirements.
+- Rebalanced how armor works:
+  - Increased maximum armor from 200 --> 300
+  - Decreased armor resistance from 0.4% --> 0.25%
+- Leveling up takes significantly less experience until level 40.
+- Increased base regen rate by 2.5x.
+
 # 1.2.0 ~ 10.6.2022
 
 ### Major Update
@@ -12,6 +32,7 @@ The new changes can be gamebreaking.
 - Added modding support!<br>
   -> [Modding Guide](https://github.com/WelehoBRUDER/Dungeons-of-Tavaraen#modding-guide) <-
 - Reworked how maps are stored.
+- Added 2 new perks for Fighter.
 
 ## Fixes & Tweaks
 
@@ -24,6 +45,7 @@ The new changes can be gamebreaking.
 - Level up button now shows "!" in red if you have unspent points.
 - Fixed items having an adjective called "undefined".
 - Fixed zoom level resetting to min when the game is loaded.
+- Rebalanced some fighter perks
 
 # 1.1.2 ~ 7.5.2022
 

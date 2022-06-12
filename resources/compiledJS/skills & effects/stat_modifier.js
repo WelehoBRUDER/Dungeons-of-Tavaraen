@@ -105,6 +105,7 @@ const traits = {
         effects: {
             hpMaxV: 55,
             mpMaxV: 10,
+            regenHpP: 10,
         }
     },
     // PERK STAT MODIFIERS
@@ -210,7 +211,7 @@ const traits = {
             hp_more_than: 80
         },
         effects: {
-            pierceDamageP: 12
+            rangedDamageP: 10
         }
     },
     mark_of_hunter: {

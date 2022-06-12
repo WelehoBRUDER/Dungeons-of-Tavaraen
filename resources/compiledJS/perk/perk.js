@@ -1,7 +1,7 @@
 "use strict";
-var perksData = [];
-var perks = [];
-var tree = player.classes.main.perkTree;
+let perksData = [];
+let perks = [];
+let tree = player.classes.main.perkTree;
 const lvl_history = {
     perks: [],
     stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
@@ -42,38 +42,31 @@ class perk {
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
         this.available = () => {
-            var _a, _b, _c, _d, _e;
+            var _a, _b;
             if (player.pp <= 0 && !this.bought())
                 return false;
+            let available = true;
             if (((_a = this.requires) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-                let needed = (_b = this.requires) === null || _b === void 0 ? void 0 : _b.length;
-                let cur = 0;
-                (_c = this.requires) === null || _c === void 0 ? void 0 : _c.forEach(req => {
-                    player.perks.forEach(prk => { prk.id == req ? cur++ : ''; });
+                this.requires.some((id) => {
+                    const perk_check = new perk(perksArray[tree]["perks"][id]);
+                    if (!perk_check.bought())
+                        available = false;
                 });
-                if (cur >= needed)
-                    return true;
             }
-            if (((_d = this.mutually_exclusive) === null || _d === void 0 ? void 0 : _d.length) > 0) {
-                const result = !this.mutually_exclusive.some((mut) => {
-                    if (player.perks.indexOf((p) => p.id == mut) > -1)
-                        return true;
+            if (((_b = this.mutually_exclusive) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+                this.mutually_exclusive.some((id) => {
+                    const perk_check = new perk(perksArray[tree]["perks"][id]);
+                    if (perk_check.bought())
+                        available = false;
                 });
-                return result;
             }
-            ;
-            if (((_e = this.requires) === null || _e === void 0 ? void 0 : _e.length) <= 0)
-                return true;
-            return false;
+            return available;
         };
         this.bought = () => {
             let isBought = false;
             player.perks.some(prk => {
-                if (prk.id == this.id) {
-                    isBought = true;
-                    return;
-                }
-                ;
+                if (prk.id == this.id)
+                    return isBought = true;
             });
             return isBought;
         };

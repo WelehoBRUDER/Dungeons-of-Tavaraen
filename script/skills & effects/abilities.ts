@@ -291,7 +291,7 @@ const abilities = {
     id: "sneaky_stabbing",
     name: "Sneaky Stabbing",
     mana_cost: 0,
-    cooldown: 18,
+    cooldown: 20,
     damage_multiplier: 0,
     type: "buff",
     action_desc: "focuses on critical points.",
@@ -431,7 +431,7 @@ const abilities = {
     id: "shadow_step",
     name: "Shadow Step",
     mana_cost: 0,
-    cooldown: 9,
+    cooldown: 11,
     type: "movement",
     action_desc: "step into a shadow, moving rapidly.",
     action_desc_pl: "steps into a shadow, moving rapidly.",
@@ -473,7 +473,7 @@ const abilities = {
     id: "barbarian_charge",
     name: "Raging Charge",
     mana_cost: 0,
-    cooldown: 13,
+    cooldown: 14,
     type: "charge",
     damage_multiplier: 1.1,
     resistance_penetration: 0,
@@ -499,7 +499,7 @@ const abilities = {
     action_desc: "reaps foe.",
     action_desc_pl: "you reap foe",
     icon: "resources/icons/charge_ability.png",
-    use_range: "14",
+    use_range: "12",
     ai_chance: 10
   },
   challenge: {
@@ -513,7 +513,7 @@ const abilities = {
     action_desc: "challenges",
     action_desc_pl: "you challenge",
     icon: "resources/icons/charge_ability.png",
-    use_range: "16",
+    use_range: "14",
     ai_chance: 15
   },
   purification: {

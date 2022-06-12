@@ -1,6 +1,6 @@
-var perksData: Array<any> = [];
-var perks: Array<any> = [];
-var tree = player.classes.main.perkTree;
+let perksData: Array<any> = [];
+let perks: Array<any> = [];
+let tree = player.classes.main.perkTree;
 const lvl_history = {
   perks: [],
   stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
@@ -56,29 +56,31 @@ class perk {
     this.traits = basePerk.traits ?? [];
     this.icon = basePerk.icon;
     this.tree = basePerk.tree;
+
     this.available = () => {
       if (player.pp <= 0 && !this.bought()) return false;
+      let available = true;
       if (this.requires?.length > 0) {
-        let needed = this.requires?.length;
-        let cur = 0;
-        this.requires?.forEach(req => {
-          player.perks.forEach(prk => { prk.id == req ? cur++ : ''; });
-        });
-        if (cur >= needed) return true;
+        this.requires.some((id: string) => {
+          const perk_check = new perk(perksArray[tree]["perks"][id]);
+          if (!perk_check.bought()) available = false;
+        }
+        );
       }
       if (this.mutually_exclusive?.length > 0) {
-        const result = !this.mutually_exclusive.some((mut: string) => {
-          if (player.perks.indexOf((p: perk) => p.id == mut) > -1) return true;
-        });
-        return result;
-      };
-      if (this.requires?.length <= 0) return true;
-      return false;
+        this.mutually_exclusive.some((id: string) => {
+          const perk_check = new perk(perksArray[tree]["perks"][id]);
+          if (perk_check.bought()) available = false;
+        }
+        );
+      }
+      return available;
     };
+
     this.bought = () => {
       let isBought = false;
       player.perks.some(prk => {
-        if (prk.id == this.id) { isBought = true; return; };
+        if (prk.id == this.id) return isBought = true;
       });
       return isBought;
     };
