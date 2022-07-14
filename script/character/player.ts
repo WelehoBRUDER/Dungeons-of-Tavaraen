@@ -1,7 +1,6 @@
-
 interface playerChar extends characterObject {
-  canFly: boolean,
-  sprite: string,
+  canFly: boolean;
+  sprite: string;
   race: string;
   hair: number;
   eyes: number;
@@ -136,7 +135,9 @@ class PlayerCharacter extends Character {
     this.oldCords = { ...base.oldCords } ?? this.cords;
     this.flags = { ...base.flags } ?? [];
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
-    this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} } as entityMemory;
+    this.entitiesEverEncountered = base.entitiesEverEncountered
+      ? { ...base.entitiesEverEncountered }
+      : ({ items: {}, enemies: {}, summons: {} } as entityMemory);
     this.sex = base.sex ?? "male";
     this.activeQuest = base.activeQuest ?? -1;
     this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
@@ -148,14 +149,14 @@ class PlayerCharacter extends Character {
         const _val = dmg[1];
         const { v: val, m: mod } = getModifiers(this, "unarmedDmg" + key);
         const { v: baseVal, m: baseMod } = getModifiers(this, "unarmedDmg");
-        damages[key] = Math.floor((((val + _val) * mod) + baseVal) * baseMod);
+        damages[key] = Math.floor(((val + _val) * mod + baseVal) * baseMod);
       });
       return damages;
     };
 
     this.hpRegen = () => {
       const { v: val, m: mod } = getModifiers(this, "hpRegen");
-      return Math.floor((val) * mod);
+      return Math.floor(val * mod);
     };
 
     this.sight = () => {
@@ -172,18 +173,28 @@ class PlayerCharacter extends Character {
       if (fromContextMenu) contextMenu.textContent = "";
     };
 
-    this.updatePerks = (dontUpdateUI: boolean = false, dontExecuteCommands: boolean = false) => {
+    this.updatePerks = (
+      dontUpdateUI: boolean = false,
+      dontExecuteCommands: boolean = false
+    ) => {
       this.perks.forEach((prk: any, index: number) => {
         let cmdsEx = prk.commandsExecuted;
         prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
         if (!cmdsEx && !dontExecuteCommands) {
           console.log("executing commands");
-          Object.entries(prk.commands)?.forEach(cmd => { command(cmd); });
+          Object.entries(prk.commands)?.forEach((cmd) => {
+            command(cmd);
+          });
         }
         prk.commandsExecuted = true;
         this.perks[index] = { ...prk };
         prk.traits.forEach((stat: any) => {
-          if (player.traits.findIndex((t: PermanentStatModifier) => t.id === stat.id) !== -1) return;
+          if (
+            player.traits.findIndex(
+              (t: PermanentStatModifier) => t.id === stat.id
+            ) !== -1
+          )
+            return;
           else {
             this.traits.push({ ...stat });
           }
@@ -198,7 +209,13 @@ class PlayerCharacter extends Character {
       updateUI();
     };
 
-    this.unequip = (event: any, slot: string, putToIndex: number = -1, shiftItems: boolean = false, fromContextMenu: boolean = false) => {
+    this.unequip = (
+      event: any,
+      slot: string,
+      putToIndex: number = -1,
+      shiftItems: boolean = false,
+      fromContextMenu: boolean = false
+    ) => {
       if ((event.button !== 2 && !fromContextMenu) || !this[slot]?.id) return;
       if (fromContextMenu) {
         contextMenu.textContent = "";
@@ -207,12 +224,10 @@ class PlayerCharacter extends Character {
         if (putToIndex != -1) {
           if (shiftItems) {
             this.inventory.splice(putToIndex, 0, this[slot]);
-          }
-          else this.inventory[putToIndex] = this[slot];
-        }
-        else this.inventory.push(this[slot]);
-      };
-      Object.entries(this[slot].commands).forEach(cmd => {
+          } else this.inventory[putToIndex] = this[slot];
+        } else this.inventory.push(this[slot]);
+      }
+      Object.entries(this[slot].commands).forEach((cmd) => {
         if (cmd[0].includes("ability_")) {
           commandRemoveAbility(cmd);
         }
@@ -222,7 +237,12 @@ class PlayerCharacter extends Character {
       renderInventory();
     };
 
-    this.equip = (event: any, item: any, fromContextMenu: boolean = false, auto: boolean = false) => {
+    this.equip = (
+      event: any,
+      item: any,
+      fromContextMenu: boolean = false,
+      auto: boolean = false
+    ) => {
       if (event.button !== 2 && !fromContextMenu) return;
       if (fromContextMenu) {
         contextMenu.textContent = "";
@@ -250,16 +270,17 @@ class PlayerCharacter extends Character {
         this.unequip(event, "weapon", item.index, false, fromContextMenu);
         spliceFromInv = false;
       }
-      if (!this[itm.slot]?.id && spliceFromInv) player.inventory.splice(item.index, 1);
+      if (!this[itm.slot]?.id && spliceFromInv)
+        player.inventory.splice(item.index, 1);
       if (!this[itm.slot]?.id) shiftOffhand = false;
       else this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
       this[itm.slot] = { ...itm };
-      Object.entries(item.commands).forEach(cmd => command(cmd));
+      Object.entries(item.commands).forEach((cmd) => command(cmd));
       if (item.twoHanded) {
         if (shiftOffhand) {
           this.unequip(event, "offhand", item.index + 1, true, fromContextMenu);
-        }
-        else this.unequip(event, "offhand", item.index, true, fromContextMenu);
+        } else
+          this.unequip(event, "offhand", item.index, true, fromContextMenu);
       }
       player.allModifiers = getAllModifiersOnce(player, true);
       if (!auto) renderInventory();
@@ -267,7 +288,7 @@ class PlayerCharacter extends Character {
 
     this.carryingWeight = () => {
       let total = 0;
-      this.inventory.forEach(itm => {
+      this.inventory.forEach((itm) => {
         total += itm.weight;
       });
       return total.toFixed(1);
@@ -275,7 +296,10 @@ class PlayerCharacter extends Character {
 
     this.maxCarryWeight = () => {
       const { v: val, m: mod } = getModifiers(this, "carryStrength");
-      return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
+      return (
+        (92.5 + val + this.getStats().str / 2 + this.getStats().vit) *
+        mod
+      ).toFixed(1);
     };
 
     this.lvlUp = () => {
@@ -285,12 +309,10 @@ class PlayerCharacter extends Character {
         if (this.level.level < 6) {
           this.pp += 2;
           this.sp += 4;
-        }
-        else if (this.level.level % 10 == 0) {
+        } else if (this.level.level % 10 == 0) {
           this.pp += 3;
           this.sp += 5;
-        }
-        else {
+        } else {
           this.pp++;
           this.sp += 3;
         }
@@ -304,8 +326,15 @@ class PlayerCharacter extends Character {
         updateUI();
       }
       // Add racial bonus
-      if (this.level.level >= 10 && this.traits.findIndex((m: any) => m.id === `racial_ability_${this.race}_1`) === -1) {
-        this.traits.push(new PermanentStatModifier(traits[`racial_ability_${this.race}_1`]));
+      if (
+        this.level.level >= 10 &&
+        this.traits.findIndex(
+          (m: any) => m.id === `racial_ability_${this.race}_1`
+        ) === -1
+      ) {
+        this.traits.push(
+          new PermanentStatModifier(traits[`racial_ability_${this.race}_1`])
+        );
         spawnFloatingText(this.cords, "RACIAL ABILITY!", "lime", 50, 2000, 450);
       }
     };
@@ -317,11 +346,13 @@ class PlayerCharacter extends Character {
         sets[this.artifact1.artifactSet] = 1;
       }
       if (this.artifact2?.artifactSet) {
-        if (sets[this.artifact2.artifactSet]) sets[this.artifact2.artifactSet]++;
+        if (sets[this.artifact2.artifactSet])
+          sets[this.artifact2.artifactSet]++;
         else sets[this.artifact2.artifactSet] = 1;
       }
       if (this.artifact3?.artifactSet) {
-        if (sets[this.artifact3.artifactSet]) sets[this.artifact3.artifactSet]++;
+        if (sets[this.artifact3.artifactSet])
+          sets[this.artifact3.artifactSet]++;
         else sets[this.artifact3.artifactSet] = 1;
       }
       Object.entries(sets).forEach((set: any) => {
@@ -329,14 +360,14 @@ class PlayerCharacter extends Character {
         const amnt = set[1];
         if (amnt > 1) {
           let curSet = { ...artifactSets[key] };
-          Object.entries(curSet.twoPieceEffect).forEach(stat => {
+          Object.entries(curSet.twoPieceEffect).forEach((stat) => {
             const statKey = stat[0];
             const statVal = stat[1];
             if (effects[statKey]) effects[statKey] += statVal;
             else effects[statKey] = statVal;
           });
           if (amnt > 2) {
-            Object.entries(curSet.threePieceEffect).forEach(stat => {
+            Object.entries(curSet.threePieceEffect).forEach((stat) => {
               const statKey = stat[0];
               const statVal = stat[1];
               if (effects[statKey]) effects[statKey] += statVal;
@@ -357,14 +388,34 @@ class PlayerCharacter extends Character {
       if (this.isDead) return;
       this.isDead = true;
       spawnFloatingText(this.cords, lang["player_death"], "red", 32, 1800, 100);
-      displayText(`<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`);
-      const xpLoss = Math.floor(helper.random(this.level.xp * 0.5, this.level.xp * 0.07));
-      const goldLoss = Math.floor(helper.random(this.gold * 0.6, this.gold * 0.1));
+      displayText(
+        `<c>white<c>[WORLD] <c>crimson<c>${lang["player_death_log"]}`
+      );
+      const xpLoss = Math.floor(
+        helper.random(this.level.xp * 0.5, this.level.xp * 0.07)
+      );
+      const goldLoss = Math.floor(
+        helper.random(this.gold * 0.6, this.gold * 0.1)
+      );
       this.level.xp -= xpLoss;
       this.gold -= goldLoss;
-      if (xpLoss > 0) spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
-      if (goldLoss > 0) spawnFloatingText(this.cords, `-${goldLoss} G`, "orange", 32, 1000, 450);
-      this.grave = { cords: { ...this.cords }, xp: xpLoss, gold: goldLoss, map: currentMap };
+      if (xpLoss > 0)
+        spawnFloatingText(this.cords, `-${xpLoss} XP`, "orange", 32, 900, 350);
+      if (goldLoss > 0)
+        spawnFloatingText(
+          this.cords,
+          `-${goldLoss} G`,
+          "orange",
+          32,
+          1000,
+          450
+        );
+      this.grave = {
+        cords: { ...this.cords },
+        xp: xpLoss,
+        gold: goldLoss,
+        map: currentMap,
+      };
       this.usedShrines = [];
       setTimeout(modifyCanvas, 300);
       //displayText("PAINA [R] JA RESPAWNAAT");
@@ -379,24 +430,21 @@ class PlayerCharacter extends Character {
         Object.entries(this.raceEffect?.modifiers).forEach((eff: any) => {
           if (!mods?.[eff[0]]) {
             mods[eff[0]] = eff[1];
-          }
-          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+          } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
         });
       }
       if (this.classes?.main?.statBonuses) {
         Object.entries(this.classes.main.statBonuses).forEach((eff: any) => {
           if (!mods?.[eff[0]]) {
             mods[eff[0]] = eff[1];
-          }
-          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+          } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
         });
       }
       if (this.classes?.sub?.statBonuses) {
         Object.entries(this.classes.sub.statBonuses).forEach((eff: any) => {
           if (!mods?.[eff[0]]) {
             mods[eff[0]] = eff[1];
-          }
-          else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
+          } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
         });
       }
       baseStats.forEach((stat: string) => {
@@ -417,8 +465,7 @@ class PlayerCharacter extends Character {
           }
         });
         if (!wasAdded) this.inventory.push({ ...itm });
-      }
-      else {
+      } else {
         this.inventory.push({ ...itm });
       }
       let encounter = player.entitiesEverEncountered?.items?.[itm.id];
@@ -427,14 +474,20 @@ class PlayerCharacter extends Character {
       }
       this.updateAbilities();
       if (slotEmpty(itm)) {
-        this.equip({ button: 2 }, this.inventory[this.inventory.length - 1], false, true);
+        this.equip(
+          { button: 2 },
+          this.inventory[this.inventory.length - 1],
+          false,
+          true
+        );
       }
     };
 
     this.addGold = (amnt: number) => {
       if (isNaN(amnt)) amnt = 0;
       player.gold += amnt;
-      document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
+      document.querySelector(".playerGoldNumber").textContent =
+        player.gold.toString();
     };
 
     this.calcDamage = (base: boolean = false) => {
@@ -442,25 +495,25 @@ class PlayerCharacter extends Character {
       if (base) {
         if (this.weapon?.id) {
           Object.values(this.weapon.damages).map((val: any) => {
-            return dmg += val;
+            return (dmg += val);
+          });
+        } else {
+          Object.values(this.fistDmg()).map((val: any) => {
+            return (dmg += val);
           });
         }
-        else {
-          Object.values(this.fistDmg()).map((val: any) => {
-            return dmg += val;
-          });
-        };
-      }
-      else {
-        let damages: any = this.weapon?.id ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
+      } else {
+        let damages: any = this.weapon?.id
+          ? Object.entries(this.weapon.damages)
+          : Object.entries(this.fistDmg());
         const stats = this.getStats();
         damages.map(([key, num]: any) => {
           let { v: val, m: mod } = getModifiers(this, key + "Damage");
           val += this.allModifiers["damageV"];
           mod *= this.allModifiers["damageP"];
           let bonus: number = 0;
-          bonus += num * stats[this.weapon?.statBonus] / 50;
-          if (!this.weapon) bonus = num * stats["str"] / 50;
+          bonus += (num * stats[this.weapon?.statBonus]) / 50;
+          if (!this.weapon) bonus = (num * stats["str"]) / 50;
           if (isNaN(val)) val = 0;
           if (isNaN(mod)) mod = 1;
           if (isNaN(bonus)) bonus = 0;
@@ -474,7 +527,6 @@ class PlayerCharacter extends Character {
   }
 }
 
-
 function nextLevel(level: number) {
   let base = 75;
   let exponent = 1.23;
@@ -483,7 +535,7 @@ function nextLevel(level: number) {
   if (level >= 29 && level < 40) base = 275;
   if (level >= 40 && level < 50) base = 500;
   if (level >= 50) base = 50000;
-  return Math.floor(base * (Math.pow(level, exponent)));
+  return Math.floor(base * Math.pow(level, exponent));
 }
 
 function updatePlayerInventoryIndexes() {
@@ -511,12 +563,12 @@ let player = new PlayerCharacter({
     vit: 1,
     cun: 1,
     hp: 100,
-    mp: 30
+    mp: 30,
   },
   armor: {
     physical: 0,
     magical: 0,
-    elemental: 0
+    elemental: 0,
   },
   // 340 resistance equals to 100% damage negation, meaning 1 damage taken.
   resistances: {
@@ -528,30 +580,30 @@ let player = new PlayerCharacter({
     divine: 0,
     fire: 0,
     lightning: 0,
-    ice: 0
+    ice: 0,
   },
   statusResistances: {
     poison: 0,
     burning: 0,
     curse: 0,
     stun: 0,
-    bleed: 0
+    bleed: 0,
   },
   level: {
     xp: 0,
     xpNeed: 100,
-    level: 1
+    level: 1,
   },
   classes: {
     main: new combatClass(combatClasses["rogueClass"]),
-    sub: null
+    sub: null,
   },
   sprite: ".player",
   race: "human",
   hair: 5,
   eyes: 2,
   face: 1,
-  weapon: {},
+  weapon: new Weapon(items.huntingBow),
   chest: {},
   offhand: {},
   helmet: {},
@@ -569,16 +621,14 @@ let player = new PlayerCharacter({
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
     new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
-  traits: [
-    { id: "resilience_of_the_lone_wanderer" },
-  ],
+  traits: [{ id: "resilience_of_the_lone_wanderer" }],
   regen: {
     hp: 0,
     mp: 0.5,
   },
   hit: {
     chance: 60,
-    evasion: 30
+    evasion: 30,
   },
   threat: 25,
   unarmed_damages: { crush: 1 },
@@ -592,14 +642,14 @@ let player = new PlayerCharacter({
   grave: null,
   flags: {} as any,
   questProgress: [],
-  sex: "male"
+  sex: "male",
 });
 
 let combatSummons: Array<any> = [];
 
-var randomProperty = function (mods: any) {
-  var keys = Object.keys(mods);
-  return mods[keys[keys.length * Math.random() << 0]];
+const randomProperty = function (mods: any) {
+  const keys = Object.keys(mods);
+  return mods[keys[(keys.length * Math.random()) << 0]];
 };
 
 function slotEmpty(item: itemClass) {
@@ -645,14 +695,14 @@ function respawnPlayer() {
   enemiesHadTurn = 0;
   turnOver = true;
   player.updateAbilities();
-  player.abilities.forEach(abi => abi.onCooldown = 0);
+  player.abilities.forEach((abi) => (abi.onCooldown = 0));
   player.statusEffects = [];
   if (currentMap !== player.respawnPoint.map && player.respawnPoint.map) {
-    if (typeof player.respawnPoint.map === "number") player.respawnPoint.map = Object.keys(maps)[player.respawnPoint.map];
+    if (typeof player.respawnPoint.map === "number")
+      player.respawnPoint.map = Object.keys(maps)[player.respawnPoint.map];
     loadingScreen.style.display = "block";
     loadMap(player.respawnPoint.map);
-  }
-  else {
+  } else {
     loadingScreen.style.display = "none";
     modifyCanvas(true);
     updateUI();
@@ -664,4 +714,3 @@ function respawnPlayer() {
 player.updateTraits();
 player.stats.hp = player.getHpMax();
 player.stats.mp = player.getMpMax();
-

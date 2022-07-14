@@ -29,15 +29,19 @@ function attackTarget(attacker, target, attackDir) {
         if (attacker.id == "player")
             layer = document.querySelector(".playerSheet");
         else
-            layer = document.querySelector(".summonLayers").querySelector(`.summon${summonIndex(attacker.cords)}`);
-        layer.style.animation = 'none';
+            layer = (document
+                .querySelector(".summonLayers")
+                .querySelector(`.summon${summonIndex(attacker.cords)}`));
+        layer.style.animation = "none";
         layer.offsetHeight; /* trigger reflow */
         layer.style.animation = null;
         layer.style.animationName = `attack${attackDir}`;
     }
     else if (attacker.isFoe) {
         try {
-            const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
+            const layer = (document
+                .querySelector(".enemyLayers")
+                .querySelector(`.enemy${enemyIndex(attacker.cords)}`));
             layer.offsetHeight; /* trigger reflow */
             layer.style.animation = null;
             layer.style.animationName = `attack${attackDir}`;
@@ -45,21 +49,21 @@ function attackTarget(attacker, target, attackDir) {
         catch (_a) {
             console.warn("Enemy layer not found");
         }
-        ;
     }
 }
 async function fireProjectile(start, end, projectileSprite, ability, isPlayer, attacker) {
-    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY, } = spriteVariables();
     const path = generateArrowPath(start, end);
-    const projectile = document.querySelector("." + projectileSprite);
+    const projectile = (document.querySelector("." + projectileSprite));
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = innerWidth;
     canvas.height = innerHeight;
+    createNewProjectile(attacker, projectiles[projectileSprite], end, ability, undefined);
     projectileLayers.append(canvas);
     if (isPlayer) {
         const layer = document.querySelector(".playerSheet");
-        layer.style.animation = 'none';
+        layer.style.animation = "none";
         // @ts-ignore
         layer.offsetHeight; /* trigger reflow */
         // @ts-ignore
@@ -69,7 +73,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     else if (attacker.isFoe) {
         try {
             const layer = document.querySelector(`.enemy${maps[currentMap].enemies.findIndex((e) => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
-            layer.style.animation = 'none';
+            layer.style.animation = "none";
             // @ts-ignore
             layer.offsetHeight; /* trigger reflow */
             // @ts-ignore
@@ -79,11 +83,10 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         catch (_a) {
             console.warn("Enemy layer not found");
         }
-        ;
     }
     else {
-        const layer = document.querySelector(`.summon${combatSummons.findIndex(e => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
-        layer.style.animation = 'none';
+        const layer = document.querySelector(`.summon${combatSummons.findIndex((e) => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+        layer.style.animation = "none";
         // @ts-ignore
         layer.offsetHeight; /* trigger reflow */
         // @ts-ignore
@@ -129,7 +132,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
             canvas.width = canvas.width;
             ctx === null || ctx === void 0 ? void 0 : ctx.translate(x + spriteSize / 2, y + spriteSize / 2);
             const rotation = calcAngleDegrees(end.x - start.x, end.y - start.y);
-            ctx === null || ctx === void 0 ? void 0 : ctx.rotate(rotation * Math.PI / 180);
+            ctx === null || ctx === void 0 ? void 0 : ctx.rotate((rotation * Math.PI) / 180);
             ctx === null || ctx === void 0 ? void 0 : ctx.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
             ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(projectile, x, y, spriteSize, spriteSize);
         }

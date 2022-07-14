@@ -1,27 +1,25 @@
 "use strict";
 const CURSOR_LOCATION = {
     x: 0,
-    y: 0
+    y: 0,
 };
 const DEVTOOLS = {
-    GOD: false,
+    GOD: true,
     FREE_SKILLS: false,
-    PERK_NO_COST: false
+    PERK_NO_COST: false,
 };
-const GAME_VERSION = 1.21.toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
-const DEVMODE = false; // Whether developer mode is enabled or not.
+const GAME_VERSION = (1.22).toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
+const DEVMODE = true; // Whether developer mode is enabled or not.
 const devBox = document.querySelector(".devInfo");
 if (DEVMODE) {
     document.querySelector(".devTools").style.display = "block";
 }
-;
 function updateDeveloperInformation() {
     let txt = "";
     devBox.textContent = "";
     const hoveredTileId = maps[currentMap].base[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
     const hoveredClutterId = maps[currentMap].clutter[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
-    txt =
-        `
+    txt = `
   \t----|DEVELOPER TOOLS|----
   PLAYER_LOCATION: [X:${player.cords.x} Y:${player.cords.y}]
   POINTER_LOCATION: [X:${CURSOR_LOCATION.x} Y:${CURSOR_LOCATION.y}]

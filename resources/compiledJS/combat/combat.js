@@ -28,6 +28,7 @@ function useAbi(abi) {
     }
     updateUI();
 }
+const currentProjectiles = [];
 function buffOrHeal(character, ability) {
     var _a;
     state.isSelected = false;
@@ -35,7 +36,7 @@ function buffOrHeal(character, ability) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
         let healFromHP = 0;
         if (ability.heal_percentage)
-            healFromHP = character.getHpMax() * ability.heal_percentage / 100;
+            healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((ability.base_heal + val + healFromHP) * mod);
         character.stats.hp += heal;
         spawnFloatingText(character.cords, heal.toString(), "lime", 36);
@@ -46,7 +47,7 @@ function buffOrHeal(character, ability) {
     }
     else if (ability.heal_percentage) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
-        let healFromHP = character.getHpMax() * ability.heal_percentage / 100;
+        let healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((healFromHP + val) * mod);
         character.stats.hp += heal;
         spawnFloatingText(character.cords, heal.toString(), "lime", 36);
@@ -74,7 +75,7 @@ function buffOrHeal(character, ability) {
         });
     }
     if (ability.remove_status) {
-        ability.remove_status.forEach(status => {
+        ability.remove_status.forEach((status) => {
             character.statusEffects.forEach((effect, index) => {
                 if (effect.id == status) {
                     character.statusEffects.splice(index, 1);
@@ -101,21 +102,25 @@ function buffOrHeal(character, ability) {
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     var _a, _b, _c, _d, _e;
     if (targetCords) {
-        maps[currentMap].enemies.forEach((en) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
-            target = en; });
+        maps[currentMap].enemies.forEach((en) => {
+            if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
+                target = en;
+        });
     }
     if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
-            attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
+            attacker.stats.hp -=
+                (attacker.getHpMax() * ability.health_cost_percentage) / 100;
     }
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
     if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
             const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
             const resist = target.getStatusResists()[_Effect.type];
-            const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
+            const resisted = resist + helper.random(9, -9) >
+                ability.status_power + helper.random(18, -18);
             if (!resisted) {
                 target.addEffect(_Effect);
             }
@@ -144,7 +149,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                         displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
                 }
             }
-            ;
         });
     }
     if (target.isFoe) {
@@ -153,7 +157,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 return;
             const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
             try {
-                layer.style.animation = 'none';
+                layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
                 layer.style.animation = null;
                 layer.style.animationName = `charHurt`;
@@ -190,22 +194,26 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             let actionText = (_d = lang[ability.id + desc]) !== null && _d !== void 0 ? _d : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
-            displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
+            displayText(`${ally
+                ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"]
+                : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
             if (ability.cooldown)
                 ability.onCooldown = ability.cooldown + 1;
             if (ability.mana_cost)
                 attacker.stats.mp -= ability.mana_cost;
         }
-        if (ability.life_steal_percentage && !ability.life_steal_trigger_only_when_killing_enemy) {
-            let lifeSteal = Math.floor(target.getHpMax() * ability.life_steal_percentage / 100);
+        if (ability.life_steal_percentage &&
+            !ability.life_steal_trigger_only_when_killing_enemy) {
+            let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
             attacker.stats.hp += lifeSteal;
             spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
         }
         if (target.stats.hp <= 0) {
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);
-            if (ability.life_steal_percentage && ability.life_steal_trigger_only_when_killing_enemy) {
-                let lifeSteal = Math.floor(target.getHpMax() * ability.life_steal_percentage / 100);
+            if (ability.life_steal_percentage &&
+                ability.life_steal_trigger_only_when_killing_enemy) {
+                let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
                 attacker.stats.hp += lifeSteal;
                 spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
             }
@@ -216,7 +224,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         const layer = document.querySelector(".playerSheet");
         if (target.id == "player") {
             setTimeout((paskaFixi) => {
-                layer.style.animation = 'none';
+                layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
                 layer.style.animation = null;
                 layer.style.animationName = `screenHurt`;
@@ -250,9 +258,13 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
 }
 function tileCordsToScreen(cords) {
     // This function returns screen pixel values from cords.
-    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
-    const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY, } = spriteVariables();
+    const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize +
+        baseCanvas.width / 2 -
+        spriteSize / 2;
+    const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize +
+        baseCanvas.height / 2 -
+        spriteSize / 2;
     return { screenX, screenY };
 }
 function collision(target, ability, isPlayer, attacker, theme) {
@@ -267,22 +279,25 @@ function collision(target, ability, isPlayer, attacker, theme) {
             regularAttack(attacker, targetEnemy, ability);
         }
     }
-    else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
+    else if (player.cords.x == target.x &&
+        player.cords.y == target.y &&
+        attacker.isFoe) {
         regularAttack(attacker, player, ability);
     }
     else if (attacker.isFoe) {
-        let summonTarget = combatSummons.find(summon => summon.cords.x == target.x && summon.cords.y == target.y);
+        let summonTarget = combatSummons.find((summon) => summon.cords.x == target.x && summon.cords.y == target.y);
         regularAttack(attacker, summonTarget, ability);
     }
 }
 function threatDistance(targets, from) {
     let chosenTarget = null;
     let highestThreat = -50;
-    targets.forEach(target => {
+    targets.forEach((target) => {
         var _a;
         let dist = +generatePath(from.cords, target.cords, from.canFly, true);
         let threat = (target.getThreat() + helper.random(18, -18)) / dist;
-        if (threat > highestThreat && dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
+        if (threat > highestThreat &&
+            dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
             highestThreat = threat;
             chosenTarget = target;
         }
@@ -324,10 +339,21 @@ function summonUnit(ability, cords) {
             }
         });
     });
-    let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
+    let newSummon = new Summon({
+        ...{
+            ...summons[ability.summon_unit],
+            level: ability.summon_level,
+            permanent: ability.permanent,
+            lastsFor: ability.summon_last,
+            cords: { ...cords },
+        },
+    });
     newSummon.updateTraits();
     newSummon.restore(true);
-    newSummon.traits.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
+    newSummon.traits.push({
+        id: "buffs_from_player",
+        effects: { ...playerBuffs },
+    });
     if (ability.summon_status)
         newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
     combatSummons.push({ ...newSummon });
@@ -346,6 +372,6 @@ function summonUnit(ability, cords) {
     modifyCanvas();
 }
 function calcAngleDegrees(x, y) {
-    return Math.atan2(y, x) * 180 / Math.PI;
+    return (Math.atan2(y, x) * 180) / Math.PI;
 }
 //# sourceMappingURL=combat.js.map
