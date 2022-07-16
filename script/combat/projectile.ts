@@ -3,6 +3,7 @@
  @param {string} texture - The texture of the tile to be used.
  @param {tileObject} target - The target tile cords {x: x, y: y}
  @param {tileObject} cords - Current tile the projectile is on. {x: x, y: y}
+ @param {ability} ability - The ability that is being used.
  @param {array} path - The path the projectile will follow.
  @param {boolean} originIsEnemy - Whether the origin of the projectile is an enemy or not.
  @param {number} speed - The speed of the projectile in tiles per round.
@@ -15,6 +16,7 @@ class Projectile {
   texture: string; // The texture of the projectile.
   target: tileObject; // Target tile
   cords: tileObject; // Current tile the projectile is on.
+  ability: ability; // The ability that created the projectile.
   path: any[]; // Path of the projectile.
   originIsEnemy: boolean = false; // Whether the origin of the projectile is an enemy or not.
   speed: number; // Speed of the projectile in tiles per round.
@@ -48,7 +50,7 @@ class Projectile {
         }
       });
       if (target) {
-        this.onHit(target);
+        this.onHit(this.shooter, target, this.ability);
       }
       this.destroy();
     } else {
@@ -58,7 +60,7 @@ class Projectile {
         }
       });
       if (target) {
-        this.onHit(target);
+        this.onHit(this.shooter, target, this.ability);
       }
       this.destroy();
     }
