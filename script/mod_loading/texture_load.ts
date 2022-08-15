@@ -5,7 +5,7 @@ const textureAtlasCtx: CanvasRenderingContext2D = textureAtlas.getContext("2d");
 
 async function loadTextures() {
   const textures = await getTextures();
-  textureAtlas.width = texturesPerRow * 128;
+  textureAtlas.width = (texturesPerRow + 1) * 128;
   textureAtlas.height = textures.length * 128;
   textures.map(async (row: any, y: number) => {
     row.map(async (texture: any, x: number) => {
