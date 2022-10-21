@@ -12,7 +12,10 @@ async function advanceTurn() {
   const pRegen = player.getRegen();
   player.stats.hp += pRegen["hp"];
   player.stats.mp += pRegen["mp"];
-  combatSummons.forEach(summon => {
+  currentProjectiles.forEach((projectile: any) => {
+    projectile.move();
+  });
+  combatSummons.forEach((summon) => {
     if (!summon.alive || player.isDead) return;
     const sRegen = summon.getRegen();
     if (summon.stats.hp < summon.getHpMax()) summon.stats.hp += sRegen["hp"];
@@ -33,7 +36,10 @@ async function advanceTurn() {
   map.enemies.forEach((enemy: any) => {
     let distToPlayer = enemy.distToPlayer();
     if (player.isDead) return;
-    if (!enemy.alive) { updateEnemiesTurn(); return; };
+    if (!enemy.alive) {
+      updateEnemiesTurn();
+      return;
+    }
     if (closestEnemyDistance < 0) closestEnemyDistance = enemy.distToPlayer();
     else if (distToPlayer < closestEnemyDistance) closestEnemyDistance = enemy.distToPlayer();
     const eRegen = enemy.getRegen();
@@ -44,8 +50,7 @@ async function advanceTurn() {
       state.inCombat = true;
       enemy.updateAbilities();
       enemy.decideAction();
-    }
-    else updateEnemiesTurn();
+    } else updateEnemiesTurn();
     enemy.effects();
   });
   player.effects();
@@ -61,7 +66,9 @@ async function advanceTurn() {
         if (!enemy.turnsToRes) enemy.turnsToRes = 200;
         enemy.turnsToRes--;
         if (enemy.turnsToRes <= 0) {
-          maps[enemy.spawnMap].enemies.push(new Enemy({ ...enemies[enemy.id], level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap }));
+          maps[enemy.spawnMap].enemies.push(
+            new Enemy({ ...enemies[enemy.id], level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap })
+          );
           fallenEnemies.splice(index, 1);
         }
         return true;
@@ -76,7 +83,6 @@ async function advanceTurn() {
     player.stats.mp = player.getMpMax();
   }
 }
-
 
 function updateEnemiesTurn() {
   enemiesHadTurn++;

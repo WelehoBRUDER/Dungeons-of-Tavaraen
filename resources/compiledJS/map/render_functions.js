@@ -30,7 +30,12 @@ function renderEntireMap(map) {
                 const tileSouth = tiles[+((_l = (_k = map.base) === null || _k === void 0 ? void 0 : _k[mapOffsetStartY + y + 1]) === null || _l === void 0 ? void 0 : _l[mapOffsetStartX + x])];
                 const tileWest = tiles[+((_o = (_m = map.base) === null || _m === void 0 ? void 0 : _m[mapOffsetStartY + y]) === null || _o === void 0 ? void 0 : _o[mapOffsetStartX + x - 1])];
                 const tileEast = tiles[+((_q = (_p = map.base) === null || _p === void 0 ? void 0 : _p[mapOffsetStartY + y]) === null || _q === void 0 ? void 0 : _q[mapOffsetStartX + x + 1])];
-                const drawOutlines = { n: !(tileNorth === null || tileNorth === void 0 ? void 0 : tileNorth.isWall), s: !(tileSouth === null || tileSouth === void 0 ? void 0 : tileSouth.isWall), e: !(tileEast === null || tileEast === void 0 ? void 0 : tileEast.isWall), w: !(tileWest === null || tileWest === void 0 ? void 0 : tileWest.isWall) };
+                const drawOutlines = {
+                    n: !(tileNorth === null || tileNorth === void 0 ? void 0 : tileNorth.isWall),
+                    s: !(tileSouth === null || tileSouth === void 0 ? void 0 : tileSouth.isWall),
+                    e: !(tileEast === null || tileEast === void 0 ? void 0 : tileEast.isWall),
+                    w: !(tileWest === null || tileWest === void 0 ? void 0 : tileWest.isWall),
+                };
                 Object.entries(drawOutlines).map(([dir, draw]) => {
                     baseCtx.globalCompositeOperation = "source-over";
                     let width = Math.round(spriteSize / 16 + 4);
@@ -38,7 +43,7 @@ function renderEntireMap(map) {
                     let height = shortHeight;
                     if (dir === "n" && draw) {
                         if (!drawOutlines["w"] && drawOutlines["n"]) {
-                            baseCtx.fillRect(Math.round((x * spriteSize - mapOffsetX) - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
+                            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
                         }
                         else {
                             baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), height, width);
@@ -46,7 +51,7 @@ function renderEntireMap(map) {
                     }
                     else if (dir === "s" && draw) {
                         if (drawOutlines["s"] && !drawOutlines["e"]) {
-                            baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
+                            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
                         }
                         else {
                             baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height, width);
@@ -54,7 +59,7 @@ function renderEntireMap(map) {
                     }
                     else if (dir === "e" && draw) {
                         if (drawOutlines["e"] && !drawOutlines["n"]) {
-                            baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX) + shortHeight - width), Math.round((y * spriteSize - mapOffsetY) - width), width, height + width);
+                            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY - width), width, height + width);
                         }
                         else {
                             baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
@@ -62,7 +67,7 @@ function renderEntireMap(map) {
                     }
                     else if (dir === "w" && draw) {
                         if (drawOutlines["w"] && !drawOutlines["s"]) {
-                            baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY), width, height + width);
+                            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), width, height + width);
                         }
                         else {
                             baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
@@ -84,7 +89,7 @@ function renderEntireMap(map) {
     baseCtx.globalCompositeOperation = "source-over";
     map.shrines.forEach((checkpoint) => {
         var _a, _b, _c;
-        if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
+        if (((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x") {
             const shrine = document.querySelector(".sprites .shrineTile");
             const shrineLit = document.querySelector(".sprites .shrineLitTile");
             let tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -97,8 +102,8 @@ function renderEntireMap(map) {
     });
     map.treasureChests.forEach((chest) => {
         var _a;
-        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
-        if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
+        const lootedChest = lootedChests.find((trs) => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
+        if (((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x") {
             if (!lootedChest) {
                 const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
                 let tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -109,7 +114,7 @@ function renderEntireMap(map) {
     });
     map.messages.forEach((msg) => {
         var _a;
-        if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
+        if (((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x") {
             const message = document.querySelector(".messageTile");
             let tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             let tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -118,7 +123,7 @@ function renderEntireMap(map) {
     });
     (_r = map === null || map === void 0 ? void 0 : map.entrances) === null || _r === void 0 ? void 0 : _r.forEach((entrance) => {
         var _a;
-        if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
+        if (((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x") {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
             let tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             let tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -158,8 +163,29 @@ function renderEntireMap(map) {
             return;
         renderItemOnMap(item, spriteSize, sightMap);
     });
+    /* Render Projectiles */
+    renderProjectiles(spriteSize);
     /* Render Player */
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
+}
+function renderProjectiles(spriteSize) {
+    currentProjectiles.forEach((projectile, index) => {
+        const { screenX: x, screenY: y } = tileCordsToScreen(projectile.cords);
+        const projectileCanvas = projectileLayers.querySelector(`#projectile${index}`);
+        const ctx = projectileCanvas.getContext("2d");
+        projectileCanvas.width = baseCanvas.width;
+        projectileCanvas.height = baseCanvas.height;
+        projectileLayers.append(projectileCanvas);
+        projectileCanvas.width = projectileCanvas.width;
+        ctx === null || ctx === void 0 ? void 0 : ctx.translate(x + spriteSize / 2, y + spriteSize / 2);
+        const rotation = calcAngleDegrees(projectile.target.x - projectile.cords.x, projectile.target.y - projectile.cords.y);
+        ctx === null || ctx === void 0 ? void 0 : ctx.rotate((rotation * Math.PI) / 180);
+        ctx === null || ctx === void 0 ? void 0 : ctx.translate((x + spriteSize / 2) * -1, (y + spriteSize / 2) * -1);
+        const projectileSprite = document.querySelector(`.sprites .${projectile.texture}`);
+        if (projectileSprite) {
+            ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(projectileSprite, x, y, spriteSize, spriteSize);
+        }
+    });
 }
 function renderEnemyModel(enemy, index, spriteSize) {
     var _a;
@@ -179,15 +205,15 @@ function renderEnemyModel(enemy, index, spriteSize) {
         const hpbg = document.querySelector(".hpBg");
         const hpbar = document.querySelector(".hpBar");
         const hpborder = document.querySelector(".hpBorder");
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), ((Math.round(enemy.hpRemain()) * spriteSize) / 100) * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         /* Render enemy on top of hp bar */
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, enemySprite.x, enemySprite.y, 128, 128, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         if (((_a = enemy.questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1) {
             ctx.font = `${spriteSize / 1.9}px Arial`;
             ctx.fillStyle = "goldenrod";
-            ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+            ctx.fillText(`!`, tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3, tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10);
         }
         let statCount = 0;
         enemy.statusEffects.forEach((effect) => {
@@ -195,8 +221,8 @@ function renderEnemyModel(enemy, index, spriteSize) {
                 return;
             let img = new Image(32, 32);
             img.src = effect.icon;
-            img.addEventListener("load", e => {
-                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
+            img.addEventListener("load", (e) => {
+                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + 32 * statCount * currentZoom, 32 * currentZoom, 32 * currentZoom);
                 img = null;
                 statCount++;
             });
@@ -216,13 +242,13 @@ function renderSummonModel(summon, index, spriteSize) {
     const summonSprite = summons[summon.id].spriteMap;
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    if (summonSprite && (((_a = sightMap[summon.cords.y]) === null || _a === void 0 ? void 0 : _a[summon.cords.x]) == "x")) {
+    if (summonSprite && ((_a = sightMap[summon.cords.y]) === null || _a === void 0 ? void 0 : _a[summon.cords.x]) == "x") {
         /* Render hp bar */
         const hpbg = document.querySelector(".hpBg");
         const hpbar = document.querySelector(".hpBarAlly");
         const hpborder = document.querySelector(".hpBorder");
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX, tileY - 12, spriteSize, spriteSize);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, summon.hpRemain() * spriteSize / 100, spriteSize);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX, tileY - 12, (summon.hpRemain() * spriteSize) / 100, spriteSize);
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX, tileY - 12, spriteSize, spriteSize);
         /* Render enemy on top of hp bar */
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, summonSprite.x, summonSprite.y, 128, 128, tileX, tileY, spriteSize, spriteSize);
@@ -232,8 +258,8 @@ function renderSummonModel(summon, index, spriteSize) {
                 return;
             let img = new Image(32, 32);
             img.src = effect.icon;
-            img.addEventListener("load", e => {
-                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + (32 * statCount), 32, 32);
+            img.addEventListener("load", (e) => {
+                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32, tileY + 32 * statCount, 32, 32);
                 img = null;
                 statCount++;
             });
@@ -258,7 +284,7 @@ function renderItemOnMap(item, spriteSize, sightMap) {
         mapDataCtx.shadowBlur = 6;
         mapDataCtx.shadowOffsetX = 0;
         mapDataCtx.shadowOffsetY = 0;
-        mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(textureAtlas, itemSprite.x, itemSprite.y, 128, 128, (tileX + spriteSize * item.mapCords.xMod), (tileY + spriteSize * item.mapCords.yMod), spriteSize / 3, spriteSize / 3);
+        mapDataCtx === null || mapDataCtx === void 0 ? void 0 : mapDataCtx.drawImage(textureAtlas, itemSprite.x, itemSprite.y, 128, 128, tileX + spriteSize * item.mapCords.xMod, tileY + spriteSize * item.mapCords.yMod, spriteSize / 3, spriteSize / 3);
     }
 }
 function renderRow(map, translateX, translateY) {
@@ -320,7 +346,7 @@ function renderRow(map, translateX, translateY) {
                 let height = shortHeight;
                 if (dir === "n" && draw) {
                     if (!drawOutlines["w"] && drawOutlines["n"]) {
-                        baseCtx.fillRect(Math.round((x * spriteSize - mapOffsetX) - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
+                        baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
                     }
                     else {
                         baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), height, width);
@@ -328,7 +354,7 @@ function renderRow(map, translateX, translateY) {
                 }
                 else if (dir === "s" && draw) {
                     if (drawOutlines["s"] && !drawOutlines["e"]) {
-                        baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
+                        baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
                     }
                     else {
                         baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height, width);
@@ -336,7 +362,7 @@ function renderRow(map, translateX, translateY) {
                 }
                 else if (dir === "e" && draw) {
                     if (drawOutlines["e"] && !drawOutlines["n"]) {
-                        baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX) + shortHeight - width), Math.round((y * spriteSize - mapOffsetY) - width), width, height + width);
+                        baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY - width), width, height + width);
                     }
                     else {
                         baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
@@ -344,7 +370,7 @@ function renderRow(map, translateX, translateY) {
                 }
                 else if (dir === "w" && draw) {
                     if (drawOutlines["w"] && !drawOutlines["s"]) {
-                        baseCtx.fillRect((Math.round(x * spriteSize - mapOffsetX)), Math.round(y * spriteSize - mapOffsetY), width, height + width);
+                        baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), width, height + width);
                     }
                     else {
                         baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
@@ -366,7 +392,7 @@ function renderRow(map, translateX, translateY) {
     baseCtx.globalCompositeOperation = "source-over";
     map.shrines.forEach((checkpoint) => {
         var _a, _b, _c;
-        if ((((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x")) {
+        if (((_a = sightMap[checkpoint.cords.y]) === null || _a === void 0 ? void 0 : _a[checkpoint.cords.x]) == "x") {
             const shrine = document.querySelector(".sprites .shrineTile");
             const shrineLit = document.querySelector(".sprites .shrineLitTile");
             let tileX = (checkpoint.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -379,8 +405,8 @@ function renderRow(map, translateX, translateY) {
     });
     map.treasureChests.forEach((chest) => {
         var _a;
-        const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
-        if ((((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x")) {
+        const lootedChest = lootedChests.find((trs) => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
+        if (((_a = sightMap[chest.cords.y]) === null || _a === void 0 ? void 0 : _a[chest.cords.x]) == "x") {
             if (!lootedChest) {
                 const chestSprite = document.querySelector(`.sprites .${chest.sprite}`);
                 let tileX = (chest.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
@@ -391,7 +417,7 @@ function renderRow(map, translateX, translateY) {
     });
     map.messages.forEach((msg) => {
         var _a;
-        if ((((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x")) {
+        if (((_a = sightMap[msg.cords.y]) === null || _a === void 0 ? void 0 : _a[msg.cords.x]) == "x") {
             const message = document.querySelector(".messageTile");
             let tileX = (msg.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             let tileY = (msg.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -400,7 +426,7 @@ function renderRow(map, translateX, translateY) {
     });
     (_a = map === null || map === void 0 ? void 0 : map.entrances) === null || _a === void 0 ? void 0 : _a.forEach((entrance) => {
         var _a;
-        if ((((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x")) {
+        if (((_a = sightMap[entrance.cords.y]) === null || _a === void 0 ? void 0 : _a[entrance.cords.x]) == "x") {
             const entranceSprite = document.querySelector(`.sprites .${entrance.sprite}`);
             let tileX = (entrance.cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
             let tileY = (entrance.cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
@@ -440,6 +466,8 @@ function renderRow(map, translateX, translateY) {
             return;
         renderItemOnMap(item, spriteSize, sightMap);
     });
+    /* Render projectiles */
+    renderProjectiles(spriteSize);
 }
 function generateFogMap() {
     var _a;

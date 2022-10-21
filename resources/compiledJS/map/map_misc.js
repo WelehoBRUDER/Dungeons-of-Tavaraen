@@ -1,8 +1,8 @@
 "use strict";
 function spriteVariables() {
     const spriteSize = Math.round(128 * currentZoom);
-    var spriteLimitX = Math.ceil(baseCanvas.width / spriteSize);
-    var spriteLimitY = Math.ceil(baseCanvas.height / spriteSize);
+    let spriteLimitX = Math.ceil(baseCanvas.width / spriteSize);
+    let spriteLimitY = Math.ceil(baseCanvas.height / spriteSize);
     if (spriteLimitX % 2 == 0)
         spriteLimitX++;
     if (spriteLimitY % 2 == 0)
@@ -11,13 +11,21 @@ function spriteVariables() {
     const mapOffsetY = (spriteLimitY * spriteSize - baseCanvas.height) / 2;
     const mapOffsetStartX = player.cords.x - settings.map_offset_x - Math.floor(spriteLimitX / 2);
     const mapOffsetStartY = player.cords.y - settings.map_offset_y - Math.floor(spriteLimitY / 2);
-    return { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY };
+    return {
+        spriteSize,
+        spriteLimitX,
+        spriteLimitY,
+        mapOffsetX,
+        mapOffsetY,
+        mapOffsetStartX,
+        mapOffsetStartY,
+    };
 }
 const checkDirs = {
     rightUp: { x1: 0, y1: -1, x2: 1, y2: 0 },
     rightDown: { x1: 1, 1: 0, x2: 0, y2: 1 },
     leftUp: { x1: 0, y1: -1, x2: -1, y2: 0 },
-    leftDown: { x1: -1, y1: 0, x2: 0, y2: 1 }
+    leftDown: { x1: -1, y1: 0, x2: 0, y2: 1 },
 };
 function calcDistance(startX, startY, endX, endY) {
     let xDist = Math.abs(endX - startX);

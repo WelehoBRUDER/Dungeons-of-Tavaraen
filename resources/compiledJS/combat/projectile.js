@@ -12,7 +12,7 @@
  @param {Function} onDestroy - The function to be called when the projectile either hits a target or reaches its destination.
  */
 class Projectile {
-    constructor(id, texture, target, cords, path, originIsEnemy, speed, onHit, onDestroy) {
+    constructor(id, texture, target, cords, path, originIsEnemy, ability, shooter, speed, index, onHit, onDestroy) {
         this.originIsEnemy = false; // Whether the origin of the projectile is an enemy or not.
         this.id = id;
         this.texture = texture;
@@ -21,50 +21,66 @@ class Projectile {
         this.path = path;
         this.originIsEnemy = originIsEnemy;
         this.speed = speed;
+        this.ability = ability;
+        this.shooter = shooter;
+        this.index = index;
         this.onHit = onHit;
         this.onDestroy = onDestroy;
     }
     destroy() {
+        console.log("destroying projectile");
         if (this.onDestroy) {
             this.onDestroy();
         }
-        currentProjectiles.splice(currentProjectiles.indexOf(this), 1);
+        currentProjectiles.splice(this.index, 1);
+        const projectileCanvas = projectileLayers.querySelector(`#projectile${this.index}`);
+        if (projectileCanvas) {
+            projectileCanvas.remove();
+        }
     }
     async move() {
-        this.path = generateArrowPath(this.cords, this.target);
+        const { spriteSize } = spriteVariables();
         if (this.path.length > 0) {
-            for (let i = 1; i <= this.speed; i++) {
-                if (this.path.length == 0) {
-                    this.checkCollision();
+            let start = this.path.findIndex((step) => {
+                return step.x === this.cords.x && step.y === this.cords.y;
+            });
+            for (let i = start; i - start <= this.speed; i++) {
+                this.cords = this.path[i];
+                this.checkCollision();
+                renderProjectiles(spriteSize);
+                await helper.sleep(30);
+                if (i >= this.path.length - 1) {
+                    this.destroy();
                     break;
                 }
-                this.cords = this.path.shift();
-                await helper.sleep(30);
             }
         }
     }
-    checkCollision() {
+    checkCollision(pathStep = 0) {
         if (this.originIsEnemy) {
-            const targets = player.concat(combatSummons);
-            const target = targets.map((tar) => {
+            const targets = combatSummons.concat([player]);
+            const target = targets.find((tar) => {
                 if (tar.cords.x === this.cords.x && tar.cords.y === this.cords.y) {
                     return tar;
                 }
             });
             if (target) {
                 this.onHit(this.shooter, target, this.ability);
+                this.destroy();
             }
-            this.destroy();
         }
         else {
-            const target = maps[currentMap].enemies.map((enemy) => {
+            const target = maps[currentMap].enemies.find((enemy) => {
                 if (enemy.cords.x === this.cords.x && enemy.cords.y === this.cords.y) {
                     return enemy;
                 }
             });
             if (target) {
                 this.onHit(this.shooter, target, this.ability);
+                this.destroy();
             }
+        }
+        if (pathStep === this.path.length - 1) {
             this.destroy();
         }
     }
@@ -78,9 +94,17 @@ function createNewProjectile(shooter, projectileTemplate, target, ability, onHit
     speed += (_a = shooter.allModifiers[`${ability.id}_projectileSpeedV`]) !== null && _a !== void 0 ? _a : 0;
     speed *= (_b = shooter.allModifiers[`${ability.id}_projectileSpeedP`]) !== null && _b !== void 0 ? _b : 1;
     speed = Math.round(speed);
+    let index = currentProjectiles.length;
     let path = generateArrowPath(shooter.cords, target);
-    const projectile = new Projectile(id, texture, target, shooter.cords, path, isEnemy, speed, onHit, onDestroy);
+    const projectile = new Projectile(id, texture, target, shooter.cords, path, isEnemy, ability, shooter, speed, index, onHit, onDestroy);
+    const projectileCanvas = document.createElement("canvas");
+    projectileCanvas.classList.add("layer");
+    projectileCanvas.width = baseCanvas.width;
+    projectileCanvas.height = baseCanvas.height;
+    projectileCanvas.id = `projectile${index}`;
+    projectileLayers.append(projectileCanvas);
     currentProjectiles.push(projectile);
+    projectile.move();
 }
 const projectiles = {
     arrowProjectile: {
