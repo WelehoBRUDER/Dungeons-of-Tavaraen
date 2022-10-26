@@ -35,12 +35,12 @@ let currentZoom = 1;
 /* temporarily store highlight variables here */
 const highlight = {
     x: 0,
-    y: 0
+    y: 0,
 };
 const mapSelection = {
     x: null,
     y: null,
-    disableHover: false
+    disableHover: false,
 };
 baseCanvas.addEventListener("wheel", changeZoomLevel, { passive: true });
 function changeZoomLevel({ deltaY }) {
@@ -57,7 +57,7 @@ function changeZoomLevel({ deltaY }) {
         modifyCanvas(true);
 }
 window.addEventListener("resize", resizeCanvas);
-(_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener('contextmenu', event => event.preventDefault());
+(_a = document.querySelector(".main")) === null || _a === void 0 ? void 0 : _a.addEventListener("contextmenu", (event) => event.preventDefault());
 let sightMap;
 let oldCords = { x: 0, y: 0 };
 let oldZoom = 0;
@@ -111,19 +111,26 @@ function renderTileHover(tile, event = { buttons: -1 }) {
         renderPlayerModel(spriteSize, playerCanvas, playerCtx);
         let hoveredEnemy = false;
         maps[currentMap].enemies.forEach((enemy) => {
-            if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
+            if (enemy.cords.x === tile.x && enemy.cords.y === tile.y) {
                 hoverEnemyShow(enemy);
                 hoveredEnemy = true;
             }
         });
         let hoveredSummon = false;
         combatSummons.forEach((summon) => {
-            if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
+            if (summon.cords.x === tile.x && summon.cords.y === tile.y) {
                 hoverEnemyShow(summon);
                 hoveredSummon = true;
             }
         });
-        if (!hoveredEnemy && !hoveredSummon) {
+        let hoveredEntity = false;
+        currentProjectiles.forEach((projectile) => {
+            if (projectile.cords.x === tile.x && projectile.cords.y === tile.y) {
+                hoverProjectile(projectile);
+                hoveredEntity = true;
+            }
+        });
+        if (!hoveredEnemy && !hoveredSummon && !hoveredEntity) {
             hideMapHover();
         }
         if (state.abiSelected.type == "movement" || state.abiSelected.type == "charge") {
@@ -143,8 +150,8 @@ function renderTileHover(tile, event = { buttons: -1 }) {
                     playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             });
         }
-        /* Render highlight test */
-        else if ((((((_e = state.abiSelected) === null || _e === void 0 ? void 0 : _e.shoots_projectile) && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
+        else if (((((_e = state.abiSelected) === null || _e === void 0 ? void 0 : _e.shoots_projectile) && state.isSelected) || (player.weapon.firesProjectile && state.rangedMode)) && event.buttons !== 1) {
+            /* Render highlight test */
             const path = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
             let distance = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
             let iteration = 0;
@@ -200,7 +207,8 @@ function renderTileHover(tile, event = { buttons: -1 }) {
     }
     catch (err) {
         if (DEVMODE)
-            displayText(`<c>red<c>${err} at line map:574`);
+            displayText(`<c>red<c>${err} at line map:299`);
+        console.error("Error while rendering highlight", err);
     }
     playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
 }
@@ -244,7 +252,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
                     extraMove = true;
                 }
                 else
-                    player.speed.movementFill += (player.getSpeed().movement - 100);
+                    player.speed.movementFill += player.getSpeed().movement - 100;
             }
             isMovingCurrently = true;
             player.cords.x = step.x;
@@ -254,7 +262,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
                 advanceTurn();
             }
             count++;
-            if (state.inCombat && !ability || count > maxRange && ability || breakMoving)
+            if ((state.inCombat && !ability) || (count > maxRange && ability) || breakMoving)
                 break moving;
         }
     }
@@ -312,15 +320,15 @@ function renderSingleEnemy(enemy, canvas) {
         const hpbg = document.querySelector(".hpBg");
         const hpbar = document.querySelector(".hpBar");
         const hpborder = document.querySelector(".hpBorder");
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
-        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbg, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpbar, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), ((Math.round(enemy.hpRemain()) * spriteSize) / 100) * enemy.scale, spriteSize * enemy.scale);
+        ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(hpborder, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         /* Render enemy on top of hp bar */
         ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(textureAtlas, enemySprite.x, enemySprite.y, 128, 128, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
         if (((_b = enemy.questSpawn) === null || _b === void 0 ? void 0 : _b.quest) > -1) {
             ctx.font = `${spriteSize / 1.9}px Arial`;
             ctx.fillStyle = "goldenrod";
-            ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+            ctx.fillText(`!`, tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3, tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10);
         }
         let statCount = 0;
         enemy.statusEffects.forEach((effect) => {
@@ -328,8 +336,8 @@ function renderSingleEnemy(enemy, canvas) {
                 return;
             let img = new Image(32, 32);
             img.src = effect.icon;
-            img.addEventListener("load", e => {
-                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
+            img.addEventListener("load", (e) => {
+                ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + 32 * statCount * currentZoom, 32 * currentZoom, 32 * currentZoom);
                 img = null;
                 statCount++;
             });
@@ -354,7 +362,7 @@ async function moveEnemy(goal, enemy, ability = null, maxRange = 99) {
                 maxRange++;
             }
             if (increaseMovement) {
-                enemy.speed.movementFill += (player.getSpeed().movement - 100);
+                enemy.speed.movementFill += player.getSpeed().movement - 100;
             }
             enemy.cords.x = step.x;
             enemy.cords.y = step.y;

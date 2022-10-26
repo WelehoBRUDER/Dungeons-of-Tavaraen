@@ -35,21 +35,21 @@ let currentZoom = 1;
 /* temporarily store highlight variables here */
 const highlight = {
   x: 0,
-  y: 0
+  y: 0,
 };
 
 const mapSelection = {
   x: null,
   y: null,
-  disableHover: false
+  disableHover: false,
 } as any;
 
 interface mapObject {
-  [name: string]: any,
-  id: string,
+  [name: string]: any;
+  id: string;
   voidTexture?: string;
-  base: Array<number[]>,
-  clutter: Array<number[]>,
+  base: Array<number[]>;
+  clutter: Array<number[]>;
   enemies: Array<Enemy>;
   playerGrave?: any;
   area?: string;
@@ -77,7 +77,7 @@ function changeZoomLevel({ deltaY }: any) {
 }
 
 window.addEventListener("resize", resizeCanvas);
-document.querySelector(".main")?.addEventListener('contextmenu', event => event.preventDefault());
+document.querySelector(".main")?.addEventListener("contextmenu", (event) => event.preventDefault());
 
 let sightMap: any;
 let oldCords: tileObject = { x: 0, y: 0 };
@@ -100,8 +100,7 @@ function renderMap(map: mapObject, createNewSightMap: boolean = false) {
     renderRow(map, translateX, translateY);
     //renderTiles(map, spriteLimitX, spriteLimitY);
     return;
-  }
-  else {
+  } else {
     renderEntireMap(map);
   }
 }
@@ -120,7 +119,6 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
   }
   const strokeSprite = staticTiles[0].spriteMap;
   try {
-
     /* Render tile */
     const highlightSprite = staticTiles[3]?.spriteMap;
     const highlightRedSprite = staticTiles[4]?.spriteMap;
@@ -129,19 +127,26 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
     let hoveredEnemy = false;
     maps[currentMap].enemies.forEach((enemy: any) => {
-      if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
+      if (enemy.cords.x === tile.x && enemy.cords.y === tile.y) {
         hoverEnemyShow(enemy);
         hoveredEnemy = true;
       }
     });
     let hoveredSummon = false;
     combatSummons.forEach((summon: any) => {
-      if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
+      if (summon.cords.x === tile.x && summon.cords.y === tile.y) {
         hoverEnemyShow(summon);
         hoveredSummon = true;
       }
     });
-    if (!hoveredEnemy && !hoveredSummon) {
+    let hoveredEntity = false;
+    currentProjectiles.forEach((projectile: any) => {
+      if (projectile.cords.x === tile.x && projectile.cords.y === tile.y) {
+        hoverProjectile(projectile);
+        hoveredEntity = true;
+      }
+    });
+    if (!hoveredEnemy && !hoveredSummon && !hoveredEntity) {
       hideMapHover();
     }
 
@@ -155,13 +160,32 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
         let _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         let _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (iteration > distance) {
-          playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
-        }
-        else playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlight2RedSprite.x,
+            highlight2RedSprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
+        } else
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlight2Sprite.x,
+            highlight2Sprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
       });
-    }
-    /* Render highlight test */
-    else if ((((state.abiSelected?.shoots_projectile && state.isSelected) || player.weapon.firesProjectile && state.rangedMode) && event.buttons !== 1)) {
+    } else if (((state.abiSelected?.shoots_projectile && state.isSelected) || (player.weapon.firesProjectile && state.rangedMode)) && event.buttons !== 1) {
+      /* Render highlight test */
       const path: any = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
       let distance: number = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
       let iteration: number = 0;
@@ -173,16 +197,46 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
         let _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if ((step.blocked && step.x !== tile.x && step.y !== tile.y) || iteration > distance) {
           if (lastStep == 0) lastStep = iteration;
-          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
-        }
-        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlightRedSprite.x,
+            highlightRedSprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
+        } else
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlightSprite.x,
+            highlightSprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
       });
       if (state.abiSelected?.aoe_size > 0) {
         let aoeMap = createAOEMap(lastStep > 0 ? path[lastStep - 1] : path[path.length - 1], state.abiSelected.aoe_size);
         for (let y = 0; y < spriteLimitY; y++) {
           for (let x = 0; x < spriteLimitX; x++) {
             if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
-              playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+              playerCtx.drawImage(
+                spriteMap_tiles,
+                highlightRedSprite.x,
+                highlightRedSprite.y,
+                128,
+                128,
+                Math.round(x * spriteSize - mapOffsetX),
+                Math.round(y * spriteSize - mapOffsetY),
+                Math.round(spriteSize + 1),
+                Math.round(spriteSize + 1)
+              );
             }
           }
         }
@@ -192,8 +246,29 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
       let _tileX = (tile.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
       let _tileY = (tile.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
       if (generatePath(player.cords, tile, player.canFly, true) <= state.abiSelected.use_range) {
-        playerCtx.drawImage(spriteMap_tiles, highlight2Sprite.x, highlight2Sprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
-      } else playerCtx.drawImage(spriteMap_tiles, highlight2RedSprite.x, highlight2RedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+        playerCtx.drawImage(
+          spriteMap_tiles,
+          highlight2Sprite.x,
+          highlight2Sprite.y,
+          128,
+          128,
+          Math.round(_tileX),
+          Math.round(_tileY),
+          Math.round(spriteSize + 1),
+          Math.round(spriteSize + 1)
+        );
+      } else
+        playerCtx.drawImage(
+          spriteMap_tiles,
+          highlight2RedSprite.x,
+          highlight2RedSprite.y,
+          128,
+          128,
+          Math.round(_tileX),
+          Math.round(_tileY),
+          Math.round(spriteSize + 1),
+          Math.round(spriteSize + 1)
+        );
     }
     if (event.buttons == 1 && !state.isSelected) {
       const path: any = generatePath({ x: player.cords.x, y: player.cords.y }, tile, player.canFly);
@@ -202,13 +277,35 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
         let _tileX = (step.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
         let _tileY = (step.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
         if (step.blocked) {
-          playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
-        }
-        else playerCtx.drawImage(spriteMap_tiles, highlightSprite.x, highlightSprite.y, 128, 128, Math.round(_tileX), Math.round(_tileY), Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlightRedSprite.x,
+            highlightRedSprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
+        } else
+          playerCtx.drawImage(
+            spriteMap_tiles,
+            highlightSprite.x,
+            highlightSprite.y,
+            128,
+            128,
+            Math.round(_tileX),
+            Math.round(_tileY),
+            Math.round(spriteSize + 1),
+            Math.round(spriteSize + 1)
+          );
       });
     }
+  } catch (err) {
+    if (DEVMODE) displayText(`<c>red<c>${err} at line map:299`);
+    console.error("Error while rendering highlight", err);
   }
-  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line map:574`); }
   playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
 }
 
@@ -247,8 +344,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
         if (player.speed.movementFill >= 100) {
           player.speed.movementFill -= 100;
           extraMove = true;
-        }
-        else player.speed.movementFill += (player.getSpeed().movement - 100);
+        } else player.speed.movementFill += player.getSpeed().movement - 100;
       }
       isMovingCurrently = true;
       player.cords.x = step.x;
@@ -258,7 +354,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
         advanceTurn();
       }
       count++;
-      if (state.inCombat && !ability || count > maxRange && ability || breakMoving) break moving;
+      if ((state.inCombat && !ability) || (count > maxRange && ability) || breakMoving) break moving;
     }
   }
   breakMoving = false;
@@ -270,22 +366,21 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
         const totalCount = (+worldTextHistoryArray[i].innerText.split(" ")[3] + count).toString();
         worldTextHistoryArray[i] = textSyntax(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${totalCount} turn(s).`);
         displayText("");
-      }
-      else displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
+      } else displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
     }
     if (state.inCombat && count == 1) {
       if (Math.round(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * 0.5)} HP.`);
-    }
-    else if (state.inCombat && count > 1) {
+    } else if (state.inCombat && count > 1) {
       let regen = Math.round(player.hpRegen() * count - 1) + Math.round(player.hpRegen() * 0.5);
       if (regen > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
       displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
     } else if (count > 0) {
       if (Math.round(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * count)} HP.`);
     }
-  }
-  else if (!action) { advanceTurn(); state.abiSelected = {}; }
-  else if (action) {
+  } else if (!action) {
+    advanceTurn();
+    state.abiSelected = {};
+  } else if (action) {
     action();
     advanceTurn();
     state.abiSelected = {};
@@ -306,23 +401,39 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
     const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
     const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
     const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-    ctx?.drawImage(hpbg, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
-    ctx?.drawImage(hpbar, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), (Math.round(enemy.hpRemain()) * spriteSize / 100) * enemy.scale, spriteSize * enemy.scale);
-    ctx?.drawImage(hpborder, (tileX) - spriteSize * (enemy.scale - 1), (tileY - 12) - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(hpbg, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      hpbar,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - 12 - spriteSize * (enemy.scale - 1),
+      ((Math.round(enemy.hpRemain()) * spriteSize) / 100) * enemy.scale,
+      spriteSize * enemy.scale
+    );
+    ctx?.drawImage(hpborder, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
     /* Render enemy on top of hp bar */
-    ctx?.drawImage(textureAtlas, enemySprite.x, enemySprite.y, 128, 128, tileX - spriteSize * (enemy.scale - 1), tileY - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      textureAtlas,
+      enemySprite.x,
+      enemySprite.y,
+      128,
+      128,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - spriteSize * (enemy.scale - 1),
+      spriteSize * enemy.scale,
+      spriteSize * enemy.scale
+    );
     if (enemy.questSpawn?.quest > -1) {
       ctx.font = `${spriteSize / 1.9}px Arial`;
       ctx.fillStyle = "goldenrod";
-      ctx.fillText(`!`, (tileX - spriteSize * (enemy.scale - 1)) + spriteSize / 2.3, (tileY - spriteSize * (enemy.scale - 1)) - spriteSize / 10);
+      ctx.fillText(`!`, tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3, tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10);
     }
     let statCount = 0;
     enemy.statusEffects.forEach((effect: statEffect) => {
       if (statCount > 4) return;
       let img = new Image(32, 32);
       img.src = effect.icon;
-      img.addEventListener("load", e => {
-        ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + (32 * statCount * currentZoom), 32 * currentZoom, 32 * currentZoom);
+      img.addEventListener("load", (e) => {
+        ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + 32 * statCount * currentZoom, 32 * currentZoom, 32 * currentZoom);
         img = null;
         statCount++;
       });
@@ -348,15 +459,14 @@ async function moveEnemy(goal: tileObject, enemy: Enemy, ability: Ability = null
         maxRange++;
       }
       if (increaseMovement) {
-        enemy.speed.movementFill += (player.getSpeed().movement - 100);
+        enemy.speed.movementFill += player.getSpeed().movement - 100;
       }
       enemy.cords.x = step.x;
       enemy.cords.y = step.y;
       const enemyCanvas: HTMLCanvasElement = document.querySelector(`.enemy${enemy.index}`);
       try {
         enemyCanvas.width = enemyCanvas.width;
-      }
-      catch { }
+      } catch {}
       renderSingleEnemy(enemy, enemyCanvas);
       count++;
       if (count > maxRange) break moving;

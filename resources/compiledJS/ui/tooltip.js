@@ -1,34 +1,37 @@
 "use strict";
 // Tooltip for ability
-function abiTT(abi) {
+function abiTT(abi, character = player) {
     var _a, _b, _c, _d, _e, _f, _g;
-    var txt = "";
+    let txt = "";
     txt += `\t<f>26px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>19px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
-    if (abi.mana_cost > 0 && player.silenced())
+    if (abi.mana_cost > 0 && character.silenced())
         txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
-    if (abi.requires_concentration && !player.concentration())
+    if (abi.requires_concentration && !character.concentration())
         txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
     if (abi.base_heal) {
-        let healFromHP = (_c = Math.floor(player.getHpMax() * abi.heal_percentage / 100)) !== null && _c !== void 0 ? _c : 0;
+        let healFromHP = (_c = Math.floor((character.getHpMax() * abi.heal_percentage) / 100)) !== null && _c !== void 0 ? _c : 0;
         txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
         if (abi.heal_percentage) {
             txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
         }
     }
     else if (abi.heal_percentage) {
-        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(player.getHpMax() * abi.heal_percentage / 100)})\n`;
+        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor((character.getHpMax() * abi.heal_percentage) / 100)})\n`;
     }
     if (abi.damages) {
-        var total = 0;
-        var text = "";
-        (_d = Object.entries(abi.get_true_damage(player))) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        let total = 0;
+        let text = "";
+        (_d = Object.entries(abi.get_true_damage(character))) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => {
+            total += dmg[1];
+            text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+        });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
     if (abi.remove_status) {
         txt += `§<c>white<c><f>20px<f>${lang["cures_statuses"]}: `;
-        abi.remove_status.forEach(stat => {
+        abi.remove_status.forEach((stat) => {
             txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
         });
         txt += "\n";
@@ -102,27 +105,30 @@ function abiTT(abi) {
         txt += `<i>${icons.cooldown_icon}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
 }
-function embedAbiTT(abi) {
+function embedAbiTT(abi, character = player) {
     var _a, _b, _c, _d, _e, _f;
-    var txt = "";
+    let txt = "";
     txt += `\t<f>17px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>14px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
-    if (abi.mana_cost > 0 && player.silenced())
+    if (abi.mana_cost > 0 && character.silenced())
         txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
-    if (abi.requires_concentration && !player.concentration())
+    if (abi.requires_concentration && !character.concentration())
         txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
     if (abi.base_heal)
         txt += `<i>${icons.heal_icon}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
     if (abi.damages) {
-        var total = 0;
-        var text = "";
-        Object.entries(abi.get_true_damage(player)).forEach((dmg) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+        let total = 0;
+        let text = "";
+        Object.entries(abi.get_true_damage(character)).forEach((dmg) => {
+            total += dmg[1];
+            text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+        });
         text = text.substring(0, text.length - 2);
         txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
     if (abi.remove_status) {
         txt += `§<c>white<c><f>15px<f>${lang["cures_statuses"]}: `;
-        abi.remove_status.forEach(stat => {
+        abi.remove_status.forEach((stat) => {
             txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
         });
         txt += "\n";
@@ -195,14 +201,14 @@ function embedAbiTT(abi) {
 // Tooltip for status
 function statTT(status, embed = false) {
     var _a, _b;
-    var txt = "";
+    let txt = "";
     if (!embed)
         txt += `\t<f>26px<f>${(_a = lang["effect_" + status.id + "_name"]) !== null && _a !== void 0 ? _a : status.id}\t\n`;
     if (!embed)
         txt += `<f>18px<f><c>silver<c>"${(_b = lang["effect_" + status.id + "_desc"]) !== null && _b !== void 0 ? _b : status.id + "_desc"}"\t\n`;
     if (status.dot)
         txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
-    Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed, status.id));
+    Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed, status.id)));
     if (status.silence)
         txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
     if (status.break_concentration)
@@ -216,7 +222,9 @@ function statTT(status, embed = false) {
     return txt;
 }
 function tooltip(element, text) {
-    element.addEventListener("mouseover", e => { showHover(e, text); });
+    element.addEventListener("mouseover", (e) => {
+        showHover(e, text);
+    });
     element.addEventListener("mousemove", moveHover);
     element.addEventListener("mouseleave", hideHover);
 }
@@ -230,10 +238,10 @@ function moveHover(mouseEvent) {
     tooltipBox.style.left = `${mouseEvent.x + 15}px`;
     tooltipBox.style.top = `${mouseEvent.y - 25}px`;
     if (tooltipBox.offsetLeft + tooltipBox.offsetWidth > innerWidth) {
-        tooltipBox.style.left = innerWidth - tooltipBox.offsetWidth - (innerWidth - mouseEvent.x) + 'px';
+        tooltipBox.style.left = innerWidth - tooltipBox.offsetWidth - (innerWidth - mouseEvent.x) + "px";
     }
     if (tooltipBox.offsetTop + tooltipBox.offsetHeight > innerHeight) {
-        tooltipBox.style.top = innerHeight - tooltipBox.offsetHeight - (innerHeight - mouseEvent.y) + 'px';
+        tooltipBox.style.top = innerHeight - tooltipBox.offsetHeight - (innerHeight - mouseEvent.y) + "px";
     }
 }
 function hideHover() {

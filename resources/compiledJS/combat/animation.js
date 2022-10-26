@@ -29,9 +29,7 @@ function attackTarget(attacker, target, attackDir) {
         if (attacker.id == "player")
             layer = document.querySelector(".playerSheet");
         else
-            layer = (document
-                .querySelector(".summonLayers")
-                .querySelector(`.summon${summonIndex(attacker.cords)}`));
+            layer = document.querySelector(".summonLayers").querySelector(`.summon${summonIndex(attacker.cords)}`);
         layer.style.animation = "none";
         layer.offsetHeight; /* trigger reflow */
         layer.style.animation = null;
@@ -39,9 +37,7 @@ function attackTarget(attacker, target, attackDir) {
     }
     else if (attacker.isFoe) {
         try {
-            const layer = (document
-                .querySelector(".enemyLayers")
-                .querySelector(`.enemy${enemyIndex(attacker.cords)}`));
+            const layer = document.querySelector(".enemyLayers").querySelector(`.enemy${enemyIndex(attacker.cords)}`);
             layer.offsetHeight; /* trigger reflow */
             layer.style.animation = null;
             layer.style.animationName = `attack${attackDir}`;
@@ -52,14 +48,19 @@ function attackTarget(attacker, target, attackDir) {
     }
 }
 async function fireProjectile(start, end, projectileSprite, ability, isPlayer, attacker) {
-    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY, } = spriteVariables();
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const path = generateArrowPath(start, end);
-    const projectile = (document.querySelector("." + projectileSprite));
+    const projectile = document.querySelector("." + projectileSprite);
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    createNewProjectile(attacker, projectiles[projectileSprite], end, ability, regularAttack);
+    let onDestroy = undefined;
+    if (ability.aoe_size > 0) {
+        onDestroy = () => aoeCollision(createAOEMap(path[path.length - 1], ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
+    }
+    console.log(onDestroy);
+    createNewProjectile(attacker, projectiles[projectileSprite], end, ability, regularAttack, onDestroy);
     animateProjectile(currentProjectiles[-1]);
     projectileLayers.append(canvas);
     if (isPlayer) {

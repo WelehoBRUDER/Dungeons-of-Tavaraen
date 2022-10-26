@@ -169,14 +169,19 @@ function renderEntireMap(map: mapObject) {
 }
 
 function renderProjectiles(spriteSize: number) {
+  projectileLayers.textContent = ""; // Delete projectile canvases
   currentProjectiles.forEach((projectile: any, index) => {
+    projectile.index = index;
     const { screenX: x, screenY: y } = tileCordsToScreen(projectile.cords);
-    const projectileCanvas: HTMLCanvasElement = projectileLayers.querySelector(`#projectile${index}`)!;
+    /* Creates a new canvas every time a projectile is rendered */
+    /* This can be catastrophically bad for performance, but who cares! */
+    const projectileCanvas: HTMLCanvasElement = document.createElement("canvas");
     const ctx = projectileCanvas.getContext("2d");
     projectileCanvas.width = baseCanvas.width;
     projectileCanvas.height = baseCanvas.height;
     projectileLayers.append(projectileCanvas);
     projectileCanvas.width = projectileCanvas.width;
+    projectileLayers.append(projectileCanvas);
     ctx?.translate(x + spriteSize / 2, y + spriteSize / 2);
     const rotation = calcAngleDegrees(projectile.target.x - projectile.cords.x, projectile.target.y - projectile.cords.y);
     ctx?.rotate((rotation * Math.PI) / 180);

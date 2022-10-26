@@ -35,9 +35,7 @@ class PlayerCharacter extends Character {
         this.oldCords = (_3 = { ...base.oldCords }) !== null && _3 !== void 0 ? _3 : this.cords;
         this.flags = (_4 = { ...base.flags }) !== null && _4 !== void 0 ? _4 : [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
-        this.entitiesEverEncountered = base.entitiesEverEncountered
-            ? { ...base.entitiesEverEncountered }
-            : { items: {}, enemies: {}, summons: {} };
+        this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
         this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
         this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
@@ -188,8 +186,7 @@ class PlayerCharacter extends Character {
         };
         this.maxCarryWeight = () => {
             const { v: val, m: mod } = getModifiers(this, "carryStrength");
-            return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) *
-                mod).toFixed(1);
+            return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
         };
         this.lvlUp = () => {
             while (this.level.xp >= this.level.xpNeed) {
@@ -217,8 +214,7 @@ class PlayerCharacter extends Character {
                 updateUI();
             }
             // Add racial bonus
-            if (this.level.level >= 10 &&
-                this.traits.findIndex((m) => m.id === `racial_ability_${this.race}_1`) === -1) {
+            if (this.level.level >= 10 && this.traits.findIndex((m) => m.id === `racial_ability_${this.race}_1`) === -1) {
                 this.traits.push(new PermanentStatModifier(traits[`racial_ability_${this.race}_1`]));
                 spawnFloatingText(this.cords, "RACIAL ABILITY!", "lime", 50, 2000, 450);
             }
@@ -370,8 +366,7 @@ class PlayerCharacter extends Character {
             if (isNaN(amnt))
                 amnt = 0;
             player.gold += amnt;
-            document.querySelector(".playerGoldNumber").textContent =
-                player.gold.toString();
+            document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
         };
         this.calcDamage = (base = false) => {
             var _a, _b;
@@ -389,9 +384,7 @@ class PlayerCharacter extends Character {
                 }
             }
             else {
-                let damages = ((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.id)
-                    ? Object.entries(this.weapon.damages)
-                    : Object.entries(this.fistDmg());
+                let damages = ((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.id) ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
                 const stats = this.getStats();
                 damages.map(([key, num]) => {
                     var _a;
@@ -453,7 +446,7 @@ let player = new PlayerCharacter({
     stats: {
         str: 1,
         dex: 1,
-        int: 1,
+        int: 10,
         vit: 1,
         cun: 1,
         hp: 100,
@@ -489,7 +482,7 @@ let player = new PlayerCharacter({
         level: 1,
     },
     classes: {
-        main: new combatClass(combatClasses["rogueClass"]),
+        main: new combatClass(combatClasses["sorcererClass"]),
         sub: null,
     },
     sprite: ".player",
@@ -530,7 +523,7 @@ let player = new PlayerCharacter({
     inventory: [],
     gold: 50,
     sp: 5,
-    pp: 1,
+    pp: 6,
     respawnPoint: { cords: { x: 175, y: 46 } },
     usedShrines: [],
     grave: null,

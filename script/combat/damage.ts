@@ -1,6 +1,5 @@
-function calculateDamage(attacker: characterObject, target: characterObject, ability: ability) {
+function calculateDamage(attacker: characterObject, target: characterObject, ability: ability, onlyRawDamage: boolean = false) {
   // Initilize some values needed for the calculation
-  console.log(attacker, target, ability);
   const attackerStats = attacker.getStats();
   const targetResists = target.getResists();
   const targetArmor = target.getArmor();
@@ -67,13 +66,14 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
 
     // Calculate final damage
     let baseValue: number = damageValue + val + bonus;
-    let dmg = Math.floor(baseValue * mod * ability.damage_multiplier * (critRolled ? 1 + attackerStats.critDamage / 100 : 1) * defense);
+    let dmg = Math.floor(baseValue * mod * ability.damage_multiplier * (critRolled && !onlyRawDamage ? 1 + attackerStats.critDamage / 100 : 1) * defense);
     if (attackTypeDamageModifier > 0) dmg *= attackTypeDamageModifier;
     dmg = Math.floor(dmg * resistance);
     damage += dmg;
   });
 
   // Apply final calculations to damage
+  if (onlyRawDamage) return { dmg: damage, critRolled: false, evade: false };
   damage = Math.floor(damage * helper.random(1.2, 0.8));
   if (evade) damage = Math.floor(damage / 2);
   if (damage < 1) damage = 1;

@@ -1,31 +1,34 @@
-
 // Tooltip for ability
-function abiTT(abi: ability) {
-  var txt: string = "";
+function abiTT(abi: ability, character: any = player) {
+  let txt: string = "";
   txt += `\t<f>26px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
   txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
-  if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
-  if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+  if (abi.mana_cost > 0 && character.silenced()) txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
+  if (abi.requires_concentration && !character.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
   if (abi.base_heal) {
-    let healFromHP = Math.floor(player.getHpMax() * abi.heal_percentage / 100) ?? 0;
+    let healFromHP = Math.floor((character.getHpMax() * abi.heal_percentage) / 100) ?? 0;
     txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
     if (abi.heal_percentage) {
       txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
     }
-  }
-  else if (abi.heal_percentage) {
-    txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(player.getHpMax() * abi.heal_percentage / 100)})\n`;
+  } else if (abi.heal_percentage) {
+    txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(
+      (character.getHpMax() * abi.heal_percentage) / 100
+    )})\n`;
   }
   if (abi.damages) {
-    var total: number = 0;
-    var text: string = "";
-    Object.entries(abi.get_true_damage(player))?.forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    let total: number = 0;
+    let text: string = "";
+    Object.entries(abi.get_true_damage(character))?.forEach((dmg: any) => {
+      total += dmg[1];
+      text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+    });
     text = text.substring(0, text.length - 2);
     txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
   }
   if (abi.remove_status) {
     txt += `§<c>white<c><f>20px<f>${lang["cures_statuses"]}: `;
-    abi.remove_status.forEach(stat => {
+    abi.remove_status.forEach((stat) => {
       txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
     });
     txt += "\n";
@@ -39,8 +42,7 @@ function abiTT(abi: ability) {
   // }
   if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
     txt += `<f>20px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
-  }
-  else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
+  } else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
     txt += `<f>20px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
   }
   if (abi.statusesEnemy?.length > 0) {
@@ -66,9 +68,11 @@ function abiTT(abi: ability) {
   else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
   if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
   if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
-  if (abi.summon_unit) txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
+  if (abi.summon_unit)
+    txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
   if (abi.summon_level) txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-  if (abi.summon_last || abi.permanent) txt += `<f>20px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
+  if (abi.summon_last || abi.permanent)
+    txt += `<f>20px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
   if (abi.total_summon_limit) txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
@@ -81,23 +85,26 @@ function abiTT(abi: ability) {
   return txt;
 }
 
-function embedAbiTT(abi: ability) {
-  var txt: string = "";
+function embedAbiTT(abi: ability, character: any = player) {
+  let txt: string = "";
   txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
   txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
-  if (abi.mana_cost > 0 && player.silenced()) txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
-  if (abi.requires_concentration && !player.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+  if (abi.mana_cost > 0 && character.silenced()) txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
+  if (abi.requires_concentration && !character.concentration()) txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
   if (abi.base_heal) txt += `<i>${icons.heal_icon}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
   if (abi.damages) {
-    var total: number = 0;
-    var text: string = "";
-    Object.entries(abi.get_true_damage(player)).forEach((dmg: any) => { total += dmg[1]; text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `; });
+    let total: number = 0;
+    let text: string = "";
+    Object.entries(abi.get_true_damage(character)).forEach((dmg: any) => {
+      total += dmg[1];
+      text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+    });
     text = text.substring(0, text.length - 2);
     txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
   }
   if (abi.remove_status) {
     txt += `§<c>white<c><f>15px<f>${lang["cures_statuses"]}: `;
-    abi.remove_status.forEach(stat => {
+    abi.remove_status.forEach((stat) => {
       txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
     });
     txt += "\n";
@@ -107,8 +114,7 @@ function embedAbiTT(abi: ability) {
   if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range_icon}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
   if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
     txt += `<f>15px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
-  }
-  else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
+  } else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
     txt += `<f>15px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
   }
   if (abi.statusesEnemy?.length > 0) {
@@ -134,9 +140,13 @@ function embedAbiTT(abi: ability) {
   else if (abi.requires_ranged_weapon) txt += `<i>${icons.ranged}<i><f>15px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
   if (abi.requires_concentration) txt += `<i>${icons.concentration_icon}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
   if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
-  if (abi.summon_unit) txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${lang[abi.summon_unit + "_name"] ?? abi.summon_unit}<c>white<c>\n`;
+  if (abi.summon_unit)
+    txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${
+      lang[abi.summon_unit + "_name"] ?? abi.summon_unit
+    }<c>white<c>\n`;
   if (abi.summon_level) txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-  if (abi.summon_last || abi.permanent) txt += `<f>15px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
+  if (abi.summon_last || abi.permanent)
+    txt += `<f>15px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${abi.permanent ? "" : lang["turns"]}\n`;
   if (abi.total_summon_limit) txt += `<f>15px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
   if (abi.aoe_size > 0) txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
   if (abi.self_target) txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
@@ -151,11 +161,14 @@ function embedAbiTT(abi: ability) {
 
 // Tooltip for status
 function statTT(status: statEffect, embed: boolean = false) {
-  var txt: string = "";
+  let txt: string = "";
   if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
   if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
-  if (status.dot) txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
-  Object.entries(status.effects).forEach(eff => txt += effectSyntax(eff, embed, status.id));
+  if (status.dot)
+    txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[
+      status.dot.damageType + "_damage"
+    ].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+  Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed, status.id)));
   if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
   if (status.break_concentration) txt += `§${embed ? " " : ""}<i>${icons.break_concentration_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
   if (status.rooted) txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "20px"}<f><c>red<c>${lang["rooted"]}\n`;
@@ -165,7 +178,9 @@ function statTT(status: statEffect, embed: boolean = false) {
 }
 
 function tooltip(element: HTMLElement, text: string) {
-  element.addEventListener("mouseover", e => { showHover(e, text); });
+  element.addEventListener("mouseover", (e) => {
+    showHover(e, text);
+  });
   element.addEventListener("mousemove", moveHover);
   element.addEventListener("mouseleave", hideHover);
 }
@@ -181,10 +196,10 @@ function moveHover(mouseEvent: MouseEvent) {
   tooltipBox.style.left = `${mouseEvent.x + 15}px`;
   tooltipBox.style.top = `${mouseEvent.y - 25}px`;
   if (tooltipBox.offsetLeft + tooltipBox.offsetWidth > innerWidth) {
-    tooltipBox.style.left = innerWidth - tooltipBox.offsetWidth - (innerWidth - mouseEvent.x) + 'px';
+    tooltipBox.style.left = innerWidth - tooltipBox.offsetWidth - (innerWidth - mouseEvent.x) + "px";
   }
   if (tooltipBox.offsetTop + tooltipBox.offsetHeight > innerHeight) {
-    tooltipBox.style.top = innerHeight - tooltipBox.offsetHeight - (innerHeight - mouseEvent.y) + 'px';
+    tooltipBox.style.top = innerHeight - tooltipBox.offsetHeight - (innerHeight - mouseEvent.y) + "px";
   }
 }
 

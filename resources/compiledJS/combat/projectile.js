@@ -28,15 +28,14 @@ class Projectile {
         this.onDestroy = onDestroy;
     }
     destroy() {
-        console.log("destroying projectile");
         if (this.onDestroy) {
             this.onDestroy();
         }
+        if (currentProjectiles.length === 1)
+            this.index = 0;
         currentProjectiles.splice(this.index, 1);
-        const projectileCanvas = projectileLayers.querySelector(`#projectile${this.index}`);
-        if (projectileCanvas) {
-            projectileCanvas.remove();
-        }
+        const { spriteSize } = spriteVariables();
+        renderProjectiles(spriteSize);
     }
     async move() {
         const { spriteSize } = spriteVariables();
@@ -97,12 +96,6 @@ function createNewProjectile(shooter, projectileTemplate, target, ability, onHit
     let index = currentProjectiles.length;
     let path = generateArrowPath(shooter.cords, target);
     const projectile = new Projectile(id, texture, target, shooter.cords, path, isEnemy, ability, shooter, speed, index, onHit, onDestroy);
-    const projectileCanvas = document.createElement("canvas");
-    projectileCanvas.classList.add("layer");
-    projectileCanvas.width = baseCanvas.width;
-    projectileCanvas.height = baseCanvas.height;
-    projectileCanvas.id = `projectile${index}`;
-    projectileLayers.append(projectileCanvas);
     currentProjectiles.push(projectile);
     projectile.move();
 }
@@ -135,7 +128,7 @@ const projectiles = {
     hunterJavelinProjectile: {
         id: "hunterJavelinProjectile",
         texture: "hunterJavelinProjectile",
-        speed: 5,
+        speed: 4,
     },
     iceSpikeProjectile: {
         id: "iceSpikeProjectile",
