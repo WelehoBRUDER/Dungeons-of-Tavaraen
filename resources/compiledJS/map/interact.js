@@ -74,7 +74,7 @@ function hoverEnemyShow(enemy) {
     Object.entries(enTotalDmg.split).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
+        mainStatText += `<f>20px<f><i>${icons[key]}<i>${val}`;
     });
     mainStatText += "<c>white<c>)\n";
     const mainStats = textSyntax(mainStatText);
@@ -82,7 +82,7 @@ function hoverEnemyShow(enemy) {
     Object.entries(enemy.getResists()).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
+        resists += `<f>20px<f><i>${icons[key + "Resist"]}<i>${lang[key]} ${val}%\n`;
     });
     const resistFrame = textSyntax(resists);
     resistFrame.classList.add("enResists");
@@ -247,8 +247,10 @@ function clickMap(event) {
             move = false;
             if (state.isSelected) {
                 // @ts-expect-error
-                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
-                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
+                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
+                    weaponReach(player, state.abiSelected.use_range, enemy)) {
+                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) ||
+                        (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
                     if (state.abiSelected.type == "attack") {
                         if (state.abiSelected.shoots_projectile)
@@ -262,7 +264,9 @@ function clickMap(event) {
                             advanceTurn();
                     }
                 }
-                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
+                if (state.abiSelected.type == "charge" &&
+                    generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range &&
+                    !player.isRooted()) {
                     player.stats.mp -= state.abiSelected.mana_cost;
                     state.abiSelected.onCooldown = state.abiSelected.cooldown;
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));

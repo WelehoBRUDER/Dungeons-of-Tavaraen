@@ -6,28 +6,28 @@ function abiTT(abi, character = player) {
     txt += `\t<f>26px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>19px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
     if (abi.mana_cost > 0 && character.silenced())
-        txt += `<i>${icons.silence_icon}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
+        txt += `<i>${icons.silence}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
     if (abi.requires_concentration && !character.concentration())
-        txt += `<i>${icons.break_concentration_icon}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+        txt += `<i>${icons.break_concentration}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
     if (abi.base_heal) {
         let healFromHP = (_c = Math.floor((character.getHpMax() * abi.heal_percentage) / 100)) !== null && _c !== void 0 ? _c : 0;
-        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
+        txt += `<i>${icons.heal}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
         if (abi.heal_percentage) {
             txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
         }
     }
     else if (abi.heal_percentage) {
-        txt += `<i>${icons.heal_icon}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor((character.getHpMax() * abi.heal_percentage) / 100)})\n`;
+        txt += `<i>${icons.heal}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor((character.getHpMax() * abi.heal_percentage) / 100)})\n`;
     }
     if (abi.damages) {
         let total = 0;
         let text = "";
         (_d = Object.entries(abi.get_true_damage(character))) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => {
             total += dmg[1];
-            text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+            text += `<i>${icons[dmg[0]]}<i><f>17px<f>${dmg[1]}, `;
         });
         text = text.substring(0, text.length - 2);
-        txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
+        txt += `<i>${icons.damage}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
     if (abi.remove_status) {
         txt += `§<c>white<c><f>20px<f>${lang["cures_statuses"]}: `;
@@ -37,11 +37,11 @@ function abiTT(abi, character = player) {
         txt += "\n";
     }
     if (abi.damage_multiplier)
-        txt += `<i>${icons.damage_icon}<i><f>20px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
+        txt += `<i>${icons.damage}<i><f>20px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
     if (abi.resistance_penetration)
-        txt += `<i>${icons.rp_icon}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
+        txt += `<i>${icons.rp}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
-        txt += `<i>${icons.range_icon}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
+        txt += `<i>${icons.range}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
     // if (abi.status) {
     //   txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
     //   txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
@@ -78,11 +78,11 @@ function abiTT(abi, character = player) {
     else if (abi.requires_ranged_weapon)
         txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
     if (abi.requires_concentration)
-        txt += `<i>${icons.concentration_icon}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.concentration}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
     if (abi.recharge_only_in_combat)
-        txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
     if (abi.summon_unit)
-        txt += `<i>${icons.fighter_symbol_icon}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
     if (abi.summon_level)
         txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
     if (abi.summon_last || abi.permanent)
@@ -90,19 +90,19 @@ function abiTT(abi, character = player) {
     if (abi.total_summon_limit)
         txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
-        txt += `<i>${icons.aoe_size_icon}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
+        txt += `<i>${icons.aoe_size}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)
-        txt += `<i>${icons.mana_icon}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+        txt += `<i>${icons.mana}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
     if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
         if (abi.health_cost > 0)
-            txt += `<f>20px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost}`;
+            txt += `<f>20px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
         else
-            txt += `<f>20px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
+            txt += `<f>20px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
     }
     if (abi.cooldown > 0)
-        txt += `<i>${icons.cooldown_icon}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
+        txt += `<i>${icons.cooldown}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
 }
 function embedAbiTT(abi, character = player) {
@@ -111,20 +111,20 @@ function embedAbiTT(abi, character = player) {
     txt += `\t<f>17px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
     txt += `<f>14px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
     if (abi.mana_cost > 0 && character.silenced())
-        txt += `<i>${icons.silence_icon}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
+        txt += `<i>${icons.silence}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
     if (abi.requires_concentration && !character.concentration())
-        txt += `<i>${icons.break_concentration_icon}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+        txt += `<i>${icons.break_concentration}<i><f>15px<f><c>orange<c>${lang["concentration_text"]}§\n`;
     if (abi.base_heal)
-        txt += `<i>${icons.heal_icon}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
+        txt += `<i>${icons.heal}<i><f>15px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
     if (abi.damages) {
         let total = 0;
         let text = "";
         Object.entries(abi.get_true_damage(character)).forEach((dmg) => {
             total += dmg[1];
-            text += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f>${dmg[1]}, `;
+            text += `<i>${icons[dmg[0]]}<i><f>17px<f>${dmg[1]}, `;
         });
         text = text.substring(0, text.length - 2);
-        txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
+        txt += `<i>${icons.damage}<i><f>15px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
     }
     if (abi.remove_status) {
         txt += `§<c>white<c><f>15px<f>${lang["cures_statuses"]}: `;
@@ -134,11 +134,11 @@ function embedAbiTT(abi, character = player) {
         txt += "\n";
     }
     if (abi.damage_multiplier)
-        txt += `<i>${icons.damage_icon}<i><f>15px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
+        txt += `<i>${icons.damage}<i><f>15px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
     if (abi.resistance_penetration)
-        txt += `<i>${icons.rp_icon}<i><f>15px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
+        txt += `<i>${icons.rp}<i><f>15px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
-        txt += `<i>${icons.range_icon}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
+        txt += `<i>${icons.range}<i><f>15px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
     if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
         txt += `<f>15px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
     }
@@ -171,11 +171,11 @@ function embedAbiTT(abi, character = player) {
     else if (abi.requires_ranged_weapon)
         txt += `<i>${icons.ranged}<i><f>15px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
     if (abi.requires_concentration)
-        txt += `<i>${icons.concentration_icon}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.concentration}<i><f>15px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
     if (abi.recharge_only_in_combat)
-        txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
     if (abi.summon_unit)
-        txt += `<i>${icons.fighter_symbol_icon}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${(_f = lang[abi.summon_unit + "_name"]) !== null && _f !== void 0 ? _f : abi.summon_unit}<c>white<c>\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${(_f = lang[abi.summon_unit + "_name"]) !== null && _f !== void 0 ? _f : abi.summon_unit}<c>white<c>\n`;
     if (abi.summon_level)
         txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
     if (abi.summon_last || abi.permanent)
@@ -183,19 +183,19 @@ function embedAbiTT(abi, character = player) {
     if (abi.total_summon_limit)
         txt += `<f>15px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
     if (abi.aoe_size > 0)
-        txt += `<i>${icons.aoe_size_icon}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
+        txt += `<i>${icons.aoe_size}<i><f>15px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
         txt += `<f>15px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
     if (abi.mana_cost > 0)
-        txt += `<i>${icons.mana_icon}<i><f>15px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+        txt += `<i>${icons.mana}<i><f>15px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
     if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
         if (abi.health_cost > 0)
-            txt += `<f>15px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost}`;
+            txt += `<f>15px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
         else
-            txt += `<f>15px<f><i>${icons.health_cost_icon}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
+            txt += `<f>15px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
     }
     if (abi.cooldown > 0)
-        txt += `<i>${icons.cooldown_icon}<i><f>15px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
+        txt += `<i>${icons.cooldown}<i><f>15px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
     return txt;
 }
 // Tooltip for status
@@ -208,17 +208,17 @@ function statTT(status, embed = false) {
         txt += `<f>18px<f><c>silver<c>"${(_b = lang["effect_" + status.id + "_desc"]) !== null && _b !== void 0 ? _b : status.id + "_desc"}"\t\n`;
     if (status.dot)
         txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
-    Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed, status.id)));
+    Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed)));
     if (status.silence)
-        txt += `§${embed ? " " : ""}<i>${icons.silence_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
+        txt += `§${embed ? " " : ""}<i>${icons.silence}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
     if (status.break_concentration)
-        txt += `§${embed ? " " : ""}<i>${icons.break_concentration_icon}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
+        txt += `§${embed ? " " : ""}<i>${icons.break_concentration}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
     if (status.rooted)
         txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "20px"}<f><c>red<c>${lang["rooted"]}\n`;
     if (!embed)
-        txt += `§<i>${icons.cooldown_icon}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
+        txt += `§<i>${icons.cooldown}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
     else
-        txt += `§${embed ? " " : ""}<i>${icons.cooldown_icon}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
+        txt += `§${embed ? " " : ""}<i>${icons.cooldown}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
     return txt;
 }
 function tooltip(element, text) {

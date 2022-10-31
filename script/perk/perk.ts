@@ -5,7 +5,7 @@ const lvl_history = {
   perks: [],
   stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
   pp: 0,
-  sp: 0
+  sp: 0,
 } as any;
 
 const perkColors = {
@@ -64,23 +64,21 @@ class perk {
         this.requires.some((id: string) => {
           const perk_check = new perk(perksArray[tree]["perks"][id]);
           if (!perk_check.bought()) available = false;
-        }
-        );
+        });
       }
       if (this.mutually_exclusive?.length > 0) {
         this.mutually_exclusive.some((id: string) => {
           const perk_check = new perk(perksArray[tree]["perks"][id]);
           if (perk_check.bought()) available = false;
-        }
-        );
+        });
       }
       return available;
     };
 
     this.bought = () => {
       let isBought = false;
-      player.perks.some(prk => {
-        if (prk.id == this.id) return isBought = true;
+      player.perks.some((prk) => {
+        if (prk.id == this.id) return (isBought = true);
       });
       return isBought;
     };
@@ -121,7 +119,7 @@ function changePerkTree(newTree: string) {
 
 const perkScroll = {
   x: 0,
-  y: 0
+  y: 0,
 };
 
 function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
@@ -158,11 +156,10 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     const combatClassIcon = document.createElement("img");
     if (combatClass.perkTree == tree) {
       classButtonContainer.classList.add("goldenBorder");
-    }
-    else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
+    } else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
       classButtonContainer.classList.add("greyedOut");
     }
-    classButtonContainer.addEventListener("click", a => changePerkTree(combatClass.perkTree));
+    classButtonContainer.addEventListener("click", (a) => changePerkTree(combatClass.perkTree));
     classButtonContainer.classList.add("classButtonContainer");
     combatClassName.textContent = lang[combatClass.id + "_name"];
     combatClassIcon.src = combatClass.icon;
@@ -173,7 +170,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   const classButtonContainer = document.createElement("div");
   const combatClassName = document.createElement("p");
   const combatClassIcon = document.createElement("img");
-  classButtonContainer.addEventListener("click", a => changePerkTree("adventurer_shared"));
+  classButtonContainer.addEventListener("click", (a) => changePerkTree("adventurer_shared"));
   classButtonContainer.classList.add("classButtonContainer");
   combatClassName.textContent = lang["adventurerPerks"];
   combatClassIcon.src = "resources/icons/adventurer.png";
@@ -199,19 +196,18 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     img.style.width = `${baseImg}px`;
     img.style.height = `${baseImg}px`;
     name.style.fontSize = `${baseFont}px`;
-    perk.addEventListener("click", a => _perk.buy());
+    perk.addEventListener("click", (a) => _perk.buy());
     if (_perk.bought()) perk.classList.add("perkBought");
     if (!_perk.available()) {
       perk.classList.add("perkUnavailable");
     }
     if (_perk.relative_to) {
       let found = perkArea.querySelector<HTMLDivElement>(`.${_perk.relative_to}`);
-      perk.style.left = `${(_perk.pos.x * baseSize) + found.offsetLeft}px`;
-      perk.style.top = `${(_perk.pos.y * baseSize) + found.offsetTop}px`;
-    }
-    else {
-      perk.style.left = `${(_perk.pos.x * baseSize)}px`;
-      perk.style.top = `${(_perk.pos.y * baseSize)}px`;
+      perk.style.left = `${_perk.pos.x * baseSize + found.offsetLeft}px`;
+      perk.style.top = `${_perk.pos.y * baseSize + found.offsetTop}px`;
+    } else {
+      perk.style.left = `${_perk.pos.x * baseSize}px`;
+      perk.style.top = `${_perk.pos.y * baseSize}px`;
     }
 
     perk.append(img, name);
@@ -226,10 +222,10 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
         let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         if (_perk.bought()) color = "gold";
         else if (!_perk.available()) color = "rgb(40, 40, 40)";
-        line.setAttribute('x1', `${+perk.style.left.replace(/\D/g, '') + (lineSize)}px`);
-        line.setAttribute('y1', `${+perk.style.top.replace(/\D/g, '') + (lineSize)}px`);
-        line.setAttribute('x2', `${+found.style.left.replace(/\D/g, '') + (lineSize)}px`);
-        line.setAttribute('y2', `${+found.style.top.replace(/\D/g, '') + (lineSize)}px`);
+        line.setAttribute("x1", `${+perk.style.left.replace(/\D/g, "") + lineSize}px`);
+        line.setAttribute("y1", `${+perk.style.top.replace(/\D/g, "") + lineSize}px`);
+        line.setAttribute("x2", `${+found.style.left.replace(/\D/g, "") + lineSize}px`);
+        line.setAttribute("y2", `${+found.style.top.replace(/\D/g, "") + lineSize}px`);
         line.setAttribute("stroke", color);
         line.setAttribute("stroke-width", `${lineWidth}px`);
         svg.appendChild(line);
@@ -241,18 +237,18 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
         let color = "rgb(25, 25, 25)";
         let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         let image = document.createElementNS("http://www.w3.org/2000/svg", "image");
-        const startX = +perk.style.left.replace(/\D/g, '') + (lineSize);
-        const startY = +perk.style.top.replace(/\D/g, '') + (lineSize);
-        let endX = +found.style.left.replace(/\D/g, '') + (lineSize);
-        let endY = +found.style.top.replace(/\D/g, '') + (lineSize);
+        const startX = +perk.style.left.replace(/\D/g, "") + lineSize;
+        const startY = +perk.style.top.replace(/\D/g, "") + lineSize;
+        let endX = +found.style.left.replace(/\D/g, "") + lineSize;
+        let endY = +found.style.top.replace(/\D/g, "") + lineSize;
         let centre = { x: (startX + endX) / 2, y: (startY + endY) / 2 };
         if (endX - startX < 0) endX = centre.x + 48;
         else endX = centre.x - 48;
         endY = centre.y;
-        line.setAttribute('x1', `${startX}px`);
-        line.setAttribute('y1', `${startY}px`);
-        line.setAttribute('x2', `${endX}px`);
-        line.setAttribute('y2', `${endY}px`);
+        line.setAttribute("x1", `${startX}px`);
+        line.setAttribute("y1", `${startY}px`);
+        line.setAttribute("x2", `${endX}px`);
+        line.setAttribute("y2", `${endY}px`);
         line.setAttribute("stroke", color);
         line.setAttribute("stroke-width", `${lineWidth}px`);
         image.setAttribute("x", `${centre.x - 32}px`);
@@ -266,8 +262,8 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     }
   });
   perkArea.style.transform = `scale(${currentZoomBG})`;
-  svg.setAttribute('width', "4000");
-  svg.setAttribute('height', "4000");
+  svg.setAttribute("width", "4000");
+  svg.setAttribute("height", "4000");
   if (!scrollDefault) background.scrollTo(perkScroll.x, perkScroll.y);
   else background.scrollTo(perksArray[tree].startPos * currentZoomBG, 0);
   /* Making a proper zoom has defeated me, it will simply not center on mouse, ever. */
@@ -286,7 +282,7 @@ function formStatUpgrades() {
   container.classList.add("statContainer");
   undo.classList.add("undo");
   undo.textContent = "Undo changes";
-  baseStats.forEach(stat => {
+  baseStats.forEach((stat) => {
     const base = document.createElement("div");
     const baseImg = document.createElement("img");
     const baseText = document.createElement("p");
@@ -297,7 +293,7 @@ function formStatUpgrades() {
     baseText.textContent = lang[stat];
     baseNumber.textContent = player.getBaseStats()[stat].toString();
     upgrade.textContent = "+";
-    upgrade.addEventListener("click", a => upStat(stat));
+    upgrade.addEventListener("click", (a) => upStat(stat));
     tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
     if (player.sp <= 0) upgrade.style.transform = "scale(0)";
     base.append(baseImg, baseText, baseNumber, upgrade);
@@ -332,13 +328,13 @@ function openLevelingScreen() {
 }
 
 function perkTT(perk: perk) {
-  var txt: string = "";
+  let txt: string = "";
   txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
   txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
   if (DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
   if (perk.requires?.length > 0) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
-    perk.requires.forEach(req => {
+    perk.requires.forEach((req) => {
       let found = false;
       player.perks.forEach((prk: perk) => {
         if (prk.id == req) {
@@ -352,7 +348,7 @@ function perkTT(perk: perk) {
   }
   if (perk.mutually_exclusive?.length > 0) {
     txt += `§\n<f>16px<f><c>white<c>${lang["mutually_exclusive"]}:  `;
-    perk.mutually_exclusive.forEach(req => {
+    perk.mutually_exclusive.forEach((req) => {
       let found = false;
       player.perks.forEach((prk: perk) => {
         if (prk.id == req) {
@@ -365,11 +361,11 @@ function perkTT(perk: perk) {
     txt += "§";
   }
   if (Object.values(perk.commands).length > 0) {
-    Object.entries(perk.commands).forEach((com: any) => txt += commandSyntax(com[0], com[1]));
+    Object.entries(perk.commands).forEach((com: any) => (txt += commandSyntax(com[0], com[1])));
   }
   if (Object.values(perk.effects).length > 0) {
     txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
-    Object.entries(perk.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
+    Object.entries(perk.effects).forEach((eff) => (txt += effectSyntax(eff, true)));
   }
   if (perk.traits) {
     perk.traits.forEach((statModif: any) => {
@@ -385,14 +381,14 @@ function statModifTT(statModif: any) {
   if (statModif.desc) txt += `§<c>silver<c><f>13px<f>"${lang[statModif.desc]}"\n§`;
   if (statModif.conditions) {
     txt += `<c>white<c><f>15px<f>${lang["active_if"]}:\n`;
-    Object.entries(statModif.conditions).forEach(cond => {
+    Object.entries(statModif.conditions).forEach((cond) => {
       const key = cond[0];
       const val = cond[1];
       txt += `<c>white<c><f>13px<f>${lang[key]} ${val}%\n`;
     });
   }
   txt += `<c>white<c><f>15px<f>${lang["status_effects"]}:\n`;
-  Object.entries(statModif.effects).forEach(eff => txt += effectSyntax(eff, true, ""));
+  Object.entries(statModif.effects).forEach((eff) => (txt += effectSyntax(eff, true)));
   return txt;
 }
 
@@ -400,8 +396,8 @@ const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12
 var currentZoomBG = 1;
 
 const background = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
-background.addEventListener('mousedown', action1);
-background.addEventListener('mousemove', action2);
+background.addEventListener("mousedown", action1);
+background.addEventListener("mousemove", action2);
 background.addEventListener("wheel", changeZoomLevelBG, { passive: true });
 // @ts-expect-error
 function changeZoomLevelBG(e) {

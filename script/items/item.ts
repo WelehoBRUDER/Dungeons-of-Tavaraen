@@ -1,4 +1,3 @@
-
 interface itemClass {
   [id: string]: any;
   name: string;
@@ -74,24 +73,24 @@ interface grades {
 const grades = {
   common: {
     color: "#e0e0e0",
-    worth: 1
+    worth: 1,
   },
   uncommon: {
     color: "#7ccf63",
-    worth: 2
+    worth: 2,
   },
   rare: {
     color: "#4287f5",
-    worth: 3.25
+    worth: 3.25,
   },
   mythical: {
     color: "#5e18a3",
-    worth: 5
+    worth: 5,
   },
   legendary: {
     color: "#cfcf32",
-    worth: 8
-  }
+    worth: 8,
+  },
 } as grades;
 
 interface damageClass {
@@ -128,7 +127,7 @@ interface traits {
 }
 
 function itemTT(item: any) {
-  var text = "";
+  let text = "";
   if (!item.grade) return;
   text += `\t<css>z-index: 5; position: relative;<css><f>22px<f><c>${grades[item.grade].color}<c>${item.name}§<c>white<c>\t\n`;
   if (item.requiresStats) {
@@ -139,15 +138,18 @@ function itemTT(item: any) {
       }
     });
     if (cantEquip) {
-      text += `§<css>background: rgba(209, 44, 77, .25); padding: 2px; margin-top: 8px; z-index: 1; position: relative;<css><i>${icons.warning_icon}<i><c>red<c><f>19px<f>${lang["cant_equip"]}\n§`;
+      text += `§<css>background: rgba(209, 44, 77, .25); padding: 2px; margin-top: 8px; z-index: 1; position: relative;<css><i>${icons.warning}<i><c>red<c><f>19px<f>${lang["cant_equip"]}\n§`;
     }
   }
-  text += `<i>${icons.silence_icon}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
+  text += `<i>${icons.silence}<i><f>18px<f><c>white<c>${lang["item_grade"]}: <c>${grades[item.grade].color}<c>${lang[item.grade]}§\n`;
   if (item.damages) {
     let total: number = 0;
     let totalCompare: number = 0;
     let txt: string = "";
-    if (player.weapon?.id) Object.entries(player.weapon.damages).forEach((dmg: any) => { totalCompare += dmg[1]; });
+    if (player.weapon?.id)
+      Object.entries(player.weapon.damages).forEach((dmg: any) => {
+        totalCompare += dmg[1];
+      });
     Object.entries(item.damages)?.forEach((dmg: any) => {
       total += dmg[1];
       if (dmg[1] !== 0) {
@@ -156,11 +158,13 @@ function itemTT(item: any) {
           if (player.weapon.damages[dmg[0]] > dmg[1]) color = "red";
           else if (player.weapon.damages[dmg[0]] == dmg[1]) color = "white";
         }
-        txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+        txt += `<i>${icons[dmg[0]]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
       }
     });
     txt = txt.substring(0, txt.length - 2);
-    text += `<i>${icons.damage_icon}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
+    text += `<i>${icons.damage}<i><f>18px<f><c>white<c>${lang["damage"]}: <c>${
+      total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"
+    }<c>${total} <c>white<c><f>17px<f>(${txt})\n`;
   }
   if (item.armor) {
     if (Object.keys(item.armor)?.length > 0) {
@@ -172,8 +176,7 @@ function itemTT(item: any) {
         if (compareValue) {
           if (compareValue > value) color = "red";
           else if (compareValue == value) color = "white";
-        }
-        else if (value < 0) color = "red";
+        } else if (value < 0) color = "red";
         text += `<i>${icons[key + "_armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
       });
     }
@@ -183,7 +186,10 @@ function itemTT(item: any) {
       let total: number = 0;
       let totalCompare: number = 0;
       let txt: string = "";
-      if (player[item.slot]?.resistances) Object.entries(player[item.slot].resistances).forEach((dmg: any) => { totalCompare += dmg[1]; });
+      if (player[item.slot]?.resistances)
+        Object.entries(player[item.slot].resistances).forEach((dmg: any) => {
+          totalCompare += dmg[1];
+        });
       Object.entries(item.resistances)?.forEach((dmg: any) => {
         total += dmg[1];
         if (dmg[1] !== 0) {
@@ -191,27 +197,32 @@ function itemTT(item: any) {
           if (player?.[item.slot]?.resistances?.[dmg[0]]) {
             if (player[item.slot]?.resistances[dmg[0]] > dmg[1]) color = "red";
             else if (player[item.slot]?.resistances[dmg[0]] == dmg[1]) color = "white";
-          }
-          else if (dmg[1] < 0) color = "red";
-          txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
+          } else if (dmg[1] < 0) color = "red";
+          txt += `<i>${icons[dmg[0]]}<i><f>17px<f><c>${color}<c>${dmg[1]}<c>white<c>, `;
         }
       });
       txt = txt.substring(0, txt.length - 2);
-      text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"}<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
+      text += `<i>${icons.resistance}<i><f>18px<f><c>white<c>${lang["resistance"]}: <c>${
+        total > totalCompare ? "lime" : total < totalCompare ? "red" : "white"
+      }<c>${total} <c>white<c> <f>17px<f>(${txt})\n`;
     }
   }
   if (item.requiresStats) {
     let txt: string = "";
-    Object.entries(item.requiresStats)?.forEach((dmg: any) => { txt += `<i>${icons[dmg[0] + "_icon"]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `; });
+    Object.entries(item.requiresStats)?.forEach((dmg: any) => {
+      txt += `<i>${icons[dmg[0]]}<i><f>17px<f><c>${player.getStats()[dmg[0]] < dmg[1] ? "red" : "white"}<c>${dmg[1]}, `;
+    });
     txt = txt.substring(0, txt.length - 2);
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt}<c>white<c>)\n§`;
   }
   if (Object.values(item?.stats)?.length > 0) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
-    Object.entries(item.stats).forEach(eff => { if (eff[1] !== 0) text += effectSyntax(eff, true, ""); });
+    Object.entries(item.stats).forEach((eff) => {
+      if (eff[1] !== 0) text += effectSyntax(eff, true);
+    });
   }
   if (Object.values(item.commands)?.length > 0) {
-    Object.entries(item.commands).forEach((eff: any) => text += `${commandSyntax(eff[0], eff[1])}\n`);
+    Object.entries(item.commands).forEach((eff: any) => (text += `${commandSyntax(eff[0], eff[1])}\n`));
   }
   if (item.statusesUser?.length > 0) {
     text += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
@@ -221,29 +232,33 @@ function itemTT(item: any) {
     });
   }
   if (item.range > 0) text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;
-  if (item.healValue) text += `<i>${icons.heal_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
-  if (item.manaValue) text += `<i>${icons.mana_icon}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
+  if (item.healValue) text += `<i>${icons.heal}<i><f>18px<f>${lang["heal_power"]}: ${item.healValue}\n`;
+  if (item.manaValue) text += `<i>${icons.mana}<i><f>18px<f>${lang["heal_power"]}: ${item.manaValue}\n`;
   if (item.usesRemaining) text += `<i>${icons.resistance}<i><f>18px<f>${lang["uses"]}: ${item.usesRemaining}/${item.usesTotal}\n`;
   if (item.stacks) text += `<i>${icons.resistance}<i><f>18px<f>${lang["amount"]}: ${item.amount}\n`;
   if (item.twoHanded) text += `<i>${icons.resistance}<i><f>18px<f>${lang["two_handed_weapon"]}\n`;
-  if (item.statBonus) text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${lang[item.statBonus]}\n`;
+  if (item.statBonus)
+    text += `<i>${icons.hitChance}<i><c>white<c><f>18px<f>${lang["item_stat_bonus"]}: <i>${icons[item.statBonus]}<i>${
+      lang[item.statBonus]
+    }\n`;
   if (item.slot) text += `<i>${icons.resistance}<i><f>18px<f>${lang["item_slot"]}: ${lang[item.slot]}\n`;
   text += `<i>${icons.resistance}<i><c>white<c><f>18px<f>${lang["item_weight"]}: ${item.weight}\n`;
   if (typeof item.fullPrice === "function") {
-    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.fullPrice()}\n`;
-  }
-  else text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold_icon}<i><f>18px<f>${item.price}\n`;
+    text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold}<i><f>18px<f>${item.fullPrice()}\n`;
+  } else text += `<f>18px<f><c>white<c>${lang["item_worth"]}: <i>${icons.gold}<i><f>18px<f>${item.price}\n`;
 
   if (item.artifactSet) {
-    text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${lang[item.artifactSet + "Set_name"]}<c>silver<c>\n`;
+    text += `\n<c>silver<c><f>18px<f>${lang["part_of_set"]} ${lang["artifact_set"]}:  <c>silver<c><c>yellow<c>${
+      lang[item.artifactSet + "Set_name"]
+    }<c>silver<c>\n`;
     let sets = player.getArtifactSetBonuses(true);
     text += `<c>${sets[item.artifactSet] > 1 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_two_piece"]}\n`;
     Object.entries(artifactSets[item.artifactSet]?.twoPieceEffect).forEach((effect: any) => {
-      if (effect[1] !== 0) text += effectSyntax(effect, true, "");
+      if (effect[1] !== 0) text += effectSyntax(effect, true);
     });
     text += `\n<c>${sets[item.artifactSet] > 2 ? "lime" : "grey"}<c><f>18px<f>${lang["artifact_three_piece"]}\n`;
     Object.entries(artifactSets[item.artifactSet]?.threePieceEffect).forEach((effect: any) => {
-      if (effect[1] !== 0) text += effectSyntax(effect, true, "");
+      if (effect[1] !== 0) text += effectSyntax(effect, true);
     });
   }
 
