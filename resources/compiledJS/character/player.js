@@ -1,4 +1,5 @@
 "use strict";
+// @ts-nocheck
 class PlayerCharacter extends Character {
     constructor(base) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
@@ -35,7 +36,9 @@ class PlayerCharacter extends Character {
         this.oldCords = (_3 = { ...base.oldCords }) !== null && _3 !== void 0 ? _3 : this.cords;
         this.flags = (_4 = { ...base.flags }) !== null && _4 !== void 0 ? _4 : [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
-        this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : { items: {}, enemies: {}, summons: {} };
+        this.entitiesEverEncountered = base.entitiesEverEncountered
+            ? { ...base.entitiesEverEncountered }
+            : { items: {}, enemies: {}, summons: {} };
         this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
         this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
         this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;

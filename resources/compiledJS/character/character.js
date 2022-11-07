@@ -3,7 +3,7 @@ const baseSpeed = {
     movement: 100,
     attack: 100,
     movementFill: 0,
-    attackFill: 0
+    attackFill: 0,
 };
 class Character {
     constructor(base) {
@@ -34,7 +34,7 @@ class Character {
                 if (!this.allModifiers[stat + "P"])
                     this.allModifiers[stat + "P"] = 1;
                 stats[stat] = Math.floor((this.stats[stat] + this.allModifiers[stat + "V"]) * this.allModifiers[stat + "P"]);
-                stats[stat] > 100 ? stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17) : "";
+                stats[stat] > 100 ? (stats[stat] = Math.floor(100 + (stats[stat] - 100) / 17)) : "";
             });
             if (!this.allModifiers["critDamageV"])
                 this.allModifiers["critDamageV"] = 0;
@@ -48,8 +48,8 @@ class Character {
                 this.allModifiers["movementSpeedV"] = 0;
             if (!this.allModifiers["attackSpeedV"])
                 this.allModifiers["attackSpeedV"] = 0;
-            stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + (stats["cun"] * 1.5) + 18.5);
-            stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + (stats["cun"] * 0.4) + 4.6);
+            stats["critDamage"] = Math.floor(this.allModifiers["critDamageV"] + (this.allModifiers["critDamageP"] - 1) * 100 + stats["cun"] * 1.5 + 18.5);
+            stats["critChance"] = Math.floor(this.allModifiers["critChanceV"] + (this.allModifiers["critChanceP"] - 1) * 100 + stats["cun"] * 0.4 + 4.6);
             return stats;
         };
         this.getSpeed = () => {
@@ -80,7 +80,7 @@ class Character {
             var _a, _b;
             const chances = {
                 chance: 0,
-                evasion: 0
+                evasion: 0,
             };
             if (!this.allModifiers["hitChanceV"])
                 this.allModifiers["hitChanceV"] = 0;
@@ -90,8 +90,8 @@ class Character {
                 this.allModifiers["evasionV"] = 0;
             if (!this.allModifiers["evasionP"])
                 this.allModifiers["evasionP"] = 1;
-            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"] + this.stats["dex"] * .25) * this.allModifiers["hitChanceP"]);
-            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"] + this.stats["dex"] * .25) * this.allModifiers["evasionP"]);
+            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"] + this.stats["dex"] * 0.25) * this.allModifiers["hitChanceP"]);
+            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"] + this.stats["dex"] * 0.25) * this.allModifiers["evasionP"]);
             return chances;
         };
         this.getResists = () => {
@@ -136,8 +136,14 @@ class Character {
             if (!this.allModifiers["regenMpP"])
                 this.allModifiers["regenMpP"] = 1;
             let reg = { hp: 0, mp: 0 };
-            reg["hp"] = ((this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) * this.allModifiers["regenHpP"]) * (1 + stats.vit / 100);
-            reg["mp"] = ((this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) * this.allModifiers["regenMpP"]) * (1 + stats.int / 100);
+            reg["hp"] =
+                (this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) *
+                    this.allModifiers["regenHpP"] *
+                    (1 + stats.vit / 100);
+            reg["mp"] =
+                (this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) *
+                    this.allModifiers["regenMpP"] *
+                    (1 + stats.int / 100);
             if (reg["hp"] < 0)
                 reg["hp"] = 0;
             if (reg["mp"] < 0)
@@ -222,7 +228,7 @@ class Character {
             // @ts-expect-error
             const reach = this.id === "player" ? (_a = this.weapon) === null || _a === void 0 ? void 0 : _a.range : this.attackRange;
             let attacks = 1;
-            this.speed.attackFill += (this.getSpeed().attack - 100);
+            this.speed.attackFill += this.getSpeed().attack - 100;
             while (this.speed.attackFill >= 100) {
                 this.speed.attackFill -= 100;
                 attacks++;
@@ -239,7 +245,7 @@ class Character {
                     // @ts-expect-error
                     const projectile = ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.firesProjectile) || this.shootsProjectile;
                     const isPlayer = this.id === "player";
-                    fireProjectile(this.cords, target.cords, projectile, this.abilities.find(e => e.id === "attack"), isPlayer, this);
+                    fireProjectile(this.cords, target.cords, projectile, this.abilities.find((e) => e.id === "attack"), isPlayer, this);
                     await helper.sleep(110);
                 }
             }
@@ -249,7 +255,7 @@ class Character {
                         break;
                     // @ts-expect-error
                     attackTarget(this, target, weaponReach(this, reach, target));
-                    regularAttack(this, target, this.abilities.find(e => e.id === "attack"));
+                    regularAttack(this, target, this.abilities.find((e) => e.id === "attack"));
                     await helper.sleep(110);
                 }
             }
@@ -376,7 +382,7 @@ const dummy = new Character({
         hp: 10000,
         mp: 0,
         hpMax: 10000,
-        mpMax: 0
+        mpMax: 0,
     },
     resistances: {
         slash: 0,
@@ -387,26 +393,19 @@ const dummy = new Character({
         magic: 0,
         fire: 0,
         lightning: 0,
-        ice: 0
+        ice: 0,
     },
     statusResistances: {
         poison: 0,
         burning: 0,
         curse: 0,
         stun: 0,
-        bleed: 0
+        bleed: 0,
     },
     xp: 10,
-    abilities: []
+    abilities: [],
 });
-const baseStats = [
-    "str",
-    "vit",
-    "dex",
-    "int",
-    "cun"
-];
-;
+const baseStats = ["str", "vit", "dex", "int", "cun"];
 // var ley = new Character({
 //   id: "ley",
 //   name: "leyli",

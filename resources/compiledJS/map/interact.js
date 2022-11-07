@@ -246,8 +246,9 @@ function clickMap(event) {
             targetingEnemy = true;
             move = false;
             if (state.isSelected) {
+                if (
                 // @ts-expect-error
-                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
+                generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
                     weaponReach(player, state.abiSelected.use_range, enemy)) {
                     if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) ||
                         (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
@@ -257,8 +258,8 @@ function clickMap(event) {
                             fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
                         else
                             regularAttack(player, enemy, state.abiSelected);
-                        // @ts-expect-error
                         if (weaponReach(player, state.abiSelected.use_range, enemy))
+                            // @ts-expect-error
                             attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
                         if (!state.abiSelected.shoots_projectile)
                             advanceTurn();

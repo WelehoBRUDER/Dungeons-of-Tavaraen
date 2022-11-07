@@ -1,4 +1,3 @@
-
 class Consumable extends Item {
   status?: string;
   ability?: string;
@@ -21,15 +20,18 @@ class Consumable extends Item {
     this.usesRemaining = base.usesRemaining ?? 1;
     this.equippedSlot = base.equippedSlot ?? -1;
     this.statusesUser = baseItem.statusesUser ?? [];
-    this.modifiers = getAbiStatusModifiers(dummy, "attack", "dazed");
     this.stats = {};
     this.commands = {};
     this.name = lang[this.id + "_name"] ?? baseItem.name;
     if (setPrice > 0) this.price = setPrice;
 
     if (setPrice > 0) {
-      this.fullPrice = () => { return this.price; };
-    }
-    else this.fullPrice = () => { return this.price * this.amount; };
+      this.fullPrice = () => {
+        return this.price;
+      };
+    } else
+      this.fullPrice = () => {
+        return this.price * this.amount;
+      };
   }
 }

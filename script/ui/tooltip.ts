@@ -41,10 +41,6 @@ function abiTT(abi: ability, character: any = player) {
       abi.resistance_penetration ? abi.resistance_penetration : "0"
     }%\n`;
   if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
-  // if (abi.status) {
-  //   txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
-  //   txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
-  // }
   if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
     txt += `<f>20px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
   } else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
@@ -54,14 +50,18 @@ function abiTT(abi: ability, character: any = player) {
     txt += `<f>20px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
     abi.statusesEnemy.forEach((status: string) => {
       txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-      txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+      const effect = new statEffect(statusEffects[status]);
+      effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
+      txt += statTT(effect);
     });
   }
   if (abi.statusesUser?.length > 0) {
     txt += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
     abi.statusesUser.forEach((status: string) => {
       txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-      txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+      const effect = new statEffect(statusEffects[status]);
+      effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
+      txt += statTT(effect);
     });
   }
   if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
@@ -139,14 +139,18 @@ function embedAbiTT(abi: ability, character: any = player) {
     txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
     abi.statusesEnemy.forEach((status: string) => {
       txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-      txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+      const effect = new statEffect(statusEffects[status]);
+      effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
+      txt += statTT(effect);
     });
   }
   if (abi.statusesUser?.length > 0) {
     txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
     abi.statusesUser.forEach((status: string) => {
       txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-      txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+      const effect = new statEffect(statusEffects[status]);
+      effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
+      txt += statTT(effect);
     });
   }
   if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {

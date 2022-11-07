@@ -267,7 +267,6 @@ function effectSyntax(effect: any, embed: boolean = false) {
   let key: string = effect[0];
   let value: any = effect[1];
   const fs = embed ? "14px" : "16px";
-  console.log(effect);
   if (key.startsWith("ability_")) {
     let text: string = "";
     const id = key.split("ability_")[1];
@@ -297,7 +296,8 @@ function effectSyntax(effect: any, embed: boolean = false) {
     const valueType = key.substring(key.length - 1);
     const prefix = value >= 0 ? "+" : "";
     const suffix = valueType === "P" || props.addPercentageSuffix ? "%" : props.addSuffix ? props.addSuffix : "";
-    const color = value >= 0 || props.lowerIsBetter ? "lime" : "red";
+    console.log(key, props);
+    const color = props.lowerIsBetter ? (value < 0 ? "lime" : "red") : value > 0 ? "lime" : "red";
     value *= props.multiplyBy;
     key = key.substring(0, key.length - 1);
     const name = lang[key] || key;

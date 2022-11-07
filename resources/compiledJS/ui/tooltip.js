@@ -42,10 +42,6 @@ function abiTT(abi, character = player) {
         txt += `<i>${icons.rp}<i><f>20px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
     if (parseInt(abi.use_range) > 0)
         txt += `<i>${icons.range}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
-    // if (abi.status) {
-    //   txt += `<f>20px<f>${lang["status_effect"]}:\n <i>${statusEffects[abi.status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[abi.status].id + "_name"]}\n`;
-    //   txt += statTT(new statEffect(statusEffects[abi.status], abi.statusModifiers), true);
-    // }
     if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
         txt += `<f>20px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
     }
@@ -55,15 +51,21 @@ function abiTT(abi, character = player) {
     if (((_e = abi.statusesEnemy) === null || _e === void 0 ? void 0 : _e.length) > 0) {
         txt += `<f>20px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
+            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+            const effect = new statEffect(statusEffects[status]);
+            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            txt += statTT(effect);
         });
     }
     if (((_f = abi.statusesUser) === null || _f === void 0 ? void 0 : _f.length) > 0) {
         txt += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
+            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+            const effect = new statEffect(statusEffects[status]);
+            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            txt += statTT(effect);
         });
     }
     if (((_g = abi.statusesUser) === null || _g === void 0 ? void 0 : _g.length) > 0 && abi.aoe_size > 0) {
@@ -148,15 +150,21 @@ function embedAbiTT(abi, character = player) {
     if (((_c = abi.statusesEnemy) === null || _c === void 0 ? void 0 : _c.length) > 0) {
         txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
+            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+            const effect = new statEffect(statusEffects[status]);
+            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            txt += statTT(effect);
         });
     }
     if (((_d = abi.statusesUser) === null || _d === void 0 ? void 0 : _d.length) > 0) {
         txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
+            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-            txt += statTT(new statEffect(statusEffects[status], abi.statusModifiers), true);
+            const effect = new statEffect(statusEffects[status]);
+            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            txt += statTT(effect);
         });
     }
     if (((_e = abi.statusesUser) === null || _e === void 0 ? void 0 : _e.length) > 0 && abi.aoe_size > 0) {

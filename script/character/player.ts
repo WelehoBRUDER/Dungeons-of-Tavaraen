@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 interface playerChar extends characterObject {
   canFly: boolean;
   sprite: string;
@@ -135,7 +137,9 @@ class PlayerCharacter extends Character {
     this.oldCords = { ...base.oldCords } ?? this.cords;
     this.flags = { ...base.flags } ?? [];
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
-    this.entitiesEverEncountered = base.entitiesEverEncountered ? { ...base.entitiesEverEncountered } : ({ items: {}, enemies: {}, summons: {} } as entityMemory);
+    this.entitiesEverEncountered = base.entitiesEverEncountered
+      ? { ...base.entitiesEverEncountered }
+      : ({ items: {}, enemies: {}, summons: {} } as entityMemory);
     this.sex = base.sex ?? "male";
     this.activeQuest = base.activeQuest ?? -1;
     this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
