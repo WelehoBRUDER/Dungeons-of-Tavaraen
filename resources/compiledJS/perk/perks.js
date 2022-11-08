@@ -35,7 +35,6 @@ const perksArray = {
                     ability_piercing_mana_bolt: {
                         mana_costV: -2,
                     },
-                    piercing_mana_bolt_mana_costV: -2,
                 },
                 tree: "sorcerer",
                 relative_to: "introduction_to_sorcery",
@@ -84,9 +83,11 @@ const perksArray = {
                 desc: "",
                 effects: {
                     hpMaxV: 10,
-                    summon_skeleton_warrior_mana_costV: -5,
-                    summon_skeleton_warrior_cooldownV: -7,
-                    summon_skeleton_warrior_use_rangeV: 2,
+                    ability_summon_skeleton_warrior: {
+                        mana_costV: -5,
+                        cooldownV: -7,
+                        use_rangeV: 2,
+                    },
                 },
                 tree: "sorcerer",
                 relative_to: "makings_of_a_summoner",
@@ -99,8 +100,10 @@ const perksArray = {
                 name: "Spells of Battle",
                 desc: "",
                 effects: {
-                    piercing_mana_bolt_damage_multiplierP: 12,
-                    piercing_mana_bolt_resistance_penetrationV: 10,
+                    ability_piercing_mana_bolt: {
+                        damage_multiplierP: 12,
+                        resistance_penetrationV: 10,
+                    },
                 },
                 tree: "sorcerer",
                 relative_to: "might_of_magic",
@@ -129,9 +132,11 @@ const perksArray = {
                 name: "Molded by Flame",
                 desc: "",
                 effects: {
-                    fireball_cooldownV: -1,
-                    fireball_aoe_sizeV: 2.3,
-                    fireball_mana_costP: 100,
+                    ability_fireball: {
+                        cooldownV: -1,
+                        aoe_sizeV: 2.3,
+                        mana_costP: 100,
+                    },
                 },
                 tree: "sorcerer",
                 relative_to: "school_of_fire",
@@ -162,10 +167,12 @@ const perksArray = {
                 name: "Armor Piercing Javelin",
                 desc: "",
                 effects: {
-                    icy_javelin_resistance_penetrationV: 25,
-                    icy_javelin_damage_multiplierP: 20,
-                    icy_javelin_cooldownP: -20,
-                    icy_javelin_mana_costP: 50,
+                    ability_icy_javelin: {
+                        resistance_penetrationV: 25,
+                        damage_multiplierP: 20,
+                        cooldownP: -20,
+                        mana_costP: 50,
+                    },
                 },
                 tree: "sorcerer",
                 relative_to: "elemental_mage",
@@ -283,8 +290,10 @@ const perksArray = {
                 name: "Patient Blow",
                 desc: "",
                 effects: {
-                    focus_strike_resistance_penetrationV: 25,
-                    focus_strike_cooldownV: -2,
+                    ability_focus_strike: {
+                        resistance_penetrationV: 25,
+                        cooldownV: -2,
+                    },
                 },
                 relative_to: "fighters_vitality",
                 requires: ["fighters_vitality"],
@@ -343,7 +352,9 @@ const perksArray = {
                 name: "Fighting Style",
                 desc: "",
                 effects: {
-                    attack_damage_multiplierP: 10,
+                    ability_attack: {
+                        damage_multiplierP: 10,
+                    },
                     hitChanceV: 5,
                 },
                 relative_to: "fighters_vitality",
@@ -396,8 +407,12 @@ const perksArray = {
                 name: "Tactical Genius",
                 desc: "",
                 effects: {
-                    focus_strike_cooldownV: -1,
-                    battle_fury_cooldownV: -3,
+                    ability_focus_strike: {
+                        strike_cooldownV: -1,
+                    },
+                    ability_battle_fury: {
+                        cooldownV: -3,
+                    },
                     cunV: 5,
                 },
                 relative_to: "fighters_vitality",
@@ -411,10 +426,14 @@ const perksArray = {
                 name: "Concentrated Warrior",
                 desc: "",
                 effects: {
-                    focus_strike_damage_multiplierP: 15,
-                    charge_damage_multiplierP: 25,
-                    charge_resistance_penetrationV: 10,
-                    charge_cooldownV: -3,
+                    ability_focus_strike: {
+                        damage_multiplierP: 15,
+                    },
+                    ability_charge: {
+                        damage_multiplierP: 25,
+                        resistance_penetrationV: 10,
+                        cooldownV: -3,
+                    },
                     hitChanceV: 7,
                 },
                 traits: [
@@ -525,9 +544,11 @@ const perksArray = {
                 name: "Impatient",
                 desc: "",
                 effects: {
+                    ability_barbarian_charge: {
+                        cooldownV: -3,
+                        damage_multiplierP: 30,
+                    },
                     evasionV: 1,
-                    barbarian_charge_cooldownV: -3,
-                    barbarian_charge_damage_multiplierP: 30,
                 },
                 tree: "barbarian",
                 pos: { x: 0, y: 2 },
@@ -553,8 +574,10 @@ const perksArray = {
                 name: "True Finish",
                 desc: "",
                 effects: {
-                    finishing_blow_damage_multiplierP: 100,
-                    finishing_blow_resistance_penetrationV: 25,
+                    ability_finishing_blow: {
+                        damage_multiplierP: 100,
+                        resistance_penetrationV: 25,
+                    },
                 },
                 tree: "barbarian",
                 pos: { x: 0, y: 2 },
@@ -656,10 +679,14 @@ const perksArray = {
                 name: "Unyielding Rage",
                 desc: "",
                 effects: {
+                    ability_barbarian_rage: {
+                        cooldownV: -3,
+                        effect_rage: {
+                            strVV: 5,
+                            resistAllVV: 5,
+                        },
+                    },
                     damageP: 4,
-                    barbarian_rage_cooldownV: -3,
-                    barbarian_rage_status_effect_rage_strVV: 5,
-                    barbarian_rage_status_effect_rage_resistAllVV: 5,
                 },
                 tree: "barbarian",
                 pos: { x: 0, y: 2 },
@@ -689,12 +716,16 @@ const perksArray = {
                 name: "Calmer Berserking",
                 desc: "",
                 effects: {
-                    berserk_cooldownV: -5,
-                    berserk_status_effect_berserk_physicalDefPV: 50,
-                    berserk_status_effect_berserk_magicalDefPV: 50,
-                    berserk_status_effect_berserk_elementalDefPV: 50,
-                    berserk_status_effect_berserk_resistAllPV: 50,
-                    berserk_status_effect_berserk_regenHpPV: 50,
+                    ability_berserk: {
+                        cooldownV: -5,
+                        effect_berserk: {
+                            physicalDefPV: 50,
+                            magicalDefPV: 50,
+                            elementalDefPV: 50,
+                            resistAllPV: 50,
+                            regenHpPV: 50,
+                        },
+                    },
                 },
                 tree: "barbarian",
                 pos: { x: 0, y: 2 },
@@ -741,8 +772,10 @@ const perksArray = {
                 name: "Shadow Warrior",
                 desc: "",
                 effects: {
-                    shadow_step_use_rangeP: 50,
-                    shadow_step_cooldownP: -10,
+                    ability_shadow_step: {
+                        use_rangeP: 50,
+                        cooldownP: -10,
+                    },
                     movementSpeedV: 10,
                     evasionV: 2,
                 },
@@ -802,7 +835,9 @@ const perksArray = {
                 name: "Simple Strokes",
                 desc: "",
                 effects: {
-                    attack_damage_multiplierP: 10,
+                    ability_attack: {
+                        damage_multiplierP: 10,
+                    },
                     hitChanceV: 2,
                 },
                 tree: "rogue",
@@ -834,8 +869,12 @@ const perksArray = {
                 name: "Poison Specialist",
                 desc: "",
                 effects: {
-                    venomous_blow_status_effect_venom_lastV: 2,
-                    venomous_blow_cooldownP: -20,
+                    ability_venomous_blow: {
+                        cooldownP: -20,
+                        effect_venom: {
+                            lastV: 2,
+                        },
+                    },
                 },
                 tree: "rogue",
                 relative_to: "fighting_dirty",
@@ -861,9 +900,15 @@ const perksArray = {
                 name: "Quicker Draw",
                 desc: "",
                 effects: {
-                    venomous_blow_cooldownV: -1,
-                    poisoned_arrow_cooldownV: -3,
-                    shadow_step_cooldownV: -1,
+                    ability_venomous_blow: {
+                        cooldownV: -1,
+                    },
+                    ability_poisoned_arrow: {
+                        cooldownV: -3,
+                    },
+                    ability_shadow_step: {
+                        cooldownV: -1,
+                    },
                 },
                 tree: "rogue",
                 relative_to: "poison_specialist",
@@ -921,9 +966,13 @@ const perksArray = {
                 name: "Sneakier Stabbing",
                 desc: "",
                 effects: {
-                    sneaky_stabbing_cooldownP: -20,
-                    sneaky_stabbing_status_effect_sneaky_stabbing_lastV: 3,
-                    sneaky_stabbing_status_effect_sneaky_stabbing_critChancePP: 5,
+                    ability_sneaky_stabbing: {
+                        cooldownP: -20,
+                        effect_sneaky_stabbing: {
+                            lastV: 3,
+                            critChancePP: 5,
+                        },
+                    },
                 },
                 tree: "rogue",
                 relative_to: "smoke_screen",
@@ -936,10 +985,16 @@ const perksArray = {
                 name: "Smoke & Mirrors",
                 desc: "",
                 effects: {
-                    smoke_bomb_cooldownV: -2,
-                    smoke_bomb_status_effect_smoke_bomb_effect_lastV: 3,
-                    smoke_bomb_status_effect_smoke_evasion_lastV: 3,
-                    smoke_bomb_damage_multiplierP: 25,
+                    ability_smoke_bomb: {
+                        cooldownV: -2,
+                        damage_multiplierP: 25,
+                        effect_smoke_bomb_effect: {
+                            lastV: 3,
+                        },
+                        effect_smoke_evasion: {
+                            lastV: 3,
+                        },
+                    },
                 },
                 tree: "rogue",
                 relative_to: "smoke_screen",
@@ -973,8 +1028,12 @@ const perksArray = {
                 name: "Call of the Forest",
                 desc: "",
                 effects: {
-                    true_shot_resistance_penetrationV: 10,
-                    retreat_cooldownP: -11,
+                    ability_true_shot: {
+                        resistance_penetrationV: 10,
+                    },
+                    ability_retreat: {
+                        cooldownP: -10,
+                    },
                     vitV: 2,
                 },
                 tree: "ranger",
@@ -1004,8 +1063,12 @@ const perksArray = {
                 name: "Rapid fire",
                 desc: "",
                 effects: {
-                    sundering_arrow_cooldownP: -33,
-                    sundering_arrow_status_effect_sunder_resistAllVV: -10,
+                    ability_sundering_arrow: {
+                        cooldownP: -33,
+                        effect_sunder: {
+                            resistAllVV: -10,
+                        },
+                    },
                     dexV: 1,
                 },
                 tree: "ranger",
@@ -1033,9 +1096,11 @@ const perksArray = {
                 name: "Rangers' Call",
                 desc: "",
                 effects: {
+                    ability_true_shot: {
+                        cooldownV: -2,
+                        use_rangeV: 2,
+                    },
                     pierceDamageP: 6,
-                    true_shot_cooldownV: -2,
-                    true_shot_use_rangeV: 2,
                 },
                 tree: "ranger",
                 relative_to: "call_of_the_forest",
@@ -1098,9 +1163,13 @@ const perksArray = {
                 name: "Leave you paralyzed",
                 desc: "",
                 effects: {
-                    shock_arrow_cooldownV: -3,
-                    shock_arrow_status_effect_paralyzed_lastV: 2,
-                    shock_arrow_status_effect_paralyzed_resistAllPP: -15,
+                    ability_shock_arrow: {
+                        cooldownV: -3,
+                        effect_paralyzed: {
+                            lastV: 2,
+                            resistAllPP: -15,
+                        },
+                    },
                     dexV: 1,
                 },
                 tree: "ranger",
@@ -1130,8 +1199,10 @@ const perksArray = {
                 name: "Rangers' Call",
                 desc: "",
                 effects: {
-                    ranger_wolf_summon_levelV: 9,
-                    ranger_wolf_cooldownV: -20,
+                    ability_ranger_wolf: {
+                        summon_levelV: 9,
+                        cooldownV: -20,
+                    },
                 },
                 tree: "ranger",
                 relative_to: "wild_call",
@@ -1228,9 +1299,11 @@ const perksArray = {
                 name: "First Aid Expert",
                 desc: "",
                 effects: {
+                    ability_first_aid: {
+                        base_healV: 5,
+                        cooldownP: -20,
+                    },
                     regenHpP: 14,
-                    first_aid_base_healV: 5,
-                    first_aid_cooldownP: -20,
                 },
                 tree: "adventurer_shared",
                 pos: { x: 6, y: 1 },
@@ -1257,8 +1330,10 @@ const perksArray = {
                 name: "Advancing Backwards",
                 desc: "",
                 effects: {
-                    retreat_cooldownP: -30,
-                    retreat_use_rangeV: 2,
+                    ability_retreat: {
+                        cooldownP: -30,
+                        use_rangeV: 2,
+                    },
                 },
                 relative_to: "cleanser",
                 requires: ["cleanser"],

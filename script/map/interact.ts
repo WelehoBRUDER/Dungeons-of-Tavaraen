@@ -58,13 +58,13 @@ function hoverEnemyShow(enemy: enemy) {
   const enemyStats = enemy.getStats();
   const enemyMiscStats = enemy.getHitchance();
   let mainStatText: string = "";
-  mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
-  mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
-  mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemyStats.str}\n`;
-  mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
-  mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
-  mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemyStats.int}\n`;
-  mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
+  mainStatText += `<f>20px<f><i>${icons.health}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
+  mainStatText += `<f>20px<f><i>${icons.mana}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
+  mainStatText += `<f>20px<f><i>${icons.str}<i>${lang["str"]}: ${enemyStats.str}\n`;
+  mainStatText += `<f>20px<f><i>${icons.dex}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
+  mainStatText += `<f>20px<f><i>${icons.vit}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
+  mainStatText += `<f>20px<f><i>${icons.int}<i>${lang["int"]}: ${enemyStats.int}\n`;
+  mainStatText += `<f>20px<f><i>${icons.cun}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
   mainStatText += `<f>20px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
   mainStatText += `<f>20px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
   let enTotalDmg = enemy.trueDamage();
@@ -76,7 +76,7 @@ function hoverEnemyShow(enemy: enemy) {
   });
   mainStatText += "<c>white<c>)\n";
   const mainStats = textSyntax(mainStatText);
-  let resists: string = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
+  let resists: string = `<f>20px<f><i>${icons.resistAll}<i>${lang["resistance"]}\n`;
   Object.entries(enemy.getResists()).forEach((res: any) => {
     const key = res[0];
     const val = res[1];

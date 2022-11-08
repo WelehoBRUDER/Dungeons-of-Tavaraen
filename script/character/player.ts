@@ -541,7 +541,7 @@ let player = new PlayerCharacter({
     level: 1,
   },
   classes: {
-    main: new combatClass(combatClasses["sorcererClass"]),
+    main: new combatClass(combatClasses["rangerClass"]),
     sub: null,
   },
   sprite: ".player",

@@ -125,7 +125,7 @@ const traits = {
             mp_less_than: 50,
         },
         effects: {
-            regenMpP: 300,
+            regenMpP: 100,
         },
     },
     heightened_casting: {
