@@ -28,6 +28,7 @@ function useAbi(abi) {
     }
     updateUI();
 }
+const currentProjectiles = [];
 function buffOrHeal(character, ability) {
     var _a;
     state.isSelected = false;
@@ -35,7 +36,7 @@ function buffOrHeal(character, ability) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
         let healFromHP = 0;
         if (ability.heal_percentage)
-            healFromHP = character.getHpMax() * ability.heal_percentage / 100;
+            healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((ability.base_heal + val + healFromHP) * mod);
         character.stats.hp += heal;
         spawnFloatingText(character.cords, heal.toString(), "lime", 36);
@@ -46,7 +47,7 @@ function buffOrHeal(character, ability) {
     }
     else if (ability.heal_percentage) {
         const { v: val, m: mod } = getModifiers(character, "healPower");
-        let healFromHP = character.getHpMax() * ability.heal_percentage / 100;
+        let healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((healFromHP + val) * mod);
         character.stats.hp += heal;
         spawnFloatingText(character.cords, heal.toString(), "lime", 36);
@@ -57,7 +58,9 @@ function buffOrHeal(character, ability) {
     }
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
+            const modifiers = character.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+            character.addEffect(_Effect, modifiers);
             if (character.id === "player")
                 _Effect.last.current -= 1;
             character.addEffect(_Effect);
@@ -74,7 +77,7 @@ function buffOrHeal(character, ability) {
         });
     }
     if (ability.remove_status) {
-        ability.remove_status.forEach(status => {
+        ability.remove_status.forEach((status) => {
             character.statusEffects.forEach((effect, index) => {
                 if (effect.id == status) {
                     character.statusEffects.splice(index, 1);
@@ -101,23 +104,26 @@ function buffOrHeal(character, ability) {
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     var _a, _b, _c, _d, _e;
     if (targetCords) {
-        maps[currentMap].enemies.forEach((en) => { if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
-            target = en; });
+        maps[currentMap].enemies.forEach((en) => {
+            if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
+                target = en;
+        });
     }
     if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
-            attacker.stats.hp -= attacker.getHpMax() * ability.health_cost_percentage / 100;
+            attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
     }
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
     if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
             const resist = target.getStatusResists()[_Effect.type];
             const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
-                target.addEffect(_Effect);
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                target.addEffect(_Effect, modifiers);
             }
             else {
                 spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
@@ -126,11 +132,12 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     }
     if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
             if (attacker.id === "player")
                 _Effect.last.current -= 1;
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
-                attacker.addEffect(_Effect);
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                attacker.addEffect(_Effect, modifiers);
                 spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
                 if (!isAoe) {
                     let string = "";
@@ -144,7 +151,6 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                         displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
                 }
             }
-            ;
         });
     }
     if (target.isFoe) {
@@ -153,7 +159,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 return;
             const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
             try {
-                layer.style.animation = 'none';
+                layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
                 layer.style.animation = null;
                 layer.style.animationName = `charHurt`;
@@ -197,7 +203,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 attacker.stats.mp -= ability.mana_cost;
         }
         if (ability.life_steal_percentage && !ability.life_steal_trigger_only_when_killing_enemy) {
-            let lifeSteal = Math.floor(target.getHpMax() * ability.life_steal_percentage / 100);
+            let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
             attacker.stats.hp += lifeSteal;
             spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
         }
@@ -205,7 +211,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);
             if (ability.life_steal_percentage && ability.life_steal_trigger_only_when_killing_enemy) {
-                let lifeSteal = Math.floor(target.getHpMax() * ability.life_steal_percentage / 100);
+                let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
                 attacker.stats.hp += lifeSteal;
                 spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
             }
@@ -216,7 +222,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         const layer = document.querySelector(".playerSheet");
         if (target.id == "player") {
             setTimeout((paskaFixi) => {
-                layer.style.animation = 'none';
+                layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
                 layer.style.animation = null;
                 layer.style.animationName = `screenHurt`;
@@ -271,14 +277,14 @@ function collision(target, ability, isPlayer, attacker, theme) {
         regularAttack(attacker, player, ability);
     }
     else if (attacker.isFoe) {
-        let summonTarget = combatSummons.find(summon => summon.cords.x == target.x && summon.cords.y == target.y);
+        let summonTarget = combatSummons.find((summon) => summon.cords.x == target.x && summon.cords.y == target.y);
         regularAttack(attacker, summonTarget, ability);
     }
 }
 function threatDistance(targets, from) {
     let chosenTarget = null;
     let highestThreat = -50;
-    targets.forEach(target => {
+    targets.forEach((target) => {
         var _a;
         let dist = +generatePath(from.cords, target.cords, from.canFly, true);
         let threat = (target.getThreat() + helper.random(18, -18)) / dist;
@@ -324,16 +330,33 @@ function summonUnit(ability, cords) {
             }
         });
     });
-    let newSummon = new Summon({ ...{ ...summons[ability.summon_unit], level: ability.summon_level, permanent: ability.permanent, lastsFor: ability.summon_last, cords: { ...cords } } });
+    let newSummon = new Summon({
+        ...{
+            ...summons[ability.summon_unit],
+            level: ability.summon_level,
+            permanent: ability.permanent,
+            lastsFor: ability.summon_last,
+            cords: { ...cords },
+        },
+    });
     newSummon.updateTraits();
     newSummon.restore(true);
-    newSummon.traits.push({ id: "buffs_from_player", effects: { ...playerBuffs } });
-    if (ability.summon_status)
-        newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
+    newSummon.traits.push({
+        id: "buffs_from_player",
+        effects: { ...playerBuffs },
+    });
+    if (ability.summon_status) {
+        const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+        const effect = new statEffect({ ...statusEffects[ability.summon_status] });
+        effect.init(modifiers);
+        newSummon.statusEffects.push(effect);
+    }
     combatSummons.push({ ...newSummon });
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            player.statusEffects.push(new statEffect({ ...statusEffects[status], last: ability.summon_last - 1 }, ability.statusModifiers));
+            const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+            // @ts-ignore - addEffect takes 2 arguments, but the IDE thinks it takes 1
+            player.addEffect(new statEffect({ ...statusEffects[status] }, modifiers));
         });
     }
     let encounter = (_c = (_b = player.entitiesEverEncountered) === null || _b === void 0 ? void 0 : _b.summons) === null || _c === void 0 ? void 0 : _c[newSummon.id];
@@ -346,6 +369,6 @@ function summonUnit(ability, cords) {
     modifyCanvas();
 }
 function calcAngleDegrees(x, y) {
-    return Math.atan2(y, x) * 180 / Math.PI;
+    return (Math.atan2(y, x) * 180) / Math.PI;
 }
 //# sourceMappingURL=combat.js.map

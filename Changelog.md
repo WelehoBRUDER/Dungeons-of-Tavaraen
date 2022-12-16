@@ -1,3 +1,22 @@
+# 1.2.2 ~ 16.12.2022
+
+## Major Changes
+
+- Projectile behaviour completely overhauled:
+   - Projectiles now move a certain amount of tiles per turn, instead of reaching their target instantly
+   - Projectiles can miss their target, if the target moves out of the way
+  - Projectiles can be blocked by walls.
+- Modifiers are handled more efficiently:
+  - The game has to do less calculations when modifiers are applied
+  - Modifiers to abilities can finally be grouped together in a tooltip
+
+## Fixes & Tweaks
+
+- Decreased **Frantic Mana Recovery**'s mana recovery from 300% --> 100%
+- Improved rendering
+- Fixed several instances of missing textures
+- Shrines can now be used during combat
+
 # 1.2.1 ~ 12.6.2022
 
 ### Minor Update

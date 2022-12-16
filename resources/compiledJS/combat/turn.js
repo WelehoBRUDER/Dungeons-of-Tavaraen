@@ -16,7 +16,10 @@ async function advanceTurn() {
     const pRegen = player.getRegen();
     player.stats.hp += pRegen["hp"];
     player.stats.mp += pRegen["mp"];
-    combatSummons.forEach(summon => {
+    currentProjectiles.forEach((projectile) => {
+        projectile.move();
+    });
+    combatSummons.forEach((summon) => {
         if (!summon.alive || player.isDead)
             return;
         const sRegen = summon.getRegen();
@@ -45,7 +48,6 @@ async function advanceTurn() {
             updateEnemiesTurn();
             return;
         }
-        ;
         if (closestEnemyDistance < 0)
             closestEnemyDistance = enemy.distToPlayer();
         else if (distToPlayer < closestEnemyDistance)

@@ -25,8 +25,8 @@ const finnish = {
 
   str_tt: `<i>${icons["str"]}<i>Voima parantaa <i>${icons["melee"]}<i>voima aseiden vahinkoa 2%,\n ja parantaa maksimi taakkaa 0.5`,
   dex_tt: `<i>${icons["dex"]}<i>Taito parantaa <i>${icons["ranged"]}<i>taito aseiden vahinkoa 2%,\nsekä nostaa <i>${icons["hitChance"]}<i>iskujen tarkkuutta ja <i>${icons["evasion"]}<i>väistelyä 0.25`,
-  vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n<i>${icons["regenHp_icon"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
-  int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n<i>${icons["regenMp_icon"]}<i>taian palautimista 1%\n ja <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
+  vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n<i>${icons["regenHp"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
+  int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n<i>${icons["regenMp"]}<i>taian palautimista 1%\n ja <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Oveluus parantaa <i>${icons["critDamage"]}<i>krit vahinkoa 1.5%,\n ja <i>${icons["critDamage"]}<i>krit mahdollisuutta 0.4%`,
   critDamage_tt: `<i>${icons["critDamage"]}<i>Krit vahinko on kertoja joka parantaa kriittisiä iskuja.`,
   critChance_tt: `<i>${icons["critDamage"]}<i>Krit mahdollisuus kertoo millä todennäköisyydellä iskusi on kriittinen.`,
@@ -34,12 +34,12 @@ const finnish = {
   evasion_tt: `<i>${icons["evasion"]}<i>Väistely parantaa mahdollisuuttasi välttää vahinkoa. \nVerrataan vastustajan <i>${icons["hitChance"]}<i>iskujen tarkkuuteen.`,
   base_attack_tt: `<css>line-height: 20px<css>Aseen voima\nTämä luku on aseesi perus vahinko`,
   true_attack_tt: `<css>line-height: 20px<css><c>white<c>Hyökkäysvoima\nTämä luku on keskiverto vahinkosi.\nSe lasketaan kykyjesi ja käytettävän aseen perusteella.\n<c>orange<c>Arvioitu vahinko voi olla alempi tai korkeampi kuin oikea vahinko,\n koska puolustuksia ja muita muuttujia ei oteta huomioon.`,
-  atk_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["attackSpeed_icon"]}<i>Hyökkäys nopeutesi.\nKun nopeus on yli 100% voit hyökätä useasti yhden vuoron aikana. \nAlle 100% ja et voi hyöätä joillain kierroksilla.`,
-  mov_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["movementSpeed_icon"]}<i>Liikkumis nopeutesi. \nYli 100% nopeus antaa sinun liikkua useita ruutuja yhden vuoron aikana. \nAlle 100% hidastaa liikettäsi joillain vuoroilla.`,
+  atk_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["attackSpeed"]}<i>Hyökkäys nopeutesi.\nKun nopeus on yli 100% voit hyökätä useasti yhden vuoron aikana. \nAlle 100% ja et voi hyöätä joillain kierroksilla.`,
+  mov_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["movementSpeed"]}<i>Liikkumis nopeutesi. \nYli 100% nopeus antaa sinun liikkua useita ruutuja yhden vuoron aikana. \nAlle 100% hidastaa liikettäsi joillain vuoroilla.`,
 
-  physical_tt: `<i>${icons["physical_armor"]}<i>Fyysinen Panssari nostaa puolustusta fyysisiä iskuja vastaan. \n<i>${icons["slash_icon"]}<i>Viilto, <i>${icons["crush_icon"]}<i>Murskaus ja <i>${icons["pierce_icon"]}<i>Lävistys vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
-  magical_tt: `<i>${icons["magical_armor"]}<i>Maaginen Suojaus nostaa puolustusta maagisia iskuja vastaan. \n<i>${icons["magic_icon"]}<i>Taika, <i>${icons["dark_icon"]}<i>Pimeä ja <i>${icons["divine_icon"]}<i>Pyhä vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
-  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elementaalinen Suojaus nostaa puolustusta elementaalisia iskuja vastaan. \n<i>${icons["fire_icon"]}<i>Tuli, <i>${icons["lightning_icon"]}<i>Sähkö ja <i>${icons["ice_icon"]}<i>Jää vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
+  physical_tt: `<i>${icons["physical_armor"]}<i>Fyysinen Panssari nostaa puolustusta fyysisiä iskuja vastaan. \n<i>${icons["slash"]}<i>Viilto, <i>${icons["crush"]}<i>Murskaus ja <i>${icons["pierce"]}<i>Lävistys vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Maaginen Suojaus nostaa puolustusta maagisia iskuja vastaan. \n<i>${icons["magic"]}<i>Taika, <i>${icons["dark"]}<i>Pimeä ja <i>${icons["divine"]}<i>Pyhä vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elementaalinen Suojaus nostaa puolustusta elementaalisia iskuja vastaan. \n<i>${icons["fire"]}<i>Tuli, <i>${icons["lightning"]}<i>Sähkö ja <i>${icons["ice"]}<i>Jää vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
 
   resistances_tt: "Vahinko tyypin puolustus vähentää saman tyyppistä tulevaa vahinkoa mainitulla prosentilla.",
   stat_resist_tt: `Efektin vastustus laskee sen tekemää vahinkoa mainitulla prosentilla. \n\nSe myös antaa mahdollisuuden kokonaan vastustaa efekti. \n\nKun efekti on täysin vastustettu, se ei tee mitään.`,
@@ -55,20 +55,33 @@ const finnish = {
   test_message: "<c>white<c>Tervetuloa <c>gold<c>Dungeons of Tavaraeniin<c>white<c>!",
   follow_slimes: "<c>white<c>Jatka <c>gold<c>limojen<c>white<c> seuraamista saadaksesi reilun tappelun!",
   beach_episode: "<c>gold<c>Luurangot<c>white<c> ovat valloittaneet rannan, valmistaudu ratkomaan luisia ongelmia!",
-  tutorial_welcome_to_game: "<c>white<c>Tervetuloa <c>gold<c>Tavaraeniin<c>white<c> seikkailija! Löydät itsesi <c>gold<c>Heeren<c>white<c> saarelta, jonne olet kaivamassa tietäsi märän luolan läpi.\n\nLuola on täynnä heikkoja hirviöitä ja unohtuneita aarteita.\n\nMitä siis odotat? Eteenpäin!",
-  tutorial_controls: "<c>white<c>Aivan aivan, täytyyhän sinun ensin tottua uuden maailman tapoihin.\nHommat hoituvat pikkuisen eri tavalla täällä, joten kroppasi tarvitsee hieman muistutusta!\n\nLiikkueksesi voit joko painaa ruutua <c>gold<c>vasemmalla hiiren napilla<c>white<c>, tai käyttää liikkumis nappeja (yleisesti <c>gold<c>WASD<c>white<c>).\n\nVoit käyttää alapalkissasi olevia kykyvä joko klikkaamaalla kyvyn ikonia, tai painamalla numero nappia (1-0, shift + 1-0).\nEteenpäin!",
-  tutorial_chests: "<c>white<c>Matkalla vastaasi sattuu <c>gold<c>Aarre arkkuja<c>white<c>.\nArkut sisältävät hyödyllisiä aarteita kuten tavaroita ja kultaa. Arkun voi avata klikkaamalla sitä.\n\nVoit myös avata arkun painamalla <c>gold<c>Välilyöntiä<c>white<c> niiden kohdalla.",
-  tutorial_combat: "<c>white<c>Harmaa pallero edessäsi on <c>gold<c>Lima<c>white<c>. \nLimat ovat <c>crimson<c>vihollisia<c>white<c> joka tekee niistä saaliita!\n\nTaisteluissa jokainen jäsen voi tehdä yhden toiminnon omalla vuorollaan, jonka jälkeen muut saavat tehdä omansa.\nVoit käyttää erilaisia kykyjä vahingoittamaan tai välttämään vihollisiasi, mutta näin aluun vanha kunnon nyrkki toimii vallan mainiosti.\n\<c>gold<c>Hyökkääminen<c>white<c>, onnistuu painamalla vihollista tai kävelemällä sitä päin.",
-  tutorial_exploration: "<c>white<c>Pelimaailma on melko avoin, tarkoittaen että aina ei ole pakko seurata lineaarista reittiä, ja joskus tutkiminen voi olla pakollista.\n\nKokeile nuuskia sivu reitit läpi!",
-  enemy_types: "<c>white<c>Edessäsi on <c>crimson<c>uusi vihollis tyyppi<c>white<c>.\n\nJoka vihollinen ei ole sama, joten ole valppaana ja tunnista vastuksesi!",
-  tutorial_avoiding_foes: "<c>white<c>Jokaisen olennon kanssa ei tarvitse painia.\n\nAloitat kyvyn <c>gold<c>Vetäydy<c>white<c> kanssa. Tämä kyky mahdollistaa tukalista tilanteista pakenemisen.\n\nAnalysoi tilanteesi ja valitse taisto tai pako.",
-  tutorial_return_later: "<c>white<c>Tunnet <c>red<c>karmivan<c>white<c> olemuksen luolan lopusta.\n\nTämä uhka kannattaisi välttää kunnes olet vahvempi.",
-  tutorial_shrines: "<c>white<c>Näet <c>gold<c>Pyhökän<c>white<c> edessäsi.\n\nPyhäköt <c>gold<c>palauttavat<c>white<c> taikasi ja terveytesi, sekä asettavat syntymis pisteesi.",
-  tutorial_entrances: "<c>gold<c>Sisäänkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi sisäänkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
-  enter_fort_of_the_dead: "<c>white<c>Kylmä hiki valuu otsallasi astuessasi Kuolleiden Linnoitukseen.\n\nTämä linna hylättiin aikoja sitten, jäljellä ovat enää vaeltavat luurangot joiden puhdistus jää harteillesi.",
+  tutorial_welcome_to_game:
+    "<c>white<c>Tervetuloa <c>gold<c>Tavaraeniin<c>white<c> seikkailija! Löydät itsesi <c>gold<c>Heeren<c>white<c> saarelta, jonne olet kaivamassa tietäsi märän luolan läpi.\n\nLuola on täynnä heikkoja hirviöitä ja unohtuneita aarteita.\n\nMitä siis odotat? Eteenpäin!",
+  tutorial_controls:
+    "<c>white<c>Aivan aivan, täytyyhän sinun ensin tottua uuden maailman tapoihin.\nHommat hoituvat pikkuisen eri tavalla täällä, joten kroppasi tarvitsee hieman muistutusta!\n\nLiikkueksesi voit joko painaa ruutua <c>gold<c>vasemmalla hiiren napilla<c>white<c>, tai käyttää liikkumis nappeja (yleisesti <c>gold<c>WASD<c>white<c>).\n\nVoit käyttää alapalkissasi olevia kykyvä joko klikkaamaalla kyvyn ikonia, tai painamalla numero nappia (1-0, shift + 1-0).\nEteenpäin!",
+  tutorial_chests:
+    "<c>white<c>Matkalla vastaasi sattuu <c>gold<c>Aarre arkkuja<c>white<c>.\nArkut sisältävät hyödyllisiä aarteita kuten tavaroita ja kultaa. Arkun voi avata klikkaamalla sitä.\n\nVoit myös avata arkun painamalla <c>gold<c>Välilyöntiä<c>white<c> niiden kohdalla.",
+  tutorial_combat:
+    "<c>white<c>Harmaa pallero edessäsi on <c>gold<c>Lima<c>white<c>. \nLimat ovat <c>crimson<c>vihollisia<c>white<c> joka tekee niistä saaliita!\n\nTaisteluissa jokainen jäsen voi tehdä yhden toiminnon omalla vuorollaan, jonka jälkeen muut saavat tehdä omansa.\nVoit käyttää erilaisia kykyjä vahingoittamaan tai välttämään vihollisiasi, mutta näin aluun vanha kunnon nyrkki toimii vallan mainiosti.\n<c>gold<c>Hyökkääminen<c>white<c>, onnistuu painamalla vihollista tai kävelemällä sitä päin.",
+  tutorial_exploration:
+    "<c>white<c>Pelimaailma on melko avoin, tarkoittaen että aina ei ole pakko seurata lineaarista reittiä, ja joskus tutkiminen voi olla pakollista.\n\nKokeile nuuskia sivu reitit läpi!",
+  enemy_types:
+    "<c>white<c>Edessäsi on <c>crimson<c>uusi vihollis tyyppi<c>white<c>.\n\nJoka vihollinen ei ole sama, joten ole valppaana ja tunnista vastuksesi!",
+  tutorial_avoiding_foes:
+    "<c>white<c>Jokaisen olennon kanssa ei tarvitse painia.\n\nAloitat kyvyn <c>gold<c>Vetäydy<c>white<c> kanssa. Tämä kyky mahdollistaa tukalista tilanteista pakenemisen.\n\nAnalysoi tilanteesi ja valitse taisto tai pako.",
+  tutorial_return_later:
+    "<c>white<c>Tunnet <c>red<c>karmivan<c>white<c> olemuksen luolan lopusta.\n\nTämä uhka kannattaisi välttää kunnes olet vahvempi.",
+  tutorial_shrines:
+    "<c>white<c>Näet <c>gold<c>Pyhökän<c>white<c> edessäsi.\n\nPyhäköt <c>gold<c>palauttavat<c>white<c> taikasi ja terveytesi, sekä asettavat syntymis pisteesi.",
+  tutorial_entrances:
+    "<c>gold<c>Sisäänkäynnit<c>white<c> ovat karttoja yhdistäviä reittejä.\n\nMennäksesi sisäänkäynnin läpi <c>gold<c>klikkaa<c>white<c> sitä seistessäi sen päällä.",
+  enter_fort_of_the_dead:
+    "<c>white<c>Kylmä hiki valuu otsallasi astuessasi Kuolleiden Linnoitukseen.\n\nTämä linna hylättiin aikoja sitten, jäljellä ovat enää vaeltavat luurangot joiden puhdistus jää harteillesi.",
   village_of_myre: "<c>gold<c>Myren Kylä",
-  welcome_to_eastern_heere: "<c>white<c>Olet saapunut saaren itäiseen päätyyn.\n\nViimeinen koettelemuksesi ennen itse mantereelle pääsyä löytyy täältä.",
-  lair_of_the_boss: "<c>white<c>Edessäsi aukeaa linnoitus jonka keskellä on ylivoimainen epäkuollut.\n\n<c>crimson<c>Tämä vihollinen on vahvin olento saarella, valmistaudu viimeiseen taisteluusi.",
+  welcome_to_eastern_heere:
+    "<c>white<c>Olet saapunut saaren itäiseen päätyyn.\n\nViimeinen koettelemuksesi ennen itse mantereelle pääsyä löytyy täältä.",
+  lair_of_the_boss:
+    "<c>white<c>Edessäsi aukeaa linnoitus jonka keskellä on ylivoimainen epäkuollut.\n\n<c>crimson<c>Tämä vihollinen on vahvin olento saarella, valmistaudu viimeiseen taisteluusi.",
   playtest_beaten: "<c>white<c>Olet päihittänyt testaus version!\n\n<c>gold<c>Onnittelut!<c>white<c>",
 
   // Technical stuff
@@ -199,11 +212,32 @@ const finnish = {
   pick_up: "Poimi",
   map: "Kartta",
   last_played: "Viimeksi pelattu",
-  slain: `<f>36px<f><c>white<c>Sinut on <c>crimson<c><f>36px<f>surmattu!\n§<c>silver<c>\tJätit jälkeesi <v>player.grave.xp<v><i>${icons["exp_icon"]}<i>, <v>player.grave.gold<v><i>${icons["gold_icon"]}<i>`,
+  slain: `<f>36px<f><c>white<c>Sinut on <c>crimson<c><f>36px<f>surmattu!\n§<c>silver<c>\tJätit jälkeesi <v>player.grave.xp<v><i>${icons["exp"]}<i>, <v>player.grave.gold<v><i>${icons["gold"]}<i>`,
   respawn: "Synny [R]",
   title_screen: "Alkuruutuun",
   playtime: "Peliaika",
   no_time_recorded: "Ei tallennettu",
+  slashDamage: "Viilto vahinko",
+  slashResist: "Viilto puolustus",
+  pierceDamage: "Lävistys vahinko",
+  pierceResist: "Lävistys puolustus",
+  crushDamage: "Murskaus vahinko",
+  crushResist: "Murskaus puolustus",
+  magicDamage: "Taika vahinko",
+  magicResist: "Taika puolustus",
+  darkDamage: "Pimeä vahinko",
+  darkResist: "Pimeä puolustus",
+  divineDamage: "Pyhä vahinko",
+  divineResist: "Pyhä puolustus",
+  fireDamage: "Tuli vahinko",
+  fireResist: "Tuli puolustus",
+  iceDamage: "Jää vahinko",
+  iceResist: "Jää puolustus",
+  lightningDamage: "Sähkö vahinko",
+  lightningResist: "Sähkö puolustus",
+  rangedDamage: "Ampumis vahinko",
+  meleeDamage: "Lähitaistelu vahinko",
+  spellDamage: "Loitsu vahinko",
 
   // Item definitions
   slash_damageSub: "Viiltävä",
@@ -402,11 +436,16 @@ const finnish = {
   choose_hair: "Hiukset",
   choose_eyes: "Silmät",
   choose_face: "Kasvot",
-  fighterClass_desc: "<f>19px<f><c>silver<c>Taistelijat ovat tasapainoisia lähitaistelijoita\njotka päihittävät vastustajansa yhdistämällä \nhyvän hyökkäyksen hyvään puolustukseen.\nTaistelijana keskityt lähitaisteluun \nja pysyt kamppailussa pitkään.§\n\n",
-  barbarianClass_desc: "<f>19px<f><c>silver<c>Barbaarit ovat lihaskimppuja\njotka rakastavat vaarallisia kamppailuja,\nja käyttävät suuria aseita\nyltääksen kauemmas ja tehdäkseen enemmän vahinkoa.\nBarbaarina keskityt lähitaisteluun\nottaen riskejä suurta vahinkoa varten.§\n\n",
-  sorcererClass_desc: "<f>19px<f><c>silver<c>Loitsijat ovat taikaa manipuloivia älykköjä\njotka luovat suurta tuhoa kaukaa.\nLoitsijana keskityt kaukotaisteluun\nJa omaat mahtavan tuhoavaa voimaa,\njoka tosin heikentää fyysistä kehoasi.§\n\n",
-  rogueClass_desc: "<f>19px<f><c>silver<c>Varjoissa kulkevat konnat lähestyvät taistelua eri tavalla,\nheikentäen vastustajiansa kaukaa alhaisilla tempuilla,\ntuhoten ne läheltä parhaimmalla hetkellä.\nKonnana jaat voimasi moniin asioihin,\nheikentäen itseäsi muihin verrattuna,\nmutta tulet toimeen tilanteessa kuin tilanteessa.§\n\n",
-  rangerClass_desc: "<f>19px<f><c>silver<c>Metsästäjät suojelevat valitsemaansa metsää\ntarkasti harjatun jousen voimin,\nsamalla vahvistaen välejä susiveljen kanssa. \nMetsästäjänä keskityt kaukotaisteluun ja\njätät lähitaistelun sudellesi.§\n\n",
+  fighterClass_desc:
+    "<f>19px<f><c>silver<c>Taistelijat ovat tasapainoisia lähitaistelijoita\njotka päihittävät vastustajansa yhdistämällä \nhyvän hyökkäyksen hyvään puolustukseen.\nTaistelijana keskityt lähitaisteluun \nja pysyt kamppailussa pitkään.§\n\n",
+  barbarianClass_desc:
+    "<f>19px<f><c>silver<c>Barbaarit ovat lihaskimppuja\njotka rakastavat vaarallisia kamppailuja,\nja käyttävät suuria aseita\nyltääksen kauemmas ja tehdäkseen enemmän vahinkoa.\nBarbaarina keskityt lähitaisteluun\nottaen riskejä suurta vahinkoa varten.§\n\n",
+  sorcererClass_desc:
+    "<f>19px<f><c>silver<c>Loitsijat ovat taikaa manipuloivia älykköjä\njotka luovat suurta tuhoa kaukaa.\nLoitsijana keskityt kaukotaisteluun\nJa omaat mahtavan tuhoavaa voimaa,\njoka tosin heikentää fyysistä kehoasi.§\n\n",
+  rogueClass_desc:
+    "<f>19px<f><c>silver<c>Varjoissa kulkevat konnat lähestyvät taistelua eri tavalla,\nheikentäen vastustajiansa kaukaa alhaisilla tempuilla,\ntuhoten ne läheltä parhaimmalla hetkellä.\nKonnana jaat voimasi moniin asioihin,\nheikentäen itseäsi muihin verrattuna,\nmutta tulet toimeen tilanteessa kuin tilanteessa.§\n\n",
+  rangerClass_desc:
+    "<f>19px<f><c>silver<c>Metsästäjät suojelevat valitsemaansa metsää\ntarkasti harjatun jousen voimin,\nsamalla vahvistaen välejä susiveljen kanssa. \nMetsästäjänä keskityt kaukotaisteluun ja\njätät lähitaistelun sudellesi.§\n\n",
 
   // Dialog screen stuff
   openStore: "KAUPPA",
@@ -900,7 +939,7 @@ const finnish = {
   rogueClass_name: "Konna",
   rangerClass_name: "Metsästäjä",
 
-  // PERKS // 
+  // PERKS //
 
   // SORCERER
   introduction_to_sorcery_name: "Maagin Alkukirja",
@@ -944,7 +983,8 @@ const finnish = {
   strength_training_name: "Voimatreeni",
   strength_training_desc: "Voima edistää kamppailu-taitoa.",
   fighting_style_name: "Harjaantunut Iskijä",
-  fighting_style_desc: "En pelkää miestä, joka on kerran harjoitellut 10 000 eri iskua, \nmutta pelkään miestä joka on harjoitellut yhtä iskua 10 000 kertaa.",
+  fighting_style_desc:
+    "En pelkää miestä, joka on kerran harjoitellut 10 000 eri iskua, \nmutta pelkään miestä joka on harjoitellut yhtä iskua 10 000 kertaa.",
   furious_assault_name: "Raivokas Hyökkäys",
   furious_assault_desc: "Taistelua ei voiteta seisoskelemalla! Eteenpäin!",
   tactical_genius_name: "Taktiikkojen Kuningas",
@@ -960,7 +1000,8 @@ const finnish = {
   fighting_with_your_voice_name: "Veteraanin Iltahuuto",
   fighting_with_your_voice_desc: "Välillä kaikki mitä tarvitset on kannustava huuto.",
   bulwark_name: "Puolustaja",
-  bulwark_desc: "Kestävyytesi tekee sinusta vakaan seinän joka pysäyttää jokaisen uhan.\nTaistelija tyyppisi on nyt <c>gold<c>Puolustaja<c>silver<c>",
+  bulwark_desc:
+    "Kestävyytesi tekee sinusta vakaan seinän joka pysäyttää jokaisen uhan.\nTaistelija tyyppisi on nyt <c>gold<c>Puolustaja<c>silver<c>",
   warrior_name: "Soturi",
   warrior_desc: "Paras puolustus on reipas hyökkäys.\nTaistelija tyyppisi on nyt <c>gold<c>Soturi<c>silver<c>",
 
@@ -1114,8 +1155,8 @@ const english = {
 
   str_tt: `<i>${icons["str"]}<i>Strength increases <i>${icons["melee"]}<i>damage with strength scaling weapons by 2%,\n and encumbrance by 0.5`,
   dex_tt: `<i>${icons["dex"]}<i>Dexterity increases <i>${icons["ranged"]}<i>damage with dexterity scaling weapons by 2%,\nand increases both <i>${icons["hitChance"]}<i>Hit chance and <i>${icons["evasion"]}<i>evasion by 0.25`,
-  vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n<i>${icons["regenHp_icon"]}<i>health regeneration by 1%\n and encumbrance by 1`,
-  int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n<i>${icons["regenMp_icon"]}<i>mana recovery by 1%\n and <i>${icons["damage"]}<i>magical damage by 2%`,
+  vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n<i>${icons["regenHp"]}<i>health regeneration by 1%\n and encumbrance by 1`,
+  int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n<i>${icons["regenMp"]}<i>mana recovery by 1%\n and <i>${icons["damage"]}<i>magical damage by 2%`,
   cun_tt: `<i>${icons["cun"]}<i>Cunning increases <i>${icons["critDamage"]}<i>crit damage by 1.5%,\n and <i>${icons["critDamage"]}<i>crit chance by 0.4%`,
   critDamage_tt: `<i>${icons["critDamage"]}<i>Crit damage is the multiplier that improves crit hits.`,
   critChance_tt: `<i>${icons["critDamage"]}<i>Crit chance increases your chances of achieving critical hits.`,
@@ -1123,12 +1164,12 @@ const english = {
   evasion_tt: `<i>${icons["evasion"]}<i>Evasion increases your chance of avoiding damage. \nCompared to enemy's <i>${icons["hitChance"]}<i>hit chance.`,
   base_attack_tt: `<css>line-height: 20px<css>Weapon power\nThis is your weapon's base damage`,
   true_attack_tt: `<css>line-height: 20px<css><c>white<c>Attack power\nThis is your average damage.\nIt is calculated based on your weapon and stats.\n<c>orange<c>Estimated damage can be higher or lower than true damage,\n because resistances and other variables are not calculated.`,
-  atk_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["attackSpeed_icon"]}<i>Attack speed.\nValues over 100% allow you to sometimes hit twice or more in a single round. \nValues under 100% cause you to miss some turns.`,
-  mov_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["movementSpeed_icon"]}<i>Movement speed. \nValues over 100% allow you to sometimes move twice or more in a single round. \nValues under 100% cause you not to move during some rounds.`,
+  atk_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["attackSpeed"]}<i>Attack speed.\nValues over 100% allow you to sometimes hit twice or more in a single round. \nValues under 100% cause you to miss some turns.`,
+  mov_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["movementSpeed"]}<i>Movement speed. \nValues over 100% allow you to sometimes move twice or more in a single round. \nValues under 100% cause you not to move during some rounds.`,
 
-  physical_tt: `<i>${icons["physical_armor"]}<i>Physical Armor increases resistance against physical attacks. \n<i>${icons["slash_icon"]}<i>Slashing, <i>${icons["crush_icon"]}<i>Crushing and <i>${icons["pierce_icon"]}<i>Piercing damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
-  magical_tt: `<i>${icons["magical_armor"]}<i>Magical Armor increases resistance against magical attacks. \n<i>${icons["magic_icon"]}<i>Magical, <i>${icons["dark_icon"]}<i>Dark and <i>${icons["divine_icon"]}<i>Divine damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
-  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elemental Armor increases resistance against elemental attacks. \n<i>${icons["fire_icon"]}<i>Fire, <i>${icons["lightning_icon"]}<i>Lightning and <i>${icons["ice_icon"]}<i>Ice damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
+  physical_tt: `<i>${icons["physical_armor"]}<i>Physical Armor increases resistance against physical attacks. \n<i>${icons["slash"]}<i>Slashing, <i>${icons["crush"]}<i>Crushing and <i>${icons["pierce"]}<i>Piercing damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Magical Armor increases resistance against magical attacks. \n<i>${icons["magic"]}<i>Magical, <i>${icons["dark"]}<i>Dark and <i>${icons["divine"]}<i>Divine damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elemental Armor increases resistance against elemental attacks. \n<i>${icons["fire"]}<i>Fire, <i>${icons["lightning"]}<i>Lightning and <i>${icons["ice"]}<i>Ice damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
 
   resistances_tt: "Resistance decreases incoming damage of its type by the indicated %.",
   stat_resist_tt: `Status resistance decreases any damage caused by effects by the indicated %. \n\nIt also gives a chance of completely resisting the effect. \n\nWhen effect is resisted, it is not applied at all.`,
@@ -1144,20 +1185,33 @@ const english = {
   test_message: "<c>white<c>Welcome to <c>gold<c>Dungeons of Tavaraen<c>white<c>!",
   follow_slimes: "<c>white<c>Keep following the <c>gold<c>slimes<c>white<c> and you'll get a fair fight!",
   beach_episode: "<c>white<c>Beach infested with <c>gold<c>skeletons<c>white<c>, prepare for trouble!",
-  tutorial_welcome_to_game: "<c>white<c>Welcome adventurer, to <c>gold<c>Tavaraen<c>white<c>! You have arrived on the island of <c>gold<c>Heere<c>white<c>, crawling through a small gap to a damp cave.\n\nThis cave is teeming with weak monsters and long forgotten treasures ready for the taking.\n\nSo what are you waiting for, adventurer? Let's go!",
-  tutorial_controls: "<c>white<c>Right, you first need to get familiar with controlling your body.\nThings work a bit differently in this land, so let's refresh you on your bodily functions!\n\nTo move, either <c>gold<c>click left mouse button<c>white<c> on a tile, or use the movement keys (default is <c>gold<c>WASD<c>white<c>).\n\nYou can use any abilities equipped to your hotbar by either clicking the icon, or by pressing the correspondive key (1-0, shift + 1-0).\nGo forth now!",
-  tutorial_chests: "<c>white<c>During your travels you will encounter <c>gold<c>Treasure chests<c>white<c>.\nThese contain loot in the form of gold or useful items and new equipment, and can be opened by clicking on them.\n\nYou can also open chests by pressing <c>gold<c>Space<c>white<c> on them.",
-  tutorial_combat: "<c>white<c>That grey blob in front of you is a <c>gold<c>Slime<c>white<c>. \nSlimes are <c>crimson<c>enemies<c>white<c> and thus must be defeated!\n\nDuring combat you can perform one action per turn, then your foe(s) will act.\nYou can use various abilities to harm or evade your opponents, but for now just hit the slime.\n\nTo <c>gold<c>attack<c>white<c>, walk towards an enemy or click on them.",
-  tutorial_exploration: "<c>white<c>You don't always have to follow a linear path, the game world is very open, and sometimes you'll find yourself in a situation where you need to explore before you can move on.\n\nTry exploring the side paths before continuing on, they might hold some small boons!",
-  enemy_types: "<c>white<c>Up ahead of you is a <c>crimson<c>new type of enemy<c>white<c>.\n\nNot every enemy is the same, and you need to adapt to any situation as is demanded!",
-  tutorial_avoiding_foes: "<c>white<c>Not every enemy needs to be fought, sometimes it's better to just run away.\n\nYou innately possess the ability <c>gold<c>Draw Back<c>white<c> which can allow you to get away from danger.\n\nAssess the situation and make the best decision.",
-  tutorial_return_later: "<c>white<c>You feel an <c>red<c>ominious<c>white<c> presence from the end of the cave.\n\nYou should pass by it for now and return when you're stronger.",
-  tutorial_shrines: "<c>white<c>You see a <c>gold<c>Shrine<c>white<c> in the distance.\n\nShrines are used to <c>gold<c>restore<c>white<c> your health and mana, as well as to set your spawn point.",
-  tutorial_entrances: "<c>gold<c>Entrances<c>white<c> are routes that connect maps.\n\nTo use one, simply <c>gold<c>click<c>white<c> on it while standing on the same tile.",
-  enter_fort_of_the_dead: "<c>white<c>You feel shivers down your spine as you enter the fort of the dead.\n\nThis place has long been abandoned and is home only to the undead menace you must cleanse.",
+  tutorial_welcome_to_game:
+    "<c>white<c>Welcome adventurer, to <c>gold<c>Tavaraen<c>white<c>! You have arrived on the island of <c>gold<c>Heere<c>white<c>, crawling through a small gap to a damp cave.\n\nThis cave is teeming with weak monsters and long forgotten treasures ready for the taking.\n\nSo what are you waiting for, adventurer? Let's go!",
+  tutorial_controls:
+    "<c>white<c>Right, you first need to get familiar with controlling your body.\nThings work a bit differently in this land, so let's refresh you on your bodily functions!\n\nTo move, either <c>gold<c>click left mouse button<c>white<c> on a tile, or use the movement keys (default is <c>gold<c>WASD<c>white<c>).\n\nYou can use any abilities equipped to your hotbar by either clicking the icon, or by pressing the correspondive key (1-0, shift + 1-0).\nGo forth now!",
+  tutorial_chests:
+    "<c>white<c>During your travels you will encounter <c>gold<c>Treasure chests<c>white<c>.\nThese contain loot in the form of gold or useful items and new equipment, and can be opened by clicking on them.\n\nYou can also open chests by pressing <c>gold<c>Space<c>white<c> on them.",
+  tutorial_combat:
+    "<c>white<c>That grey blob in front of you is a <c>gold<c>Slime<c>white<c>. \nSlimes are <c>crimson<c>enemies<c>white<c> and thus must be defeated!\n\nDuring combat you can perform one action per turn, then your foe(s) will act.\nYou can use various abilities to harm or evade your opponents, but for now just hit the slime.\n\nTo <c>gold<c>attack<c>white<c>, walk towards an enemy or click on them.",
+  tutorial_exploration:
+    "<c>white<c>You don't always have to follow a linear path, the game world is very open, and sometimes you'll find yourself in a situation where you need to explore before you can move on.\n\nTry exploring the side paths before continuing on, they might hold some small boons!",
+  enemy_types:
+    "<c>white<c>Up ahead of you is a <c>crimson<c>new type of enemy<c>white<c>.\n\nNot every enemy is the same, and you need to adapt to any situation as is demanded!",
+  tutorial_avoiding_foes:
+    "<c>white<c>Not every enemy needs to be fought, sometimes it's better to just run away.\n\nYou innately possess the ability <c>gold<c>Draw Back<c>white<c> which can allow you to get away from danger.\n\nAssess the situation and make the best decision.",
+  tutorial_return_later:
+    "<c>white<c>You feel an <c>red<c>ominious<c>white<c> presence from the end of the cave.\n\nYou should pass by it for now and return when you're stronger.",
+  tutorial_shrines:
+    "<c>white<c>You see a <c>gold<c>Shrine<c>white<c> in the distance.\n\nShrines are used to <c>gold<c>restore<c>white<c> your health and mana, as well as to set your spawn point.",
+  tutorial_entrances:
+    "<c>gold<c>Entrances<c>white<c> are routes that connect maps.\n\nTo use one, simply <c>gold<c>click<c>white<c> on it while standing on the same tile.",
+  enter_fort_of_the_dead:
+    "<c>white<c>You feel shivers down your spine as you enter the fort of the dead.\n\nThis place has long been abandoned and is home only to the undead menace you must cleanse.",
   village_of_myre: "<c>gold<c>Myre Village",
-  welcome_to_eastern_heere: "<c>white<c>You have arrived at the eastern end of the island.\n\nHere you shall face your final trial before you can enter the continent proper.",
-  lair_of_the_boss: "<c>white<c>You have arrived at the lair of an undead above the rest.\n\n<c>crimson<c>Be prepared, this is the final battle on Heere.",
+  welcome_to_eastern_heere:
+    "<c>white<c>You have arrived at the eastern end of the island.\n\nHere you shall face your final trial before you can enter the continent proper.",
+  lair_of_the_boss:
+    "<c>white<c>You have arrived at the lair of an undead above the rest.\n\n<c>crimson<c>Be prepared, this is the final battle on Heere.",
   playtest_beaten: "<c>white<c>You have completed the playtest!\n\n<c>gold<c>Congratulations!<c>white<c>",
 
   // Technical stuff
@@ -1288,11 +1342,32 @@ const english = {
   pick_up: "Pick up",
   map: "Map",
   last_played: "Last played",
-  slain: `<f>36px<f><c>white<c>You have been <c>crimson<c><f>36px<f>slain!\n§<c>silver<c>\tYou left behind <v>player.grave.xp<v><i>${icons["exp_icon"]}<i>, <v>player.grave.gold<v><i>${icons["gold_icon"]}<i>`,
+  slain: `<f>36px<f><c>white<c>You have been <c>crimson<c><f>36px<f>slain!\n§<c>silver<c>\tYou left behind <v>player.grave.xp<v><i>${icons["exp"]}<i>, <v>player.grave.gold<v><i>${icons["gold"]}<i>`,
   respawn: "Respawn [R]",
   title_screen: "Title Screen",
   playtime: "Playtime",
   no_time_recorded: "Not recorded",
+  slashDamage: "Slash damage",
+  slashResist: "Slash defense",
+  pierceDamage: "Pierce damage",
+  pierceResist: "Pierce defense",
+  crushDamage: "Crush damage",
+  crushResist: "Crush defense",
+  magicDamage: "Magic damage",
+  magicResist: "Magic defense",
+  darkDamage: "Dark damage",
+  darkResist: "Dark defense",
+  divineDamage: "Divine damage",
+  divineResist: "Divine defense",
+  fireDamage: "Fire damage",
+  fireResist: "Fire defense",
+  iceDamage: "Ice damage",
+  iceResist: "Ice defense",
+  lightningDamage: "Lightning damage",
+  lightningResist: "Lightning defense",
+  rangedDamage: "Ranged damage",
+  meleeDamage: "Melee damage",
+  spellDamage: "Spell damage",
 
   // Enemy names
   hiisi_name: "Hiisi",
@@ -1343,7 +1418,6 @@ const english = {
   moves_to: "moves to tile",
   gained: "Gained",
 
-
   // WORLD TEXTS
   gained_xp: "Gained [XP] XP!",
   player_death: "YOU WERE KILLED!",
@@ -1360,11 +1434,16 @@ const english = {
   choose_hair: "Hair",
   choose_eyes: "Eyes",
   choose_face: "Face",
-  fighterClass_desc: "<f>19px<f><c>silver<c>Fighters are balanced melee combatants\nwho defeat their foes by combining \ngood offense with great defense.\nAs a fighter you focus on melee combat \nand have great staying potential.§\n\n",
-  barbarianClass_desc: "<f>19px<f><c>silver<c>Barbarians are brutes\nwho love fighting on the edge,\npreferring to use two handed weapons\nfor more reach and damage.\nAs a barbarian you focus on melee combat\nand have great offensive power\nwith high risk high reward gameplay.§\n\n",
-  sorcererClass_desc: "<f>19px<f><c>silver<c>Sorcerers are spell weaving intellectuals\nwho prefer inflicting devastating damage from a distance.\nAs a sorcerer you focus on ranged combat \nand have excellent offensive power,\nat the cost of being vulnerable in close range.§\n\n",
-  rogueClass_desc: "<f>19px<f><c>silver<c>Rogues lurk in the shadows,\npreferring to soften their targets from range\nbefore finishing them off at close range.\nAs a rogue you don't particularly excel\nin either ranged or melee combat,\nbut are more flexible than others.§\n\n",
-  rangerClass_desc: "<f>19px<f><c>silver<c>Rangers are forest guardians \nwho prefer ranged weapons and \nbonding with their wolf companion. \nAs a ranger you focus on ranged combat \nand have an excellent partner helping you out.§\n\n",
+  fighterClass_desc:
+    "<f>19px<f><c>silver<c>Fighters are balanced melee combatants\nwho defeat their foes by combining \ngood offense with great defense.\nAs a fighter you focus on melee combat \nand have great staying potential.§\n\n",
+  barbarianClass_desc:
+    "<f>19px<f><c>silver<c>Barbarians are brutes\nwho love fighting on the edge,\npreferring to use two handed weapons\nfor more reach and damage.\nAs a barbarian you focus on melee combat\nand have great offensive power\nwith high risk high reward gameplay.§\n\n",
+  sorcererClass_desc:
+    "<f>19px<f><c>silver<c>Sorcerers are spell weaving intellectuals\nwho prefer inflicting devastating damage from a distance.\nAs a sorcerer you focus on ranged combat \nand have excellent offensive power,\nat the cost of being vulnerable in close range.§\n\n",
+  rogueClass_desc:
+    "<f>19px<f><c>silver<c>Rogues lurk in the shadows,\npreferring to soften their targets from range\nbefore finishing them off at close range.\nAs a rogue you don't particularly excel\nin either ranged or melee combat,\nbut are more flexible than others.§\n\n",
+  rangerClass_desc:
+    "<f>19px<f><c>silver<c>Rangers are forest guardians \nwho prefer ranged weapons and \nbonding with their wolf companion. \nAs a ranger you focus on ranged combat \nand have an excellent partner helping you out.§\n\n",
 
   // Dialog screen stuff
   openStore: "STORE",
@@ -1813,7 +1892,8 @@ const english = {
   summon_skeleton_warrior_action_desc_pl: "You call Skeleton Warrior to battle!",
   barbarian_charge_name: "Barbarian Charge",
   barbarian_charge_desc: "Recklessly close in on foes.",
-  barbarian_charge_action_desc_pl: "<c>yellow<c>You<c>white<c> unleash a fearsome warcry and charge towards [TARGET], dealing [DMG] damage and disorienting them!",
+  barbarian_charge_action_desc_pl:
+    "<c>yellow<c>You<c>white<c> unleash a fearsome warcry and charge towards [TARGET], dealing [DMG] damage and disorienting them!",
   barbarian_charge_action_desc: "charges at [TARGET] with a ferocious cry, ramming into them for [DMG] damage.",
   chivalrious_blow_name: "Chivalrious Blow",
   chivalrious_blow_desc: "Gracefully strike your foe, tempting them to duel you.",
@@ -1821,7 +1901,8 @@ const english = {
   chivalrious_blow_action_desc: "masterfully strikes [TARGET], harming them for [DMG] damage and dueling them.",
   challenge_name: "Challenge",
   challenge_desc: "Rush towards your opponent, ready to battle them with honour!",
-  challenge_action_desc_pl: "<c>yellow<c>You<c>white<c> rush forwards, looking at [TARGET] while doing so, soon slamming into them for [DMG] damage!",
+  challenge_action_desc_pl:
+    "<c>yellow<c>You<c>white<c> rush forwards, looking at [TARGET] while doing so, soon slamming into them for [DMG] damage!",
   challenge_action_desc: "rushes towards [TARGET] while shouting 'I CHALLENGE YOU!', quickly slamming into them for [DMG] damage.",
   sneaky_stabbing_name: "Sneaky Stabbing",
   sneaky_stabbing_desc: "Carefully examine your enemy's body, looking for juicy stabbing targets.",
@@ -1853,7 +1934,8 @@ const english = {
   awaken_action_desc_pl: "You focus your senses to your sight.",
   finishing_blow_name: "Finishing Blow",
   finishing_blow_desc: "Sacrifice your life to end your foes'",
-  finishing_blow_action_desc_pl: "<c>yellow<c>You<c>white<c> enhance your next attack with your vitality, dealing [DMG] damage to [TARGET]!",
+  finishing_blow_action_desc_pl:
+    "<c>yellow<c>You<c>white<c> enhance your next attack with your vitality, dealing [DMG] damage to [TARGET]!",
   finishing_blow_action_desc: "enhances their blow with their vitality, dealing [DMG] to [TARGET]!",
   sundering_arrow_name: "Sundering Arrow",
   sundering_arrow_desc: "Reduce your enemy's defense by half from afar.",
@@ -1861,7 +1943,8 @@ const english = {
   sundering_arrow_action_desc: "fires a sundering arrow at [TARGET], causing [DMG] damage.",
   shock_arrow_name: "Shock Arrow",
   shock_arrow_desc: "Paralyze an enemy.",
-  shock_arrow_action_desc_pl: "<c>yellow<c>You<c>white<c> fire a paralyzing arrow at [TARGET], dealing [DMG] damage and leaving them paralyzed!",
+  shock_arrow_action_desc_pl:
+    "<c>yellow<c>You<c>white<c> fire a paralyzing arrow at [TARGET], dealing [DMG] damage and leaving them paralyzed!",
   shock_arrow_action_desc: "fires a paralyzing arrow at [TARGET], leaving them paralyzed with [DMG] damage!",
 
   // CLASSES
@@ -1915,7 +1998,8 @@ const english = {
   strength_training_name: "Strength Training",
   strength_training_desc: "When tactics fail, strength is relied upon.",
   fighting_style_name: "Fighting Style",
-  fighting_style_desc: "I fear not the man who has practiced 10 000 blows once, \nbut I fear the man who has practiced one blow 10 000 times.",
+  fighting_style_desc:
+    "I fear not the man who has practiced 10 000 blows once, \nbut I fear the man who has practiced one blow 10 000 times.",
   furious_assault_name: "Furious Assault",
   furious_assault_desc: "Nothing will be gained without a hearty offensive!",
   tactical_genius_name: "Tactical Genius",
@@ -1931,9 +2015,11 @@ const english = {
   fighting_with_your_voice_name: "A Helping Voice",
   fighting_with_your_voice_desc: "Sometimes all you need to push forward is an encouraging shout.",
   bulwark_name: "Bulwark",
-  bulwark_desc: "Your endurance makes you an impregnable fortress\n upon which waves of your foes will break.\nWill make your specialization <c>gold<c>Bulwark<c>silver<c>",
+  bulwark_desc:
+    "Your endurance makes you an impregnable fortress\n upon which waves of your foes will break.\nWill make your specialization <c>gold<c>Bulwark<c>silver<c>",
   warrior_name: "Warrior",
-  warrior_desc: "You will keep your foes on the defensive with a spirited offensive.\nWill make your specialization <c>gold<c>Warrior<c>silver<c>",
+  warrior_desc:
+    "You will keep your foes on the defensive with a spirited offensive.\nWill make your specialization <c>gold<c>Warrior<c>silver<c>",
 
   // ROGUE
   way_of_the_rogue_name: "Way of the Rogue",
@@ -2060,4 +2146,4 @@ const english = {
   ui_scale: "<f>16px<f>Scales UI-elements based on multiplier.\nChange this value if UI is too large or small.",
 } as any;
 
-var lang = english;
+let lang = english;

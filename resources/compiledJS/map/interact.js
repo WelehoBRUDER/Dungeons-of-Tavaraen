@@ -59,14 +59,14 @@ function hoverEnemyShow(enemy) {
     name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
     const enemyStats = enemy.getStats();
     const enemyMiscStats = enemy.getHitchance();
-    var mainStatText = "";
-    mainStatText += `<f>20px<f><i>${icons.health_icon}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
-    mainStatText += `<f>20px<f><i>${icons.mana_icon}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
-    mainStatText += `<f>20px<f><i>${icons.str_icon}<i>${lang["str"]}: ${enemyStats.str}\n`;
-    mainStatText += `<f>20px<f><i>${icons.dex_icon}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
-    mainStatText += `<f>20px<f><i>${icons.vit_icon}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
-    mainStatText += `<f>20px<f><i>${icons.int_icon}<i>${lang["int"]}: ${enemyStats.int}\n`;
-    mainStatText += `<f>20px<f><i>${icons.cun_icon}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
+    let mainStatText = "";
+    mainStatText += `<f>20px<f><i>${icons.health}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.mana}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
+    mainStatText += `<f>20px<f><i>${icons.str}<i>${lang["str"]}: ${enemyStats.str}\n`;
+    mainStatText += `<f>20px<f><i>${icons.dex}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
+    mainStatText += `<f>20px<f><i>${icons.vit}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
+    mainStatText += `<f>20px<f><i>${icons.int}<i>${lang["int"]}: ${enemyStats.int}\n`;
+    mainStatText += `<f>20px<f><i>${icons.cun}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
     mainStatText += `<f>20px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
     mainStatText += `<f>20px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
     let enTotalDmg = enemy.trueDamage();
@@ -74,19 +74,33 @@ function hoverEnemyShow(enemy) {
     Object.entries(enTotalDmg.split).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        mainStatText += `<f>20px<f><i>${icons[key + "_icon"]}<i>${val}`;
+        mainStatText += `<f>20px<f><i>${icons[key]}<i>${val}`;
     });
     mainStatText += "<c>white<c>)\n";
     const mainStats = textSyntax(mainStatText);
-    var resists = `<f>20px<f><i>${icons.resistAll_icon}<i>${lang["resistance"]}\n`;
+    let resists = `<f>20px<f><i>${icons.resistAll}<i>${lang["resistance"]}\n`;
     Object.entries(enemy.getResists()).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        resists += `<f>20px<f><i>${icons[key + "Resist" + "_icon"]}<i>${lang[key]} ${val}%\n`;
+        resists += `<f>20px<f><i>${icons[key + "Resist"]}<i>${lang[key]} ${val}%\n`;
     });
     const resistFrame = textSyntax(resists);
     resistFrame.classList.add("enResists");
     staticHover.append(name, mainStats, resistFrame);
+}
+function hoverProjectile(projectile) {
+    var _a, _b, _c, _d, _e;
+    staticHover.textContent = "";
+    staticHover.style.display = "block";
+    const name = document.createElement("p");
+    name.classList.add("enemyName");
+    name.textContent = `${(_a = lang[projectile.id + "_name"]) !== null && _a !== void 0 ? _a : projectile.id}`;
+    let mainStatText = "";
+    mainStatText += `<f>19px<f>${(_b = lang["speed"]) !== null && _b !== void 0 ? _b : "speed"}: ${projectile.speed} ${(_c = lang["tiles_per_turn"]) !== null && _c !== void 0 ? _c : "tpt"}\n`;
+    mainStatText += `<f>19px<f>${(_d = lang["origin"]) !== null && _d !== void 0 ? _d : "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
+    mainStatText += `<f>19px<f><i>${icons.damage}<i>${(_e = lang["predicted_damage"]) !== null && _e !== void 0 ? _e : "predicted_damage"}: ${calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg}`;
+    const mainStats = textSyntax(mainStatText);
+    staticHover.append(name, mainStats);
 }
 /* Hide map hover */
 function hideMapHover() {
@@ -95,8 +109,8 @@ function hideMapHover() {
 }
 function activateShrine() {
     maps[currentMap].shrines.forEach((shrine) => {
-        if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
-            if (!(player.usedShrines.find((used) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap))) {
+        if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y) {
+            if (!player.usedShrines.find((used) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap)) {
                 player.stats.hp = player.getHpMax();
                 player.stats.mp = player.getMpMax();
                 player.respawnPoint.cords = shrine.cords;
@@ -115,8 +129,8 @@ function activateShrine() {
 }
 function mapHover(event) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
-    const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
+    const lX = Math.floor((event.offsetX - baseCanvas.width / 2 + spriteSize / 2) / spriteSize);
+    const lY = Math.floor((event.offsetY - baseCanvas.height / 2 + spriteSize / 2) / spriteSize);
     const x = lX + player.cords.x - settings.map_offset_x;
     const y = lY + player.cords.y - settings.map_offset_y;
     if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1)
@@ -138,8 +152,8 @@ function clickMap(event) {
     }
     closeTextWindow();
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
-    const lX = Math.floor(((event.offsetX - baseCanvas.width / 2) + spriteSize / 2) / spriteSize);
-    const lY = Math.floor(((event.offsetY - baseCanvas.height / 2) + spriteSize / 2) / spriteSize);
+    const lX = Math.floor((event.offsetX - baseCanvas.width / 2 + spriteSize / 2) / spriteSize);
+    const lY = Math.floor((event.offsetY - baseCanvas.height / 2 + spriteSize / 2) / spriteSize);
     const x = lX + player.cords.x - settings.map_offset_x;
     const y = lY + player.cords.y - settings.map_offset_y;
     if (event.button === 2) {
@@ -191,7 +205,7 @@ function clickMap(event) {
     });
     maps[currentMap].treasureChests.some((chest) => {
         if (chest.cords.x === x && chest.cords.y === y) {
-            const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
+            const lootedChest = lootedChests.find((trs) => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == currentMap);
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) {
                 chest.lootChest();
                 return true;
@@ -232,23 +246,28 @@ function clickMap(event) {
             targetingEnemy = true;
             move = false;
             if (state.isSelected) {
+                if (
                 // @ts-expect-error
-                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
-                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
+                generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
+                    weaponReach(player, state.abiSelected.use_range, enemy)) {
+                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) ||
+                        (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
                     if (state.abiSelected.type == "attack") {
                         if (state.abiSelected.shoots_projectile)
                             fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
                         else
                             regularAttack(player, enemy, state.abiSelected);
-                        // @ts-expect-error
                         if (weaponReach(player, state.abiSelected.use_range, enemy))
+                            // @ts-expect-error
                             attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
                         if (!state.abiSelected.shoots_projectile)
                             advanceTurn();
                     }
                 }
-                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
+                if (state.abiSelected.type == "charge" &&
+                    generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range &&
+                    !player.isRooted()) {
                     player.stats.mp -= state.abiSelected.mana_cost;
                     state.abiSelected.onCooldown = state.abiSelected.cooldown;
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
@@ -267,7 +286,6 @@ function clickMap(event) {
             break;
         }
     }
-    ;
     if (state.isSelected && ((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.aoe_size) > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: x, y: y }).length <= state.abiSelected.use_range) {
@@ -283,7 +301,9 @@ function clickMap(event) {
         }
     }
     state.clicked = true;
-    setTimeout(() => { state.clicked = false; }, 30);
+    setTimeout(() => {
+        state.clicked = false;
+    }, 30);
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
@@ -326,7 +346,6 @@ function changeMap(entrance) {
         loadingScreen.style.display = "none";
         return;
     }
-    ;
     document.querySelector(".loading-bar-fill").style.width = "0%";
     currentMap = id;
     player.cords = { ...entrance.path.cords };
@@ -391,7 +410,7 @@ function loadUI() {
 }
 function areaName(name) {
     areaTitleText.textContent = name;
-    areaTitle.style.animation = 'none';
+    areaTitle.style.animation = "none";
     areaTitle.offsetHeight; /* trigger reflow */
     areaTitle.style.animation = null;
     areaTitle.style.animationName = `charHurt`;

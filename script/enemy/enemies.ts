@@ -3,8 +3,6 @@
 // 350 res == 100% / fully immune
 // -100 res == take double damage
 
-const s_def: any = getAbiStatusModifiers(dummy, "", "");
-
 const enemies = {
   greySlime: {
     id: "greySlime",
@@ -19,7 +17,7 @@ const enemies = {
       hp: 10,
       mp: 0,
       hpMax: 10,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -30,26 +28,23 @@ const enemies = {
       divine: 0,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      crush: 4
+      crush: 4,
     },
     hit: {
       chance: 30,
-      evasion: 0
+      evasion: 0,
     },
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" }
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     threat: 10,
     alive: true,
     xp: 10,
@@ -60,14 +55,10 @@ const enemies = {
     aggroRange: 6,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "slime_default",
-    loot: [
-      { type: "gold", amount: [1, 5] }
-    ]
+    loot: [{ type: "gold", amount: [1, 5] }],
   },
   flamingSlime: {
     id: "flamingSlime",
@@ -82,7 +73,7 @@ const enemies = {
       hp: 14,
       mp: 0,
       hpMax: 14,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -93,26 +84,23 @@ const enemies = {
       divine: 0,
       fire: 340,
       lightning: -20,
-      ice: -50
+      ice: -50,
     },
     statusResistances: {
       poison: 0,
       burning: 100,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      fire: 6
+      fire: 6,
     },
     hit: {
       chance: 30,
-      evasion: 0
+      evasion: 0,
     },
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" }
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     threat: 10,
     alive: true,
     xp: 10,
@@ -123,14 +111,10 @@ const enemies = {
     aggroRange: 6,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "slime_default",
-    loot: [
-      { type: "gold", amount: [4, 11] }
-    ]
+    loot: [{ type: "gold", amount: [4, 11] }],
   },
   electricSlime: {
     id: "electricSlime",
@@ -145,7 +129,7 @@ const enemies = {
       hp: 14,
       mp: 0,
       hpMax: 14,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -156,26 +140,23 @@ const enemies = {
       divine: 0,
       fire: -50,
       lightning: 340,
-      ice: -20
+      ice: -20,
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
       stun: 50,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      lightning: 6
+      lightning: 6,
     },
     hit: {
       chance: 30,
-      evasion: 0
+      evasion: 0,
     },
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" }
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     threat: 10,
     alive: true,
     xp: 10,
@@ -186,14 +167,10 @@ const enemies = {
     aggroRange: 6,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "slime_default",
-    loot: [
-      { type: "gold", amount: [4, 11] }
-    ]
+    loot: [{ type: "gold", amount: [4, 11] }],
   },
   hiisi: {
     id: "hiisi",
@@ -208,7 +185,7 @@ const enemies = {
       hp: 20,
       mp: 0,
       hpMax: 20,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -219,21 +196,21 @@ const enemies = {
       divine: 0,
       fire: -10,
       lightning: -10,
-      ice: -10
+      ice: -10,
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      slash: 6
+      slash: 6,
     },
     hit: {
       chance: 55,
-      evasion: 35
+      evasion: 35,
     },
     scale: 0.9,
     threat: 25,
@@ -246,21 +223,14 @@ const enemies = {
     aggroRange: 9,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-      { id: "cornered_animal" },
-      { id: "fast" }
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
-      { type: "gold", amount: [2, 11] }
-    ]
+      { type: "gold", amount: [2, 11] },
+    ],
   },
   hiisiWarrior: {
     id: "hiisiWarrior",
@@ -275,7 +245,7 @@ const enemies = {
       hp: 30,
       mp: 0,
       hpMax: 30,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 5,
@@ -286,21 +256,21 @@ const enemies = {
       divine: 5,
       fire: -10,
       lightning: -10,
-      ice: -10
+      ice: -10,
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      pierce: 8
+      pierce: 8,
     },
     hit: {
       chance: 60,
-      evasion: 40
+      evasion: 40,
     },
     scale: 0.9,
     threat: 25,
@@ -313,22 +283,14 @@ const enemies = {
     aggroRange: 9,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.battle_fury, dummy)
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-      { id: "cornered_animal" },
-      { id: "fast" }
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.battle_fury, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
-      { type: "gold", amount: [2, 11] }
-    ]
+      { type: "gold", amount: [2, 11] },
+    ],
   },
   hiisiHunter: {
     id: "hiisiHunter",
@@ -343,7 +305,7 @@ const enemies = {
       hp: 20,
       mp: 0,
       hpMax: 20,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: -5,
@@ -354,21 +316,21 @@ const enemies = {
       divine: -5,
       fire: -10,
       lightning: -10,
-      ice: -10
+      ice: -10,
     },
     statusResistances: {
       poison: 0,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      pierce: 7
+      pierce: 7,
     },
     hit: {
       chance: 60,
-      evasion: 40
+      evasion: 40,
     },
     scale: 0.9,
     threat: 20,
@@ -382,22 +344,14 @@ const enemies = {
     aggroRange: 9,
     attackRange: 6,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.poisoned_arrow, dummy)
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-      { id: "cornered_animal" },
-      { id: "fast" }
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.poisoned_arrow, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_ranged",
     loot: [
       { type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25 },
-      { type: "gold", amount: [2, 11] }
-    ]
+      { type: "gold", amount: [2, 11] },
+    ],
   },
   skeletonWarrior: {
     id: "skeletonWarrior",
@@ -412,7 +366,7 @@ const enemies = {
       hp: 25,
       mp: 0,
       hpMax: 25,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 45,
@@ -423,21 +377,21 @@ const enemies = {
       divine: -50,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 100,
       burning: -20,
       curse: 50,
       stun: 0,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
-      slash: 3
+      slash: 3,
     },
     hit: {
       chance: 45,
-      evasion: 25
+      evasion: 25,
     },
     threat: 20,
     alive: true,
@@ -449,19 +403,14 @@ const enemies = {
     aggroRange: 8,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "skeleton_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
-      { type: "gold", amount: [4, 15] }
-    ]
+      { type: "gold", amount: [4, 15] },
+    ],
   },
   skeletonArcher: {
     id: "skeletonArcher",
@@ -476,7 +425,7 @@ const enemies = {
       hp: 20,
       mp: 0,
       hpMax: 20,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 45,
@@ -487,21 +436,21 @@ const enemies = {
       divine: -50,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 100,
       burning: -20,
       curse: 50,
       stun: 0,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
-      pierce: 4
+      pierce: 4,
     },
     hit: {
       chance: 45,
-      evasion: 25
+      evasion: 25,
     },
     threat: 20,
     alive: true,
@@ -514,20 +463,14 @@ const enemies = {
     attackRange: 7,
     canFly: false,
     shootsProjectile: "arrowProjectile",
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.sundering_arrow, dummy)
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.sundering_arrow, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     levelingTemplate: "skeleton_ranged",
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
       { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20 },
-      { type: "gold", amount: [4, 15] }
-    ]
+      { type: "gold", amount: [4, 15] },
+    ],
   },
   skeletonMage: {
     id: "skeletonMage",
@@ -542,7 +485,7 @@ const enemies = {
       hp: 14,
       mp: 12,
       hpMax: 14,
-      mpMax: 4
+      mpMax: 4,
     },
     resistances: {
       slash: 45,
@@ -553,22 +496,22 @@ const enemies = {
       divine: -50,
       fire: 0,
       lightning: 0,
-      ice: 5
+      ice: 5,
     },
     statusResistances: {
       poison: 100,
       burning: -20,
       curse: 50,
       stun: 0,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
       pierce: 2,
-      magic: 3
+      magic: 3,
     },
     hit: {
       chance: 45,
-      evasion: 25
+      evasion: 25,
     },
     alive: true,
     xp: 40,
@@ -580,19 +523,12 @@ const enemies = {
     attackRange: 6,
     canFly: false,
     shootsProjectile: "piercingManaBoltProjectile",
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.blight, dummy),
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.blight, dummy)],
     threat: 20,
-    traits: [
-      { id: "magical_regen" },
-    ],
+    traits: [{ id: "magical_regen" }],
     levelingTemplate: "skeleton_mage",
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
-    loot: [
-      { type: "gold", amount: [4, 15] }
-    ]
+    loot: [{ type: "gold", amount: [4, 15] }],
   },
   skeletonLich: {
     id: "skeletonLich",
@@ -607,7 +543,7 @@ const enemies = {
       hp: 30,
       mp: 70,
       hpMax: 30,
-      mpMax: 50
+      mpMax: 50,
     },
     resistances: {
       slash: 50,
@@ -618,23 +554,23 @@ const enemies = {
       divine: -50,
       fire: 0,
       lightning: 0,
-      ice: 10
+      ice: 10,
     },
     statusResistances: {
       poison: 100,
       burning: -25,
       curse: 50,
       stun: 0,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
       pierce: 2,
       magic: 4,
-      dark: 3
+      dark: 3,
     },
     hit: {
       chance: 55,
-      evasion: 30
+      evasion: 30,
     },
     threat: 30,
     alive: true,
@@ -647,22 +583,15 @@ const enemies = {
     attackRange: 9,
     canFly: false,
     shootsProjectile: "piercingManaBoltProjectile",
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.blight, dummy),
-      new Ability(abilities.fireball, dummy)
-    ],
-    traits: [
-      { id: "magical_regen" },
-      { id: "weaker_natural_ability" }
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.blight, dummy), new Ability(abilities.fireball, dummy)],
+    traits: [{ id: "magical_regen" }, { id: "weaker_natural_ability" }],
     levelingTemplate: "skeleton_mage",
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     loot: [
       { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5 },
       { type: "armor", amount: [1, 1], item: "lichRobes", chance: 10 },
-      { type: "gold", amount: [24, 60] }
-    ]
+      { type: "gold", amount: [24, 60] },
+    ],
   },
   norsemanBerserk: {
     id: "norsemanBerserk",
@@ -677,7 +606,7 @@ const enemies = {
       hp: 40,
       mp: 0,
       hpMax: 40,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -688,22 +617,22 @@ const enemies = {
       divine: 15,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 25,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
       slash: 4,
-      pierce: 3
+      pierce: 3,
     },
     hit: {
       chance: 60,
-      evasion: 20
+      evasion: 20,
     },
     threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
@@ -715,21 +644,14 @@ const enemies = {
     aggroRange: 8,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.charge, dummy),
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "weaker_natural_ability" },
-      { id: "magically_impotent" },
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.charge, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "weaker_natural_ability" }, { id: "magically_impotent" }],
     levelingTemplate: "berserker_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "chippedAxe", chance: 15 },
       { type: "weapon", amount: [1, 1], item: "stick", chance: 20 },
-      { type: "gold", amount: [6, 18] }
-    ]
+      { type: "gold", amount: [6, 18] },
+    ],
   },
   norsemanHunter: {
     id: "norsemanHunter",
@@ -744,7 +666,7 @@ const enemies = {
       hp: 30,
       mp: 0,
       hpMax: 30,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 5,
@@ -755,21 +677,21 @@ const enemies = {
       divine: 15,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 25,
       burning: 0,
       curse: 0,
       stun: 0,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
-      pierce: 6
+      pierce: 6,
     },
     hit: {
       chance: 60,
-      evasion: 20
+      evasion: 20,
     },
     threat: 25,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
@@ -782,18 +704,11 @@ const enemies = {
     aggroRange: 8,
     attackRange: 7,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-    ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     levelingTemplate: "berserker_ranged",
     shootsProjectile: "hunterJavelinProjectile",
-    loot: [
-      { type: "gold", amount: [6, 18] }
-    ]
+    loot: [{ type: "gold", amount: [6, 18] }],
   },
   femaleOrcRaider: {
     id: "femaleOrcRaider",
@@ -808,7 +723,7 @@ const enemies = {
       hp: 75,
       mp: 0,
       hpMax: 55,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 0,
@@ -819,22 +734,22 @@ const enemies = {
       divine: 0,
       fire: 0,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 50,
       burning: 0,
       curse: 0,
       stun: 30,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
       crush: 5,
-      pierce: 4
+      pierce: 4,
     },
     hit: {
       chance: 55,
-      evasion: 25
+      evasion: 25,
     },
     threat: 30,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
@@ -847,23 +762,14 @@ const enemies = {
     aggroRange: 11,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy),
-      new Ability(abilities.charge, dummy),
-      new Ability(abilities.barbarian_rage, dummy),
-    ],
-    traits: [
-      { id: "low_natural_regen" },
-      { id: "weaker_natural_ability" },
-      { id: "orc_frenzy", },
-      { id: "orc_resilience", }
-    ],
+    abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.charge, dummy), new Ability(abilities.barbarian_rage, dummy)],
+    traits: [{ id: "low_natural_regen" }, { id: "weaker_natural_ability" }, { id: "orc_frenzy" }, { id: "orc_resilience" }],
     levelingTemplate: "berserker_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "orcishAxe", chance: 15 },
       { type: "armor", amount: [1, 1], item: "ironShield", chance: 10 },
-      { type: "gold", amount: [15, 33] }
-    ]
+      { type: "gold", amount: [15, 33] },
+    ],
   },
   maleOrcRaider: {
     id: "maleOrcRaider",
@@ -878,7 +784,7 @@ const enemies = {
       hp: 95,
       mp: 0,
       hpMax: 75,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 10,
@@ -889,22 +795,22 @@ const enemies = {
       divine: 5,
       fire: 5,
       lightning: -5,
-      ice: 5
+      ice: 5,
     },
     statusResistances: {
       poison: 50,
       burning: 0,
       curse: 0,
       stun: 30,
-      bleed: 0
+      bleed: 0,
     },
     damages: {
       slash: 5,
-      pierce: 2
+      pierce: 2,
     },
     hit: {
       chance: 55,
-      evasion: 25
+      evasion: 25,
     },
     threat: 30,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
@@ -922,18 +828,13 @@ const enemies = {
       new Ability(abilities.challenge, dummy),
       new Ability(abilities.barbarian_rage, dummy),
     ],
-    traits: [
-      { id: "low_natural_regen" },
-      { id: "weaker_natural_ability" },
-      { id: "orc_frenzy", },
-      { id: "orc_resilience", }
-    ],
+    traits: [{ id: "low_natural_regen" }, { id: "weaker_natural_ability" }, { id: "orc_frenzy" }, { id: "orc_resilience" }],
     levelingTemplate: "bulwark",
     loot: [
       { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 15 },
       { type: "armor", amount: [1, 1], item: "silverShield", chance: 8 },
-      { type: "gold", amount: [15, 33] }
-    ]
+      { type: "gold", amount: [15, 33] },
+    ],
   },
   orcChieftess: {
     id: "orcChieftess",
@@ -948,7 +849,7 @@ const enemies = {
       hp: 150,
       mp: 0,
       hpMax: 50,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 5,
@@ -959,22 +860,22 @@ const enemies = {
       divine: 5,
       fire: 5,
       lightning: 5,
-      ice: 5
+      ice: 5,
     },
     statusResistances: {
       poison: 55,
       burning: 20,
       curse: 0,
       stun: 40,
-      bleed: 20
+      bleed: 20,
     },
     damages: {
       pierce: 10,
-      divine: 5
+      divine: 5,
     },
     hit: {
       chance: 55,
-      evasion: 25
+      evasion: 25,
     },
     threat: 30,
     retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
@@ -993,17 +894,12 @@ const enemies = {
       new Ability(abilities.charge, dummy),
       new Ability(abilities.barbarian_rage, dummy),
     ],
-    traits: [
-      { id: "low_natural_regen" },
-      { id: "weaker_natural_ability" },
-      { id: "orc_frenzy", },
-      { id: "orc_resilience", }
-    ],
+    traits: [{ id: "low_natural_regen" }, { id: "weaker_natural_ability" }, { id: "orc_frenzy" }, { id: "orc_resilience" }],
     levelingTemplate: "berserker_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "galadorSpear", chance: 100 },
-      { type: "gold", amount: [180, 260] }
-    ]
+      { type: "gold", amount: [180, 260] },
+    ],
   },
   wildTroll: {
     id: "wildTroll",
@@ -1018,7 +914,7 @@ const enemies = {
       hp: 60,
       mp: 0,
       hpMax: 60,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 10,
@@ -1029,22 +925,22 @@ const enemies = {
       divine: -10,
       fire: -20,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 50,
       burning: -20,
       curse: 0,
       stun: 0,
-      bleed: 50
+      bleed: 50,
     },
     damages: {
       crush: 4,
-      slash: 4
+      slash: 4,
     },
     hit: {
       chance: 70,
-      evasion: 10
+      evasion: 10,
     },
     threat: 30,
     alive: true,
@@ -1056,19 +952,12 @@ const enemies = {
     aggroRange: 10,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.2,
-    traits: [
-      { id: "troll_regeneration" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
-    loot: [
-      { type: "gold", amount: [22, 44] }
-    ]
+    loot: [{ type: "gold", amount: [22, 44] }],
   },
   wildStoneTroll: {
     id: "wildStoneTroll",
@@ -1083,7 +972,7 @@ const enemies = {
       hp: 80,
       mp: 0,
       hpMax: 80,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 30,
@@ -1094,22 +983,22 @@ const enemies = {
       divine: -10,
       fire: 10,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 50,
       burning: -10,
       curse: 0,
       stun: 0,
-      bleed: 75
+      bleed: 75,
     },
     damages: {
       crush: 6,
-      slash: 4
+      slash: 4,
     },
     hit: {
       chance: 70,
-      evasion: 10
+      evasion: 10,
     },
     threat: 35,
     alive: true,
@@ -1121,19 +1010,12 @@ const enemies = {
     aggroRange: 11,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.2,
-    traits: [
-      { id: "troll_regeneration" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
-    loot: [
-      { type: "gold", amount: [22, 44] }
-    ]
+    loot: [{ type: "gold", amount: [22, 44] }],
   },
   troll: {
     id: "troll",
@@ -1148,7 +1030,7 @@ const enemies = {
       hp: 75,
       mp: 0,
       hpMax: 75,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 5,
@@ -1159,21 +1041,21 @@ const enemies = {
       divine: -15,
       fire: -25,
       lightning: 0,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 50,
       burning: -10,
       curse: 0,
       stun: 0,
-      bleed: 25
+      bleed: 25,
     },
     damages: {
       crush: 11,
     },
     hit: {
       chance: 70,
-      evasion: 10
+      evasion: 10,
     },
     threat: 35,
     alive: true,
@@ -1185,20 +1067,15 @@ const enemies = {
     aggroRange: 11,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.2,
-    traits: [
-      { id: "troll_regeneration" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
-      { type: "gold", amount: [26, 51] }
-    ]
+      { type: "gold", amount: [26, 51] },
+    ],
   },
   stoneTroll: {
     id: "stoneTroll",
@@ -1213,7 +1090,7 @@ const enemies = {
       hp: 90,
       mp: 0,
       hpMax: 90,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 25,
@@ -1224,21 +1101,21 @@ const enemies = {
       divine: -5,
       fire: -5,
       lightning: 5,
-      ice: 5
+      ice: 5,
     },
     statusResistances: {
       poison: 50,
       burning: -10,
       curse: 0,
       stun: 0,
-      bleed: 65
+      bleed: 65,
     },
     damages: {
       crush: 11,
     },
     hit: {
       chance: 70,
-      evasion: 10
+      evasion: 10,
     },
     threat: 40,
     type: "troll",
@@ -1250,20 +1127,15 @@ const enemies = {
     aggroRange: 11,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.2,
-    traits: [
-      { id: "troll_regeneration" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "beast_melee",
     loot: [
       { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
-      { type: "gold", amount: [53, 129] }
-    ]
+      { type: "gold", amount: [53, 129] },
+    ],
   },
   stoneStatue: {
     id: "stoneStatue",
@@ -1278,7 +1150,7 @@ const enemies = {
       hp: 100,
       mp: 0,
       hpMax: 100,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 40,
@@ -1289,22 +1161,22 @@ const enemies = {
       divine: 0,
       fire: 30,
       lightning: 40,
-      ice: 35
+      ice: 35,
     },
     statusResistances: {
       poison: 100,
       burning: 100,
       curse: 0,
       stun: 25,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
       pierce: 10,
-      slash: 3
+      slash: 3,
     },
     hit: {
       chance: 50,
-      evasion: 20
+      evasion: 20,
     },
     threat: 50,
     type: "troll",
@@ -1316,20 +1188,12 @@ const enemies = {
     aggroRange: 14,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.33,
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-      { id: "slow" }
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "slow" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "bulwark",
-    loot: [
-      { type: "gold", amount: [65, 150] }
-    ]
+    loot: [{ type: "gold", amount: [65, 150] }],
   },
   stoneStatueHalberd: {
     id: "stoneStatueHalberd",
@@ -1344,7 +1208,7 @@ const enemies = {
       hp: 120,
       mp: 0,
       hpMax: 120,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 50,
@@ -1355,22 +1219,22 @@ const enemies = {
       divine: 10,
       fire: 40,
       lightning: 50,
-      ice: 45
+      ice: 45,
     },
     statusResistances: {
       poison: 100,
       burning: 100,
       curse: 0,
       stun: 25,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
       pierce: 11,
-      slash: 3
+      slash: 3,
     },
     hit: {
       chance: 50,
-      evasion: 20
+      evasion: 20,
     },
     threat: 50,
     type: "troll",
@@ -1382,21 +1246,15 @@ const enemies = {
     aggroRange: 14,
     attackRange: 1,
     canFly: false,
-    abilities: [
-      new Ability(abilities.attack, dummy)
-    ],
+    abilities: [new Ability(abilities.attack, dummy)],
     scale: 1.33,
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-      { id: "slow" }
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "slow" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "bulwark",
     loot: [
       { type: "weapon", amount: [1, 1], item: "stoneHalberd", chance: 12 },
-      { type: "gold", amount: [90, 210] }
-    ]
+      { type: "gold", amount: [90, 210] },
+    ],
   },
   enthralledKnight: {
     id: "enthralledKnight",
@@ -1411,7 +1269,7 @@ const enemies = {
       hp: 100,
       mp: 0,
       hpMax: 30,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 40,
@@ -1422,21 +1280,21 @@ const enemies = {
       divine: 45,
       fire: 0,
       lightning: -25,
-      ice: 0
+      ice: 0,
     },
     statusResistances: {
       poison: 0,
       burning: -25,
       curse: 0,
       stun: 0,
-      bleed: 50
+      bleed: 50,
     },
     damages: {
-      slash: 9
+      slash: 9,
     },
     hit: {
       chance: 75,
-      evasion: 15
+      evasion: 15,
     },
     scale: 1.1,
     threat: 50,
@@ -1452,12 +1310,9 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy),
       new Ability(abilities.challenge, dummy),
-      new Ability(abilities.chivalrious_blow, dummy)
+      new Ability(abilities.chivalrious_blow, dummy),
     ],
-    traits: [
-      { id: "no_natural_regen" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "balanced",
     loot: [
@@ -1468,8 +1323,8 @@ const enemies = {
       { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
       { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
       { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
-      { type: "gold", amount: [37, 123] }
-    ]
+      { type: "gold", amount: [37, 123] },
+    ],
   },
   spectralKnight: {
     id: "spectralKnight",
@@ -1484,7 +1339,7 @@ const enemies = {
       hp: 60,
       mp: 0,
       hpMax: 25,
-      mpMax: 0
+      mpMax: 0,
     },
     resistances: {
       slash: 60,
@@ -1495,22 +1350,22 @@ const enemies = {
       divine: 15,
       fire: 30,
       lightning: 30,
-      ice: 30
+      ice: 30,
     },
     statusResistances: {
       poison: 100,
       burning: 25,
       curse: 50,
       stun: 40,
-      bleed: 100
+      bleed: 100,
     },
     damages: {
       slash: 5,
-      dark: 5
+      dark: 5,
     },
     hit: {
       chance: 60,
-      evasion: 0
+      evasion: 0,
     },
     scale: 1.1,
     threat: 50,
@@ -1526,12 +1381,9 @@ const enemies = {
     abilities: [
       new Ability(abilities.attack, dummy),
       new Ability(abilities.challenge, dummy),
-      new Ability(abilities.chivalrious_blow, dummy)
+      new Ability(abilities.chivalrious_blow, dummy),
     ],
-    traits: [
-      { id: "low_natural_regen" },
-      { id: "magically_impotent" },
-    ],
+    traits: [{ id: "low_natural_regen" }, { id: "magically_impotent" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "magical_melee",
     loot: [
@@ -1542,8 +1394,8 @@ const enemies = {
       { type: "armor", amount: [1, 1], item: "knightGreaves", chance: 10 },
       { type: "armor", amount: [1, 1], item: "knightGauntlets", chance: 10 },
       { type: "armor", amount: [1, 1], item: "knightSabatons", chance: 10 },
-      { type: "gold", amount: [37, 123] }
-    ]
+      { type: "gold", amount: [37, 123] },
+    ],
   },
   soulWraith: {
     id: "soulWraith",
@@ -1558,7 +1410,7 @@ const enemies = {
       hp: 125,
       mp: 60,
       hpMax: 75,
-      mpMax: 60
+      mpMax: 60,
     },
     resistances: {
       slash: 45,
@@ -1569,23 +1421,23 @@ const enemies = {
       divine: -50,
       fire: 15,
       lightning: 15,
-      ice: 45
+      ice: 45,
     },
     statusResistances: {
       poison: 50,
       burning: -25,
       curse: 100,
       stun: 25,
-      bleed: 50
+      bleed: 50,
     },
     damages: {
       slash: 7,
       dark: 9,
-      magic: 3
+      magic: 3,
     },
     hit: {
       chance: 95,
-      evasion: 45
+      evasion: 45,
     },
     threat: 90,
     alive: true,
@@ -1604,14 +1456,9 @@ const enemies = {
       new Ability(abilities.piercing_mana_bolt, dummy),
       new Ability(abilities.reap, dummy),
     ],
-    traits: [
-      { id: "medium_natural_regen" },
-      { id: "weaker_natural_ability" }
-    ],
+    traits: [{ id: "medium_natural_regen" }, { id: "weaker_natural_ability" }],
     retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
     levelingTemplate: "magical_melee",
-    loot: [
-      { type: "gold", amount: [288, 541] }
-    ]
+    loot: [{ type: "gold", amount: [288, 541] }],
   },
 } as any;

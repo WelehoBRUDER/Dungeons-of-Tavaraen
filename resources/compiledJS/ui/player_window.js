@@ -16,7 +16,8 @@ function createArmorOrResistanceDisplay(stat, armor) {
     const key = stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-    statImage.src = icons[key + (armor ? "_armor" : "Resist_icon")];
+    console.log(key);
+    statImage.src = icons[key + (armor ? "_armor" : "Resist")];
     statText.textContent = lang[key];
     statValue.textContent = val + (armor ? "" : "%");
     tooltip(statContainer, (_a = lang[armor ? key + "_tt" : "resistances_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
@@ -137,8 +138,8 @@ function renderCharacter() {
     charManaRegenImage.src = "resources/icons/mana_regen.png";
     charBaseAttackImage.src = "resources/icons/damage.png";
     charTrueAttackImage.src = "resources/icons/atk.png";
-    charAttackSpeedImage.src = icons.attackSpeed_icon;
-    charMovementSpeedImage.src = icons.movementSpeed_icon;
+    charAttackSpeedImage.src = icons.attackSpeed;
+    charMovementSpeedImage.src = icons.movementSpeed;
     if (attack > 100)
         charAttackSpeed.classList.add("positive");
     else if (attack < 100)

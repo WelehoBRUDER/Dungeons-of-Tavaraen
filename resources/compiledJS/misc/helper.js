@@ -28,20 +28,26 @@ let helper = {
         return result;
     },
     random: function (max, min = -100) {
-        return (Math.random() * (max - min) + min);
+        return Math.random() * (max - min) + min;
     },
     roundFloat: function (value, decimals = 2) {
         let rounded = Math.pow(10, decimals);
         return +(Math.round(value * rounded) / rounded).toFixed(decimals);
     },
     sleep: function (ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
     },
     trimPlayerObjectForSaveFile: function (playerObject) {
         const trimmed = { ...playerObject };
         trimmed.inventory.forEach((itm, index) => {
             if (itm.stackable || itm.type === "consumable")
-                trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
+                trimmed.inventory[index] = {
+                    id: itm.id,
+                    type: itm.type,
+                    amount: itm.amount,
+                    usesRemaining: itm.usesRemaining,
+                    equippedSlot: itm.equippedSlot,
+                };
             else if (itm.level)
                 trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
             else
@@ -55,7 +61,12 @@ let helper = {
         equipSlots.forEach((slot) => {
             var _a;
             if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
-                trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level, rolledStats: trimmed[slot].rolledStats };
+                trimmed[slot] = {
+                    id: trimmed[slot].id,
+                    type: trimmed[slot].type,
+                    level: trimmed[slot].level,
+                    rolledStats: trimmed[slot].rolledStats,
+                };
             }
         });
         trimmed.perks.forEach((perk, index) => {
@@ -70,7 +81,7 @@ let helper = {
         return { ...trimmed };
     },
     purgeDeadEnemies: function () {
-        fallenEnemies.forEach(deadFoe => {
+        fallenEnemies.forEach((deadFoe) => {
             let key = deadFoe.spawnMap;
             if (typeof key === "number")
                 key = Object.keys(maps)[key];
@@ -87,12 +98,17 @@ let helper = {
         });
     },
     reviveAllDeadEnemies: function () {
-        fallenEnemies.forEach(deadFoe => {
+        fallenEnemies.forEach((deadFoe) => {
             let key = deadFoe.spawnMap;
             if (typeof key === "number")
                 key = Object.keys(maps)[key];
             const map = maps[key];
-            const foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
+            const foe = new Enemy({
+                ...enemies[deadFoe.id],
+                cords: deadFoe.spawnCords,
+                spawnCords: deadFoe.spawnCords,
+                level: deadFoe.level,
+            });
             foe.restore();
             map.enemies.push(foe);
         });
@@ -112,6 +128,6 @@ let helper = {
                 enemy.restore();
             });
         });
-    }
+    },
 };
 //# sourceMappingURL=helper.js.map

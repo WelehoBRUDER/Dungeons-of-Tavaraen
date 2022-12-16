@@ -1,4 +1,3 @@
-
 function createStatDisplay(stat: any) {
   const key = stat[0] == "chance" ? "hitChance" : stat[0];
   const val = stat[1];
@@ -15,7 +14,8 @@ function createArmorOrResistanceDisplay(stat: any, armor: boolean) {
   const key = stat[0];
   const val = stat[1];
   const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-  statImage.src = icons[key + (armor ? "_armor" : "Resist_icon")];
+  console.log(key);
+  statImage.src = icons[key + (armor ? "_armor" : "Resist")];
   statText.textContent = lang[key];
   statValue.textContent = val + (armor ? "" : "%");
   tooltip(statContainer, lang[armor ? key + "_tt" : "resistances_tt"] ?? "no tooltip");
@@ -132,8 +132,8 @@ function renderCharacter() {
   charManaRegenImage.src = "resources/icons/mana_regen.png";
   charBaseAttackImage.src = "resources/icons/damage.png";
   charTrueAttackImage.src = "resources/icons/atk.png";
-  charAttackSpeedImage.src = icons.attackSpeed_icon;
-  charMovementSpeedImage.src = icons.movementSpeed_icon;
+  charAttackSpeedImage.src = icons.attackSpeed;
+  charMovementSpeedImage.src = icons.movementSpeed;
   if (attack > 100) charAttackSpeed.classList.add("positive");
   else if (attack < 100) charAttackSpeed.classList.add("negative");
   if (movement > 100) charMovementSpeed.classList.add("positive");
@@ -209,7 +209,18 @@ function renderCharacter() {
   pc.style.left = "24px";
   pc.style.top = "24px";
   tooltip(statusResistances, lang["stat_resist_tt"]);
-  bg.append(pc, generalInfo, coreStatsTitle, coreStats, coreResistancesTitle, coreResistances, statusResistancesTitle, statusResistances, traitsTitle, traits);
+  bg.append(
+    pc,
+    generalInfo,
+    coreStatsTitle,
+    coreStats,
+    coreResistancesTitle,
+    coreResistances,
+    statusResistancesTitle,
+    statusResistances,
+    traitsTitle,
+    traits
+  );
 }
 
 function closeCharacter() {

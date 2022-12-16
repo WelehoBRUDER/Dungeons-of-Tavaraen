@@ -4,42 +4,57 @@
 let movementCooldown = false;
 let actionCooldown = false;
 /* For clarity movement and hotkeys are separated to two different functions */
-document.addEventListener("keydown", key => {
+document.addEventListener("keydown", (key) => {
   movementCheck(key);
   hotbarKey(key);
 });
-document.addEventListener("keyup", key => {
+document.addEventListener("keyup", (key) => {
   hotkeyCheck(key);
 });
 
 function hotbarKey(e) {
   if (actionCooldown) return;
   actionCooldown = true;
-  setTimeout(() => actionCooldown = false, 1);
+  setTimeout(() => (actionCooldown = false), 1);
   const number: number = parseInt(e.keyCode) - 48;
   if (number > -1 && e.shiftKey) {
-
-    let abi = player.abilities.find(a => a.equippedSlot == number + 9);
-    if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 19);
+    let abi = player.abilities.find((a) => a.equippedSlot == number + 9);
+    if (number == 0) abi = player.abilities.find((a) => a.equippedSlot == 19);
 
     if (!abi) {
-      let itm = player.inventory.find(a => a.equippedSlot == number + 9);
-      if (number == 0) itm = player.inventory.find(a => a.equippedSlot == 19);
+      let itm = player.inventory.find((a) => a.equippedSlot == number + 9);
+      if (number == 0) itm = player.inventory.find((a) => a.equippedSlot == 19);
+      if (itm) useConsumable(itm);
+      return;
+    } else if (
+      abi.onCooldown == 0 &&
+      player.stats.mp >= abi.mana_cost &&
+      (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) &&
+      (abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) &&
+      (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true) &&
+      !(abi.mana_cost > 0 ? player.silenced() : false) &&
+      (abi.requires_concentration ? player.concentration() : true)
+    )
+      useAbi(abi);
+  } else if (number > -1 && !e.shiftKey) {
+    let abi = player.abilities.find((a) => a.equippedSlot == number - 1);
+    if (number == 0) abi = player.abilities.find((a) => a.equippedSlot == 9);
+    if (!abi) {
+      let itm = player.inventory.find((a) => a.equippedSlot == number - 1);
+      if (number == 0) itm = player.inventory.find((a) => a.equippedSlot == 9);
       if (itm) useConsumable(itm);
       return;
     }
-    else if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
-  }
-  else if (number > -1 && !e.shiftKey) {
-    let abi = player.abilities.find(a => a.equippedSlot == number - 1);
-    if (number == 0) abi = player.abilities.find(a => a.equippedSlot == 9);
-    if (!abi) {
-      let itm = player.inventory.find(a => a.equippedSlot == number - 1);
-      if (number == 0) itm = player.inventory.find(a => a.equippedSlot == 9);
-      if (itm) useConsumable(itm);
-      return;
-    }
-    if ((abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true))) useAbi(abi);
+    if (
+      abi.onCooldown == 0 &&
+      player.stats.mp >= abi.mana_cost &&
+      (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) &&
+      (abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) &&
+      (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true) &&
+      !(abi.mana_cost > 0 ? player.silenced() : false) &&
+      (abi.requires_concentration ? player.concentration() : true)
+    )
+      useAbi(abi);
   }
 }
 
@@ -49,8 +64,7 @@ function hotkeyCheck(e) {
       respawnPlayer();
       return;
     }
-  }
-  else if (e.key == "Escape") {
+  } else if (e.key == "Escape") {
     handleEscape();
     return;
   }
@@ -71,31 +85,26 @@ function hotkeyCheck(e) {
   if (e.key == settings.hotkey_inv && !state.menuOpen) {
     if (!state.invOpen) renderInventory();
     else closeInventory();
-  }
-  else if (e.key == settings.hotkey_char && !state.menuOpen) {
+  } else if (e.key == settings.hotkey_char && !state.menuOpen) {
     if (!state.charOpen) renderCharacter();
     else closeCharacter();
-  }
-  else if (e.key == settings.hotkey_perk && !state.menuOpen) {
+  } else if (e.key == settings.hotkey_perk && !state.menuOpen) {
     if (!state.perkOpen) openLevelingScreen();
     else closeLeveling();
-  }
-  else if (e.key == settings.hotkey_journal && !state.menuOpen) {
+  } else if (e.key == settings.hotkey_journal && !state.menuOpen) {
     if (!state.journalOpen) renderPlayerQuests();
     else closePlayerQuests();
-  }
-  else if (e.key == settings.hotkey_codex && !state.menuOpen) {
+  } else if (e.key == settings.hotkey_codex && !state.menuOpen) {
     if (!state.codexOpen) openIngameCodex();
     else closeCodex();
-  }
-  else if (state.invOpen || state.menuOpen) return;
+  } else if (state.invOpen || state.menuOpen) return;
   else if (e.key == settings.hotkey_interact) {
     activateShrine();
     pickLoot();
     readMessage();
     restoreGrave();
     maps[currentMap].treasureChests.forEach((chest: treasureChest) => {
-      const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
+      const lootedChest = lootedChests.find((trs) => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
       if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest) chest.lootChest();
     });
     maps[currentMap].entrances?.some((entrance: entrance) => {
@@ -105,7 +114,6 @@ function hotkeyCheck(e) {
         setTimeout(() => changeMap(entrance), 0);
         return;
       }
-
     });
     if (!state.textWindowOpen && !state.invOpen) {
       talkToCharacter();
@@ -116,11 +124,22 @@ function hotkeyCheck(e) {
 function movementCheck(keyPress) {
   if (movementCooldown) return;
   movementCooldown = true;
-  setTimeout(() => movementCooldown = false, 1);
+  setTimeout(() => (movementCooldown = false), 1);
   const rooted = player.isRooted();
   if (!turnOver || state.dialogWindow || state.storeOpen) return;
-  let dirs = { [settings.hotkey_move_up]: "up", [settings.hotkey_move_down]: "down", [settings.hotkey_move_left]: "left", [settings.hotkey_move_right]: "right", [settings.hotkey_move_right_up]: "rightUp", [settings.hotkey_move_right_down]: "rightDown", [settings.hotkey_move_left_up]: "leftUp", [settings.hotkey_move_left_down]: "leftDown" } as any;
-  let target = maps[currentMap].enemies.find((e: any) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y);
+  let dirs = {
+    [settings.hotkey_move_up]: "up",
+    [settings.hotkey_move_down]: "down",
+    [settings.hotkey_move_left]: "left",
+    [settings.hotkey_move_right]: "right",
+    [settings.hotkey_move_right_up]: "rightUp",
+    [settings.hotkey_move_right_down]: "rightDown",
+    [settings.hotkey_move_left_up]: "leftUp",
+    [settings.hotkey_move_left_down]: "leftDown",
+  } as any;
+  let target = maps[currentMap].enemies.find(
+    (e: any) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y
+  );
   if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
     advanceTurn();
     state.abiSelected = {};
@@ -135,8 +154,7 @@ function movementCheck(keyPress) {
       mapSelection.x = cords.x;
       mapSelection.y = cords.y;
       renderTileHover({ x: mapSelection.x, y: mapSelection.y });
-    }
-    else {
+    } else {
       const cords = cordsFromDir(player.cords, dirs[keyPress.key]);
       mapSelection.x = cords.x;
       mapSelection.y = cords.y;
@@ -166,16 +184,13 @@ function movementCheck(keyPress) {
       if (player.speed.movementFill >= 100) {
         player.speed.movementFill -= 100;
         extraMove = true;
-      }
-      else player.speed.movementFill += (player.getSpeed().movement - 100);
+      } else player.speed.movementFill += player.getSpeed().movement - 100;
       if (!extraMove) advanceTurn();
-    }
-    else if (target) {
+    } else if (target) {
       if (weaponReach(player, player.weapon.range, target)) {
         player.doNormalAttack(target);
       }
-    }
-    else {
+    } else {
       advanceTurn();
       state.abiSelected = {};
     }
@@ -205,15 +220,14 @@ function useAbiTargetingWithKeyboard() {
           state.abiSelected.onCooldown = state.abiSelected.cooldown;
           movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
         }
-      }
-      else if (weaponReach(player, player.weapon.range, enemy)) {
+      } else if (weaponReach(player, player.weapon.range, enemy)) {
         if (weaponReach(player, player.weapon.range, enemy)) {
           player.doNormalAttack(enemy);
         }
       }
       break;
     }
-  };
+  }
   if (state.isSelected && state.abiSelected?.aoe_size > 0 && !targetingEnemy) {
     // @ts-expect-error
     if (generateArrowPath(player.cords, { x: mapSelection.x, y: mapSelection.y }).length <= state.abiSelected.use_range) {
@@ -227,7 +241,9 @@ function useAbiTargetingWithKeyboard() {
     }
   }
   state.clicked = true;
-  setTimeout(() => { state.clicked = false; }, 30);
+  setTimeout(() => {
+    state.clicked = false;
+  }, 30);
   if (state.abiSelected.type == "movement" && !player.isRooted()) {
     player.stats.mp -= state.abiSelected.mana_cost;
     state.abiSelected.onCooldown = state.abiSelected.cooldown;
@@ -260,7 +276,13 @@ function canMove(char: any, dir: string) {
   let fieldMap: Array<number[]>;
   if (char.canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
   else fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
-  map.enemies.forEach((enemy: any) => { if (!(char.cords.x == enemy.cords.x && char.cords.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
+  map.enemies.forEach((enemy: any) => {
+    if (!(char.cords.x == enemy.cords.x && char.cords.y == enemy.cords.y)) {
+      {
+        fieldMap[enemy.cords.y][enemy.cords.x] = 1;
+      }
+    }
+  });
   NPCcharacters.forEach((npc: Npc) => {
     if (npc.currentMap == currentMap) {
       fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
@@ -268,14 +290,15 @@ function canMove(char: any, dir: string) {
   });
   if (fieldMap?.[tile.y]?.[tile.x] === 1) movable = false;
   if (checkDirs[dir]) {
-    if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 && fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1) movable = false;
+    if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 && fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1)
+      movable = false;
   }
   if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length) movable = false;
   return movable;
 }
 
 function canMoveTo(char: any, tile: tileObject) {
-  var movable = true;
+  let movable: boolean = true;
   if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly)) movable = false;
   if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) movable = false;
   for (let enemy of maps[currentMap].enemies) {

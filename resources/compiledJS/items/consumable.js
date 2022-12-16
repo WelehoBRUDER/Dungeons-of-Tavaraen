@@ -12,17 +12,20 @@ class Consumable extends Item {
         this.usesRemaining = (_b = base.usesRemaining) !== null && _b !== void 0 ? _b : 1;
         this.equippedSlot = (_c = base.equippedSlot) !== null && _c !== void 0 ? _c : -1;
         this.statusesUser = (_d = baseItem.statusesUser) !== null && _d !== void 0 ? _d : [];
-        this.modifiers = getAbiStatusModifiers(dummy, "attack", "dazed");
         this.stats = {};
         this.commands = {};
         this.name = (_e = lang[this.id + "_name"]) !== null && _e !== void 0 ? _e : baseItem.name;
         if (setPrice > 0)
             this.price = setPrice;
         if (setPrice > 0) {
-            this.fullPrice = () => { return this.price; };
+            this.fullPrice = () => {
+                return this.price;
+            };
         }
         else
-            this.fullPrice = () => { return this.price * this.amount; };
+            this.fullPrice = () => {
+                return this.price * this.amount;
+            };
     }
 }
 //# sourceMappingURL=consumable.js.map

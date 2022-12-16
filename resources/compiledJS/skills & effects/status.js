@@ -1,6 +1,6 @@
 "use strict";
 class statEffect {
-    constructor(base, modifiers) {
+    constructor(base) {
         var _a, _b, _c;
         // @ts-ignore
         if (!base)
@@ -8,9 +8,12 @@ class statEffect {
         const defaultEffect = statusEffects[base.id];
         this.id = defaultEffect.id;
         this.name = defaultEffect.name;
-        this.dot = setDOT({ ...defaultEffect.dot });
-        this.effects = effectsInit({ ...defaultEffect.effects }, this.id);
-        this.last = { total: Math.floor((defaultEffect.last.total + modifiers.last.value) * modifiers.last.modif), current: Math.floor((defaultEffect.last.total + modifiers.last.value + 1) * modifiers.last.modif) };
+        this.dot = defaultEffect.dot;
+        this.effects = defaultEffect.effects;
+        this.last = {
+            total: defaultEffect.last.total,
+            current: defaultEffect.last.total,
+        };
         this.rooted = defaultEffect.rooted;
         this.type = defaultEffect.type;
         this.onRemove = defaultEffect.onRemove;
@@ -19,37 +22,32 @@ class statEffect {
         this.aura = (_a = defaultEffect.aura) !== null && _a !== void 0 ? _a : "";
         this.silence = (_b = defaultEffect.silence) !== null && _b !== void 0 ? _b : false;
         this.break_concentration = (_c = defaultEffect.break_concentration) !== null && _c !== void 0 ? _c : false;
-        function effectsInit(effects, id) {
-            let total = effects;
-            Object.entries(modifiers === null || modifiers === void 0 ? void 0 : modifiers.effects).forEach((eff) => {
-                const key = eff[0];
-                const val = eff[1].value;
-                const mod = eff[1].modif;
-                const statusId = eff[1].status;
-                if ((val !== 0 || mod !== 1) && statusId == id) {
-                    var num = total[key];
-                    if (!num)
-                        num = 0;
-                    total[key] = Math.floor(((num + val) * mod));
-                }
-            });
-            // @ts-expect-error
-            let entries = Object.entries(total).sort((a, b) => b[1] - a[1]);
-            let sortedTotal = {};
-            entries.forEach((entry) => {
-                sortedTotal[entry[0]] = entry[1];
-            });
-            return sortedTotal;
-        }
-        function setDOT(defaultDot) {
-            let dot = defaultDot;
-            if (dot.damageAmount) {
-                dot.damageAmount = Math.floor((dot.damageAmount + modifiers.damageAmount.value) * modifiers.damageAmount.modif);
+    }
+    init(bonuses) {
+        if (!bonuses)
+            bonuses = {};
+        Object.entries(this).forEach(([key, value]) => {
+            if (typeof value === "number") {
+                let bonus = (bonuses === null || bonuses === void 0 ? void 0 : bonuses[key + "V"]) || 0;
+                let modifier = 1 + ((bonuses === null || bonuses === void 0 ? void 0 : bonuses[key + "P"]) / 100 || 0);
+                this[key] = +((value + bonus) * modifier).toFixed(2);
             }
-            else
-                return null;
-            return dot;
-        }
+            else if (typeof value === "object") {
+                Object.entries(value).forEach(([_key, _value]) => {
+                    var _a, _b;
+                    if (!_value)
+                        return;
+                    if (typeof _value === "number") {
+                        let bonus = ((_a = bonuses === null || bonuses === void 0 ? void 0 : bonuses[key]) === null || _a === void 0 ? void 0 : _a[_key + "V"]) || 0;
+                        let modifier = 1 + (((_b = bonuses === null || bonuses === void 0 ? void 0 : bonuses[key]) === null || _b === void 0 ? void 0 : _b[_key + "P"]) / 100 || 0);
+                        this[key][_key] = +((_value + bonus) * modifier).toFixed(2);
+                    }
+                    else
+                        updateObjectWithoutReturn(_key, _value, bonuses[key]);
+                });
+            }
+        });
+        return this;
     }
 }
 //# sourceMappingURL=status.js.map

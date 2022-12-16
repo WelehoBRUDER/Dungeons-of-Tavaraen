@@ -4,7 +4,7 @@ const textureAtlas = document.querySelector(".texture-sheet");
 const textureAtlasCtx = textureAtlas.getContext("2d");
 async function loadTextures() {
     const textures = await getTextures();
-    textureAtlas.width = texturesPerRow * 128;
+    textureAtlas.width = (texturesPerRow + 1) * 128;
     textureAtlas.height = textures.length * 128;
     textures.map(async (row, y) => {
         row.map(async (texture, x) => {

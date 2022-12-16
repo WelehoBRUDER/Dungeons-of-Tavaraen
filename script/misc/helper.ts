@@ -1,4 +1,4 @@
-interface helper {
+interface HelperInterface {
   [weightedRandom: string]: Function;
   trimPlayerObjectForSaveFile: Function;
   purgeDeadEnemies: Function;
@@ -28,25 +28,36 @@ let helper = {
     let value: number = Math.floor(helper.random(max, 0));
     let result: any;
     for (let item of table) {
-      if (item.dynamicChance >= value) { result = item; break; }
+      if (item.dynamicChance >= value) {
+        result = item;
+        break;
+      }
     }
     return result;
   },
   random: function (max: number, min: number = -100) {
-    return (Math.random() * (max - min) + min);
+    return Math.random() * (max - min) + min;
   },
   roundFloat: function (value: number, decimals: number = 2) {
     let rounded = Math.pow(10, decimals);
     return +(Math.round(value * rounded) / rounded).toFixed(decimals);
   },
   sleep: function (ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   },
   trimPlayerObjectForSaveFile: function (playerObject: PlayerCharacter) {
     const trimmed: PlayerCharacter = { ...playerObject };
     trimmed.inventory.forEach((itm: any, index: number) => {
-      if (itm.stackable || itm.type === "consumable") trimmed.inventory[index] = { id: itm.id, type: itm.type, amount: itm.amount, usesRemaining: itm.usesRemaining, equippedSlot: itm.equippedSlot };
-      else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
+      if (itm.stackable || itm.type === "consumable")
+        trimmed.inventory[index] = {
+          id: itm.id,
+          type: itm.type,
+          amount: itm.amount,
+          usesRemaining: itm.usesRemaining,
+          equippedSlot: itm.equippedSlot,
+        };
+      else if (itm.level)
+        trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
       else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats };
     });
     trimmed.abilities.forEach((abi: any, index: number) => {
@@ -56,7 +67,12 @@ let helper = {
     trimmed.allModifiers = {};
     equipSlots.forEach((slot: string) => {
       if (trimmed[slot]?.id) {
-        trimmed[slot] = { id: trimmed[slot].id, type: trimmed[slot].type, level: trimmed[slot].level, rolledStats: trimmed[slot].rolledStats };
+        trimmed[slot] = {
+          id: trimmed[slot].id,
+          type: trimmed[slot].type,
+          level: trimmed[slot].level,
+          rolledStats: trimmed[slot].rolledStats,
+        };
       }
     });
     trimmed.perks.forEach((perk: any, index: number) => {
@@ -70,7 +86,7 @@ let helper = {
     return { ...trimmed };
   },
   purgeDeadEnemies: function () {
-    fallenEnemies.forEach(deadFoe => {
+    fallenEnemies.forEach((deadFoe) => {
       let key = deadFoe.spawnMap;
       if (typeof key === "number") key = Object.keys(maps)[key];
       const map = maps[key];
@@ -86,11 +102,16 @@ let helper = {
     });
   },
   reviveAllDeadEnemies: function () {
-    fallenEnemies.forEach(deadFoe => {
+    fallenEnemies.forEach((deadFoe) => {
       let key = deadFoe.spawnMap;
       if (typeof key === "number") key = Object.keys(maps)[key];
       const map = maps[key];
-      const foe = new Enemy({ ...enemies[deadFoe.id], cords: deadFoe.spawnCords, spawnCords: deadFoe.spawnCords, level: deadFoe.level });
+      const foe = new Enemy({
+        ...enemies[deadFoe.id],
+        cords: deadFoe.spawnCords,
+        spawnCords: deadFoe.spawnCords,
+        level: deadFoe.level,
+      });
       foe.restore();
       map.enemies.push(foe);
     });
@@ -106,8 +127,7 @@ let helper = {
     Object.values(maps).forEach((map: any) => {
       map.enemies.forEach((enemy: Enemy) => {
         enemy.restore();
-      }
-      );
+      });
     });
-  }
-} as helper;
+  },
+} as HelperInterface;

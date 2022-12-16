@@ -75,7 +75,7 @@ const less_is_better = {
   damage_multiplier: false,
   use_range: false,
   health_cost: true,
-  health_cost_percentage: true
+  health_cost_percentage: true,
 };
 
 const possible_stat_modifiers = [
@@ -120,7 +120,7 @@ const possible_modifiers = [
 ];
 
 class Ability {
-  id: string;
+  [id: string]: any;
   name: string;
   mana_cost: number;
   health_cost?: number;
@@ -168,30 +168,26 @@ class Ability {
   ai_chance?: number;
   remove_status: Array<string>;
   get_true_damage?: Function;
-  constructor(base: ability, user: characterObject) {
+  updateStats?: Function;
+  constructor(base: any, user: characterObject) {
     this.id = base.id;
-    const values = getAbiModifiers(user, base.id);
     // @ts-ignorep
     const baseAbility = abilities[this.id];
-    let statusModifiers: any = {};
-    baseAbility.statusesUser?.forEach((str: string) => statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, str) });
-    baseAbility.statusesEnemy?.forEach((str: string) => statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, str) });
-    if (baseAbility.summon_status) statusModifiers = { ...statusModifiers, ...getAbiStatusModifiers(user, base.id, baseAbility.summon_status) };
     this.name = baseAbility.name;
-    this.mana_cost = Math.floor((baseAbility.mana_cost + values.mana_cost.value) * values.mana_cost.modif) ?? 0;
-    this.health_cost = Math.floor((baseAbility.health_cost + values.health_cost.value) * values.health_cost.modif) ?? 0;
-    this.health_cost_percentage = Math.floor((baseAbility.health_cost_percentage + values.health_cost_percentage.value) * values.health_cost_percentage.modif) ?? 0;
-    this.cooldown = Math.floor((baseAbility.cooldown + values.cooldown.value) * values.cooldown.modif) ?? 0;
+    this.mana_cost = baseAbility.mana_cost ?? 0;
+    this.health_cost = baseAbility.health_cost ?? 0;
+    this.health_cost_percentage = baseAbility.health_cost_percentage ?? 0;
+    this.cooldown = baseAbility.cooldown ?? 0;
     this.type = baseAbility.type ?? "none";
     this.onCooldown = base.onCooldown ?? 0;
     this.equippedSlot = base.equippedSlot ?? -1;
     this.damages = baseAbility.damages;
-    this.damage_multiplier = (baseAbility.damage_multiplier + values.damage_multiplier.value + (values.damage_multiplier.modif - 1)) ?? 1;
-    this.resistance_penetration = Math.floor((baseAbility.resistance_penetration + values.resistance_penetration.value + (values.resistance_penetration.modif - 1))) ?? 0;
-    this.base_heal = Math.floor((baseAbility.base_heal + values.base_heal.value) * values.base_heal.modif) ?? 0;
-    this.heal_percentage = Math.floor((baseAbility.heal_percentage + values.heal_percentage.value) * values.heal_percentage.modif) ?? 0;
-    this.life_steal = Math.floor((baseAbility.life_steal + values.life_steal.value) * values.life_steal.modif) ?? 0;
-    this.life_steal_percentage = Math.floor((baseAbility.life_steal_percentage + values.life_steal_percentage.value) * values.life_steal_percentage.modif) ?? 0;
+    this.damage_multiplier = baseAbility.damage_multiplier ?? 1;
+    this.resistance_penetration = baseAbility.resistance_penetration ?? 0;
+    this.base_heal = baseAbility.base_heal ?? 0;
+    this.heal_percentage = baseAbility.heal_percentage ?? 0;
+    this.life_steal = baseAbility.life_steal ?? 0;
+    this.life_steal_percentage = baseAbility.life_steal_percentage ?? 0;
     this.life_steal_trigger_only_when_killing_enemy = baseAbility.life_steal_trigger_only_when_killing_enemy ?? false;
     this.stat_bonus = baseAbility.stat_bonus ?? "";
     this.statusesUser = baseAbility.statusesUser ?? [];
@@ -200,22 +196,22 @@ class Ability {
     this.shoots_projectile = baseAbility.shoots_projectile ?? "";
     this.icon = baseAbility.icon;
     this.line = baseAbility.line ?? "";
-    this.use_range = typeof parseInt(baseAbility.use_range) === 'number' ? Math.floor(((parseInt(baseAbility.use_range) + values.use_range.value) * values.use_range.modif)).toString() : baseAbility.use_range;
+    this.use_range =
+      typeof parseInt(baseAbility.use_range) === "number" ? parseInt(baseAbility.use_range).toString() : baseAbility.use_range;
     this.requires_melee_weapon = baseAbility.requires_melee_weapon ?? false;
     this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
     this.requires_concentration = baseAbility.requires_concentration ?? false;
     this.recharge_only_in_combat = baseAbility.recharge_only_in_combat ?? false;
     this.summon_unit = baseAbility.summon_unit;
-    this.summon_level = Math.floor((baseAbility.summon_level + values.summon_level.value) * values.summon_level.modif) ?? 0;;
-    this.summon_last = Math.floor((baseAbility.summon_last + values.summon_last.value) * values.summon_last.modif) ?? 0;;
+    this.summon_level = baseAbility.summon_level ?? 0;
+    this.summon_last = baseAbility.summon_last ?? 0;
     this.summon_status = baseAbility.summon_status;
-    this.total_summon_limit = baseAbility.total_summon_limit + values.total_summon_limit.value;
+    this.total_summon_limit = baseAbility.total_summon_limit ?? 0;
     this.instant_aoe = baseAbility.instant_aoe ?? false;
-    this.aoe_size = (baseAbility.aoe_size + values.aoe_size.value) * values.aoe_size.modif ?? 0;
+    this.aoe_size = baseAbility.aoe_size ?? 0;
     this.aoe_effect = baseAbility.aoe_effect ?? "";
     this.aoe_ignore_ledge = baseAbility.aoe_ignore_ledge ?? false;
     this.self_target = baseAbility.self_target ?? false;
-    this.statusModifiers = statusModifiers;
     this.action_desc = baseAbility.action_desc;
     this.action_desc_pl = baseAbility.action_desc_pl;
     this.ai_chance = baseAbility.ai_chance;
@@ -241,6 +237,27 @@ class Ability {
       });
       return damages;
     };
+
+    this.updateStats = (holder: characterObject): void => {
+      let id = this.id;
+      const baseStats: Ability = { ...abilities[id] };
+      id = "ability_" + id;
+      if (!holder) return;
+      Object.entries(this).forEach(([key, value]) => {
+        if (typeof value !== "number" || typeof value === "object") return;
+        if (typeof value === "number") {
+          if (key === "onCooldown") return;
+          const bonus = holder.allModifiers[id]?.[key + "V"] ?? 0;
+          const modifier = 1 + (holder.allModifiers[id]?.[key + "P"] / 100 || 0);
+          const base = baseStats[key] !== undefined ? baseStats[key] : value;
+          this[key] = +(((base || 0) + bonus) * modifier).toFixed(2);
+        } else if (typeof value === "object" && !Array.isArray(value)) {
+          this[key] = { ...updateObject(key, value, holder.allModifiers[id]) };
+        }
+      });
+    };
+
+    this.updateStats(user);
   }
 }
 
@@ -255,205 +272,6 @@ function getAbiKey(key: string) {
   });
   return newKey;
 }
-
-function getAbiModifiers(char: characterObject, id: string) {
-  const total: any = {};
-  straight_modifiers.forEach((mod: string) => {
-    total[mod] = { value: 0, modif: 1 };
-  });
-  char.perks?.forEach((prk: statEffect) => {
-    Object.entries(prk.effects).forEach((eff: any) => {
-      let key = eff[0];
-      let value = eff[1];
-      const comparisonKey = getAbiKey(key);
-      if (id == comparisonKey && !key.includes("status")) {
-        key = key.replace(id + "_", "");
-        const _key = key.substring(0, key.length - 1);
-        if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (value / 100);
-      }
-    });
-  });
-  char.statusEffects.forEach((stat: statEffect) => {
-    Object.entries(stat.effects).forEach((eff: any) => {
-      let key = eff[0];
-      let value = eff[1];
-      const comparisonKey = getAbiKey(key);
-      if (id == comparisonKey && !key.includes("status")) {
-        key = key.replace(id + "_", "");
-        const _key = key.substring(0, key.length - 1);
-        if (key.endsWith("V")) total[_key].value += value;
-        else if (key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-        else if (key.endsWith("P")) total[_key].modif += (value / 100);
-      }
-    });
-  });
-  char.traits?.forEach((stat: statEffect) => {
-    if (!stat.effects) return;
-    let apply = true;
-    if (stat.conditions) {
-      apply = statConditions(stat.conditions, char);
-    }
-    if (apply) {
-      Object.entries(stat.effects).forEach((eff: any) => {
-        let key = eff[0];
-        let value = eff[1];
-        const comparisonKey = getAbiKey(key);
-        if (id == comparisonKey && !key.includes("status")) {
-          key = key.replace(id + "_", "");
-          const _key = key.substring(0, key.length - 1);
-          if (key.endsWith("V")) total[_key].value += value;
-          else if (key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-          else if (key.endsWith("P")) total[_key].modif += (value / 100);
-        }
-      });
-    }
-  });
-  equipmentSlots.forEach((slot: string) => {
-    if (char[slot]?.stats) {
-      Object.entries(char[slot].stats).forEach((eff: any) => {
-        let key = eff[0];
-        let value = eff[1];
-        const comparisonKey = getAbiKey(key);
-        if (id == comparisonKey && !key.includes("status")) {
-          key = key.replace(id + "_", "");
-          const _key = key.substring(0, key.length - 1);
-          if (key.endsWith("V")) total[_key].value += value;
-          else if (key.endsWith("P") && value < 0) total[_key].modif *= (1 + value / 100);
-          else if (key.endsWith("P")) total[_key].modif += (value / 100);
-        }
-      });
-    }
-  });
-  return total;
-}
-
-function getAbiStatusModifiers(char: characterObject, abilityId: string, effectId: string) {
-  const total: any = { effects: {} };
-  possible_stat_modifiers.forEach((mod: string) => {
-    total["effects"][mod] = { value: 0, modif: 1 };
-  });
-  possible_modifiers.forEach((mod: string) => {
-    total[mod] = { value: 0, modif: 1 };
-  });
-  char.statusEffects.forEach((stat: statEffect) => {
-    // Go through stat modifiers
-    Object.entries(stat.effects).forEach((eff: any) => {
-      let key = eff[0];
-      let value = eff[1];
-      if (key.includes(abilityId) && key.includes("status")) {
-        key = key.replace(abilityId + "_", "");
-        if (key.includes("status_effect")) {
-          const _key = key.replace("status_effect_", "");
-          const __key = _key.substring(0, _key.length - 1);
-          if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
-            if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
-            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
-            total["effects"][__key].status = effectId;
-          }
-          else {
-            if (!total[__key]) total[__key] = { value: 0, modif: 1 };
-            if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
-            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
-          }
-        }
-      }
-    });
-  });
-  char.traits?.forEach((stat: statEffect) => {
-    if (!stat.effects) return;
-    let apply = true;
-    if (stat.conditions) {
-      apply = statConditions(stat.conditions, char);
-    }
-    if (apply) {
-      // Go through stat modifiers
-      Object.entries(stat.effects).forEach((eff: any) => {
-        let key = eff[0];
-        let value = eff[1];
-        if (key.includes(abilityId) && key.includes("status")) {
-          key = key.replace(abilityId + "_", "");
-          if (key.includes("status_effect")) {
-            const _key = key.replace("status_effect_", "");
-            const trueKey = _key.replace(effectId + "_", "");
-            const __key = trueKey.substring(0, trueKey.length - 1);
-            if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
-              if (key.endsWith("V")) total["effects"][__key].value += value;
-              else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
-              else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
-              total["effects"][__key].status = effectId;
-            }
-            else {
-              if (!total[__key]) total[__key] = { value: 0, modif: 1 };
-              if (key.endsWith("V")) total[__key].value += value;
-              else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
-              else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
-            }
-          }
-        }
-      });
-    }
-  });
-  char.perks?.forEach((prk: statEffect) => {
-    // Go through stat modifiers
-    Object.entries(prk.effects).forEach((eff: any) => {
-      let key = eff[0];
-      let value = eff[1];
-      if (key.includes(abilityId) && key.includes("status")) {
-        key = key.replace(abilityId + "_", "");
-        if (key.includes("status_effect")) {
-          const _key = key.replace("status_effect_", "");
-          const trueKey = _key.replace(effectId + "_", "");
-          const __key = trueKey.substring(0, trueKey.length - 1);
-          if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
-            if (key.endsWith("V")) total["effects"][__key].value += value;
-            else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
-            else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
-            total["effects"][__key].status = effectId;
-          }
-          else {
-            if (!total[__key]) total[__key] = { value: 0, modif: 1 };
-            if (key.endsWith("V")) total[__key].value += value;
-            else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
-            else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
-          }
-        }
-      }
-    });
-  });
-  equipmentSlots.forEach((slot: string) => {
-    if (char[slot]?.stats) {
-      Object.entries(char[slot].stats).forEach((eff: any) => {
-        let key = eff[0];
-        let value = eff[1];
-        if (key.includes(abilityId) && key.includes("status")) {
-          key = key.replace(abilityId + "_", "");
-          if (key.includes("status_effect")) {
-            const _key = key.replace("status_effect_", "");
-            const __key = _key.substring(0, _key.length - 1);
-            if (possible_stat_modifiers.find((m: string) => m == __key.toString())) {
-              if (key.endsWith("V")) total["effects"][__key].value += value;
-              else if (key.endsWith("P") && value < 0) total["effects"][__key].modif *= (1 + value / 100);
-              else if (key.endsWith("P")) total["effects"][__key].modif += (1 + value / 100);
-            }
-            else {
-              if (!total[__key]) total[__key] = { value: 0, modif: 1 };
-              if (key.endsWith("V")) total[__key].value += value;
-              else if (key.endsWith("P") && value < 0) total[__key].modif *= (1 + value / 100);
-              else if (key.endsWith("P")) total[__key].modif += (1 + value / 100);
-            }
-          }
-        }
-      });
-    }
-  });
-  return total;
-}
-
-
 
 // {
 //   const arr = [1, 2, 3];
