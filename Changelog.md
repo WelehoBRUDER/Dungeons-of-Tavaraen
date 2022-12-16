@@ -1,4 +1,4 @@
-# 1.2.2 ~ 8.11.2022
+# 1.2.2 ~ 16.12.2022
 
 ## Major Changes
 
@@ -15,6 +15,7 @@
 - Decreased **Frantic Mana Recovery**'s mana recovery from 300% --> 100%
 - Improved rendering
 - Fixed several instances of missing textures
+- Shrines can now be used during combat
 
 # 1.2.1 ~ 12.6.2022
 

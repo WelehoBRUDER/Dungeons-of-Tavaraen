@@ -3,12 +3,12 @@ const CURSOR_LOCATION = {
   y: 0,
 };
 const DEVTOOLS = {
-  GOD: true,
+  GOD: false,
   FREE_SKILLS: false,
   PERK_NO_COST: false,
 };
 const GAME_VERSION = (1.22).toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
-const DEVMODE: boolean = true; // Whether developer mode is enabled or not.
+const DEVMODE: boolean = false; // Whether developer mode is enabled or not.
 const devBox = document.querySelector<HTMLDivElement>(".devInfo");
 if (DEVMODE) {
   document.querySelector<HTMLDivElement>(".devTools").style.display = "block";
@@ -17,10 +17,8 @@ if (DEVMODE) {
 function updateDeveloperInformation() {
   let txt = "";
   devBox.textContent = "";
-  const hoveredTileId =
-    maps[currentMap].base[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
-  const hoveredClutterId =
-    maps[currentMap].clutter[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
+  const hoveredTileId = maps[currentMap].base[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
+  const hoveredClutterId = maps[currentMap].clutter[CURSOR_LOCATION.y][CURSOR_LOCATION.x];
   txt = `
   \t----|DEVELOPER TOOLS|----
   PLAYER_LOCATION: [X:${player.cords.x} Y:${player.cords.y}]

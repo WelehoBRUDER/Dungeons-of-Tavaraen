@@ -58,7 +58,9 @@ function buffOrHeal(character, ability) {
     }
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
+            const modifiers = character.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+            character.addEffect(_Effect, modifiers);
             if (character.id === "player")
                 _Effect.last.current -= 1;
             character.addEffect(_Effect);
@@ -111,18 +113,17 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
-            attacker.stats.hp -=
-                (attacker.getHpMax() * ability.health_cost_percentage) / 100;
+            attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
     }
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
     if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
             const resist = target.getStatusResists()[_Effect.type];
-            const resisted = resist + helper.random(9, -9) >
-                ability.status_power + helper.random(18, -18);
+            const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
-                target.addEffect(_Effect);
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                target.addEffect(_Effect, modifiers);
             }
             else {
                 spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
@@ -131,11 +132,12 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     }
     if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            const _Effect = new statEffect({ ...statusEffects[status] }, ability.statusModifiers);
+            const _Effect = new statEffect({ ...statusEffects[status] });
             if (attacker.id === "player")
                 _Effect.last.current -= 1;
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
-                attacker.addEffect(_Effect);
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                attacker.addEffect(_Effect, modifiers);
                 spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
                 if (!isAoe) {
                     let string = "";
@@ -194,16 +196,13 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             let actionText = (_d = lang[ability.id + desc]) !== null && _d !== void 0 ? _d : ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
-            displayText(`${ally
-                ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"]
-                : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
+            displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
             if (ability.cooldown)
                 ability.onCooldown = ability.cooldown + 1;
             if (ability.mana_cost)
                 attacker.stats.mp -= ability.mana_cost;
         }
-        if (ability.life_steal_percentage &&
-            !ability.life_steal_trigger_only_when_killing_enemy) {
+        if (ability.life_steal_percentage && !ability.life_steal_trigger_only_when_killing_enemy) {
             let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
             attacker.stats.hp += lifeSteal;
             spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
@@ -211,8 +210,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (target.stats.hp <= 0) {
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);
-            if (ability.life_steal_percentage &&
-                ability.life_steal_trigger_only_when_killing_enemy) {
+            if (ability.life_steal_percentage && ability.life_steal_trigger_only_when_killing_enemy) {
                 let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
                 attacker.stats.hp += lifeSteal;
                 spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
@@ -258,13 +256,9 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
 }
 function tileCordsToScreen(cords) {
     // This function returns screen pixel values from cords.
-    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY, } = spriteVariables();
-    const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize +
-        baseCanvas.width / 2 -
-        spriteSize / 2;
-    const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize +
-        baseCanvas.height / 2 -
-        spriteSize / 2;
+    const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+    const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
     return { screenX, screenY };
 }
 function collision(target, ability, isPlayer, attacker, theme) {
@@ -279,9 +273,7 @@ function collision(target, ability, isPlayer, attacker, theme) {
             regularAttack(attacker, targetEnemy, ability);
         }
     }
-    else if (player.cords.x == target.x &&
-        player.cords.y == target.y &&
-        attacker.isFoe) {
+    else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
         regularAttack(attacker, player, ability);
     }
     else if (attacker.isFoe) {
@@ -296,8 +288,7 @@ function threatDistance(targets, from) {
         var _a;
         let dist = +generatePath(from.cords, target.cords, from.canFly, true);
         let threat = (target.getThreat() + helper.random(18, -18)) / dist;
-        if (threat > highestThreat &&
-            dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
+        if (threat > highestThreat && dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
             highestThreat = threat;
             chosenTarget = target;
         }
@@ -354,12 +345,18 @@ function summonUnit(ability, cords) {
         id: "buffs_from_player",
         effects: { ...playerBuffs },
     });
-    if (ability.summon_status)
-        newSummon.statusEffects.push(new statEffect({ ...statusEffects[ability.summon_status] }, ability.statusModifiers));
+    if (ability.summon_status) {
+        const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+        const effect = new statEffect({ ...statusEffects[ability.summon_status] });
+        effect.init(modifiers);
+        newSummon.statusEffects.push(effect);
+    }
     combatSummons.push({ ...newSummon });
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
-            player.statusEffects.push(new statEffect({ ...statusEffects[status], last: ability.summon_last - 1 }, ability.statusModifiers));
+            const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+            // @ts-ignore - addEffect takes 2 arguments, but the IDE thinks it takes 1
+            player.addEffect(new statEffect({ ...statusEffects[status] }, modifiers));
         });
     }
     let encounter = (_c = (_b = player.entitiesEverEncountered) === null || _b === void 0 ? void 0 : _b.summons) === null || _c === void 0 ? void 0 : _c[newSummon.id];

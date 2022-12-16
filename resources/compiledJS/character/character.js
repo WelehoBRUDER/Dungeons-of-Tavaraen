@@ -209,7 +209,7 @@ class Character {
         };
         this.addEffect = (effect, modifiers = {}) => {
             if (!(effect === null || effect === void 0 ? void 0 : effect.id)) {
-                effect = new statEffect({ ...statusEffects[effect] }, modifiers);
+                effect = new statEffect({ ...statusEffects[effect] });
             }
             let missing = true;
             this.statusEffects.forEach((_effect) => {
@@ -220,6 +220,7 @@ class Character {
                 }
             });
             if (missing) {
+                effect.init(modifiers);
                 this.statusEffects.push({ ...effect });
             }
         };

@@ -21,11 +21,7 @@ function useAbi(abi: ability) {
     // @ts-ignore
     buffOrHeal(player, state.abiSelected);
   } else if (abi.instant_aoe) {
-    aoeCollision(
-      createAOEMap(player.cords, abi.aoe_size, abi.aoe_ignore_ledge),
-      player,
-      abi
-    );
+    aoeCollision(createAOEMap(player.cords, abi.aoe_size, abi.aoe_ignore_ledge), player, abi);
   }
   updateUI();
 }
@@ -38,24 +34,21 @@ function buffOrHeal(character: characterObject, ability: ability) {
   if (ability.base_heal) {
     const { v: val, m: mod } = getModifiers(character, "healPower");
     let healFromHP = 0;
-    if (ability.heal_percentage)
-      healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
-    const heal: number = Math.floor(
-      (ability.base_heal + val + healFromHP) * mod
-    );
+    if (ability.heal_percentage) healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
+    const heal: number = Math.floor((ability.base_heal + val + healFromHP) * mod);
     character.stats.hp += heal;
     spawnFloatingText(character.cords, heal.toString(), "lime", 36);
     if (character.isFoe)
       displayText(
-        `<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${
-          lang[ability.id + "_action_desc"]
-        } ${lang["recovery_foe"]} ${heal} ${lang["health_points"]}.`
+        `<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${lang[ability.id + "_action_desc"]} ${
+          lang["recovery_foe"]
+        } ${heal} ${lang["health_points"]}.`
       );
     else
       displayText(
-        `<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${
-          lang[ability.id + "_action_desc_pl"]
-        } ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`
+        `<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${
+          lang["health_points"]
+        }.`
       );
   } else if (ability.heal_percentage) {
     const { v: val, m: mod } = getModifiers(character, "healPower");
@@ -65,36 +58,29 @@ function buffOrHeal(character: characterObject, ability: ability) {
     spawnFloatingText(character.cords, heal.toString(), "lime", 36);
     if (character.isFoe)
       displayText(
-        `<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${
-          lang[ability.id + "_action_desc"]
-        } ${lang["recovery_foe"]} ${heal} ${lang["health_points"]}.`
+        `<c>crimson<c>[ENEMY] <c>yellow<c>${character.name} <c>white<c>${lang[ability.id + "_action_desc"]} ${
+          lang["recovery_foe"]
+        } ${heal} ${lang["health_points"]}.`
       );
     else
       displayText(
-        `<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${
-          lang[ability.id + "_action_desc_pl"]
-        } ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`
+        `<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${
+          lang["health_points"]
+        }.`
       );
   }
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
-      const _Effect = new statEffect(
-        { ...statusEffects[status] },
-        ability.statusModifiers
-      );
+      const _Effect = new statEffect({ ...statusEffects[status] });
+      const modifiers = character.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+      character.addEffect(_Effect, modifiers);
       if (character.id === "player") _Effect.last.current -= 1;
       character.addEffect(_Effect);
       spawnFloatingText(character.cords, ability.line, "crimson", 36);
       let string: string = "";
-      if (character.id == "player")
-        string = lang[ability.id + "_action_desc_pl"];
+      if (character.id == "player") string = lang[ability.id + "_action_desc_pl"];
       else string = lang[ability.id + "_action_desc"];
-      if (character.isFoe)
-        displayText(
-          `<c>crimson<c>[ENEMY] <c>yellow<c>${
-            lang[character.id + "_name"]
-          } <c>white<c>${string}`
-        );
+      if (character.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[character.id + "_name"]} <c>white<c>${string}`);
       else displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
     });
   }
@@ -109,10 +95,7 @@ function buffOrHeal(character: characterObject, ability: ability) {
     let string: string = "";
     if (character.id == "player") string = lang["cure_pl"];
     else string = lang["cure"];
-    string.replace(
-      "[ACTOR]",
-      `<c>yellow<c>${lang[character.id + "_name"]}<c>white<c>`
-    );
+    string.replace("[ACTOR]", `<c>yellow<c>${lang[character.id + "_name"]}<c>white<c>`);
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
   }
   character.stats.mp -= ability.mana_cost;
@@ -124,40 +107,27 @@ function buffOrHeal(character: characterObject, ability: ability) {
 }
 
 /* This function needs to be updated at some point */
-function regularAttack(
-  attacker: characterObject,
-  target: characterObject,
-  ability: ability,
-  targetCords?: any,
-  isAoe: boolean = false
-) {
+function regularAttack(attacker: characterObject, target: characterObject, ability: ability, targetCords?: any, isAoe: boolean = false) {
   if (targetCords) {
     maps[currentMap].enemies.forEach((en: any) => {
-      if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
-        target = en;
+      if (targetCords.x == en.cords.x && targetCords.y == en.cords.y) target = en;
     });
   }
 
   if (ability?.health_cost || ability?.health_cost_percentage) {
     if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
-    if (ability.health_cost_percentage)
-      attacker.stats.hp -=
-        (attacker.getHpMax() * ability.health_cost_percentage) / 100;
+    if (ability.health_cost_percentage) attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
   }
   const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
 
   if (ability.statusesEnemy?.length > 0) {
     ability.statusesEnemy.forEach((status: string) => {
-      const _Effect = new statEffect(
-        { ...statusEffects[status] },
-        ability.statusModifiers
-      );
+      const _Effect = new statEffect({ ...statusEffects[status] });
       const resist = target.getStatusResists()[_Effect.type];
-      const resisted =
-        resist + helper.random(9, -9) >
-        ability.status_power + helper.random(18, -18);
+      const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
       if (!resisted) {
-        target.addEffect(_Effect);
+        const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+        target.addEffect(_Effect, modifiers);
       } else {
         spawnFloatingText(target.cords, "RESISTED!", "grey", 36);
       }
@@ -165,25 +135,17 @@ function regularAttack(
   }
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
-      const _Effect = new statEffect(
-        { ...statusEffects[status] },
-        ability.statusModifiers
-      );
+      const _Effect = new statEffect({ ...statusEffects[status] });
       if (attacker.id === "player") _Effect.last.current -= 1;
       if (!attacker.statusEffects.find((eff: statEffect) => eff.id == status)) {
-        attacker.addEffect(_Effect);
+        const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+        attacker.addEffect(_Effect, modifiers);
         spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
         if (!isAoe) {
           let string: string = "";
-          if (attacker.id == "player")
-            string = lang[ability.id + "_action_desc_pl"];
+          if (attacker.id == "player") string = lang[ability.id + "_action_desc_pl"];
           else string = lang[ability.id + "_action_desc"];
-          if (attacker.isFoe)
-            displayText(
-              `<c>crimson<c>[ENEMY] <c>yellow<c>${
-                lang[attacker.id + "_name"]
-              } <c>white<c>${string}`
-            );
+          if (attacker.isFoe) displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${string}`);
           else displayText(`<c>cyan<c>[ACTION] <c>white<c>${string}`);
         }
       }
@@ -193,9 +155,7 @@ function regularAttack(
   if (target.isFoe) {
     setTimeout((paskaFixi: null) => {
       if (!enemyIndex(target.cords)) return;
-      const layer = document.querySelector<HTMLCanvasElement>(
-        `.enemy${enemyIndex(target.cords)}`
-      );
+      const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
       try {
         layer.style.animation = "none";
         layer.offsetHeight; /* trigger reflow */
@@ -211,17 +171,12 @@ function regularAttack(
       target.tempAggroLast = 6;
     }
     target.stats.hp -= dmg;
-    if (critRolled)
-      spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
     if (evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
     if (isAoe) {
-      let actionText: string =
-        lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
-      actionText = actionText.replace(
-        "[TARGET]",
-        `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`
-      );
+      let actionText: string = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
+      actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
       actionText = actionText.replace("[DMG]", `${dmg}`);
       displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
     } else {
@@ -231,31 +186,18 @@ function regularAttack(
         desc += "_pl";
         ally = false;
       }
-      let actionText: string =
-        lang[ability.id + desc] ?? ability.action_desc_pl;
-      actionText = actionText.replace(
-        "[TARGET]",
-        `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`
-      );
+      let actionText: string = lang[ability.id + desc] ?? ability.action_desc_pl;
+      actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
       actionText = actionText.replace("[DMG]", `${dmg}`);
       displayText(
-        `${
-          ally
-            ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"]
-            : "<c>cyan<c>[ACTION]"
-        } <c>white<c>${actionText}`
+        `${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`
       );
       if (ability.cooldown) ability.onCooldown = ability.cooldown + 1;
       if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
     }
 
-    if (
-      ability.life_steal_percentage &&
-      !ability.life_steal_trigger_only_when_killing_enemy
-    ) {
-      let lifeSteal = Math.floor(
-        (target.getHpMax() * ability.life_steal_percentage) / 100
-      );
+    if (ability.life_steal_percentage && !ability.life_steal_trigger_only_when_killing_enemy) {
+      let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
       attacker.stats.hp += lifeSteal;
       spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
     }
@@ -264,22 +206,14 @@ function regularAttack(
       target.kill();
       spawnFloatingText(
         target.cords,
-        lang["gained_xp"].replace(
-          "[XP]",
-          Math.floor(target.xp * player.allModifiers.expGainP)
-        ),
+        lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)),
         "lime",
         32,
         1800,
         100
       );
-      if (
-        ability.life_steal_percentage &&
-        ability.life_steal_trigger_only_when_killing_enemy
-      ) {
-        let lifeSteal = Math.floor(
-          (target.getHpMax() * ability.life_steal_percentage) / 100
-        );
+      if (ability.life_steal_percentage && ability.life_steal_trigger_only_when_killing_enemy) {
+        let lifeSteal = Math.floor((target.getHpMax() * ability.life_steal_percentage) / 100);
         attacker.stats.hp += lifeSteal;
         spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
       }
@@ -296,23 +230,15 @@ function regularAttack(
       }, 110);
     }
     target.stats.hp -= dmg;
-    if (critRolled)
-      spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
+    if (critRolled) spawnFloatingText(target.cords, dmg.toString() + "!", "red", 48);
     else spawnFloatingText(target.cords, dmg.toString(), "red", 36);
     if (evade) spawnFloatingText(target.cords, "EVADE!", "white", 36);
     let actionText = lang[ability.id + "_action_desc"] ?? "[TEXT NOT FOUND]";
     let targetName = lang[target.id + "_name"];
     if (!targetName) targetName = player.name;
-    actionText = actionText.replace(
-      "[TARGET]",
-      `'<c>yellow<c>${targetName}<c>white<c>'`
-    );
+    actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${targetName}<c>white<c>'`);
     actionText = actionText.replace("[DMG]", `${dmg}`);
-    displayText(
-      `<c>crimson<c>[ENEMY] <c>yellow<c>${
-        lang[attacker.id + "_name"]
-      } <c>white<c>${actionText}`
-    );
+    displayText(`<c>crimson<c>[ENEMY] <c>yellow<c>${lang[attacker.id + "_name"]} <c>white<c>${actionText}`);
     if (ability.cooldown) ability.onCooldown = ability.cooldown + 1;
     if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
     if (target.stats.hp <= 0) {
@@ -326,64 +252,25 @@ function regularAttack(
 
 function tileCordsToScreen(cords: tileObject) {
   // This function returns screen pixel values from cords.
-  const {
-    spriteSize,
-    spriteLimitX,
-    spriteLimitY,
-    mapOffsetX,
-    mapOffsetY,
-    mapOffsetStartX,
-    mapOffsetStartY,
-  } = spriteVariables();
-  const screenX =
-    (cords.x - player.cords.x + settings.map_offset_x) * spriteSize +
-    baseCanvas.width / 2 -
-    spriteSize / 2;
-  const screenY =
-    (cords.y - player.cords.y + settings.map_offset_y) * spriteSize +
-    baseCanvas.height / 2 -
-    spriteSize / 2;
+  const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+  const screenX = (cords.x - player.cords.x + settings.map_offset_x) * spriteSize + baseCanvas.width / 2 - spriteSize / 2;
+  const screenY = (cords.y - player.cords.y + settings.map_offset_y) * spriteSize + baseCanvas.height / 2 - spriteSize / 2;
   return { screenX, screenY };
 }
 
-function collision(
-  target: tileObject,
-  ability: ability,
-  isPlayer: boolean,
-  attacker: characterObject,
-  theme?: string
-) {
+function collision(target: tileObject, ability: ability, isPlayer: boolean, attacker: characterObject, theme?: string) {
   if (!attacker.isFoe || isPlayer) {
-    let targetEnemy = maps[currentMap].enemies.find(
-      (en: any) => en.cords.x == target.x && en.cords.y == target.y
-    );
-    if (!targetEnemy)
-      targetEnemy = maps[currentMap].enemies.find(
-        (en: any) => en.oldCords.x == target.x && en.oldCords.y == target.y
-      );
+    let targetEnemy = maps[currentMap].enemies.find((en: any) => en.cords.x == target.x && en.cords.y == target.y);
+    if (!targetEnemy) targetEnemy = maps[currentMap].enemies.find((en: any) => en.oldCords.x == target.x && en.oldCords.y == target.y);
     if (ability.aoe_size > 0) {
-      aoeCollision(
-        createAOEMap(
-          targetEnemy?.cords,
-          ability.aoe_size,
-          ability.aoe_ignore_ledge
-        ),
-        attacker,
-        ability
-      );
+      aoeCollision(createAOEMap(targetEnemy?.cords, ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
     } else {
       regularAttack(attacker, targetEnemy, ability);
     }
-  } else if (
-    player.cords.x == target.x &&
-    player.cords.y == target.y &&
-    attacker.isFoe
-  ) {
+  } else if (player.cords.x == target.x && player.cords.y == target.y && attacker.isFoe) {
     regularAttack(attacker, player, ability);
   } else if (attacker.isFoe) {
-    let summonTarget = combatSummons.find(
-      (summon) => summon.cords.x == target.x && summon.cords.y == target.y
-    );
+    let summonTarget = combatSummons.find((summon) => summon.cords.x == target.x && summon.cords.y == target.y);
     regularAttack(attacker, summonTarget, ability);
   }
 }
@@ -394,10 +281,7 @@ function threatDistance(targets: Array<any>, from: characterObject) {
   targets.forEach((target) => {
     let dist = +generatePath(from.cords, target.cords, from.canFly, true);
     let threat = (target.getThreat() + helper.random(18, -18)) / dist;
-    if (
-      threat > highestThreat &&
-      dist <= (from.aggroRange + from.tempAggro ?? 28)
-    ) {
+    if (threat > highestThreat && dist <= (from.aggroRange + from.tempAggro ?? 28)) {
       highestThreat = threat;
       chosenTarget = target;
     }
@@ -451,22 +335,18 @@ function summonUnit(ability: ability, cords: tileObject) {
     id: "buffs_from_player",
     effects: { ...playerBuffs },
   });
-  if (ability.summon_status)
-    newSummon.statusEffects.push(
-      new statEffect(
-        { ...statusEffects[ability.summon_status] },
-        ability.statusModifiers
-      )
-    );
+  if (ability.summon_status) {
+    const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+    const effect = new statEffect({ ...statusEffects[ability.summon_status] });
+    effect.init(modifiers);
+    newSummon.statusEffects.push(effect);
+  }
   combatSummons.push({ ...newSummon });
   if (ability.statusesUser?.length > 0) {
     ability.statusesUser.forEach((status: string) => {
-      player.statusEffects.push(
-        new statEffect(
-          { ...statusEffects[status], last: ability.summon_last - 1 },
-          ability.statusModifiers
-        )
-      );
+      const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
+      // @ts-ignore - addEffect takes 2 arguments, but the IDE thinks it takes 1
+      player.addEffect(new statEffect({ ...statusEffects[status] }, modifiers));
     });
   }
   let encounter = player.entitiesEverEncountered?.summons?.[newSummon.id];
@@ -474,14 +354,7 @@ function summonUnit(ability: ability, cords: tileObject) {
     player.entitiesEverEncountered.enemies[newSummon.id] = 1;
     displayText("New creature encountered!");
     displayText(newSummon.id + " added to codex.");
-    spawnFloatingText(
-      newSummon.cords,
-      "NEW CREATURE ENCOUNTER",
-      "yellow",
-      22,
-      2000,
-      0
-    );
+    spawnFloatingText(newSummon.cords, "NEW CREATURE ENCOUNTER", "yellow", 22, 2000, 0);
   }
   modifyCanvas();
 }

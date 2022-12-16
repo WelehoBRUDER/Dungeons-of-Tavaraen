@@ -681,8 +681,10 @@ const perksArray = {
           ability_barbarian_rage: {
             cooldownV: -3,
             effect_rage: {
-              strVV: 5,
-              resistAllVV: 5,
+              effects: {
+                strVV: 5,
+                resistAllVV: 5,
+              },
             },
           },
           damageP: 4,
@@ -718,11 +720,13 @@ const perksArray = {
           ability_berserk: {
             cooldownV: -5,
             effect_berserk: {
-              physicalDefPV: 50,
-              magicalDefPV: 50,
-              elementalDefPV: 50,
-              resistAllPV: 50,
-              regenHpPV: 50,
+              effects: {
+                physicalDefPV: 50,
+                magicalDefPV: 50,
+                elementalDefPV: 50,
+                resistAllPV: 50,
+                regenHpPV: 50,
+              },
             },
           },
         },
@@ -969,7 +973,9 @@ const perksArray = {
             cooldownP: -20,
             effect_sneaky_stabbing: {
               lastV: 3,
-              critChancePP: 5,
+              effects: {
+                critChancePP: 5,
+              },
             },
           },
         },
@@ -1065,7 +1071,9 @@ const perksArray = {
           ability_sundering_arrow: {
             cooldownP: -33,
             effect_sunder: {
-              resistAllVV: -10,
+              effects: {
+                resistAllVV: -10,
+              },
             },
           },
           dexV: 1,
@@ -1166,7 +1174,9 @@ const perksArray = {
             cooldownV: -3,
             effect_paralyzed: {
               lastV: 2,
-              resistAllPP: -15,
+              effects: {
+                resistAllPP: -15,
+              },
             },
           },
           dexV: 1,

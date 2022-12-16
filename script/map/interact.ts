@@ -111,7 +111,7 @@ function hideMapHover() {
 
 function activateShrine() {
   maps[currentMap].shrines.forEach((shrine: any) => {
-    if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y && !state.inCombat) {
+    if (shrine.cords.x == player.cords.x && shrine.cords.y == player.cords.y) {
       if (
         !player.usedShrines.find((used: any) => used.cords.x == shrine.cords.x && used.cords.y == shrine.cords.y && used.map == currentMap)
       ) {
