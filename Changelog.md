@@ -1,4 +1,4 @@
-# 1.2.3 ~ 13.1.2023
+# 1.2.3 ~ 13.4.2023
 
 ## Major Changes
   - Added 2 new armor sets.
