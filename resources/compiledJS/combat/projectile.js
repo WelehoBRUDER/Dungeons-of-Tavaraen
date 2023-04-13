@@ -12,21 +12,6 @@
  @param {Function} onDestroy - The function to be called when the projectile either hits a target or reaches its destination.
  */
 class Projectile {
-    constructor(id, texture, target, cords, path, originIsEnemy, ability, shooter, speed, index, onHit, onDestroy) {
-        this.originIsEnemy = false; // Whether the origin of the projectile is an enemy or not.
-        this.id = id;
-        this.texture = texture;
-        this.target = target;
-        this.cords = cords;
-        this.path = path;
-        this.originIsEnemy = originIsEnemy;
-        this.speed = speed;
-        this.ability = ability;
-        this.shooter = shooter;
-        this.index = index;
-        this.onHit = onHit;
-        this.onDestroy = onDestroy;
-    }
     destroy() {
         if (this.onDestroy) {
             this.onDestroy();
@@ -83,10 +68,24 @@ class Projectile {
             this.destroy();
         }
     }
+    constructor(id, texture, target, cords, path, originIsEnemy, ability, shooter, speed, index, onHit, onDestroy) {
+        this.originIsEnemy = false; // Whether the origin of the projectile is an enemy or not.
+        this.id = id;
+        this.texture = texture;
+        this.target = target;
+        this.cords = cords;
+        this.path = path;
+        this.originIsEnemy = originIsEnemy;
+        this.speed = speed;
+        this.ability = ability;
+        this.shooter = shooter;
+        this.index = index;
+        this.onHit = onHit;
+        this.onDestroy = onDestroy;
+    }
 }
 function createNewProjectile(shooter, projectileTemplate, target, ability, onHit, onDestroy) {
     var _a, _b;
-    console.log(projectileTemplate);
     let { id, texture, speed } = projectileTemplate;
     let isEnemy = shooter.isFoe ? true : false;
     speed += shooter.allModifiers.projectileSpeed || 0;

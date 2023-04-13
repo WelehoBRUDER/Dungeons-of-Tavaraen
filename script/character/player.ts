@@ -588,7 +588,7 @@ let player = new PlayerCharacter({
   grave: null,
   flags: {} as any,
   questProgress: [],
-  sex: "male",
+  sex: "female",
 });
 
 let combatSummons: Array<any> = [];

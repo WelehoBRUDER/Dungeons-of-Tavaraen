@@ -58,8 +58,9 @@ function buffOrHeal(character, ability) {
     }
     if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesUser.forEach((status) => {
+            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
-            const modifiers = character.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+            const modifiers = ((_a = character.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}`]) || {};
             character.addEffect(_Effect, modifiers);
             if (character.id === "player")
                 _Effect.last.current -= 1;
@@ -118,11 +119,12 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
     if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
         ability.statusesEnemy.forEach((status) => {
+            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
             const resist = target.getStatusResists()[_Effect.type];
             const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
-                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                const modifiers = ((_a = attacker.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}`]) || {};
                 target.addEffect(_Effect, modifiers);
             }
             else {
@@ -132,11 +134,12 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
     }
     if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
         ability.statusesUser.forEach((status) => {
+            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
             if (attacker.id === "player")
                 _Effect.last.current -= 1;
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
-                const modifiers = attacker.allModifiers[`ability_${ability.id}`][`effect_${status}}`] || {};
+                const modifiers = ((_a = attacker.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}}`]) || {};
                 attacker.addEffect(_Effect, modifiers);
                 spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
                 if (!isAoe) {

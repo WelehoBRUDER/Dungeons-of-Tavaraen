@@ -2,51 +2,38 @@ function handleEscape() {
   if (state.perkOpen) {
     closeLeveling();
     state.perkOpen = false;
-  }
-  else if (state.charOpen) {
+  } else if (state.charOpen) {
     closeCharacter();
     state.charOpen = false;
-  }
-  else if (state.invOpen) {
+  } else if (state.invOpen) {
     closeInventory();
     state.invOpen = false;
-  }
-  else if (state.savesOpen) {
+  } else if (state.savesOpen) {
     closeSaveMenu();
     state.savesOpen = false;
-  }
-  else if (state.optionsOpen) {
+  } else if (state.optionsOpen) {
     closeSettingsMenu();
     state.optionsOpen = false;
-  }
-  else if (state.displayingTextHistory) {
+  } else if (state.displayingTextHistory) {
     state.displayingTextHistory = false;
     displayAllTextHistory();
-  }
-  else if (state.rangedMode) {
+  } else if (state.rangedMode) {
     state.rangedMode = false;
     renderTileHover(player.cords, null);
-  }
-  else if (state.menuOpen && !state.titleScreen) {
+  } else if (state.menuOpen && !state.titleScreen) {
     closeGameMenu(false, false, false);
     state.menuOpen = false;
-  }
-  else if (state.dialogWindow) {
+  } else if (state.dialogWindow) {
     exitDialog();
-  }
-  else if (state.storeOpen) {
+  } else if (state.storeOpen) {
     cancelTransaction();
-  }
-  else if (state.journalOpen) {
+  } else if (state.journalOpen) {
     closePlayerQuests();
-  }
-  else if (state.codexOpen) {
+  } else if (state.keyxOpen) {
     closeCodex();
-  }
-  else if (state.smithOpen) {
+  } else if (state.smithOpen) {
     closeSmithingWindow();
-  }
-  else if (!state.isSelected && !player.isDead) {
+  } else if (!state.isSelected && !player.isDead) {
     openGameMenu();
     state.menuOpen = true;
   }
@@ -94,7 +81,9 @@ const settingsTopbar = settingsBackground.querySelector<HTMLDivElement>(".top-ba
 
 function openGameMenu() {
   menu.textContent = "";
-  setTimeout(() => { dim.style.height = "100%"; }, 5);
+  setTimeout(() => {
+    dim.style.height = "100%";
+  }, 5);
   for (let button of menuOptions) {
     const frame = document.createElement("div");
     frame.textContent = lang[button.id] ?? button.id;
@@ -110,12 +99,16 @@ function openGameMenu() {
 function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
   const reverseOptions = [...menuOptions].reverse();
   if (!noDim) {
-    setTimeout(() => { dim.style.height = "0%"; }, 5);
+    setTimeout(() => {
+      dim.style.height = "0%";
+    }, 5);
     settingsContent.textContent = "";
     settingsTopbar.style.height = "0px";
   }
   if (!keepMainMenu) {
-    setTimeout(() => { mainMenu.style.display = "none"; }, 575);
+    setTimeout(() => {
+      mainMenu.style.display = "none";
+    }, 575);
     state.menuOpen = false;
     state.titleScreen = false;
     mainMenu.style.opacity = "0";
@@ -124,8 +117,9 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     try {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
+    } catch (err) {
+      if (DEVMODE) displayText(`<c>red<c>${err} at line menu:398`);
     }
-    catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:398`); }
   }
   if (escape) handleEscape();
   hideHover();
@@ -150,13 +144,15 @@ async function closeSettingsMenu() {
   settingsContent.textContent = "";
   settingsTopbar.style.height = "0px";
   state.optionsOpen = false;
-  setTimeout(() => { dim.style.height = "0%"; }, 5);
+  setTimeout(() => {
+    dim.style.height = "0%";
+  }, 5);
   hideHover();
 }
 
 function scaleUI(scale: number) {
   settings["ui_scale"] = scale * 100;
-  document.documentElement.style.setProperty('--ui-scale', scale.toString());
+  document.documentElement.style.setProperty("--ui-scale", scale.toString());
   moveMinimap();
 }
 
@@ -176,7 +172,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       let _setting = setting.id.replace("setting_", "");
       if (settings[_setting]) toggleBox.textContent = "X";
       else toggleBox.textContent = "";
-      container.addEventListener("click", tog => {
+      container.addEventListener("click", (tog) => {
         settings[_setting] = !settings[_setting];
         moveMinimap();
         if (_setting.includes("draw")) resizeCanvas();
@@ -189,8 +185,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       }
       container.append(text, toggleBox);
       settingsContent.append(container);
-    }
-    else if (setting.type == "hotkey") {
+    } else if (setting.type == "hotkey") {
       container.classList.add("hotkeySelection");
       const text = document.createElement("p");
       text.textContent = lang[setting.id] ?? setting.id;
@@ -210,8 +205,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       }
       container.append(text, keyButton);
       settingsContent.append(container);
-    }
-    else if (setting.type == "inputSlider") {
+    } else if (setting.type == "inputSlider") {
       container.classList.add("sliderContainer");
       const text = document.createElement("p");
       const slider = document.createElement("input");
@@ -236,8 +230,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       text.append(textVal);
       container.append(text, slider);
       settingsContent.append(container);
-    }
-    else if (setting.type == "inputSliderReduced") {
+    } else if (setting.type == "inputSliderReduced") {
       container.classList.add("sliderContainer");
       const text = document.createElement("p");
       const slider = document.createElement("input");
@@ -263,8 +256,7 @@ function gotoSettingsMenu(inMainMenu = false) {
       text.append(textVal);
       container.append(text, slider);
       settingsContent.append(container);
-    }
-    else if (setting.type == "languageSelection") {
+    } else if (setting.type == "languageSelection") {
       container.classList.add("languageSelection");
       const text = document.createElement("p");
       text.textContent = lang[setting.id] ?? setting.id;
@@ -275,8 +267,11 @@ function gotoSettingsMenu(inMainMenu = false) {
         if (language == lang["language_id"]) langButton.classList.add("selectedLang");
         langButton.addEventListener("click", () => {
           container.childNodes.forEach((child: any) => {
-            try { child.classList.remove("selectedLang"); }
-            catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line menu:279`); }
+            try {
+              child.classList.remove("selectedLang");
+            } catch (err) {
+              if (DEVMODE) displayText(`<c>red<c>${err} at line menu:279`);
+            }
           });
           settings.language = language;
           lang = eval(language);
@@ -301,7 +296,9 @@ function gotoSettingsMenu(inMainMenu = false) {
 async function gotoMainMenu(init: boolean = false) {
   despawnDeathScreen();
   menu.textContent = "";
-  setTimeout(() => { dim.style.height = "0%"; }, 150);
+  setTimeout(() => {
+    dim.style.height = "0%";
+  }, 150);
   mainMenu.style.display = "block";
   await helper.sleep(10);
   mainMenu.style.opacity = "1";
@@ -351,10 +348,10 @@ function LoadSlot(data: any) {
     _loot = GetKey("lootedChests", data).data ?? [];
     // update classes of all dropped items just in case
     _itmData.map((item: any) => {
-      if (item.itm.type === "weapon") return item.itm = new Weapon({ ...items[item.itm.id] });
-      if (item.itm.type === "armor") return item.itm = new Armor({ ...items[item.itm.id] });
-      if (item.itm.type === "artifact") return item.itm = new Artifact({ ...items[item.itm.id] });
-      if (item.itm.type === "consumable") return item.itm = new Consumable({ ...items[item.itm.id] });
+      if (item.itm.type === "weapon") return (item.itm = new Weapon({ ...items[item.itm.id] }));
+      if (item.itm.type === "armor") return (item.itm = new Armor({ ...items[item.itm.id] }));
+      if (item.itm.type === "artifact") return (item.itm = new Artifact({ ...items[item.itm.id] }));
+      if (item.itm.type === "consumable") return (item.itm = new Consumable({ ...items[item.itm.id] }));
     });
     for (let i = _pl.traits?.length ?? 0; i >= 0; i--) {
       // Find faulty trait
@@ -362,17 +359,15 @@ function LoadSlot(data: any) {
         if (Object.keys(_pl.traits[i].effects).length === 0) {
           // literally do nothing
         }
-      }
-      catch {
+      } catch {
         _pl.traits.splice(i, 1);
       }
     }
     _pl.updateTraits();
     _pl.updatePerks(true);
     _pl.updateAbilities();
-    Object.entries(_pl.classes.main.statBonuses).forEach((stat: any) => { }); // dirty trick to catch invalid save
-  }
-  catch (err: any) {
+    Object.entries(_pl.classes.main.statBonuses).forEach((stat: any) => {}); // dirty trick to catch invalid save
+  } catch (err: any) {
     console.error(err);
     loadingScreen.style.display = "none";
     return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
@@ -418,28 +413,27 @@ function closeTextWindow() {
   textWindow.textContent = "";
 }
 
-
 // This function was provided by courtesy of kassu11
 // thanks
 function calcLocalStorageMaxSpace() {
   try {
     for (let tuhat = 1000; tuhat < 100005; tuhat += 1000) localStorage.tuhat = "a".repeat(1024 * tuhat);
-  } catch { }
+  } catch {}
   try {
     for (let sata = 100; sata < 1005; sata += 100) localStorage.sata = "a".repeat(1024 * sata);
-  } catch { }
+  } catch {}
   try {
     for (let kymmenen = 10; kymmenen < 105; kymmenen += 10) localStorage.kymppi = "a".repeat(1024 * kymmenen);
-  } catch { }
+  } catch {}
   try {
     for (let single = 1; single < 15; single++) localStorage.single = "a".repeat(1024 * single);
-  } catch { }
+  } catch {}
   try {
     for (let half = 20; half > 0; half--) localStorage.half = "a".repeat(Math.ceil(1024 / half));
-  } catch { }
+  } catch {}
   try {
     for (let pieni = 1; pieni < 512; pieni++) localStorage.pieni = "a".repeat(pieni);
-  } catch { }
+  } catch {}
 
   const endSpace = calcLocalStorageUsedSpace();
   localStorage.removeItem("tuhat");
@@ -485,13 +479,13 @@ function saveSettingsFile() {
       link.click();
       window.URL.revokeObjectURL(url);
     };
-  }());
+  })();
   saveData(settings, "settings.json");
 }
 
 function loadSettingsFile() {
   const fileInput = document.createElement("input");
-  fileInput.setAttribute('type', 'file');
+  fileInput.setAttribute("type", "file");
   fileInput.click();
   fileInput.addEventListener("change", () => HandleSettingsFile(fileInput.files[0]));
 }
@@ -501,8 +495,8 @@ function HandleSettingsFile(file: any) {
   let text = "";
 
   // file reading finished successfully
-  reader.addEventListener('load', function (e) {
-    // contents of file in variable     
+  reader.addEventListener("load", function (e) {
+    // contents of file in variable
     text = e.target.result as any;
     FinishRead();
   });

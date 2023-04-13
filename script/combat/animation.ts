@@ -36,7 +36,14 @@ function attackTarget(attacker: characterObject, target: characterObject, attack
   }
 }
 
-async function fireProjectile(start: tileObject, end: tileObject, projectileSprite: string, ability: ability, isPlayer: boolean, attacker: characterObject) {
+async function fireProjectile(
+  start: tileObject,
+  end: tileObject,
+  projectileSprite: string,
+  ability: ability,
+  isPlayer: boolean,
+  attacker: characterObject
+) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
   const path: any = generateArrowPath(start, end);
   const projectile = <HTMLImageElement>document.querySelector("." + projectileSprite);
@@ -48,10 +55,19 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
   if (ability.aoe_size > 0) {
     onDestroy = () => aoeCollision(createAOEMap(path[path.length - 1], ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
   }
-  console.log(onDestroy);
+  //console.log(onDestroy);
   createNewProjectile(attacker, projectiles[projectileSprite], end, ability, regularAttack, onDestroy);
   animateProjectile(currentProjectiles[-1]);
   projectileLayers.append(canvas);
+
+  if (ability?.health_cost || ability?.health_cost_percentage) {
+    if (ability.health_cost) attacker.stats.hp -= ability.health_cost;
+    if (ability.health_cost_percentage) attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
+  }
+
+  if (ability.cooldown) ability.onCooldown = ability.cooldown + 1;
+  if (ability.mana_cost) attacker.stats.mp -= ability.mana_cost;
+
   if (isPlayer) {
     const layer = <HTMLCanvasElement>document.querySelector(".playerSheet");
     layer.style.animation = "none";
@@ -75,7 +91,9 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
       console.warn("Enemy layer not found");
     }
   } else {
-    const layer = document.querySelector<HTMLCanvasElement>(`.summon${combatSummons.findIndex((e) => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`);
+    const layer = document.querySelector<HTMLCanvasElement>(
+      `.summon${combatSummons.findIndex((e) => e.cords.x == attacker.cords.x && e.cords.y == attacker.cords.y)}`
+    );
     layer.style.animation = "none";
     // @ts-ignore
     layer.offsetHeight; /* trigger reflow */
@@ -83,6 +101,11 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
     layer.style.animation = null;
     layer.style.animationName = `shakeObject`;
   }
+
+  state.abiSelected = {};
+  state.isSelected = false;
+
+  updateUI();
   // if (path.length * 50 > highestWaitTime) highestWaitTime = path.length * 50;
   // try {
   //   let collided = false;
@@ -140,5 +163,5 @@ async function fireProjectile(start: tileObject, end: tileObject, projectileSpri
 }
 
 async function animateProjectile(projectile: Projectile) {
-  console.log(projectile);
+  // console.log(projectile);
 }

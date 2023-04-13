@@ -532,7 +532,7 @@ let player = new PlayerCharacter({
     grave: null,
     flags: {},
     questProgress: [],
-    sex: "male",
+    sex: "female",
 });
 let combatSummons = [];
 const randomProperty = function (mods) {

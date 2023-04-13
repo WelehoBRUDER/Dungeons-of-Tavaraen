@@ -10,7 +10,7 @@ const emptyModel = {
         vit: 1,
         cun: 1,
         hp: 100,
-        mp: 30
+        mp: 30,
     },
     resistances: {
         slash: 0,
@@ -21,23 +21,23 @@ const emptyModel = {
         divine: 0,
         fire: 0,
         lightning: 0,
-        ice: 0
+        ice: 0,
     },
     statusResistances: {
         poison: 0,
         burning: 0,
         curse: 0,
         stun: 0,
-        bleed: 0
+        bleed: 0,
     },
     level: {
         xp: 0,
         xpNeed: 100,
-        level: 1
+        level: 1,
     },
     classes: {
         main: null,
-        sub: null
+        sub: null,
     },
     sprite: ".player",
     race: "human",
@@ -67,7 +67,7 @@ const emptyModel = {
     traits: [
         {
             id: "resilience_of_the_lone_wanderer",
-        }
+        },
     ],
     regen: {
         hp: 0,
@@ -75,7 +75,7 @@ const emptyModel = {
     },
     hit: {
         chance: 60,
-        evasion: 30
+        evasion: 30,
     },
     unarmed_damages: { crush: 1 },
     statusEffects: [],
@@ -140,7 +140,7 @@ const classEquipments = {
         legs: new Armor({ ...items.raggedPants }),
         boots: new Armor({ ...items.raggedBoots }),
         offhand: {},
-    }
+    },
 };
 var clothToggleCreation = false;
 // steps: class-race, appearance
@@ -152,7 +152,9 @@ function characterCreation(withAnimations = true) {
         creation.style.display = "flex";
         traitPicks = 2;
         creationStep = "class-race";
-        setTimeout(() => { creation.style.opacity = "1"; }, 5);
+        setTimeout(() => {
+            creation.style.opacity = "1";
+        }, 5);
     }
     checkIfCanStartGame();
     content.innerHTML = ""; // Clear screen
@@ -164,7 +166,20 @@ function characterCreation(withAnimations = true) {
     }
     renderPlayerOutOfMap(256, creationCanvas, creationCtx, "center", player, clothToggleCreation);
 }
-const startingTraits = ["strong", "quick", "enduring", "intelligent", "stealthy", "lucky", "healthy", "wise", "regenerating", "magical", "adrenaline", "confident"];
+const startingTraits = [
+    "strong",
+    "quick",
+    "enduring",
+    "intelligent",
+    "stealthy",
+    "lucky",
+    "healthy",
+    "wise",
+    "regenerating",
+    "magical",
+    "adrenaline",
+    "confident",
+];
 let traitPicks = 2;
 function classRaceSelection() {
     var _a;
@@ -172,31 +187,37 @@ function classRaceSelection() {
   <div class="char-race-container">
     <h1 class="race-select">${lang.choose_race}</h1>
     <div class="races">
-      ${Object.entries(raceTexts).map(([key, { name }]) => {
+      ${Object.entries(raceTexts)
+        .map(([key, { name }]) => {
         return `<div class="race-pick ${key} ${player.race === key ? "selected" : ""}" onclick="changeRace('${key}')"><p>${name}</p></div>`;
-    }).join("")}
+    })
+        .join("")}
     </div>
   </div>
   <div class="char-class-container">
     <h1 class="class-select">${lang.choose_class}</h1>
     <div class="classes">
-      ${Object.values(combatClasses).map((combatClass) => {
+      ${Object.values(combatClasses)
+        .map((combatClass) => {
         var _a;
         return `<div class="class-pick ${combatClass.id} ${((_a = player.classes.main) === null || _a === void 0 ? void 0 : _a.id) === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
       <p>${lang[combatClass.id + "_name"]}</p>
       <img src="${combatClass.icon}" alt="${combatClass.id}">
     </div>`;
-    }).join("")}
+    })
+        .join("")}
     </div>
   </div>
   <div class="char-traits-container">
     <h1 class="trait-select">${(_a = lang.choose_traits) !== null && _a !== void 0 ? _a : "lang.choose_traits"}</h1>
     <p class="trait-picks-left">${traitPicks} points</p>
     <div class="traits">
-      ${startingTraits.map((trait) => {
+      ${startingTraits
+        .map((trait) => {
         var _a;
         return `<div class="trait-pick ${trait} ${player.traits.findIndex((t) => t.id === trait) > -1 ? "selected" : ""}" onclick="changeTrait('${trait}')"><p>${(_a = lang[trait + "_name"]) !== null && _a !== void 0 ? _a : trait}</p></div>`;
-    }).join("")}
+    })
+        .join("")}
   </div>
   </div>
   <div class="continue-buttons">
@@ -250,25 +271,31 @@ function appearanceSelection() {
   <div class="char-appearance-container">
     <h1 class="appearance-select">${(_a = lang.choose_hair) !== null && _a !== void 0 ? _a : "choose_hair"}</h1>
     <div class="appearances">
-      ${getHairArray().map((hair) => {
+      ${getHairArray()
+        .map((hair) => {
         return `<div  class="appearance-pick ${hair} ${player.hair === hair ? "selected" : ""}" onclick="changeHair(${hair})"><img src="${getHairImg(hair)}" alt="hair image ${hair}" ></div>`;
-    }).join("")}
+    })
+        .join("")}
     </div>
   </div>
   <div class="char-appearance-container">
   <h1 class="appearance-select">${(_b = lang.choose_eyes) !== null && _b !== void 0 ? _b : "choose_eyes"}</h1>
   <div class="appearances">
-    ${getEyesArray().map((eyes) => {
+    ${getEyesArray()
+        .map((eyes) => {
         return `<div  class="appearance-pick ${eyes} ${player.eyes === eyes ? "selected" : ""}" onclick="changeEyes(${eyes})"><img src="${getEyesImg(eyes)}" alt="eyes image ${eyes}" ></div>`;
-    }).join("")}
+    })
+        .join("")}
     </div>
   </div>
   <div class="char-appearance-container">
     <h1 class="appearance-select">${(_c = lang.choose_face) !== null && _c !== void 0 ? _c : "choose_face"}</h1>
     <div class="appearances">
-      ${getFaceArray().map((face) => {
+      ${getFaceArray()
+        .map((face) => {
         return `<div  class="appearance-pick ${face} ${player.face === face ? "selected" : ""}" onclick="changeFace(${face})"><img src="${getFaceImg(face)}" alt="face image ${face}" ></div>`;
-    }).join("")}
+    })
+        .join("")}
     </div>
   </div>
   <div class="char-appearance-container">
@@ -296,7 +323,9 @@ function changeName(value) {
 }
 function closeCharacterCreation() {
     creation.style.opacity = "0";
-    setTimeout(() => { creation.style.display = "none"; }, 750);
+    setTimeout(() => {
+        creation.style.display = "none";
+    }, 750);
     gotoMainMenu(true);
 }
 function toggleStep() {
@@ -313,7 +342,9 @@ function beginGame() {
     player.updateTraits();
     player.updateAbilities();
     creation.style.opacity = "0";
-    setTimeout(() => { creation.style.display = "none"; }, 750);
+    setTimeout(() => {
+        creation.style.display = "none";
+    }, 750);
     tree = player.classes.main.perkTree;
     closeGameMenu(false, true);
     helper.reviveAllDeadEnemies();
@@ -436,7 +467,7 @@ function raceTT(race) {
     entries.forEach((entry) => {
         sortedTotal[entry[0]] = entry[1];
     });
-    Object.entries(sortedTotal).forEach(effect => {
+    Object.entries(sortedTotal).forEach((effect) => {
         txt += effectSyntax(effect);
     });
     return txt;
@@ -450,14 +481,19 @@ function classTT(data) {
     entries.forEach((entry) => {
         sortedTotal[entry[0]] = entry[1];
     });
-    Object.entries(sortedTotal).forEach(effect => {
+    Object.entries(sortedTotal).forEach((effect) => {
         txt += effectSyntax(effect);
     });
     return txt;
 }
-for (let i = 0; i < 30; i++) {
-    player.addItem({ ...randomProperty(items) });
-}
+// for (let i = 0; i < 30; i++) {
+//   player.addItem({ ...randomProperty(items) });
+// }
+player.addItem(new Armor(items.mysteriousMask));
+player.addItem(new Armor(items.mysteriousBodysuit));
+player.addItem(new Armor(items.mysteriousGloves));
+player.addItem(new Armor(items.mysteriousLeggings));
+player.addItem(new Armor(items.mysteriousBoots));
 async function initGame() {
     document.querySelector(".loading-bar-fill").style.width = "0%";
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
@@ -514,7 +550,7 @@ async function initGame() {
     }
     document.querySelector(".loading-text").textContent = "Finishing load";
     document.querySelector(".loading-bar-fill").style.width = "100%";
-    setTimeout(() => document.querySelector(".loading").style.display = "none", 0);
+    setTimeout(() => (document.querySelector(".loading").style.display = "none"), 0);
     resizeCanvas();
     renderMinimap(maps[currentMap]);
     renderAreaMap(maps[currentMap]);

@@ -111,8 +111,14 @@ class Projectile {
   }
 }
 
-function createNewProjectile(shooter: characterObject, projectileTemplate: projectileTemplate, target: tileObject, ability: Ability, onHit: Function, onDestroy?: Function) {
-  console.log(projectileTemplate);
+function createNewProjectile(
+  shooter: characterObject,
+  projectileTemplate: projectileTemplate,
+  target: tileObject,
+  ability: Ability,
+  onHit: Function,
+  onDestroy?: Function
+) {
   let { id, texture, speed } = projectileTemplate;
   let isEnemy = shooter.isFoe ? true : false;
   speed += shooter.allModifiers.projectileSpeed || 0;

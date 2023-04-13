@@ -10,7 +10,7 @@ const items = {
         grade: "common",
         stats: {},
         commands: {},
-        spriteMap: { x: 0, y: 0 }
+        spriteMap: { x: 0, y: 0 },
     },
     dagger: {
         id: "dagger",
@@ -20,7 +20,7 @@ const items = {
         img: "resources/icons/weapon_dagger.png",
         sprite: "resources/tiles/player/dagger_model.png",
         stats: {
-            attackSpeedV: 25
+            attackSpeedV: 25,
         },
         price: 10,
         weight: 1.2,
@@ -28,7 +28,7 @@ const items = {
         statBonus: "dex",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 128, y: 0 }
+        spriteMap: { x: 128, y: 0 },
     },
     dualDaggers: {
         id: "dualDaggers",
@@ -38,7 +38,7 @@ const items = {
         img: "resources/icons/dual_daggers.png",
         sprite: "resources/tiles/player/dual_daggers.png",
         stats: {
-            attackSpeedV: 25
+            attackSpeedV: 25,
         },
         twoHanded: true,
         price: 70,
@@ -47,7 +47,7 @@ const items = {
         statBonus: "dex",
         grade: "uncommon",
         slot: "weapon",
-        spriteMap: { x: 256, y: 0 }
+        spriteMap: { x: 256, y: 0 },
     },
     stick: {
         id: "stick",
@@ -62,14 +62,14 @@ const items = {
         statBonus: "str",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 384, y: 0 }
+        spriteMap: { x: 384, y: 0 },
     },
     trollClub: {
         id: "trollClub",
         name: "Troll Club",
         damages: { crush: 21 },
         stats: {
-            hitChanceV: 5
+            hitChanceV: 5,
         },
         requiresStats: { str: 18 },
         range: 1,
@@ -82,7 +82,7 @@ const items = {
         twoHanded: true,
         grade: "uncommon",
         slot: "weapon",
-        spriteMap: { x: 512, y: 0 }
+        spriteMap: { x: 512, y: 0 },
     },
     chippedBlade: {
         id: "chippedBlade",
@@ -97,7 +97,7 @@ const items = {
         statBonus: "str",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 640, y: 0 }
+        spriteMap: { x: 640, y: 0 },
     },
     longsword: {
         id: "longsword",
@@ -113,7 +113,7 @@ const items = {
         statBonus: "str",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 768, y: 0 }
+        spriteMap: { x: 768, y: 0 },
     },
     silverSword: {
         id: "silverSword",
@@ -129,7 +129,7 @@ const items = {
         statBonus: "str",
         grade: "rare",
         slot: "weapon",
-        spriteMap: { x: 896, y: 0 }
+        spriteMap: { x: 896, y: 0 },
     },
     stoneHalberd: {
         id: "stoneHalberd",
@@ -146,7 +146,7 @@ const items = {
         grade: "uncommon",
         slot: "weapon",
         mainTitle: false,
-        spriteMap: { x: 1024, y: 0 }
+        spriteMap: { x: 1024, y: 0 },
     },
     galadorSpear: {
         id: "galadorSpear",
@@ -155,7 +155,7 @@ const items = {
         requiresStats: { dex: 12, str: 8 },
         stats: {
             evasionV: 5,
-            damage_against_race_undeadP: 15
+            damage_against_race_undeadP: 15,
         },
         range: 2,
         img: "resources/icons/spear_of_galador.png",
@@ -167,7 +167,7 @@ const items = {
         grade: "rare",
         slot: "weapon",
         mainTitle: false,
-        spriteMap: { x: 1152, y: 0 }
+        spriteMap: { x: 1152, y: 0 },
     },
     pikeMore: {
         id: "pikeMore",
@@ -175,7 +175,7 @@ const items = {
         damages: { crush: 16, lightning: 10 },
         requiresStats: { str: 14 },
         stats: {
-            hitChanceV: 10
+            hitChanceV: 10,
         },
         range: 2,
         img: "resources/icons/pikemore.png",
@@ -187,7 +187,7 @@ const items = {
         grade: "rare",
         twoHanded: true,
         slot: "weapon",
-        spriteMap: { x: 1280, y: 0 }
+        spriteMap: { x: 1280, y: 0 },
     },
     chippedAxe: {
         id: "chippedAxe",
@@ -202,7 +202,7 @@ const items = {
         statBonus: "str",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 1408, y: 0 }
+        spriteMap: { x: 1408, y: 0 },
     },
     orcishAxe: {
         id: "orcishAxe",
@@ -218,7 +218,7 @@ const items = {
         statBonus: "str",
         grade: "uncommon",
         slot: "weapon",
-        spriteMap: { x: 1536, y: 0 }
+        spriteMap: { x: 1536, y: 0 },
     },
     huntingBow: {
         id: "huntingBow",
@@ -235,7 +235,7 @@ const items = {
         statBonus: "dex",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 1664, y: 0 }
+        spriteMap: { x: 1664, y: 0 },
     },
     hiisiBow: {
         id: "hiisiBow",
@@ -252,7 +252,7 @@ const items = {
         statBonus: "dex",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 1792, y: 0 }
+        spriteMap: { x: 1792, y: 0 },
     },
     longBow: {
         id: "longBow",
@@ -270,7 +270,7 @@ const items = {
         grade: "uncommon",
         twoHanded: true,
         slot: "weapon",
-        spriteMap: { x: 1920, y: 0 }
+        spriteMap: { x: 1920, y: 0 },
     },
     goldBow: {
         id: "goldBow",
@@ -287,7 +287,7 @@ const items = {
         statBonus: "dex",
         grade: "rare",
         slot: "weapon",
-        spriteMap: { x: 2048, y: 0 }
+        spriteMap: { x: 2048, y: 0 },
     },
     apprenticeWand: {
         id: "apprenticeWand",
@@ -295,7 +295,7 @@ const items = {
         damages: { magic: 10 },
         requiresStats: { int: 5 },
         stats: {
-            magicDamageP: 5
+            magicDamageP: 5,
         },
         range: 6,
         img: "resources/icons/apprentice_wand.png",
@@ -307,7 +307,7 @@ const items = {
         statBonus: "int",
         grade: "common",
         slot: "weapon",
-        spriteMap: { x: 2176, y: 0 }
+        spriteMap: { x: 2176, y: 0 },
     },
     crimsonStaff: {
         id: "crimsonStaff",
@@ -316,7 +316,7 @@ const items = {
         requiresStats: { int: 10 },
         stats: {
             spellDamageP: 5,
-            fireDamageP: 5
+            fireDamageP: 5,
         },
         range: 7,
         img: "resources/icons/crimson_staff.png",
@@ -328,7 +328,7 @@ const items = {
         statBonus: "int",
         grade: "uncommon",
         slot: "weapon",
-        spriteMap: { x: 2304, y: 0 }
+        spriteMap: { x: 2304, y: 0 },
     },
     crystalWand: {
         id: "crystalWand",
@@ -337,7 +337,7 @@ const items = {
         requiresStats: { int: 15 },
         stats: {
             spellDamageP: 10,
-            iceDamageP: 10
+            iceDamageP: 10,
         },
         range: 9,
         img: "resources/icons/crystal_wand.png",
@@ -349,7 +349,7 @@ const items = {
         statBonus: "int",
         grade: "rare",
         slot: "weapon",
-        spriteMap: { x: 2432, y: 0 }
+        spriteMap: { x: 2432, y: 0 },
     },
     woodenShield: {
         id: "woodenShield",
@@ -357,7 +357,7 @@ const items = {
         armor: {
             physical: 10,
             magical: 7,
-            elemental: 3
+            elemental: 3,
         },
         resistances: { fire: -5 },
         img: "resources/icons/wooden_shield.png",
@@ -367,7 +367,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "offhand",
-        spriteMap: { x: 2560, y: 0 }
+        spriteMap: { x: 2560, y: 0 },
     },
     ironShield: {
         id: "ironShield",
@@ -375,7 +375,7 @@ const items = {
         armor: {
             physical: 20,
             magical: 10,
-            elemental: 10
+            elemental: 10,
         },
         resistances: { slash: 5, pierce: 2, crush: -3 },
         requiresStats: { str: 6, vit: 8 },
@@ -386,7 +386,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "offhand",
-        spriteMap: { x: 2688, y: 0 }
+        spriteMap: { x: 2688, y: 0 },
     },
     silverShield: {
         id: "silverShield",
@@ -394,7 +394,7 @@ const items = {
         armor: {
             physical: 25,
             magical: 15,
-            elemental: 15
+            elemental: 15,
         },
         resistances: { slash: 5, crush: -4, pierce: 5, lightning: -5 },
         requiresStats: { str: 7, dex: 7, vit: 7 },
@@ -405,7 +405,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "offhand",
-        spriteMap: { x: 2816, y: 0 }
+        spriteMap: { x: 2816, y: 0 },
     },
     parryingDagger: {
         id: "parryingDagger",
@@ -415,14 +415,14 @@ const items = {
         sprite: "resources/tiles/player/parrying_dagger.png",
         stats: {
             damageP: 10,
-            evasionV: 3
+            evasionV: 3,
         },
         price: 130,
         weight: 1.2,
         type: "armor",
         grade: "uncommon",
         slot: "offhand",
-        spriteMap: { x: 2944, y: 0 }
+        spriteMap: { x: 2944, y: 0 },
     },
     raggedShirt: {
         id: "raggedShirt",
@@ -430,7 +430,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 5,
-            elemental: 5
+            elemental: 5,
         },
         resistances: { crush: 3, fire: -2, ice: 2 },
         img: "resources/icons/ragged_shirt.png",
@@ -440,7 +440,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest",
-        spriteMap: { x: 0, y: 128 }
+        spriteMap: { x: 0, y: 128 },
     },
     raggedPants: {
         id: "raggedPants",
@@ -448,7 +448,7 @@ const items = {
         armor: {
             physical: 3,
             magical: 3,
-            elemental: 3
+            elemental: 3,
         },
         resistances: { crush: 2, fire: -1, ice: 1 },
         img: "resources/icons/ragged_pants.png",
@@ -458,7 +458,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "legs",
-        spriteMap: { x: 128, y: 128 }
+        spriteMap: { x: 128, y: 128 },
     },
     raggedBoots: {
         id: "raggedBoots",
@@ -466,7 +466,7 @@ const items = {
         armor: {
             physical: 2,
             magical: 2,
-            elemental: 2
+            elemental: 2,
         },
         resistances: { crush: 1, fire: -1, ice: 1 },
         img: "resources/icons/ragged_boots.png",
@@ -476,7 +476,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "boots",
-        spriteMap: { x: 256, y: 128 }
+        spriteMap: { x: 256, y: 128 },
     },
     raggedGloves: {
         id: "raggedGloves",
@@ -484,7 +484,7 @@ const items = {
         armor: {
             physical: 2,
             magical: 2,
-            elemental: 2
+            elemental: 2,
         },
         resistances: { crush: 1, fire: -1, ice: 1 },
         img: "resources/icons/gloves.png",
@@ -494,7 +494,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "gloves",
-        spriteMap: { x: 384, y: 128 }
+        spriteMap: { x: 384, y: 128 },
     },
     enchantedCap: {
         id: "enchantedCap",
@@ -502,7 +502,7 @@ const items = {
         armor: {
             physical: 100,
             magical: 100,
-            elemental: 100
+            elemental: 100,
         },
         resistances: { slash: 70, crush: 70, pierce: 70, magic: 70, fire: 70, ice: 70, dark: 70, divine: 70, lightning: 70 },
         stats: {
@@ -510,7 +510,7 @@ const items = {
             strP: 200,
             vitP: 200,
             intV: 100,
-            cunV: -25
+            cunV: -25,
         },
         coversHair: true,
         img: "resources/icons/kas_dj.png",
@@ -520,7 +520,7 @@ const items = {
         type: "armor",
         grade: "legendary",
         slot: "helmet",
-        spriteMap: { x: 512, y: 128 }
+        spriteMap: { x: 512, y: 128 },
     },
     raggedHood: {
         id: "raggedHood",
@@ -528,7 +528,7 @@ const items = {
         armor: {
             physical: 2,
             magical: 2,
-            elemental: 2
+            elemental: 2,
         },
         resistances: { crush: 1, fire: -2, ice: 1 },
         coversHair: true,
@@ -539,7 +539,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 640, y: 128 }
+        spriteMap: { x: 640, y: 128 },
     },
     woolHat: {
         id: "woolHat",
@@ -547,7 +547,7 @@ const items = {
         armor: {
             physical: 3,
             magical: 2,
-            elemental: 2
+            elemental: 2,
         },
         resistances: { crush: 2, fire: -1, ice: 5 },
         coversHair: false,
@@ -558,7 +558,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 768, y: 128 }
+        spriteMap: { x: 768, y: 128 },
     },
     leatherChest: {
         id: "leatherChest",
@@ -566,7 +566,7 @@ const items = {
         armor: {
             physical: 15,
             magical: 10,
-            elemental: 10
+            elemental: 10,
         },
         resistances: { crush: 4 },
         img: "resources/icons/leather_chest.png",
@@ -576,7 +576,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest",
-        spriteMap: { x: 896, y: 128 }
+        spriteMap: { x: 896, y: 128 },
     },
     leatherLeggings: {
         id: "leatherLeggings",
@@ -584,7 +584,7 @@ const items = {
         armor: {
             physical: 10,
             magical: 7,
-            elemental: 7
+            elemental: 7,
         },
         resistances: { crush: 3 },
         img: "resources/icons/leather_leg_bracers.png",
@@ -594,7 +594,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "legs",
-        spriteMap: { x: 1024, y: 128 }
+        spriteMap: { x: 1024, y: 128 },
     },
     leatherBracers: {
         id: "leatherBracers",
@@ -602,7 +602,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 4,
-            elemental: 4
+            elemental: 4,
         },
         resistances: { crush: 2 },
         img: "resources/icons/leather_bracers.png",
@@ -612,7 +612,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "gloves",
-        spriteMap: { x: 1152, y: 128 }
+        spriteMap: { x: 1152, y: 128 },
     },
     leatherHelmet: {
         id: "leatherHelmet",
@@ -620,7 +620,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 4,
-            elemental: 4
+            elemental: 4,
         },
         resistances: { crush: 2 },
         coversHair: true,
@@ -631,7 +631,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 1280, y: 128 }
+        spriteMap: { x: 1280, y: 128 },
     },
     leatherBoots: {
         id: "leatherBoots",
@@ -639,7 +639,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 4,
-            elemental: 4
+            elemental: 4,
         },
         resistances: { crush: 2 },
         img: "resources/icons/leather_boots.png",
@@ -649,7 +649,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "boots",
-        spriteMap: { x: 1408, y: 128 }
+        spriteMap: { x: 1408, y: 128 },
     },
     initiateRobe: {
         id: "initiateRobe",
@@ -657,7 +657,7 @@ const items = {
         armor: {
             physical: 10,
             magical: 15,
-            elemental: 5
+            elemental: 5,
         },
         img: "resources/icons/initiate_robe.png",
         sprite: "resources/tiles/player/initiate_robe.png",
@@ -666,7 +666,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "chest",
-        spriteMap: { x: 1536, y: 128 }
+        spriteMap: { x: 1536, y: 128 },
     },
     initiatePants: {
         id: "initiatePants",
@@ -674,7 +674,7 @@ const items = {
         armor: {
             physical: 7,
             magical: 13,
-            elemental: 4
+            elemental: 4,
         },
         img: "resources/icons/initiate_pants.png",
         sprite: "resources/tiles/player/initiate_pants.png",
@@ -683,7 +683,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "legs",
-        spriteMap: { x: 1664, y: 128 }
+        spriteMap: { x: 1664, y: 128 },
     },
     initiateHood: {
         id: "initiateHood",
@@ -691,7 +691,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 8,
-            elemental: 2
+            elemental: 2,
         },
         coversHair: true,
         img: "resources/icons/initiate_hood.png",
@@ -701,7 +701,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "helmet",
-        spriteMap: { x: 1792, y: 128 }
+        spriteMap: { x: 1792, y: 128 },
     },
     initiateGloves: {
         id: "initiateGloves",
@@ -709,7 +709,7 @@ const items = {
         armor: {
             physical: 4,
             magical: 5,
-            elemental: 2
+            elemental: 2,
         },
         img: "resources/icons/initiate_gloves.png",
         sprite: "resources/tiles/player/initiate_gloves.png",
@@ -718,7 +718,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "gloves",
-        spriteMap: { x: 1920, y: 128 }
+        spriteMap: { x: 1920, y: 128 },
     },
     initiateShoes: {
         id: "initiateShoes",
@@ -726,7 +726,7 @@ const items = {
         armor: {
             physical: 4,
             magical: 5,
-            elemental: 2
+            elemental: 2,
         },
         img: "resources/icons/initiate_shoes.png",
         sprite: "resources/tiles/player/initiate_shoes.png",
@@ -735,7 +735,7 @@ const items = {
         type: "armor",
         grade: "common",
         slot: "boots",
-        spriteMap: { x: 2048, y: 128 }
+        spriteMap: { x: 2048, y: 128 },
     },
     apprenticeRobe: {
         id: "apprenticeRobe",
@@ -743,11 +743,11 @@ const items = {
         armor: {
             physical: 25,
             magical: 30,
-            elemental: 25
+            elemental: 25,
         },
         stats: {
             regenMpP: 15,
-            spellDamageP: 5
+            spellDamageP: 5,
         },
         resistances: { fire: 2, ice: 2, lightning: 2 },
         img: "resources/icons/apprentice_robe.png",
@@ -757,7 +757,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 2176, y: 128 }
+        spriteMap: { x: 2176, y: 128 },
     },
     apprenticePants: {
         id: "apprenticePants",
@@ -765,11 +765,11 @@ const items = {
         armor: {
             physical: 15,
             magical: 20,
-            elemental: 15
+            elemental: 15,
         },
         stats: {
             mpMaxP: 10,
-            spellDamageP: 5
+            spellDamageP: 5,
         },
         resistances: { slash: -3, fire: 2, ice: 2, lightning: 2 },
         img: "resources/icons/apprentice_pants.png",
@@ -779,7 +779,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "legs",
-        spriteMap: { x: 2304, y: 128 }
+        spriteMap: { x: 2304, y: 128 },
     },
     apprenticeBoots: {
         id: "apprenticeBoots",
@@ -787,10 +787,10 @@ const items = {
         armor: {
             physical: 10,
             magical: 15,
-            elemental: 10
+            elemental: 10,
         },
         stats: {
-            spellDamageP: 5
+            spellDamageP: 5,
         },
         resistances: { slash: -2, fire: 1, ice: 1, lightning: 1 },
         img: "resources/icons/apprentice_boots.png",
@@ -800,7 +800,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "boots",
-        spriteMap: { x: 2432, y: 128 }
+        spriteMap: { x: 2432, y: 128 },
     },
     ironArmor: {
         id: "ironArmor",
@@ -808,7 +808,7 @@ const items = {
         armor: {
             physical: 30,
             magical: 15,
-            elemental: 12
+            elemental: 12,
         },
         resistances: { slash: 5, crush: -5, lightning: -5 },
         requiresStats: { str: 12 },
@@ -819,7 +819,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 2560, y: 128 }
+        spriteMap: { x: 2560, y: 128 },
     },
     ironLegplates: {
         id: "ironLegplates",
@@ -827,7 +827,7 @@ const items = {
         armor: {
             physical: 24,
             magical: 12,
-            elemental: 10
+            elemental: 10,
         },
         resistances: { slash: 4, crush: -4, lightning: -4 },
         requiresStats: { str: 12 },
@@ -838,7 +838,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "legs",
-        spriteMap: { x: 2688, y: 128 }
+        spriteMap: { x: 2688, y: 128 },
     },
     ironHelmet: {
         id: "ironHelmet",
@@ -846,7 +846,7 @@ const items = {
         armor: {
             physical: 15,
             magical: 10,
-            elemental: 8
+            elemental: 8,
         },
         resistances: { slash: 3, crush: -3, lightning: -3 },
         requiresStats: { str: 8 },
@@ -858,7 +858,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "helmet",
-        spriteMap: { x: 2816, y: 128 }
+        spriteMap: { x: 2816, y: 128 },
     },
     ironGauntlets: {
         id: "ironGauntlets",
@@ -866,7 +866,7 @@ const items = {
         armor: {
             physical: 15,
             magical: 10,
-            elemental: 8
+            elemental: 8,
         },
         resistances: { slash: 3, crush: -3, lightning: -3 },
         requiresStats: { str: 8 },
@@ -877,7 +877,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "gloves",
-        spriteMap: { x: 2944, y: 128 }
+        spriteMap: { x: 2944, y: 128 },
     },
     ironBoots: {
         id: "ironBoots",
@@ -885,7 +885,7 @@ const items = {
         armor: {
             physical: 15,
             magical: 10,
-            elemental: 8
+            elemental: 8,
         },
         resistances: { slash: 3, crush: -3, lightning: -3 },
         requiresStats: { str: 8 },
@@ -896,7 +896,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "boots",
-        spriteMap: { x: 0, y: 256 }
+        spriteMap: { x: 0, y: 256 },
     },
     rangerArmor: {
         id: "rangerArmor",
@@ -904,7 +904,7 @@ const items = {
         armor: {
             physical: 40,
             magical: 15,
-            elemental: 15
+            elemental: 15,
         },
         resistances: { slash: 5, crush: 5 },
         requiresStats: { vit: 8 },
@@ -915,7 +915,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 128, y: 256 }
+        spriteMap: { x: 128, y: 256 },
     },
     rangerPants: {
         id: "rangerPants",
@@ -923,7 +923,7 @@ const items = {
         armor: {
             physical: 30,
             magical: 10,
-            elemental: 10
+            elemental: 10,
         },
         resistances: { slash: 2, pierce: 5, crush: 2 },
         requiresStats: { vit: 8 },
@@ -934,7 +934,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "legs",
-        spriteMap: { x: 256, y: 256 }
+        spriteMap: { x: 256, y: 256 },
     },
     rangerHood: {
         id: "rangerHood",
@@ -942,7 +942,7 @@ const items = {
         armor: {
             physical: 20,
             magical: 10,
-            elemental: 10
+            elemental: 10,
         },
         resistances: { slash: 2, crush: 3 },
         requiresStats: { vit: 5 },
@@ -954,7 +954,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "helmet",
-        spriteMap: { x: 384, y: 256 }
+        spriteMap: { x: 384, y: 256 },
     },
     rangerGloves: {
         id: "rangerGloves",
@@ -962,7 +962,7 @@ const items = {
         armor: {
             physical: 18,
             magical: 8,
-            elemental: 8
+            elemental: 8,
         },
         resistances: { slash: 1, pierce: 3, crush: 1 },
         requiresStats: { vit: 4 },
@@ -973,7 +973,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "gloves",
-        spriteMap: { x: 512, y: 256 }
+        spriteMap: { x: 512, y: 256 },
     },
     rangerBoots: {
         id: "rangerBoots",
@@ -981,7 +981,7 @@ const items = {
         armor: {
             physical: 18,
             magical: 8,
-            elemental: 8
+            elemental: 8,
         },
         resistances: { slash: 1, pierce: 3, crush: 1 },
         requiresStats: { vit: 4 },
@@ -992,7 +992,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "boots",
-        spriteMap: { x: 640, y: 256 }
+        spriteMap: { x: 640, y: 256 },
     },
     crownOfWisdom: {
         id: "crownOfWisdom",
@@ -1000,11 +1000,11 @@ const items = {
         armor: {
             physical: 0,
             magical: 30,
-            elemental: 0
+            elemental: 0,
         },
         requiresStats: { int: 6 },
         stats: {
-            magicDamageP: 10
+            magicDamageP: 10,
         },
         img: "resources/icons/crown_of_wisdom.png",
         sprite: "resources/tiles/player/crown_of_wisdom.png",
@@ -1013,7 +1013,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "helmet",
-        spriteMap: { x: 768, y: 256 }
+        spriteMap: { x: 768, y: 256 },
     },
     lichRobes: {
         id: "lichRobes",
@@ -1021,7 +1021,7 @@ const items = {
         armor: {
             physical: 5,
             magical: 25,
-            elemental: 10
+            elemental: 10,
         },
         requiresStats: { int: 12 },
         img: "resources/icons/lich_robes.png",
@@ -1031,7 +1031,7 @@ const items = {
         type: "armor",
         grade: "uncommon",
         slot: "chest",
-        spriteMap: { x: 896, y: 256 }
+        spriteMap: { x: 896, y: 256 },
     },
     knightArmor: {
         id: "knightArmor",
@@ -1039,7 +1039,7 @@ const items = {
         armor: {
             physical: 40,
             magical: 10,
-            elemental: 20
+            elemental: 20,
         },
         resistances: { slash: 5, crush: -10 },
         requiresStats: { vit: 10, str: 12 },
@@ -1050,7 +1050,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "chest",
-        spriteMap: { x: 1024, y: 256 }
+        spriteMap: { x: 1024, y: 256 },
     },
     knightGreaves: {
         id: "knightGreaves",
@@ -1058,7 +1058,7 @@ const items = {
         armor: {
             physical: 25,
             magical: 10,
-            elemental: 15
+            elemental: 15,
         },
         resistances: { slash: 5, crush: -5 },
         requiresStats: { vit: 10, str: 12 },
@@ -1069,7 +1069,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "legs",
-        spriteMap: { x: 1152, y: 256 }
+        spriteMap: { x: 1152, y: 256 },
     },
     greathelm: {
         id: "greathelm",
@@ -1077,7 +1077,7 @@ const items = {
         armor: {
             physical: 20,
             magical: 5,
-            elemental: 10
+            elemental: 10,
         },
         requiresStats: { vit: 6, str: 8 },
         coversHair: true,
@@ -1088,7 +1088,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "helmet",
-        spriteMap: { x: 1280, y: 256 }
+        spriteMap: { x: 1280, y: 256 },
     },
     knightGauntlets: {
         id: "knightGauntlets",
@@ -1096,7 +1096,7 @@ const items = {
         armor: {
             physical: 20,
             magical: 5,
-            elemental: 10
+            elemental: 10,
         },
         requiresStats: { vit: 6, str: 8 },
         img: "resources/icons/knight_gloves.png",
@@ -1106,7 +1106,7 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "gloves",
-        spriteMap: { x: 1408, y: 256 }
+        spriteMap: { x: 1408, y: 256 },
     },
     knightSabatons: {
         id: "knightSabatons",
@@ -1114,7 +1114,7 @@ const items = {
         armor: {
             physical: 20,
             magical: 5,
-            elemental: 10
+            elemental: 10,
         },
         requiresStats: { vit: 6, str: 8 },
         img: "resources/icons/knight_sabatons.png",
@@ -1124,14 +1124,120 @@ const items = {
         type: "armor",
         grade: "rare",
         slot: "boots",
-        spriteMap: { x: 1536, y: 256 }
+        spriteMap: { x: 1536, y: 256 },
+    },
+    mysteriousBodysuit: {
+        id: "mysteriousBodysuit",
+        name: "Mysterious Bodysuit",
+        armor: {
+            physical: 30,
+            magical: 30,
+            elemental: 30,
+        },
+        requiresStats: { int: 5 },
+        stats: {
+            hpMaxP: 6,
+        },
+        img: "resources/icons/mysterious_bodysuit.png",
+        sprite: "resources/tiles/player/mysterious_bodysuit.png",
+        price: 1250,
+        weight: 3.5,
+        type: "armor",
+        grade: "mythical",
+        slot: "chest",
+        spriteMap: { x: 1664, y: 256 },
+    },
+    mysteriousLeggings: {
+        id: "mysteriousLeggings",
+        name: "Mysterious Leggings",
+        armor: {
+            physical: 25,
+            magical: 25,
+            elemental: 25,
+        },
+        requiresStats: { int: 5 },
+        stats: {
+            hpMaxP: 4,
+        },
+        img: "resources/icons/mysterious_leggings.png",
+        sprite: "resources/tiles/player/mysterious_leggings.png",
+        price: 925,
+        weight: 2,
+        type: "armor",
+        grade: "mythical",
+        slot: "legs",
+        spriteMap: { x: 1792, y: 256 },
+    },
+    mysteriousMask: {
+        id: "mysteriousMask",
+        name: "Mysterious Mask",
+        armor: {
+            physical: 15,
+            magical: 15,
+            elemental: 15,
+        },
+        requiresStats: { int: 5 },
+        stats: {
+            damageP: 7.5,
+        },
+        coversHair: false,
+        img: "resources/icons/mysterious_mask.png",
+        sprite: "resources/tiles/player/mysterious_mask.png",
+        price: 650,
+        weight: 0.8,
+        type: "armor",
+        grade: "mythical",
+        slot: "helmet",
+        spriteMap: { x: 1920, y: 256 },
+    },
+    mysteriousGloves: {
+        id: "mysteriousGloves",
+        name: "Mysterious Gloves",
+        armor: {
+            physical: 20,
+            magical: 20,
+            elemental: 20,
+        },
+        requiresStats: { int: 5 },
+        stats: {
+            hitChanceV: 5,
+        },
+        img: "resources/icons/mysterious_gloves.png",
+        sprite: "resources/tiles/player/mysterious_gloves.png",
+        price: 600,
+        weight: 1.1,
+        type: "armor",
+        grade: "mythical",
+        slot: "gloves",
+        spriteMap: { x: 2048, y: 256 },
+    },
+    mysteriousBoots: {
+        id: "mysteriousBoots",
+        name: "Mysterious Boots",
+        armor: {
+            physical: 20,
+            magical: 20,
+            elemental: 20,
+        },
+        requiresStats: { int: 5 },
+        stats: {
+            evasionV: 5,
+        },
+        img: "resources/icons/mysterious_boots.png",
+        sprite: "resources/tiles/player/mysterious_boots.png",
+        price: 600,
+        weight: 1.5,
+        type: "armor",
+        grade: "mythical",
+        slot: "boots",
+        spriteMap: { x: 2176, y: 256 },
     },
     talismanOfProtection: {
         id: "talismanOfProtection",
         name: "Talisman of Protection",
         stats: {
             hpMaxV: 10,
-            resistAllV: 3
+            resistAllV: 3,
         },
         img: "resources/icons/talisman_of_protection.png",
         price: 60,
@@ -1140,14 +1246,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 1664, y: 256 }
+        spriteMap: { x: 2304, y: 256 },
     },
     emblemOfProtection: {
         id: "emblemOfProtection",
         name: "Emblem of Protection",
         stats: {
             hpMaxV: 5,
-            evasionV: 3
+            evasionV: 3,
         },
         img: "resources/icons/emblem_of_protection.png",
         price: 60,
@@ -1156,13 +1262,13 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 1792, y: 256 }
+        spriteMap: { x: 2432, y: 256 },
     },
     ringOfProtection: {
         id: "ringOfProtection",
         name: "Ring of Protection",
         stats: {
-            resistAllV: 5
+            resistAllV: 5,
         },
         img: "resources/icons/ring_of_protection.png",
         price: 60,
@@ -1171,14 +1277,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 1920, y: 256 }
+        spriteMap: { x: 2560, y: 256 },
     },
     scholarsTalisman: {
         id: "scholarsTalisman",
         name: "Scholars Lucky Talisman",
         stats: {
             mpMaxV: 5,
-            magicDamageP: 3
+            magicDamageP: 3,
         },
         img: "resources/icons/scholars_talisman.png",
         price: 60,
@@ -1187,14 +1293,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 2048, y: 256 }
+        spriteMap: { x: 2688, y: 256 },
     },
     scholarsEmblem: {
         id: "scholarsEmblem",
         name: "Emblem of the Scholar",
         stats: {
             mpMaxP: 6,
-            hpMaxV: 3
+            hpMaxV: 3,
         },
         img: "resources/icons/emblem_of_scholar.png",
         price: 60,
@@ -1203,14 +1309,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2176, y: 256 }
+        spriteMap: { x: 2816, y: 256 },
     },
     scholarsRing: {
         id: "scholarsRing",
         name: "Scholars Enchanted Ring",
         stats: {
             mpMaxV: 5,
-            magicResistV: 8
+            magicResistV: 8,
         },
         img: "resources/icons/scholars_ring.png",
         price: 60,
@@ -1219,14 +1325,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 2304, y: 256 }
+        spriteMap: { x: 2944, y: 256 },
     },
     warriorsTalisman: {
         id: "warriorsTalisman",
         name: "Talisman of an Exalted Warrior",
         stats: {
             damageP: 3,
-            strV: 3
+            strV: 3,
         },
         img: "resources/icons/warrior_talisman.png",
         price: 60,
@@ -1235,14 +1341,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 2432, y: 256 }
+        spriteMap: { x: 0, y: 384 },
     },
     warriorsEmblem: {
         id: "warriorsEmblem",
         name: "Exalted Warriors Emblem",
         stats: {
             hpMaxV: 8,
-            cunV: 2
+            cunV: 2,
         },
         img: "resources/icons/warrior_emblem.png",
         price: 60,
@@ -1251,7 +1357,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2560, y: 256 }
+        spriteMap: { x: 128, y: 384 },
     },
     warriorsRing: {
         id: "warriorsRing",
@@ -1259,7 +1365,7 @@ const items = {
         stats: {
             attack_damage_multiplierP: 7,
             strV: 1,
-            vitV: 1
+            vitV: 1,
         },
         img: "resources/icons/warrior_ring.png",
         price: 60,
@@ -1268,14 +1374,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 2688, y: 256 }
+        spriteMap: { x: 256, y: 384 },
     },
     loneShadesTalisman: {
         id: "loneShadesTalisman",
         name: "Lone Shades Star Talisman",
         stats: {
             dexV: 3,
-            hpMaxV: 2
+            hpMaxV: 2,
         },
         img: "resources/icons/lone_shades_star_talisman.png",
         price: 60,
@@ -1284,14 +1390,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 2816, y: 256 }
+        spriteMap: { x: 384, y: 384 },
     },
     loneShadesEmblem: {
         id: "loneShadesEmblem",
         name: "Emblem of the Lone Shade",
         stats: {
             cunV: 3,
-            evasionV: 2
+            evasionV: 2,
         },
         img: "resources/icons/emblem_of_the_lone_shade.png",
         price: 60,
@@ -1300,14 +1406,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 2944, y: 256 }
+        spriteMap: { x: 512, y: 384 },
     },
     loneShadesRing: {
         id: "loneShadesRing",
         name: "Creeping Ring of the Lone Shade",
         stats: {
             damageP: 6,
-            vitV: 2
+            vitV: 2,
         },
         img: "resources/icons/creeping_ring_of_the_lone_shade.png",
         price: 60,
@@ -1316,14 +1422,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 0, y: 384 }
+        spriteMap: { x: 640, y: 384 },
     },
     huntersTalisman: {
         id: "huntersTalisman",
         name: "Old Hunters Talisman",
         stats: {
             dexV: 2,
-            hpMaxV: 5
+            hpMaxV: 5,
         },
         img: "resources/icons/hunter_talisman.png",
         price: 60,
@@ -1332,14 +1438,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact1",
-        spriteMap: { x: 128, y: 384 }
+        spriteMap: { x: 768, y: 384 },
     },
     huntersEmblem: {
         id: "huntersEmblem",
         name: "Emblem of the Old Hunter",
         stats: {
             vitV: 2,
-            hitChanceV: 5
+            hitChanceV: 5,
         },
         img: "resources/icons/hunter_emblem.png",
         price: 60,
@@ -1348,14 +1454,14 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact2",
-        spriteMap: { x: 256, y: 384 }
+        spriteMap: { x: 896, y: 384 },
     },
     huntersRing: {
         id: "huntersRing",
         name: "Valued Ring of the Old Hunter",
         stats: {
             dexV: 2,
-            strV: 2
+            strV: 2,
         },
         img: "resources/icons/hunter_ring.png",
         price: 60,
@@ -1364,7 +1470,7 @@ const items = {
         type: "artifact",
         grade: "uncommon",
         slot: "artifact3",
-        spriteMap: { x: 384, y: 384 }
+        spriteMap: { x: 1024, y: 384 },
     },
     healingScrollI: {
         id: "healingScrollI",
@@ -1380,7 +1486,7 @@ const items = {
         healValue: 20,
         usesTotal: 3,
         usesRemaining: 3,
-        spriteMap: { x: 512, y: 384 }
+        spriteMap: { x: 1152, y: 384 },
     },
     manaScrollI: {
         id: "manaScrollI",
@@ -1396,7 +1502,7 @@ const items = {
         manaValue: 15,
         usesTotal: 3,
         usesRemaining: 3,
-        spriteMap: { x: 640, y: 384 }
+        spriteMap: { x: 1280, y: 384 },
     },
     healingPotion_weak: {
         id: "healingPotion_weak",
@@ -1411,7 +1517,7 @@ const items = {
         equippedSlot: -1,
         healValue: 50,
         stacks: true,
-        spriteMap: { x: 768, y: 384 }
+        spriteMap: { x: 1408, y: 384 },
     },
     manaPotion_weak: {
         id: "manaPotion_weak",
@@ -1426,7 +1532,7 @@ const items = {
         equippedSlot: -1,
         manaValue: 40,
         stacks: true,
-        spriteMap: { x: 896, y: 384 }
+        spriteMap: { x: 1536, y: 384 },
     },
     beer: {
         id: "beer",
@@ -1439,11 +1545,9 @@ const items = {
         grade: "common",
         slot: "",
         equippedSlot: -1,
-        statusesUser: [
-            "liquid_courage"
-        ],
+        statusesUser: ["liquid_courage"],
         stacks: true,
-        spriteMap: { x: 1024, y: 384 }
-    }
+        spriteMap: { x: 1664, y: 384 },
+    },
 };
 //# sourceMappingURL=items.js.map

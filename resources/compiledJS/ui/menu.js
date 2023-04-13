@@ -41,7 +41,7 @@ function handleEscape() {
     else if (state.journalOpen) {
         closePlayerQuests();
     }
-    else if (state.codexOpen) {
+    else if (state.keyxOpen) {
         closeCodex();
     }
     else if (state.smithOpen) {
@@ -93,7 +93,9 @@ const settingsTopbar = settingsBackground.querySelector(".top-bar");
 function openGameMenu() {
     var _a;
     menu.textContent = "";
-    setTimeout(() => { dim.style.height = "100%"; }, 5);
+    setTimeout(() => {
+        dim.style.height = "100%";
+    }, 5);
     for (let button of menuOptions) {
         const frame = document.createElement("div");
         frame.textContent = (_a = lang[button.id]) !== null && _a !== void 0 ? _a : button.id;
@@ -108,12 +110,16 @@ function openGameMenu() {
 function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
     const reverseOptions = [...menuOptions].reverse();
     if (!noDim) {
-        setTimeout(() => { dim.style.height = "0%"; }, 5);
+        setTimeout(() => {
+            dim.style.height = "0%";
+        }, 5);
         settingsContent.textContent = "";
         settingsTopbar.style.height = "0px";
     }
     if (!keepMainMenu) {
-        setTimeout(() => { mainMenu.style.display = "none"; }, 575);
+        setTimeout(() => {
+            mainMenu.style.display = "none";
+        }, 575);
         state.menuOpen = false;
         state.titleScreen = false;
         mainMenu.style.opacity = "0";
@@ -151,12 +157,14 @@ async function closeSettingsMenu() {
     settingsContent.textContent = "";
     settingsTopbar.style.height = "0px";
     state.optionsOpen = false;
-    setTimeout(() => { dim.style.height = "0%"; }, 5);
+    setTimeout(() => {
+        dim.style.height = "0%";
+    }, 5);
     hideHover();
 }
 function scaleUI(scale) {
     settings["ui_scale"] = scale * 100;
-    document.documentElement.style.setProperty('--ui-scale', scale.toString());
+    document.documentElement.style.setProperty("--ui-scale", scale.toString());
     moveMinimap();
 }
 function gotoSettingsMenu(inMainMenu = false) {
@@ -179,7 +187,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                 toggleBox.textContent = "X";
             else
                 toggleBox.textContent = "";
-            container.addEventListener("click", tog => {
+            container.addEventListener("click", (tog) => {
                 settings[_setting] = !settings[_setting];
                 moveMinimap();
                 if (_setting.includes("draw"))
@@ -315,7 +323,9 @@ async function gotoMainMenu(init = false) {
     var _a;
     despawnDeathScreen();
     menu.textContent = "";
-    setTimeout(() => { dim.style.height = "0%"; }, 150);
+    setTimeout(() => {
+        dim.style.height = "0%";
+    }, 150);
     mainMenu.style.display = "block";
     await helper.sleep(10);
     mainMenu.style.opacity = "1";
@@ -368,13 +378,13 @@ function LoadSlot(data) {
         // update classes of all dropped items just in case
         _itmData.map((item) => {
             if (item.itm.type === "weapon")
-                return item.itm = new Weapon({ ...items[item.itm.id] });
+                return (item.itm = new Weapon({ ...items[item.itm.id] }));
             if (item.itm.type === "armor")
-                return item.itm = new Armor({ ...items[item.itm.id] });
+                return (item.itm = new Armor({ ...items[item.itm.id] }));
             if (item.itm.type === "artifact")
-                return item.itm = new Artifact({ ...items[item.itm.id] });
+                return (item.itm = new Artifact({ ...items[item.itm.id] }));
             if (item.itm.type === "consumable")
-                return item.itm = new Consumable({ ...items[item.itm.id] });
+                return (item.itm = new Consumable({ ...items[item.itm.id] }));
         });
         for (let i = (_e = (_d = _pl.traits) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0; i >= 0; i--) {
             // Find faulty trait
@@ -506,12 +516,12 @@ function saveSettingsFile() {
             link.click();
             window.URL.revokeObjectURL(url);
         };
-    }());
+    })();
     saveData(settings, "settings.json");
 }
 function loadSettingsFile() {
     const fileInput = document.createElement("input");
-    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute("type", "file");
     fileInput.click();
     fileInput.addEventListener("change", () => HandleSettingsFile(fileInput.files[0]));
 }
@@ -519,8 +529,8 @@ function HandleSettingsFile(file) {
     const reader = new FileReader();
     let text = "";
     // file reading finished successfully
-    reader.addEventListener('load', function (e) {
-        // contents of file in variable     
+    reader.addEventListener("load", function (e) {
+        // contents of file in variable
         text = e.target.result;
         FinishRead();
     });

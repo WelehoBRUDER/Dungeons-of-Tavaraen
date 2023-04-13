@@ -1,3 +1,14 @@
+# 1.2.3 ~ 13.1.2023
+
+## Major Changes
+  - Added 2 new armor sets.
+    - Mysterious Set, a mythical bodysuit with a mysterious origin.
+    - Barbarian Set, rough leather armor with a barbaric design.
+
+## Fixes & Tweaks
+- Fixed bug that prevented use of abilities with that applied status effects.
+- Fixed bug where abilities shot outside of aggro range did not go on cooldown.
+
 # 1.2.2 ~ 16.12.2022
 
 ## Major Changes

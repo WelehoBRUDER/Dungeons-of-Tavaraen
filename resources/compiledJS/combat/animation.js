@@ -59,10 +59,20 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     if (ability.aoe_size > 0) {
         onDestroy = () => aoeCollision(createAOEMap(path[path.length - 1], ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
     }
-    console.log(onDestroy);
+    //console.log(onDestroy);
     createNewProjectile(attacker, projectiles[projectileSprite], end, ability, regularAttack, onDestroy);
     animateProjectile(currentProjectiles[-1]);
     projectileLayers.append(canvas);
+    if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
+        if (ability.health_cost)
+            attacker.stats.hp -= ability.health_cost;
+        if (ability.health_cost_percentage)
+            attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
+    }
+    if (ability.cooldown)
+        ability.onCooldown = ability.cooldown + 1;
+    if (ability.mana_cost)
+        attacker.stats.mp -= ability.mana_cost;
     if (isPlayer) {
         const layer = document.querySelector(".playerSheet");
         layer.style.animation = "none";
@@ -95,6 +105,9 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
         layer.style.animation = null;
         layer.style.animationName = `shakeObject`;
     }
+    state.abiSelected = {};
+    state.isSelected = false;
+    updateUI();
     // if (path.length * 50 > highestWaitTime) highestWaitTime = path.length * 50;
     // try {
     //   let collided = false;
@@ -151,6 +164,6 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     // }
 }
 async function animateProjectile(projectile) {
-    console.log(projectile);
+    // console.log(projectile);
 }
 //# sourceMappingURL=animation.js.map
