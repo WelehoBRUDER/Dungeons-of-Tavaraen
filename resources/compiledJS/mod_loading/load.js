@@ -1,10 +1,11 @@
 "use strict";
 var _a;
 const modsInformation = [];
-const modsSettings = (_a = JSON.parse(localStorage.getItem("DOT_game_mods"))) !== null && _a !== void 0 ? _a : {};
+const modsSettings = (_a = JSON.parse(localStorage.getItem("DOT_mods_config"))) !== null && _a !== void 0 ? _a : {};
 const modsData = {
     folder: null,
     mods: [],
+    images: [],
 };
 async function uploadModDirectory() {
     // @ts-expect-error
@@ -19,6 +20,32 @@ async function uploadModDirectory() {
     modsData.mods = mods;
 }
 async function loadMods() {
+    console.log("called!");
+    Object.entries(modsData.mods).forEach(async ([id, files]) => {
+        files.forEach(async (file) => {
+            if (file.type.startsWith("image")) {
+                const url = file.webkitRelativePath;
+                if (!modsData.images[id])
+                    modsData.images[id] = [];
+                modsData.images[id].push({ name: file.name, url });
+                return;
+            }
+            if (file.type !== "text/javascript")
+                return;
+            let fileData = await file.text();
+            console.log(file);
+            console.log(fileData);
+            if (namesFromPaths[file.name]) {
+                namesFromPaths[file.name].forEach((name) => {
+                    fileData = fileData.split(`${name}`).join(`${id}_${name}`);
+                });
+            }
+            const script = document.createElement("script");
+            script.innerHTML = fileData;
+            console.log(script);
+            document.head.appendChild(script);
+        });
+    });
     // total rework
     //openModsMenu();
     // const JSONdata = await fetch("mods_config.json");

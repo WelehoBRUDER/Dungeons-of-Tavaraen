@@ -7,11 +7,12 @@ interface ModInfo {
   version: string;
 }
 const modsInformation: Array<ModInfo> = [];
-const modsSettings: any = JSON.parse(localStorage.getItem("DOT_game_mods")) ?? {};
+const modsSettings: any = JSON.parse(localStorage.getItem("DOT_mods_config")) ?? {};
 
 const modsData: any = {
   folder: null,
   mods: [],
+  images: [],
 };
 
 async function uploadModDirectory() {
@@ -27,6 +28,30 @@ async function uploadModDirectory() {
 }
 
 async function loadMods() {
+  console.log("called!");
+  Object.entries(modsData.mods).forEach(async ([id, files]: any) => {
+    files.forEach(async (file: any) => {
+      if (file.type.startsWith("image")) {
+        const url = file.webkitRelativePath;
+        if (!modsData.images[id]) modsData.images[id] = [];
+        modsData.images[id].push({ name: file.name, url });
+        return;
+      }
+      if (file.type !== "text/javascript") return;
+      let fileData = await file.text();
+      console.log(file);
+      console.log(fileData);
+      if (namesFromPaths[file.name]) {
+        namesFromPaths[file.name].forEach((name: string) => {
+          fileData = fileData.split(`${name}`).join(`${id}_${name}`);
+        });
+      }
+      const script = document.createElement("script");
+      script.innerHTML = fileData;
+      console.log(script);
+      document.head.appendChild(script);
+    });
+  });
   // total rework
   //openModsMenu();
   // const JSONdata = await fetch("mods_config.json");

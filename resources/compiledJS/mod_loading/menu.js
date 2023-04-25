@@ -9,24 +9,22 @@ async function gotoMods() {
         // This will update modsData
         await uploadModDirectory();
     }
-    console.log(modsData);
     modsWindow.style.display = "flex";
     modsWindowList.innerHTML = "";
     modsWindowInfo.innerHTML = "";
-    Object.values(modsData.mods).forEach(async (mod) => {
+    Object.entries(modsData.mods).forEach(async ([key, mod]) => {
+        const rawData = await mod.find((file) => file.name === "mod.json").text();
+        const modInfo = JSON.parse(rawData);
         const modItem = document.createElement("div");
-        // if (!modsSettings || !Object.keys(modsSettings).includes(mod.key)) {
-        //   modsSettings[mod.key] = true;
-        // }
-        const enabled = true;
+        if (!modsSettings || !Object.keys(modsSettings).includes(key)) {
+            modsSettings[key] = true;
+        }
+        const enabled = modsSettings[key];
         modItem.classList.add("mod-item");
         if (enabled) {
             modItem.classList.add("enabled");
         }
-        const rawData = await mod.find((file) => file.name === "mod.json").text();
-        const modInfo = JSON.parse(rawData);
-        console.log(modInfo);
-        modItem.classList.add(modInfo.key);
+        modItem.classList.add(key);
         modItem.innerHTML = `
       <div class="mod-name">${modInfo.name} ${modInfo.version}</div>
       <div class="mod-enabled"></div>
@@ -64,6 +62,7 @@ function toggleMod(mod) {
     const name = mod.classList[1];
     modsSettings[name] = !modsSettings[name];
     const button = modsWindowInfo.querySelector(".toggle-mod");
+    console.log(name);
     if (modsSettings[name]) {
         button.textContent = (_a = lang.disable) !== null && _a !== void 0 ? _a : "Disable";
         (_b = button.classList) === null || _b === void 0 ? void 0 : _b.remove("blue-button");
@@ -74,6 +73,13 @@ function toggleMod(mod) {
         (_e = button.classList) === null || _e === void 0 ? void 0 : _e.remove("red-button");
         (_f = button.classList) === null || _f === void 0 ? void 0 : _f.add("blue-button");
     }
-    localStorage.setItem("DOT_game_mods", JSON.stringify(modsSettings));
+    localStorage.setItem("DOT_mods_config", JSON.stringify(modsSettings));
+}
+function reloadMods() {
+    modsWindow.style.display = "none";
+    if (preloadFinished) {
+        return location.reload();
+    }
+    loadMods();
 }
 //# sourceMappingURL=menu.js.map

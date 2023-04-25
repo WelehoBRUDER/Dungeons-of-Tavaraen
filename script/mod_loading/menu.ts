@@ -8,24 +8,23 @@ async function gotoMods() {
     // This will update modsData
     await uploadModDirectory();
   }
-  console.log(modsData);
   modsWindow.style.display = "flex";
   modsWindowList.innerHTML = "";
   modsWindowInfo.innerHTML = "";
-  Object.values(modsData.mods).forEach(async (mod: any) => {
+  Object.entries(modsData.mods).forEach(async ([key, mod]: any) => {
+    const rawData = await mod.find((file: any) => file.name === "mod.json").text();
+    const modInfo = JSON.parse(rawData);
+
     const modItem = document.createElement("div");
-    // if (!modsSettings || !Object.keys(modsSettings).includes(mod.key)) {
-    //   modsSettings[mod.key] = true;
-    // }
-    const enabled = true;
+    if (!modsSettings || !Object.keys(modsSettings).includes(key)) {
+      modsSettings[key] = true;
+    }
+    const enabled = modsSettings[key];
     modItem.classList.add("mod-item");
     if (enabled) {
       modItem.classList.add("enabled");
     }
-    const rawData = await mod.find((file: any) => file.name === "mod.json").text();
-    const modInfo = JSON.parse(rawData);
-    console.log(modInfo);
-    modItem.classList.add(modInfo.key);
+    modItem.classList.add(key);
     modItem.innerHTML = `
       <div class="mod-name">${modInfo.name} ${modInfo.version}</div>
       <div class="mod-enabled"></div>
@@ -63,6 +62,7 @@ function toggleMod(mod: HTMLElement) {
   const name = mod.classList[1];
   modsSettings[name] = !modsSettings[name];
   const button = modsWindowInfo.querySelector(".toggle-mod");
+  console.log(name);
   if (modsSettings[name]) {
     button.textContent = lang.disable ?? "Disable";
     button.classList?.remove("blue-button");
@@ -72,5 +72,13 @@ function toggleMod(mod: HTMLElement) {
     button.classList?.remove("red-button");
     button.classList?.add("blue-button");
   }
-  localStorage.setItem("DOT_game_mods", JSON.stringify(modsSettings));
+  localStorage.setItem("DOT_mods_config", JSON.stringify(modsSettings));
+}
+
+function reloadMods() {
+  modsWindow.style.display = "none";
+  if (preloadFinished) {
+    return location.reload();
+  }
+  loadMods();
 }
