@@ -504,8 +504,13 @@ async function initGame() {
     }
     else
         settings = new gameSettings(settings);
+    await gotoMainMenu(true);
+    document.querySelector(".loading-bar-fill").style.width = "10%";
+    document.querySelector(".loading-text").textContent = "Updating player...";
     state.menuOpen = true;
     state.titleScreen = true;
+    document.querySelector(".loading-text").textContent = "Loading mods...";
+    document.querySelector(".loading-bar-fill").style.width = "50%";
     const buttons = [
         {
             text: "Load mods",
@@ -525,57 +530,47 @@ async function initGame() {
         },
     ];
     multiButtonPrompt("load_mods_prompt", buttons);
-    async function continueLoad() {
-        await gotoMainMenu(true);
-        document.querySelector(".loading-bar-fill").style.width = "10%";
-        try {
-            document.querySelector(".loading-text").textContent = "Loading mods...";
-            document.querySelector(".loading-bar-fill").style.width = "50%";
-            await loadMods();
-        }
-        catch (_a) {
-            warningMessage("<i>resources/icons/error.png<i>Could not load mods.\nThis is most likely caused by CORS blocking local file access.\nIf you wish to play with mods, you must set up a simple http server.\n Find out how here: §<c>cyan<c>https://github.com/http-party/http-server");
-        }
-        document.querySelector(".loading-text").textContent = "Updating player...";
-        document.querySelector(".loading-bar-fill").style.width = "55%";
-        await player.updateAbilities();
-        player.updatePerks();
-        player.updateTraits();
-        document.querySelector(".loading-text").textContent = "Creating tooltips....";
-        document.querySelector(".loading-bar-fill").style.width = "60%";
-        tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
-        tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
-        tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
-        tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-        tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
-        tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
-        tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
-        document.querySelector(".loading-text").textContent = "Building textures...";
-        await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
-        document.querySelector(".loading-bar-fill").style.width = "70%";
-        try {
-            document.querySelector(".loading-text").textContent = "Loading textures...";
-            await loadTextures();
-            document.querySelector(".loading-bar-fill").style.width = "80%";
-            document.querySelector(".loading-text").textContent = "Creating static maps...";
-            await createStaticMap();
-            document.querySelector(".loading-bar-fill").style.width = "85%";
-            document.querySelector(".loading-text").textContent = "Rendering map...";
-            resizeCanvas();
-            renderMinimap(maps[currentMap]);
-            renderAreaMap(maps[currentMap]);
-            document.querySelector(".loading-bar-fill").style.width = "95%";
-        }
-        catch (err) {
-            console.warn("Failed rendering map", err);
-        }
-        document.querySelector(".loading-text").textContent = "Finishing load";
-        document.querySelector(".loading-bar-fill").style.width = "100%";
-        setTimeout(() => (document.querySelector(".loading").style.display = "none"), 0);
+}
+async function continueLoad() {
+    preloadFinished = true;
+    document.querySelector(".loading-bar-fill").style.width = "55%";
+    await player.updateAbilities();
+    player.updatePerks();
+    player.updateTraits();
+    document.querySelector(".loading-text").textContent = "Creating tooltips....";
+    document.querySelector(".loading-bar-fill").style.width = "60%";
+    tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+    tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+    tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+    tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+    tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+    tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+    tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+    document.querySelector(".loading-text").textContent = "Building textures...";
+    await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
+    document.querySelector(".loading-bar-fill").style.width = "70%";
+    try {
+        document.querySelector(".loading-text").textContent = "Loading textures...";
+        await loadTextures();
+        document.querySelector(".loading-bar-fill").style.width = "80%";
+        document.querySelector(".loading-text").textContent = "Creating static maps...";
+        await createStaticMap();
+        document.querySelector(".loading-bar-fill").style.width = "85%";
+        document.querySelector(".loading-text").textContent = "Rendering map...";
         resizeCanvas();
         renderMinimap(maps[currentMap]);
         renderAreaMap(maps[currentMap]);
+        document.querySelector(".loading-bar-fill").style.width = "95%";
     }
+    catch (err) {
+        console.warn("Failed rendering map", err);
+    }
+    document.querySelector(".loading-text").textContent = "Finishing load";
+    document.querySelector(".loading-bar-fill").style.width = "100%";
+    setTimeout(() => (document.querySelector(".loading").style.display = "none"), 0);
+    resizeCanvas();
+    renderMinimap(maps[currentMap]);
+    renderAreaMap(maps[currentMap]);
 }
 document.addEventListener("DOMContentLoaded", initGame);
 //# sourceMappingURL=start_game.js.map

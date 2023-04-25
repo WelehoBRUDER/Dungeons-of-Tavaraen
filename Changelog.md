@@ -1,6 +1,9 @@
 # 1.2.4 ~ 25.4.2023
 
 ## Major Changes
+- Fully reworked how loading  mods works
+  - Created a proper mod loader that allows selecting mods before starting the game.
+  - No longer restricted to locally run http server, mods can be used when playing through github.
 
 ## Fixes & Tweaks
 
