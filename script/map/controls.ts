@@ -138,7 +138,8 @@ function movementCheck(keyPress) {
     [settings.hotkey_move_left_down]: "leftDown",
   } as any;
   let target = maps[currentMap].enemies.find(
-    (e: any) => e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y
+    (e: any) =>
+      e.cords.x == cordsFromDir(player.cords, dirs[keyPress.key]).x && e.cords.y == cordsFromDir(player.cords, dirs[keyPress.key]).y
   );
   if (rooted && !player.isDead && dirs[keyPress.key] && !target) {
     advanceTurn();
@@ -162,7 +163,18 @@ function movementCheck(keyPress) {
     }
     return;
   }
-  if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen) return;
+  if (
+    !turnOver ||
+    player.isDead ||
+    state.menuOpen ||
+    state.invOpen ||
+    state.savesOpen ||
+    state.optionsOpen ||
+    state.charOpen ||
+    state.perkOpen ||
+    state.titleScreen
+  )
+    return;
   let shittyFix = JSON.parse(JSON.stringify(player));
   if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
     displayText(`<c>white<c>[WORLD] <c>orange<c>${lang["too_much_weight"]}`);
@@ -205,17 +217,30 @@ function useAbiTargetingWithKeyboard() {
       targetingEnemy = true;
       if (state.isSelected) {
         // @ts-ignore
-        if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
-          if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile)) break;
+        if (
+          generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
+          weaponReach(player, state.abiSelected.use_range, enemy)
+        ) {
+          if (
+            (state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) ||
+            (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile)
+          )
+            break;
           if (state.abiSelected.type == "attack") {
-            if (state.abiSelected.shoots_projectile) fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
+            if (state.abiSelected.shoots_projectile)
+              fireProjectile(player.cords, enemy.cords, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
             else regularAttack(player, enemy, state.abiSelected);
             // @ts-expect-error
-            if (weaponReach(player, state.abiSelected.use_range, enemy)) attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
+            if (weaponReach(player, state.abiSelected.use_range, enemy))
+              attackTarget(player, enemy, weaponReach(player, state.abiSelected.use_range, enemy));
             if (!state.abiSelected.shoots_projectile) advanceTurn();
           }
         }
-        if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
+        if (
+          state.abiSelected.type == "charge" &&
+          generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range &&
+          !player.isRooted()
+        ) {
           player.stats.mp -= state.abiSelected.mana_cost;
           state.abiSelected.onCooldown = state.abiSelected.cooldown;
           movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
@@ -231,7 +256,14 @@ function useAbiTargetingWithKeyboard() {
   if (state.isSelected && state.abiSelected?.aoe_size > 0 && !targetingEnemy) {
     // @ts-expect-error
     if (generateArrowPath(player.cords, { x: mapSelection.x, y: mapSelection.y }).length <= state.abiSelected.use_range) {
-      fireProjectile(player.cords, { x: mapSelection.x, y: mapSelection.y }, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
+      fireProjectile(
+        player.cords,
+        { x: mapSelection.x, y: mapSelection.y },
+        state.abiSelected.shoots_projectile,
+        state.abiSelected,
+        true,
+        player
+      );
     }
   }
   if (state.isSelected && state.abiSelected.summon_unit) {
@@ -269,9 +301,9 @@ function useAbiTargetingWithKeyboard() {
 }
 
 function canMove(char: any, dir: string) {
-  var tile = cordsFromDir(char.cords, dir);
-  var check = char.cords;
-  var movable = true;
+  let tile = cordsFromDir(char.cords, dir);
+  let check = char.cords;
+  let movable = true;
   const map = maps[currentMap];
   let fieldMap: Array<number[]>;
   if (char.canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
@@ -290,7 +322,10 @@ function canMove(char: any, dir: string) {
   });
   if (fieldMap?.[tile.y]?.[tile.x] === 1) movable = false;
   if (checkDirs[dir]) {
-    if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 && fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1)
+    if (
+      fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 &&
+      fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1
+    )
       movable = false;
   }
   if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length) movable = false;
@@ -299,7 +334,8 @@ function canMove(char: any, dir: string) {
 
 function canMoveTo(char: any, tile: tileObject) {
   let movable: boolean = true;
-  if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly)) movable = false;
+  if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || (tiles[maps[currentMap].base[tile.y][tile.x]].isLedge && !char.canFly))
+    movable = false;
   if (clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) movable = false;
   for (let enemy of maps[currentMap].enemies) {
     if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) movable = false;

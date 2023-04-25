@@ -1,6 +1,6 @@
 const originalPos = {
   x: 0,
-  y: 0
+  y: 0,
 };
 let dragging = false;
 
@@ -15,7 +15,7 @@ function calcElementArea(element: HTMLElement) {
 }
 
 function dragElem(elem: HTMLElement, snapContainers: Array<any>, updateFunction: Function = null) {
-  var pos1 = 0,
+  let pos1 = 0,
     pos2 = 0,
     pos3 = 0,
     pos4 = 0;
@@ -28,7 +28,7 @@ function dragElem(elem: HTMLElement, snapContainers: Array<any>, updateFunction:
   };
 
   function dragMouseDown(e: MouseEvent) {
-    e = e || window.event as MouseEvent;
+    e = e || (window.event as MouseEvent);
     e.preventDefault();
     pos1 = elem.offsetLeft;
     pos2 = elem.offsetTop;
@@ -44,7 +44,7 @@ function dragElem(elem: HTMLElement, snapContainers: Array<any>, updateFunction:
 
   function elemDrag(e: MouseEvent) {
     dragging = true;
-    e = e || window.event as MouseEvent;
+    e = e || (window.event as MouseEvent);
     e.preventDefault();
     elem.style.left = `${pos1 + e.x - pos3}px`;
     elem.style.top = `${pos2 + e.y - pos4}px`;
@@ -57,12 +57,7 @@ function dragElem(elem: HTMLElement, snapContainers: Array<any>, updateFunction:
     for (const container of snapContainers) {
       Array.from(container.childNodes).some((_area: any, index: number) => {
         let area = calcElementArea(_area);
-        if (
-          e.x >= area.xMin &&
-          e.x <= area.xMax &&
-          e.y >= area.yMin &&
-          e.y <= area.yMax
-        ) {
+        if (e.x >= area.xMin && e.x <= area.xMax && e.y >= area.yMin && e.y <= area.yMax) {
           if (elem.classList.contains("ability")) {
             swapAbility(+elem.classList[1], index);
           }

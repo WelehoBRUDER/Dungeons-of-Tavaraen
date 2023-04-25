@@ -30,22 +30,22 @@ function renderMinimap(map) {
     }
     map.shrines.forEach((checkpoint) => {
         const shrine = document.querySelector(".sprites .shrineTile");
-        var tileX = checkpoint.cords.x * spriteSize;
-        var tileY = checkpoint.cords.y * spriteSize;
+        let tileX = checkpoint.cords.x * spriteSize;
+        let tileY = checkpoint.cords.y * spriteSize;
         minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
     });
     map.messages.forEach((msg) => {
         const message = document.querySelector(".messageTile");
-        var tileX = msg.cords.x * spriteSize;
-        var tileY = msg.cords.y * spriteSize;
+        let tileX = msg.cords.x * spriteSize;
+        let tileY = msg.cords.y * spriteSize;
         minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
     });
     /* Render Characters */
     NPCcharacters.forEach((npc) => {
         if (npc.currentMap == currentMap) {
             const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
-            var tileX = npc.currentCords.x * spriteSize;
-            var tileY = npc.currentCords.y * spriteSize;
+            let tileX = npc.currentCords.x * spriteSize;
+            let tileY = npc.currentCords.y * spriteSize;
             if (charSprite) {
                 minimapCtx === null || minimapCtx === void 0 ? void 0 : minimapCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
             }
@@ -77,15 +77,15 @@ function moveMinimap() {
     //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
     //   if (!lootedChest) {
     //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-    //     var tileX = chest.cords.x * spriteSize;
-    //     var tileY = chest.cords.y * spriteSize;
+    //     let tileX = chest.cords.x * spriteSize;
+    //     let tileY = chest.cords.y * spriteSize;
     //     minimapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
     //   }
     // });
-    minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-    minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
-    minimapUpdateCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-    minimapUpdateCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
+    minimapCanvas.style.left = `${player.cords.x * -8 + (172 * settings["ui_scale"]) / 100}px`;
+    minimapCanvas.style.top = `${player.cords.y * -8 + (112 * settings["ui_scale"]) / 100}px`;
+    minimapUpdateCanvas.style.left = `${player.cords.x * -8 + (172 * settings["ui_scale"]) / 100}px`;
+    minimapUpdateCanvas.style.top = `${player.cords.y * -8 + (112 * settings["ui_scale"]) / 100}px`;
 }
 function renderAreaMap(map) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -111,22 +111,22 @@ function renderAreaMap(map) {
     }
     map.shrines.forEach((checkpoint) => {
         const shrine = document.querySelector(".sprites .shrineTile");
-        var tileX = checkpoint.cords.x * spriteSize;
-        var tileY = checkpoint.cords.y * spriteSize;
+        let tileX = checkpoint.cords.x * spriteSize;
+        let tileY = checkpoint.cords.y * spriteSize;
         areaMapCtx === null || areaMapCtx === void 0 ? void 0 : areaMapCtx.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
     });
     map.messages.forEach((msg) => {
         const message = document.querySelector(".messageTile");
-        var tileX = msg.cords.x * spriteSize;
-        var tileY = msg.cords.y * spriteSize;
+        let tileX = msg.cords.x * spriteSize;
+        let tileY = msg.cords.y * spriteSize;
         areaMapCtx === null || areaMapCtx === void 0 ? void 0 : areaMapCtx.drawImage(message, tileX, tileY, spriteSize, spriteSize);
     });
     /* Render Characters */
     NPCcharacters.forEach((npc) => {
         if (npc.currentMap == currentMap) {
             const charSprite = document.querySelector(`.sprites .${npc.sprite}`);
-            var tileX = npc.currentCords.x * spriteSize;
-            var tileY = npc.currentCords.y * spriteSize;
+            let tileX = npc.currentCords.x * spriteSize;
+            let tileY = npc.currentCords.y * spriteSize;
             if (charSprite) {
                 areaMapCtx === null || areaMapCtx === void 0 ? void 0 : areaMapCtx.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
             }
@@ -148,15 +148,15 @@ function moveAreaMap() {
     //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
     //   if (!lootedChest) {
     //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-    //     var tileX = chest.cords.x * spriteSize;
-    //     var tileY = chest.cords.y * spriteSize;
+    //     let tileX = chest.cords.x * spriteSize;
+    //     let tileY = chest.cords.y * spriteSize;
     //     areaMapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
     //   }
     // });
-    areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
-    areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
-    areaMapUpdateCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
-    areaMapUpdateCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
+    areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * 0.6) / 2}px`;
+    areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * 0.8) / 2}px`;
+    areaMapUpdateCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * 0.6) / 2}px`;
+    areaMapUpdateCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * 0.8) / 2}px`;
     // if (player.cords.y >= maps[currentMap].base.length - displayLimit.heightLimit) {
     //   areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8) * settings["ui_scale"] / 100}px`;
     // }

@@ -15,7 +15,7 @@ class Summon extends Character {
         this.shootsProjectile = base.shootsProjectile;
         this.hasBeenLeveled = (_f = base.hasBeenLeveled) !== null && _f !== void 0 ? _f : false;
         this.level = (_g = base.level) !== null && _g !== void 0 ? _g : 1;
-        this.xp = this.level > 1 ? Math.floor(base.xp + (base.xp * this.level / 2.9)) : base.xp;
+        this.xp = this.level > 1 ? Math.floor(base.xp + (base.xp * this.level) / 2.9) : base.xp;
         this.statsPerLevel = (_h = { ...base.statsPerLevel }) !== null && _h !== void 0 ? _h : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
         this.retreatPath = [];
         this.retreatIndex = 0;
@@ -79,7 +79,12 @@ class Summon extends Character {
                 // Choose a random ability
                 let chosenAbility = this.chooseAbility();
                 // Check if it should be used
-                if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length : (chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) && arrowHitsTarget(this.cords, this.chosenTarget.cords, true))) || chosenAbility.self_target)) {
+                if (chosenAbility &&
+                    (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge"
+                        ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length
+                        : chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) &&
+                            arrowHitsTarget(this.cords, this.chosenTarget.cords, true)) ||
+                        chosenAbility.self_target)) {
                     if (chosenAbility.type == "charge") {
                         moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
                     }
@@ -94,7 +99,9 @@ class Summon extends Character {
                     }
                 }
                 // Check if enemy should shoot the this.chosenTarget
-                else if (this.shootsProjectile && generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange && arrowHitsTarget(this.cords, this.chosenTarget.cords, true)) {
+                else if (this.shootsProjectile &&
+                    generateArrowPath(this.cords, this.chosenTarget.cords, true) <= this.attackRange &&
+                    arrowHitsTarget(this.cords, this.chosenTarget.cords, true)) {
                     this.doNormalAttack(this.chosenTarget);
                 }
                 // Check if enemy should instead punch the this.chosenTarget (and is in range)
@@ -103,11 +110,11 @@ class Summon extends Character {
                 }
                 // If there's no offensive action to be taken, just move towards the this.chosenTarget.
                 else if (!this.isRooted()) {
-                    var path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
+                    let path = generatePath(this.cords, this.chosenTarget.cords, this.canFly);
                     try {
                         let willStack = false;
                         if (path.length > 0) {
-                            combatSummons.forEach(summon => {
+                            combatSummons.forEach((summon) => {
                                 if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
                                     willStack = true;
                                 }
@@ -124,11 +131,11 @@ class Summon extends Character {
                 }
             }
             else if (!this.isRooted()) {
-                var path = generatePath(this.cords, player.cords, this.canFly);
+                let path = generatePath(this.cords, player.cords, this.canFly);
                 try {
                     let willStack = false;
                     if (path.length > 0) {
-                        combatSummons.forEach(summon => {
+                        combatSummons.forEach((summon) => {
                             if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
                                 willStack = true;
                             }
@@ -155,7 +162,10 @@ class Summon extends Character {
                 // weight.
                 for (let j = 0; j < this.abilities[i].ai_chance; ++j) {
                     const abi = this.abilities[i];
-                    if (abi.mana_cost <= this.stats.mp && abi.onCooldown == 0 && !(abi.mana_cost > 0 ? this.silenced() : false) && (abi.requires_concentration ? this.concentration() : true)) {
+                    if (abi.mana_cost <= this.stats.mp &&
+                        abi.onCooldown == 0 &&
+                        !(abi.mana_cost > 0 ? this.silenced() : false) &&
+                        (abi.requires_concentration ? this.concentration() : true)) {
                         out.push(this.abilities[i]);
                     }
                 }
@@ -178,10 +188,10 @@ class Summon extends Character {
                 // @ts-ignore
                 // @ts-ignore
                 if (this.shootsProjectile)
-                    bonus += num * this.getStats().dex / 50;
+                    bonus += (num * this.getStats().dex) / 50;
                 // @ts-ignore
                 else
-                    bonus += num * this.getStats().str / 50;
+                    bonus += (num * this.getStats().str) / 50;
                 // @ts-ignore
                 dmg += Math.floor((num + val + bonus) * mod);
                 dmgs[key] = Math.floor((num + val + bonus) * mod);
@@ -191,7 +201,7 @@ class Summon extends Character {
         this.kill = () => {
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);
             this.alive = false;
-            let index = combatSummons.findIndex(sm => sm.cords.x == this.cords.x && sm.cords.y == this.cords.y);
+            let index = combatSummons.findIndex((sm) => sm.cords.x == this.cords.x && sm.cords.y == this.cords.y);
             combatSummons.splice(index, 1);
         };
         this.restore = (keepEffects = false) => {
@@ -199,7 +209,7 @@ class Summon extends Character {
             this.stats.mp = this.getMpMax();
             if (!keepEffects)
                 this.statusEffects = [];
-            this.abilities.forEach(abi => {
+            this.abilities.forEach((abi) => {
                 abi.onCooldown = 0;
             });
         };

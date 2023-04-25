@@ -187,7 +187,15 @@ function movementCheck(keyPress) {
         }
         return;
     }
-    if (!turnOver || player.isDead || state.menuOpen || state.invOpen || state.savesOpen || state.optionsOpen || state.charOpen || state.perkOpen || state.titleScreen)
+    if (!turnOver ||
+        player.isDead ||
+        state.menuOpen ||
+        state.invOpen ||
+        state.savesOpen ||
+        state.optionsOpen ||
+        state.charOpen ||
+        state.perkOpen ||
+        state.titleScreen)
         return;
     let shittyFix = JSON.parse(JSON.stringify(player));
     if (parseInt(player.carryingWeight()) > parseInt(player.maxCarryWeight()) && dirs[keyPress.key]) {
@@ -237,8 +245,10 @@ function useAbiTargetingWithKeyboard() {
             targetingEnemy = true;
             if (state.isSelected) {
                 // @ts-ignore
-                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range || weaponReach(player, state.abiSelected.use_range, enemy)) {
-                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) || (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
+                if (generateArrowPath(player.cords, enemy.cords).length <= state.abiSelected.use_range ||
+                    weaponReach(player, state.abiSelected.use_range, enemy)) {
+                    if ((state.abiSelected.requires_melee_weapon && player.weapon.firesProjectile) ||
+                        (state.abiSelected.requires_ranged_weapon && !player.weapon.firesProjectile))
                         break;
                     if (state.abiSelected.type == "attack") {
                         if (state.abiSelected.shoots_projectile)
@@ -252,7 +262,9 @@ function useAbiTargetingWithKeyboard() {
                             advanceTurn();
                     }
                 }
-                if (state.abiSelected.type == "charge" && generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range && !player.isRooted()) {
+                if (state.abiSelected.type == "charge" &&
+                    generatePath(player.cords, enemy.cords, false).length <= state.abiSelected.use_range &&
+                    !player.isRooted()) {
                     player.stats.mp -= state.abiSelected.mana_cost;
                     state.abiSelected.onCooldown = state.abiSelected.cooldown;
                     movePlayer(enemy.cords, true, 99, () => regularAttack(player, enemy, state.abiSelected));
@@ -308,9 +320,9 @@ function useAbiTargetingWithKeyboard() {
 }
 function canMove(char, dir) {
     var _a, _b, _c;
-    var tile = cordsFromDir(char.cords, dir);
-    var check = char.cords;
-    var movable = true;
+    let tile = cordsFromDir(char.cords, dir);
+    let check = char.cords;
+    let movable = true;
     const map = maps[currentMap];
     let fieldMap;
     if (char.canFly)
@@ -332,7 +344,8 @@ function canMove(char, dir) {
     if (((_a = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[tile.y]) === null || _a === void 0 ? void 0 : _a[tile.x]) === 1)
         movable = false;
     if (checkDirs[dir]) {
-        if (((_b = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y1]) === null || _b === void 0 ? void 0 : _b[check.x + checkDirs[dir].x1]) === 1 && ((_c = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y2]) === null || _c === void 0 ? void 0 : _c[check.x + checkDirs[dir].x2]) === 1)
+        if (((_b = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y1]) === null || _b === void 0 ? void 0 : _b[check.x + checkDirs[dir].x1]) === 1 &&
+            ((_c = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y2]) === null || _c === void 0 ? void 0 : _c[check.x + checkDirs[dir].x2]) === 1)
             movable = false;
     }
     if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length)

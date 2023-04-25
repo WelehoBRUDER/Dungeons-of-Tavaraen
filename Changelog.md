@@ -1,3 +1,9 @@
+# 1.2.4 ~ 25.4.2023
+
+## Major Changes
+
+## Fixes & Tweaks
+
 # 1.2.3 ~ 13.4.2023
 
 ## Major Changes
@@ -6,7 +12,7 @@
     - Barbarian Set, rough leather armor with a barbaric design.
 
 ## Fixes & Tweaks
-- Fixed bug that prevented use of abilities with that applied status effects.
+- Fixed bug that prevented use of abilities that applied status effects.
 - Fixed bug where abilities shot outside of aggro range did not go on cooldown.
 
 # 1.2.2 ~ 16.12.2022

@@ -41,7 +41,7 @@ function handleEscape() {
     else if (state.journalOpen) {
         closePlayerQuests();
     }
-    else if (state.keyxOpen) {
+    else if (state.codexOpen) {
         closeCodex();
     }
     else if (state.smithOpen) {
@@ -555,5 +555,27 @@ function LoadSettings(name, settings) {
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
     player.updateAbilities();
     gotoSettingsMenu(true);
+}
+const multiButtonPromptWindow = document.querySelector(".multiButtonPrompt");
+const multiButtonPromptText = multiButtonPromptWindow.querySelector(".prompt-text");
+const multiButtonPromptButtons = multiButtonPromptWindow.querySelector(".prompt-buttons");
+function multiButtonPrompt(text, buttons) {
+    multiButtonPromptWindow.style.transform = "scale(1)";
+    const translatedText = lang[text] || text;
+    multiButtonPromptText.innerHTML = "";
+    multiButtonPromptButtons.innerHTML = "";
+    multiButtonPromptText.append(textSyntax(translatedText));
+    for (const button of buttons) {
+        const buttonElement = document.createElement("div");
+        buttonElement.textContent = button.text;
+        buttonElement.classList.add(button.class);
+        buttonElement.addEventListener("click", button.callback);
+        multiButtonPromptButtons.appendChild(buttonElement);
+    }
+}
+function closeMultiButtonPrompt() {
+    multiButtonPromptWindow.style.transform = "scale(0)";
+    multiButtonPromptText.textContent = "";
+    multiButtonPromptButtons.innerHTML = "";
 }
 //# sourceMappingURL=menu.js.map

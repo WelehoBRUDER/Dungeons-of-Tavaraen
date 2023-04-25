@@ -5,51 +5,72 @@ interface ModInfo {
   maps: string[];
   author: string;
   version: string;
-};
+}
 const modsInformation: Array<ModInfo> = [];
 const modsSettings: any = JSON.parse(localStorage.getItem("DOT_game_mods")) ?? {};
 
-async function loadMods() {
-  const JSONdata = await fetch("mods_config.json");
-  const modsConfig = await JSONdata.json();
-  const list = modsConfig.list;
-  list.forEach(async (mod: string) => {
-    const modPath = `/mods/${mod}`;
-    const JSONmod = await fetch(`${modPath}/mod.json`);
-    const load: any = {};
-    const modConfig: ModInfo = await JSONmod.json();
-    mod = mod.replace(/\s|-/g, "_");
-    modConfig.key = mod;
-    modsInformation.push(modConfig);
-    if (modsSettings?.[mod] === false) return;
-    load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
-    load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
-    load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
-    load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
-    load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
-    load.modFlags = { path: `${modPath}/flags.js`, func: applyModFlags };
-    load.modCharacters = { path: `${modPath}/characters.js`, func: applyModCharacters };
-    load.modInteractions = { path: `${modPath}/character_interactions.js`, func: applyModInteractions };
-    load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
-    load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
-    load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
-    load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
-    Object.values(load).forEach(async ({ path, func }: any) => {
-      await loadModFile(path, mod, func);
-    });
-    if (modConfig.maps) {
-      loadMaps(modConfig.maps, modPath, mod).then(() => {
-        applyModMaps(mod, modConfig.maps);
-      });
-    }
+const modsData: any = {
+  folder: null,
+  mods: [],
+};
+
+async function uploadModDirectory() {
+  // @ts-expect-error
+  modsData.directory = await getDirectory();
+  const mods: any = {};
+  modsData.directory.forEach((file: any) => {
+    const modName = file.webkitRelativePath.split("/")[1];
+    if (!mods[modName]) mods[modName] = [];
+    mods[modName].push(file);
   });
-  lang = eval(settings.language);
+  modsData.mods = mods;
+}
+
+async function loadMods() {
+  // total rework
+  //openModsMenu();
+  // const JSONdata = await fetch("mods_config.json");
+  // const modsConfig = await JSONdata.json();
+  // const list = modsConfig.list;
+  // list.forEach(async (mod: string) => {
+  //   const modPath = `/mods/${mod}`;
+  //   const JSONmod = await fetch(`${modPath}/mod.json`);
+  //   const load: any = {};
+  //   const modConfig: ModInfo = await JSONmod.json();
+  //   mod = mod.replace(/\s|-/g, "_");
+  //   modConfig.key = mod;
+  //   modsInformation.push(modConfig);
+  //   if (modsSettings?.[mod] === false) return;
+  //   load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
+  //   load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
+  //   load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
+  //   load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
+  //   load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
+  //   load.modFlags = { path: `${modPath}/flags.js`, func: applyModFlags };
+  //   load.modCharacters = { path: `${modPath}/characters.js`, func: applyModCharacters };
+  //   load.modInteractions = { path: `${modPath}/character_interactions.js`, func: applyModInteractions };
+  //   load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
+  //   load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
+  //   load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
+  //   load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
+  //   Object.values(load).forEach(async ({ path, func }: any) => {
+  //     await loadModFile(path, mod, func);
+  //   });
+  //   if (modConfig.maps) {
+  //     loadMaps(modConfig.maps, modPath, mod).then(() => {
+  //       applyModMaps(mod, modConfig.maps);
+  //     });
+  //   }
+  // });
+  // lang = eval(settings.language);
 }
 
 function loadMaps(maps: string[], modPath: string, mod: string) {
-  return Promise.all(maps.map(async (map: string) => {
-    await loadModMapFile(`${modPath}/maps/${map}.js`, mod, map);
-  }));
+  return Promise.all(
+    maps.map(async (map: string) => {
+      await loadModMapFile(`${modPath}/maps/${map}.js`, mod, map);
+    })
+  );
 }
 
 const namesFromPaths = {
@@ -144,44 +165,49 @@ function applyModTraits(mod: string) {
 function applyModLocalisationGeneral(mod: string) {
   let finLoc;
   let engLoc;
-  try { finLoc = eval(`${mod}_finnish`); } catch { }
-  try { engLoc = eval(`${mod}_english`); } catch { }
+  try {
+    finLoc = eval(`${mod}_finnish`);
+  } catch {}
+  try {
+    engLoc = eval(`${mod}_english`);
+  } catch {}
   if (engLoc) {
     Object.entries(engLoc).forEach(([key, text]: any) => {
       english[key] = text;
-    }
-    );
+    });
   }
   if (finLoc) {
     Object.entries(finLoc).forEach(([key, text]: any) => {
       finnish[key] = text;
-    }
-    );
+    });
   }
 }
 
 function applyModLocalisation(mod: string) {
   let codexMod, dialogMod, questMod;
-  try { codexMod = eval(`${mod}_codexLang`); } catch { }
-  try { dialogMod = eval(`${mod}_dialogLang`); } catch { }
-  try { questMod = eval(`${mod}_questLang`); } catch { }
+  try {
+    codexMod = eval(`${mod}_codexLang`);
+  } catch {}
+  try {
+    dialogMod = eval(`${mod}_dialogLang`);
+  } catch {}
+  try {
+    questMod = eval(`${mod}_questLang`);
+  } catch {}
   if (codexMod) {
     Object.entries(codexMod).forEach(([key, text]: any) => {
       codexLang[key] = text;
-    }
-    );
+    });
   }
   if (dialogMod) {
     Object.entries(dialogMod).forEach(([key, text]: any) => {
       dialogLang[key] = text;
-    }
-    );
+    });
   }
   if (questMod) {
     Object.entries(questMod).forEach(([key, text]: any) => {
       questLang[key] = text;
-    }
-    );
+    });
   }
 }
 
@@ -192,19 +218,21 @@ function applyModFlags(mod: string) {
 
 function applyModCharacters(mod: string) {
   let modChars, modInvs;
-  try { modChars = eval(`${mod}_NPCcharacters`); } catch { }
-  try { modInvs = eval(`${mod}_NPCInventories`); } catch { }
+  try {
+    modChars = eval(`${mod}_NPCcharacters`);
+  } catch {}
+  try {
+    modInvs = eval(`${mod}_NPCInventories`);
+  } catch {}
   if (modChars) {
     Object.entries(modChars).forEach(([key, char]: any) => {
       NPCcharacters[key] = { ...char };
-    }
-    );
+    });
   }
   if (modInvs) {
     Object.entries(modInvs).forEach(([key, inv]: any) => {
       NPCInventories[key] = { ...inv };
-    }
-    );
+    });
   }
 }
 
@@ -231,33 +259,33 @@ const replace_in_map: any = {
   treasureChests: true,
   messages: true,
   shrines: true,
-  entrances: true
+  entrances: true,
 };
 
 function applyModMaps(mod: string, maps_array: string[]) {
   maps_array.forEach((map: string) => {
     let mod_map: any;
-    try { mod_map = eval(`${mod}_${map}`); } catch (err) { console.log(err); }
+    try {
+      mod_map = eval(`${mod}_${map}`);
+    } catch (err) {
+      console.log(err);
+    }
     if (mod_map) {
       if (!mod_map.DONT_REPLACE_EXISTING) {
         maps[map] = { ...mod_map };
-      }
-      else {
+      } else {
         Object.entries(mod_map).forEach(([key, data]: [string, any]) => {
           if (!maps[map][key]) {
             maps[map][key] = data;
-          }
-          else if (replace_in_map[key]) {
+          } else if (replace_in_map[key]) {
             if (mod_map["DONT_REPLACE_" + key.toUpperCase()]) {
               data.forEach((obj: any) => {
                 maps[map][key].push(obj);
               });
-            }
-            else {
+            } else {
               maps[map][key] = data;
             }
-          }
-          else {
+          } else {
             maps[map][key] = data;
           }
         });
@@ -265,4 +293,3 @@ function applyModMaps(mod: string, maps_array: string[]) {
     }
   });
 }
-

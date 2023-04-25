@@ -1,7 +1,9 @@
 "use strict";
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector(".savesMenu .saves").addEventListener("wheel", (wheel) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
+document
+    .querySelector(".savesMenu .saves")
+    .addEventListener("wheel", (wheel) => (saveMenuScroll = wheel.path[1].scrollTop), { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
     var _a, _b, _c, _d, _e, _f, _g;
     hideHover();
@@ -33,7 +35,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
     savesArea.textContent = "";
     if (animate) {
         saveBg.style.display = "block";
-        saveBg.style.animation = 'none';
+        saveBg.style.animation = "none";
         // @ts-ignore
         saveBg.offsetHeight; /* trigger reflow */
         // @ts-ignore
@@ -86,9 +88,17 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             saveData.currentMap = maps[currentMap].id;
             saveData.lootedChests = [...lootedChests];
             saveData.version = GAME_VERSION;
-            let sortTime = +(new Date());
+            let sortTime = +new Date();
             let saveTime = new Date();
-            let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+            let saveTimeString = ("0" + saveTime.getHours()).slice(-2).toString() +
+                "." +
+                ("0" + saveTime.getMinutes()).slice(-2).toString() +
+                " - " +
+                saveTime.getDate() +
+                "." +
+                (saveTime.getMonth() + 1) +
+                "." +
+                saveTime.getFullYear();
             let name = save.text.split(" ||")[0];
             saves[save.id].text = `${name} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`;
             saves[save.id].time = sortTime;
@@ -129,13 +139,13 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 // update classes of all dropped items just in case
                 id.map((item) => {
                     if (item.itm.type === "weapon")
-                        return item.itm = new Weapon({ ...items[item.itm.id] });
+                        return (item.itm = new Weapon({ ...items[item.itm.id] }));
                     if (item.itm.type === "armor")
-                        return item.itm = new Armor({ ...items[item.itm.id] });
+                        return (item.itm = new Armor({ ...items[item.itm.id] }));
                     if (item.itm.type === "artifact")
-                        return item.itm = new Artifact({ ...items[item.itm.id] });
+                        return (item.itm = new Artifact({ ...items[item.itm.id] }));
                     if (item.itm.type === "consumable")
-                        return item.itm = new Consumable({ ...items[item.itm.id] });
+                        return (item.itm = new Consumable({ ...items[item.itm.id] }));
                 });
                 pl.updateTraits();
                 pl.updatePerks(true);
@@ -216,12 +226,12 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
             let verColor = "lime";
             let addVersionWarning = false;
-            if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
+            if (+save.save.version + 0.1 < +GAME_VERSION || !save.save.version || +save.save.version < 1.1) {
                 verColor = "orange";
                 addVersionWarning = true;
             }
             let versionText = `${(_c = (_b = save.save) === null || _b === void 0 ? void 0 : _b.version) === null || _c === void 0 ? void 0 : _c[0]}.${(_e = (_d = save.save) === null || _d === void 0 ? void 0 : _d.version) === null || _e === void 0 ? void 0 : _e[2]}.${(_g = (_f = save.save) === null || _f === void 0 ? void 0 : _f.version) === null || _g === void 0 ? void 0 : _g[3]}`;
-            if (versionText.includes('undefined'))
+            if (versionText.includes("undefined"))
                 versionText = lang["old_save"];
             totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
             if (addVersionWarning) {
@@ -246,7 +256,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
 async function closeSaveMenu() {
     const saveBg = document.querySelector(".savesMenu");
     saveBg.style.display = "block";
-    saveBg.style.animation = 'none';
+    saveBg.style.animation = "none";
     // @ts-ignore
     saveBg.offsetHeight; /* trigger reflow */
     // @ts-ignore
@@ -254,14 +264,16 @@ async function closeSaveMenu() {
     await helper.sleep(5);
     saveBg.style.animationName = `slideToTop`;
     saveBg.style.display = "none";
-    setTimeout(() => { dim.style.height = "0%"; }, 5);
+    setTimeout(() => {
+        dim.style.height = "0%";
+    }, 5);
 }
 function secondsToHoursAndMinutes(seconds) {
     if (seconds <= 0)
         return undefined;
     let hours = Math.floor(seconds / 3600);
-    let minutes = Math.floor((seconds - (hours * 3600)) / 60);
-    let secondsLeft = seconds - (hours * 3600) - (minutes * 60);
+    let minutes = Math.floor((seconds - hours * 3600) / 60);
+    let secondsLeft = seconds - hours * 3600 - minutes * 60;
     // @ts-ignore
     if (hours < 10)
         hours = "0" + hours;
@@ -276,10 +288,10 @@ function secondsToHoursAndMinutes(seconds) {
 let saves = [];
 let input = "";
 function generateKey(len) {
-    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-        var randomPoz = Math.floor(Math.random() * charSet.length);
+    const charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let randomString = "";
+    for (let i = 0; i < len; i++) {
+        let randomPoz = Math.floor(Math.random() * charSet.length);
         randomString += charSet.substring(randomPoz, randomPoz + 1);
     }
     return randomString;
@@ -318,7 +330,7 @@ function createNewSaveGame() {
     const saveBg = document.querySelector(".savesMenu");
     const saveNameInput = saveBg.querySelector(".saveName");
     let saveName = saveNameInput.value || player.name;
-    let sortTime = +(new Date());
+    let sortTime = +new Date();
     let gameSave = {};
     player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
     timePlayedNow = performance.now();
@@ -351,32 +363,32 @@ function saveToFile(input) {
             link.click();
             window.URL.revokeObjectURL(url);
         };
-    }());
+    })();
     let saveArray = [
         {
             key: "player",
-            data: helper.trimPlayerObjectForSaveFile(player)
+            data: helper.trimPlayerObjectForSaveFile(player),
         },
         {
             key: "itemData",
-            data: [...itemData]
+            data: [...itemData],
         },
         {
             key: "lootedChests",
-            data: [...lootedChests]
+            data: [...lootedChests],
         },
         {
             key: "enemies",
-            data: [...fallenEnemies]
+            data: [...fallenEnemies],
         },
         {
             key: "currentMap",
-            data: maps[currentMap].id
+            data: maps[currentMap].id,
         },
         {
             key: "version",
-            data: GAME_VERSION
-        }
+            data: GAME_VERSION,
+        },
     ];
     let minutes = new Date().getMinutes();
     if (minutes < 10)
@@ -388,7 +400,7 @@ function saveToFile(input) {
 }
 function loadFromfile() {
     let fileInput = document.createElement("input");
-    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute("type", "file");
     fileInput.click();
     fileInput.addEventListener("change", () => HandleFile(fileInput.files[0]));
 }
@@ -396,8 +408,8 @@ function HandleFile(file) {
     let reader = new FileReader();
     let text = "";
     // file reading finished successfully
-    reader.addEventListener('load', function (e) {
-        // contents of file in variable     
+    reader.addEventListener("load", function (e) {
+        // contents of file in variable
         text = e.target.result;
         FinishRead();
     });

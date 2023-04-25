@@ -19,7 +19,7 @@
 
 <body>
   <div class="main">
-    <p class="version-number">Ver. Alpha 1.2.3</p>
+    <p class="version-number">Ver. Alpha 1.2.4</p>
     <h1 class="fps-counter">9999</h1>
     <div class="loading">
       <h1 class="loading-text"></h1>
@@ -161,6 +161,10 @@
     </div>
     <p class="closestEnemyDistance"></p>
     <p class="interactPrompt"></p>
+    <div class="multiButtonPrompt">
+      <div class="prompt-text">Main text content</div>
+      <div class="prompt-buttons">[BUTTONS]</div>
+    </div>
     <div class="textWindow"></div>
     <div class="warningWindow"></div>
     <div class="playerWindow"></div>
@@ -272,6 +276,9 @@
       <canvas class="areaUpdateCanvas" width="360" height="240"></canvas>
     </div>
     <div class="mods-menu">
+      <div class="header">
+        <button class="load">Done</button>
+      </div>
       <div class="content">
         <div class="closeWindowButton" onclick="closeModsMenu()"><span>X</span></div>
         <div class="mods-list"></div>
@@ -539,6 +546,7 @@
 <script src="resources/compiledJS/misc/commands.js"></script>
 <script src="resources/compiledJS/misc/dev.js"></script>
 <script src="resources/compiledJS/ui/settings.js"></script>
+<script src="resources/compiledJS/mod_loading/fs.js"></script>
 <script src="resources/compiledJS/mod_loading/load.js"></script>
 <script src="resources/compiledJS/mod_loading/menu.js"></script>
 <script src="resources/compiledJS/mod_loading/texture_load.js"></script>

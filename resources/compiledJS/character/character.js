@@ -267,7 +267,7 @@ class Character {
         };
         this.abilities = (_h = [...base.abilities]) !== null && _h !== void 0 ? _h : [];
         this.silenced = () => {
-            var result = false;
+            let result = false;
             this.statusEffects.forEach((eff) => {
                 if (eff.silence) {
                     result = true;
@@ -277,7 +277,7 @@ class Character {
             return result;
         };
         this.concentration = () => {
-            var result = true;
+            let result = true;
             this.statusEffects.forEach((eff) => {
                 if (eff.break_concentration) {
                     result = false;
@@ -407,7 +407,7 @@ const dummy = new Character({
     abilities: [],
 });
 const baseStats = ["str", "vit", "dex", "int", "cun"];
-// var ley = new Character({
+// let ley = new Character({
 //   id: "ley",
 //   name: "leyli",
 //   cords: {x: 0, y: 0},

@@ -7,8 +7,8 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + player.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + player.eyes);
   const faceModel = <HTMLImageElement>document.querySelector(".sprites .face" + player.face);
-  const posX = baseCanvas.width / 2 - size / 2 + (size * settings.map_offset_x);
-  const posY = baseCanvas.height / 2 - size / 2 + (size * settings.map_offset_y);
+  const posX = baseCanvas.width / 2 - size / 2 + size * settings.map_offset_x;
+  const posY = baseCanvas.height / 2 - size / 2 + size * settings.map_offset_y;
   player.statusEffects.forEach((eff: statEffect) => {
     if (eff.aura) {
       const aura = <HTMLImageElement>document.querySelector(".sprites ." + eff.aura);
@@ -53,15 +53,22 @@ function renderPlayerModel(size: number, canvas: HTMLCanvasElement, ctx: any) {
       const offhandModel = player.offhand.equippedSprite;
       ctx?.drawImage(textureAtlas, offhandModel.x, offhandModel.y, 128, 128, posX, posY, size, size);
     }
-  }
-  catch (e) { }
+  } catch (e) {}
 }
 
-
-function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, side: string = "center", playerModel: any = player, noClothes: boolean = false) {
+function renderPlayerOutOfMap(
+  size: number,
+  canvas: HTMLCanvasElement,
+  ctx: any,
+  side: string = "center",
+  playerModel: any = player,
+  noClothes: boolean = false
+) {
   canvas.width = canvas.width; // Clear canvas
   const sex = playerModel.sex === "male" ? "" : capitalizeFirstLetter(playerModel.sex);
-  const bodyModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex));
+  const bodyModel = <HTMLImageElement>(
+    document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex))
+  );
   const earModel = <HTMLImageElement>document.querySelector(".sprites ." + playerModel.race + "Ears");
   const hairModel = <HTMLImageElement>document.querySelector(".sprites .hair" + playerModel.hair);
   const eyeModel = <HTMLImageElement>document.querySelector(".sprites .eyes" + playerModel.eyes);
@@ -79,11 +86,13 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
   try {
     if (!noClothes) {
       if (playerModel.helmet?.sprite && !settings["hide_helmet"]) {
-        const helmetModel = sex === "Female" ? items[playerModel.helmet.id].equippedSpriteFemale : items[playerModel.helmet.id].equippedSprite;
+        const helmetModel =
+          sex === "Female" ? items[playerModel.helmet.id].equippedSpriteFemale : items[playerModel.helmet.id].equippedSprite;
         ctx?.drawImage(textureAtlas, helmetModel.x, helmetModel.y, 128, 128, x, y, size, size);
       }
       if (playerModel.gloves?.sprite) {
-        const glovesModel = sex === "Female" ? items[playerModel.gloves.id].equippedSpriteFemale : items[playerModel.gloves.id].equippedSprite;
+        const glovesModel =
+          sex === "Female" ? items[playerModel.gloves.id].equippedSpriteFemale : items[playerModel.gloves.id].equippedSprite;
         ctx?.drawImage(textureAtlas, glovesModel.x, glovesModel.y, 128, 128, x, y, size, size);
       }
       if (playerModel.boots?.sprite) {
@@ -95,7 +104,8 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
         ctx?.drawImage(leggings, x, y, size, size);
       }
       if (playerModel.legs?.sprite) {
-        const leggingsModel = sex === "Female" ? items[playerModel.legs.id].equippedSpriteFemale : items[playerModel.legs.id].equippedSprite;
+        const leggingsModel =
+          sex === "Female" ? items[playerModel.legs.id].equippedSpriteFemale : items[playerModel.legs.id].equippedSprite;
         ctx?.drawImage(textureAtlas, leggingsModel.x, leggingsModel.y, 128, 128, x, y, size, size);
       }
       if (playerModel.chest?.sprite) {
@@ -111,8 +121,7 @@ function renderPlayerOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any,
         ctx?.drawImage(textureAtlas, offhandModel.x, offhandModel.y, 128, 128, x, y, size, size);
       }
     }
-  }
-  catch (e) { }
+  } catch (e) {}
 }
 
 function renderPlayerPortrait() {
@@ -130,8 +139,8 @@ function renderPlayerPortrait() {
 function renderNPCOutOfMap(size: number, canvas: HTMLCanvasElement, ctx: any, npc: Npc, side: string = "center") {
   canvas.width = canvas.width; // Clear canvas
   const sprite = <HTMLImageElement>document.querySelector(".sprites ." + npc.sprite);
-  var x = 0;
-  var y = 0;
+  let x = 0;
+  let y = 0;
   if (side == "left") x = 0 - size / 4;
   ctx?.drawImage(sprite, x, y, size, size);
 }

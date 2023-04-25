@@ -22,7 +22,7 @@ class Enemy extends Character {
         this.hasBeenLeveled = (_j = base.hasBeenLeveled) !== null && _j !== void 0 ? _j : false;
         this.level = (_k = base.level) !== null && _k !== void 0 ? _k : 1;
         this.isUnique = (_l = base.isUnique) !== null && _l !== void 0 ? _l : false;
-        this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + (this.level / 5))) : defaultModel.xp;
+        this.xp = this.level > 1 ? Math.floor(defaultModel.xp * (1 + this.level / 5)) : defaultModel.xp;
         this.levelingTemplate = (_m = defaultModel.levelingTemplate) !== null && _m !== void 0 ? _m : "balanced";
         this.retreatPath = [];
         this.retreatIndex = 0;
@@ -108,7 +108,11 @@ class Enemy extends Character {
                 if (arrowPathDistance < 1)
                     arrowPathDistance = 9999;
                 // Check if it should be used
-                if (chosenAbility && (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge" ? parseInt(chosenAbility.use_range) >= pathDistance : (parseInt(chosenAbility.use_range) >= arrowPathDistance && missileWillLand)) || chosenAbility.self_target)) {
+                if (chosenAbility &&
+                    (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge"
+                        ? parseInt(chosenAbility.use_range) >= pathDistance
+                        : parseInt(chosenAbility.use_range) >= arrowPathDistance && missileWillLand) ||
+                        chosenAbility.self_target)) {
                     if (chosenAbility.type == "charge") {
                         moveEnemy(this.chosenTarget.cords, this, chosenAbility, chosenAbility.use_range);
                     }
@@ -137,11 +141,11 @@ class Enemy extends Character {
                 }
                 // If there's no offensive action to be taken, just move towards the target.
                 else if (!this.isRooted()) {
-                    var path = pathToTarget;
+                    let path = pathToTarget;
                     try {
                         let willStack = false;
                         if (path.length > 0) {
-                            combatSummons.forEach(summon => {
+                            combatSummons.forEach((summon) => {
                                 if (summon.cords.x == path[0].x && summon.cords.y == path[0].y) {
                                     willStack = true;
                                 }
@@ -183,7 +187,10 @@ class Enemy extends Character {
                 // weight.
                 for (let j = 0; j < this.abilities[i].ai_chance; ++j) {
                     const abi = this.abilities[i];
-                    if (abi.mana_cost <= this.stats.mp && abi.onCooldown == 0 && !(abi.mana_cost > 0 ? this.silenced() : false) && (abi.requires_concentration ? this.concentration() : true)) {
+                    if (abi.mana_cost <= this.stats.mp &&
+                        abi.onCooldown == 0 &&
+                        !(abi.mana_cost > 0 ? this.silenced() : false) &&
+                        (abi.requires_concentration ? this.concentration() : true)) {
                         out.push(this.abilities[i]);
                     }
                 }
@@ -206,10 +213,10 @@ class Enemy extends Character {
                 // @ts-ignore
                 // @ts-ignore
                 if (this.shootsProjectile)
-                    bonus += num * this.getStats().dex / 50;
+                    bonus += (num * this.getStats().dex) / 50;
                 // @ts-ignore
                 else
-                    bonus += num * this.getStats().str / 50;
+                    bonus += (num * this.getStats().str) / 50;
                 // @ts-ignore
                 dmg += Math.floor((num + val + bonus) * mod);
                 dmgs[key] = Math.floor((num + val + bonus) * mod);
@@ -231,7 +238,14 @@ class Enemy extends Character {
                 updateQuestProgress({ id: index, quest: Object.keys(quests)[player.questProgress[index].id] });
             }
             else
-                fallenEnemies.push({ id: this.id, level: this.level, spawnCords: this.spawnCords, spawnMap: this.spawnMap, isUnique: this.isUnique, turnsToRes: 200 });
+                fallenEnemies.push({
+                    id: this.id,
+                    level: this.level,
+                    spawnCords: this.spawnCords,
+                    spawnMap: this.spawnMap,
+                    isUnique: this.isUnique,
+                    turnsToRes: 200,
+                });
             player.questProgress.forEach((prog) => {
                 var _a;
                 let questFind = Object.values(quests)[prog.id];
@@ -260,7 +274,7 @@ class Enemy extends Character {
             this.stats.hp = this.getHpMax();
             this.stats.mp = this.getMpMax();
             this.statusEffects = [];
-            this.abilities.forEach(abi => {
+            this.abilities.forEach((abi) => {
                 abi.onCooldown = 0;
             });
             this.cords.x = this.spawnCords.x;

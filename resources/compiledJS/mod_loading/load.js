@@ -1,44 +1,60 @@
 "use strict";
 var _a;
-;
 const modsInformation = [];
 const modsSettings = (_a = JSON.parse(localStorage.getItem("DOT_game_mods"))) !== null && _a !== void 0 ? _a : {};
-async function loadMods() {
-    const JSONdata = await fetch("mods_config.json");
-    const modsConfig = await JSONdata.json();
-    const list = modsConfig.list;
-    list.forEach(async (mod) => {
-        const modPath = `/mods/${mod}`;
-        const JSONmod = await fetch(`${modPath}/mod.json`);
-        const load = {};
-        const modConfig = await JSONmod.json();
-        mod = mod.replace(/\s|-/g, "_");
-        modConfig.key = mod;
-        modsInformation.push(modConfig);
-        if ((modsSettings === null || modsSettings === void 0 ? void 0 : modsSettings[mod]) === false)
-            return;
-        load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
-        load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
-        load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
-        load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
-        load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
-        load.modFlags = { path: `${modPath}/flags.js`, func: applyModFlags };
-        load.modCharacters = { path: `${modPath}/characters.js`, func: applyModCharacters };
-        load.modInteractions = { path: `${modPath}/character_interactions.js`, func: applyModInteractions };
-        load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
-        load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
-        load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
-        load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
-        Object.values(load).forEach(async ({ path, func }) => {
-            await loadModFile(path, mod, func);
-        });
-        if (modConfig.maps) {
-            loadMaps(modConfig.maps, modPath, mod).then(() => {
-                applyModMaps(mod, modConfig.maps);
-            });
-        }
+const modsData = {
+    folder: null,
+    mods: [],
+};
+async function uploadModDirectory() {
+    // @ts-expect-error
+    modsData.directory = await getDirectory();
+    const mods = {};
+    modsData.directory.forEach((file) => {
+        const modName = file.webkitRelativePath.split("/")[1];
+        if (!mods[modName])
+            mods[modName] = [];
+        mods[modName].push(file);
     });
-    lang = eval(settings.language);
+    modsData.mods = mods;
+}
+async function loadMods() {
+    // total rework
+    //openModsMenu();
+    // const JSONdata = await fetch("mods_config.json");
+    // const modsConfig = await JSONdata.json();
+    // const list = modsConfig.list;
+    // list.forEach(async (mod: string) => {
+    //   const modPath = `/mods/${mod}`;
+    //   const JSONmod = await fetch(`${modPath}/mod.json`);
+    //   const load: any = {};
+    //   const modConfig: ModInfo = await JSONmod.json();
+    //   mod = mod.replace(/\s|-/g, "_");
+    //   modConfig.key = mod;
+    //   modsInformation.push(modConfig);
+    //   if (modsSettings?.[mod] === false) return;
+    //   load.modItems = { path: `${modPath}/items.js`, func: applyModItems };
+    //   load.modEnemies = { path: `${modPath}/enemies.js`, func: applyModEnemies };
+    //   load.modAbilities = { path: `${modPath}/abilities.js`, func: applyModAbilities };
+    //   load.modStatEffects = { path: `${modPath}/status_effects.js`, func: applyModStatEffects };
+    //   load.modTraits = { path: `${modPath}/traits.js`, func: applyModTraits };
+    //   load.modFlags = { path: `${modPath}/flags.js`, func: applyModFlags };
+    //   load.modCharacters = { path: `${modPath}/characters.js`, func: applyModCharacters };
+    //   load.modInteractions = { path: `${modPath}/character_interactions.js`, func: applyModInteractions };
+    //   load.modLocalisationGeneral = { path: `${modPath}/localisation/aa_localisation.js`, func: applyModLocalisationGeneral };
+    //   load.modLocalisationCodex = { path: `${modPath}/localisation/codex_localisation.js`, func: applyModLocalisation };
+    //   load.modLocalisationDialog = { path: `${modPath}/localisation/dialog_localisation.js`, func: applyModLocalisation };
+    //   load.modLocalisationQuest = { path: `${modPath}/localisation/quest_localisation.js`, func: applyModLocalisation };
+    //   Object.values(load).forEach(async ({ path, func }: any) => {
+    //     await loadModFile(path, mod, func);
+    //   });
+    //   if (modConfig.maps) {
+    //     loadMaps(modConfig.maps, modPath, mod).then(() => {
+    //       applyModMaps(mod, modConfig.maps);
+    //     });
+    //   }
+    // });
+    // lang = eval(settings.language);
 }
 function loadMaps(maps, modPath, mod) {
     return Promise.all(maps.map(async (map) => {
@@ -229,7 +245,7 @@ const replace_in_map = {
     treasureChests: true,
     messages: true,
     shrines: true,
-    entrances: true
+    entrances: true,
 };
 function applyModMaps(mod, maps_array) {
     maps_array.forEach((map) => {

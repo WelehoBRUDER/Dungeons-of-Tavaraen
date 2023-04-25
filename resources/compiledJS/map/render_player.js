@@ -10,8 +10,8 @@ function renderPlayerModel(size, canvas, ctx) {
     const hairModel = document.querySelector(".sprites .hair" + player.hair);
     const eyeModel = document.querySelector(".sprites .eyes" + player.eyes);
     const faceModel = document.querySelector(".sprites .face" + player.face);
-    const posX = baseCanvas.width / 2 - size / 2 + (size * settings.map_offset_x);
-    const posY = baseCanvas.height / 2 - size / 2 + (size * settings.map_offset_y);
+    const posX = baseCanvas.width / 2 - size / 2 + size * settings.map_offset_x;
+    const posY = baseCanvas.height / 2 - size / 2 + size * settings.map_offset_y;
     player.statusEffects.forEach((eff) => {
         if (eff.aura) {
             const aura = document.querySelector(".sprites ." + eff.aura);
@@ -64,7 +64,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     canvas.width = canvas.width; // Clear canvas
     const sex = playerModel.sex === "male" ? "" : capitalizeFirstLetter(playerModel.sex);
-    const bodyModel = document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex));
+    const bodyModel = (document.querySelector(".sprites ." + playerModel.race + "Model" + capitalizeFirstLetter(playerModel.sex)));
     const earModel = document.querySelector(".sprites ." + playerModel.race + "Ears");
     const hairModel = document.querySelector(".sprites .hair" + playerModel.hair);
     const eyeModel = document.querySelector(".sprites .eyes" + playerModel.eyes);
@@ -133,8 +133,8 @@ function renderPlayerPortrait() {
 function renderNPCOutOfMap(size, canvas, ctx, npc, side = "center") {
     canvas.width = canvas.width; // Clear canvas
     const sprite = document.querySelector(".sprites ." + npc.sprite);
-    var x = 0;
-    var y = 0;
+    let x = 0;
+    let y = 0;
     if (side == "left")
         x = 0 - size / 4;
     ctx === null || ctx === void 0 ? void 0 : ctx.drawImage(sprite, x, y, size, size);

@@ -31,7 +31,8 @@ interface statusResistances {
 }
 
 interface characterObject {
-  [id: string]: string | any;
+  [key: string]: any;
+  id: string;
   name: string;
   cords: tileObject;
   stats: stats;
@@ -412,7 +413,7 @@ class Character {
     this.abilities = [...base.abilities] ?? [];
 
     this.silenced = () => {
-      var result = false;
+      let result = false;
       this.statusEffects.forEach((eff: statEffect) => {
         if (eff.silence) {
           result = true;
@@ -423,7 +424,7 @@ class Character {
     };
 
     this.concentration = () => {
-      var result = true;
+      let result = true;
       this.statusEffects.forEach((eff: statEffect) => {
         if (eff.break_concentration) {
           result = false;
@@ -537,7 +538,7 @@ const dummy = new Character({
 
 const baseStats = ["str", "vit", "dex", "int", "cun"];
 
-// var ley = new Character({
+// let ley = new Character({
 //   id: "ley",
 //   name: "leyli",
 //   cords: {x: 0, y: 0},

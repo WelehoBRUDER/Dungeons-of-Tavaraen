@@ -180,31 +180,23 @@
   box-shadow: 0 0 2px 2px rgb(177, 164, 160);
 }
 .settingsMenu .sliderContainer input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  /* Override default look */
+  -webkit-appearance: none; /* Override default look */
   appearance: none;
-  width: 20px;
-  /* Set a specific slider handle width */
-  height: 20px;
-  /* Slider handle height */
+  width: 20px; /* Set a specific slider handle width */
+  height: 20px; /* Slider handle height */
   background: #6e2d07;
   box-shadow: inset 0 0 3px 3px #833f18, 0 0 3px 3px rgb(211, 67, 10);
-  cursor: pointer;
-  /* Cursor on hover */
+  cursor: pointer; /* Cursor on hover */
   box-shadow: -200px 0 0 200px #bb581f;
 }
 .settingsMenu .sliderContainer input::-moz-range-thumb {
-  -webkit-appearance: none;
-  /* Override default look */
+  -webkit-appearance: none; /* Override default look */
   appearance: none;
-  width: 20px;
-  /* Set a specific slider handle width */
-  height: 20px;
-  /* Slider handle height */
+  width: 20px; /* Set a specific slider handle width */
+  height: 20px; /* Slider handle height */
   background: #6e2d07;
   box-shadow: inset 0 0 3px 3px #833f18, 0 0 3px 3px rgb(211, 67, 10);
-  cursor: pointer;
-  /* Cursor on hover */
+  cursor: pointer; /* Cursor on hover */
   box-shadow: -200px 0 0 200px #bb581f;
 }
 .settingsMenu .sliderContainer input::-webkit-slider-runnable-track,
@@ -465,6 +457,70 @@
   vertical-align: middle;
 }
 .warningWindow button.red-button {
+  height: auto;
+}
+
+.multiButtonPrompt {
+  transition: 0.2s ease-in;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(670px * var(--ui-scale));
+  height: calc(440px * var(--ui-scale));
+  margin-top: calc(-180px * var(--ui-scale));
+  margin-left: calc(-240px * var(--ui-scale));
+  box-sizing: border-box;
+  background: rgba(5, 5, 5, 0.95);
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+  transform: scale(0);
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
+.multiButtonPrompt .prompt-text {
+  margin-bottom: calc(80px * var(--ui-scale));
+}
+.multiButtonPrompt .prompt-text pre {
+  position: relative;
+  width: 90%;
+  height: auto;
+  padding: 3px;
+  max-height: 90%;
+  overflow: hidden;
+  overflow-y: auto;
+  border: 2px solid rgb(60, 60, 60);
+}
+.multiButtonPrompt .prompt-text pre span {
+  margin: 0;
+  font-size: 25px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  text-shadow: 0px 0px 8px black;
+  line-height: 24px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  user-select: all;
+}
+.multiButtonPrompt .prompt-text pre img {
+  width: 34px;
+  vertical-align: middle;
+}
+.multiButtonPrompt .prompt-buttons {
+  display: flex;
+  position: absolute;
+  left: 0;
+  bottom: 50px;
+  width: 100%;
+  justify-content: center;
+  gap: 18px;
+}
+.multiButtonPrompt .prompt-buttons div {
+  width: calc(160px * var(--ui-scale)) !important;
   height: auto;
 }
 

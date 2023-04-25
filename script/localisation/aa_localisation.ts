@@ -662,6 +662,7 @@ const finnish = {
   save_settings: "Tallenna asetukset",
   save_settings_file: "Tallenna asetukset tiedostoon (lataa .json tiedoston)",
   load_settings_file: "Lataa asetukset tiedostosta (avaa valikon)",
+  load_mods_prompt: "Haluatko käynnistää pelin modien kanssa?\nValitse kansio jossa modit sijaitsevat valikosta.",
 
   // Grades
   common: "Yleinen",
@@ -1673,6 +1674,7 @@ const english = {
   save_settings: "Save settings",
   save_settings_file: "Save settings to file (downloads a .json file)",
   load_settings_file: "Load settings from file (opens prompt)",
+  load_mods_prompt: "Do you want to launch the game with mods?\nChoose the folder with your installed mods from the prompt.",
 
   // Grades
   common: "Common",

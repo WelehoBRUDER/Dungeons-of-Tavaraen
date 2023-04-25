@@ -392,7 +392,7 @@ function statModifTT(statModif) {
     return txt;
 }
 const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
-var currentZoomBG = 1;
+let currentZoomBG = 1;
 const background = document.querySelector(".playerLeveling .perks");
 background.addEventListener("mousedown", action1);
 background.addEventListener("mousemove", action2);
