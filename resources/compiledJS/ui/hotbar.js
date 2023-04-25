@@ -14,7 +14,7 @@ function generateHotbar() {
         frame.classList.add("hotbarFrame");
         bg.src = "resources/ui/hotbar_bg.png";
         hotKey.textContent = `${i > 9 ? "Shift + " : ""}${i < 9 ? (i + 1).toString() : i == 9 ? "0" : i > 9 && i < 19 ? (i - 9).toString() : "0"}`;
-        frame.addEventListener("mouseup", e => rightClickHotBar(e, i));
+        frame.addEventListener("mouseup", (e) => rightClickHotBar(e, i));
         frame.append(bg, hotKey);
         hotbar.append(frame);
         const total = player.abilities.concat(player.inventory);
@@ -45,7 +45,14 @@ function generateHotbar() {
                 }
                 else {
                     tooltip(abiDiv, abiTT(abi));
-                    if (abi.onCooldown == 0 && player.stats.mp >= abi.mana_cost && (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) && ((abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) && (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true)) && !(abi.mana_cost > 0 ? player.silenced() : false) && (abi.requires_concentration ? player.concentration() : true) && !player.isDead)
+                    if (abi.onCooldown == 0 &&
+                        player.stats.mp >= abi.mana_cost &&
+                        (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) &&
+                        (abi.requires_melee_weapon ? abi.requires_melee_weapon && !player.weapon.firesProjectile : true) &&
+                        (abi.requires_ranged_weapon ? abi.requires_ranged_weapon && player.weapon.firesProjectile : true) &&
+                        !(abi.mana_cost > 0 ? player.silenced() : false) &&
+                        (abi.requires_concentration ? player.concentration() : true) &&
+                        !player.isDead)
                         abiDiv.addEventListener("click", () => useAbi(abi));
                     else {
                         abiDiv.style.filter = "brightness(0.25)";
@@ -58,8 +65,8 @@ function generateHotbar() {
                         }
                     }
                     if (abi.instant_aoe) {
-                        abiDiv.addEventListener("mouseover", e => renderAOEHoverOnPlayer(abi.aoe_size, abi.aoe_ignore_ledge));
-                        abiDiv.addEventListener("mouseleave", e => renderTileHover(player.cords, e));
+                        abiDiv.addEventListener("mouseover", (e) => renderAOEHoverOnPlayer(abi.aoe_size, abi.aoe_ignore_ledge));
+                        abiDiv.addEventListener("mouseleave", (e) => renderTileHover(player.cords, e));
                     }
                 }
                 dragElem(abiDiv, [hotbar], updateUI);
@@ -130,7 +137,7 @@ function useConsumable(itm) {
         spawnFloatingText(player.cords, itm.manaValue.toString(), "cyan", 36, 1000, 200);
     }
     if (itm.statusesUser) {
-        itm.statusesUser.forEach(status => {
+        itm.statusesUser.forEach((status) => {
             player.addEffect(status, itm.modifiers);
         });
     }
@@ -138,13 +145,13 @@ function useConsumable(itm) {
     if (itm.stacks) {
         itm.amount--;
         if (itm.amount <= 0) {
-            player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+            player.inventory.splice(player.inventory.findIndex((item) => item.equippedSlot == itm.equippedSlot), 1);
         }
     }
     else {
         itm.usesRemaining--;
         if (itm.usesRemaining <= 0) {
-            player.inventory.splice(player.inventory.findIndex(item => item.equippedSlot == itm.equippedSlot), 1);
+            player.inventory.splice(player.inventory.findIndex((item) => item.equippedSlot == itm.equippedSlot), 1);
         }
     }
     hideHover();
@@ -157,20 +164,20 @@ function rightClickHotBar(Event, Index) {
         return;
     contextMenu.style.left = `${Event.x}px`;
     contextMenu.style.top = `${Event.y}px`;
-    let hotbarItem = player.abilities.find(a => a.equippedSlot == Index);
+    let hotbarItem = player.abilities.find((a) => a.equippedSlot == Index);
     if (!hotbarItem)
-        hotbarItem = player.inventory.find(itm => itm.equippedSlot == Index);
+        hotbarItem = player.inventory.find((itm) => itm.equippedSlot == Index);
     if (hotbarItem) {
-        contextMenuButton(lang["map_to_hotbar"], a => mapToHotBar(Index));
-        contextMenuButton(lang["remove_from_hotbar"], a => removeFromHotBar(Index));
+        contextMenuButton(lang["map_to_hotbar"], (a) => mapToHotBar(Index));
+        contextMenuButton(lang["remove_from_hotbar"], (a) => removeFromHotBar(Index));
     }
     else {
-        contextMenuButton(lang["map_to_hotbar"], a => mapToHotBar(Index));
+        contextMenuButton(lang["map_to_hotbar"], (a) => mapToHotBar(Index));
     }
 }
 function contextMenuButton(text, onClick) {
     const but = document.createElement("button");
-    but.addEventListener("click", e => onClick());
+    but.addEventListener("click", (e) => onClick());
     but.textContent = text;
     contextMenu.append(but);
 }
@@ -200,7 +207,7 @@ function mapToHotBar(index) {
                 tooltip(abiDiv, abiTT(abi));
             abiDiv.append(abiImg);
             frame.append(abiDiv);
-            frame.addEventListener("click", a => addToHotBar(index, abi));
+            frame.addEventListener("click", (a) => addToHotBar(index, abi));
             assignContainer.append(frame);
         }
     });
@@ -208,15 +215,15 @@ function mapToHotBar(index) {
 function addToHotBar(index, abi) {
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
-    player.abilities.find(a => a.equippedSlot == index)?.equippedSlot = -1;
-    player.inventory.find(i => i.equippedSlot == index)?.equippedSlot = -1;
+    player.abilities.find((a) => a.equippedSlot == index).equippedSlot = -1;
+    player.inventory.find((i) => i.equippedSlot == index).equippedSlot = -1;
     abi.equippedSlot = index;
     updateUI();
 }
 function removeFromHotBar(index) {
     contextMenu.textContent = "";
-    player.abilities.find(a => a.equippedSlot == index)?.equippedSlot = -1;
-    player.inventory.find(i => i.equippedSlot == index)?.equippedSlot = -1;
+    player.abilities.find((a) => a.equippedSlot == index).equippedSlot = -1;
+    player.inventory.find((i) => i.equippedSlot == index).equippedSlot = -1;
     updateUI();
 }
 function generateEffects() {
@@ -261,14 +268,14 @@ function updateUI() {
     hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
     mpText.textContent = `${Math.floor(player.stats.mp)} / ${player.getMpMax()}`;
     mpText.innerHTML += ` <span>+${player.getRegen().mp.toFixed(2)}</span>`;
-    hpImg.style.setProperty("--value", (100 - player.hpRemain()) + "%");
-    mpImg.style.setProperty("--value", (100 - player.mpRemain()) + "%");
+    hpImg.style.setProperty("--value", 100 - player.hpRemain() + "%");
+    mpImg.style.setProperty("--value", 100 - player.mpRemain() + "%");
     ui.querySelector(".playerGoldNumber").textContent = player.gold.toString();
     generateHotbar();
     generateEffects();
     generateSummonList();
     displayLevelNotification();
-    xp.style.width = `${player.level.xp / player.level.xpNeed * 100}%`;
+    xp.style.width = `${(player.level.xp / player.level.xpNeed) * 100}%`;
 }
 player.updateAbilities();
 maps[currentMap].enemies.forEach((en) => {

@@ -1,4 +1,8 @@
 function handleEscape() {
+  if (devConsole.open) {
+    devConsole.open = false;
+    consoleElement.style.display = "none";
+  }
   if (state.perkOpen) {
     closeLeveling();
     state.perkOpen = false;

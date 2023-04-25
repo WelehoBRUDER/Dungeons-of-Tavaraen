@@ -5,6 +5,8 @@ class gameSettings {
     randomize_items;
     draw_wall_outlines;
     show_fps_counter;
+    enable_developer_console;
+    hotkey_developer_console;
     hotkey_inv;
     hotkey_char;
     hotkey_perk;
@@ -33,7 +35,9 @@ class gameSettings {
         this.randomize_items = base.randomize_items || false;
         this.draw_wall_outlines = base.draw_wall_outlines || true;
         this.show_fps_counter = base.show_fps_counter || true;
-        this.hotkey_inv = base.hotkey_inv || "i";
+        (this.enable_developer_console = base.enable_developer_console || false),
+            (this.hotkey_developer_console = base.hotkey_developer_console || "§"),
+            (this.hotkey_inv = base.hotkey_inv || "i");
         this.hotkey_char = base.hotkey_char || "c";
         this.hotkey_perk = base.hotkey_perk || "p";
         this.hotkey_ranged = base.hotkey_ranged || "g";
@@ -63,6 +67,8 @@ let settings = new gameSettings({
     randomize_items: true,
     draw_wall_outlines: true,
     show_fps_counter: true,
+    enable_developer_console: false,
+    hotkey_developer_console: "§",
     hotkey_inv: "i",
     hotkey_char: "c",
     hotkey_perk: "p",
@@ -83,7 +89,7 @@ let settings = new gameSettings({
     hotkey_open_world_messages: "Enter",
     hotkey_journal: "j",
     hotkey_codex: "y",
-    language: "english"
+    language: "english",
 });
 const state = {
     inCombat: false,

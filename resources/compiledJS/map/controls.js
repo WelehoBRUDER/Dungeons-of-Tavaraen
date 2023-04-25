@@ -61,6 +61,9 @@ function hotbarKey(e) {
     }
 }
 function hotkeyCheck(e) {
+    if (e.key === settings.hotkey_developer_console) {
+        devConsole.toggle();
+    }
     if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
             respawnPlayer();

@@ -1,42 +1,42 @@
 const menuOptions = [
   {
     id: "menu_resume",
-    action: () => handleEscape()
+    action: () => handleEscape(),
   },
   {
     id: "menu_save_games",
-    action: () => gotoSaveMenu()
+    action: () => gotoSaveMenu(),
   },
   {
     id: "menu_options",
-    action: () => gotoSettingsMenu()
+    action: () => gotoSettingsMenu(),
   },
   {
     id: "menu_main_screen",
-    action: () => gotoMainMenu()
-  }
+    action: () => gotoMainMenu(),
+  },
 ];
 
 const mainButtons = [
   {
     id: "menu_resume",
-    action: () => closeGameMenu(false, false)
+    action: () => closeGameMenu(false, false),
   },
   {
     id: "menu_new_game",
-    action: () => characterCreation()
+    action: () => characterCreation(),
   },
   {
     id: "menu_load_game",
-    action: () => gotoSaveMenu(true)
+    action: () => gotoSaveMenu(true),
   },
   {
     id: "menu_mods",
-    action: () => gotoMods()
+    action: () => gotoMods(),
   },
   {
     id: "menu_options",
-    action: () => gotoSettingsMenu(true)
+    action: () => gotoSettingsMenu(true),
   },
 ];
 
@@ -70,6 +70,11 @@ const menuSettings = [
     type: "toggle",
   },
   {
+    id: "setting_enable_developer_console",
+    tooltip: "enable_developer_console",
+    type: "toggle",
+  },
+  {
     id: "setting_ui_scale",
     tooltip: "ui_scale",
     type: "inputSlider",
@@ -81,6 +86,10 @@ const menuSettings = [
   {
     id: "setting_map_offset_y",
     type: "inputSliderReduced",
+  },
+  {
+    id: "setting_hotkey_developer_console",
+    type: "hotkey",
   },
   {
     id: "setting_hotkey_inv",
@@ -155,6 +164,6 @@ const menuSettings = [
   },
   {
     id: "setting_game_language",
-    type: "languageSelection"
-  }
+    type: "languageSelection",
+  },
 ];

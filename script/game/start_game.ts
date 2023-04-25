@@ -571,6 +571,7 @@ async function continueLoad() {
   tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
   tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
   tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+  updateCommands();
   document.querySelector(".loading-text").textContent = "Building textures...";
   await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
   document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "70%";
