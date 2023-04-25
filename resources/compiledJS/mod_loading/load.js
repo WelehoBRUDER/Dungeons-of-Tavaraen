@@ -1,7 +1,6 @@
 "use strict";
-var _a;
 const modsInformation = [];
-const modsSettings = (_a = JSON.parse(localStorage.getItem("DOT_mods_config"))) !== null && _a !== void 0 ? _a : {};
+const modsSettings = JSON.parse(localStorage.getItem("DOT_mods_config")) ?? {};
 const modsData = {
     folder: null,
     mods: [],
@@ -183,11 +182,11 @@ function applyModLocalisationGeneral(mod) {
     try {
         finLoc = eval(`${mod}_finnish`);
     }
-    catch (_a) { }
+    catch { }
     try {
         engLoc = eval(`${mod}_english`);
     }
-    catch (_b) { }
+    catch { }
     if (engLoc) {
         Object.entries(engLoc).forEach(([key, text]) => {
             english[key] = text;
@@ -204,15 +203,15 @@ function applyModLocalisation(mod) {
     try {
         codexMod = eval(`${mod}_codexLang`);
     }
-    catch (_a) { }
+    catch { }
     try {
         dialogMod = eval(`${mod}_dialogLang`);
     }
-    catch (_b) { }
+    catch { }
     try {
         questMod = eval(`${mod}_questLang`);
     }
-    catch (_c) { }
+    catch { }
     if (codexMod) {
         Object.entries(codexMod).forEach(([key, text]) => {
             codexLang[key] = text;
@@ -238,11 +237,11 @@ function applyModCharacters(mod) {
     try {
         modChars = eval(`${mod}_NPCcharacters`);
     }
-    catch (_a) { }
+    catch { }
     try {
         modInvs = eval(`${mod}_NPCInventories`);
     }
-    catch (_b) { }
+    catch { }
     if (modChars) {
         Object.entries(modChars).forEach(([key, char]) => {
             NPCcharacters[key] = { ...char };

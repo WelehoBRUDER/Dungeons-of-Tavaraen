@@ -13,21 +13,21 @@ const quests = {
         desc: "slimes_kill_desc",
         spawnUnique: "slime_posse",
         flag: "defeated_robber_slimes_talk",
-        prog: "saveEnemyKillIndex"
+        prog: "saveEnemyKillIndex",
       },
       {
         objective: "speakWithNpc",
         npc: "testMerchant",
         desc: "slimes_killed_talk_desc",
         flag: "completed_quest_defeat_slimes",
-        completesQuest: true
-      }
+        completesQuest: true,
+      },
     ],
     reward: [
       { type: "gold", amount: 100 },
-      { type: "xp", amount: 25 }
+      { type: "xp", amount: 25 },
     ],
-    giveNewQuestAfterCompletion: false
+    giveNewQuestAfterCompletion: false,
   },
   defeat_slimes_task_2: {
     id: "defeat_slimes_task_2",
@@ -35,7 +35,11 @@ const quests = {
       {
         objective: "killEnemies",
         desc: "exterminate_slimes_desc",
-        enemiesToKill: [{ type: "greySlime", amount: 8 }, { type: "flamingSlime", amount: 1 }, { type: "electricSlime", amount: 1 }],
+        enemiesToKill: [
+          { type: "greySlime", amount: 8 },
+          { type: "flamingSlime", amount: 1 },
+          { type: "electricSlime", amount: 1 },
+        ],
         flag: "exterminate_slimes_talk",
         prog: "saveEnemyKillIndex",
       },
@@ -44,13 +48,13 @@ const quests = {
         npc: "testMerchant",
         desc: "slimes_exterminated_talk_desc",
         flag: "completed_quest_defeat_slimes_2",
-        completesQuest: true
-      }
+        completesQuest: true,
+      },
     ],
     reward: [
       { type: "gold", amount: 250 },
-      { type: "xp", amount: 100 }
-    ]
+      { type: "xp", amount: 100 },
+    ],
   },
   maroch_slay_brethren_task: {
     id: "maroch_slay_brethren_task",
@@ -60,21 +64,21 @@ const quests = {
         desc: "slay_brethren_desc",
         spawnUnique: "maroch_brethren",
         flag: "brethren_slain_talk",
-        prog: "saveEnemyKillIndex"
+        prog: "saveEnemyKillIndex",
       },
       {
         objective: "speakWithNpc",
         npc: "blacksmithMaroch",
         desc: "brethren_slain_desc",
         flag: "completed_quest_slay_brethren",
-        completesQuest: true
-      }
+        completesQuest: true,
+      },
     ],
     reward: [
       { type: "gold", amount: 750 },
-      { type: "xp", amount: 500 }
-    ]
-  }
+      { type: "xp", amount: 500 },
+    ],
+  },
 } as any;
 
 const uniqueQuestSpawns = {
@@ -88,7 +92,7 @@ const uniqueQuestSpawns = {
     { enemy: "norsemanHunter", pos: { x: 39, y: 149 }, map: "western_heere_coast", level: 4 },
     { enemy: "norsemanHunter", pos: { x: 38, y: 153 }, map: "western_heere_coast", level: 4 },
     { enemy: "norsemanBerserk", pos: { x: 36, y: 154 }, map: "western_heere_coast", level: 5 },
-  ]
+  ],
 } as any;
 
 class Quest {
@@ -122,7 +126,7 @@ function renderPlayerQuests() {
     if (index == player.activeQuest) {
       // @ts-ignore
       selectEntry(questList.childNodes[questList.childNodes.length - 1], set);
-    };
+    }
   });
 }
 
@@ -140,15 +144,16 @@ function createQuestFromIds(idSet: any) {
   const questEntry = document.createElement("p");
   questEntry.textContent = questLang[lang.language_id][quest.id + "_name"] ?? quest.id;
   questEntry.id = quest.id + idSet.id;
-  questEntry.addEventListener("click", e => selectEntry(questEntry, idSet));
+  questEntry.addEventListener("click", (e) => selectEntry(questEntry, idSet));
   questList.append(questEntry);
 }
 
 function selectEntry(entryElement: HTMLParagraphElement, entry: any) {
   try {
     questList.childNodes.forEach((entry: any) => entry.classList.remove("selectedEntry"));
+  } catch (err) {
+    if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err}`);
   }
-  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err}`); }
   entryElement.classList.add("selectedEntry");
   player.activeQuest = player.questProgress.findIndex((prog: any) => prog.id == entry.id);
   createQuestData(entry);
@@ -159,7 +164,7 @@ function createQuestData(entry: any) {
   const loc = questLang[lang.language_id];
   let quest = new Quest(Object.values(quests)[entry.id]);
   let title = questLang[lang.language_id][quest.id + "_name"] || quest.id;
-  let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${title}`;
+  let text = `<f>${(36 * settings.ui_scale) / 100}px<f><c>goldenrod<c>${title}`;
   //let currentTask = quest.objectives[entry.obj];
   quest.objectives.forEach((currentTask: any, ObjectiveIndex: number) => {
     if (ObjectiveIndex > entry.obj) return;
@@ -174,8 +179,7 @@ function createQuestData(entry: any) {
             amounts[enemy.enemy]["max"]++;
             amounts[enemy.enemy]["def"] += entry.prog[index] ? 1 : 0;
             return;
-          }
-          else {
+          } else {
             amounts[enemy.enemy] = {
               max: 1,
               def: entry.prog[index] ? 1 : 0,
@@ -188,25 +192,28 @@ function createQuestData(entry: any) {
           const value = data[1];
           let col = "silver";
           if (value.def >= value.max || objectiveDoneAlready) col = "lime";
-          text += `\n<c>${col}<c>(${objectiveDoneAlready ? value.max : value.def}/${value.max}) Defeat ${lang[key + "_name"]} (Lvl ${value.lvl})`;
+          text += `\n<c>${col}<c>(${objectiveDoneAlready ? value.max : value.def}/${value.max}) Defeat ${lang[key + "_name"]} (Lvl ${
+            value.lvl
+          })`;
         });
-      }
-      else {
+      } else {
         currentTask.enemiesToKill.forEach((en: any, index: number) => {
           let col = "silver";
           if (entry?.prog?.[index] >= en.amount || objectiveDoneAlready) col = "lime";
-          text += `\n<c>${col}<c>(${entry.prog[index] ? entry.prog[index] : objectiveDoneAlready ? en.amount : 0}/${en.amount}) Defeat ${lang[en.type + "_name"]}`;
+          text += `\n<c>${col}<c>(${entry.prog[index] ? entry.prog[index] : objectiveDoneAlready ? en.amount : 0}/${en.amount}) Defeat ${
+            lang[en.type + "_name"]
+          }`;
         });
       }
-    }
-    else if (currentTask.objective == "speakWithNpc") {
+    } else if (currentTask.objective == "speakWithNpc") {
       let col = "silver";
       if (objectiveDoneAlready) col = "lime";
       text += `\n<c>${col}<c>Talk to ${currentTask.npc}`;
     }
   });
-  if (entry.obj >= quest.objectives.length) { text += "\n\n§<f>28px<f><c>goldenrod<c>This quest is complete!"; }
-  else {
+  if (entry.obj >= quest.objectives.length) {
+    text += "\n\n§<f>28px<f><c>goldenrod<c>This quest is complete!";
+  } else {
     text += `\n\n§<c>white<c><f>24px<f>Quest reward: `;
     quest.reward.forEach((reward: any) => {
       text += `${reward.amount} ${reward.type} `;
@@ -216,7 +223,7 @@ function createQuestData(entry: any) {
 }
 
 function startNewQuest(id: string) {
-  let index = Object.keys(quests).findIndex(q => q == id);
+  let index = Object.keys(quests).findIndex((q) => q == id);
   player.questProgress.push({ id: index, obj: 0, prog: {} });
   console.log("Got new quest!");
   spawnQuestMonsters();
@@ -235,7 +242,16 @@ function spawnQuestMonsters() {
         });
         if (!foundUniqueMob) {
           let spawnMap = maps[enemy.map];
-          spawnMap.enemies.push(new Enemy({ ...enemies[enemy.enemy], cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } }));
+          spawnMap.enemies.push(
+            new Enemy({
+              ...enemies[enemy.enemy],
+              cords: enemy.pos,
+              spawnCords: enemy.pos,
+              level: enemy.level,
+              map: enemy.map,
+              questSpawn: { quest: q.id, index: index },
+            })
+          );
           spawnMap.enemies[spawnMap.enemies.length - 1].updateTraits();
         }
       });
@@ -256,8 +272,7 @@ function updateQuestProgress(data: any, npc: string = "") {
         if (questId.prog[index]) killed++;
       });
       if (killed >= spawns.length) isObjectiveComplete = true;
-    }
-    else {
+    } else {
       let totalCurrent = 0;
       let totalNeeded = 0;
       objective.enemiesToKill.forEach((en: any, index: number) => {
@@ -266,8 +281,7 @@ function updateQuestProgress(data: any, npc: string = "") {
       });
       if (totalCurrent >= totalNeeded) isObjectiveComplete = true;
     }
-  }
-  else if (objective.objective == "speakWithNpc") {
+  } else if (objective.objective == "speakWithNpc") {
     if (objective.npc == npc) isObjectiveComplete = true;
   }
   if (isObjectiveComplete) {
@@ -281,7 +295,6 @@ function updateQuestProgress(data: any, npc: string = "") {
         else if (reward.type == "xp") player.level.xp += reward.amount;
         player.lvlUp();
       });
-    }
-    else spawnFloatingText(player.cords, "Quest objective fulfilled!", "lime", 27, 3000, 500);
+    } else spawnFloatingText(player.cords, "Quest objective fulfilled!", "lime", 27, 3000, 500);
   }
 }

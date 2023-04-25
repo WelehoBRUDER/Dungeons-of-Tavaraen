@@ -182,7 +182,6 @@ const startingTraits = [
 ];
 let traitPicks = 2;
 function classRaceSelection() {
-    var _a;
     content.innerHTML = `
   <div class="char-race-container">
     <h1 class="race-select">${lang.choose_race}</h1>
@@ -199,8 +198,7 @@ function classRaceSelection() {
     <div class="classes">
       ${Object.values(combatClasses)
         .map((combatClass) => {
-        var _a;
-        return `<div class="class-pick ${combatClass.id} ${((_a = player.classes.main) === null || _a === void 0 ? void 0 : _a.id) === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
+        return `<div class="class-pick ${combatClass.id} ${player.classes.main?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
       <p>${lang[combatClass.id + "_name"]}</p>
       <img src="${combatClass.icon}" alt="${combatClass.id}">
     </div>`;
@@ -209,13 +207,12 @@ function classRaceSelection() {
     </div>
   </div>
   <div class="char-traits-container">
-    <h1 class="trait-select">${(_a = lang.choose_traits) !== null && _a !== void 0 ? _a : "lang.choose_traits"}</h1>
+    <h1 class="trait-select">${lang.choose_traits ?? "lang.choose_traits"}</h1>
     <p class="trait-picks-left">${traitPicks} points</p>
     <div class="traits">
       ${startingTraits
         .map((trait) => {
-        var _a;
-        return `<div class="trait-pick ${trait} ${player.traits.findIndex((t) => t.id === trait) > -1 ? "selected" : ""}" onclick="changeTrait('${trait}')"><p>${(_a = lang[trait + "_name"]) !== null && _a !== void 0 ? _a : trait}</p></div>`;
+        return `<div class="trait-pick ${trait} ${player.traits.findIndex((t) => t.id === trait) > -1 ? "selected" : ""}" onclick="changeTrait('${trait}')"><p>${lang[trait + "_name"] ?? trait}</p></div>`;
     })
         .join("")}
   </div>
@@ -266,10 +263,9 @@ function getFaceImg(face) {
     return `./resources/tiles/player/nose_mouth_${face}.png`;
 }
 function appearanceSelection() {
-    var _a, _b, _c, _d;
     content.innerHTML = `
   <div class="char-appearance-container">
-    <h1 class="appearance-select">${(_a = lang.choose_hair) !== null && _a !== void 0 ? _a : "choose_hair"}</h1>
+    <h1 class="appearance-select">${lang.choose_hair ?? "choose_hair"}</h1>
     <div class="appearances">
       ${getHairArray()
         .map((hair) => {
@@ -279,7 +275,7 @@ function appearanceSelection() {
     </div>
   </div>
   <div class="char-appearance-container">
-  <h1 class="appearance-select">${(_b = lang.choose_eyes) !== null && _b !== void 0 ? _b : "choose_eyes"}</h1>
+  <h1 class="appearance-select">${lang.choose_eyes ?? "choose_eyes"}</h1>
   <div class="appearances">
     ${getEyesArray()
         .map((eyes) => {
@@ -289,7 +285,7 @@ function appearanceSelection() {
     </div>
   </div>
   <div class="char-appearance-container">
-    <h1 class="appearance-select">${(_c = lang.choose_face) !== null && _c !== void 0 ? _c : "choose_face"}</h1>
+    <h1 class="appearance-select">${lang.choose_face ?? "choose_face"}</h1>
     <div class="appearances">
       ${getFaceArray()
         .map((face) => {
@@ -299,7 +295,7 @@ function appearanceSelection() {
     </div>
   </div>
   <div class="char-appearance-container">
-    <h1 class="appearance-select">${(_d = lang.choose_name) !== null && _d !== void 0 ? _d : "choose_name"}</h1>
+    <h1 class="appearance-select">${lang.choose_name ?? "choose_name"}</h1>
     <input class="name-input" type="text" value="${player.name}" placeholder="Varien Loreanus" maxlength="24" oninput="changeName(this.value)">
   </div>
   <div class="continue-buttons">
@@ -399,12 +395,11 @@ function checkIfCanStartGame() {
         else
             creation.querySelector(".startGame").classList.add("greyedOut");
     }
-    catch (_a) { }
+    catch { }
 }
 function canContinue() {
-    var _a, _b;
     if (creationStep === "class-race") {
-        if (!((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.main) === null || _b === void 0 ? void 0 : _b.id))
+        if (!player.classes?.main?.id)
             return false;
         if (traitPicks < 0 || traitPicks > 1)
             return false;

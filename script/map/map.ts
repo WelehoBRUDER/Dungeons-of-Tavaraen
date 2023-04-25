@@ -184,7 +184,10 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
             Math.round(spriteSize + 1)
           );
       });
-    } else if (((state.abiSelected?.shoots_projectile && state.isSelected) || (player.weapon.firesProjectile && state.rangedMode)) && event.buttons !== 1) {
+    } else if (
+      ((state.abiSelected?.shoots_projectile && state.isSelected) || (player.weapon.firesProjectile && state.rangedMode)) &&
+      event.buttons !== 1
+    ) {
       /* Render highlight test */
       const path: any = generateArrowPath({ x: player.cords.x, y: player.cords.y }, tile);
       let distance: number = state.isSelected ? state.abiSelected.use_range : player.weapon.range;
@@ -303,10 +306,20 @@ function renderTileHover(tile: tileObject, event: any = { buttons: -1 }) {
       });
     }
   } catch (err) {
-    if (DEVMODE) displayText(`<c>red<c>${err} at line map:299`);
+    if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line map:299`);
     console.error("Error while rendering highlight", err);
   }
-  playerCtx.drawImage(spriteMap_tiles, strokeSprite.x, strokeSprite.y, 128, 128, tileX, tileY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
+  playerCtx.drawImage(
+    spriteMap_tiles,
+    strokeSprite.x,
+    strokeSprite.y,
+    128,
+    128,
+    tileX,
+    tileY,
+    Math.round(spriteSize + 1),
+    Math.round(spriteSize + 1)
+  );
 }
 
 function restoreGrave() {
@@ -369,13 +382,15 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
       } else displayText(`<c>green<c>[MOVEMENT]<c>white<c> Ran for ${count} turn(s).`);
     }
     if (state.inCombat && count == 1) {
-      if (Math.round(player.hpRegen() * 0.5) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * 0.5)} HP.`);
+      if (Math.round(player.hpRegen() * 0.5) > 0)
+        displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * 0.5)} HP.`);
     } else if (state.inCombat && count > 1) {
       let regen = Math.round(player.hpRegen() * count - 1) + Math.round(player.hpRegen() * 0.5);
       if (regen > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${regen} HP.`);
       displayText(`<c>green<c>[MOVEMENT] <c>orange<c>Stopped moving due to encontering an enemy.`);
     } else if (count > 0) {
-      if (Math.round(player.hpRegen() * count) > 0) displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * count)} HP.`);
+      if (Math.round(player.hpRegen() * count) > 0)
+        displayText(`<c>white<c>[PASSIVE] <c>lime<c>Recovered ${Math.round(player.hpRegen() * count)} HP.`);
     }
   } else if (!action) {
     advanceTurn();
@@ -401,7 +416,13 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
     const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
     const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
     const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-    ctx?.drawImage(hpbg, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      hpbg,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - 12 - spriteSize * (enemy.scale - 1),
+      spriteSize * enemy.scale,
+      spriteSize * enemy.scale
+    );
     ctx?.drawImage(
       hpbar,
       tileX - spriteSize * (enemy.scale - 1),
@@ -409,7 +430,13 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
       ((Math.round(enemy.hpRemain()) * spriteSize) / 100) * enemy.scale,
       spriteSize * enemy.scale
     );
-    ctx?.drawImage(hpborder, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      hpborder,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - 12 - spriteSize * (enemy.scale - 1),
+      spriteSize * enemy.scale,
+      spriteSize * enemy.scale
+    );
     /* Render enemy on top of hp bar */
     ctx?.drawImage(
       textureAtlas,
@@ -425,7 +452,11 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
     if (enemy.questSpawn?.quest > -1) {
       ctx.font = `${spriteSize / 1.9}px Arial`;
       ctx.fillStyle = "goldenrod";
-      ctx.fillText(`!`, tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3, tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10);
+      ctx.fillText(
+        `!`,
+        tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3,
+        tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10
+      );
     }
     let statCount = 0;
     enemy.statusEffects.forEach((effect: statEffect) => {
@@ -433,7 +464,13 @@ function renderSingleEnemy(enemy: Enemy, canvas: HTMLCanvasElement) {
       let img = new Image(32, 32);
       img.src = effect.icon;
       img.addEventListener("load", (e) => {
-        ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + 32 * statCount * currentZoom, 32 * currentZoom, 32 * currentZoom);
+        ctx?.drawImage(
+          img,
+          tileX + spriteSize - 32 * currentZoom,
+          tileY + 32 * statCount * currentZoom,
+          32 * currentZoom,
+          32 * currentZoom
+        );
         img = null;
         statCount++;
       });

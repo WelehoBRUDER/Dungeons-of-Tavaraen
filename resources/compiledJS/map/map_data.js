@@ -105,20 +105,31 @@ const chestTemplates = {
     },
 };
 class treasureChest {
+    cords;
+    map;
+    sprite; // Tells the game which sprite to load for the chest.
+    isUnique; // Whether this chest respawns or not.
+    respawnTime; // If it respawns, this answers when.
+    lootPool; // Generate loot based on this.
+    loot; // If this doesn't exist, it's created.
+    gold; // Just store how much gold we've rolled.
+    itemsGenerate; // Set min and max items to generate, eg. [1, 5]
+    sinceOpened; // Should be -1 to indicate chest is fresh.
+    useOldPattern; // Old pattern will loop through all items and pick in order, new is fully random.
+    lootChest;
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f;
         this.id = base.id;
         if (!this.id)
             throw new Error("NO ID");
         this.cords = { ...base.cords };
-        this.map = (_a = base.map) !== null && _a !== void 0 ? _a : 0;
-        this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : "treasureChest1";
-        this.isUnique = (_c = base.isUnique) !== null && _c !== void 0 ? _c : false;
-        this.respawnTime = (_d = base.respawnTime) !== null && _d !== void 0 ? _d : 500;
-        this.lootPool = (_e = base.lootPool) !== null && _e !== void 0 ? _e : "default";
+        this.map = base.map ?? 0;
+        this.sprite = base.sprite ?? "treasureChest1";
+        this.isUnique = base.isUnique ?? false;
+        this.respawnTime = base.respawnTime ?? 500;
+        this.lootPool = base.lootPool ?? "default";
         this.loot = base.loot;
         this.itemsGenerate = base.itemsGenerate;
-        this.sinceOpened = (_f = base.sinceOpened) !== null && _f !== void 0 ? _f : -1;
+        this.sinceOpened = base.sinceOpened ?? -1;
         this.useOldPattern = base.useOldPattern || false;
         if (!this.loot) {
             const pool = [...lootPools[this.lootPool]];

@@ -138,7 +138,7 @@ function mapHover(event: MouseEvent) {
   const x = lX + player.cords.x - settings.map_offset_x;
   const y = lY + player.cords.y - settings.map_offset_y;
   if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1) return;
-  if (DEVMODE) {
+  if (DEVTOOLS.ENABLED) {
     CURSOR_LOCATION.x = x;
     CURSOR_LOCATION.y = y;
     updateDeveloperInformation();

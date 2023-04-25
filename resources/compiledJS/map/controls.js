@@ -61,7 +61,6 @@ function hotbarKey(e) {
     }
 }
 function hotkeyCheck(e) {
-    var _a;
     if (e.key == "r" && !state.savesOpen) {
         if (player.isDead) {
             respawnPlayer();
@@ -131,7 +130,7 @@ function hotkeyCheck(e) {
             if (chest.cords.x == player.cords.x && chest.cords.y == player.cords.y && !lootedChest)
                 chest.lootChest();
         });
-        (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+        maps[currentMap].entrances?.some((entrance) => {
             if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
                 loadingScreen.style.display = "flex";
                 loadingText.textContent = "Loading map...";
@@ -145,7 +144,6 @@ function hotkeyCheck(e) {
     }
 }
 function movementCheck(keyPress) {
-    var _a, _b;
     if (movementCooldown)
         return;
     movementCooldown = true;
@@ -169,10 +167,10 @@ function movementCheck(keyPress) {
         state.abiSelected = {};
         return;
     }
-    if ((((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.id) || (+player.weapon.range > 2 && state.rangedMode)) && keyPress.key === settings.hotkey_interact) {
+    if ((state.abiSelected?.id || (+player.weapon.range > 2 && state.rangedMode)) && keyPress.key === settings.hotkey_interact) {
         useAbiTargetingWithKeyboard();
     }
-    if (dirs[keyPress.key] && (((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.id) || (+player.weapon.range > 2 && state.rangedMode))) {
+    if (dirs[keyPress.key] && (state.abiSelected?.id || (+player.weapon.range > 2 && state.rangedMode))) {
         if (mapSelection.x !== null && mapSelection.y !== null) {
             const cords = cordsFromDir({ x: mapSelection.x, y: mapSelection.y }, dirs[keyPress.key]);
             mapSelection.x = cords.x;
@@ -236,7 +234,6 @@ function movementCheck(keyPress) {
     }
 }
 function useAbiTargetingWithKeyboard() {
-    var _a, _b;
     let targetingEnemy = false;
     for (let enemy of maps[currentMap].enemies) {
         if (enemy.cords.x == mapSelection.x && enemy.cords.y == mapSelection.y) {
@@ -278,7 +275,7 @@ function useAbiTargetingWithKeyboard() {
             break;
         }
     }
-    if (state.isSelected && ((_a = state.abiSelected) === null || _a === void 0 ? void 0 : _a.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && state.abiSelected?.aoe_size > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: mapSelection.x, y: mapSelection.y }).length <= state.abiSelected.use_range) {
             fireProjectile(player.cords, { x: mapSelection.x, y: mapSelection.y }, state.abiSelected.shoots_projectile, state.abiSelected, true, player);
@@ -297,7 +294,7 @@ function useAbiTargetingWithKeyboard() {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (((_b = state.abiSelected.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+        if (state.abiSelected.statusesUser?.length > 0) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
@@ -319,7 +316,6 @@ function useAbiTargetingWithKeyboard() {
     state.abiSelected = {};
 }
 function canMove(char, dir) {
-    var _a, _b, _c;
     let tile = cordsFromDir(char.cords, dir);
     let check = char.cords;
     let movable = true;
@@ -341,11 +337,11 @@ function canMove(char, dir) {
             fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
         }
     });
-    if (((_a = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[tile.y]) === null || _a === void 0 ? void 0 : _a[tile.x]) === 1)
+    if (fieldMap?.[tile.y]?.[tile.x] === 1)
         movable = false;
     if (checkDirs[dir]) {
-        if (((_b = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y1]) === null || _b === void 0 ? void 0 : _b[check.x + checkDirs[dir].x1]) === 1 &&
-            ((_c = fieldMap === null || fieldMap === void 0 ? void 0 : fieldMap[check.y + checkDirs[dir].y2]) === null || _c === void 0 ? void 0 : _c[check.x + checkDirs[dir].x2]) === 1)
+        if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 &&
+            fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1)
             movable = false;
     }
     if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length)

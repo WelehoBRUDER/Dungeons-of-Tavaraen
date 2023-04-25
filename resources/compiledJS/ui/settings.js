@@ -1,5 +1,31 @@
 "use strict";
 class gameSettings {
+    toggle_minimap;
+    hide_helmet;
+    randomize_items;
+    draw_wall_outlines;
+    show_fps_counter;
+    hotkey_inv;
+    hotkey_char;
+    hotkey_perk;
+    hotkey_ranged;
+    hotkey_area_map;
+    ui_scale;
+    map_offset_x;
+    map_offset_y;
+    hotkey_move_up;
+    hotkey_move_down;
+    hotkey_move_left;
+    hotkey_move_right;
+    hotkey_move_right_up;
+    hotkey_move_right_down;
+    hotkey_move_left_up;
+    hotkey_move_left_down;
+    hotkey_open_world_messages;
+    hotkey_interact;
+    hotkey_journal;
+    hotkey_codex;
+    language;
     constructor(base) {
         this.log_enemy_movement = base.log_enemy_movement || false;
         this.toggle_minimap = base.toggle_minimap || true;

@@ -18,8 +18,7 @@ function generateHotbar() {
         frame.append(bg, hotKey);
         hotbar.append(frame);
         const total = player.abilities.concat(player.inventory);
-        total === null || total === void 0 ? void 0 : total.map((abi) => {
-            var _a;
+        total?.map((abi) => {
             if (abi.equippedSlot == i && abi.id != "attack") {
                 const abiDiv = document.createElement("div");
                 const abiImg = document.createElement("img");
@@ -54,7 +53,7 @@ function generateHotbar() {
                             const cdTxt = document.createElement("p");
                             if (abi.recharge_only_in_combat && !state.inCombat)
                                 cdTxt.style.color = "red";
-                            cdTxt.textContent = ((_a = abi.onCooldown) === null || _a === void 0 ? void 0 : _a.toString()) || "0";
+                            cdTxt.textContent = abi.onCooldown?.toString() || "0";
                             frame.append(cdTxt);
                         }
                     }
@@ -180,7 +179,7 @@ function mapToHotBar(index) {
     assignContainer.style.display = "grid";
     assignContainer.textContent = "";
     const total = player.abilities.concat(player.inventory);
-    total === null || total === void 0 ? void 0 : total.map((abi) => {
+    total?.map((abi) => {
         const bg = document.createElement("img");
         const frame = document.createElement("div");
         frame.classList.add("assignFrame");
@@ -207,19 +206,17 @@ function mapToHotBar(index) {
     });
 }
 function addToHotBar(index, abi) {
-    var _a, _b;
     contextMenu.textContent = "";
     assignContainer.style.display = "none";
-    (_a = player.abilities.find(a => a.equippedSlot == index)) === null || _a === void 0 ? void 0 : _a.equippedSlot = -1;
-    (_b = player.inventory.find(i => i.equippedSlot == index)) === null || _b === void 0 ? void 0 : _b.equippedSlot = -1;
+    player.abilities.find(a => a.equippedSlot == index)?.equippedSlot = -1;
+    player.inventory.find(i => i.equippedSlot == index)?.equippedSlot = -1;
     abi.equippedSlot = index;
     updateUI();
 }
 function removeFromHotBar(index) {
-    var _a, _b;
     contextMenu.textContent = "";
-    (_a = player.abilities.find(a => a.equippedSlot == index)) === null || _a === void 0 ? void 0 : _a.equippedSlot = -1;
-    (_b = player.inventory.find(i => i.equippedSlot == index)) === null || _b === void 0 ? void 0 : _b.equippedSlot = -1;
+    player.abilities.find(a => a.equippedSlot == index)?.equippedSlot = -1;
+    player.inventory.find(i => i.equippedSlot == index)?.equippedSlot = -1;
     updateUI();
 }
 function generateEffects() {

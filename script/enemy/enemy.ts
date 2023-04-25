@@ -242,7 +242,7 @@ class Enemy extends Character {
                 }]`
               );
           } catch (err) {
-            if (DEVMODE) displayText(`<c>red<c>${err}`);
+            if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err}`);
           }
 
           updateEnemiesTurn();

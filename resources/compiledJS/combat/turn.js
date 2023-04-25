@@ -2,7 +2,7 @@
 async function advanceTurn() {
     if (player.isDead)
         return;
-    if (DEVMODE)
+    if (DEVTOOLS.ENABLED)
         updateDeveloperInformation();
     if (state.inCombat)
         displayText("<c>white<c>[WORLD]: <c>yellow<c>-----Turn change-----");
@@ -81,7 +81,13 @@ async function advanceTurn() {
                     enemy.turnsToRes = 200;
                 enemy.turnsToRes--;
                 if (enemy.turnsToRes <= 0) {
-                    maps[enemy.spawnMap].enemies.push(new Enemy({ ...enemies[enemy.id], level: enemy.level, spawnCords: enemy.spawnCords, cords: enemy.spawnCords, spawnMap: enemy.spawnMap }));
+                    maps[enemy.spawnMap].enemies.push(new Enemy({
+                        ...enemies[enemy.id],
+                        level: enemy.level,
+                        spawnCords: enemy.spawnCords,
+                        cords: enemy.spawnCords,
+                        spawnMap: enemy.spawnMap,
+                    }));
                     fallenEnemies.splice(index, 1);
                 }
                 return true;

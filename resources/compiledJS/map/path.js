@@ -1,7 +1,6 @@
 "use strict";
 /* PATH FINDING ALGORITHM */
 function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
     /* Quick calculation to determine approximate distance for low performance cost */
     let distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
     /* Return only distance if that's all that has been requested */
@@ -58,38 +57,38 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         if (fieldMap[y][x] == v) {
             // Check diagonal
             // North-west
-            if (((_a = fieldMap[y - 1]) === null || _a === void 0 ? void 0 : _a[x - 1]) === 0 && (((_b = fieldMap[y]) === null || _b === void 0 ? void 0 : _b[x - 1]) === 0 || ((_c = fieldMap[y - 1]) === null || _c === void 0 ? void 0 : _c[x]) === 0)) {
+            if (fieldMap[y - 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
                 fieldMap[y - 1][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y - 1, dist: calcDistance(x - 1, y - 1, start.x, start.y) });
             }
             // North-east
-            if (((_d = fieldMap[y - 1]) === null || _d === void 0 ? void 0 : _d[x + 1]) === 0 && (((_e = fieldMap[y]) === null || _e === void 0 ? void 0 : _e[x + 1]) === 0 || ((_f = fieldMap[y - 1]) === null || _f === void 0 ? void 0 : _f[x]) === 0)) {
+            if (fieldMap[y - 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
                 fieldMap[y - 1][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y - 1, dist: calcDistance(x + 1, y - 1, start.x, start.y) });
             }
             // South-west
-            if (((_g = fieldMap[y + 1]) === null || _g === void 0 ? void 0 : _g[x - 1]) === 0 && (((_h = fieldMap[y]) === null || _h === void 0 ? void 0 : _h[x - 1]) === 0 || ((_j = fieldMap[y + 1]) === null || _j === void 0 ? void 0 : _j[x]) === 0)) {
+            if (fieldMap[y + 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
                 fieldMap[y + 1][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y + 1, dist: calcDistance(x - 1, y + 1, start.x, start.y) });
             }
             // South-east
-            if (((_k = fieldMap[y + 1]) === null || _k === void 0 ? void 0 : _k[x + 1]) === 0 && (((_l = fieldMap[y]) === null || _l === void 0 ? void 0 : _l[x + 1]) === 0 || ((_m = fieldMap[y + 1]) === null || _m === void 0 ? void 0 : _m[x]) === 0)) {
+            if (fieldMap[y + 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
                 fieldMap[y + 1][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y + 1, dist: calcDistance(x + 1, y + 1, start.x, start.y) });
             }
-            if (((_o = fieldMap[y - 1]) === null || _o === void 0 ? void 0 : _o[x]) === 0) {
+            if (fieldMap[y - 1]?.[x] === 0) {
                 fieldMap[y - 1][x] = v + 1;
                 checkGrid.push({ v: v + 1, x: x, y: y - 1, dist: calcDistance(x, y - 1, start.x, start.y) });
             }
-            if (((_p = fieldMap[y + 1]) === null || _p === void 0 ? void 0 : _p[x]) === 0) {
+            if (fieldMap[y + 1]?.[x] === 0) {
                 fieldMap[y + 1][x] = v + 1;
                 checkGrid.push({ v: v + 1, x: x, y: y + 1, dist: calcDistance(x, y + 1, start.x, start.y) });
             }
-            if (((_q = fieldMap[y]) === null || _q === void 0 ? void 0 : _q[x - 1]) === 0) {
+            if (fieldMap[y]?.[x - 1] === 0) {
                 fieldMap[y][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y, dist: calcDistance(x - 1, y, start.x, start.y) });
             }
-            if (((_r = fieldMap[y]) === null || _r === void 0 ? void 0 : _r[x + 1]) === 0) {
+            if (fieldMap[y]?.[x + 1] === 0) {
                 fieldMap[y][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y, dist: calcDistance(x + 1, y, start.x, start.y) });
             }
@@ -108,27 +107,27 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
     const cords = [];
     siksakki: for (let i = 0; i < 375; i++) {
         const v = fieldMap[data.y][data.x] - 1;
-        if (((_s = fieldMap[data.y]) === null || _s === void 0 ? void 0 : _s[data.x - 1]) == v)
+        if (fieldMap[data.y]?.[data.x - 1] == v)
             data.x -= 1;
-        else if (((_t = fieldMap[data.y]) === null || _t === void 0 ? void 0 : _t[data.x + 1]) == v)
+        else if (fieldMap[data.y]?.[data.x + 1] == v)
             data.x += 1;
-        else if (((_u = fieldMap[data.y - 1]) === null || _u === void 0 ? void 0 : _u[data.x]) == v)
+        else if (fieldMap[data.y - 1]?.[data.x] == v)
             data.y -= 1;
-        else if (((_v = fieldMap[data.y + 1]) === null || _v === void 0 ? void 0 : _v[data.x]) == v)
+        else if (fieldMap[data.y + 1]?.[data.x] == v)
             data.y += 1;
-        else if (((_w = fieldMap[data.y - 1]) === null || _w === void 0 ? void 0 : _w[data.x - 1]) == v) {
+        else if (fieldMap[data.y - 1]?.[data.x - 1] == v) {
             data.y -= 1;
             data.x -= 1;
         }
-        else if (((_x = fieldMap[data.y - 1]) === null || _x === void 0 ? void 0 : _x[data.x + 1]) == v) {
+        else if (fieldMap[data.y - 1]?.[data.x + 1] == v) {
             data.y -= 1;
             data.x += 1;
         }
-        else if (((_y = fieldMap[data.y + 1]) === null || _y === void 0 ? void 0 : _y[data.x - 1]) == v) {
+        else if (fieldMap[data.y + 1]?.[data.x - 1] == v) {
             data.y += 1;
             data.x -= 1;
         }
-        else if (((_z = fieldMap[data.y + 1]) === null || _z === void 0 ? void 0 : _z[data.x + 1]) == v) {
+        else if (fieldMap[data.y + 1]?.[data.x + 1] == v) {
             data.y += 1;
             data.x += 1;
         }

@@ -14,21 +14,21 @@ const quests = {
                 desc: "slimes_kill_desc",
                 spawnUnique: "slime_posse",
                 flag: "defeated_robber_slimes_talk",
-                prog: "saveEnemyKillIndex"
+                prog: "saveEnemyKillIndex",
             },
             {
                 objective: "speakWithNpc",
                 npc: "testMerchant",
                 desc: "slimes_killed_talk_desc",
                 flag: "completed_quest_defeat_slimes",
-                completesQuest: true
-            }
+                completesQuest: true,
+            },
         ],
         reward: [
             { type: "gold", amount: 100 },
-            { type: "xp", amount: 25 }
+            { type: "xp", amount: 25 },
         ],
-        giveNewQuestAfterCompletion: false
+        giveNewQuestAfterCompletion: false,
     },
     defeat_slimes_task_2: {
         id: "defeat_slimes_task_2",
@@ -36,7 +36,11 @@ const quests = {
             {
                 objective: "killEnemies",
                 desc: "exterminate_slimes_desc",
-                enemiesToKill: [{ type: "greySlime", amount: 8 }, { type: "flamingSlime", amount: 1 }, { type: "electricSlime", amount: 1 }],
+                enemiesToKill: [
+                    { type: "greySlime", amount: 8 },
+                    { type: "flamingSlime", amount: 1 },
+                    { type: "electricSlime", amount: 1 },
+                ],
                 flag: "exterminate_slimes_talk",
                 prog: "saveEnemyKillIndex",
             },
@@ -45,13 +49,13 @@ const quests = {
                 npc: "testMerchant",
                 desc: "slimes_exterminated_talk_desc",
                 flag: "completed_quest_defeat_slimes_2",
-                completesQuest: true
-            }
+                completesQuest: true,
+            },
         ],
         reward: [
             { type: "gold", amount: 250 },
-            { type: "xp", amount: 100 }
-        ]
+            { type: "xp", amount: 100 },
+        ],
     },
     maroch_slay_brethren_task: {
         id: "maroch_slay_brethren_task",
@@ -61,21 +65,21 @@ const quests = {
                 desc: "slay_brethren_desc",
                 spawnUnique: "maroch_brethren",
                 flag: "brethren_slain_talk",
-                prog: "saveEnemyKillIndex"
+                prog: "saveEnemyKillIndex",
             },
             {
                 objective: "speakWithNpc",
                 npc: "blacksmithMaroch",
                 desc: "brethren_slain_desc",
                 flag: "completed_quest_slay_brethren",
-                completesQuest: true
-            }
+                completesQuest: true,
+            },
         ],
         reward: [
             { type: "gold", amount: 750 },
-            { type: "xp", amount: 500 }
-        ]
-    }
+            { type: "xp", amount: 500 },
+        ],
+    },
 };
 const uniqueQuestSpawns = {
     slime_posse: [
@@ -88,11 +92,14 @@ const uniqueQuestSpawns = {
         { enemy: "norsemanHunter", pos: { x: 39, y: 149 }, map: "western_heere_coast", level: 4 },
         { enemy: "norsemanHunter", pos: { x: 38, y: 153 }, map: "western_heere_coast", level: 4 },
         { enemy: "norsemanBerserk", pos: { x: 36, y: 154 }, map: "western_heere_coast", level: 5 },
-    ]
+    ],
 };
 class Quest {
+    objectives;
+    reward;
+    giveNewQuestAfterCompletion;
+    nextQuest;
     constructor(baseQuest) {
-        var _a;
         this.id = baseQuest.id;
         if (!this.id)
             throw new Error("QUEST IS MISSING ID!");
@@ -100,7 +107,7 @@ class Quest {
         this.objectives = defaultQuest.objectives;
         this.reward = defaultQuest.reward;
         this.giveNewQuestAfterCompletion = defaultQuest.giveNewQuestAfterCompletion;
-        this.nextQuest = (_a = defaultQuest.nextQuest) !== null && _a !== void 0 ? _a : null;
+        this.nextQuest = defaultQuest.nextQuest ?? null;
     }
 }
 const journalWindow = document.querySelector(".questJournalWindow");
@@ -119,7 +126,6 @@ function renderPlayerQuests() {
             // @ts-ignore
             selectEntry(questList.childNodes[questList.childNodes.length - 1], set);
         }
-        ;
     });
 }
 function closePlayerQuests() {
@@ -131,12 +137,11 @@ function closePlayerQuests() {
 }
 // This simply creates a quest entry in the journal from player data.
 function createQuestFromIds(idSet) {
-    var _a;
     let quest = new Quest(Object.values(quests)[idSet.id]);
     const questEntry = document.createElement("p");
-    questEntry.textContent = (_a = questLang[lang.language_id][quest.id + "_name"]) !== null && _a !== void 0 ? _a : quest.id;
+    questEntry.textContent = questLang[lang.language_id][quest.id + "_name"] ?? quest.id;
     questEntry.id = quest.id + idSet.id;
-    questEntry.addEventListener("click", e => selectEntry(questEntry, idSet));
+    questEntry.addEventListener("click", (e) => selectEntry(questEntry, idSet));
     questList.append(questEntry);
 }
 function selectEntry(entryElement, entry) {
@@ -144,7 +149,7 @@ function selectEntry(entryElement, entry) {
         questList.childNodes.forEach((entry) => entry.classList.remove("selectedEntry"));
     }
     catch (err) {
-        if (DEVMODE)
+        if (DEVTOOLS.ENABLED)
             displayText(`<c>red<c>${err}`);
     }
     entryElement.classList.add("selectedEntry");
@@ -156,16 +161,15 @@ function createQuestData(entry) {
     const loc = questLang[lang.language_id];
     let quest = new Quest(Object.values(quests)[entry.id]);
     let title = questLang[lang.language_id][quest.id + "_name"] || quest.id;
-    let text = `<f>${36 * settings.ui_scale / 100}px<f><c>goldenrod<c>${title}`;
+    let text = `<f>${(36 * settings.ui_scale) / 100}px<f><c>goldenrod<c>${title}`;
     //let currentTask = quest.objectives[entry.obj];
     quest.objectives.forEach((currentTask, ObjectiveIndex) => {
-        var _a;
         if (ObjectiveIndex > entry.obj)
             return;
         let objectiveDoneAlready = false;
         if (entry.obj > ObjectiveIndex)
             objectiveDoneAlready = true;
-        text += `\n<c>grey<c>"${(_a = loc[currentTask.desc]) !== null && _a !== void 0 ? _a : currentTask.desc}"`;
+        text += `\n<c>grey<c>"${loc[currentTask.desc] ?? currentTask.desc}"`;
         if (currentTask.objective == "killEnemies") {
             if (currentTask.spawnUnique) {
                 let amounts = {};
@@ -194,9 +198,8 @@ function createQuestData(entry) {
             }
             else {
                 currentTask.enemiesToKill.forEach((en, index) => {
-                    var _a;
                     let col = "silver";
-                    if (((_a = entry === null || entry === void 0 ? void 0 : entry.prog) === null || _a === void 0 ? void 0 : _a[index]) >= en.amount || objectiveDoneAlready)
+                    if (entry?.prog?.[index] >= en.amount || objectiveDoneAlready)
                         col = "lime";
                     text += `\n<c>${col}<c>(${entry.prog[index] ? entry.prog[index] : objectiveDoneAlready ? en.amount : 0}/${en.amount}) Defeat ${lang[en.type + "_name"]}`;
                 });
@@ -221,7 +224,7 @@ function createQuestData(entry) {
     questInfo.append(textSyntax(text));
 }
 function startNewQuest(id) {
-    let index = Object.keys(quests).findIndex(q => q == id);
+    let index = Object.keys(quests).findIndex((q) => q == id);
     player.questProgress.push({ id: index, obj: 0, prog: {} });
     console.log("Got new quest!");
     spawnQuestMonsters();
@@ -230,7 +233,7 @@ function spawnQuestMonsters() {
     player.questProgress.forEach((q) => {
         // @ts-expect-error
         let obj = Object.values(quests)[q.id].objectives[q.obj];
-        if (obj === null || obj === void 0 ? void 0 : obj.spawnUnique) {
+        if (obj?.spawnUnique) {
             let uniques = uniqueQuestSpawns[obj.spawnUnique];
             uniques.forEach((enemy, index) => {
                 let foundUniqueMob = false;
@@ -240,7 +243,14 @@ function spawnQuestMonsters() {
                 });
                 if (!foundUniqueMob) {
                     let spawnMap = maps[enemy.map];
-                    spawnMap.enemies.push(new Enemy({ ...enemies[enemy.enemy], cords: enemy.pos, spawnCords: enemy.pos, level: enemy.level, map: enemy.map, questSpawn: { quest: q.id, index: index } }));
+                    spawnMap.enemies.push(new Enemy({
+                        ...enemies[enemy.enemy],
+                        cords: enemy.pos,
+                        spawnCords: enemy.pos,
+                        level: enemy.level,
+                        map: enemy.map,
+                        questSpawn: { quest: q.id, index: index },
+                    }));
                     spawnMap.enemies[spawnMap.enemies.length - 1].updateTraits();
                 }
             });
@@ -267,9 +277,8 @@ function updateQuestProgress(data, npc = "") {
             let totalCurrent = 0;
             let totalNeeded = 0;
             objective.enemiesToKill.forEach((en, index) => {
-                var _a;
                 totalNeeded += en.amount;
-                totalCurrent += questId.prog[index] > en.amount ? en.amount : (_a = questId.prog[index]) !== null && _a !== void 0 ? _a : 0;
+                totalCurrent += questId.prog[index] > en.amount ? en.amount : questId.prog[index] ?? 0;
             });
             if (totalCurrent >= totalNeeded)
                 isObjectiveComplete = true;

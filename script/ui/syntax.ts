@@ -390,7 +390,7 @@ function effectSyntax(effect: any, embed: boolean = false) {
 //         player
 //       );
 //     } catch (err) {
-//       if (DEVMODE) displayText(`<c>red<c>${err} at line syntax:220`);
+//       if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line syntax:220`);
 //     }
 //     if (!_abi) _abi = new Ability(abilities[id], dummy);
 //     let status: statusEffect = new statEffect(statusEffects[statusId], _abi.statusModifiers);

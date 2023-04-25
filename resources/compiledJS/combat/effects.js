@@ -22,17 +22,16 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
     }, delay);
 }
 function aoeCollision(area, attacker, ability) {
-    var _a, _b;
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     const effect = document.querySelector(`.${ability.aoe_effect}`);
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
-            if (((_a = area[mapOffsetStartY + y]) === null || _a === void 0 ? void 0 : _a[mapOffsetStartX + x]) == "x") {
+            if (area[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
                 baseCtx.drawImage(effect, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
         }
     }
-    let actionText = (_b = lang[ability.id + "_action_desc_pl"]) !== null && _b !== void 0 ? _b : ability.action_desc_pl;
+    let actionText = lang[ability.id + "_action_desc_pl"] ?? ability.action_desc_pl;
     displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
     maps[currentMap].enemies.forEach((en) => {
         if (area[en.cords.y][en.cords.x] == "x") {

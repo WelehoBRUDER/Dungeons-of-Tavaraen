@@ -1,6 +1,5 @@
 "use strict";
 function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
-    var _a, _b, _c, _d, _e, _f, _g;
     // Initilize some values needed for the calculation
     const attackerStats = attacker.getStats();
     const targetResists = target.getResists();
@@ -16,24 +15,23 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
     // If attacker is player, apply attack type buff
     let attackTypeDamageModifier = 0; // This is actually a HUGE modifier as it is applied last!;
     if (attacker.id == "player") {
-        if (parseInt((_a = player.weapon) === null || _a === void 0 ? void 0 : _a.range) > 2) {
-            if ((_b = player.allModifiers) === null || _b === void 0 ? void 0 : _b.rangedDamageP)
-                attackTypeDamageModifier += (_c = player.allModifiers) === null || _c === void 0 ? void 0 : _c.rangedDamageP;
+        if (parseInt(player.weapon?.range) > 2) {
+            if (player.allModifiers?.rangedDamageP)
+                attackTypeDamageModifier += player.allModifiers?.rangedDamageP;
         }
         else if (ability.mana_cost > 0) {
-            if ((_d = player.allModifiers) === null || _d === void 0 ? void 0 : _d.spellDamageP)
-                attackTypeDamageModifier += (_e = player.allModifiers) === null || _e === void 0 ? void 0 : _e.spellDamageP;
+            if (player.allModifiers?.spellDamageP)
+                attackTypeDamageModifier += player.allModifiers?.spellDamageP;
         }
         else {
-            if ((_f = player.allModifiers) === null || _f === void 0 ? void 0 : _f.meleeDamageP)
-                attackTypeDamageModifier += (_g = player.allModifiers) === null || _g === void 0 ? void 0 : _g.meleeDamageP;
+            if (player.allModifiers?.meleeDamageP)
+                attackTypeDamageModifier += player.allModifiers?.meleeDamageP;
         }
     }
     // Get base damages that will be used for the calculation
     const baseDamages = ability.damages ? ability.get_true_damage(attacker) : getAttackerDamages(attacker);
     // Start calculating damage
     Object.entries(baseDamages).map(([damageType, damageValue]) => {
-        var _a;
         // Get base damage modifiers
         let { v: val, m: mod } = getModifiers(attacker, damageType + "Damage");
         val += attacker.allModifiers["damageV"];
@@ -47,7 +45,7 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
         }
         // Calculate bonus damage from stats
         let bonus = 0;
-        bonus += (damageValue * attackerStats[(_a = (attacker.weapon ? attacker.weapon.statBonus : attacker.firesProjectile ? "dex" : "str")) !== null && _a !== void 0 ? _a : "str"]) / 50;
+        bonus += (damageValue * attackerStats[(attacker.weapon ? attacker.weapon.statBonus : attacker.firesProjectile ? "dex" : "str") ?? "str"]) / 50;
         // Calculate defense penetration
         let penetration = ability.resistance_penetration / 100;
         // Calculate defenses
@@ -87,12 +85,11 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
     // Return damage and events
     return { dmg: damage, evade: evade, critRolled: critRolled };
     function getAttackerDamages(attacker) {
-        var _a;
-        let _damages = (_a = attacker.weapon) === null || _a === void 0 ? void 0 : _a.damages;
+        let _damages = attacker.weapon?.damages;
         if (!_damages && attacker.id == "player")
             _damages = attacker.fistDmg();
         else if (!_damages)
-            _damages = attacker === null || attacker === void 0 ? void 0 : attacker.trueDamage().split;
+            _damages = attacker?.trueDamage().split;
         else if (!_damages)
             _damages = attacker.damages;
         return _damages;

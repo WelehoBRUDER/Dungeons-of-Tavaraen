@@ -34,17 +34,16 @@ function createAOEMap(start, size, ignoreLedge = false) {
     }));
 }
 function renderAOEHoverOnPlayer(aoeSize, ignoreLedge) {
-    var _a, _b;
     if (!baseCtx)
         throw new Error("2D context from base canvas is missing!");
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
     playerCanvas.width = playerCanvas.width;
     renderPlayerModel(spriteSize, playerCanvas, playerCtx);
-    const highlightRedSprite = (_a = staticTiles[4]) === null || _a === void 0 ? void 0 : _a.spriteMap;
+    const highlightRedSprite = staticTiles[4]?.spriteMap;
     let aoeMap = createAOEMap(player.cords, aoeSize, ignoreLedge);
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
-            if (((_b = aoeMap[mapOffsetStartY + y]) === null || _b === void 0 ? void 0 : _b[mapOffsetStartX + x]) == "x" && !(player.cords.x == x && player.cords.y == y)) {
+            if (aoeMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x" && !(player.cords.x == x && player.cords.y == y)) {
                 playerCtx.drawImage(spriteMap_tiles, highlightRedSprite.x, highlightRedSprite.y, 128, 128, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, Math.round(spriteSize + 1), Math.round(spriteSize + 1));
             }
         }

@@ -118,7 +118,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
     } catch (err) {
-      if (DEVMODE) displayText(`<c>red<c>${err} at line menu:398`);
+      if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line menu:398`);
     }
   }
   if (escape) handleEscape();
@@ -270,7 +270,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             try {
               child.classList.remove("selectedLang");
             } catch (err) {
-              if (DEVMODE) displayText(`<c>red<c>${err} at line menu:279`);
+              if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line menu:279`);
             }
           });
           settings.language = language;
@@ -311,7 +311,7 @@ async function gotoMainMenu(init: boolean = false) {
     if (button.action) {
       frame.addEventListener("click", () => button.action());
     }
-    if (button.id.includes("resume") && !DEVMODE && init) frame.classList.add("greyedOut");
+    if (button.id.includes("resume") && !DEVTOOLS.ENABLED && init) frame.classList.add("greyedOut");
     mainMenuButtons.append(frame);
   }
 }

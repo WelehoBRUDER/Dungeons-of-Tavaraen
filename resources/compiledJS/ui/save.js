@@ -5,7 +5,6 @@ document
     .querySelector(".savesMenu .saves")
     .addEventListener("wheel", (wheel) => (saveMenuScroll = wheel.path[1].scrollTop), { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate = true) {
-    var _a, _b, _c, _d, _e, _f, _g;
     hideHover();
     saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
     const saveBg = document.querySelector(".savesMenu");
@@ -221,7 +220,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             totalText += save.text.split("||")[0];
             totalText += `§<c>goldenrod<c><f>24px<f>|§ Lvl ${renderedPlayer.level.level} ${lang[renderedPlayer.race + "_name"]} `;
             totalText += `§<c>goldenrod<c><f>24px<f>|§ ${lang["last_played"]}: ${saveDateString} @ ${saveTimeString} §<c>goldenrod<c><f>24px<f>|§ `;
-            totalText += `§\n${lang["map"]}: §<c>gold<c>${(_a = maps === null || maps === void 0 ? void 0 : maps[foundMap]) === null || _a === void 0 ? void 0 : _a.name}§ `;
+            totalText += `§\n${lang["map"]}: §<c>gold<c>${maps?.[foundMap]?.name}§ `;
             totalText += `§| ${lang["playtime"]}: ${secondsToHoursAndMinutes(renderedPlayer.timePlayed) || lang["no_time_recorded"]}§`;
             totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
             let verColor = "lime";
@@ -230,7 +229,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 verColor = "orange";
                 addVersionWarning = true;
             }
-            let versionText = `${(_c = (_b = save.save) === null || _b === void 0 ? void 0 : _b.version) === null || _c === void 0 ? void 0 : _c[0]}.${(_e = (_d = save.save) === null || _d === void 0 ? void 0 : _d.version) === null || _e === void 0 ? void 0 : _e[2]}.${(_g = (_f = save.save) === null || _f === void 0 ? void 0 : _f.version) === null || _g === void 0 ? void 0 : _g[3]}`;
+            let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
             if (versionText.includes("undefined"))
                 versionText = lang["old_save"];
             totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
@@ -393,7 +392,7 @@ function saveToFile(input) {
     let minutes = new Date().getMinutes();
     if (minutes < 10)
         minutes = `0${new Date().getMinutes()}`;
-    saveData(saveArray, `DUNGEONS_OF_TAVARAEN-${input !== null && input !== void 0 ? input : player.name}-save_file-${new Date().getHours()}.${minutes}.txt`);
+    saveData(saveArray, `DUNGEONS_OF_TAVARAEN-${input ?? player.name}-save_file-${new Date().getHours()}.${minutes}.txt`);
     player.updateTraits();
     player.updatePerks(true);
     player.updateAbilities();

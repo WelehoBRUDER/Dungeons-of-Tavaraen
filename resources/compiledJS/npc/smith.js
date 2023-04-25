@@ -106,7 +106,6 @@ function closeSmithingWindow() {
     smithingWindow.style.transform = "scale(0)";
 }
 function upgradePrice() {
-    var _a;
-    return Math.floor(((_a = pendingUpgrade.upgradeItem) === null || _a === void 0 ? void 0 : _a.fullPrice()) * .5);
+    return Math.floor(pendingUpgrade.upgradeItem?.fullPrice() * .5);
 }
 //# sourceMappingURL=smith.js.map

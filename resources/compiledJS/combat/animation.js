@@ -42,7 +42,7 @@ function attackTarget(attacker, target, attackDir) {
             layer.style.animation = null;
             layer.style.animationName = `attack${attackDir}`;
         }
-        catch (_a) {
+        catch {
             console.warn("Enemy layer not found");
         }
     }
@@ -63,7 +63,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
     createNewProjectile(attacker, projectiles[projectileSprite], end, ability, regularAttack, onDestroy);
     animateProjectile(currentProjectiles[-1]);
     projectileLayers.append(canvas);
-    if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
+    if (ability?.health_cost || ability?.health_cost_percentage) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
@@ -92,7 +92,7 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
             layer.style.animation = null;
             layer.style.animationName = `shakeObject`;
         }
-        catch (_a) {
+        catch {
             console.warn("Enemy layer not found");
         }
     }

@@ -331,7 +331,7 @@ function perkTT(perk: perk) {
   let txt: string = "";
   txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
   txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
-  if (DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
+  if (DEVTOOLS.ENABLED) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
   if (perk.requires?.length > 0) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
     perk.requires.forEach((req) => {

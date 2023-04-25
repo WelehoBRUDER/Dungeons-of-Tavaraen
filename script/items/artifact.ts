@@ -1,4 +1,3 @@
-
 class Artifact extends Item {
   commands?: any;
   stats: any;
@@ -24,8 +23,7 @@ class Artifact extends Item {
         const data = randomStat;
         if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
           this.rolledStats.push({ stat: key + "P", value: Math.floor(helper.random(data.Percent.length - 1, 0)) });
-        }
-        else if (!data.disableValue) {
+        } else if (!data.disableValue) {
           this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
         }
       }
@@ -37,9 +35,8 @@ class Artifact extends Item {
         if (!this.stats[stat.stat]) this.stats[stat.stat] = val;
         else this.stats[stat.stat] += val;
       });
-    }
-    catch (err) {
-      if (DEVMODE) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
+    } catch (err) {
+      if (DEVTOOLS.ENABLED) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
     }
 
     if (this.rolledStats.length > 0) {
@@ -71,7 +68,10 @@ class Artifact extends Item {
       this.name = name;
     }
 
-    if (setPrice > 0) this.fullPrice = () => { return this.price; };
+    if (setPrice > 0)
+      this.fullPrice = () => {
+        return this.price;
+      };
     else {
       this.fullPrice = () => {
         let bonus = 0;

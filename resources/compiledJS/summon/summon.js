@@ -1,22 +1,51 @@
 "use strict";
 class Summon extends Character {
+    sprite;
+    aggroRange;
+    attackRange;
+    tempAggro;
+    alive;
+    damages;
+    firesProjectile;
+    canFly;
+    decideAction;
+    aggro;
+    retreatLimit;
+    shootsProjectile;
+    level;
+    statsPerLevel;
+    retreatPath;
+    retreatIndex;
+    hasRetreated;
+    chooseAbility;
+    img;
+    restore;
+    type;
+    race;
+    hasBeenLeveled;
+    trueDamage; // Misleading, will just give the enemy's damage raw
+    targetInterval; // How often, in turns, the AI should pick a target.
+    currentTargetInterval;
+    chosenTarget;
+    permanent;
+    oldCords;
+    lastsFor;
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         super(base);
         this.sprite = base.sprite;
-        this.aggroRange = (_a = base.aggroRange) !== null && _a !== void 0 ? _a : 5;
-        this.attackRange = (_b = base.attackRange) !== null && _b !== void 0 ? _b : 1;
+        this.aggroRange = base.aggroRange ?? 5;
+        this.attackRange = base.attackRange ?? 1;
         this.tempAggro = 0;
         this.damages = { ...base.damages };
         this.firesProjectile = base.firesProjectile;
-        this.canFly = (_c = base.canFly) !== null && _c !== void 0 ? _c : false;
-        this.alive = (_d = base.alive) !== null && _d !== void 0 ? _d : true;
-        this.retreatLimit = (_e = base.retreatLimit) !== null && _e !== void 0 ? _e : 30;
+        this.canFly = base.canFly ?? false;
+        this.alive = base.alive ?? true;
+        this.retreatLimit = base.retreatLimit ?? 30;
         this.shootsProjectile = base.shootsProjectile;
-        this.hasBeenLeveled = (_f = base.hasBeenLeveled) !== null && _f !== void 0 ? _f : false;
-        this.level = (_g = base.level) !== null && _g !== void 0 ? _g : 1;
+        this.hasBeenLeveled = base.hasBeenLeveled ?? false;
+        this.level = base.level ?? 1;
         this.xp = this.level > 1 ? Math.floor(base.xp + (base.xp * this.level) / 2.9) : base.xp;
-        this.statsPerLevel = (_h = { ...base.statsPerLevel }) !== null && _h !== void 0 ? _h : { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
+        this.statsPerLevel = { ...base.statsPerLevel } ?? { str: 1, vit: 1, dex: 1, int: 1, cun: 1 };
         this.retreatPath = [];
         this.retreatIndex = 0;
         this.hasRetreated = false;
@@ -24,11 +53,11 @@ class Summon extends Character {
         this.type = base.type;
         this.race = base.race;
         this.targetInterval = 4;
-        this.currentTargetInterval = (_j = base.currentTargetInterval) !== null && _j !== void 0 ? _j : 0;
-        this.chosenTarget = (_k = base.chosenTarget) !== null && _k !== void 0 ? _k : null;
-        this.permanent = (_l = base.permanent) !== null && _l !== void 0 ? _l : false;
-        this.oldCords = (_m = base.oldCords) !== null && _m !== void 0 ? _m : this.cords;
-        this.lastsFor = (_o = base.lastsFor) !== null && _o !== void 0 ? _o : 0;
+        this.currentTargetInterval = base.currentTargetInterval ?? 0;
+        this.chosenTarget = base.chosenTarget ?? null;
+        this.permanent = base.permanent ?? false;
+        this.oldCords = base.oldCords ?? this.cords;
+        this.lastsFor = base.lastsFor ?? 0;
         if (!this.hasBeenLeveled && this.level > 1) {
             for (let i = 1; i < this.level; i++) {
                 Object.entries(this.statsPerLevel).forEach((stat) => {
@@ -48,7 +77,6 @@ class Summon extends Character {
             // Right now AI only randomly chooses an ability and checks if there's any point in using it,
             // Which is whether or not it'll actually hit the player.
             // This system already provides plenty of depht, but not truly intelligent foes.
-            var _a, _b, _c;
             // Retreating does not work properly, so has been disabled for the time being.
             // @ts-ignore
             // if(this.hpRemain() <= this.retreatLimit && !this.hasRetreated) {
@@ -75,12 +103,12 @@ class Summon extends Character {
             }
             else
                 this.currentTargetInterval--;
-            if (this.chosenTarget !== null && ((_a = this.chosenTarget) === null || _a === void 0 ? void 0 : _a.alive)) {
+            if (this.chosenTarget !== null && this.chosenTarget?.alive) {
                 // Choose a random ability
                 let chosenAbility = this.chooseAbility();
                 // Check if it should be used
                 if (chosenAbility &&
-                    (((chosenAbility === null || chosenAbility === void 0 ? void 0 : chosenAbility.type) == "charge"
+                    ((chosenAbility?.type == "charge"
                         ? chosenAbility.use_range >= generatePath(this.cords, this.chosenTarget.cords, this.canFly).length
                         : chosenAbility.use_range >= generateArrowPath(this.cords, this.chosenTarget.cords, true) &&
                             arrowHitsTarget(this.cords, this.chosenTarget.cords, true)) ||
@@ -124,10 +152,10 @@ class Summon extends Character {
                             this.cords.x = path[0].x;
                             this.cords.y = path[0].y;
                             if (settings.log_enemy_movement)
-                                displayText(`<c>lime<c>[ALLY] <c>yellow<c>${(_b = lang[this.id + "_name"]) !== null && _b !== void 0 ? _b : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
+                                displayText(`<c>lime<c>[ALLY] <c>yellow<c>${lang[this.id + "_name"] ?? this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
                         }
                     }
-                    catch (_d) { }
+                    catch { }
                 }
             }
             else if (!this.isRooted()) {
@@ -148,9 +176,9 @@ class Summon extends Character {
                         this.cords.y = path[0].y;
                     }
                     if (settings.log_enemy_movement)
-                        displayText(`<c>lime<c>[ALLY] <c>yellow<c>${(_c = lang[this.id + "_name"]) !== null && _c !== void 0 ? _c : this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
+                        displayText(`<c>lime<c>[ALLY] <c>yellow<c>${lang[this.id + "_name"] ?? this.id} <c>white<c>${lang["moves_to"]} [${this.cords.x}, ${this.cords.y}]`);
                 }
-                catch (_e) { }
+                catch { }
             }
             setTimeout(modifyCanvas, 200);
         };

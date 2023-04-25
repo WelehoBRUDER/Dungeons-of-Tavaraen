@@ -4,7 +4,6 @@ const areaTitleText = areaTitle.querySelector(".title");
 const loadingScreen = document.querySelector(".loading");
 const loadingText = loadingScreen.querySelector(".loading-text");
 function showInteractPrompt() {
-    var _a;
     const interactPrompt = document.querySelector(".interactPrompt");
     let foundPrompt = false;
     let interactKey = settings["hotkey_interact"] == " " ? lang["space_key"] : settings["hotkey_interact"].toUpperCase();
@@ -41,7 +40,7 @@ function showInteractPrompt() {
         });
     }
     if (!foundPrompt) {
-        (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+        maps[currentMap].entrances?.some((entrance) => {
             if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
                 foundPrompt = true;
                 interactPrompt.textContent = `[${interactKey}] ` + lang["enter_area"];
@@ -51,12 +50,11 @@ function showInteractPrompt() {
 }
 /* Show enemy stats when hovering */
 function hoverEnemyShow(enemy) {
-    var _a;
     staticHover.textContent = "";
     staticHover.style.display = "block";
     const name = document.createElement("p");
     name.classList.add("enemyName");
-    name.textContent = `Lvl ${enemy.level} ${(_a = lang[enemy.id + "_name"]) !== null && _a !== void 0 ? _a : enemy.id}`;
+    name.textContent = `Lvl ${enemy.level} ${lang[enemy.id + "_name"] ?? enemy.id}`;
     const enemyStats = enemy.getStats();
     const enemyMiscStats = enemy.getHitchance();
     let mainStatText = "";
@@ -89,16 +87,15 @@ function hoverEnemyShow(enemy) {
     staticHover.append(name, mainStats, resistFrame);
 }
 function hoverProjectile(projectile) {
-    var _a, _b, _c, _d, _e;
     staticHover.textContent = "";
     staticHover.style.display = "block";
     const name = document.createElement("p");
     name.classList.add("enemyName");
-    name.textContent = `${(_a = lang[projectile.id + "_name"]) !== null && _a !== void 0 ? _a : projectile.id}`;
+    name.textContent = `${lang[projectile.id + "_name"] ?? projectile.id}`;
     let mainStatText = "";
-    mainStatText += `<f>19px<f>${(_b = lang["speed"]) !== null && _b !== void 0 ? _b : "speed"}: ${projectile.speed} ${(_c = lang["tiles_per_turn"]) !== null && _c !== void 0 ? _c : "tpt"}\n`;
-    mainStatText += `<f>19px<f>${(_d = lang["origin"]) !== null && _d !== void 0 ? _d : "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
-    mainStatText += `<f>19px<f><i>${icons.damage}<i>${(_e = lang["predicted_damage"]) !== null && _e !== void 0 ? _e : "predicted_damage"}: ${calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg}`;
+    mainStatText += `<f>19px<f>${lang["speed"] ?? "speed"}: ${projectile.speed} ${lang["tiles_per_turn"] ?? "tpt"}\n`;
+    mainStatText += `<f>19px<f>${lang["origin"] ?? "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
+    mainStatText += `<f>19px<f><i>${icons.damage}<i>${lang["predicted_damage"] ?? "predicted_damage"}: ${calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg}`;
     const mainStats = textSyntax(mainStatText);
     staticHover.append(name, mainStats);
 }
@@ -135,7 +132,7 @@ function mapHover(event) {
     const y = lY + player.cords.y - settings.map_offset_y;
     if (x < 0 || x > maps[currentMap].base[0].length - 1 || y < 0 || y > maps[currentMap].base.length - 1)
         return;
-    if (DEVMODE) {
+    if (DEVTOOLS.ENABLED) {
         CURSOR_LOCATION.x = x;
         CURSOR_LOCATION.y = y;
         updateDeveloperInformation();
@@ -143,7 +140,6 @@ function mapHover(event) {
     renderTileHover({ x: x, y: y }, event);
 }
 function clickMap(event) {
-    var _a, _b, _c;
     if (state.clicked || player.isDead)
         return;
     if (state.invOpen || (event.button != 0 && event.button != 1 && event.button != 2)) {
@@ -212,7 +208,7 @@ function clickMap(event) {
             }
         }
     });
-    (_a = maps[currentMap].entrances) === null || _a === void 0 ? void 0 : _a.some((entrance) => {
+    maps[currentMap].entrances?.some((entrance) => {
         if (entrance.cords.x == x && entrance.cords.y == y) {
             if (entrance.cords.x == player.cords.x && entrance.cords.y == player.cords.y) {
                 dontMove = true;
@@ -286,7 +282,7 @@ function clickMap(event) {
             break;
         }
     }
-    if (state.isSelected && ((_b = state.abiSelected) === null || _b === void 0 ? void 0 : _b.aoe_size) > 0 && !targetingEnemy) {
+    if (state.isSelected && state.abiSelected?.aoe_size > 0 && !targetingEnemy) {
         // @ts-expect-error
         if (generateArrowPath(player.cords, { x: x, y: y }).length <= state.abiSelected.use_range) {
             move = false;
@@ -307,7 +303,7 @@ function clickMap(event) {
     if (state.abiSelected.type == "movement" && !player.isRooted()) {
         player.stats.mp -= state.abiSelected.mana_cost;
         state.abiSelected.onCooldown = state.abiSelected.cooldown;
-        if (((_c = state.abiSelected.statusesUser) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+        if (state.abiSelected.statusesUser?.length > 0) {
             state.abiSelected.statusesUser.forEach((status) => {
                 if (!player.statusEffects.find((eff) => eff.id == status)) {
                     // @ts-ignore
