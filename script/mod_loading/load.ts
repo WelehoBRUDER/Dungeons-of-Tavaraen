@@ -10,7 +10,7 @@ const modsInformation: Array<ModInfo> = [];
 const modsSettings: any = JSON.parse(localStorage.getItem("DOT_mods_config")) ?? {};
 
 const modsData: any = {
-  folder: null,
+  directory: null,
   mods: [],
 };
 
@@ -24,6 +24,7 @@ async function uploadModDirectory() {
     mods[modName].push(file);
   });
   modsData.mods = mods;
+  console.log(JSON.stringify(modsData));
 }
 
 async function loadMods() {

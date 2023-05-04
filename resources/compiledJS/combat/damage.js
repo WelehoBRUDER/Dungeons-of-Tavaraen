@@ -3,7 +3,7 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
     // Initilize some values needed for the calculation
     const attackerStats = attacker.getStats();
     const targetResists = target.getResists();
-    const targetArmor = target.getArmor();
+    const targetArmor = target.getArmorReduction();
     // Roll for crit
     const critRolled = attackerStats.critChance >= helper.random(100, 0);
     // Roll for evasion
@@ -45,14 +45,22 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
         }
         // Calculate bonus damage from stats
         let bonus = 0;
-        bonus += (damageValue * attackerStats[(attacker.weapon ? attacker.weapon.statBonus : attacker.firesProjectile ? "dex" : "str") ?? "str"]) / 50;
+        bonus +=
+            (damageValue * attackerStats[(attacker.weapon ? attacker.weapon.statBonus : attacker.firesProjectile ? "dex" : "str") ?? "str"]) / 50;
         // Calculate defense penetration
         let penetration = ability.resistance_penetration / 100;
         // Calculate defenses
-        let defense = 1 -
-            (targetArmor[damageCategories[damageType]] * 0.25 > 0 ? targetArmor[damageCategories[damageType]] * 0.25 * (1 - penetration) : targetArmor[damageCategories[damageType]]) /
-                100;
-        let resistance = 1 - (targetResists[damageType] > 0 ? targetResists[damageType] * (1 - penetration) : targetResists[damageType]) / 100;
+        let defense = 1;
+        const currentArmor = targetArmor[damageCategories[damageType]];
+        const penetrationMultiplier = 1 - penetration;
+        if (currentArmor > 0) {
+            const armorWithLoss = Math.min(currentArmor + penetrationMultiplier, 1);
+            defense = defense * armorWithLoss;
+        }
+        else if (currentArmor) {
+            defense = defense * currentArmor;
+        }
+        let resistance = 1 - (targetResists[damageType] > 0 ? targetResists[damageType] * penetrationMultiplier : targetResists[damageType]) / 100;
         // Check for NaN to prevent breaking calculation
         if (isNaN(bonus))
             bonus = 0;

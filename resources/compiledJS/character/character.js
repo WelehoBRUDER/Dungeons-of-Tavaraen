@@ -150,10 +150,8 @@ class Character {
                 const { v: _val, m: _mod } = getModifiers(this, "resistAll");
                 let value = Math.floor((this.resistances[res] + val) * mod);
                 resists[res] = Math.floor((value + _val) * _mod);
-                if (resists[res] >= 320)
+                if (resists[res] > 100)
                     resists[res] = 100;
-                else if (resists[res] > 80)
-                    resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
             });
             return resists;
         };
@@ -162,10 +160,19 @@ class Character {
             Object.keys(this.armor).forEach((armor) => {
                 const { v: val, m: mod } = getModifiers(this, armor + "Def");
                 armors[armor] = Math.floor((this.armor[armor] + val) * mod);
-                if (armors[armor] > 300)
-                    armors[armor] = 300;
             });
             return armors;
+        };
+        this.getArmorReduction = () => {
+            const armors = this.getArmor();
+            let reductions = {};
+            Object.keys(armors).forEach((armor) => {
+                // Get the armor value
+                const armorValue = armors[armor];
+                // Then we calculate the reduction
+                reductions[armor] = +(1 - 1 / (1 + armorValue / 100)).toFixed(3);
+            });
+            return reductions;
         };
         this.getThreat = () => {
             if (!this.allModifiers["threatV"])
@@ -176,28 +183,36 @@ class Character {
         };
         this.getRegen = () => {
             let stats = this.getStats();
-            if (!this.allModifiers["regenHpV"])
-                this.allModifiers["regenHpV"] = 0;
-            if (!this.allModifiers["regenHpP"])
-                this.allModifiers["regenHpP"] = 1;
-            if (!this.allModifiers["regenMpV"])
-                this.allModifiers["regenMpV"] = 0;
-            if (!this.allModifiers["regenMpP"])
-                this.allModifiers["regenMpP"] = 1;
-            let reg = { hp: 0, mp: 0 };
-            reg["hp"] =
-                (this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) *
-                    this.allModifiers["regenHpP"] *
-                    (1 + stats.vit / 100);
-            reg["mp"] =
-                (this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) *
-                    this.allModifiers["regenMpP"] *
-                    (1 + stats.int / 100);
-            if (reg["hp"] < 0)
-                reg["hp"] = 0;
-            if (reg["mp"] < 0)
-                reg["mp"] = 0;
-            return reg;
+            let hpRegenBase = this.regen.hp;
+            let hpRegenVit = 0;
+            let hpRegenPercent = 1;
+            let mpRegenBase = this.regen.mp;
+            let mpRegenInt = 0;
+            let mpRegenPercent = 1;
+            if (this.allModifiers.regenHpV) {
+                hpRegenVit += this.allModifiers.regenHpV;
+            }
+            if (this.allModifiers.regenHpP) {
+                hpRegenPercent += this.allModifiers.regenHpP;
+            }
+            if (this.allModifiers.regenMpV) {
+                mpRegenInt += this.allModifiers.regenMpV;
+            }
+            if (this.allModifiers.regenMpP) {
+                mpRegenPercent += this.allModifiers.regenMpP;
+            }
+            let hpRegen = (hpRegenBase + this.getHpMax() * 0.006 + hpRegenVit) * hpRegenPercent;
+            let mpRegen = (mpRegenBase + this.getMpMax() * 0.006 + mpRegenInt) * mpRegenPercent;
+            if (hpRegen < 0) {
+                hpRegen = 0;
+            }
+            if (mpRegen < 0) {
+                mpRegen = 0;
+            }
+            return {
+                hp: hpRegen * (1 + stats.vit / 100),
+                mp: mpRegen * (1 + stats.int / 100),
+            };
         };
         this.isRooted = () => {
             let rooted = false;

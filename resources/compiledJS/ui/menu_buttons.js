@@ -69,6 +69,10 @@ const menuSettings = [
         type: "toggle",
     },
     {
+        id: "setting_load_mods",
+        type: "toggle",
+    },
+    {
         id: "setting_enable_developer_console",
         tooltip: "enable_developer_console",
         type: "toggle",

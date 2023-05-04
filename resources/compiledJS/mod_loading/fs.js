@@ -1,5 +1,5 @@
 const getDirectory = async () => {
-  const folder = await openDirectory("readwrite");
+  const folder = await openDirectory("read");
   return folder;
 };
 

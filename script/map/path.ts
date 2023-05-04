@@ -162,6 +162,7 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
   const ratioX = distX / distY;
   const negativeY = start.y - end.y > 0;
   const negativeX = start.x - end.x > 0;
+  // Get the ratio of the X and Y distances
   const ratioY2 = ratioY == Math.max(ratioY, ratioX) ? (negativeY ? -1 : 1) : negativeY ? ratioY * -1 : ratioY;
   const ratioX2 = ratioX == Math.max(ratioY, ratioX) ? (negativeX ? -1 : 1) : negativeX ? ratioX * -1 : ratioX;
   const arrow = {

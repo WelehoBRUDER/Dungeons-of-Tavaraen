@@ -506,6 +506,10 @@ async function initGame() {
     state.titleScreen = true;
     document.querySelector(".loading-text").textContent = "Loading mods...";
     document.querySelector(".loading-bar-fill").style.width = "50%";
+    if (!settings.load_mods) {
+        continueLoad();
+        return;
+    }
     const buttons = [
         {
             text: "Load mods",

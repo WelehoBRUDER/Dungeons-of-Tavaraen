@@ -567,7 +567,7 @@ let player = new PlayerCharacter({
     new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
     new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
   ],
-  traits: [{ id: "resilience_of_the_lone_wanderer" }],
+  traits: [{ id: "resilience_of_the_lone_wanderer" }, { id: "all_muscle" }],
   regen: {
     hp: 0,
     mp: 0.5,

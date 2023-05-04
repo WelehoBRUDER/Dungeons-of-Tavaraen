@@ -4,8 +4,12 @@
 - Fully reworked how loading  mods works
   - Created a proper mod loader that allows selecting mods before starting the game.
   - No longer restricted to locally run http server, mods can be used when playing through github.
+- Reworked how armor reduces incoming damage.
+  - Armor now calculates reduction as a bonus health multiplier.
+  - For example, 100 armor will reduce incoming damage by 50%.
 
 ## Fixes & Tweaks
+- Fixed a bug where toggleable settings would not save.
 
 # 1.2.3 ~ 13.4.2023
 

@@ -30,7 +30,7 @@ function statConditions(conditions, char) {
 function applyModifierToTotal(modifier, total) {
     const key = modifier[0];
     const value = modifier[1];
-    if (!total?.[key]) {
+    if (total?.[key] === undefined) {
         total[key] = value;
         if (typeof value === "number") {
             if (key.endsWith("P")) {
