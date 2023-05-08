@@ -12,6 +12,8 @@ document.addEventListener("keyup", (key) => {
     hotkeyCheck(key);
 });
 function hotbarKey(e) {
+    if (devConsole.open)
+        return;
     if (actionCooldown)
         return;
     actionCooldown = true;
@@ -64,16 +66,12 @@ function hotkeyCheck(e) {
     if (e.key === settings.hotkey_developer_console) {
         devConsole.toggle();
     }
-    if (e.key == "r" && !state.savesOpen) {
-        if (player.isDead) {
-            respawnPlayer();
-            return;
-        }
-    }
-    else if (e.key == "Escape") {
+    if (e.key == "Escape") {
         handleEscape();
         return;
     }
+    if (devConsole.open)
+        return;
     if (e.key == settings["hotkey_open_world_messages"]) {
         if (state.displayingTextHistory)
             state.displayingTextHistory = false;
@@ -147,6 +145,8 @@ function hotkeyCheck(e) {
     }
 }
 function movementCheck(keyPress) {
+    if (devConsole.open)
+        return;
     if (movementCooldown)
         return;
     movementCooldown = true;

@@ -173,7 +173,7 @@ class Character {
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
-    this.getStats = (withConditions = true) => {
+    this.getStats = () => {
       let stats = {} as statusObject;
       baseStats.forEach((stat: string) => {
         if (!this.allModifiers[stat + "V"]) this.allModifiers[stat + "V"] = 0;
@@ -203,22 +203,20 @@ class Character {
       return { ...speed };
     };
 
-    this.getHpMax = (withConditions = true) => {
-      let hpMax: number = 0;
-      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
-      const { v: vitVal, m: vitMod } = getModifiers(this, "vit", withConditions);
-      let vit = Math.floor((this.stats.vit + vitVal) * vitMod);
-      hpMax = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + vit * 5) * hp_mod);
-      return hpMax < 0 ? 0 : hpMax;
+    this.getHpMax = () => {
+      const hpFlat = this.allModifiers["hpMaxV"] || 0;
+      const hpModifier = this.allModifiers["hpMaxP"] || 1;
+      const vit = this.getStats().vit;
+
+      return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + vit * 5) * hpModifier), 0);
     };
 
-    this.getMpMax = (withConditions = true) => {
-      let mpMax: number = 0;
-      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
-      const { v: intVal, m: intMod } = getModifiers(this, "int", withConditions);
-      let int = Math.floor((this.stats.int + intVal) * intMod);
-      mpMax = Math.floor(((this.stats?.hpMax ?? 10) + mp_val + int * 2) * mp_mod);
-      return mpMax < 0 ? 0 : mpMax;
+    this.getMpMax = () => {
+      const mpFlat = this.allModifiers["mpMaxV"] || 0;
+      const mpModifier = this.allModifiers["mpMaxP"] || 1;
+      const int = this.getStats().int;
+
+      return Math.max(Math.floor(((this.stats?.hpMax ?? 10) + mpFlat + int * 2) * mpModifier), 0);
     };
 
     this.getHitchance = () => {
@@ -242,10 +240,10 @@ class Character {
     this.getResists = () => {
       let resists = {} as resistances;
       Object.keys(this.resistances).forEach((res: string) => {
-        const { v: val, m: mod } = getModifiers(this, res + "Resist");
-        const { v: _val, m: _mod } = getModifiers(this, "resistAll");
-        let value = Math.floor((this.resistances[res] + val) * mod);
-        resists[res] = Math.floor((value + _val) * _mod);
+        const specificFlat = this.allModifiers[res + "ResistV"] || 0;
+        const allFlat = this.allModifiers["resistAllV"] || 0;
+        let value = Math.floor(this.resistances[res] + specificFlat);
+        resists[res] = Math.floor(value + allFlat);
         if (resists[res] > 100) resists[res] = 100;
       });
       return resists;
@@ -254,8 +252,9 @@ class Character {
     this.getArmor = () => {
       let armors = {} as defenseClass;
       Object.keys(this.armor).forEach((armor: string) => {
-        const { v: val, m: mod } = getModifiers(this, armor + "Def");
-        armors[armor] = Math.floor((this.armor[armor] + val) * mod);
+        const armorFlat = this.allModifiers[armor + "ArmorV"] || 0;
+        const armorModifier = this.allModifiers[armor + "ArmorP"] || 1;
+        armors[armor] = Math.floor((this.armor[armor] + armorFlat) * armorModifier);
       });
       return armors;
     };
@@ -300,8 +299,8 @@ class Character {
         mpRegenPercent += this.allModifiers.regenMpP;
       }
 
-      let hpRegen = (hpRegenBase + this.getHpMax() * 0.006 + hpRegenVit) * hpRegenPercent;
-      let mpRegen = (mpRegenBase + this.getMpMax() * 0.006 + mpRegenInt) * mpRegenPercent;
+      let hpRegen = (hpRegenBase + this.getHpMax() * 0.004 + hpRegenVit) * hpRegenPercent;
+      let mpRegen = (mpRegenBase + this.getMpMax() * 0.004 + mpRegenInt) * mpRegenPercent;
 
       if (hpRegen < 0) {
         hpRegen = 0;
@@ -470,10 +469,13 @@ class Character {
       return (this.stats.mp / this.getMpMax(false)) * 100;
     };
 
-    this.updateAbilities = (useDummy: boolean = false) => {
+    this.updateAllModifiers = () => {
       this.allModifiers = getAllModifiersOnce(this);
       if (!this.allModifiers["damageV"]) this.allModifiers["damageV"] = 0;
       if (!this.allModifiers["damageP"]) this.allModifiers["damageP"] = 1;
+    };
+
+    this.updateAbilities = (useDummy: boolean = false) => {
       for (let i = 0; i < this.abilities?.length; i++) {
         if (!useDummy) this.abilities[i] = new Ability(this.abilities[i], this);
         else this.abilities[i] = new Ability(this.abilities[i], dummy);

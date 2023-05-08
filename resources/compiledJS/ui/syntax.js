@@ -305,7 +305,7 @@ function effectSyntax(effect, embed = false) {
         key = key.substring(0, key.length - 1);
         const name = lang[key] || key;
         const id = key.substring(0, key.length - 1);
-        const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : "gfx/icons/triple-yin.png";
+        const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
         return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n`;
     }
     else if (typeof value === "object") {

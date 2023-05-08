@@ -7,8 +7,15 @@
 - Reworked how armor reduces incoming damage.
   - Armor now calculates reduction as a bonus health multiplier.
   - For example, 100 armor will reduce incoming damage by 50%.
+- Added developer console that can be opened with `§`.
+  - Console can be used to spawn items and enable cheats.
 
-## Fixes & Tweaks
+## Minor Changes
+- Nerfed all random stat modifier percentage values.
+- Changed Adventurer perk tree's health bonuses to all be 5%.
+- Lowered base regen by 33%.
+
+## Bug Fixes
 - Fixed a bug where toggleable settings would not save.
 
 # 1.2.3 ~ 13.4.2023

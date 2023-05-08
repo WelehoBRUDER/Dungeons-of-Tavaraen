@@ -131,4 +131,9 @@ const icons = {
   movementSpeed: "resources/icons/speed.png",
   attackSpeed: "resources/icons/speed.png",
   liquid_courage: "resources/icons/drunk.png",
+  fallback: "resources/icons/uncertainty.png",
 } as icons;
+
+const icon = (name: string) => {
+  return icons[name] || icons.fallback;
+};

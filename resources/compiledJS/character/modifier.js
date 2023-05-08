@@ -106,13 +106,30 @@ const updateObjectWithoutReturn = (key, object, mods) => {
     });
 };
 function getAllModifiersOnce(char, withConditions = true) {
-    let obj = {};
-    obj["expGainP"] = 1;
-    obj["meleeDamageP"] = 1;
-    obj["rangedDamageP"] = 1;
-    obj["spellDamageP"] = 1;
-    obj["movementSpeedV"] = 0;
-    obj["attackSpeedV"] = 0;
+    const obj = {
+        hpMaxV: 0,
+        hpMaxP: 1,
+        mpMaxV: 0,
+        mpMaxP: 1,
+        hpRegenV: 0,
+        hpRegenP: 0,
+        mpRegenV: 0,
+        mpRegenP: 0,
+        expGainP: 1,
+        meleeDamageP: 1,
+        rangedDamageP: 1,
+        spellDamageP: 1,
+        movementSpeedV: 0,
+        attackSpeedV: 0,
+        critChanceV: 0,
+        critDamageV: 0,
+        physicalArmorV: 0,
+        physicalArmorP: 0,
+        magicalArmorV: 0,
+        magicalArmorP: 0,
+        elementalArmorV: 0,
+        elementalArmorP: 0,
+    };
     char.traits.forEach((mod) => {
         if (!mod.effects)
             return;
@@ -168,132 +185,103 @@ function getAllModifiersOnce(char, withConditions = true) {
     }
     return obj;
 }
-function getModifiers(char, stat, withConditions = true) {
-    let val = 0;
-    let modif = 1;
-    char.traits.forEach((mod) => {
-        if (!mod.effects)
-            return;
-        let apply = true;
-        if (mod.conditions && withConditions) {
-            apply = statConditions(mod.conditions, char);
-        }
-        if (mod.conditions && !withConditions)
-            apply = false;
-        if (apply && mod.effects) {
-            Object.entries(mod.effects).forEach((eff) => {
-                if (eff[0].startsWith(stat)) {
-                    if (eff[0] == stat + "P" && eff[1] < 0)
-                        modif *= 1 + eff[1] / 100;
-                    else if (eff[0] == stat + "P")
-                        modif += eff[1] / 100;
-                    else if (eff[0] == stat + "V")
-                        val += eff[1];
-                }
-            });
-        }
-    });
-    char.statusEffects.forEach((mod) => {
-        if (!mod.effects)
-            return;
-        Object.entries(mod.effects).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    });
-    if (char.classes?.main?.statBonuses) {
-        Object.entries(char.classes.main.statBonuses).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if (char.classes?.sub?.statBonuses) {
-        Object.entries(char.classes.sub.statBonuses).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    char.perks?.forEach((mod) => {
-        Object.entries(mod.effects).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    });
-    if (char.raceEffect?.modifiers) {
-        Object.entries(char.raceEffect?.modifiers).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    if (char.id === "player") {
-        equipmentSlots.forEach((slot) => {
-            if (char[slot]?.stats) {
-                Object.entries(char[slot].stats).forEach((eff) => {
-                    if (eff[0].startsWith(stat)) {
-                        if (eff[0] == stat + "P" && eff[1] < 0)
-                            modif *= 1 + eff[1] / 100;
-                        else if (eff[0] == stat + "P")
-                            modif += eff[1] / 100;
-                        else if (eff[0] == stat + "V")
-                            val += eff[1];
-                    }
-                });
-            }
-            if (stat.includes("Resist")) {
-                if (char[slot]?.resistances) {
-                    if (char[slot].resistances[stat.replace("Resist", "")])
-                        val += char[slot].resistances[stat.replace("Resist", "")];
-                }
-            }
-            if (stat.includes("Def")) {
-                if (char[slot]?.armor) {
-                    if (char[slot].armor[stat.replace("Def", "")])
-                        val += char[slot].armor[stat.replace("Def", "")];
-                }
-            }
-        });
-        const artifactEffects = char.getArtifactSetBonuses();
-        Object.entries(artifactEffects).forEach((eff) => {
-            if (eff[0].startsWith(stat)) {
-                if (eff[0] == stat + "P" && eff[1] < 0)
-                    modif *= 1 + eff[1] / 100;
-                else if (eff[0] == stat + "P")
-                    modif += eff[1] / 100;
-                else if (eff[0] == stat + "V")
-                    val += eff[1];
-            }
-        });
-    }
-    return { v: val, m: modif };
-}
+// function getModifiers(char: any, stat: string, withConditions = true) {
+//   let val = 0;
+//   let modif = 1;
+//   char.traits.forEach((mod: any) => {
+//     if (!mod.effects) return;
+//     let apply = true;
+//     if (mod.conditions && withConditions) {
+//       apply = statConditions(mod.conditions, char);
+//     }
+//     if (mod.conditions && !withConditions) apply = false;
+//     if (apply && mod.effects) {
+//       Object.entries(mod.effects).forEach((eff: any) => {
+//         if (eff[0].startsWith(stat)) {
+//           if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//           else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//           else if (eff[0] == stat + "V") val += eff[1];
+//         }
+//       });
+//     }
+//   });
+//   char.statusEffects.forEach((mod: any) => {
+//     if (!mod.effects) return;
+//     Object.entries(mod.effects).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   });
+//   if (char.classes?.main?.statBonuses) {
+//     Object.entries(char.classes.main.statBonuses).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   }
+//   if (char.classes?.sub?.statBonuses) {
+//     Object.entries(char.classes.sub.statBonuses).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   }
+//   char.perks?.forEach((mod: any) => {
+//     Object.entries(mod.effects).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   });
+//   if (char.raceEffect?.modifiers) {
+//     Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   }
+//   if (char.id === "player") {
+//     equipmentSlots.forEach((slot: string) => {
+//       if (char[slot]?.stats) {
+//         Object.entries(char[slot].stats).forEach((eff: any) => {
+//           if (eff[0].startsWith(stat)) {
+//             if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//             else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//             else if (eff[0] == stat + "V") val += eff[1];
+//           }
+//         });
+//       }
+//       if (stat.includes("Resist")) {
+//         if (char[slot]?.resistances) {
+//           if (char[slot].resistances[stat.replace("Resist", "")]) val += char[slot].resistances[stat.replace("Resist", "")];
+//         }
+//       }
+//       if (stat.includes("Def")) {
+//         if (char[slot]?.armor) {
+//           if (char[slot].armor[stat.replace("Def", "")]) val += char[slot].armor[stat.replace("Def", "")];
+//         }
+//       }
+//     });
+//     const artifactEffects = char.getArtifactSetBonuses();
+//     Object.entries(artifactEffects).forEach((eff: any) => {
+//       if (eff[0].startsWith(stat)) {
+//         if (eff[0] == stat + "P" && eff[1] < 0) modif *= 1 + eff[1] / 100;
+//         else if (eff[0] == stat + "P") modif += eff[1] / 100;
+//         else if (eff[0] == stat + "V") val += eff[1];
+//       }
+//     });
+//   }
+//   return { v: val, m: modif };
+// }
 //# sourceMappingURL=modifier.js.map

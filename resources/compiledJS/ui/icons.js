@@ -128,5 +128,9 @@ const icons = {
     movementSpeed: "resources/icons/speed.png",
     attackSpeed: "resources/icons/speed.png",
     liquid_courage: "resources/icons/drunk.png",
+    fallback: "resources/icons/uncertainty.png",
+};
+const icon = (name) => {
+    return icons[name] || icons.fallback;
 };
 //# sourceMappingURL=icons.js.map
