@@ -3,11 +3,10 @@
 /* Helper should be expanded whenever the same function must be repeated in multiple files */
 let helper = {
     weightedRandom: function (Array) {
-        var _a;
         let table = [...Array];
         let max = 0;
         for (let i = 0; i < table.length; i++) {
-            if (((_a = table[i]) === null || _a === void 0 ? void 0 : _a.type) == "gold")
+            if (table[i]?.type == "gold")
                 continue;
             table[i].dynamicChance = 0;
             if (table[i - 1])
@@ -59,8 +58,7 @@ let helper = {
         });
         trimmed.allModifiers = {};
         equipSlots.forEach((slot) => {
-            var _a;
-            if ((_a = trimmed[slot]) === null || _a === void 0 ? void 0 : _a.id) {
+            if (trimmed[slot]?.id) {
                 trimmed[slot] = {
                     id: trimmed[slot].id,
                     type: trimmed[slot].type,
@@ -115,9 +113,8 @@ let helper = {
     },
     killAllQuestEnemies: function () {
         Object.values(maps).forEach((mp, index) => {
-            var _a;
             for (let i = mp.enemies.length - 1; i >= 0; i--) {
-                if (((_a = mp.enemies[i].questSpawn) === null || _a === void 0 ? void 0 : _a.quest) > -1)
+                if (mp.enemies[i].questSpawn?.quest > -1)
                     mp.enemies.splice(i, 1);
             }
         });

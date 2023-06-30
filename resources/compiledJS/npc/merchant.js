@@ -17,7 +17,6 @@ const amountScreen = document.querySelector(".amountSelector");
 const confirmButton = confirmation.querySelector(".confirmButton");
 const smithingWindow = document.querySelector(".smithingWindow");
 function createMerchantWindow(resetInv = true, justSort = false) {
-    var _a;
     storeWindow.style.transform = "scale(1)";
     amountScreen.style.display = "none";
     hideHover();
@@ -89,7 +88,7 @@ function createMerchantWindow(resetInv = true, justSort = false) {
         confirmButton.classList.add("greyedOut");
     }
     else {
-        (_a = confirmButton.classList) === null || _a === void 0 ? void 0 : _a.remove("greyedOut");
+        confirmButton.classList?.remove("greyedOut");
     }
 }
 function closeMerchantWindow() {

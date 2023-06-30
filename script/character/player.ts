@@ -149,21 +149,23 @@ class PlayerCharacter extends Character {
       Object.entries(this.unarmedDamages).forEach((dmg: any) => {
         const key = dmg[0];
         const _val = dmg[1];
-        const { v: val, m: mod } = getModifiers(this, "unarmedDmg" + key);
-        const { v: baseVal, m: baseMod } = getModifiers(this, "unarmedDmg");
-        damages[key] = Math.floor(((val + _val) * mod + baseVal) * baseMod);
+        const damageFlat = this.allModifiers["unarmedDmgV"] ?? 0;
+        const damageModifier = this.allModifiers["unarmedDmgP"] ?? 1;
+        damages[key] = Math.floor((damageFlat + _val) * damageModifier);
       });
       return damages;
     };
 
     this.hpRegen = () => {
-      const { v: val, m: mod } = getModifiers(this, "hpRegen");
-      return Math.floor(val * mod);
+      const regenFlat = this.allModifiers["hpRegenV"] ?? 0;
+      const regenModifier = this.allModifiers["hpRegenP"] ?? 1;
+      return Math.floor(regenFlat * regenModifier);
     };
 
     this.sight = () => {
-      const { v: val, m: mod } = getModifiers(this, "sight");
-      return Math.floor((15 + val) * mod);
+      const sightFlat = this.allModifiers["sightV"] ?? 0;
+      const sightModifier = this.allModifiers["sightP"] ?? 1;
+      return Math.floor((15 + sightFlat) * sightModifier);
     };
 
     this.drop = (itm: any, fromContextMenu: boolean = false) => {
@@ -221,7 +223,7 @@ class PlayerCharacter extends Character {
         }
       });
       this[slot] = {};
-      player.allModifiers = getAllModifiersOnce(player, true);
+      this.updateAllModifiers();
       renderInventory();
     };
 
@@ -263,7 +265,7 @@ class PlayerCharacter extends Character {
           this.unequip(event, "offhand", item.index + 1, true, fromContextMenu);
         } else this.unequip(event, "offhand", item.index, true, fromContextMenu);
       }
-      player.allModifiers = getAllModifiersOnce(player, true);
+      this.updateAllModifiers();
       if (!auto) renderInventory();
     };
 
@@ -276,8 +278,19 @@ class PlayerCharacter extends Character {
     };
 
     this.maxCarryWeight = () => {
-      const { v: val, m: mod } = getModifiers(this, "carryStrength");
-      return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
+      const carryFlat = this.allModifiers["carryWeightV"] ?? 0;
+      const carryModifier = this.allModifiers["carryWeightP"] ?? 1;
+      const { str, vit } = this.getStats();
+      return ((92.5 + carryFlat + str / 2 + vit) * carryModifier).toFixed(1);
+    };
+
+    this.addXP = (xp: number, flat: boolean = false) => {
+      if (!flat) {
+        this.level.xp += Math.floor(xp * player.allModifiers.expGainP);
+      } else {
+        this.level.xp += Math.floor(xp);
+      }
+      this.lvlUp();
     };
 
     this.lvlUp = () => {
@@ -454,17 +467,15 @@ class PlayerCharacter extends Character {
         let damages: any = this.weapon?.id ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
         const stats = this.getStats();
         damages.map(([key, num]: any) => {
-          let { v: val, m: mod } = getModifiers(this, key + "Damage");
-          val += this.allModifiers["damageV"];
-          mod *= this.allModifiers["damageP"];
+          const dmgFlat = this.allModifiers[key + "DamageV"] ?? 0;
+          const dmgModifier = this.allModifiers[key + "DamageP"] ?? 1;
+          const val = dmgFlat + (this.allModifiers["damageV"] ?? 0);
+          const mod = dmgModifier * (this.allModifiers["damageP"] ?? 1);
           let bonus: number = 0;
           bonus += (num * stats[this.weapon?.statBonus]) / 50;
           if (!this.weapon) bonus = (num * stats["str"]) / 50;
-          if (isNaN(val)) val = 0;
-          if (isNaN(mod)) mod = 1;
           if (isNaN(bonus)) bonus = 0;
           if (isNaN(num)) num = 0;
-          console.log(Math.floor((num + val + bonus) * mod));
           dmg += Math.floor((num + val + bonus) * mod);
         });
       }
@@ -652,6 +663,7 @@ function respawnPlayer() {
     modifyCanvas(true);
     updateUI();
   }
+  renderEntireMap(maps[currentMap]);
   helper.resetAllLivingEnemiesInAllMaps();
   displayText(`[WORLD] ${lang["revive"]}`);
   spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);

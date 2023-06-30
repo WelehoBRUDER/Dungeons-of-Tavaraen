@@ -16,8 +16,21 @@ const perkColors = {
     rogue: "#2b2b2b",
 };
 class perk {
+    name;
+    desc;
+    commands;
+    effects;
+    commandsExecuted;
+    pos;
+    traits;
+    relative_to;
+    requires;
+    mutually_exclusive;
+    icon;
+    available;
+    bought;
+    tree;
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g;
         this.id = base.id;
         let base_ = perksArray[base.tree || tree]["perks"][this.id];
         if (!base_ && this.id) {
@@ -31,29 +44,28 @@ class perk {
         }
         this.name = basePerk.name;
         this.desc = basePerk.desc;
-        this.commands = (_a = { ...basePerk.commands }) !== null && _a !== void 0 ? _a : {};
-        this.effects = (_b = { ...basePerk.effects }) !== null && _b !== void 0 ? _b : {};
-        this.commandsExecuted = (_c = base.commandsExecuted) !== null && _c !== void 0 ? _c : false;
+        this.commands = { ...basePerk.commands } ?? {};
+        this.effects = { ...basePerk.effects } ?? {};
+        this.commandsExecuted = base.commandsExecuted ?? false;
         this.pos = basePerk.pos;
-        this.relative_to = (_d = basePerk.relative_to) !== null && _d !== void 0 ? _d : "";
-        this.requires = (_e = basePerk.requires) !== null && _e !== void 0 ? _e : [];
-        this.mutually_exclusive = (_f = basePerk.mutually_exclusive) !== null && _f !== void 0 ? _f : [];
-        this.traits = (_g = basePerk.traits) !== null && _g !== void 0 ? _g : [];
+        this.relative_to = basePerk.relative_to ?? "";
+        this.requires = basePerk.requires ?? [];
+        this.mutually_exclusive = basePerk.mutually_exclusive ?? [];
+        this.traits = basePerk.traits ?? [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
         this.available = () => {
-            var _a, _b;
             if (player.pp <= 0 && !this.bought())
                 return false;
             let available = true;
-            if (((_a = this.requires) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+            if (this.requires?.length > 0) {
                 this.requires.some((id) => {
                     const perk_check = new perk(perksArray[tree]["perks"][id]);
                     if (!perk_check.bought())
                         available = false;
                 });
             }
-            if (((_b = this.mutually_exclusive) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+            if (this.mutually_exclusive?.length > 0) {
                 this.mutually_exclusive.some((id) => {
                     const perk_check = new perk(perksArray[tree]["perks"][id]);
                     if (perk_check.bought())
@@ -71,11 +83,10 @@ class perk {
             return isBought;
         };
         this.buy = () => {
-            var _a, _b;
             if (this.available() && !this.bought()) {
                 player.perks.push(new perk({ ...this }));
                 player.pp--;
-                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != ((_b = (_a = player.classes) === null || _a === void 0 ? void 0 : _a.sub) === null || _b === void 0 ? void 0 : _b.perkTree)) {
+                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
                     player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
                 }
                 this.traits.forEach((stat) => {
@@ -133,10 +144,9 @@ function formPerks(e = null, scrollDefault = false) {
     staticBg.textContent = "";
     perkTreesContainer.textContent = "";
     Object.entries(combatClasses).forEach((combatClassObject) => {
-        var _a, _b, _c, _d;
         const combatClass = combatClassObject[1];
-        if ((((_a = player.classes.main) === null || _a === void 0 ? void 0 : _a.id) && ((_b = player.classes.sub) === null || _b === void 0 ? void 0 : _b.id)) || player.level.level < 10) {
-            if (combatClass.id != player.classes.main.id && combatClass.id != ((_d = (_c = player.classes) === null || _c === void 0 ? void 0 : _c.sub) === null || _d === void 0 ? void 0 : _d.id))
+        if ((player.classes.main?.id && player.classes.sub?.id) || player.level.level < 10) {
+            if (combatClass.id != player.classes.main.id && combatClass.id != player.classes?.sub?.id)
                 return;
         }
         const classButtonContainer = document.createElement("div");
@@ -171,7 +181,6 @@ function formPerks(e = null, scrollDefault = false) {
     perkTreesContainer.append(classButtonContainer);
     staticBg.append(points);
     perks.forEach((_perk) => {
-        var _a;
         const perk = document.createElement("div");
         const img = document.createElement("img");
         const name = document.createElement("p");
@@ -179,7 +188,7 @@ function formPerks(e = null, scrollDefault = false) {
         perk.classList.add(`${_perk.id}`);
         perk.style.backgroundColor = perkColors[tree];
         img.src = _perk.icon;
-        name.textContent = (_a = lang[_perk.id + "_name"]) !== null && _a !== void 0 ? _a : _perk.id;
+        name.textContent = lang[_perk.id + "_name"] ?? _perk.id;
         tooltip(perk, perkTT(_perk));
         perk.style.width = `${baseSize}px`;
         perk.style.height = `${baseSize}px`;
@@ -279,7 +288,6 @@ function formStatUpgrades() {
     undo.classList.add("undo");
     undo.textContent = "Undo changes";
     baseStats.forEach((stat) => {
-        var _a;
         const base = document.createElement("div");
         const baseImg = document.createElement("img");
         const baseText = document.createElement("p");
@@ -291,7 +299,7 @@ function formStatUpgrades() {
         baseNumber.textContent = player.getBaseStats()[stat].toString();
         upgrade.textContent = "+";
         upgrade.addEventListener("click", (a) => upStat(stat));
-        tooltip(base, (_a = lang[stat + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+        tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
         if (player.sp <= 0)
             upgrade.style.transform = "scale(0)";
         base.append(baseImg, baseText, baseNumber, upgrade);
@@ -323,38 +331,35 @@ function openLevelingScreen() {
     state.perkOpen = true;
 }
 function perkTT(perk) {
-    var _a, _b, _c, _d;
     let txt = "";
-    txt += `\t<f>21px<f>${(_a = lang[perk.id + "_name"]) !== null && _a !== void 0 ? _a : perk.id}\t\n`;
-    txt += `<f>15px<f><c>silver<c>"${(_b = lang[perk.id + "_desc"]) !== null && _b !== void 0 ? _b : perk.id + "_desc"}"<c>white<c>\n`;
-    if (DEVMODE)
+    txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
+    txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
+    if (DEVTOOLS.ENABLED)
         txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
-    if (((_c = perk.requires) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+    if (perk.requires?.length > 0) {
         txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
         perk.requires.forEach((req) => {
-            var _a;
             let found = false;
             player.perks.forEach((prk) => {
                 if (prk.id == req) {
                     found = true;
                 }
             });
-            txt += `<c> ${found ? "lime" : "red"}<c>${(_a = lang[req + "_name"]) !== null && _a !== void 0 ? _a : req}, `;
+            txt += `<c> ${found ? "lime" : "red"}<c>${lang[req + "_name"] ?? req}, `;
         });
         txt = txt.substring(0, txt.length - 2);
         txt += "§";
     }
-    if (((_d = perk.mutually_exclusive) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+    if (perk.mutually_exclusive?.length > 0) {
         txt += `§\n<f>16px<f><c>white<c>${lang["mutually_exclusive"]}:  `;
         perk.mutually_exclusive.forEach((req) => {
-            var _a;
             let found = false;
             player.perks.forEach((prk) => {
                 if (prk.id == req) {
                     found = true;
                 }
             });
-            txt += `<c> ${found ? "red" : "lime"}<c>${(_a = lang[req + "_name"]) !== null && _a !== void 0 ? _a : req}, `;
+            txt += `<c> ${found ? "red" : "lime"}<c>${lang[req + "_name"] ?? req}, `;
         });
         txt = txt.substring(0, txt.length - 2);
         txt += "§";
@@ -374,9 +379,8 @@ function perkTT(perk) {
     return txt;
 }
 function statModifTT(statModif) {
-    var _a;
     statModif = new PermanentStatModifier({ ...statModif });
-    let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${(_a = lang[statModif.id + "_name"]) !== null && _a !== void 0 ? _a : statModif.id}<c>white<c>'\n`;
+    let txt = `§\n ${lang["passive"]} <f>16px<f><c>white<c>'<c>gold<c>${lang[statModif.id + "_name"] ?? statModif.id}<c>white<c>'\n`;
     if (statModif.desc)
         txt += `§<c>silver<c><f>13px<f>"${lang[statModif.desc]}"\n§`;
     if (statModif.conditions) {
@@ -392,7 +396,7 @@ function statModifTT(statModif) {
     return txt;
 }
 const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
-var currentZoomBG = 1;
+let currentZoomBG = 1;
 const background = document.querySelector(".playerLeveling .perks");
 background.addEventListener("mousedown", action1);
 background.addEventListener("mousemove", action2);

@@ -1,3 +1,24 @@
+# 1.2.4 ~ 30.6.2023
+
+## Major Changes
+- Fully reworked how loading  mods works
+  - Created a proper mod loader that allows selecting mods before starting the game.
+  - No longer restricted to locally run http server, mods can be used when playing through github.
+- Reworked how armor reduces incoming damage.
+  - Armor now calculates reduction as a bonus health multiplier.
+  - For example, 100 armor will reduce incoming damage by 50%.
+- Added developer console that can be opened with `§`.
+  - Console can be used to spawn items and enable cheats.
+
+## Minor Changes
+- Nerfed all random stat modifier percentage values.
+- Changed Adventurer perk tree's health bonuses to all be 5%.
+- Lowered base regen by 33%.
+
+## Bug Fixes
+- Fixed fog map only updating when scrolling.
+- Fixed a bug where toggleable settings would not save.
+
 # 1.2.3 ~ 13.4.2023
 
 ## Major Changes
@@ -6,7 +27,7 @@
     - Barbarian Set, rough leather armor with a barbaric design.
 
 ## Fixes & Tweaks
-- Fixed bug that prevented use of abilities with that applied status effects.
+- Fixed bug that prevented use of abilities that applied status effects.
 - Fixed bug where abilities shot outside of aggro range did not go on cooldown.
 
 # 1.2.2 ~ 16.12.2022

@@ -1,65 +1,112 @@
 "use strict";
 // @ts-nocheck
 class PlayerCharacter extends Character {
+    sprite;
+    race;
+    hair;
+    eyes;
+    face;
+    level;
+    weapon;
+    offhand;
+    chest;
+    helmet;
+    gloves;
+    boots;
+    legs;
+    artifact1;
+    artifact2;
+    artifact3;
+    hpRegen;
+    inventory;
+    raceEffect;
+    carryingWeight;
+    maxCarryWeight;
+    sight;
+    isDead;
+    grave;
+    respawnPoint;
+    gold;
+    perks;
+    sp;
+    pp;
+    usedShrines;
+    updatePerks;
+    lvlUp;
+    unarmedDamages;
+    fistDmg;
+    classes;
+    oldCords;
+    getArtifactSetBonuses;
+    flags;
+    addItem;
+    addGold;
+    questProgress;
+    entitiesEverEncountered;
+    sex;
+    activeQuest;
+    timePlayed;
+    calcDamage;
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
         super(base);
-        this.canFly = (_a = base.canFly) !== null && _a !== void 0 ? _a : false;
-        this.sprite = (_b = base.sprite) !== null && _b !== void 0 ? _b : ".player";
-        this.race = (_c = base.race) !== null && _c !== void 0 ? _c : "human";
-        this.hair = (_d = base.hair) !== null && _d !== void 0 ? _d : 1;
-        this.eyes = (_e = base.eyes) !== null && _e !== void 0 ? _e : 1;
-        this.face = (_f = base.face) !== null && _f !== void 0 ? _f : 1;
+        this.canFly = base.canFly ?? false;
+        this.sprite = base.sprite ?? ".player";
+        this.race = base.race ?? "human";
+        this.hair = base.hair ?? 1;
+        this.eyes = base.eyes ?? 1;
+        this.face = base.face ?? 1;
         this.level = base.level;
-        this.weapon = (_g = base.weapon) !== null && _g !== void 0 ? _g : {};
-        this.offhand = (_h = base.offhand) !== null && _h !== void 0 ? _h : {};
-        this.chest = (_j = base.chest) !== null && _j !== void 0 ? _j : {};
-        this.helmet = (_k = base.helmet) !== null && _k !== void 0 ? _k : {};
-        this.gloves = (_l = base.gloves) !== null && _l !== void 0 ? _l : {};
-        this.boots = (_m = base.boots) !== null && _m !== void 0 ? _m : {};
-        this.legs = (_o = base.legs) !== null && _o !== void 0 ? _o : {};
+        this.weapon = base.weapon ?? {};
+        this.offhand = base.offhand ?? {};
+        this.chest = base.chest ?? {};
+        this.helmet = base.helmet ?? {};
+        this.gloves = base.gloves ?? {};
+        this.boots = base.boots ?? {};
+        this.legs = base.legs ?? {};
         this.raceEffect = raceEffects[this.race];
-        this.artifact1 = (_p = base.artifact1) !== null && _p !== void 0 ? _p : {};
-        this.artifact2 = (_q = base.artifact2) !== null && _q !== void 0 ? _q : {};
-        this.artifact3 = (_r = base.artifact3) !== null && _r !== void 0 ? _r : {};
-        this.inventory = (_s = [...base.inventory]) !== null && _s !== void 0 ? _s : [];
-        this.isDead = (_t = base.isDead) !== null && _t !== void 0 ? _t : false;
-        this.grave = (_u = base.grave) !== null && _u !== void 0 ? _u : null;
-        this.respawnPoint = (_v = { ...base.respawnPoint }) !== null && _v !== void 0 ? _v : null; // need to add default point, or this might soft lock
-        this.gold = (_w = base.gold) !== null && _w !== void 0 ? _w : 0;
-        this.perks = (_x = [...base.perks]) !== null && _x !== void 0 ? _x : [];
-        this.sp = (_y = base.sp) !== null && _y !== void 0 ? _y : 0;
-        this.pp = (_z = base.pp) !== null && _z !== void 0 ? _z : 0;
-        this.usedShrines = (_0 = [...base.usedShrines]) !== null && _0 !== void 0 ? _0 : [];
-        this.unarmedDamages = (_1 = base.unarmedDamages) !== null && _1 !== void 0 ? _1 : { crush: 5 };
-        this.classes = (_2 = { ...base.classes }) !== null && _2 !== void 0 ? _2 : {};
-        this.oldCords = (_3 = { ...base.oldCords }) !== null && _3 !== void 0 ? _3 : this.cords;
-        this.flags = (_4 = { ...base.flags }) !== null && _4 !== void 0 ? _4 : [];
+        this.artifact1 = base.artifact1 ?? {};
+        this.artifact2 = base.artifact2 ?? {};
+        this.artifact3 = base.artifact3 ?? {};
+        this.inventory = [...base.inventory] ?? [];
+        this.isDead = base.isDead ?? false;
+        this.grave = base.grave ?? null;
+        this.respawnPoint = { ...base.respawnPoint } ?? null; // need to add default point, or this might soft lock
+        this.gold = base.gold ?? 0;
+        this.perks = [...base.perks] ?? [];
+        this.sp = base.sp ?? 0;
+        this.pp = base.pp ?? 0;
+        this.usedShrines = [...base.usedShrines] ?? [];
+        this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
+        this.classes = { ...base.classes } ?? {};
+        this.oldCords = { ...base.oldCords } ?? this.cords;
+        this.flags = { ...base.flags } ?? [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
         this.entitiesEverEncountered = base.entitiesEverEncountered
             ? { ...base.entitiesEverEncountered }
             : { items: {}, enemies: {}, summons: {} };
-        this.sex = (_5 = base.sex) !== null && _5 !== void 0 ? _5 : "male";
-        this.activeQuest = (_6 = base.activeQuest) !== null && _6 !== void 0 ? _6 : -1;
+        this.sex = base.sex ?? "male";
+        this.activeQuest = base.activeQuest ?? -1;
         this.timePlayed = base.timePlayed ? Math.round(base.timePlayed) : 0;
         this.fistDmg = () => {
             let damages = {};
             Object.entries(this.unarmedDamages).forEach((dmg) => {
                 const key = dmg[0];
                 const _val = dmg[1];
-                const { v: val, m: mod } = getModifiers(this, "unarmedDmg" + key);
-                const { v: baseVal, m: baseMod } = getModifiers(this, "unarmedDmg");
-                damages[key] = Math.floor(((val + _val) * mod + baseVal) * baseMod);
+                const damageFlat = this.allModifiers["unarmedDmgV"] ?? 0;
+                const damageModifier = this.allModifiers["unarmedDmgP"] ?? 1;
+                damages[key] = Math.floor((damageFlat + _val) * damageModifier);
             });
             return damages;
         };
         this.hpRegen = () => {
-            const { v: val, m: mod } = getModifiers(this, "hpRegen");
-            return Math.floor(val * mod);
+            const regenFlat = this.allModifiers["hpRegenV"] ?? 0;
+            const regenModifier = this.allModifiers["hpRegenP"] ?? 1;
+            return Math.floor(regenFlat * regenModifier);
         };
         this.sight = () => {
-            const { v: val, m: mod } = getModifiers(this, "sight");
-            return Math.floor((15 + val) * mod);
+            const sightFlat = this.allModifiers["sightV"] ?? 0;
+            const sightModifier = this.allModifiers["sightP"] ?? 1;
+            return Math.floor((15 + sightFlat) * sightModifier);
         };
         this.drop = (itm, fromContextMenu = false) => {
             const item = { ...itm };
@@ -71,14 +118,12 @@ class PlayerCharacter extends Character {
                 contextMenu.textContent = "";
         };
         this.updatePerks = (dontUpdateUI = false, dontExecuteCommands = false) => {
-            var _a;
             this.perks.forEach((prk, index) => {
-                var _a;
                 let cmdsEx = prk.commandsExecuted;
                 prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
                 if (!cmdsEx && !dontExecuteCommands) {
                     console.log("executing commands");
-                    (_a = Object.entries(prk.commands)) === null || _a === void 0 ? void 0 : _a.forEach((cmd) => {
+                    Object.entries(prk.commands)?.forEach((cmd) => {
                         command(cmd);
                     });
                 }
@@ -93,7 +138,7 @@ class PlayerCharacter extends Character {
                 });
             });
             for (let i = this.perks.length - 1; i >= 0; i--) {
-                if (((_a = this.perks[i]) === null || _a === void 0 ? void 0 : _a.id) == undefined) {
+                if (this.perks[i]?.id == undefined) {
                     this.perks.splice(i, 1);
                 }
             }
@@ -102,13 +147,12 @@ class PlayerCharacter extends Character {
             updateUI();
         };
         this.unequip = (event, slot, putToIndex = -1, shiftItems = false, fromContextMenu = false) => {
-            var _a, _b;
-            if ((event.button !== 2 && !fromContextMenu) || !((_a = this[slot]) === null || _a === void 0 ? void 0 : _a.id))
+            if ((event.button !== 2 && !fromContextMenu) || !this[slot]?.id)
                 return;
             if (fromContextMenu) {
                 contextMenu.textContent = "";
             }
-            if ((_b = this[slot]) === null || _b === void 0 ? void 0 : _b.id) {
+            if (this[slot]?.id) {
                 if (putToIndex != -1) {
                     if (shiftItems) {
                         this.inventory.splice(putToIndex, 0, this[slot]);
@@ -125,11 +169,10 @@ class PlayerCharacter extends Character {
                 }
             });
             this[slot] = {};
-            player.allModifiers = getAllModifiersOnce(player, true);
+            this.updateAllModifiers();
             renderInventory();
         };
         this.equip = (event, item, fromContextMenu = false, auto = false) => {
-            var _a, _b, _c;
             if (event.button !== 2 && !fromContextMenu)
                 return;
             if (fromContextMenu) {
@@ -157,13 +200,13 @@ class PlayerCharacter extends Character {
             let shiftOffhand = true;
             if (!canEquip)
                 return;
-            if (item.slot == "offhand" && ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.twoHanded)) {
+            if (item.slot == "offhand" && this.weapon?.twoHanded) {
                 this.unequip(event, "weapon", item.index, false, fromContextMenu);
                 spliceFromInv = false;
             }
-            if (!((_b = this[itm.slot]) === null || _b === void 0 ? void 0 : _b.id) && spliceFromInv)
+            if (!this[itm.slot]?.id && spliceFromInv)
                 player.inventory.splice(item.index, 1);
-            if (!((_c = this[itm.slot]) === null || _c === void 0 ? void 0 : _c.id))
+            if (!this[itm.slot]?.id)
                 shiftOffhand = false;
             else
                 this.unequip(event, itm.slot, itm.index, false, fromContextMenu);
@@ -176,7 +219,7 @@ class PlayerCharacter extends Character {
                 else
                     this.unequip(event, "offhand", item.index, true, fromContextMenu);
             }
-            player.allModifiers = getAllModifiersOnce(player, true);
+            this.updateAllModifiers();
             if (!auto)
                 renderInventory();
         };
@@ -188,8 +231,19 @@ class PlayerCharacter extends Character {
             return total.toFixed(1);
         };
         this.maxCarryWeight = () => {
-            const { v: val, m: mod } = getModifiers(this, "carryStrength");
-            return ((92.5 + val + this.getStats().str / 2 + this.getStats().vit) * mod).toFixed(1);
+            const carryFlat = this.allModifiers["carryWeightV"] ?? 0;
+            const carryModifier = this.allModifiers["carryWeightP"] ?? 1;
+            const { str, vit } = this.getStats();
+            return ((92.5 + carryFlat + str / 2 + vit) * carryModifier).toFixed(1);
+        };
+        this.addXP = (xp, flat = false) => {
+            if (!flat) {
+                this.level.xp += Math.floor(xp * player.allModifiers.expGainP);
+            }
+            else {
+                this.level.xp += Math.floor(xp);
+            }
+            this.lvlUp();
         };
         this.lvlUp = () => {
             while (this.level.xp >= this.level.xpNeed) {
@@ -223,19 +277,18 @@ class PlayerCharacter extends Character {
             }
         };
         this.getArtifactSetBonuses = (getOnlySetAmounts = false) => {
-            var _a, _b, _c;
             let sets = {};
             let effects = {};
-            if ((_a = this.artifact1) === null || _a === void 0 ? void 0 : _a.artifactSet) {
+            if (this.artifact1?.artifactSet) {
                 sets[this.artifact1.artifactSet] = 1;
             }
-            if ((_b = this.artifact2) === null || _b === void 0 ? void 0 : _b.artifactSet) {
+            if (this.artifact2?.artifactSet) {
                 if (sets[this.artifact2.artifactSet])
                     sets[this.artifact2.artifactSet]++;
                 else
                     sets[this.artifact2.artifactSet] = 1;
             }
-            if ((_c = this.artifact3) === null || _c === void 0 ? void 0 : _c.artifactSet) {
+            if (this.artifact3?.artifactSet) {
                 if (sets[this.artifact3.artifactSet])
                     sets[this.artifact3.artifactSet]++;
                 else
@@ -301,30 +354,29 @@ class PlayerCharacter extends Character {
             updateUI();
         };
         this.getBaseStats = () => {
-            var _a, _b, _c, _d, _e, _f;
             const vals = { ...this.stats };
             const mods = {};
-            if ((_a = this.raceEffect) === null || _a === void 0 ? void 0 : _a.modifiers) {
-                Object.entries((_b = this.raceEffect) === null || _b === void 0 ? void 0 : _b.modifiers).forEach((eff) => {
-                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+            if (this.raceEffect?.modifiers) {
+                Object.entries(this.raceEffect?.modifiers).forEach((eff) => {
+                    if (!mods?.[eff[0]]) {
                         mods[eff[0]] = eff[1];
                     }
                     else if (eff[0].endsWith("V"))
                         mods[eff[0]] += eff[1];
                 });
             }
-            if ((_d = (_c = this.classes) === null || _c === void 0 ? void 0 : _c.main) === null || _d === void 0 ? void 0 : _d.statBonuses) {
+            if (this.classes?.main?.statBonuses) {
                 Object.entries(this.classes.main.statBonuses).forEach((eff) => {
-                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+                    if (!mods?.[eff[0]]) {
                         mods[eff[0]] = eff[1];
                     }
                     else if (eff[0].endsWith("V"))
                         mods[eff[0]] += eff[1];
                 });
             }
-            if ((_f = (_e = this.classes) === null || _e === void 0 ? void 0 : _e.sub) === null || _f === void 0 ? void 0 : _f.statBonuses) {
+            if (this.classes?.sub?.statBonuses) {
                 Object.entries(this.classes.sub.statBonuses).forEach((eff) => {
-                    if (!(mods === null || mods === void 0 ? void 0 : mods[eff[0]])) {
+                    if (!mods?.[eff[0]]) {
                         mods[eff[0]] = eff[1];
                     }
                     else if (eff[0].endsWith("V"))
@@ -341,7 +393,6 @@ class PlayerCharacter extends Character {
             return vals;
         };
         this.addItem = (itm) => {
-            var _a, _b;
             if (itm.stacks) {
                 let wasAdded = false;
                 this.inventory.forEach((item) => {
@@ -356,7 +407,7 @@ class PlayerCharacter extends Character {
             else {
                 this.inventory.push({ ...itm });
             }
-            let encounter = (_b = (_a = player.entitiesEverEncountered) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b[itm.id];
+            let encounter = player.entitiesEverEncountered?.items?.[itm.id];
             if (encounter < 1 || !encounter) {
                 player.entitiesEverEncountered.items[itm.id] = 1;
             }
@@ -372,10 +423,9 @@ class PlayerCharacter extends Character {
             document.querySelector(".playerGoldNumber").textContent = player.gold.toString();
         };
         this.calcDamage = (base = false) => {
-            var _a, _b;
             let dmg = 0;
             if (base) {
-                if ((_a = this.weapon) === null || _a === void 0 ? void 0 : _a.id) {
+                if (this.weapon?.id) {
                     Object.values(this.weapon.damages).map((val) => {
                         return (dmg += val);
                     });
@@ -387,26 +437,21 @@ class PlayerCharacter extends Character {
                 }
             }
             else {
-                let damages = ((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.id) ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
+                let damages = this.weapon?.id ? Object.entries(this.weapon.damages) : Object.entries(this.fistDmg());
                 const stats = this.getStats();
                 damages.map(([key, num]) => {
-                    var _a;
-                    let { v: val, m: mod } = getModifiers(this, key + "Damage");
-                    val += this.allModifiers["damageV"];
-                    mod *= this.allModifiers["damageP"];
+                    const dmgFlat = this.allModifiers[key + "DamageV"] ?? 0;
+                    const dmgModifier = this.allModifiers[key + "DamageP"] ?? 1;
+                    const val = dmgFlat + (this.allModifiers["damageV"] ?? 0);
+                    const mod = dmgModifier * (this.allModifiers["damageP"] ?? 1);
                     let bonus = 0;
-                    bonus += (num * stats[(_a = this.weapon) === null || _a === void 0 ? void 0 : _a.statBonus]) / 50;
+                    bonus += (num * stats[this.weapon?.statBonus]) / 50;
                     if (!this.weapon)
                         bonus = (num * stats["str"]) / 50;
-                    if (isNaN(val))
-                        val = 0;
-                    if (isNaN(mod))
-                        mod = 1;
                     if (isNaN(bonus))
                         bonus = 0;
                     if (isNaN(num))
                         num = 0;
-                    console.log(Math.floor((num + val + bonus) * mod));
                     dmg += Math.floor((num + val + bonus) * mod);
                 });
             }
@@ -540,12 +585,11 @@ const randomProperty = function (mods) {
     return mods[keys[(keys.length * Math.random()) << 0]];
 };
 function slotEmpty(item) {
-    var _a, _b, _c;
     let isEmpty = false;
-    if (!((_a = player[item.slot]) === null || _a === void 0 ? void 0 : _a.id)) {
-        if (item.slot === "offhand" && !((_b = player["weapon"]) === null || _b === void 0 ? void 0 : _b.twoHanded))
+    if (!player[item.slot]?.id) {
+        if (item.slot === "offhand" && !player["weapon"]?.twoHanded)
             isEmpty = true;
-        else if (item.twoHanded && !((_c = player["offhand"]) === null || _c === void 0 ? void 0 : _c.id))
+        else if (item.twoHanded && !player["offhand"]?.id)
             isEmpty = true;
         else if (!item.twoHanded && item.slot !== "offhand")
             isEmpty = true;
@@ -596,6 +640,7 @@ function respawnPlayer() {
         modifyCanvas(true);
         updateUI();
     }
+    renderEntireMap(maps[currentMap]);
     helper.resetAllLivingEnemiesInAllMaps();
     displayText(`[WORLD] ${lang["revive"]}`);
     spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);

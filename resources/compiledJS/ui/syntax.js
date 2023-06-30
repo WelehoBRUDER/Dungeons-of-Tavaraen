@@ -1,7 +1,6 @@
 "use strict";
 //@ts-nocheck
 function textSyntax(syn = "") {
-    var _a;
     const pre = document.createElement("pre");
     const lines = syn.split("§");
     let selectedContainer = pre;
@@ -98,9 +97,9 @@ function textSyntax(syn = "") {
                 const [, variable, text = ""] = currentLine.split("<v>");
                 [lineText] = text.split("<");
                 try {
-                    lineText = (_a = eval(variable)) !== null && _a !== void 0 ? _a : "" + lineText;
+                    lineText = eval(variable) ?? "" + lineText;
                 }
-                catch (_b) {
+                catch {
                     return console.error(`"${variable}" is not defined`);
                 }
                 index = line.indexOf("<v>", index + 1);
@@ -161,7 +160,6 @@ function textSyntax(syn = "") {
     }
     return pre;
     function runVariableTest(data) {
-        var _a;
         if (data.indexOf("<v>") == -1)
             return data;
         let index = 0;
@@ -173,9 +171,9 @@ function textSyntax(syn = "") {
                 const [, variable, text = ""] = currentLine.split("<v>");
                 [lineText] = text.split("<");
                 try {
-                    lineText = (_a = eval(variable)) !== null && _a !== void 0 ? _a : "" + lineText;
+                    lineText = eval(variable) ?? "" + lineText;
                 }
-                catch (_b) {
+                catch {
                     return console.error(`"${variable}" is not defined`);
                 }
                 index = data.indexOf("<v>", index + 1);
@@ -307,7 +305,7 @@ function effectSyntax(effect, embed = false) {
         key = key.substring(0, key.length - 1);
         const name = lang[key] || key;
         const id = key.substring(0, key.length - 1);
-        const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : "gfx/icons/triple-yin.png";
+        const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
         return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n`;
     }
     else if (typeof value === "object") {
@@ -396,7 +394,7 @@ function effectSyntax(effect, embed = false) {
 //         player
 //       );
 //     } catch (err) {
-//       if (DEVMODE) displayText(`<c>red<c>${err} at line syntax:220`);
+//       if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line syntax:220`);
 //     }
 //     if (!_abi) _abi = new Ability(abilities[id], dummy);
 //     let status: statusEffect = new statEffect(statusEffects[statusId], _abi.statusModifiers);

@@ -1,26 +1,23 @@
 "use strict";
 function createStatDisplay(stat) {
-    var _a;
     const key = stat[0] == "chance" ? "hitChance" : stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
     statImage.src = icons[key];
     statText.textContent = lang[key];
     statValue.textContent = key.includes("crit") ? val + "%" : val;
-    tooltip(statContainer, (_a = lang[key + "_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+    tooltip(statContainer, lang[key + "_tt"] ?? "no tooltip");
     statContainer.append(statImage, statText, statValue);
     return statContainer;
 }
 function createArmorOrResistanceDisplay(stat, armor) {
-    var _a;
     const key = stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-    console.log(key);
     statImage.src = icons[key + (armor ? "_armor" : "Resist")];
     statText.textContent = lang[key];
     statValue.textContent = val + (armor ? "" : "%");
-    tooltip(statContainer, (_a = lang[armor ? key + "_tt" : "resistances_tt"]) !== null && _a !== void 0 ? _a : "no tooltip");
+    tooltip(statContainer, lang[armor ? key + "_tt" : "resistances_tt"] ?? "no tooltip");
     if (val > 0)
         statValue.classList.add("positive");
     else if (val < 0)
@@ -29,11 +26,10 @@ function createArmorOrResistanceDisplay(stat, armor) {
     return statContainer;
 }
 function createStatusResistanceDisplay(stat) {
-    var _a;
     const key = stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-    statImage.src = (_a = icons[key]) !== null && _a !== void 0 ? _a : icons["damage"];
+    statImage.src = icons[key] ?? icons["damage"];
     statText.textContent = lang[key + "_status"];
     statValue.textContent = val + "%";
     if (val > 0)
@@ -44,11 +40,10 @@ function createStatusResistanceDisplay(stat) {
     return statContainer;
 }
 function createStatModifierDisplay(mod) {
-    var _a;
     const statContainer = document.createElement("div");
     const statImage = document.createElement("img");
     const statText = document.createElement("p");
-    statImage.src = (_a = mod.icon) !== null && _a !== void 0 ? _a : icons["damage"];
+    statImage.src = mod.icon ?? icons["damage"];
     statText.textContent = lang[mod.id + "_name"];
     if (mod.conditions) {
         let active = statConditions(mod.conditions, player);

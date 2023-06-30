@@ -1,19 +1,30 @@
 "use strict";
 class Weapon extends Item {
+    damages;
+    range;
+    firesProjectile;
+    stats;
+    commands;
+    statStrings;
+    fullPrice;
+    twoHanded;
+    statBonus;
+    level;
+    maxLevel;
+    rolledStats;
     constructor(base, setPrice = 0, dontRollStats = false) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         super(base);
         const baseItem = { ...items[this.id] };
-        this.name = (_a = lang[this.id + "_name"]) !== null && _a !== void 0 ? _a : baseItem.name;
-        this.level = (_b = base.level) !== null && _b !== void 0 ? _b : 0;
-        this.maxLevel = (_c = baseItem.maxLevel) !== null && _c !== void 0 ? _c : 5;
+        this.name = lang[this.id + "_name"] ?? baseItem.name;
+        this.level = base.level ?? 0;
+        this.maxLevel = baseItem.maxLevel ?? 5;
         this.range = baseItem.range;
         this.firesProjectile = baseItem.firesProjectile;
-        this.twoHanded = (_d = baseItem.twoHanded) !== null && _d !== void 0 ? _d : false;
-        this.damages = (_f = leveledStats({ ...baseItem.damages }, (_e = this.level) !== null && _e !== void 0 ? _e : 0)) !== null && _f !== void 0 ? _f : {};
-        this.stats = (_g = { ...baseItem.stats }) !== null && _g !== void 0 ? _g : {};
-        this.commands = (_h = { ...baseItem.commands }) !== null && _h !== void 0 ? _h : {};
-        this.statBonus = (_j = baseItem.statBonus) !== null && _j !== void 0 ? _j : "str";
+        this.twoHanded = baseItem.twoHanded ?? false;
+        this.damages = leveledStats({ ...baseItem.damages }, this.level ?? 0) ?? {};
+        this.stats = { ...baseItem.stats } ?? {};
+        this.commands = { ...baseItem.commands } ?? {};
+        this.statBonus = baseItem.statBonus ?? "str";
         this.rolledStats = base.rolledStats || [];
         if (setPrice > 0)
             this.price = setPrice;
@@ -41,7 +52,7 @@ class Weapon extends Item {
             }
         }
         try {
-            (_k = this.rolledStats) === null || _k === void 0 ? void 0 : _k.forEach((stat) => {
+            this.rolledStats?.forEach((stat) => {
                 if (stat.damage) {
                     let val = equipmentStatRandomization["damage"][stat.damage]["Value"][stat.value];
                     if (!this.damages[stat.damage])
@@ -60,7 +71,7 @@ class Weapon extends Item {
             });
         }
         catch (err) {
-            if (DEVMODE)
+            if (DEVTOOLS.ENABLED)
                 displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
         }
         // Assign correct name based on stat effects.
@@ -102,7 +113,9 @@ class Weapon extends Item {
                 this.name += ` +${this.level}`;
         }
         if (setPrice > 0)
-            this.fullPrice = () => { return this.price; };
+            this.fullPrice = () => {
+                return this.price;
+            };
         else {
             this.fullPrice = () => {
                 let bonus = 0;

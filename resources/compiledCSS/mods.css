@@ -23,13 +23,37 @@
   border-radius: 4px;
   display: flex;
 }
+.mods-menu .content .header {
+  position: absolute;
+  width: 100%;
+  height: calc(60px * var(--ui-scale));
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: calc(25px * var(--ui-scale));
+}
+.mods-menu .content .header button.blue-button {
+  margin: 0 calc(25px * var(--ui-scale));
+  width: calc(120px * var(--ui-scale));
+  height: calc(36px * var(--ui-scale));
+  font-size: calc(20px * var(--ui-scale));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .mods-menu .content .mods-list {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 60%;
-  height: 100%;
+  height: calc(100% - 60px * var(--ui-scale));
+  top: calc(60px * var(--ui-scale));
   overflow-y: auto;
   overflow-x: hidden;
   background: rgba(6, 7, 10, 0.65);
@@ -76,12 +100,14 @@
   text-align: center;
 }
 .mods-menu .content .mod-info {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  top: calc(60px * var(--ui-scale));
   width: 40%;
-  height: 100%;
+  height: calc(100% - 60px * var(--ui-scale));
   overflow-y: auto;
   overflow-x: hidden;
   background: rgba(10, 6, 6, 0.65);

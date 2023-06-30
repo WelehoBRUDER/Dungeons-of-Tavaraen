@@ -54,7 +54,6 @@ function createEnemyInfo(enemy) {
         enemytraitsContainer.append(createStatModifierDisplay(mod));
     });
     enemy.abilities.map((abi) => {
-        var _a;
         if (abi.id != "attack") {
             const bg = document.createElement("img");
             const frame = document.createElement("div");
@@ -62,7 +61,7 @@ function createEnemyInfo(enemy) {
             bg.src = "resources/ui/hotbar_bg.png";
             frame.append(bg);
             const abiImg = document.createElement("img");
-            abiImg.src = (_a = abi.icon) !== null && _a !== void 0 ? _a : icons.damage;
+            abiImg.src = abi.icon ?? icons.damage;
             tooltip(abiImg, abiTT(abi));
             frame.append(abiImg);
             enemySkillsContainer.append(frame);

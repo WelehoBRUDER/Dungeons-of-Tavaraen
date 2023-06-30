@@ -30,10 +30,10 @@ function useAbi(abi) {
 }
 const currentProjectiles = [];
 function buffOrHeal(character, ability) {
-    var _a;
     state.isSelected = false;
     if (ability.base_heal) {
-        const { v: val, m: mod } = getModifiers(character, "healPower");
+        const val = character.allModifiers["healPowerV"] || 0;
+        const mod = character.allModifiers["healPowerP"] || 1;
         let healFromHP = 0;
         if (ability.heal_percentage)
             healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
@@ -46,7 +46,8 @@ function buffOrHeal(character, ability) {
             displayText(`<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`);
     }
     else if (ability.heal_percentage) {
-        const { v: val, m: mod } = getModifiers(character, "healPower");
+        const val = character.allModifiers["healPowerV"] || 0;
+        const mod = character.allModifiers["healPowerP"] || 1;
         let healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((healFromHP + val) * mod);
         character.stats.hp += heal;
@@ -56,11 +57,10 @@ function buffOrHeal(character, ability) {
         else
             displayText(`<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`);
     }
-    if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+    if (ability.statusesUser?.length > 0) {
         ability.statusesUser.forEach((status) => {
-            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
-            const modifiers = ((_a = character.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}`]) || {};
+            const modifiers = character.allModifiers[`ability_${ability.id}`]?.[`effect_${status}`] || {};
             character.addEffect(_Effect, modifiers);
             if (character.id === "player")
                 _Effect.last.current -= 1;
@@ -103,28 +103,26 @@ function buffOrHeal(character, ability) {
 }
 /* This function needs to be updated at some point */
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
-    var _a, _b, _c, _d, _e;
     if (targetCords) {
         maps[currentMap].enemies.forEach((en) => {
             if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
                 target = en;
         });
     }
-    if ((ability === null || ability === void 0 ? void 0 : ability.health_cost) || (ability === null || ability === void 0 ? void 0 : ability.health_cost_percentage)) {
+    if (ability?.health_cost || ability?.health_cost_percentage) {
         if (ability.health_cost)
             attacker.stats.hp -= ability.health_cost;
         if (ability.health_cost_percentage)
             attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
     }
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
-    if (((_a = ability.statusesEnemy) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+    if (ability.statusesEnemy?.length > 0) {
         ability.statusesEnemy.forEach((status) => {
-            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
             const resist = target.getStatusResists()[_Effect.type];
             const resisted = resist + helper.random(9, -9) > ability.status_power + helper.random(18, -18);
             if (!resisted) {
-                const modifiers = ((_a = attacker.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}`]) || {};
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`]?.[`effect_${status}`] || {};
                 target.addEffect(_Effect, modifiers);
             }
             else {
@@ -132,14 +130,13 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             }
         });
     }
-    if (((_b = ability.statusesUser) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+    if (ability.statusesUser?.length > 0) {
         ability.statusesUser.forEach((status) => {
-            var _a;
             const _Effect = new statEffect({ ...statusEffects[status] });
             if (attacker.id === "player")
                 _Effect.last.current -= 1;
             if (!attacker.statusEffects.find((eff) => eff.id == status)) {
-                const modifiers = ((_a = attacker.allModifiers[`ability_${ability.id}`]) === null || _a === void 0 ? void 0 : _a[`effect_${status}}`]) || {};
+                const modifiers = attacker.allModifiers[`ability_${ability.id}`]?.[`effect_${status}}`] || {};
                 attacker.addEffect(_Effect, modifiers);
                 spawnFloatingText(attacker.cords, ability.line, "crimson", 36);
                 if (!isAoe) {
@@ -170,7 +167,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 // @ts-ignore
                 renderSingleEnemy(target, layer);
             }
-            catch (_a) { }
+            catch { }
         }, 110);
         if (!target.aggro()) {
             target.tempAggro = 12;
@@ -184,7 +181,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
         if (isAoe) {
-            let actionText = (_c = lang[ability.id + "_action_desc_aoe_pl"]) !== null && _c !== void 0 ? _c : ability.action_desc_pl;
+            let actionText = lang[ability.id + "_action_desc_aoe_pl"] ?? ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`<c>cyan<c>[ACTION] <c>white<c>${actionText}`);
@@ -196,7 +193,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
                 desc += "_pl";
                 ally = false;
             }
-            let actionText = (_d = lang[ability.id + desc]) !== null && _d !== void 0 ? _d : ability.action_desc_pl;
+            let actionText = lang[ability.id + desc] ?? ability.action_desc_pl;
             actionText = actionText.replace("[TARGET]", `'<c>yellow<c>${lang[target.id + "_name"]}<c>white<c>'`);
             actionText = actionText.replace("[DMG]", `${dmg}`);
             displayText(`${ally ? "<c>lime<c>[ALLY]" + "<c>yellow<c> " + lang[attacker.id + "_name"] : "<c>cyan<c>[ACTION]"} <c>white<c>${actionText}`);
@@ -238,7 +235,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             spawnFloatingText(target.cords, dmg.toString(), "red", 36);
         if (evade)
             spawnFloatingText(target.cords, "EVADE!", "white", 36);
-        let actionText = (_e = lang[ability.id + "_action_desc"]) !== null && _e !== void 0 ? _e : "[TEXT NOT FOUND]";
+        let actionText = lang[ability.id + "_action_desc"] ?? "[TEXT NOT FOUND]";
         let targetName = lang[target.id + "_name"];
         if (!targetName)
             targetName = player.name;
@@ -270,7 +267,7 @@ function collision(target, ability, isPlayer, attacker, theme) {
         if (!targetEnemy)
             targetEnemy = maps[currentMap].enemies.find((en) => en.oldCords.x == target.x && en.oldCords.y == target.y);
         if (ability.aoe_size > 0) {
-            aoeCollision(createAOEMap(targetEnemy === null || targetEnemy === void 0 ? void 0 : targetEnemy.cords, ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
+            aoeCollision(createAOEMap(targetEnemy?.cords, ability.aoe_size, ability.aoe_ignore_ledge), attacker, ability);
         }
         else {
             regularAttack(attacker, targetEnemy, ability);
@@ -288,10 +285,9 @@ function threatDistance(targets, from) {
     let chosenTarget = null;
     let highestThreat = -50;
     targets.forEach((target) => {
-        var _a;
         let dist = +generatePath(from.cords, target.cords, from.canFly, true);
         let threat = (target.getThreat() + helper.random(18, -18)) / dist;
-        if (threat > highestThreat && dist <= ((_a = from.aggroRange + from.tempAggro) !== null && _a !== void 0 ? _a : 28)) {
+        if (threat > highestThreat && dist <= (from.aggroRange + from.tempAggro ?? 28)) {
             highestThreat = threat;
             chosenTarget = target;
         }
@@ -299,7 +295,6 @@ function threatDistance(targets, from) {
     return chosenTarget;
 }
 function summonUnit(ability, cords) {
-    var _a, _b, _c;
     state.isSelected = false;
     state.abiSelected = {};
     if (ability.cooldown)
@@ -355,14 +350,14 @@ function summonUnit(ability, cords) {
         newSummon.statusEffects.push(effect);
     }
     combatSummons.push({ ...newSummon });
-    if (((_a = ability.statusesUser) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+    if (ability.statusesUser?.length > 0) {
         ability.statusesUser.forEach((status) => {
             const modifiers = player.allModifiers[`ability_${ability.id}`][`effect_${ability.summon_status}}`] || {};
             // @ts-ignore - addEffect takes 2 arguments, but the IDE thinks it takes 1
             player.addEffect(new statEffect({ ...statusEffects[status] }, modifiers));
         });
     }
-    let encounter = (_c = (_b = player.entitiesEverEncountered) === null || _b === void 0 ? void 0 : _b.summons) === null || _c === void 0 ? void 0 : _c[newSummon.id];
+    let encounter = player.entitiesEverEncountered?.summons?.[newSummon.id];
     if (encounter < 1 || !encounter) {
         player.entitiesEverEncountered.enemies[newSummon.id] = 1;
         displayText("New creature encountered!");

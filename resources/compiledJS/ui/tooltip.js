@@ -1,16 +1,15 @@
 "use strict";
 // Tooltip for ability
 function abiTT(abi, character = player) {
-    var _a, _b, _c, _d, _e, _f, _g;
     let txt = "";
-    txt += `\t<f>26px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
-    txt += `<f>19px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
+    txt += `\t<f>26px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
+    txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
     if (abi.mana_cost > 0 && character.silenced())
         txt += `<i>${icons.silence}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
     if (abi.requires_concentration && !character.concentration())
         txt += `<i>${icons.break_concentration}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
     if (abi.base_heal) {
-        let healFromHP = (_c = Math.floor((character.getHpMax() * abi.heal_percentage) / 100)) !== null && _c !== void 0 ? _c : 0;
+        let healFromHP = Math.floor((character.getHpMax() * abi.heal_percentage) / 100) ?? 0;
         txt += `<i>${icons.heal}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
         if (abi.heal_percentage) {
             txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
@@ -22,7 +21,7 @@ function abiTT(abi, character = player) {
     if (abi.damages) {
         let total = 0;
         let text = "";
-        (_d = Object.entries(abi.get_true_damage(character))) === null || _d === void 0 ? void 0 : _d.forEach((dmg) => {
+        Object.entries(abi.get_true_damage(character))?.forEach((dmg) => {
             total += dmg[1];
             text += `<i>${icons[dmg[0]]}<i><f>17px<f>${dmg[1]}, `;
         });
@@ -48,27 +47,25 @@ function abiTT(abi, character = player) {
     else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
         txt += `<f>20px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
     }
-    if (((_e = abi.statusesEnemy) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+    if (abi.statusesEnemy?.length > 0) {
         txt += `<f>20px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
-            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
-            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             txt += statTT(effect);
         });
     }
-    if (((_f = abi.statusesUser) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+    if (abi.statusesUser?.length > 0) {
         txt += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
-            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
-            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             txt += statTT(effect);
         });
     }
-    if (((_g = abi.statusesUser) === null || _g === void 0 ? void 0 : _g.length) > 0 && abi.aoe_size > 0) {
+    if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
         txt += `<f>20px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
     }
     if (abi.type)
@@ -108,10 +105,9 @@ function abiTT(abi, character = player) {
     return txt;
 }
 function embedAbiTT(abi, character = player) {
-    var _a, _b, _c, _d, _e, _f;
     let txt = "";
-    txt += `\t<f>17px<f>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}\t\n`;
-    txt += `<f>14px<f><c>silver<c>"${(_b = lang[abi.id + "_desc"]) !== null && _b !== void 0 ? _b : abi.id + "_desc"}"<c>white<c>\n`;
+    txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
+    txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
     if (abi.mana_cost > 0 && character.silenced())
         txt += `<i>${icons.silence}<i><f>15px<f><c>orange<c>${lang["silence_text"]}§\n`;
     if (abi.requires_concentration && !character.concentration())
@@ -147,27 +143,25 @@ function embedAbiTT(abi, character = player) {
     else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
         txt += `<f>15px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
     }
-    if (((_c = abi.statusesEnemy) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+    if (abi.statusesEnemy?.length > 0) {
         txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
-            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
-            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             txt += statTT(effect);
         });
     }
-    if (((_d = abi.statusesUser) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+    if (abi.statusesUser?.length > 0) {
         txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
-            var _a, _b;
             txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
-            effect.init((_b = (_a = character === null || character === void 0 ? void 0 : character.allModifiers) === null || _a === void 0 ? void 0 : _a["ability_" + abi.id]) === null || _b === void 0 ? void 0 : _b["effect_" + status]);
+            effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             txt += statTT(effect);
         });
     }
-    if (((_e = abi.statusesUser) === null || _e === void 0 ? void 0 : _e.length) > 0 && abi.aoe_size > 0) {
+    if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
         txt += `<f>14px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
     }
     if (abi.type)
@@ -183,7 +177,7 @@ function embedAbiTT(abi, character = player) {
     if (abi.recharge_only_in_combat)
         txt += `<i>${icons.fighter_symbol}<i><f>15px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
     if (abi.summon_unit)
-        txt += `<i>${icons.fighter_symbol}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${(_f = lang[abi.summon_unit + "_name"]) !== null && _f !== void 0 ? _f : abi.summon_unit}<c>white<c>\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>15px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>15px<f>${lang[abi.summon_unit + "_name"] ?? abi.summon_unit}<c>white<c>\n`;
     if (abi.summon_level)
         txt += `<f>15px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
     if (abi.summon_last || abi.permanent)
@@ -208,12 +202,11 @@ function embedAbiTT(abi, character = player) {
 }
 // Tooltip for status
 function statTT(status, embed = false) {
-    var _a, _b;
     let txt = "";
     if (!embed)
-        txt += `\t<f>26px<f>${(_a = lang["effect_" + status.id + "_name"]) !== null && _a !== void 0 ? _a : status.id}\t\n`;
+        txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
     if (!embed)
-        txt += `<f>18px<f><c>silver<c>"${(_b = lang["effect_" + status.id + "_desc"]) !== null && _b !== void 0 ? _b : status.id + "_desc"}"\t\n`;
+        txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
     if (status.dot)
         txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
     Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed)));

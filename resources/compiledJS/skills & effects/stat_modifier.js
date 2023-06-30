@@ -351,17 +351,35 @@ const traits = {
         },
     },
     /* End of starter trait choices */
+    // Secret traits
+    all_muscle: {
+        id: "all_muscle",
+        desc: "all_muscle_desc",
+        effects: {
+            strP: 15,
+            vitP: 15,
+            dexP: 15,
+            meleeDamageP: 30,
+            rangedDamageP: 30,
+            magicDamageP: -100,
+            mpMaxP: -100,
+            regenMpP: -100,
+            intP: -100,
+        },
+    },
 };
 class PermanentStatModifier {
+    conditions;
+    effects;
+    desc;
     constructor(base) {
-        var _a, _b, _c;
         this.id = base.id;
         const baseModifier = { ...traits[this.id] };
         if (!baseModifier)
             throw new Error("Invalid modifier id!");
-        this.conditions = (_a = baseModifier.conditions) !== null && _a !== void 0 ? _a : null;
-        this.effects = (_b = baseModifier.effects) !== null && _b !== void 0 ? _b : {};
-        this.desc = (_c = baseModifier.desc) !== null && _c !== void 0 ? _c : null;
+        this.conditions = baseModifier.conditions ?? null;
+        this.effects = baseModifier.effects ?? {};
+        this.desc = baseModifier.desc ?? null;
     }
 }
 //# sourceMappingURL=stat_modifier.js.map

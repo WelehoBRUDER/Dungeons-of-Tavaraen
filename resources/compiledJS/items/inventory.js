@@ -1,7 +1,6 @@
 "use strict";
-var _a, _b, _c;
-(_b = (_a = document.querySelector(".playerInventory")) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".slot")) === null || _b === void 0 ? void 0 : _b.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
-(_c = document.querySelector(".playerInventory")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", e => removeContextMenu(e));
+document.querySelector(".playerInventory")?.querySelectorAll(".slot")?.forEach(slot => slot.addEventListener("mousedown", e => player.unequip(e, slot.classList[0].toString())));
+document.querySelector(".playerInventory")?.addEventListener("click", e => removeContextMenu(e));
 let invScroll = 0;
 let sellingScroll = 0;
 function renderInventory() {
@@ -90,8 +89,8 @@ function createItems(inventory, context = "PLAYER_INVENTORY", chest = null, rese
     itemsList.addEventListener("click", e => removeContextMenu(e));
     const items = [...inventory];
     items.forEach((item) => {
-        if (context == "UPGRADE" && (itemToMatch === null || itemToMatch === void 0 ? void 0 : itemToMatch.id)) {
-            if (item.id !== (itemToMatch === null || itemToMatch === void 0 ? void 0 : itemToMatch.id) || item.level !== (itemToMatch === null || itemToMatch === void 0 ? void 0 : itemToMatch.level))
+        if (context == "UPGRADE" && itemToMatch?.id) {
+            if (item.id !== itemToMatch?.id || item.level !== itemToMatch?.level)
                 return;
         }
         ;
@@ -194,11 +193,10 @@ function sellItem(e, itm) {
     addItemToSelling(itm);
 }
 function clickItem(Event, item, itemObject, context = "PLAYER_INVENTORY", chest = null, dataIndex = -1) {
-    var _a, _b;
     if (item.id == "A0_error")
         return;
     contextMenu.textContent = "";
-    (_b = (_a = document.querySelector(".itemSelected")) === null || _a === void 0 ? void 0 : _a.classList) === null || _b === void 0 ? void 0 : _b.remove("itemSelected");
+    document.querySelector(".itemSelected")?.classList?.remove("itemSelected");
     if (Event.shiftKey)
         return;
     if (context != "PLAYER_EQUIPMENT")
@@ -232,10 +230,9 @@ function fastDrop(Event, itm) {
     }
 }
 function removeContextMenu(Event = null) {
-    var _a, _b;
     let target = Event.target;
     if (target.className.includes("itemList") || target.className.includes("playerInventory")) {
-        (_b = (_a = document.querySelector(".itemSelected")) === null || _a === void 0 ? void 0 : _a.classList) === null || _b === void 0 ? void 0 : _b.remove("itemSelected");
+        document.querySelector(".itemSelected")?.classList?.remove("itemSelected");
         contextMenu.textContent = "";
     }
 }

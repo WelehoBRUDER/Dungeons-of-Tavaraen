@@ -7,27 +7,33 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   if (distanceOnly) {
     let newDistance = distance;
     /* What the fck does this do? */
-    if ((Math.abs(start.x - end.x) == Math.abs(start.y - end.y)) && distance < 3) newDistance = Math.round(newDistance / 2);
+    if (Math.abs(start.x - end.x) == Math.abs(start.y - end.y) && distance < 3) newDistance = Math.round(newDistance / 2);
     return newDistance;
   }
   /* If the goal is out of bounds cancel the pathfinding */
   if (end.x < 0 || end.x > maps[currentMap].base[0].length - 1 || end.y < 0 || end.y > maps[currentMap].base.length - 1) return;
   /* Initialize an empty map for testing */
-  var fieldMap: Array<number[]>;
+  let fieldMap: Array<number[]>;
   /* Decide which static map should be used */
   if (canFly) fieldMap = JSON.parse(JSON.stringify(staticMap_flying));
   else fieldMap = JSON.parse(JSON.stringify(staticMap_normal));
   /* If we're not generating for the player then add summons as obstacles */
   if (start.x !== player.cords.x && start.y !== player.cords.y) {
     fieldMap[player.cords.y][player.cords.x] = 1;
-    combatSummons.forEach(summon => {
+    combatSummons.forEach((summon) => {
       if (summon.cords.x !== start.x && summon.cords.y !== start.y) {
         fieldMap[summon.cords.y][summon.cords.x] = 1;
       }
     });
   }
   /* Add enemies as obstacles */
-  maps[currentMap].enemies.forEach((enemy: any) => { if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) { { fieldMap[enemy.cords.y][enemy.cords.x] = 1; }; } });
+  maps[currentMap].enemies.forEach((enemy: any) => {
+    if (!(start.x == enemy.cords.x && start.y == enemy.cords.y)) {
+      {
+        fieldMap[enemy.cords.y][enemy.cords.x] = 1;
+      }
+    }
+  });
   NPCcharacters.forEach((npc: Npc) => {
     if (npc.currentMap == currentMap) {
       fieldMap[npc.currentCords.y][npc.currentCords.x] = 1;
@@ -92,7 +98,7 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
   /* This will be used to fill the final array */
   const data = {
     x: start.x,
-    y: start.y
+    y: start.y,
   };
   /* Cors array is filled with the siksakki loop */
   const cords: Array<any> = [];
@@ -105,16 +111,13 @@ function generatePath(start: tileObject, end: tileObject, canFly: boolean, dista
     else if (fieldMap[data.y - 1]?.[data.x - 1] == v) {
       data.y -= 1;
       data.x -= 1;
-    }
-    else if (fieldMap[data.y - 1]?.[data.x + 1] == v) {
+    } else if (fieldMap[data.y - 1]?.[data.x + 1] == v) {
       data.y -= 1;
       data.x += 1;
-    }
-    else if (fieldMap[data.y + 1]?.[data.x - 1] == v) {
+    } else if (fieldMap[data.y + 1]?.[data.x - 1] == v) {
       data.y += 1;
       data.x -= 1;
-    }
-    else if (fieldMap[data.y + 1]?.[data.x + 1] == v) {
+    } else if (fieldMap[data.y + 1]?.[data.x + 1] == v) {
       data.y += 1;
       data.x += 1;
     }
@@ -130,8 +133,7 @@ function arrowHitsTarget(start: tileObject, end: tileObject, isSummon: boolean =
   let path: any;
   if (useExistingPath) {
     path = useExistingPath;
-  }
-  else {
+  } else {
     path = generateArrowPath(start, end);
   }
   let hits = true;
@@ -160,40 +162,51 @@ function generateArrowPath(start: tileObject, end: tileObject, distanceOnly: boo
   const ratioX = distX / distY;
   const negativeY = start.y - end.y > 0;
   const negativeX = start.x - end.x > 0;
-  const ratioY2 = ratioY == Math.max(ratioY, ratioX) ? negativeY ? -1 : 1 : negativeY ? ratioY * -1 : ratioY;
-  const ratioX2 = ratioX == Math.max(ratioY, ratioX) ? negativeX ? -1 : 1 : negativeX ? ratioX * -1 : ratioX;
+  // Get the ratio of the X and Y distances
+  const ratioY2 = ratioY == Math.max(ratioY, ratioX) ? (negativeY ? -1 : 1) : negativeY ? ratioY * -1 : ratioY;
+  const ratioX2 = ratioX == Math.max(ratioY, ratioX) ? (negativeX ? -1 : 1) : negativeX ? ratioX * -1 : ratioX;
   const arrow = {
     x: start.x,
     y: start.y,
     blocked: false,
     enemy: false,
     player: false,
-    summon: false
+    summon: false,
   };
   const finalPath: Array<any> = [{ ...arrow }];
-  var rounderX = negativeX ? Math.ceil : Math.floor;
-  var rounderY = negativeY ? Math.ceil : Math.floor;
+  let rounderX = negativeX ? Math.ceil : Math.floor;
+  let rounderY = negativeY ? Math.ceil : Math.floor;
   for (let i = 0; i < 100; i++) {
     arrow.x += ratioX2;
     arrow.y += ratioY2;
-    var tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
+    let tile = { x: rounderX(arrow.x), y: rounderY(arrow.y) };
     if (tile.y > maps[currentMap].base.length || tile.y < 0) continue;
     if (tile.x > maps[currentMap].base[0].length || tile.x < 0) continue;
-    if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall) arrow.blocked = true;
+    if (tiles[maps[currentMap].base[tile.y][tile.x]].isWall || clutters[maps[currentMap].clutter[tile.y][tile.x]].isWall)
+      arrow.blocked = true;
     maps[currentMap].enemies.forEach((enemy: any) => {
       if (enemy.cords.x == start.x && enemy.cords.y == start.y) return;
-      if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) { arrow.enemy = true; arrow.blocked = true; };
+      if (enemy.cords.x == tile.x && enemy.cords.y == tile.y) {
+        arrow.enemy = true;
+        arrow.blocked = true;
+      }
     });
-    combatSummons.forEach(summon => {
+    combatSummons.forEach((summon) => {
       if (summon.cords.x == start.x && summon.cords.y == start.y) return;
-      if (summon.cords.x == tile.x && summon.cords.y == tile.y) { arrow.summon = true; arrow.blocked = true; };
+      if (summon.cords.x == tile.x && summon.cords.y == tile.y) {
+        arrow.summon = true;
+        arrow.blocked = true;
+      }
     });
-    if (player.cords.x == tile.x && player.cords.y == tile.y) { arrow.player = true; arrow.blocked = true; }
+    if (player.cords.x == tile.x && player.cords.y == tile.y) {
+      arrow.player = true;
+      arrow.blocked = true;
+    }
     finalPath.push({ ...arrow });
     arrow.enemy = false;
     if (rounderX(arrow.x) == end.x && rounderY(arrow.y) == end.y) break;
   }
-  return finalPath.map(e => {
+  return finalPath.map((e) => {
     e.x = rounderX(e.x);
     e.y = rounderY(e.y);
     return e;

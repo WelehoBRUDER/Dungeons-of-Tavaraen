@@ -216,10 +216,11 @@ function itemTT(item: any) {
     text += `<i>${icons.resistance}<i><f>18px<f>${lang["required_stats"]}: <f>17px<f>(${txt}<c>white<c>)\n§`;
   }
   if (Object.values(item?.stats)?.length > 0) {
-    text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n`;
+    text += `<i>${icons.resistance}<i><f>18px<f>${lang["status_effects"]}:\n§`;
     Object.entries(item.stats).forEach((eff) => {
-      if (eff[1] !== 0) text += effectSyntax(eff, true);
+      if (eff[1] !== 0) text += " " + effectSyntax(eff, true);
     });
+    text += "§";
   }
   if (Object.values(item.commands)?.length > 0) {
     Object.entries(item.commands).forEach((eff: any) => (text += `${commandSyntax(eff[0], eff[1])}\n`));
@@ -228,7 +229,9 @@ function itemTT(item: any) {
     text += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
     item.statusesUser.forEach((status: string) => {
       text += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-      text += statTT(new statEffect(statusEffects[status], item.modifiers), true);
+      const statEff = new statEffect(statusEffects[status]);
+      statEff.init(item.modifiers);
+      text += statTT(statEff, true);
     });
   }
   if (item.range > 0) text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;

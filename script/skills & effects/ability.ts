@@ -120,7 +120,8 @@ const possible_modifiers = [
 ];
 
 class Ability {
-  [id: string]: any;
+  [key: string]: any;
+  id: string;
   name: string;
   mana_cost: number;
   health_cost?: number;

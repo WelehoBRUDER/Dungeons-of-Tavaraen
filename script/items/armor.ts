@@ -55,8 +55,7 @@ class Armor extends Item {
         const data = randomStat;
         if ((Math.random() > 0.5 && !data.disablePercent) || data.disableValue) {
           this.rolledStats.push({ stat: key + "P", value: Math.floor(helper.random(data.Percent.length - 1, 0)) });
-        }
-        else if (!data.disableValue) {
+        } else if (!data.disableValue) {
           this.rolledStats.push({ stat: key + "V", value: Math.floor(helper.random(data.Value.length - 1, 0)) });
         }
       }
@@ -67,17 +66,15 @@ class Armor extends Item {
           let val = equipmentStatRandomization["armor"][stat.armor]["Value"][stat.value];
           if (!this.armor[stat.armor]) this.armor[stat.armor] = Math.floor(val * gradeStatMultis[this.grade]);
           else this.armor[stat.armor] += Math.floor(val * gradeStatMultis[this.grade]);
-        }
-        else {
+        } else {
           let val = equipmentStatRandomization["side"][stat.stat.substring(0, stat.stat.length - 1)];
           val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
           if (!this.stats[stat.stat]) this.stats[stat.stat] = Math.floor(val * gradeStatMultis[this.grade]);
           else this.stats[stat.stat] += Math.floor(val * gradeStatMultis[this.grade]);
         }
       });
-    }
-    catch (err) {
-      if (DEVMODE) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
+    } catch (err) {
+      if (DEVTOOLS.ENABLED) displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
     }
 
     if (this.rolledStats.length > 0) {
@@ -110,7 +107,10 @@ class Armor extends Item {
       if (this.level > 0) this.name += ` +${this.level}`;
     }
 
-    if (setPrice > 0) this.fullPrice = () => { return this.price; };
+    if (setPrice > 0)
+      this.fullPrice = () => {
+        return this.price;
+      };
     else {
       this.fullPrice = () => {
         let bonus = 0;

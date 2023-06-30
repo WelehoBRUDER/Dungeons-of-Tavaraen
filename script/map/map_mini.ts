@@ -1,4 +1,3 @@
-
 function renderMinimap(map: mapObject) {
   const miniSpriteSize = 8;
   const spriteSize = miniSpriteSize;
@@ -9,8 +8,7 @@ function renderMinimap(map: mapObject) {
   if (!settings.toggle_minimap) {
     minimapContainer.style.display = "none";
     return;
-  }
-  else {
+  } else {
     minimapContainer.style.display = "block";
   }
   for (let y = 0; y < map.base.length; y++) {
@@ -20,32 +18,51 @@ function renderMinimap(map: mapObject) {
       const clutterId = map.clutter?.[y]?.[x];
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        minimapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        minimapCtx.drawImage(
+          textureAtlas,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          x * miniSpriteSize,
+          y * miniSpriteSize,
+          miniSpriteSize + 1,
+          miniSpriteSize + 1
+        );
       }
       if (clutterSprite) {
-        minimapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        minimapCtx.drawImage(
+          textureAtlas,
+          clutterSprite.x,
+          clutterSprite.y,
+          128,
+          128,
+          x * miniSpriteSize,
+          y * miniSpriteSize,
+          miniSpriteSize + 1,
+          miniSpriteSize + 1
+        );
       }
     }
   }
   map.shrines.forEach((checkpoint: any) => {
     const shrine = document.querySelector<HTMLImageElement>(".sprites .shrineTile");
-    var tileX = checkpoint.cords.x * spriteSize;
-    var tileY = checkpoint.cords.y * spriteSize;
+    let tileX = checkpoint.cords.x * spriteSize;
+    let tileY = checkpoint.cords.y * spriteSize;
     minimapCtx?.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
-
   });
   map.messages.forEach((msg: any) => {
     const message = document.querySelector<HTMLImageElement>(".messageTile");
-    var tileX = msg.cords.x * spriteSize;
-    var tileY = msg.cords.y * spriteSize;
+    let tileX = msg.cords.x * spriteSize;
+    let tileY = msg.cords.y * spriteSize;
     minimapCtx?.drawImage(message, tileX, tileY, spriteSize, spriteSize);
   });
   /* Render Characters */
   NPCcharacters.forEach((npc: Npc) => {
     if (npc.currentMap == currentMap) {
       const charSprite = document.querySelector<HTMLImageElement>(`.sprites .${npc.sprite}`);
-      var tileX = npc.currentCords.x * spriteSize;
-      var tileY = npc.currentCords.y * spriteSize;
+      let tileX = npc.currentCords.x * spriteSize;
+      let tileY = npc.currentCords.y * spriteSize;
       if (charSprite) {
         minimapCtx?.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
       }
@@ -68,8 +85,7 @@ function moveMinimap() {
   if (!settings.toggle_minimap) {
     minimapContainer.style.display = "none";
     return;
-  }
-  else {
+  } else {
     minimapContainer.style.display = "block";
   }
   const map = maps[currentMap];
@@ -79,15 +95,15 @@ function moveMinimap() {
   //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
   //   if (!lootedChest) {
   //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-  //     var tileX = chest.cords.x * spriteSize;
-  //     var tileY = chest.cords.y * spriteSize;
+  //     let tileX = chest.cords.x * spriteSize;
+  //     let tileY = chest.cords.y * spriteSize;
   //     minimapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
   //   }
   // });
-  minimapCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-  minimapCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
-  minimapUpdateCanvas.style.left = `${player.cords.x * -8 + 172 * settings["ui_scale"] / 100}px`;
-  minimapUpdateCanvas.style.top = `${player.cords.y * -8 + 112 * settings["ui_scale"] / 100}px`;
+  minimapCanvas.style.left = `${player.cords.x * -8 + (172 * settings["ui_scale"]) / 100}px`;
+  minimapCanvas.style.top = `${player.cords.y * -8 + (112 * settings["ui_scale"]) / 100}px`;
+  minimapUpdateCanvas.style.left = `${player.cords.x * -8 + (172 * settings["ui_scale"]) / 100}px`;
+  minimapUpdateCanvas.style.top = `${player.cords.y * -8 + (112 * settings["ui_scale"]) / 100}px`;
 }
 
 function renderAreaMap(map: mapObject) {
@@ -104,32 +120,51 @@ function renderAreaMap(map: mapObject) {
       const clutterId = map.clutter?.[y]?.[x];
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        areaMapCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        areaMapCtx.drawImage(
+          textureAtlas,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          x * miniSpriteSize,
+          y * miniSpriteSize,
+          miniSpriteSize + 1,
+          miniSpriteSize + 1
+        );
       }
       if (clutterSprite) {
-        areaMapCtx.drawImage(textureAtlas, clutterSprite.x, clutterSprite.y, 128, 128, x * miniSpriteSize, y * miniSpriteSize, miniSpriteSize + 1, miniSpriteSize + 1);
+        areaMapCtx.drawImage(
+          textureAtlas,
+          clutterSprite.x,
+          clutterSprite.y,
+          128,
+          128,
+          x * miniSpriteSize,
+          y * miniSpriteSize,
+          miniSpriteSize + 1,
+          miniSpriteSize + 1
+        );
       }
     }
   }
   map.shrines.forEach((checkpoint: any) => {
     const shrine = document.querySelector<HTMLImageElement>(".sprites .shrineTile");
-    var tileX = checkpoint.cords.x * spriteSize;
-    var tileY = checkpoint.cords.y * spriteSize;
+    let tileX = checkpoint.cords.x * spriteSize;
+    let tileY = checkpoint.cords.y * spriteSize;
     areaMapCtx?.drawImage(shrine, tileX, tileY, spriteSize, spriteSize);
-
   });
   map.messages.forEach((msg: any) => {
     const message = document.querySelector<HTMLImageElement>(".messageTile");
-    var tileX = msg.cords.x * spriteSize;
-    var tileY = msg.cords.y * spriteSize;
+    let tileX = msg.cords.x * spriteSize;
+    let tileY = msg.cords.y * spriteSize;
     areaMapCtx?.drawImage(message, tileX, tileY, spriteSize, spriteSize);
   });
   /* Render Characters */
   NPCcharacters.forEach((npc: Npc) => {
     if (npc.currentMap == currentMap) {
       const charSprite = document.querySelector<HTMLImageElement>(`.sprites .${npc.sprite}`);
-      var tileX = npc.currentCords.x * spriteSize;
-      var tileY = npc.currentCords.y * spriteSize;
+      let tileX = npc.currentCords.x * spriteSize;
+      let tileY = npc.currentCords.y * spriteSize;
       if (charSprite) {
         areaMapCtx?.drawImage(charSprite, tileX, tileY, spriteSize, spriteSize);
       }
@@ -142,8 +177,7 @@ function moveAreaMap() {
   // if (isCanvasBlank(areaMapCanvas)) renderAreaMap(maps[currentMap]);
   if (state.areaMapOpen) {
     areaMapContainer.style.display = "block";
-  }
-  else {
+  } else {
     areaMapContainer.style.display = "none";
   }
   const spriteSize = 11.97;
@@ -152,15 +186,15 @@ function moveAreaMap() {
   //   const lootedChest = lootedChests.find(trs => trs.cords.x == chest.cords.x && trs.cords.y == chest.cords.y && trs.map == chest.map);
   //   if (!lootedChest) {
   //     const chestSprite = document.querySelector<HTMLImageElement>(`.sprites .${chest.sprite}`);
-  //     var tileX = chest.cords.x * spriteSize;
-  //     var tileY = chest.cords.y * spriteSize;
+  //     let tileX = chest.cords.x * spriteSize;
+  //     let tileY = chest.cords.y * spriteSize;
   //     areaMapUpdateCtx?.drawImage(chestSprite, tileX, tileY, spriteSize, spriteSize);
   //   }
   // });
-  areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
-  areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
-  areaMapUpdateCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * .6 / 2)}px`;
-  areaMapUpdateCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8 / 2)}px`;
+  areaMapCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * 0.6) / 2}px`;
+  areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * 0.8) / 2}px`;
+  areaMapUpdateCanvas.style.left = `${player.cords.x * -12 + (window.innerWidth * 0.6) / 2}px`;
+  areaMapUpdateCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * 0.8) / 2}px`;
   // if (player.cords.y >= maps[currentMap].base.length - displayLimit.heightLimit) {
   //   areaMapCanvas.style.top = `${player.cords.y * -12 + (window.innerHeight * .8) * settings["ui_scale"] / 100}px`;
   // }

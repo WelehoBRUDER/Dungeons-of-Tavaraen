@@ -56,8 +56,7 @@ let helper = {
           usesRemaining: itm.usesRemaining,
           equippedSlot: itm.equippedSlot,
         };
-      else if (itm.level)
-        trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
+      else if (itm.level) trimmed.inventory[index] = { id: itm.id, type: itm.type, level: itm.level, rolledStats: itm.rolledStats };
       else trimmed.inventory[index] = { id: itm.id, type: itm.type, rolledStats: itm.rolledStats };
     });
     trimmed.abilities.forEach((abi: any, index: number) => {

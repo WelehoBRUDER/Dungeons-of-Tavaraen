@@ -5,6 +5,9 @@ class gameSettings {
   randomize_items: boolean;
   draw_wall_outlines: boolean;
   show_fps_counter: boolean;
+  load_mods: boolean;
+  enable_developer_console: boolean;
+  hotkey_developer_console: string;
   hotkey_inv: string;
   hotkey_char: string;
   hotkey_perk: string;
@@ -27,33 +30,36 @@ class gameSettings {
   hotkey_codex: string;
   language: string;
   constructor(base: gameSettings) {
-    this.log_enemy_movement = base.log_enemy_movement || false;
-    this.toggle_minimap = base.toggle_minimap || true;
-    this.hide_helmet = base.hide_helmet || false;
-    this.randomize_items = base.randomize_items || false;
-    this.draw_wall_outlines = base.draw_wall_outlines || true;
-    this.show_fps_counter = base.show_fps_counter || true;
-    this.hotkey_inv = base.hotkey_inv || "i";
-    this.hotkey_char = base.hotkey_char || "c";
-    this.hotkey_perk = base.hotkey_perk || "p";
-    this.hotkey_ranged = base.hotkey_ranged || "g";
-    this.hotkey_area_map = base.hotkey_area_map || "m";
-    this.ui_scale = base.ui_scale || 100;
-    this.map_offset_x = base.map_offset_x || 0;
-    this.map_offset_y = base.map_offset_x || 0;
-    this.hotkey_move_up = base.hotkey_move_up || "w";
-    this.hotkey_move_down = base.hotkey_move_down || "s";
-    this.hotkey_move_left = base.hotkey_move_left || "a";
-    this.hotkey_move_right = base.hotkey_move_right || "d";
-    this.hotkey_move_right_up = base.hotkey_move_right_up || "PageUp";
-    this.hotkey_move_right_down = base.hotkey_move_right_down || "PageDown";
-    this.hotkey_move_left_up = base.hotkey_move_left_up || "Home";
-    this.hotkey_move_left_down = base.hotkey_move_left_down || "End";
-    this.hotkey_open_world_messages = base.hotkey_open_world_messages || "Enter";
-    this.hotkey_interact = base.hotkey_interact || " ";
-    this.hotkey_journal = base.hotkey_journal || "j";
-    this.hotkey_codex = base.hotkey_codex || "y";
-    this.language = base.language || "english";
+    this.log_enemy_movement = base.log_enemy_movement ?? false;
+    this.toggle_minimap = base.toggle_minimap ?? true;
+    this.hide_helmet = base.hide_helmet ?? false;
+    this.randomize_items = base.randomize_items ?? false;
+    this.draw_wall_outlines = base.draw_wall_outlines ?? true;
+    this.show_fps_counter = base.show_fps_counter ?? true;
+    this.load_mods = base.load_mods ?? true;
+    this.enable_developer_console = base.enable_developer_console ?? false;
+    this.hotkey_developer_console = base.hotkey_developer_console ?? "§";
+    this.hotkey_inv = base.hotkey_inv ?? "i";
+    this.hotkey_char = base.hotkey_char ?? "c";
+    this.hotkey_perk = base.hotkey_perk ?? "p";
+    this.hotkey_ranged = base.hotkey_ranged ?? "g";
+    this.hotkey_area_map = base.hotkey_area_map ?? "m";
+    this.ui_scale = base.ui_scale ?? 100;
+    this.map_offset_x = base.map_offset_x ?? 0;
+    this.map_offset_y = base.map_offset_x ?? 0;
+    this.hotkey_move_up = base.hotkey_move_up ?? "w";
+    this.hotkey_move_down = base.hotkey_move_down ?? "s";
+    this.hotkey_move_left = base.hotkey_move_left ?? "a";
+    this.hotkey_move_right = base.hotkey_move_right ?? "d";
+    this.hotkey_move_right_up = base.hotkey_move_right_up ?? "PageUp";
+    this.hotkey_move_right_down = base.hotkey_move_right_down ?? "PageDown";
+    this.hotkey_move_left_up = base.hotkey_move_left_up ?? "Home";
+    this.hotkey_move_left_down = base.hotkey_move_left_down ?? "End";
+    this.hotkey_open_world_messages = base.hotkey_open_world_messages ?? "Enter";
+    this.hotkey_interact = base.hotkey_interact ?? " ";
+    this.hotkey_journal = base.hotkey_journal ?? "j";
+    this.hotkey_codex = base.hotkey_codex ?? "y";
+    this.language = base.language ?? "english";
   }
 }
 
@@ -64,6 +70,9 @@ let settings = new gameSettings({
   randomize_items: true,
   draw_wall_outlines: true,
   show_fps_counter: true,
+  load_mods: true,
+  enable_developer_console: false,
+  hotkey_developer_console: "§",
   hotkey_inv: "i",
   hotkey_char: "c",
   hotkey_perk: "p",
@@ -84,7 +93,7 @@ let settings = new gameSettings({
   hotkey_open_world_messages: "Enter",
   hotkey_journal: "j",
   hotkey_codex: "y",
-  language: "english"
+  language: "english",
 });
 
 const state = {

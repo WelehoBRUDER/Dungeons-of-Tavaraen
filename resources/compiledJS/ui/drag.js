@@ -1,7 +1,7 @@
 "use strict";
 const originalPos = {
     x: 0,
-    y: 0
+    y: 0,
 };
 let dragging = false;
 let heldDownTimer = null;
@@ -13,7 +13,7 @@ function calcElementArea(element) {
     return { xMin: posX, yMin: posY, xMax: posX + width, yMax: posY + height };
 }
 function dragElem(elem, snapContainers, updateFunction = null) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     elem.onmousedown = (e) => {
         clearTimeout(heldDownTimer);
         heldDownTimer = setTimeout(() => dragMouseDown(e), 200);
@@ -49,10 +49,7 @@ function dragElem(elem, snapContainers, updateFunction = null) {
         for (const container of snapContainers) {
             Array.from(container.childNodes).some((_area, index) => {
                 let area = calcElementArea(_area);
-                if (e.x >= area.xMin &&
-                    e.x <= area.xMax &&
-                    e.y >= area.yMin &&
-                    e.y <= area.yMax) {
+                if (e.x >= area.xMin && e.x <= area.xMax && e.y >= area.yMin && e.y <= area.yMax) {
                     if (elem.classList.contains("ability")) {
                         swapAbility(+elem.classList[1], index);
                     }

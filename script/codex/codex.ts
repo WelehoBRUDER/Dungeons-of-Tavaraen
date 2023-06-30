@@ -37,7 +37,7 @@ function loopCodex(entry: any) {
   const titleText = document.createElement("p");
   const titleArrow = document.createElement("span");
   const content = document.createElement("div");
-  const maxHeight = 780 * settings.ui_scale / 100; // Max height of the content container
+  const maxHeight = (780 * settings.ui_scale) / 100; // Max height of the content container
   const entryTitle = entry.title.replaceAll(" ", "_");
   fullEntry.classList.add("codex-entry");
   fullEntry.classList.add(entryTitle);
@@ -69,7 +69,7 @@ function loopCodex(entry: any) {
       content.style.height = "0px";
       content.style.transition = `${transitionTime}ms`;
       titleArrow.style.transform = "rotate(90deg)";
-      animator = setTimeout(() => content.style.height = `${totalHeight}px`, 0);
+      animator = setTimeout(() => (content.style.height = `${totalHeight}px`), 0);
       animator = setTimeout(() => {
         content.style.transition = "";
         content.style.height = `${height}px`;
@@ -88,7 +88,7 @@ function loopCodex(entry: any) {
           parent.querySelector<HTMLDivElement>(".entry-content").style.height = `auto`;
         }
       }
-      animator = setTimeout(() => content.style.height = "0px", 0);
+      animator = setTimeout(() => (content.style.height = "0px"), 0);
       animator = setTimeout(() => {
         content.style.transition = "";
       }, transitionTime);
@@ -98,8 +98,7 @@ function loopCodex(entry: any) {
   fullEntry.append(title, content);
   if (entry.parent === "NONE") {
     listContainer.append(fullEntry);
-  }
-  else {
+  } else {
     listContainer.querySelector(`.${entry?.parent?.replaceAll(" ", "_")} .entry-content`).append(fullEntry);
   }
   if (entry.import_from_array) {
@@ -107,8 +106,7 @@ function loopCodex(entry: any) {
       if (_entry.id.includes("error") || _entry.id == "attack") return;
       createCodexEntry(entry, _entry, entry.needs_encounter, content, index);
     });
-  }
-  else {
+  } else {
     entry?.content?.forEach((content: any) => {
       loopCodex(content);
     });
@@ -124,7 +122,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   let displayName = lang[entry.id + "_name"];
   if (!displayName) displayName = lang[entry.id];
   if (!displayName) displayName = entry.name ?? entry.title;
-  if (DEVMODE) playerHasEntry = true;
+  if (DEVTOOLS.ENABLED) playerHasEntry = true;
   if (codexEntry.import_from_array == "items" || codexEntry.import_from_array == "abilities") index--;
   entryText.textContent = `${index + 1}. ` + (playerHasEntry ? displayName : "???");
   entryElement.classList.add("entry-item");
@@ -133,12 +131,11 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (!playerHasEntry) {
     entryElement.classList.add("noEntry");
     entryText.style.left = `0px`;
-  }
-  else if (!entry.no_img) {
+  } else if (!entry.no_img) {
     const icon = document.createElement("img");
     icon.src = entry.img ?? entry.icon;
-    entryText.style.left = `-${15 * settings.ui_scale / 100}px`;
-    icon.style.left = `-${15 * settings.ui_scale / 100}px`;
+    entryText.style.left = `-${(15 * settings.ui_scale) / 100}px`;
+    icon.style.left = `-${(15 * settings.ui_scale) / 100}px`;
     entryElement.append(icon);
   }
   entryElement.onclick = () => {
@@ -147,7 +144,7 @@ function createCodexEntry(codexEntry: any, entry: any, needsEncounter: boolean, 
   if (codexHistory["displayed"]?.id === entry.id) {
     entryElement.classList.add("displayed");
   }
-  entryElement.style.maxHeight = `${30 * settings.ui_scale / 100}px`;
+  entryElement.style.maxHeight = `${(30 * settings.ui_scale) / 100}px`;
   entryElement.append(entryText);
   const hoverText = playerHasEntry ? displayName : lang["no_entry"];
   tooltip(entryElement, hoverText);
@@ -164,25 +161,22 @@ function clickListEntry(entry: HTMLDivElement) {
   let object: any;
   try {
     object = { ...eval(category)[id] };
+  } catch (err) {
+    if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line codex:177`);
   }
-  catch (err) { if (DEVMODE) displayText(`<c>red<c>${err} at line codex:177`); }
   codexHistory["displayed"] = { id: id, category: category, object: { ...object } };
   handleDisplayEntry(category, object);
-
 }
 
 function handleDisplayEntry(category: string, object: any) {
   contentContainer.innerHTML = "";
   if (category === "enemies" || category === "summons") {
     createEnemyInfo(object);
-  }
-  else if (category === "items") {
+  } else if (category === "items") {
     createItemInfo(object);
-  }
-  else if (category.includes("perks")) {
+  } else if (category.includes("perks")) {
     createPerkInfo(object);
-  }
-  else if (category === "abilities") {
+  } else if (category === "abilities") {
     createAbilityInfo(object);
   }
   // else if (category === "npcs") {
@@ -200,7 +194,7 @@ function handleDisplayEntry(category: string, object: any) {
 }
 
 function openCodexToPage(path: Array<string>, displayed: any) {
-  path.forEach(step => {
+  path.forEach((step) => {
     codexHistory[step] = true;
   });
   codexHistory["displayed"] = displayed;

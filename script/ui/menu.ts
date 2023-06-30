@@ -1,4 +1,8 @@
 function handleEscape() {
+  if (devConsole.open) {
+    devConsole.open = false;
+    consoleElement.style.display = "none";
+  }
   if (state.perkOpen) {
     closeLeveling();
     state.perkOpen = false;
@@ -29,7 +33,7 @@ function handleEscape() {
     cancelTransaction();
   } else if (state.journalOpen) {
     closePlayerQuests();
-  } else if (state.keyxOpen) {
+  } else if (state.codexOpen) {
     closeCodex();
   } else if (state.smithOpen) {
     closeSmithingWindow();
@@ -118,7 +122,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
       const frame = menu.querySelector<HTMLDivElement>(`.${button.id}`);
       frame.remove();
     } catch (err) {
-      if (DEVMODE) displayText(`<c>red<c>${err} at line menu:398`);
+      if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line menu:398`);
     }
   }
   if (escape) handleEscape();
@@ -270,7 +274,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             try {
               child.classList.remove("selectedLang");
             } catch (err) {
-              if (DEVMODE) displayText(`<c>red<c>${err} at line menu:279`);
+              if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line menu:279`);
             }
           });
           settings.language = language;
@@ -311,7 +315,7 @@ async function gotoMainMenu(init: boolean = false) {
     if (button.action) {
       frame.addEventListener("click", () => button.action());
     }
-    if (button.id.includes("resume") && !DEVMODE && init) frame.classList.add("greyedOut");
+    if (button.id.includes("resume") && !DEVTOOLS.ENABLED && init) frame.classList.add("greyedOut");
     mainMenuButtons.append(frame);
   }
 }
@@ -524,4 +528,33 @@ function LoadSettings(name: string, settings: any) {
   tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
   player.updateAbilities();
   gotoSettingsMenu(true);
+}
+
+interface multiButtonPrompt_button {
+  text: string;
+  class: string;
+  callback: () => void;
+}
+
+const multiButtonPromptWindow = document.querySelector<HTMLDivElement>(".multiButtonPrompt");
+const multiButtonPromptText = multiButtonPromptWindow.querySelector<HTMLDivElement>(".prompt-text");
+const multiButtonPromptButtons = multiButtonPromptWindow.querySelector<HTMLDivElement>(".prompt-buttons");
+function multiButtonPrompt(text: string, buttons: multiButtonPrompt_button[]) {
+  multiButtonPromptWindow.style.transform = "scale(1)";
+  const translatedText = lang[text] || text;
+  multiButtonPromptText.innerHTML = "";
+  multiButtonPromptButtons.innerHTML = "";
+  multiButtonPromptText.append(textSyntax(translatedText));
+  for (const button of buttons) {
+    const buttonElement = document.createElement("div");
+    buttonElement.textContent = button.text;
+    buttonElement.classList.add(button.class);
+    buttonElement.addEventListener("click", button.callback);
+    multiButtonPromptButtons.appendChild(buttonElement);
+  }
+}
+function closeMultiButtonPrompt() {
+  multiButtonPromptWindow.style.transform = "scale(0)";
+  multiButtonPromptText.textContent = "";
+  multiButtonPromptButtons.innerHTML = "";
 }

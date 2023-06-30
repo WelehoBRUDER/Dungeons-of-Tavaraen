@@ -12,6 +12,17 @@
  @param {Function} onDestroy - The function to be called when the projectile either hits a target or reaches its destination.
  */
 class Projectile {
+    texture; // The texture of the projectile.
+    target; // Target tile
+    cords; // Current tile the projectile is on.
+    ability; // The ability that created the projectile.
+    path; // Path of the projectile.
+    originIsEnemy = false; // Whether the origin of the projectile is an enemy or not.
+    speed; // Speed of the projectile in tiles per round.
+    shooter; // The character that shot the projectile.
+    index; // Index of the projectile in the currentProjectiles array.
+    onHit; // Function to call when the projectile hits a target.
+    onDestroy; // Function to call when the projectile is destroyed.
     destroy() {
         if (this.onDestroy) {
             this.onDestroy();
@@ -69,7 +80,6 @@ class Projectile {
         }
     }
     constructor(id, texture, target, cords, path, originIsEnemy, ability, shooter, speed, index, onHit, onDestroy) {
-        this.originIsEnemy = false; // Whether the origin of the projectile is an enemy or not.
         this.id = id;
         this.texture = texture;
         this.target = target;
@@ -85,12 +95,11 @@ class Projectile {
     }
 }
 function createNewProjectile(shooter, projectileTemplate, target, ability, onHit, onDestroy) {
-    var _a, _b;
     let { id, texture, speed } = projectileTemplate;
     let isEnemy = shooter.isFoe ? true : false;
     speed += shooter.allModifiers.projectileSpeed || 0;
-    speed += (_a = shooter.allModifiers[`${ability.id}_projectileSpeedV`]) !== null && _a !== void 0 ? _a : 0;
-    speed *= (_b = shooter.allModifiers[`${ability.id}_projectileSpeedP`]) !== null && _b !== void 0 ? _b : 1;
+    speed += shooter.allModifiers[`${ability.id}_projectileSpeedV`] ?? 0;
+    speed *= shooter.allModifiers[`${ability.id}_projectileSpeedP`] ?? 1;
     speed = Math.round(speed);
     let index = currentProjectiles.length;
     let path = generateArrowPath(shooter.cords, target);

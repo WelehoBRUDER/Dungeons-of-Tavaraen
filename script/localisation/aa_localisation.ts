@@ -37,9 +37,9 @@ const finnish = {
   atk_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["attackSpeed"]}<i>Hyökkäys nopeutesi.\nKun nopeus on yli 100% voit hyökätä useasti yhden vuoron aikana. \nAlle 100% ja et voi hyöätä joillain kierroksilla.`,
   mov_speed_tt: `<css>line-height: 20px<css>Tämä on <i>${icons["movementSpeed"]}<i>Liikkumis nopeutesi. \nYli 100% nopeus antaa sinun liikkua useita ruutuja yhden vuoron aikana. \nAlle 100% hidastaa liikettäsi joillain vuoroilla.`,
 
-  physical_tt: `<i>${icons["physical_armor"]}<i>Fyysinen Panssari nostaa puolustusta fyysisiä iskuja vastaan. \n<i>${icons["slash"]}<i>Viilto, <i>${icons["crush"]}<i>Murskaus ja <i>${icons["pierce"]}<i>Lävistys vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
-  magical_tt: `<i>${icons["magical_armor"]}<i>Maaginen Suojaus nostaa puolustusta maagisia iskuja vastaan. \n<i>${icons["magic"]}<i>Taika, <i>${icons["dark"]}<i>Pimeä ja <i>${icons["divine"]}<i>Pyhä vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
-  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elementaalinen Suojaus nostaa puolustusta elementaalisia iskuja vastaan. \n<i>${icons["fire"]}<i>Tuli, <i>${icons["lightning"]}<i>Sähkö ja <i>${icons["ice"]}<i>Jää vahinko alennettu 0.25% joka tasolla. \nPanssarin maksimi arvo on 300.`,
+  physical_tt: `<i>${icons["physical_armor"]}<i>Fyysinen Panssari nostaa puolustusta fyysisiä iskuja vastaan. \n<i>${icons["slash"]}<i>Viilto, <i>${icons["crush"]}<i>Murskaus ja <i>${icons["pierce"]}<i>Lävistys vahinko. \nVahingon vähennys: <v>(player.getArmorReduction().physical*100).toFixed(1)<v>§%.`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Maaginen Suojaus nostaa puolustusta maagisia iskuja vastaan. \n<i>${icons["magic"]}<i>Taika, <i>${icons["dark"]}<i>Pimeä ja <i>${icons["divine"]}<i>Pyhä vahinko. \nVahingon vähennys: <v>(player.getArmorReduction().magical*100).toFixed(1)<v>§%.`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elementaalinen Suojaus nostaa puolustusta elementaalisia iskuja vastaan. \n<i>${icons["fire"]}<i>Tuli, <i>${icons["lightning"]}<i>Sähkö ja <i>${icons["ice"]}<i>Jää vahinko. \nVahingon vähennys: <v>(player.getArmorReduction().elemental*100).toFixed(1)<v>§%.`,
 
   resistances_tt: "Vahinko tyypin puolustus vähentää saman tyyppistä tulevaa vahinkoa mainitulla prosentilla.",
   stat_resist_tt: `Efektin vastustus laskee sen tekemää vahinkoa mainitulla prosentilla. \n\nSe myös antaa mahdollisuuden kokonaan vastustaa efekti. \n\nKun efekti on täysin vastustettu, se ei tee mitään.`,
@@ -578,6 +578,8 @@ const finnish = {
   magical_name: "Taiallinen",
   adrenaline_name: "Adrenaliini",
   confident_name: "Itsevarma",
+  all_muscle_name: "Pelkkää Lihasta",
+  all_muscle_desc: "Voimat tapissa ja aivot jumissa.",
 
   // Enemy types
   against_type_syntax: " vastaan",
@@ -623,7 +625,10 @@ const finnish = {
   setting_randomize_items: "Satunnaiset tavaroiden statsit",
   setting_draw_wall_outlines: "Piirrä reunat seinäruutuihin",
   setting_show_fps_counter: "Näytä FPS-laskuri",
+  setting_load_mods: "Lataa modit",
+  setting_enable_developer_console: "Kehittäjäkonsoli",
   setting_game_language: "Pelin kieli",
+  setting_hotkey_developer_console: "Avaa kehittäjäkonsoli",
   setting_hotkey_inv: "Avaa inventaario",
   setting_hotkey_char: "Avaa hahmoruutu",
   setting_hotkey_perk: "Avaa kehitysruutu",
@@ -662,6 +667,7 @@ const finnish = {
   save_settings: "Tallenna asetukset",
   save_settings_file: "Tallenna asetukset tiedostoon (lataa .json tiedoston)",
   load_settings_file: "Lataa asetukset tiedostosta (avaa valikon)",
+  load_mods_prompt: "Haluatko käynnistää pelin modien kanssa?\nValitse kansio jossa modit sijaitsevat valikosta.",
 
   // Grades
   common: "Yleinen",
@@ -1167,9 +1173,9 @@ const english = {
   atk_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["attackSpeed"]}<i>Attack speed.\nValues over 100% allow you to sometimes hit twice or more in a single round. \nValues under 100% cause you to miss some turns.`,
   mov_speed_tt: `<css>line-height: 20px<css>This is your <i>${icons["movementSpeed"]}<i>Movement speed. \nValues over 100% allow you to sometimes move twice or more in a single round. \nValues under 100% cause you not to move during some rounds.`,
 
-  physical_tt: `<i>${icons["physical_armor"]}<i>Physical Armor increases resistance against physical attacks. \n<i>${icons["slash"]}<i>Slashing, <i>${icons["crush"]}<i>Crushing and <i>${icons["pierce"]}<i>Piercing damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
-  magical_tt: `<i>${icons["magical_armor"]}<i>Magical Armor increases resistance against magical attacks. \n<i>${icons["magic"]}<i>Magical, <i>${icons["dark"]}<i>Dark and <i>${icons["divine"]}<i>Divine damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
-  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elemental Armor increases resistance against elemental attacks. \n<i>${icons["fire"]}<i>Fire, <i>${icons["lightning"]}<i>Lightning and <i>${icons["ice"]}<i>Ice damage reduced by 0.25% per point. \nArmor has a maximum value of 300.`,
+  physical_tt: `<i>${icons["physical_armor"]}<i>Physical Armor increases resistance against physical attacks. \nReduces damage from <i>${icons["slash"]}<i>Slashing, <i>${icons["crush"]}<i>Crushing and <i>${icons["pierce"]}<i>Piercing. \nCurrent reduction: <v>(player.getArmorReduction().physical*100).toFixed(1)<v>§%`,
+  magical_tt: `<i>${icons["magical_armor"]}<i>Magical Armor increases resistance against magical attacks. \nReduces damage from <i>${icons["magic"]}<i>Magical, <i>${icons["dark"]}<i>Dark and <i>${icons["divine"]}<i>Divine. \nCurrent reduction: <v>(player.getArmorReduction().magical*100).toFixed(1)<v>§%`,
+  elemental_tt: `<i>${icons["elemental_armor"]}<i>Elemental Armor increases resistance against elemental attacks. \nReduces damage from <i>${icons["fire"]}<i>Fire, <i>${icons["lightning"]}<i>Lightning and <i>${icons["ice"]}<i>Ice. \nCurrent reduction: <v>(player.getArmorReduction().elemental*100).toFixed(1)<v>§%`,
 
   resistances_tt: "Resistance decreases incoming damage of its type by the indicated %.",
   stat_resist_tt: `Status resistance decreases any damage caused by effects by the indicated %. \n\nIt also gives a chance of completely resisting the effect. \n\nWhen effect is resisted, it is not applied at all.`,
@@ -1589,6 +1595,8 @@ const english = {
   magical_name: "Magical",
   adrenaline_name: "Adrenaline",
   confident_name: "Confident",
+  all_muscle_name: "All Muscle",
+  all_muscle_desc: "Physical stats maxed out, but mp zero.",
 
   // Enemy types
   against_type_syntax: " against ",
@@ -1634,7 +1642,10 @@ const english = {
   setting_randomize_items: "Random equipment stats",
   setting_draw_wall_outlines: "Draw outlines on walls",
   setting_show_fps_counter: "Show fps-counter",
+  setting_load_mods: "Load mods",
+  setting_enable_developer_console: "Enable developer console",
   setting_game_language: "Game language",
+  setting_hotkey_developer_console: "Open developer console",
   setting_hotkey_inv: "Open inventory screen",
   setting_hotkey_char: "Open character screen",
   setting_hotkey_perk: "Open level up screen",
@@ -1673,6 +1684,7 @@ const english = {
   save_settings: "Save settings",
   save_settings_file: "Save settings to file (downloads a .json file)",
   load_settings_file: "Load settings from file (opens prompt)",
+  load_mods_prompt: "Do you want to launch the game with mods?\nChoose the folder with your installed mods from the prompt.",
 
   // Grades
   common: "Common",
@@ -2140,6 +2152,7 @@ const english = {
   toggle_minimap: "<f>16px<f>The minimap helps with navigating through areas. \nCan cause the game to run slower.",
   hide_helmet: "<f>16px<f>Toggle helmet visiblity to see or hide character's face.",
   randomize_items: "<f>16px<f>Equipment generates random extra stats.\nGives the game a more roguelike feeling.",
+  enable_developer_console: "<f>16px<f>Enables the developer console. \nUseful for debugging and testing.",
   interact_help: "<f>16px<f>Open chests or pick loot when standing on the same tile. \nAlso used to talk to NPCs and interact with world.",
   world_messages: "<f>16px<f>View more action messages displayed in the bottom left.",
   toggle_rangedMode: "<f>16px<f>Ranged mode allows you to see where your ranged weapon can reach.",

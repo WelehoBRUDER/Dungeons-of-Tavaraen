@@ -3,14 +3,19 @@ const CURSOR_LOCATION = {
   y: 0,
 };
 const DEVTOOLS = {
+  ENABLED: false,
   GOD: false,
   FREE_SKILLS: false,
   PERK_NO_COST: false,
 };
-const GAME_VERSION = (1.23).toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
-const DEVMODE: boolean = false; // Whether developer mode is enabled or not.
+const GAME_VERSION = (1.24).toFixed(2); // Current version of the game, just used to warn players about old saves being potetiantially broken.
 const devBox = document.querySelector<HTMLDivElement>(".devInfo");
-if (DEVMODE) {
+
+if (localStorage.getItem("DOT_game_devtools") === "true") {
+  DEVTOOLS.ENABLED = true;
+}
+
+if (DEVTOOLS.ENABLED) {
   document.querySelector<HTMLDivElement>(".devTools").style.display = "block";
 }
 

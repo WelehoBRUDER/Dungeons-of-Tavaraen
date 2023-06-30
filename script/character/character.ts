@@ -31,7 +31,8 @@ interface statusResistances {
 }
 
 interface characterObject {
-  [id: string]: string | any;
+  [key: string]: any;
+  id: string;
   name: string;
   cords: tileObject;
   stats: stats;
@@ -172,7 +173,7 @@ class Character {
 
     if (Object.keys(this.armor).length < 1) this.armor = { physical: 0, magical: 0, elemental: 0 };
 
-    this.getStats = (withConditions = true) => {
+    this.getStats = () => {
       let stats = {} as statusObject;
       baseStats.forEach((stat: string) => {
         if (!this.allModifiers[stat + "V"]) this.allModifiers[stat + "V"] = 0;
@@ -202,22 +203,20 @@ class Character {
       return { ...speed };
     };
 
-    this.getHpMax = (withConditions = true) => {
-      let hpMax: number = 0;
-      const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
-      const { v: vitVal, m: vitMod } = getModifiers(this, "vit", withConditions);
-      let vit = Math.floor((this.stats.vit + vitVal) * vitMod);
-      hpMax = Math.floor(((this.stats?.hpMax ?? 20) + hp_val + vit * 5) * hp_mod);
-      return hpMax < 0 ? 0 : hpMax;
+    this.getHpMax = () => {
+      const hpFlat = this.allModifiers["hpMaxV"] || 0;
+      const hpModifier = this.allModifiers["hpMaxP"] || 1;
+      const vit = this.getStats().vit;
+
+      return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + vit * 5) * hpModifier), 0);
     };
 
-    this.getMpMax = (withConditions = true) => {
-      let mpMax: number = 0;
-      const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
-      const { v: intVal, m: intMod } = getModifiers(this, "int", withConditions);
-      let int = Math.floor((this.stats.int + intVal) * intMod);
-      mpMax = Math.floor(((this.stats?.hpMax ?? 10) + mp_val + int * 2) * mp_mod);
-      return mpMax < 0 ? 0 : mpMax;
+    this.getMpMax = () => {
+      const mpFlat = this.allModifiers["mpMaxV"] || 0;
+      const mpModifier = this.allModifiers["mpMaxP"] || 1;
+      const int = this.getStats().int;
+
+      return Math.max(Math.floor(((this.stats?.hpMax ?? 10) + mpFlat + int * 2) * mpModifier), 0);
     };
 
     this.getHitchance = () => {
@@ -241,12 +240,11 @@ class Character {
     this.getResists = () => {
       let resists = {} as resistances;
       Object.keys(this.resistances).forEach((res: string) => {
-        const { v: val, m: mod } = getModifiers(this, res + "Resist");
-        const { v: _val, m: _mod } = getModifiers(this, "resistAll");
-        let value = Math.floor((this.resistances[res] + val) * mod);
-        resists[res] = Math.floor((value + _val) * _mod);
-        if (resists[res] >= 320) resists[res] = 100;
-        else if (resists[res] > 80) resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
+        const specificFlat = this.allModifiers[res + "ResistV"] || 0;
+        const allFlat = this.allModifiers["resistAllV"] || 0;
+        let value = Math.floor(this.resistances[res] + specificFlat);
+        resists[res] = Math.floor(value + allFlat);
+        if (resists[res] > 100) resists[res] = 100;
       });
       return resists;
     };
@@ -254,11 +252,23 @@ class Character {
     this.getArmor = () => {
       let armors = {} as defenseClass;
       Object.keys(this.armor).forEach((armor: string) => {
-        const { v: val, m: mod } = getModifiers(this, armor + "Def");
-        armors[armor] = Math.floor((this.armor[armor] + val) * mod);
-        if (armors[armor] > 300) armors[armor] = 300;
+        const armorFlat = this.allModifiers[armor + "ArmorV"] || 0;
+        const armorModifier = this.allModifiers[armor + "ArmorP"] || 1;
+        armors[armor] = Math.floor((this.armor[armor] + armorFlat) * armorModifier);
       });
       return armors;
+    };
+
+    this.getArmorReduction = () => {
+      const armors = this.getArmor();
+      let reductions = {} as defenseClass;
+      Object.keys(armors).forEach((armor: string) => {
+        // Get the armor value
+        const armorValue = armors[armor];
+        // Then we calculate the reduction
+        reductions[armor] = +(1 - 1 / (1 + armorValue / 100)).toFixed(3);
+      });
+      return reductions;
     };
 
     this.getThreat = () => {
@@ -269,22 +279,40 @@ class Character {
 
     this.getRegen = () => {
       let stats = this.getStats();
-      if (!this.allModifiers["regenHpV"]) this.allModifiers["regenHpV"] = 0;
-      if (!this.allModifiers["regenHpP"]) this.allModifiers["regenHpP"] = 1;
-      if (!this.allModifiers["regenMpV"]) this.allModifiers["regenMpV"] = 0;
-      if (!this.allModifiers["regenMpP"]) this.allModifiers["regenMpP"] = 1;
-      let reg = { hp: 0, mp: 0 };
-      reg["hp"] =
-        (this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) *
-        this.allModifiers["regenHpP"] *
-        (1 + stats.vit / 100);
-      reg["mp"] =
-        (this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) *
-        this.allModifiers["regenMpP"] *
-        (1 + stats.int / 100);
-      if (reg["hp"] < 0) reg["hp"] = 0;
-      if (reg["mp"] < 0) reg["mp"] = 0;
-      return reg;
+      let hpRegenBase = this.regen.hp;
+      let hpRegenVit = 0;
+      let hpRegenPercent = 1;
+      let mpRegenBase = this.regen.mp;
+      let mpRegenInt = 0;
+      let mpRegenPercent = 1;
+
+      if (this.allModifiers.regenHpV) {
+        hpRegenVit += this.allModifiers.regenHpV;
+      }
+      if (this.allModifiers.regenHpP) {
+        hpRegenPercent += this.allModifiers.regenHpP;
+      }
+      if (this.allModifiers.regenMpV) {
+        mpRegenInt += this.allModifiers.regenMpV;
+      }
+      if (this.allModifiers.regenMpP) {
+        mpRegenPercent += this.allModifiers.regenMpP;
+      }
+
+      let hpRegen = (hpRegenBase + this.getHpMax() * 0.004 + hpRegenVit) * hpRegenPercent;
+      let mpRegen = (mpRegenBase + this.getMpMax() * 0.004 + mpRegenInt) * mpRegenPercent;
+
+      if (hpRegen < 0) {
+        hpRegen = 0;
+      }
+      if (mpRegen < 0) {
+        mpRegen = 0;
+      }
+
+      return {
+        hp: hpRegen * (1 + stats.vit / 100),
+        mp: mpRegen * (1 + stats.int / 100),
+      };
     };
 
     this.isRooted = () => {
@@ -412,7 +440,7 @@ class Character {
     this.abilities = [...base.abilities] ?? [];
 
     this.silenced = () => {
-      var result = false;
+      let result = false;
       this.statusEffects.forEach((eff: statEffect) => {
         if (eff.silence) {
           result = true;
@@ -423,7 +451,7 @@ class Character {
     };
 
     this.concentration = () => {
-      var result = true;
+      let result = true;
       this.statusEffects.forEach((eff: statEffect) => {
         if (eff.break_concentration) {
           result = false;
@@ -441,10 +469,13 @@ class Character {
       return (this.stats.mp / this.getMpMax(false)) * 100;
     };
 
-    this.updateAbilities = (useDummy: boolean = false) => {
-      this.allModifiers = getAllModifiersOnce(this);
+    this.updateAllModifiers = () => {
+      this.allModifiers = getAllModifiersOnce(this, true);
       if (!this.allModifiers["damageV"]) this.allModifiers["damageV"] = 0;
       if (!this.allModifiers["damageP"]) this.allModifiers["damageP"] = 1;
+    };
+
+    this.updateAbilities = (useDummy: boolean = false) => {
       for (let i = 0; i < this.abilities?.length; i++) {
         if (!useDummy) this.abilities[i] = new Ability(this.abilities[i], this);
         else this.abilities[i] = new Ability(this.abilities[i], dummy);
@@ -537,7 +568,7 @@ const dummy = new Character({
 
 const baseStats = ["str", "vit", "dex", "int", "cun"];
 
-// var ley = new Character({
+// let ley = new Character({
 //   id: "ley",
 //   name: "leyli",
 //   cords: {x: 0, y: 0},

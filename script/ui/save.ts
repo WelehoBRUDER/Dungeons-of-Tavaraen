@@ -1,6 +1,8 @@
 let saveMenuScroll = 0;
 let timePlayedNow = 0;
-document.querySelector<HTMLDivElement>(".savesMenu .saves").addEventListener("wheel", (wheel: any) => saveMenuScroll = wheel.path[1].scrollTop, { passive: true });
+document
+  .querySelector<HTMLDivElement>(".savesMenu .saves")
+  .addEventListener("wheel", (wheel: any) => (saveMenuScroll = wheel.path[1].scrollTop), { passive: true });
 async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   hideHover();
   saves = JSON.parse(localStorage.getItem(`DOT_game_saves`)) || [];
@@ -13,8 +15,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
     saveNameInput.classList.add("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveGame").classList.add("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveFile").classList.add("unavailable");
-  }
-  else {
+  } else {
     saveNameInput.classList.remove("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveGame").classList.remove("unavailable");
     saveBg.querySelector<HTMLDivElement>(".saveFile").classList.remove("unavailable");
@@ -26,11 +27,13 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
   saveBg.querySelector<HTMLDivElement>(".saveFile").onclick = () => saveToFile(saveNameInput.value);
   saveBg.querySelector<HTMLDivElement>(".loadFile").onclick = () => loadFromfile();
   saveBg.querySelector<HTMLDivElement>(".usedBarFill").style.width = `${(calcLocalStorageUsedSpace() / calcLocalStorageMaxSpace()) * 100}%`;
-  saveBg.querySelector<HTMLParagraphElement>(".usedText").textContent = `${lang["storage_used"]}: ${(calcLocalStorageUsedSpace() / 1000).toFixed(2)}/${(calcLocalStorageMaxSpace() / 1000).toFixed(2)}mb`;
+  saveBg.querySelector<HTMLParagraphElement>(".usedText").textContent = `${lang["storage_used"]}: ${(
+    calcLocalStorageUsedSpace() / 1000
+  ).toFixed(2)}/${(calcLocalStorageMaxSpace() / 1000).toFixed(2)}mb`;
   savesArea.textContent = "";
   if (animate) {
     saveBg.style.display = "block";
-    saveBg.style.animation = 'none';
+    saveBg.style.animation = "none";
     // @ts-ignore
     saveBg.offsetHeight; /* trigger reflow */
     // @ts-ignore
@@ -82,9 +85,18 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       saveData.currentMap = maps[currentMap].id;
       saveData.lootedChests = [...lootedChests];
       saveData.version = GAME_VERSION;
-      let sortTime = +(new Date());
+      let sortTime = +new Date();
       let saveTime = new Date();
-      let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString() + " - " + saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
+      let saveTimeString: string =
+        ("0" + saveTime.getHours()).slice(-2).toString() +
+        "." +
+        ("0" + saveTime.getMinutes()).slice(-2).toString() +
+        " - " +
+        saveTime.getDate() +
+        "." +
+        (saveTime.getMonth() + 1) +
+        "." +
+        saveTime.getFullYear();
       let name = save.text.split(" ||")[0];
       saves[save.id].text = `${name} || ${saveTimeString} || Lvl ${player.level.level} ${player.race} || ${maps[currentMap].name}`;
       saves[save.id].time = sortTime;
@@ -121,17 +133,16 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
         lc = save.save.lootedChests ? [...save.save.lootedChests] : [];
         // update classes of all dropped items just in case
         id.map((item) => {
-          if (item.itm.type === "weapon") return item.itm = new Weapon({ ...items[item.itm.id] });
-          if (item.itm.type === "armor") return item.itm = new Armor({ ...items[item.itm.id] });
-          if (item.itm.type === "artifact") return item.itm = new Artifact({ ...items[item.itm.id] });
-          if (item.itm.type === "consumable") return item.itm = new Consumable({ ...items[item.itm.id] });
+          if (item.itm.type === "weapon") return (item.itm = new Weapon({ ...items[item.itm.id] }));
+          if (item.itm.type === "armor") return (item.itm = new Armor({ ...items[item.itm.id] }));
+          if (item.itm.type === "artifact") return (item.itm = new Artifact({ ...items[item.itm.id] }));
+          if (item.itm.type === "consumable") return (item.itm = new Consumable({ ...items[item.itm.id] }));
         });
         pl.updateTraits();
         pl.updatePerks(true);
         pl.updateAbilities();
         document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "40%";
-      }
-      catch (err: any) {
+      } catch (err: any) {
         console.error(err.message);
         loadingScreen.style.display = "none";
         return warningMessage("<i>resources/icons/error.png<i>Failed to load save.\nIt may be corrupted or too old.");
@@ -171,7 +182,6 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       closeAllWindowsAndMenus();
       document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "100%";
       loadingScreen.style.display = "none";
-
     });
     deleteGame.addEventListener("click", () => {
       saves.splice(save.id, 1);
@@ -186,7 +196,8 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       renderedPlayer.updateAbilities(true);
       let saveTime = new Date(save.time);
       let saveDateString: string = saveTime.getDate() + "." + (saveTime.getMonth() + 1) + "." + saveTime.getFullYear();
-      let saveTimeString: string = ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
+      let saveTimeString: string =
+        ("0" + saveTime.getHours()).slice(-2).toString() + "." + ("0" + saveTime.getMinutes()).slice(-2).toString();
       let totalText = ``;
       let saveSize = (JSON.stringify(save).length / 1024).toFixed(2);
       let key = save.save.currentMap;
@@ -204,12 +215,12 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       totalText += `§<c>silver<c><f>24px<f>|§ ${saveSize} kb§ `;
       let verColor: string = "lime";
       let addVersionWarning: boolean = false;
-      if ((+save.save.version + .1 < +GAME_VERSION) || !save.save.version || +save.save.version < 1.1) {
+      if (+save.save.version + 0.1 < +GAME_VERSION || !save.save.version || +save.save.version < 1.1) {
         verColor = "orange";
         addVersionWarning = true;
       }
       let versionText = `${save.save?.version?.[0]}.${save.save?.version?.[2]}.${save.save?.version?.[3]}`;
-      if (versionText.includes('undefined')) versionText = lang["old_save"];
+      if (versionText.includes("undefined")) versionText = lang["old_save"];
       totalText += `§<c>silver<c><f>24px<f>|§ ${lang["version"]}: §<c>${verColor}<c>${versionText}`;
       if (addVersionWarning) {
         totalText += ` <i>resources/icons/warn.png[warningOutOfDate]<i>`;
@@ -223,8 +234,9 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
       if (addVersionWarning) {
         tooltip(saveName.querySelector(".warningOutOfDate"), lang["out_of_date"]);
       }
+    } catch (err) {
+      console.warn(err);
     }
-    catch (err) { console.warn(err); }
   }
   savesArea.scrollBy(saveMenuScroll, saveMenuScroll);
 }
@@ -232,7 +244,7 @@ async function gotoSaveMenu(inMainMenu = false, animate: boolean = true) {
 async function closeSaveMenu() {
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
   saveBg.style.display = "block";
-  saveBg.style.animation = 'none';
+  saveBg.style.animation = "none";
   // @ts-ignore
   saveBg.offsetHeight; /* trigger reflow */
   // @ts-ignore
@@ -240,14 +252,16 @@ async function closeSaveMenu() {
   await helper.sleep(5);
   saveBg.style.animationName = `slideToTop`;
   saveBg.style.display = "none";
-  setTimeout(() => { dim.style.height = "0%"; }, 5);
+  setTimeout(() => {
+    dim.style.height = "0%";
+  }, 5);
 }
 
 function secondsToHoursAndMinutes(seconds: number) {
   if (seconds <= 0) return undefined;
   let hours = Math.floor(seconds / 3600);
-  let minutes = Math.floor((seconds - (hours * 3600)) / 60);
-  let secondsLeft = seconds - (hours * 3600) - (minutes * 60);
+  let minutes = Math.floor((seconds - hours * 3600) / 60);
+  let secondsLeft = seconds - hours * 3600 - minutes * 60;
   // @ts-ignore
   if (hours < 10) hours = "0" + hours;
   // @ts-ignore
@@ -261,10 +275,10 @@ let saves: Array<any> = [];
 let input: string = "";
 
 function generateKey(len: number) {
-  const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var randomString = '';
-  for (var i = 0; i < len; i++) {
-    var randomPoz = Math.floor(Math.random() * charSet.length);
+  const charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomString = "";
+  for (let i = 0; i < len; i++) {
+    let randomPoz = Math.floor(Math.random() * charSet.length);
     randomString += charSet.substring(randomPoz, randomPoz + 1);
   }
   return randomString;
@@ -303,7 +317,7 @@ function createNewSaveGame() {
   const saveBg = document.querySelector<HTMLDivElement>(".savesMenu");
   const saveNameInput = saveBg.querySelector<HTMLInputElement>(".saveName");
   let saveName = saveNameInput.value || player.name;
-  let sortTime = +(new Date());
+  let sortTime = +new Date();
   let gameSave = {} as any;
   player.timePlayed += Math.round((performance.now() - timePlayedNow) / 1000);
   timePlayedNow = performance.now();
@@ -339,32 +353,32 @@ function saveToFile(input: string) {
       link.click();
       window.URL.revokeObjectURL(url);
     };
-  }());
+  })();
   let saveArray = [
     {
       key: "player",
-      data: helper.trimPlayerObjectForSaveFile(player)
+      data: helper.trimPlayerObjectForSaveFile(player),
     },
     {
       key: "itemData",
-      data: [...itemData]
+      data: [...itemData],
     },
     {
       key: "lootedChests",
-      data: [...lootedChests]
+      data: [...lootedChests],
     },
     {
       key: "enemies",
-      data: [...fallenEnemies]
+      data: [...fallenEnemies],
     },
     {
       key: "currentMap",
-      data: maps[currentMap].id
+      data: maps[currentMap].id,
     },
     {
       key: "version",
-      data: GAME_VERSION
-    }
+      data: GAME_VERSION,
+    },
   ];
   let minutes: any = new Date().getMinutes();
   if (minutes < 10) minutes = `0${new Date().getMinutes()}`;
@@ -376,7 +390,7 @@ function saveToFile(input: string) {
 
 function loadFromfile() {
   let fileInput = document.createElement("input");
-  fileInput.setAttribute('type', 'file');
+  fileInput.setAttribute("type", "file");
   fileInput.click();
   fileInput.addEventListener("change", () => HandleFile(fileInput.files[0]));
 }
@@ -386,8 +400,8 @@ function HandleFile(file: any) {
   let text = "";
 
   // file reading finished successfully
-  reader.addEventListener('load', function (e) {
-    // contents of file in variable     
+  reader.addEventListener("load", function (e) {
+    // contents of file in variable
     text = e.target.result as any;
     FinishRead();
   });
@@ -400,7 +414,6 @@ function HandleFile(file: any) {
     LoadSlotPromptFile(file.name, Table);
   }
 }
-
 
 function LoadSlotPromptFile(name: string, data: any) {
   LoadSlot(data);

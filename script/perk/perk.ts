@@ -331,7 +331,7 @@ function perkTT(perk: perk) {
   let txt: string = "";
   txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
   txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
-  if (DEVMODE) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
+  if (DEVTOOLS.ENABLED) txt += `<f>18px<f><c>gold<c>${perk.id}<c>white<c>\n`;
   if (perk.requires?.length > 0) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
     perk.requires.forEach((req) => {
@@ -393,7 +393,7 @@ function statModifTT(statModif: any) {
 }
 
 const zoomLevelsBG = [0.17, 0.25, 0.33, 0.41, 0.5, 0.6, 0.7, 0.75, 0.87, 1, 1.12, 1.25, 1.33, 1.5, 1.64, 1.75, 1.87, 2];
-var currentZoomBG = 1;
+let currentZoomBG = 1;
 
 const background = document.querySelector<HTMLDivElement>(".playerLeveling .perks");
 background.addEventListener("mousedown", action1);

@@ -4,8 +4,8 @@ function renderEntireMap(map: mapObject) {
   oldCords = { ...player.cords };
   oldZoom = currentZoom;
   /* Render the base layer */
-  fogCanvas.width = fogCanvas.width;
   baseCanvas.width = baseCanvas.width;
+  fogCanvas.width = fogCanvas.width;
   generateFogMap();
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
@@ -19,7 +19,17 @@ function renderEntireMap(map: mapObject) {
       const clutterId = map.clutter?.[mapOffsetStartY + y]?.[mapOffsetStartX + x];
       const clutterSprite = clutters[clutterId]?.spriteMap;
       if (sprite) {
-        baseCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+        baseCtx.drawImage(
+          textureAtlas,
+          sprite.x,
+          sprite.y,
+          128,
+          128,
+          Math.round(x * spriteSize - mapOffsetX),
+          Math.round(y * spriteSize - mapOffsetY),
+          spriteSize,
+          spriteSize
+        );
       }
       if (tile.isWall && settings.draw_wall_outlines) {
         const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
@@ -40,21 +50,46 @@ function renderEntireMap(map: mapObject) {
 
           if (dir === "n" && draw) {
             if (!drawOutlines["w"] && drawOutlines["n"]) {
-              baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
+              baseCtx.fillRect(
+                Math.round(x * spriteSize - mapOffsetX - width),
+                Math.round(y * spriteSize - mapOffsetY),
+                height + width,
+                width
+              );
             } else {
               baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), height, width);
             }
           } else if (dir === "s" && draw) {
             if (drawOutlines["s"] && !drawOutlines["e"]) {
-              baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
+              baseCtx.fillRect(
+                Math.round(x * spriteSize - mapOffsetX),
+                Math.round(y * spriteSize - mapOffsetY) + shortHeight - width,
+                height + width,
+                width
+              );
             } else {
-              baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height, width);
+              baseCtx.fillRect(
+                Math.round(x * spriteSize - mapOffsetX),
+                Math.round(y * spriteSize - mapOffsetY) + shortHeight - width,
+                height,
+                width
+              );
             }
           } else if (dir === "e" && draw) {
             if (drawOutlines["e"] && !drawOutlines["n"]) {
-              baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY - width), width, height + width);
+              baseCtx.fillRect(
+                Math.round(x * spriteSize - mapOffsetX) + shortHeight - width,
+                Math.round(y * spriteSize - mapOffsetY - width),
+                width,
+                height + width
+              );
             } else {
-              baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
+              baseCtx.fillRect(
+                Math.round(x * spriteSize - mapOffsetX) + shortHeight - width,
+                Math.round(y * spriteSize - mapOffsetY),
+                width,
+                shortHeight
+              );
             }
           } else if (dir === "w" && draw) {
             if (drawOutlines["w"] && !drawOutlines["s"]) {
@@ -68,7 +103,13 @@ function renderEntireMap(map: mapObject) {
       baseCtx.globalCompositeOperation = "source-over";
       if (player.grave) {
         if (player.grave.cords.x == x + mapOffsetStartX && player.grave.cords.y == y + mapOffsetStartY) {
-          baseCtx.drawImage(grave, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+          baseCtx.drawImage(
+            grave,
+            Math.round(x * spriteSize - mapOffsetX),
+            Math.round(y * spriteSize - mapOffsetY),
+            spriteSize,
+            spriteSize
+          );
         }
       }
       if (clutterSprite) {
@@ -210,7 +251,13 @@ function renderEnemyModel(enemy: Enemy, index: number, spriteSize: number) {
     const hpbg = <HTMLImageElement>document.querySelector(".hpBg");
     const hpbar = <HTMLImageElement>document.querySelector(".hpBar");
     const hpborder = <HTMLImageElement>document.querySelector(".hpBorder");
-    ctx?.drawImage(hpbg, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      hpbg,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - 12 - spriteSize * (enemy.scale - 1),
+      spriteSize * enemy.scale,
+      spriteSize * enemy.scale
+    );
     ctx?.drawImage(
       hpbar,
       tileX - spriteSize * (enemy.scale - 1),
@@ -218,7 +265,13 @@ function renderEnemyModel(enemy: Enemy, index: number, spriteSize: number) {
       ((Math.round(enemy.hpRemain()) * spriteSize) / 100) * enemy.scale,
       spriteSize * enemy.scale
     );
-    ctx?.drawImage(hpborder, tileX - spriteSize * (enemy.scale - 1), tileY - 12 - spriteSize * (enemy.scale - 1), spriteSize * enemy.scale, spriteSize * enemy.scale);
+    ctx?.drawImage(
+      hpborder,
+      tileX - spriteSize * (enemy.scale - 1),
+      tileY - 12 - spriteSize * (enemy.scale - 1),
+      spriteSize * enemy.scale,
+      spriteSize * enemy.scale
+    );
     /* Render enemy on top of hp bar */
     ctx?.drawImage(
       textureAtlas,
@@ -234,7 +287,11 @@ function renderEnemyModel(enemy: Enemy, index: number, spriteSize: number) {
     if (enemy.questSpawn?.quest > -1) {
       ctx.font = `${spriteSize / 1.9}px Arial`;
       ctx.fillStyle = "goldenrod";
-      ctx.fillText(`!`, tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3, tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10);
+      ctx.fillText(
+        `!`,
+        tileX - spriteSize * (enemy.scale - 1) + spriteSize / 2.3,
+        tileY - spriteSize * (enemy.scale - 1) - spriteSize / 10
+      );
     }
     let statCount = 0;
     enemy.statusEffects.forEach((effect: statEffect) => {
@@ -242,7 +299,13 @@ function renderEnemyModel(enemy: Enemy, index: number, spriteSize: number) {
       let img = new Image(32, 32);
       img.src = effect.icon;
       img.addEventListener("load", (e) => {
-        ctx?.drawImage(img, tileX + spriteSize - 32 * currentZoom, tileY + 32 * statCount * currentZoom, 32 * currentZoom, 32 * currentZoom);
+        ctx?.drawImage(
+          img,
+          tileX + spriteSize - 32 * currentZoom,
+          tileY + 32 * statCount * currentZoom,
+          32 * currentZoom,
+          32 * currentZoom
+        );
         img = null;
         statCount++;
       });
@@ -320,6 +383,15 @@ function renderItemOnMap(item: any, spriteSize: number, sightMap: any) {
 
 function renderRow(map: mapObject, translateX: number, translateY: number) {
   const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+  if (
+    player.cords.y < playerOldSight ||
+    player.cords.y + playerOldSight > maps[currentMap].base.length ||
+    player.cords.x < playerOldSight ||
+    player.cords.x + playerOldSight > maps[currentMap].base[0].length
+  ) {
+    fogCanvas.width = fogCanvas.width;
+    generateFogMap();
+  }
 
   if (translateX !== 0) {
     for (let i = 0; i <= Math.abs(translateX); i++) {
@@ -356,7 +428,17 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
     const clutterSprite = clutters[clutterId]?.spriteMap;
     const fog = { x: 256, y: 0 };
     if (sprite) {
-      baseCtx.drawImage(textureAtlas, sprite.x, sprite.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+      baseCtx.drawImage(
+        textureAtlas,
+        sprite.x,
+        sprite.y,
+        128,
+        128,
+        Math.round(x * spriteSize - mapOffsetX),
+        Math.round(y * spriteSize - mapOffsetY),
+        spriteSize,
+        spriteSize
+      );
     }
     if (tile.isWall && settings.draw_wall_outlines) {
       const tileNorth = tiles[+map.base?.[mapOffsetStartY + y - 1]?.[mapOffsetStartX + x]];
@@ -372,21 +454,46 @@ function renderRow(map: mapObject, translateX: number, translateY: number) {
 
         if (dir === "n" && draw) {
           if (!drawOutlines["w"] && drawOutlines["n"]) {
-            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX - width), Math.round(y * spriteSize - mapOffsetY), height + width, width);
+            baseCtx.fillRect(
+              Math.round(x * spriteSize - mapOffsetX - width),
+              Math.round(y * spriteSize - mapOffsetY),
+              height + width,
+              width
+            );
           } else {
             baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), height, width);
           }
         } else if (dir === "s" && draw) {
           if (drawOutlines["s"] && !drawOutlines["e"]) {
-            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height + width, width);
+            baseCtx.fillRect(
+              Math.round(x * spriteSize - mapOffsetX),
+              Math.round(y * spriteSize - mapOffsetY) + shortHeight - width,
+              height + width,
+              width
+            );
           } else {
-            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY) + shortHeight - width, height, width);
+            baseCtx.fillRect(
+              Math.round(x * spriteSize - mapOffsetX),
+              Math.round(y * spriteSize - mapOffsetY) + shortHeight - width,
+              height,
+              width
+            );
           }
         } else if (dir === "e" && draw) {
           if (drawOutlines["e"] && !drawOutlines["n"]) {
-            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY - width), width, height + width);
+            baseCtx.fillRect(
+              Math.round(x * spriteSize - mapOffsetX) + shortHeight - width,
+              Math.round(y * spriteSize - mapOffsetY - width),
+              width,
+              height + width
+            );
           } else {
-            baseCtx.fillRect(Math.round(x * spriteSize - mapOffsetX) + shortHeight - width, Math.round(y * spriteSize - mapOffsetY), width, shortHeight);
+            baseCtx.fillRect(
+              Math.round(x * spriteSize - mapOffsetX) + shortHeight - width,
+              Math.round(y * spriteSize - mapOffsetY),
+              width,
+              shortHeight
+            );
           }
         } else if (dir === "w" && draw) {
           if (drawOutlines["w"] && !drawOutlines["s"]) {
@@ -503,7 +610,17 @@ function generateFogMap() {
   for (let y = 0; y < spriteLimitY; y++) {
     for (let x = 0; x < spriteLimitX; x++) {
       if (sightMap[mapOffsetStartY + y]?.[mapOffsetStartX + x] != "x") {
-        fogCtx.drawImage(spriteMap_tiles, fog.x, fog.y, 128, 128, Math.round(x * spriteSize - mapOffsetX), Math.round(y * spriteSize - mapOffsetY), spriteSize, spriteSize);
+        fogCtx.drawImage(
+          spriteMap_tiles,
+          fog.x,
+          fog.y,
+          128,
+          128,
+          Math.round(x * spriteSize - mapOffsetX),
+          Math.round(y * spriteSize - mapOffsetY),
+          spriteSize,
+          spriteSize
+        );
       }
     }
   }

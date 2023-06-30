@@ -301,7 +301,7 @@ function effectSyntax(effect: any, embed: boolean = false) {
     key = key.substring(0, key.length - 1);
     const name = lang[key] || key;
     const id = key.substring(0, key.length - 1);
-    const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : "gfx/icons/triple-yin.png";
+    const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
     return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n`;
   } else if (typeof value === "object") {
     let text: string = "";
@@ -390,7 +390,7 @@ function effectSyntax(effect: any, embed: boolean = false) {
 //         player
 //       );
 //     } catch (err) {
-//       if (DEVMODE) displayText(`<c>red<c>${err} at line syntax:220`);
+//       if (DEVTOOLS.ENABLED) displayText(`<c>red<c>${err} at line syntax:220`);
 //     }
 //     if (!_abi) _abi = new Ability(abilities[id], dummy);
 //     let status: statusEffect = new statEffect(statusEffects[statusId], _abi.statusModifiers);

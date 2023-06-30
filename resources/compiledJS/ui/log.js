@@ -38,7 +38,7 @@ function displayText(txt) {
         try {
             worldTextContainer.removeChild(textElement);
         }
-        catch (_a) { }
+        catch { }
     }, worldTextDisplayTime);
 }
 function displayLatestWorldHistoryMessages() {

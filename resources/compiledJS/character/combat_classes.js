@@ -60,6 +60,10 @@ const combatClasses = {
     }
 };
 class combatClass {
+    statBonuses;
+    color;
+    icon;
+    perkTree;
     constructor(base) {
         this.id = base.id;
         const baseClass = combatClasses[this.id];

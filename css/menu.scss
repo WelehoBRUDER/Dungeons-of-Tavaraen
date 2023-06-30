@@ -521,6 +521,74 @@
   }
 }
 
+.multiButtonPrompt {
+  transition: 0.2s ease-in;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(670px * var(--ui-scale));
+  height: calc(440px * var(--ui-scale));
+  margin-top: calc(-180px * var(--ui-scale));
+  margin-left: calc(-240px * var(--ui-scale));
+  box-sizing: border-box;
+  background: rgba(5, 5, 5, 0.95);
+  border: calc(6px * var(--ui-scale)) solid goldenrod;
+  box-shadow: inset 0 0 18px 24px rgba(24, 24, 24, 0.95);
+  transform: scale(0);
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+
+  .prompt-text {
+    margin-bottom: calc(80px * var(--ui-scale));
+    pre {
+      position: relative;
+      width: 90%;
+      height: auto;
+      padding: 3px;
+      max-height: 90%;
+      overflow: hidden;
+      overflow-y: auto;
+      border: 2px solid rgb(60, 60, 60);
+      span {
+        margin: 0;
+        font-size: 25px;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+        text-shadow: 0px 0px 8px black;
+        line-height: 24px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        user-select: all;
+      }
+
+      img {
+        width: 34px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .prompt-buttons {
+    display: flex;
+    position: absolute;
+    left: 0;
+    bottom: 50px;
+    width: 100%;
+    justify-content: center;
+    gap: 18px;
+
+    div {
+      width: calc(160px * var(--ui-scale)) !important;
+      height: auto;
+    }
+  }
+}
+
 .mainMenu {
   transition: 0.35s;
   width: 100%;
@@ -681,4 +749,138 @@
   height: 0%;
   background: black;
   opacity: 0.75;
+}
+
+.console {
+  width: 40rem;
+  height: 25rem;
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 0 1rem 0.6rem rgb(25, 25, 25);
+
+  .log {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 3rem);
+    padding: 0.5rem;
+    box-sizing: border-box;
+    color: white;
+    font-size: 0.75rem;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.25rem;
+    text-shadow: 0 0 0.5rem black;
+    overflow: hidden;
+    overflow-y: auto;
+
+    p {
+      height: max-content;
+      margin: 0;
+      padding: 0;
+      font-size: 0.8rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      white-space: pre-wrap;
+    }
+  }
+
+  .input {
+    position: relative;
+    width: 100%;
+    height: 3rem;
+    input#console-input {
+      width: 100%;
+      height: 2.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      font-weight: lighter;
+      font-size: 1rem;
+      color: white;
+      box-sizing: border-box;
+      padding: 0.5rem 0.5rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+      &:hover {
+        filter: brightness(1.25);
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .prediction {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2.5rem;
+      padding: 0.5rem 0.3rem;
+      box-sizing: border-box;
+      pointer-events: none;
+      margin-top: 0.125rem;
+
+      span {
+        font-weight: lighter;
+        font-size: 1rem;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .phantom {
+        color: transparent;
+      }
+      .trailing {
+        color: white;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .console-intellisense {
+    width: auto;
+    height: auto;
+    max-height: 200px;
+    overflow: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 50;
+
+    .intellisense-option {
+      width: 100%;
+      height: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: dotted 1px silver;
+      font-weight: lighter;
+      font-size: 1rem;
+      color: white;
+      box-sizing: border-box;
+      padding: 0.25rem 1rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+
+      &:hover {
+        filter: brightness(1.25);
+        background: silver;
+        color: black;
+        cursor: pointer;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &.selected {
+        background: silver;
+        color: black;
+      }
+    }
+  }
 }

@@ -1,10 +1,14 @@
 "use strict";
 class Artifact extends Item {
+    commands;
+    stats;
+    artifactSet;
+    rolledStats;
+    fullPrice;
     constructor(base, setPrice = 0, dontRollStats = false) {
-        var _a, _b;
         super(base);
         const baseItem = { ...items[this.id] };
-        this.stats = (_a = { ...baseItem.stats }) !== null && _a !== void 0 ? _a : {};
+        this.stats = { ...baseItem.stats } ?? {};
         this.artifactSet = baseItem.artifactSet;
         this.rolledStats = base.rolledStats || [];
         this.commands = {};
@@ -27,7 +31,7 @@ class Artifact extends Item {
             }
         }
         try {
-            (_b = this.rolledStats) === null || _b === void 0 ? void 0 : _b.forEach((stat) => {
+            this.rolledStats?.forEach((stat) => {
                 let val = artifactStatRandomization[stat.stat.substring(0, stat.stat.length - 1)];
                 val = val[stat.stat.endsWith("V") ? "Value" : "Percent"][stat.value];
                 if (!this.stats[stat.stat])
@@ -37,7 +41,7 @@ class Artifact extends Item {
             });
         }
         catch (err) {
-            if (DEVMODE)
+            if (DEVTOOLS.ENABLED)
                 displayText("<c>red<c>Error trying to randomize stats for: " + this.id + " " + err);
         }
         if (this.rolledStats.length > 0) {
@@ -76,7 +80,9 @@ class Artifact extends Item {
             this.name = name;
         }
         if (setPrice > 0)
-            this.fullPrice = () => { return this.price; };
+            this.fullPrice = () => {
+                return this.price;
+            };
         else {
             this.fullPrice = () => {
                 let bonus = 0;

@@ -1246,7 +1246,7 @@ const perksArray = {
                 name: "Hearty Adventurer 1",
                 desc: "",
                 effects: {
-                    hpMaxV: 10,
+                    hpMaxP: 5,
                 },
                 tree: "adventurer_shared",
                 pos: { x: 3, y: 1 },
@@ -1257,7 +1257,7 @@ const perksArray = {
                 name: "Hearty Adventurer 2",
                 desc: "",
                 effects: {
-                    hpMaxV: 15,
+                    hpMaxP: 5,
                 },
                 relative_to: "hearty_adventurer_1",
                 requires: ["hearty_adventurer_1"],
@@ -1270,7 +1270,7 @@ const perksArray = {
                 name: "Hearty Adventurer 3",
                 desc: "",
                 effects: {
-                    hpMaxV: 20,
+                    hpMaxP: 5,
                 },
                 relative_to: "hearty_adventurer_2",
                 requires: ["hearty_adventurer_2"],
@@ -1283,7 +1283,7 @@ const perksArray = {
                 name: "Hearty Adventurer 4",
                 desc: "",
                 effects: {
-                    hpMaxP: 10,
+                    hpMaxP: 5,
                 },
                 relative_to: "hearty_adventurer_3",
                 requires: ["hearty_adventurer_3"],
@@ -1296,7 +1296,7 @@ const perksArray = {
                 name: "Hearty Adventurer 5",
                 desc: "",
                 effects: {
-                    hpMaxP: 15,
+                    hpMaxP: 5,
                 },
                 relative_to: "hearty_adventurer_4",
                 requires: ["hearty_adventurer_4"],

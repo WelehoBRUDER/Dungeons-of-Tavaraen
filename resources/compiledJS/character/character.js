@@ -6,27 +6,79 @@ const baseSpeed = {
     attackFill: 0,
 };
 class Character {
+    id;
+    name;
+    cords;
+    stats;
+    armor;
+    resistances;
+    statusResistances;
+    abilities;
+    weapon;
+    offhand;
+    chest;
+    helmet;
+    gloves;
+    boots;
+    legs;
+    artifact1;
+    artifact2;
+    artifact3;
+    isFoe;
+    kill;
+    xp;
+    threat;
+    traits;
+    statusEffects;
+    getStats;
+    getResists;
+    getArmor;
+    getStatusResists;
+    effects;
+    updateAbilities;
+    updateTraits;
+    aura;
+    regen;
+    hit;
+    silenced;
+    concentration;
+    statRemaining;
+    hpRemain;
+    mpRemain;
+    getThreat;
+    getHpMax;
+    getMpMax;
+    getRegen;
+    getHitchance;
+    isRooted;
+    scale;
+    allModifiers;
+    inventory;
+    speed;
+    getSpeed;
+    doNormalAttack;
+    addEffect;
+    spriteMap;
     constructor(base) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
         this.id = base.id;
-        this.name = (_a = base.name) !== null && _a !== void 0 ? _a : "name_404";
-        this.cords = (_b = base.cords) !== null && _b !== void 0 ? _b : { x: 0, y: 0 };
+        this.name = base.name ?? "name_404";
+        this.cords = base.cords ?? { x: 0, y: 0 };
         this.stats = { ...base.stats };
-        this.armor = (_c = { ...base.armor }) !== null && _c !== void 0 ? _c : { physical: 0, magical: 0, elemental: 0 };
+        this.armor = { ...base.armor } ?? { physical: 0, magical: 0, elemental: 0 };
         this.resistances = { ...base.resistances };
         this.statusResistances = { ...base.statusResistances };
         this.traits = base.traits ? [...base.traits] : [];
         this.statusEffects = base.statusEffects ? [...base.statusEffects] : [];
-        this.threat = (_d = base.threat) !== null && _d !== void 0 ? _d : 25;
-        this.regen = (_e = base.regen) !== null && _e !== void 0 ? _e : { hp: 0, mp: 0 };
-        this.hit = (_f = { ...base.hit }) !== null && _f !== void 0 ? _f : { chance: 10, evasion: 5 };
-        this.scale = (_g = base.scale) !== null && _g !== void 0 ? _g : 1;
+        this.threat = base.threat ?? 25;
+        this.regen = base.regen ?? { hp: 0, mp: 0 };
+        this.hit = { ...base.hit } ?? { chance: 10, evasion: 5 };
+        this.scale = base.scale ?? 1;
         this.allModifiers = {};
         this.speed = base.speed ? { ...base.speed } : { ...baseSpeed };
         this.spriteMap = base.spriteMap ? { ...base.spriteMap } : null;
         if (Object.keys(this.armor).length < 1)
             this.armor = { physical: 0, magical: 0, elemental: 0 };
-        this.getStats = (withConditions = true) => {
+        this.getStats = () => {
             let stats = {};
             baseStats.forEach((stat) => {
                 if (!this.allModifiers[stat + "V"])
@@ -58,26 +110,19 @@ class Character {
             speed.attack = this.speed.attack + this.allModifiers["attackSpeedV"];
             return { ...speed };
         };
-        this.getHpMax = (withConditions = true) => {
-            var _a, _b;
-            let hpMax = 0;
-            const { v: hp_val, m: hp_mod } = getModifiers(this, "hpMax", withConditions);
-            const { v: vitVal, m: vitMod } = getModifiers(this, "vit", withConditions);
-            let vit = Math.floor((this.stats.vit + vitVal) * vitMod);
-            hpMax = Math.floor((((_b = (_a = this.stats) === null || _a === void 0 ? void 0 : _a.hpMax) !== null && _b !== void 0 ? _b : 20) + hp_val + vit * 5) * hp_mod);
-            return hpMax < 0 ? 0 : hpMax;
+        this.getHpMax = () => {
+            const hpFlat = this.allModifiers["hpMaxV"] || 0;
+            const hpModifier = this.allModifiers["hpMaxP"] || 1;
+            const vit = this.getStats().vit;
+            return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + vit * 5) * hpModifier), 0);
         };
-        this.getMpMax = (withConditions = true) => {
-            var _a, _b;
-            let mpMax = 0;
-            const { v: mp_val, m: mp_mod } = getModifiers(this, "mpMax", withConditions);
-            const { v: intVal, m: intMod } = getModifiers(this, "int", withConditions);
-            let int = Math.floor((this.stats.int + intVal) * intMod);
-            mpMax = Math.floor((((_b = (_a = this.stats) === null || _a === void 0 ? void 0 : _a.hpMax) !== null && _b !== void 0 ? _b : 10) + mp_val + int * 2) * mp_mod);
-            return mpMax < 0 ? 0 : mpMax;
+        this.getMpMax = () => {
+            const mpFlat = this.allModifiers["mpMaxV"] || 0;
+            const mpModifier = this.allModifiers["mpMaxP"] || 1;
+            const int = this.getStats().int;
+            return Math.max(Math.floor(((this.stats?.hpMax ?? 10) + mpFlat + int * 2) * mpModifier), 0);
         };
         this.getHitchance = () => {
-            var _a, _b;
             const chances = {
                 chance: 0,
                 evasion: 0,
@@ -90,33 +135,41 @@ class Character {
                 this.allModifiers["evasionV"] = 0;
             if (!this.allModifiers["evasionP"])
                 this.allModifiers["evasionP"] = 1;
-            chances["chance"] = Math.floor((((_a = this.hit) === null || _a === void 0 ? void 0 : _a.chance) + this.allModifiers["hitChanceV"] + this.stats["dex"] * 0.25) * this.allModifiers["hitChanceP"]);
-            chances["evasion"] = Math.floor((((_b = this.hit) === null || _b === void 0 ? void 0 : _b.evasion) + this.allModifiers["evasionV"] + this.stats["dex"] * 0.25) * this.allModifiers["evasionP"]);
+            chances["chance"] = Math.floor((this.hit?.chance + this.allModifiers["hitChanceV"] + this.stats["dex"] * 0.25) * this.allModifiers["hitChanceP"]);
+            chances["evasion"] = Math.floor((this.hit?.evasion + this.allModifiers["evasionV"] + this.stats["dex"] * 0.25) * this.allModifiers["evasionP"]);
             return chances;
         };
         this.getResists = () => {
             let resists = {};
             Object.keys(this.resistances).forEach((res) => {
-                const { v: val, m: mod } = getModifiers(this, res + "Resist");
-                const { v: _val, m: _mod } = getModifiers(this, "resistAll");
-                let value = Math.floor((this.resistances[res] + val) * mod);
-                resists[res] = Math.floor((value + _val) * _mod);
-                if (resists[res] >= 320)
+                const specificFlat = this.allModifiers[res + "ResistV"] || 0;
+                const allFlat = this.allModifiers["resistAllV"] || 0;
+                let value = Math.floor(this.resistances[res] + specificFlat);
+                resists[res] = Math.floor(value + allFlat);
+                if (resists[res] > 100)
                     resists[res] = 100;
-                else if (resists[res] > 80)
-                    resists[res] = Math.floor(80 + (resists[res] - 80) / 17);
             });
             return resists;
         };
         this.getArmor = () => {
             let armors = {};
             Object.keys(this.armor).forEach((armor) => {
-                const { v: val, m: mod } = getModifiers(this, armor + "Def");
-                armors[armor] = Math.floor((this.armor[armor] + val) * mod);
-                if (armors[armor] > 300)
-                    armors[armor] = 300;
+                const armorFlat = this.allModifiers[armor + "ArmorV"] || 0;
+                const armorModifier = this.allModifiers[armor + "ArmorP"] || 1;
+                armors[armor] = Math.floor((this.armor[armor] + armorFlat) * armorModifier);
             });
             return armors;
+        };
+        this.getArmorReduction = () => {
+            const armors = this.getArmor();
+            let reductions = {};
+            Object.keys(armors).forEach((armor) => {
+                // Get the armor value
+                const armorValue = armors[armor];
+                // Then we calculate the reduction
+                reductions[armor] = +(1 - 1 / (1 + armorValue / 100)).toFixed(3);
+            });
+            return reductions;
         };
         this.getThreat = () => {
             if (!this.allModifiers["threatV"])
@@ -127,28 +180,36 @@ class Character {
         };
         this.getRegen = () => {
             let stats = this.getStats();
-            if (!this.allModifiers["regenHpV"])
-                this.allModifiers["regenHpV"] = 0;
-            if (!this.allModifiers["regenHpP"])
-                this.allModifiers["regenHpP"] = 1;
-            if (!this.allModifiers["regenMpV"])
-                this.allModifiers["regenMpV"] = 0;
-            if (!this.allModifiers["regenMpP"])
-                this.allModifiers["regenMpP"] = 1;
-            let reg = { hp: 0, mp: 0 };
-            reg["hp"] =
-                (this.regen["hp"] + this.getHpMax() * 0.006 + this.allModifiers["regenHpV"]) *
-                    this.allModifiers["regenHpP"] *
-                    (1 + stats.vit / 100);
-            reg["mp"] =
-                (this.regen["mp"] + this.getMpMax() * 0.006 + this.allModifiers["regenMpV"]) *
-                    this.allModifiers["regenMpP"] *
-                    (1 + stats.int / 100);
-            if (reg["hp"] < 0)
-                reg["hp"] = 0;
-            if (reg["mp"] < 0)
-                reg["mp"] = 0;
-            return reg;
+            let hpRegenBase = this.regen.hp;
+            let hpRegenVit = 0;
+            let hpRegenPercent = 1;
+            let mpRegenBase = this.regen.mp;
+            let mpRegenInt = 0;
+            let mpRegenPercent = 1;
+            if (this.allModifiers.regenHpV) {
+                hpRegenVit += this.allModifiers.regenHpV;
+            }
+            if (this.allModifiers.regenHpP) {
+                hpRegenPercent += this.allModifiers.regenHpP;
+            }
+            if (this.allModifiers.regenMpV) {
+                mpRegenInt += this.allModifiers.regenMpV;
+            }
+            if (this.allModifiers.regenMpP) {
+                mpRegenPercent += this.allModifiers.regenMpP;
+            }
+            let hpRegen = (hpRegenBase + this.getHpMax() * 0.004 + hpRegenVit) * hpRegenPercent;
+            let mpRegen = (mpRegenBase + this.getMpMax() * 0.004 + mpRegenInt) * mpRegenPercent;
+            if (hpRegen < 0) {
+                hpRegen = 0;
+            }
+            if (mpRegen < 0) {
+                mpRegen = 0;
+            }
+            return {
+                hp: hpRegen * (1 + stats.vit / 100),
+                mp: mpRegen * (1 + stats.int / 100),
+            };
         };
         this.isRooted = () => {
             let rooted = false;
@@ -175,17 +236,16 @@ class Character {
             return ((this.stats[stat] / this.getStats()[stat + "Max"]) * 100);
         };
         this.effects = () => {
-            var _a;
             this.statusEffects.forEach((status, index) => {
                 if (status.dot) {
                     const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
                     this.stats.hp -= dmg;
                     spawnFloatingText(this.cords, dmg.toString(), "red", 32);
                     let effectText = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
-                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
-                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[ICON]", `<i>${status.dot.icon}<i>`);
-                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
-                    effectText = effectText === null || effectText === void 0 ? void 0 : effectText.replace("[DMG]", `${dmg}`);
+                    effectText = effectText?.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
+                    effectText = effectText?.replace("[ICON]", `<i>${status.dot.icon}<i>`);
+                    effectText = effectText?.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
+                    effectText = effectText?.replace("[DMG]", `${dmg}`);
                     displayText(`<c>purple<c>[EFFECT] ${effectText}`);
                     if (this.stats.hp <= 0) {
                         this.kill();
@@ -196,7 +256,7 @@ class Character {
                     this.statusEffects.splice(index, 1);
                 }
             });
-            (_a = this.abilities) === null || _a === void 0 ? void 0 : _a.forEach((abi) => {
+            this.abilities?.forEach((abi) => {
                 if (abi.onCooldown > 0) {
                     if (abi.recharge_only_in_combat) {
                         if (state.inCombat)
@@ -208,7 +268,7 @@ class Character {
             });
         };
         this.addEffect = (effect, modifiers = {}) => {
-            if (!(effect === null || effect === void 0 ? void 0 : effect.id)) {
+            if (!effect?.id) {
                 effect = new statEffect({ ...statusEffects[effect] });
             }
             let missing = true;
@@ -225,9 +285,8 @@ class Character {
             }
         };
         this.doNormalAttack = async (target) => {
-            var _a, _b, _c;
             // @ts-expect-error
-            const reach = this.id === "player" ? (_a = this.weapon) === null || _a === void 0 ? void 0 : _a.range : this.attackRange;
+            const reach = this.id === "player" ? this.weapon?.range : this.attackRange;
             let attacks = 1;
             this.speed.attackFill += this.getSpeed().attack - 100;
             while (this.speed.attackFill >= 100) {
@@ -239,12 +298,12 @@ class Character {
                 attacks--;
             }
             // @ts-expect-error
-            if (((_b = this.weapon) === null || _b === void 0 ? void 0 : _b.firesProjectile) || this.shootsProjectile) {
+            if (this.weapon?.firesProjectile || this.shootsProjectile) {
                 for (let i = attacks; i > 0; i--) {
                     if (target.stats.hp <= 0)
                         break;
                     // @ts-expect-error
-                    const projectile = ((_c = this.weapon) === null || _c === void 0 ? void 0 : _c.firesProjectile) || this.shootsProjectile;
+                    const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
                     const isPlayer = this.id === "player";
                     fireProjectile(this.cords, target.cords, projectile, this.abilities.find((e) => e.id === "attack"), isPlayer, this);
                     await helper.sleep(110);
@@ -265,9 +324,9 @@ class Character {
             else if (this.isFoe)
                 updateEnemiesTurn();
         };
-        this.abilities = (_h = [...base.abilities]) !== null && _h !== void 0 ? _h : [];
+        this.abilities = [...base.abilities] ?? [];
         this.silenced = () => {
-            var result = false;
+            let result = false;
             this.statusEffects.forEach((eff) => {
                 if (eff.silence) {
                     result = true;
@@ -277,7 +336,7 @@ class Character {
             return result;
         };
         this.concentration = () => {
-            var result = true;
+            let result = true;
             this.statusEffects.forEach((eff) => {
                 if (eff.break_concentration) {
                     result = false;
@@ -292,21 +351,22 @@ class Character {
         this.mpRemain = () => {
             return (this.stats.mp / this.getMpMax(false)) * 100;
         };
-        this.updateAbilities = (useDummy = false) => {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
-            this.allModifiers = getAllModifiersOnce(this);
+        this.updateAllModifiers = () => {
+            this.allModifiers = getAllModifiersOnce(this, true);
             if (!this.allModifiers["damageV"])
                 this.allModifiers["damageV"] = 0;
             if (!this.allModifiers["damageP"])
                 this.allModifiers["damageP"] = 1;
-            for (let i = 0; i < ((_a = this.abilities) === null || _a === void 0 ? void 0 : _a.length); i++) {
+        };
+        this.updateAbilities = (useDummy = false) => {
+            for (let i = 0; i < this.abilities?.length; i++) {
                 if (!useDummy)
                     this.abilities[i] = new Ability(this.abilities[i], this);
                 else
                     this.abilities[i] = new Ability(this.abilities[i], dummy);
             }
             if (this.inventory) {
-                for (let i = 0; i < ((_b = this.inventory) === null || _b === void 0 ? void 0 : _b.length); i++) {
+                for (let i = 0; i < this.inventory?.length; i++) {
                     // If item is broken, default to error item
                     if (!this.inventory[i].id || !this.inventory[i].type) {
                         this.inventory[i] = { ...items.A0_error };
@@ -326,31 +386,31 @@ class Character {
                         this.inventory[i] = new Artifact({ ...this.inventory[i] });
                     if (!this.inventory[i].indexInBaseArray)
                         continue;
-                    let encounter = (_d = (_c = player.entitiesEverEncountered) === null || _c === void 0 ? void 0 : _c.items) === null || _d === void 0 ? void 0 : _d[this.inventory[i].id];
+                    let encounter = player.entitiesEverEncountered?.items?.[this.inventory[i].id];
                     if (encounter < 1 || !encounter) {
                         player.entitiesEverEncountered.items[this.inventory[i].id] = 1;
                     }
                 }
             }
-            if ((_e = this.weapon) === null || _e === void 0 ? void 0 : _e.type)
+            if (this.weapon?.type)
                 this.weapon = new Weapon({ ...this.weapon });
-            if ((_f = this.offhand) === null || _f === void 0 ? void 0 : _f.type)
+            if (this.offhand?.type)
                 this.offhand = new Armor({ ...this.offhand });
-            if ((_g = this.chest) === null || _g === void 0 ? void 0 : _g.type)
+            if (this.chest?.type)
                 this.chest = new Armor({ ...this.chest });
-            if ((_h = this.legs) === null || _h === void 0 ? void 0 : _h.type)
+            if (this.legs?.type)
                 this.legs = new Armor({ ...this.legs });
-            if ((_j = this.helmet) === null || _j === void 0 ? void 0 : _j.type)
+            if (this.helmet?.type)
                 this.helmet = new Armor({ ...this.helmet });
-            if ((_k = this.gloves) === null || _k === void 0 ? void 0 : _k.type)
+            if (this.gloves?.type)
                 this.gloves = new Armor({ ...this.gloves });
-            if ((_l = this.boots) === null || _l === void 0 ? void 0 : _l.type)
+            if (this.boots?.type)
                 this.boots = new Armor({ ...this.boots });
-            if ((_m = this.artifact1) === null || _m === void 0 ? void 0 : _m.type)
+            if (this.artifact1?.type)
                 this.artifact1 = new Artifact({ ...this.artifact1 });
-            if ((_o = this.artifact2) === null || _o === void 0 ? void 0 : _o.type)
+            if (this.artifact2?.type)
                 this.artifact2 = new Artifact({ ...this.artifact2 });
-            if ((_p = this.artifact3) === null || _p === void 0 ? void 0 : _p.type)
+            if (this.artifact3?.type)
                 this.artifact3 = new Artifact({ ...this.artifact3 });
         };
         this.updateTraits = () => {
@@ -407,7 +467,7 @@ const dummy = new Character({
     abilities: [],
 });
 const baseStats = ["str", "vit", "dex", "int", "cun"];
-// var ley = new Character({
+// let ley = new Character({
 //   id: "ley",
 //   name: "leyli",
 //   cords: {x: 0, y: 0},

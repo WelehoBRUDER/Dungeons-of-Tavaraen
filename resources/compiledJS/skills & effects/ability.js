@@ -66,65 +66,112 @@ const possible_modifiers = [
     "damageAmount",
 ];
 class Ability {
+    id;
+    name;
+    mana_cost;
+    health_cost;
+    health_cost_percentage;
+    cooldown;
+    type;
+    onCooldown;
+    equippedSlot;
+    damages;
+    resistance_penetration;
+    base_heal;
+    heal_percentage;
+    life_steal;
+    life_steal_percentage;
+    life_steal_trigger_only_when_killing_enemy;
+    mana_steal;
+    mana_steal_percentage;
+    damage_multiplier;
+    shoots_projectile;
+    stat_bonus;
+    statusesUser;
+    statusesEnemy;
+    status_power;
+    line;
+    icon;
+    use_range;
+    requires_melee_weapon;
+    requires_ranged_weapon;
+    requires_concentration;
+    recharge_only_in_combat;
+    summon_unit;
+    summon_level;
+    summon_last;
+    summon_status;
+    total_summon_limit;
+    permanent;
+    instant_aoe;
+    aoe_size;
+    aoe_effect;
+    aoe_ignore_ledge;
+    self_target;
+    statusModifiers;
+    action_desc;
+    action_desc_pl;
+    ai_chance;
+    remove_status;
+    get_true_damage;
+    updateStats;
     constructor(base, user) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
         this.id = base.id;
         // @ts-ignorep
         const baseAbility = abilities[this.id];
         this.name = baseAbility.name;
-        this.mana_cost = (_a = baseAbility.mana_cost) !== null && _a !== void 0 ? _a : 0;
-        this.health_cost = (_b = baseAbility.health_cost) !== null && _b !== void 0 ? _b : 0;
-        this.health_cost_percentage = (_c = baseAbility.health_cost_percentage) !== null && _c !== void 0 ? _c : 0;
-        this.cooldown = (_d = baseAbility.cooldown) !== null && _d !== void 0 ? _d : 0;
-        this.type = (_e = baseAbility.type) !== null && _e !== void 0 ? _e : "none";
-        this.onCooldown = (_f = base.onCooldown) !== null && _f !== void 0 ? _f : 0;
-        this.equippedSlot = (_g = base.equippedSlot) !== null && _g !== void 0 ? _g : -1;
+        this.mana_cost = baseAbility.mana_cost ?? 0;
+        this.health_cost = baseAbility.health_cost ?? 0;
+        this.health_cost_percentage = baseAbility.health_cost_percentage ?? 0;
+        this.cooldown = baseAbility.cooldown ?? 0;
+        this.type = baseAbility.type ?? "none";
+        this.onCooldown = base.onCooldown ?? 0;
+        this.equippedSlot = base.equippedSlot ?? -1;
         this.damages = baseAbility.damages;
-        this.damage_multiplier = (_h = baseAbility.damage_multiplier) !== null && _h !== void 0 ? _h : 1;
-        this.resistance_penetration = (_j = baseAbility.resistance_penetration) !== null && _j !== void 0 ? _j : 0;
-        this.base_heal = (_k = baseAbility.base_heal) !== null && _k !== void 0 ? _k : 0;
-        this.heal_percentage = (_l = baseAbility.heal_percentage) !== null && _l !== void 0 ? _l : 0;
-        this.life_steal = (_m = baseAbility.life_steal) !== null && _m !== void 0 ? _m : 0;
-        this.life_steal_percentage = (_o = baseAbility.life_steal_percentage) !== null && _o !== void 0 ? _o : 0;
-        this.life_steal_trigger_only_when_killing_enemy = (_p = baseAbility.life_steal_trigger_only_when_killing_enemy) !== null && _p !== void 0 ? _p : false;
-        this.stat_bonus = (_q = baseAbility.stat_bonus) !== null && _q !== void 0 ? _q : "";
-        this.statusesUser = (_r = baseAbility.statusesUser) !== null && _r !== void 0 ? _r : [];
-        this.statusesEnemy = (_s = baseAbility.statusesEnemy) !== null && _s !== void 0 ? _s : [];
-        this.status_power = (_t = baseAbility.status_power) !== null && _t !== void 0 ? _t : 0;
-        this.shoots_projectile = (_u = baseAbility.shoots_projectile) !== null && _u !== void 0 ? _u : "";
+        this.damage_multiplier = baseAbility.damage_multiplier ?? 1;
+        this.resistance_penetration = baseAbility.resistance_penetration ?? 0;
+        this.base_heal = baseAbility.base_heal ?? 0;
+        this.heal_percentage = baseAbility.heal_percentage ?? 0;
+        this.life_steal = baseAbility.life_steal ?? 0;
+        this.life_steal_percentage = baseAbility.life_steal_percentage ?? 0;
+        this.life_steal_trigger_only_when_killing_enemy = baseAbility.life_steal_trigger_only_when_killing_enemy ?? false;
+        this.stat_bonus = baseAbility.stat_bonus ?? "";
+        this.statusesUser = baseAbility.statusesUser ?? [];
+        this.statusesEnemy = baseAbility.statusesEnemy ?? [];
+        this.status_power = baseAbility.status_power ?? 0;
+        this.shoots_projectile = baseAbility.shoots_projectile ?? "";
         this.icon = baseAbility.icon;
-        this.line = (_v = baseAbility.line) !== null && _v !== void 0 ? _v : "";
+        this.line = baseAbility.line ?? "";
         this.use_range =
             typeof parseInt(baseAbility.use_range) === "number" ? parseInt(baseAbility.use_range).toString() : baseAbility.use_range;
-        this.requires_melee_weapon = (_w = baseAbility.requires_melee_weapon) !== null && _w !== void 0 ? _w : false;
-        this.requires_ranged_weapon = (_x = baseAbility.requires_ranged_weapon) !== null && _x !== void 0 ? _x : false;
-        this.requires_concentration = (_y = baseAbility.requires_concentration) !== null && _y !== void 0 ? _y : false;
-        this.recharge_only_in_combat = (_z = baseAbility.recharge_only_in_combat) !== null && _z !== void 0 ? _z : false;
+        this.requires_melee_weapon = baseAbility.requires_melee_weapon ?? false;
+        this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
+        this.requires_concentration = baseAbility.requires_concentration ?? false;
+        this.recharge_only_in_combat = baseAbility.recharge_only_in_combat ?? false;
         this.summon_unit = baseAbility.summon_unit;
-        this.summon_level = (_0 = baseAbility.summon_level) !== null && _0 !== void 0 ? _0 : 0;
-        this.summon_last = (_1 = baseAbility.summon_last) !== null && _1 !== void 0 ? _1 : 0;
+        this.summon_level = baseAbility.summon_level ?? 0;
+        this.summon_last = baseAbility.summon_last ?? 0;
         this.summon_status = baseAbility.summon_status;
-        this.total_summon_limit = (_2 = baseAbility.total_summon_limit) !== null && _2 !== void 0 ? _2 : 0;
-        this.instant_aoe = (_3 = baseAbility.instant_aoe) !== null && _3 !== void 0 ? _3 : false;
-        this.aoe_size = (_4 = baseAbility.aoe_size) !== null && _4 !== void 0 ? _4 : 0;
-        this.aoe_effect = (_5 = baseAbility.aoe_effect) !== null && _5 !== void 0 ? _5 : "";
-        this.aoe_ignore_ledge = (_6 = baseAbility.aoe_ignore_ledge) !== null && _6 !== void 0 ? _6 : false;
-        this.self_target = (_7 = baseAbility.self_target) !== null && _7 !== void 0 ? _7 : false;
+        this.total_summon_limit = baseAbility.total_summon_limit ?? 0;
+        this.instant_aoe = baseAbility.instant_aoe ?? false;
+        this.aoe_size = baseAbility.aoe_size ?? 0;
+        this.aoe_effect = baseAbility.aoe_effect ?? "";
+        this.aoe_ignore_ledge = baseAbility.aoe_ignore_ledge ?? false;
+        this.self_target = baseAbility.self_target ?? false;
         this.action_desc = baseAbility.action_desc;
         this.action_desc_pl = baseAbility.action_desc_pl;
         this.ai_chance = baseAbility.ai_chance;
         this.remove_status = baseAbility.remove_status;
-        this.permanent = (_8 = baseAbility.permanent) !== null && _8 !== void 0 ? _8 : false;
+        this.permanent = baseAbility.permanent ?? false;
         if (this.cooldown < 0)
             this.cooldown = 0;
         this.get_true_damage = (_user) => {
-            var _a, _b;
             let damages = {};
             let takenValues;
             let total = 0;
-            if ((_a = _user.weapon) === null || _a === void 0 ? void 0 : _a.damages)
+            if (_user.weapon?.damages)
                 takenValues = _user.weapon.damages;
-            else if (!((_b = _user.weapon) === null || _b === void 0 ? void 0 : _b.damages) && _user.unarmedDamages)
+            else if (!_user.weapon?.damages && _user.unarmedDamages)
                 takenValues = _user.unarmedDamages;
             else
                 takenValues = _user.damages;
@@ -145,14 +192,13 @@ class Ability {
             if (!holder)
                 return;
             Object.entries(this).forEach(([key, value]) => {
-                var _a, _b, _c;
                 if (typeof value !== "number" || typeof value === "object")
                     return;
                 if (typeof value === "number") {
                     if (key === "onCooldown")
                         return;
-                    const bonus = (_b = (_a = holder.allModifiers[id]) === null || _a === void 0 ? void 0 : _a[key + "V"]) !== null && _b !== void 0 ? _b : 0;
-                    const modifier = 1 + (((_c = holder.allModifiers[id]) === null || _c === void 0 ? void 0 : _c[key + "P"]) / 100 || 0);
+                    const bonus = holder.allModifiers[id]?.[key + "V"] ?? 0;
+                    const modifier = 1 + (holder.allModifiers[id]?.[key + "P"] / 100 || 0);
                     const base = baseStats[key] !== undefined ? baseStats[key] : value;
                     this[key] = +(((base || 0) + bonus) * modifier).toFixed(2);
                 }

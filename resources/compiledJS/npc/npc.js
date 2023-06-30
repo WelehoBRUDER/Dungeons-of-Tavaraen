@@ -2,18 +2,16 @@
 // THIS FILE CONTAINS THE LOGIC FOR FRIENDLY CHARACTERS //
 // Returns flag by searching with string.
 function getFlag(str) {
-    var _a;
     str = str.toLowerCase();
-    return (_a = flags.find((flag) => flag.toLowerCase() == str)) !== null && _a !== void 0 ? _a : -1;
+    return flags.find((flag) => flag.toLowerCase() == str) ?? -1;
 }
 // Either sets a flag to specified value, or modifies it.
 // If override is enabled, value is replaced instead of modified.
 // Boolean values can't be modified and will instead always be replaced (duh).
 function setFlag(str, value, override = false) {
-    var _a;
     let flag = getFlag(str);
     if (flag != -1) {
-        if ((_a = player.flags) === null || _a === void 0 ? void 0 : _a[flag]) {
+        if (player.flags?.[flag]) {
             if (override)
                 player.flags[flag] = value;
             else {
@@ -34,6 +32,14 @@ function setFlag(str, value, override = false) {
     }
 }
 class Npc {
+    sprite;
+    img;
+    greeting;
+    pronounSet;
+    currentMap;
+    currentCords;
+    conditionalMaps;
+    conditionalCords;
     constructor(base) {
         this.id = base.id;
         this.sprite = base.sprite;
@@ -86,27 +92,26 @@ function createNPCPortrait(npc) {
     renderNPCOutOfMap(512 * (settings["ui_scale"] / 100), canvas, ctx, npc, "left");
 }
 function createDialogChoices(id, choices, npc) {
-    var _a, _b, _c, _d;
     let interactions = characterInteractions[id];
     if (!interactions)
         return;
     choices.innerHTML = "";
-    (_a = interactions.always) === null || _a === void 0 ? void 0 : _a.forEach((choice) => {
+    interactions.always?.forEach((choice) => {
         if (!choice.displayAtBottom) {
             createChoice(choice, choices, npc);
         }
     });
-    (_b = interactions.conditional) === null || _b === void 0 ? void 0 : _b.forEach((choice) => {
+    interactions.conditional?.forEach((choice) => {
         if (checkDialogConditions(choice.conditions)) {
             createChoice(choice, choices, npc);
         }
     });
-    (_c = interactions.dialogChoices) === null || _c === void 0 ? void 0 : _c.forEach((choice) => {
+    interactions.dialogChoices?.forEach((choice) => {
         if (checkDialogConditions(choice.conditions)) {
             createChoice(choice, choices, npc);
         }
     });
-    (_d = interactions.always) === null || _d === void 0 ? void 0 : _d.forEach((choice) => {
+    interactions.always?.forEach((choice) => {
         if (choice.displayAtBottom) {
             createChoice(choice, choices, npc);
         }
@@ -176,11 +181,10 @@ function checkDialogConditions(conditions) {
     return pass;
 }
 function nextDialog(choice, npc) {
-    var _a;
     dialogText.innerHTML = "";
     let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
     dialogText.append(textSyntax(text));
-    (_a = choice.flags) === null || _a === void 0 ? void 0 : _a.forEach((flag) => {
+    choice.flags?.forEach((flag) => {
         if (flag.set_flag) {
             setFlag(flag.set_flag.flag, flag.set_flag.value, true);
         }
@@ -188,11 +192,10 @@ function nextDialog(choice, npc) {
     createDialogChoices(npc.id, dialogChoices, npc);
 }
 function questDialog(choice, npc) {
-    var _a, _b;
     dialogText.innerHTML = "";
     let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
     dialogText.append(textSyntax(text));
-    (_a = choice.flags) === null || _a === void 0 ? void 0 : _a.forEach((flag) => {
+    choice.flags?.forEach((flag) => {
         if (flag.set_flag) {
             setFlag(flag.set_flag.flag, flag.set_flag.value, true);
         }
@@ -201,7 +204,7 @@ function questDialog(choice, npc) {
         startNewQuest(choice.action.questId);
     }
     let questAddedText = lang["quest_added"];
-    questAddedText = questAddedText.replace("[QUEST]", (_b = questLang[lang.language_id][choice.action.questId + "_name"]) !== null && _b !== void 0 ? _b : choice.action.questId);
+    questAddedText = questAddedText.replace("[QUEST]", questLang[lang.language_id][choice.action.questId + "_name"] ?? choice.action.questId);
     dialogText.append(textSyntax(`\n\n${questAddedText}`));
     createDialogChoices(npc.id, dialogChoices, npc);
 }
@@ -210,11 +213,10 @@ function getQuestParams(questId) {
     return { id: questIndex, quest: questId };
 }
 function questObjectiveDialog(choice, npc) {
-    var _a;
     dialogText.innerHTML = "";
     let text = applyVarsToDialogText(dialogLang[lang.language_id][choice.action.id], npc.pronounSet);
     dialogText.append(textSyntax(text));
-    (_a = choice.flags) === null || _a === void 0 ? void 0 : _a.forEach((flag) => {
+    choice.flags?.forEach((flag) => {
         if (flag.set_flag) {
             setFlag(flag.set_flag.flag, flag.set_flag.value, true);
         }

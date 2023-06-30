@@ -1,5 +1,9 @@
 "use strict";
 function handleEscape() {
+    if (devConsole.open) {
+        devConsole.open = false;
+        consoleElement.style.display = "none";
+    }
     if (state.perkOpen) {
         closeLeveling();
         state.perkOpen = false;
@@ -41,7 +45,7 @@ function handleEscape() {
     else if (state.journalOpen) {
         closePlayerQuests();
     }
-    else if (state.keyxOpen) {
+    else if (state.codexOpen) {
         closeCodex();
     }
     else if (state.smithOpen) {
@@ -91,14 +95,13 @@ const settingsBackground = document.querySelector(".settingsMenu");
 const settingsContent = settingsBackground.querySelector(".content");
 const settingsTopbar = settingsBackground.querySelector(".top-bar");
 function openGameMenu() {
-    var _a;
     menu.textContent = "";
     setTimeout(() => {
         dim.style.height = "100%";
     }, 5);
     for (let button of menuOptions) {
         const frame = document.createElement("div");
-        frame.textContent = (_a = lang[button.id]) !== null && _a !== void 0 ? _a : button.id;
+        frame.textContent = lang[button.id] ?? button.id;
         frame.classList.add("blue-button");
         frame.classList.add(button.id);
         if (button.action) {
@@ -130,7 +133,7 @@ function closeGameMenu(noDim = false, escape = false, keepMainMenu = false) {
             frame.remove();
         }
         catch (err) {
-            if (DEVMODE)
+            if (DEVTOOLS.ENABLED)
                 displayText(`<c>red<c>${err} at line menu:398`);
         }
     }
@@ -168,7 +171,6 @@ function scaleUI(scale) {
     moveMinimap();
 }
 function gotoSettingsMenu(inMainMenu = false) {
-    var _a, _b, _c, _d, _e;
     selectingHotkey = "";
     state.optionsOpen = true;
     if (!inMainMenu)
@@ -181,7 +183,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             container.classList.add("toggle");
             const text = document.createElement("p");
             const toggleBox = document.createElement("div");
-            text.textContent = (_a = lang[setting.id]) !== null && _a !== void 0 ? _a : setting.id;
+            text.textContent = lang[setting.id] ?? setting.id;
             let _setting = setting.id.replace("setting_", "");
             if (settings[_setting])
                 toggleBox.textContent = "X";
@@ -208,7 +210,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         else if (setting.type == "hotkey") {
             container.classList.add("hotkeySelection");
             const text = document.createElement("p");
-            text.textContent = (_b = lang[setting.id]) !== null && _b !== void 0 ? _b : setting.id;
+            text.textContent = lang[setting.id] ?? setting.id;
             let _setting = setting.id.replace("setting_", "");
             container.classList.add(_setting);
             const keyButton = document.createElement("div");
@@ -234,7 +236,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             const textVal = document.createElement("p");
             slider.classList.add("slider");
             textVal.classList.add("inputValue");
-            text.textContent = (_c = lang[setting.id]) !== null && _c !== void 0 ? _c : setting.id;
+            text.textContent = lang[setting.id] ?? setting.id;
             let _setting = setting.id.replace("setting_", "");
             slider.type = "range";
             slider.min = "50";
@@ -260,7 +262,7 @@ function gotoSettingsMenu(inMainMenu = false) {
             const textVal = document.createElement("p");
             slider.classList.add("slider");
             textVal.classList.add("inputValue");
-            text.textContent = (_d = lang[setting.id]) !== null && _d !== void 0 ? _d : setting.id;
+            text.textContent = lang[setting.id] ?? setting.id;
             let _setting = setting.id.replace("setting_", "");
             slider.type = "range";
             slider.min = "-10";
@@ -283,7 +285,7 @@ function gotoSettingsMenu(inMainMenu = false) {
         else if (setting.type == "languageSelection") {
             container.classList.add("languageSelection");
             const text = document.createElement("p");
-            text.textContent = (_e = lang[setting.id]) !== null && _e !== void 0 ? _e : setting.id;
+            text.textContent = lang[setting.id] ?? setting.id;
             container.append(text);
             languages.forEach((language) => {
                 const langButton = document.createElement("div");
@@ -296,7 +298,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                             child.classList.remove("selectedLang");
                         }
                         catch (err) {
-                            if (DEVMODE)
+                            if (DEVTOOLS.ENABLED)
                                 displayText(`<c>red<c>${err} at line menu:279`);
                         }
                     });
@@ -320,7 +322,6 @@ function gotoSettingsMenu(inMainMenu = false) {
     }
 }
 async function gotoMainMenu(init = false) {
-    var _a;
     despawnDeathScreen();
     menu.textContent = "";
     setTimeout(() => {
@@ -332,13 +333,13 @@ async function gotoMainMenu(init = false) {
     mainMenuButtons.textContent = "";
     for (let button of mainButtons) {
         const frame = document.createElement("div");
-        frame.textContent = (_a = lang[button.id]) !== null && _a !== void 0 ? _a : button.id;
+        frame.textContent = lang[button.id] ?? button.id;
         frame.classList.add("menuButton");
         frame.classList.add(button.id);
         if (button.action) {
             frame.addEventListener("click", () => button.action());
         }
-        if (button.id.includes("resume") && !DEVMODE && init)
+        if (button.id.includes("resume") && !DEVTOOLS.ENABLED && init)
             frame.classList.add("greyedOut");
         mainMenuButtons.append(frame);
     }
@@ -351,7 +352,6 @@ function convertEnemytraits() {
     });
 }
 function LoadSlot(data) {
-    var _a, _b, _c, _d, _e;
     timePlayedNow = performance.now();
     loadingScreen.style.display = "flex";
     loadingText.textContent = "Loading save...";
@@ -372,9 +372,9 @@ function LoadSlot(data) {
         if (foundMap < 0 || foundMap === undefined)
             throw Error("CAN'T FIND MAP!");
         _pl = new PlayerCharacter({ ...GetKey("player", data).data });
-        _itmData = (_a = GetKey("itemData", data).data) !== null && _a !== void 0 ? _a : [];
-        _falEnemies = (_b = GetKey("enemies", data).data) !== null && _b !== void 0 ? _b : [];
-        _loot = (_c = GetKey("lootedChests", data).data) !== null && _c !== void 0 ? _c : [];
+        _itmData = GetKey("itemData", data).data ?? [];
+        _falEnemies = GetKey("enemies", data).data ?? [];
+        _loot = GetKey("lootedChests", data).data ?? [];
         // update classes of all dropped items just in case
         _itmData.map((item) => {
             if (item.itm.type === "weapon")
@@ -386,14 +386,14 @@ function LoadSlot(data) {
             if (item.itm.type === "consumable")
                 return (item.itm = new Consumable({ ...items[item.itm.id] }));
         });
-        for (let i = (_e = (_d = _pl.traits) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0; i >= 0; i--) {
+        for (let i = _pl.traits?.length ?? 0; i >= 0; i--) {
             // Find faulty trait
             try {
                 if (Object.keys(_pl.traits[i].effects).length === 0) {
                     // literally do nothing
                 }
             }
-            catch (_f) {
+            catch {
                 _pl.traits.splice(i, 1);
             }
         }
@@ -452,32 +452,32 @@ function calcLocalStorageMaxSpace() {
         for (let tuhat = 1000; tuhat < 100005; tuhat += 1000)
             localStorage.tuhat = "a".repeat(1024 * tuhat);
     }
-    catch (_a) { }
+    catch { }
     try {
         for (let sata = 100; sata < 1005; sata += 100)
             localStorage.sata = "a".repeat(1024 * sata);
     }
-    catch (_b) { }
+    catch { }
     try {
         for (let kymmenen = 10; kymmenen < 105; kymmenen += 10)
             localStorage.kymppi = "a".repeat(1024 * kymmenen);
     }
-    catch (_c) { }
+    catch { }
     try {
         for (let single = 1; single < 15; single++)
             localStorage.single = "a".repeat(1024 * single);
     }
-    catch (_d) { }
+    catch { }
     try {
         for (let half = 20; half > 0; half--)
             localStorage.half = "a".repeat(Math.ceil(1024 / half));
     }
-    catch (_e) { }
+    catch { }
     try {
         for (let pieni = 1; pieni < 512; pieni++)
             localStorage.pieni = "a".repeat(pieni);
     }
-    catch (_f) { }
+    catch { }
     const endSpace = calcLocalStorageUsedSpace();
     localStorage.removeItem("tuhat");
     localStorage.removeItem("sata");
@@ -555,5 +555,27 @@ function LoadSettings(name, settings) {
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
     player.updateAbilities();
     gotoSettingsMenu(true);
+}
+const multiButtonPromptWindow = document.querySelector(".multiButtonPrompt");
+const multiButtonPromptText = multiButtonPromptWindow.querySelector(".prompt-text");
+const multiButtonPromptButtons = multiButtonPromptWindow.querySelector(".prompt-buttons");
+function multiButtonPrompt(text, buttons) {
+    multiButtonPromptWindow.style.transform = "scale(1)";
+    const translatedText = lang[text] || text;
+    multiButtonPromptText.innerHTML = "";
+    multiButtonPromptButtons.innerHTML = "";
+    multiButtonPromptText.append(textSyntax(translatedText));
+    for (const button of buttons) {
+        const buttonElement = document.createElement("div");
+        buttonElement.textContent = button.text;
+        buttonElement.classList.add(button.class);
+        buttonElement.addEventListener("click", button.callback);
+        multiButtonPromptButtons.appendChild(buttonElement);
+    }
+}
+function closeMultiButtonPrompt() {
+    multiButtonPromptWindow.style.transform = "scale(0)";
+    multiButtonPromptText.textContent = "";
+    multiButtonPromptButtons.innerHTML = "";
 }
 //# sourceMappingURL=menu.js.map

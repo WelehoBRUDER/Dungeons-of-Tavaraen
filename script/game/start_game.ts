@@ -144,7 +144,7 @@ const classEquipments = {
   },
 } as any;
 
-var clothToggleCreation = false;
+let clothToggleCreation = false;
 // steps: class-race, appearance
 let creationStep = "class-race";
 function characterCreation(withAnimations = true) {
@@ -516,6 +516,7 @@ player.addItem(new Armor(items.mysteriousGloves));
 player.addItem(new Armor(items.mysteriousLeggings));
 player.addItem(new Armor(items.mysteriousBoots));
 
+let preloadFinished: boolean = false;
 async function initGame() {
   document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "0%";
   let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
@@ -523,20 +524,45 @@ async function initGame() {
     settings = new gameSettings(options);
     lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
   } else settings = new gameSettings(settings);
-  state.menuOpen = true;
-  state.titleScreen = true;
+
   await gotoMainMenu(true);
   document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "10%";
-  try {
-    document.querySelector(".loading-text").textContent = "Loading mods...";
-    document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "50%";
-    await loadMods();
-  } catch {
-    warningMessage(
-      "<i>resources/icons/error.png<i>Could not load mods.\nThis is most likely caused by CORS blocking local file access.\nIf you wish to play with mods, you must set up a simple http server.\n Find out how here: §<c>cyan<c>https://github.com/http-party/http-server"
-    );
-  }
   document.querySelector(".loading-text").textContent = "Updating player...";
+
+  state.menuOpen = true;
+  state.titleScreen = true;
+
+  document.querySelector(".loading-text").textContent = "Loading mods...";
+  document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "50%";
+
+  if (!settings.load_mods) {
+    continueLoad();
+    return;
+  }
+
+  const buttons = [
+    {
+      text: "Load mods",
+      class: "blue-button",
+      callback: () => {
+        gotoMods();
+        closeMultiButtonPrompt();
+      },
+    },
+    {
+      text: "Don't load",
+      class: "red-button",
+      callback: () => {
+        continueLoad();
+        closeMultiButtonPrompt();
+      },
+    },
+  ];
+  multiButtonPrompt("load_mods_prompt", buttons);
+}
+
+async function continueLoad() {
+  preloadFinished = true;
   document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "55%";
   await player.updateAbilities();
   player.updatePerks();
@@ -550,6 +576,7 @@ async function initGame() {
   tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
   tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
   tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+  updateCommands();
   document.querySelector(".loading-text").textContent = "Building textures...";
   await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
   document.querySelector<HTMLDivElement>(".loading-bar-fill").style.width = "70%";

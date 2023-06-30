@@ -37,14 +37,13 @@ function command(cmd) {
     }
 }
 function commandSyntax(cmd, val) {
-    var _a;
     let txt = "";
     if (cmd.startsWith("add_")) {
         let key = cmd.replace("add_", "");
         if (key.includes("ability_")) {
             key = key.replace("ability_", "");
             let abi = new Ability(abilities[key], dummy);
-            txt = `\n<f>18px<f><c>white<c>${lang["add_ability"]} '<c>yellow<c>${(_a = lang[abi.id + "_name"]) !== null && _a !== void 0 ? _a : abi.id}<c>white<c>'\n§`;
+            txt = `\n<f>18px<f><c>white<c>${lang["add_ability"]} '<c>yellow<c>${lang[abi.id + "_name"] ?? abi.id}<c>white<c>'\n§`;
             txt += embedAbiTT(abi);
         }
     }
