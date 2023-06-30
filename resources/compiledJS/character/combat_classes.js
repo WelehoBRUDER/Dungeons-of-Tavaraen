@@ -5,11 +5,11 @@ const combatClasses = {
         statBonuses: {
             vitV: 3,
             meleeDamageP: 10,
-            rangedDamageP: -10
+            rangedDamageP: -10,
         },
         color: "#5e2813",
         perkTree: "fighter",
-        icon: "resources/icons/fighter_symbol.png"
+        icon: "resources/icons/fighter_symbol.png",
     },
     barbarianClass: {
         id: "barbarianClass",
@@ -20,7 +20,20 @@ const combatClasses = {
         },
         color: "#5c2323",
         perkTree: "barbarian",
-        icon: "resources/icons/barbarian_symbol.png"
+        icon: "resources/icons/barbarian_symbol.png",
+    },
+    paladinClass: {
+        id: "paladinClass",
+        statBonuses: {
+            meleeDamageP: 5,
+            spellDamageP: 5,
+            vitV: 2,
+            hpMaxP: 10,
+            healPowerP: 5,
+        },
+        color: "#fcba03",
+        perkTree: "paladin",
+        icon: "resources/icons/paladin_symbol.png",
     },
     sorcererClass: {
         id: "sorcererClass",
@@ -28,11 +41,11 @@ const combatClasses = {
             intV: 3,
             spellDamageP: 10,
             meleeDamageP: -10,
-            hpMaxP: -25
+            hpMaxP: -25,
         },
         color: "#183952",
         perkTree: "sorcerer",
-        icon: "resources/icons/sorcerer_symbol.png"
+        icon: "resources/icons/sorcerer_symbol.png",
     },
     rogueClass: {
         id: "rogueClass",
@@ -40,11 +53,11 @@ const combatClasses = {
             cunV: 3,
             rangedDamageP: 5,
             meleeDamageP: 5,
-            hpMaxP: -10
+            hpMaxP: -10,
         },
         color: "#2b2b2b",
         perkTree: "rogue",
-        icon: "resources/icons/rogue_symbol.png"
+        icon: "resources/icons/rogue_symbol.png",
     },
     rangerClass: {
         id: "rangerClass",
@@ -52,12 +65,12 @@ const combatClasses = {
             dexV: 3,
             rangedDamageP: 10,
             meleeDamageP: -5,
-            hpMaxP: -20
+            hpMaxP: -20,
         },
         color: "#19400a",
         perkTree: "ranger",
-        icon: "resources/icons/ornate_ranger_bow.png"
-    }
+        icon: "resources/icons/ornate_ranger_bow.png",
+    },
 };
 class combatClass {
     statBonuses;

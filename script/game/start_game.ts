@@ -115,6 +115,15 @@ const classEquipments = {
     boots: new Armor({ ...items.raggedBoots }),
     offhand: {},
   },
+  paladin: {
+    weapon: new Weapon({ ...items.chippedBlade }),
+    chest: new Armor({ ...items.ironArmor }),
+    helmet: new Armor({ ...items.leatherHelmet }),
+    gloves: {},
+    legs: new Armor({ ...items.leatherLeggings }),
+    boots: new Armor({ ...items.raggedBoots }),
+    offhand: new Armor({ ...items.ironShield }),
+  },
   sorcerer: {
     weapon: new Weapon({ ...items.apprenticeWand }),
     chest: new Armor({ ...items.raggedShirt }),

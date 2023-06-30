@@ -1,3 +1,10 @@
+# 1.3.0 ~ 30.6.2023
+
+### Major Update
+
+## Major Changes
+- Added new class **Paladin**
+
 # 1.2.4 ~ 30.6.2023
 
 ## Major Changes

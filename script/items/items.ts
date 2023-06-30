@@ -1548,4 +1548,4 @@ const items = {
     stacks: true,
     spriteMap: { x: 1664, y: 384 },
   },
-} as any;
+} as const;

@@ -440,6 +440,8 @@ const finnish = {
     "<f>19px<f><c>silver<c>Taistelijat ovat tasapainoisia lähitaistelijoita\njotka päihittävät vastustajansa yhdistämällä \nhyvän hyökkäyksen hyvään puolustukseen.\nTaistelijana keskityt lähitaisteluun \nja pysyt kamppailussa pitkään.§\n\n",
   barbarianClass_desc:
     "<f>19px<f><c>silver<c>Barbaarit ovat lihaskimppuja\njotka rakastavat vaarallisia kamppailuja,\nja käyttävät suuria aseita\nyltääksen kauemmas ja tehdäkseen enemmän vahinkoa.\nBarbaarina keskityt lähitaisteluun\nottaen riskejä suurta vahinkoa varten.§\n\n",
+  paladinClass_desc:
+    "<f>19px<f><c>silver<c>Paladiinit ovat pyhiä sotureita jotka palvovat jumalaansa.\nHe taistelevat aseen ja kilven kanssa\nhyödyntäen pyhiä loitsuja.\nPaladiininä keskityt lähitaisteluun\njossa pärjäät loistavasti puolustuskyvylläsi\nja parannus taioilla.§\n\n",
   sorcererClass_desc:
     "<f>19px<f><c>silver<c>Loitsijat ovat taikaa manipuloivia älykköjä\njotka luovat suurta tuhoa kaukaa.\nLoitsijana keskityt kaukotaisteluun\nJa omaat mahtavan tuhoavaa voimaa,\njoka tosin heikentää fyysistä kehoasi.§\n\n",
   rogueClass_desc:
@@ -941,6 +943,7 @@ const finnish = {
   // CLASSES
   fighterClass_name: "Taistelija",
   barbarianClass_name: "Barbaari",
+  paladinClass_name: "Paladiini",
   sorcererClass_name: "Loitsija",
   rogueClass_name: "Konna",
   rangerClass_name: "Metsästäjä",
@@ -1444,6 +1447,8 @@ const english = {
     "<f>19px<f><c>silver<c>Fighters are balanced melee combatants\nwho defeat their foes by combining \ngood offense with great defense.\nAs a fighter you focus on melee combat \nand have great staying potential.§\n\n",
   barbarianClass_desc:
     "<f>19px<f><c>silver<c>Barbarians are brutes\nwho love fighting on the edge,\npreferring to use two handed weapons\nfor more reach and damage.\nAs a barbarian you focus on melee combat\nand have great offensive power\nwith high risk high reward gameplay.§\n\n",
+  paladinClass_desc:
+    "<f>19px<f><c>silver<c>Paladins are holy warriors devoted to their deity.\nThey battle with one handed weapons and shields\nas well as divine magic.\nAs a paladin you focus on melee combat\nand have great defensive power\nwith the ability to heal yourself.§\n\n",
   sorcererClass_desc:
     "<f>19px<f><c>silver<c>Sorcerers are spell weaving intellectuals\nwho prefer inflicting devastating damage from a distance.\nAs a sorcerer you focus on ranged combat \nand have excellent offensive power,\nat the cost of being vulnerable in close range.§\n\n",
   rogueClass_desc:
@@ -1962,6 +1967,7 @@ const english = {
   // CLASSES
   fighterClass_name: "Fighter",
   barbarianClass_name: "Barbarian",
+  paladinClass_name: "Paladin",
   sorcererClass_name: "Sorcerer",
   rogueClass_name: "Rogue",
   rangerClass_name: "Ranger",

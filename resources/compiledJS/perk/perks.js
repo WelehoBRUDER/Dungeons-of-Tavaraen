@@ -739,6 +739,27 @@ const perksArray = {
             },
         },
     },
+    paladin: {
+        id: "paladin_perks",
+        name: "Paladin",
+        startPos: 50,
+        perks: {
+            holy_smite: {
+                id: "holy_smite",
+                name: "Holy Smite",
+                desc: "",
+                effects: {
+                    strV: 1,
+                },
+                commands: {
+                    add_ability_focus_strike: 1,
+                },
+                tree: "paladin",
+                pos: { x: 7.5, y: 1 },
+                icon: "resources/icons/paladin_symbol.png",
+            },
+        },
+    },
     rogue: {
         id: "rogue_perks",
         name: "Rogue",
