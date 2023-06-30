@@ -1,4 +1,4 @@
-# 1.2.4 ~ 25.4.2023
+# 1.2.4 ~ 30.6.2023
 
 ## Major Changes
 - Fully reworked how loading  mods works
@@ -16,6 +16,7 @@
 - Lowered base regen by 33%.
 
 ## Bug Fixes
+- Fixed fog map only updating when scrolling.
 - Fixed a bug where toggleable settings would not save.
 
 # 1.2.3 ~ 13.4.2023

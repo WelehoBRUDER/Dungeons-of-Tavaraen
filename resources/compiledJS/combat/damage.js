@@ -33,15 +33,16 @@ function calculateDamage(attacker, target, ability, onlyRawDamage = false) {
     // Start calculating damage
     Object.entries(baseDamages).map(([damageType, damageValue]) => {
         // Get base damage modifiers
-        let { v: val, m: mod } = getModifiers(attacker, damageType + "Damage");
-        val += attacker.allModifiers["damageV"];
-        mod *= attacker.allModifiers["damageP"];
+        let val = attacker.allModifiers[damageType + "DamageV"] || 0;
+        let mod = attacker.allModifiers[damageType + "DamageP"] || 1;
+        val += attacker.allModifiers["damageV"] || 0;
+        mod *= attacker.allModifiers["damageP"] || 1;
         // If player attacks enemy, apply buff/debuff against enemy type
         if (target.isFoe) {
-            val += getModifiers(attacker, "damage_against_type_" + target.type).v;
-            mod *= getModifiers(attacker, "damage_against_type_" + target.type).m;
-            val += getModifiers(attacker, "damage_against_race_" + target.race).v;
-            mod *= getModifiers(attacker, "damage_against_race_" + target.race).m;
+            val += attacker.allModifiers["damage_against_type_" + target.type + "V"] || 0;
+            mod *= attacker.allModifiers["damage_against_type_" + target.type + "P"] || 1;
+            val += attacker.allModifiers["damage_against_race_" + target.race + "V"] || 0;
+            mod *= attacker.allModifiers["damage_against_race_" + target.race + "P"] || 1;
         }
         // Calculate bonus damage from stats
         let bonus = 0;

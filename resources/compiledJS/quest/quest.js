@@ -298,7 +298,7 @@ function updateQuestProgress(data, npc = "") {
                 if (reward.type == "gold")
                     player.addGold(reward.amount);
                 else if (reward.type == "xp")
-                    player.level.xp += reward.amount;
+                    player.addXP(reward.amount);
                 player.lvlUp();
             });
         }

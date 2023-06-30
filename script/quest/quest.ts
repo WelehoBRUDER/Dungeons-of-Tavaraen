@@ -292,7 +292,7 @@ function updateQuestProgress(data: any, npc: string = "") {
       spawnFloatingText(player.cords, "Quest completed!", "gold", 30, 3000, 500);
       thisQuest.reward.forEach((reward: any) => {
         if (reward.type == "gold") player.addGold(reward.amount);
-        else if (reward.type == "xp") player.level.xp += reward.amount;
+        else if (reward.type == "xp") player.addXP(reward.amount);
         player.lvlUp();
       });
     } else spawnFloatingText(player.cords, "Quest objective fulfilled!", "lime", 27, 3000, 500);

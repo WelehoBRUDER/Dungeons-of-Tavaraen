@@ -220,9 +220,10 @@ class Summon extends Character {
       Object.entries(this.damages).forEach((value: any) => {
         const key: string = value[0];
         const num: number = value[1];
-        let { v: val, m: mod } = getModifiers(this, key + "Damage");
-        val += getModifiers(this, "damage").v;
-        mod *= getModifiers(this, "damage").m;
+        let val = this.allModifiers[key + "DamageV"];
+        let mod = this.allModifiers[key + "DamageP"];
+        val += this.allModifiers.damageV;
+        mod *= this.allModifiers.damageP;
         let bonus: number = 0;
         // @ts-ignore
         // @ts-ignore

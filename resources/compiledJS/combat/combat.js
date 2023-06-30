@@ -32,7 +32,8 @@ const currentProjectiles = [];
 function buffOrHeal(character, ability) {
     state.isSelected = false;
     if (ability.base_heal) {
-        const { v: val, m: mod } = getModifiers(character, "healPower");
+        const val = character.allModifiers["healPowerV"] || 0;
+        const mod = character.allModifiers["healPowerP"] || 1;
         let healFromHP = 0;
         if (ability.heal_percentage)
             healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
@@ -45,7 +46,8 @@ function buffOrHeal(character, ability) {
             displayText(`<c>cyan<c>[ACTION] <c>yellow<c>${lang["you"]} <c>white<c>${lang[ability.id + "_action_desc_pl"]} ${lang["recovery_pl"]} ${heal} ${lang["health_points"]}.`);
     }
     else if (ability.heal_percentage) {
-        const { v: val, m: mod } = getModifiers(character, "healPower");
+        const val = character.allModifiers["healPowerV"] || 0;
+        const mod = character.allModifiers["healPowerP"] || 1;
         let healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
         const heal = Math.floor((healFromHP + val) * mod);
         character.stats.hp += heal;

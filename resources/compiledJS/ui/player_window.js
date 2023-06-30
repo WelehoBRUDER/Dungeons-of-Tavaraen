@@ -14,7 +14,6 @@ function createArmorOrResistanceDisplay(stat, armor) {
     const key = stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-    console.log(key);
     statImage.src = icons[key + (armor ? "_armor" : "Resist")];
     statText.textContent = lang[key];
     statValue.textContent = val + (armor ? "" : "%");

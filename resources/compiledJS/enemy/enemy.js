@@ -244,9 +244,10 @@ class Enemy extends Character {
             Object.entries(this.damages).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
-                let { v: val, m: mod } = getModifiers(this, key + "Damage");
-                val += getModifiers(this, "damage").v;
-                mod *= getModifiers(this, "damage").m;
+                let val = this.allModifiers[`${key}DamageV`] || 0;
+                let mod = this.allModifiers[`${key}DamageP`] || 1;
+                val += this.allModifiers.damageV || 0;
+                mod *= this.allModifiers.damageP || 1;
                 let bonus = 0;
                 // @ts-ignore
                 // @ts-ignore
@@ -262,7 +263,7 @@ class Enemy extends Character {
             return { total: dmg, split: dmgs };
         };
         this.kill = () => {
-            player.level.xp += Math.floor(this.xp * player.allModifiers.expGainP);
+            player.addXP(this.xp);
             this.spawnMap = currentMap;
             const index = maps[currentMap].enemies.findIndex((e) => e.cords == this.cords);
             displayText(`<c>white<c>[WORLD] <c>yellow<c>${lang[this.id + "_name"]}<c>white<c> ${lang["death"]}`);

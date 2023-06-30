@@ -32,7 +32,8 @@ function buffOrHeal(character: characterObject, ability: ability) {
   state.isSelected = false;
 
   if (ability.base_heal) {
-    const { v: val, m: mod } = getModifiers(character, "healPower");
+    const val = character.allModifiers["healPowerV"] || 0;
+    const mod = character.allModifiers["healPowerP"] || 1;
     let healFromHP = 0;
     if (ability.heal_percentage) healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
     const heal: number = Math.floor((ability.base_heal + val + healFromHP) * mod);
@@ -51,7 +52,8 @@ function buffOrHeal(character: characterObject, ability: ability) {
         }.`
       );
   } else if (ability.heal_percentage) {
-    const { v: val, m: mod } = getModifiers(character, "healPower");
+    const val = character.allModifiers["healPowerV"] || 0;
+    const mod = character.allModifiers["healPowerP"] || 1;
     let healFromHP = (character.getHpMax() * ability.heal_percentage) / 100;
     const heal: number = Math.floor((healFromHP + val) * mod);
     character.stats.hp += heal;

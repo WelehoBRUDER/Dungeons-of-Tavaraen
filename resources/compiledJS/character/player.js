@@ -169,7 +169,7 @@ class PlayerCharacter extends Character {
                 }
             });
             this[slot] = {};
-            player.allModifiers = getAllModifiersOnce(player, true);
+            this.updateAllModifiers();
             renderInventory();
         };
         this.equip = (event, item, fromContextMenu = false, auto = false) => {
@@ -219,7 +219,7 @@ class PlayerCharacter extends Character {
                 else
                     this.unequip(event, "offhand", item.index, true, fromContextMenu);
             }
-            player.allModifiers = getAllModifiersOnce(player, true);
+            this.updateAllModifiers();
             if (!auto)
                 renderInventory();
         };
@@ -235,6 +235,15 @@ class PlayerCharacter extends Character {
             const carryModifier = this.allModifiers["carryWeightP"] ?? 1;
             const { str, vit } = this.getStats();
             return ((92.5 + carryFlat + str / 2 + vit) * carryModifier).toFixed(1);
+        };
+        this.addXP = (xp, flat = false) => {
+            if (!flat) {
+                this.level.xp += Math.floor(xp * player.allModifiers.expGainP);
+            }
+            else {
+                this.level.xp += Math.floor(xp);
+            }
+            this.lvlUp();
         };
         this.lvlUp = () => {
             while (this.level.xp >= this.level.xpNeed) {
@@ -631,6 +640,7 @@ function respawnPlayer() {
         modifyCanvas(true);
         updateUI();
     }
+    renderEntireMap(maps[currentMap]);
     helper.resetAllLivingEnemiesInAllMaps();
     displayText(`[WORLD] ${lang["revive"]}`);
     spawnFloatingText(player.cords, "REVIVE!", "green", 36, 575, 75);

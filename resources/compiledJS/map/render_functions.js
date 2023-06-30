@@ -5,8 +5,8 @@ function renderEntireMap(map) {
     oldCords = { ...player.cords };
     oldZoom = currentZoom;
     /* Render the base layer */
-    fogCanvas.width = fogCanvas.width;
     baseCanvas.width = baseCanvas.width;
+    fogCanvas.width = fogCanvas.width;
     generateFogMap();
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
@@ -284,6 +284,13 @@ function renderItemOnMap(item, spriteSize, sightMap) {
 }
 function renderRow(map, translateX, translateY) {
     const { spriteSize, spriteLimitX, spriteLimitY, mapOffsetX, mapOffsetY, mapOffsetStartX, mapOffsetStartY } = spriteVariables();
+    if (player.cords.y < playerOldSight ||
+        player.cords.y + playerOldSight > maps[currentMap].base.length ||
+        player.cords.x < playerOldSight ||
+        player.cords.x + playerOldSight > maps[currentMap].base[0].length) {
+        fogCanvas.width = fogCanvas.width;
+        generateFogMap();
+    }
     if (translateX !== 0) {
         for (let i = 0; i <= Math.abs(translateX); i++) {
             for (let y = 0; y < spriteLimitY; y++) {

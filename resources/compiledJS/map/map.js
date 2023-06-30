@@ -216,7 +216,7 @@ function restoreGrave() {
         return;
     if (player.cords.x + settings.map_offset_x == player.grave.cords.x && player.cords.y + settings.map_offset_y == player.grave.cords.y) {
         player.addGold(player.grave.gold);
-        player.level.xp += player.grave.xp;
+        player.addXP(player.grave.xp, true);
         player.grave = null;
         spawnFloatingText(player.cords, "GRAVE RESTORED!", "lime", 25, 3000);
         modifyCanvas();

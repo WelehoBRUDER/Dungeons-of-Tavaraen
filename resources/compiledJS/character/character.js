@@ -352,7 +352,7 @@ class Character {
             return (this.stats.mp / this.getMpMax(false)) * 100;
         };
         this.updateAllModifiers = () => {
-            this.allModifiers = getAllModifiersOnce(this);
+            this.allModifiers = getAllModifiersOnce(this, true);
             if (!this.allModifiers["damageV"])
                 this.allModifiers["damageV"] = 0;
             if (!this.allModifiers["damageP"])

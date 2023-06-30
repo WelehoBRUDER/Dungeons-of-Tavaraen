@@ -470,7 +470,7 @@ class Character {
     };
 
     this.updateAllModifiers = () => {
-      this.allModifiers = getAllModifiersOnce(this);
+      this.allModifiers = getAllModifiersOnce(this, true);
       if (!this.allModifiers["damageV"]) this.allModifiers["damageV"] = 0;
       if (!this.allModifiers["damageP"]) this.allModifiers["damageP"] = 1;
     };
