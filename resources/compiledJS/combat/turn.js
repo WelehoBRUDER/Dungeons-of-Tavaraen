@@ -38,6 +38,7 @@ async function advanceTurn() {
         summon.updateAbilities();
         summon.decideAction();
         summon.effects();
+        summon.updateAllModifiers();
     });
     let closestEnemyDistance = -1;
     map.enemies.forEach((enemy) => {
@@ -52,6 +53,7 @@ async function advanceTurn() {
             closestEnemyDistance = enemy.distToPlayer();
         else if (distToPlayer < closestEnemyDistance)
             closestEnemyDistance = enemy.distToPlayer();
+        enemy.updateAllModifiers();
         const eRegen = enemy.getRegen();
         if (enemy.stats.hp < enemy.getHpMax())
             enemy.stats.hp += eRegen["hp"];
@@ -69,6 +71,7 @@ async function advanceTurn() {
     });
     player.effects();
     player.updateAbilities();
+    player.updateAllModifiers();
     updateUI();
     document.querySelector(".closestEnemyDistance").textContent = lang["closest_enemy"] + closestEnemyDistance;
     showInteractPrompt();
