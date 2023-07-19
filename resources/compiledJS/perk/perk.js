@@ -1,7 +1,7 @@
 "use strict";
 let perksData = [];
 let perks = [];
-let tree = player.classes.main.perkTree;
+let tree = player.classes[0].perkTree;
 const lvl_history = {
     perks: [],
     stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
@@ -86,8 +86,8 @@ class perk {
             if (this.available() && !this.bought()) {
                 player.perks.push(new perk({ ...this }));
                 player.pp--;
-                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
-                    player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
+                if (this.tree != "adventurer_shared" && !player.hasClass({ tree: this.tree })) {
+                    player.classespush(new combatClass(combatClasses[this.tree + "Class"]));
                 }
                 this.traits.forEach((stat) => {
                     let add = true;
@@ -145,18 +145,28 @@ function formPerks(e = null, scrollDefault = false) {
     perkTreesContainer.textContent = "";
     Object.entries(combatClasses).forEach((combatClassObject) => {
         const combatClass = combatClassObject[1];
-        if ((player.classes.main?.id && player.classes.sub?.id) || player.level.level < 10) {
-            if (combatClass.id != player.classes.main.id && combatClass.id != player.classes?.sub?.id)
-                return;
-        }
         const classButtonContainer = document.createElement("div");
         const combatClassName = document.createElement("p");
         const combatClassIcon = document.createElement("img");
-        if (combatClass.perkTree == tree) {
-            classButtonContainer.classList.add("goldenBorder");
+        // if (combatClass.perkTree == tree) {
+        //   classButtonContainer.classList.add("goldenBorder");
+        // } else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
+        //   classButtonContainer.classList.add("greyedOut");
+        // }
+        if (player.classes.findIndex((cl) => cl.id == combatClass.id) == -1 && combatClass.id != "adventurer") {
+            let canMultiClass = true;
+            let playerStats = player.getStats();
+            console.log(combatClass);
+            Object.entries(perksArray[combatClass.perkTree].multiClassRequires).forEach((req) => {
+                if (playerStats[req[0]] < req[1])
+                    canMultiClass = false;
+            });
+            if (!canMultiClass) {
+                classButtonContainer.classList.add("greyedOut");
+            }
         }
-        else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
-            classButtonContainer.classList.add("greyedOut");
+        else if (combatClass.perkTree == tree) {
+            classButtonContainer.classList.add("goldenBorder");
         }
         classButtonContainer.addEventListener("click", (a) => changePerkTree(combatClass.perkTree));
         classButtonContainer.classList.add("classButtonContainer");

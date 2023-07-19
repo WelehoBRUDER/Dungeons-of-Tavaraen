@@ -207,8 +207,9 @@ class Character {
       const hpFlat = this.allModifiers["hpMaxV"] || 0;
       const hpModifier = this.allModifiers["hpMaxP"] || 1;
       const vit = this.getStats().vit;
+      const levelBonus = this.allModifiers["hpMaxPerLevelV"] || 0;
 
-      return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + vit * 5) * hpModifier), 0);
+      return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + levelBonus + vit * 3) * hpModifier), 0);
     };
 
     this.getMpMax = () => {

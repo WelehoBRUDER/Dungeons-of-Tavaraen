@@ -28,7 +28,7 @@ interface playerChar extends characterObject {
   usedShrines: Array<any>;
   unarmedDamages?: any;
   fistDmg?: Function;
-  classes?: any;
+  classes: combatClass[];
   oldCords?: tileObject;
   getArtifactSetBonuses?: Function;
   flags?: any;
@@ -91,7 +91,7 @@ class PlayerCharacter extends Character {
   lvlUp?: Function;
   unarmedDamages?: any;
   fistDmg?: Function;
-  classes?: any;
+  classes: combatClass[];
   oldCords?: tileObject;
   getArtifactSetBonuses?: Function;
   flags?: any;
@@ -133,7 +133,7 @@ class PlayerCharacter extends Character {
     this.pp = base.pp ?? 0;
     this.usedShrines = [...base.usedShrines] ?? [];
     this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
-    this.classes = { ...base.classes } ?? {};
+    this.classes = [...base?.classes] ?? [];
     this.oldCords = { ...base.oldCords } ?? this.cords;
     this.flags = { ...base.flags } ?? [];
     this.questProgress = base.questProgress ? [...base.questProgress] : [];
@@ -482,6 +482,14 @@ class PlayerCharacter extends Character {
       return dmg;
     };
   }
+  hasClass(options?: { id?: string; tree?: string }) {
+    if (options?.id) {
+      if (this.classes.findIndex((c: combatClass) => c.id === id) !== -1) return true;
+    }
+    if (options?.tree) {
+      if (this.classes.findIndex((c: combatClass) => c.tree === tree) !== -1) return true;
+    }
+  }
 }
 
 function nextLevel(level: number) {
@@ -551,10 +559,7 @@ let player = new PlayerCharacter({
     xpNeed: 100,
     level: 1,
   },
-  classes: {
-    main: new combatClass(combatClasses["rangerClass"]),
-    sub: null,
-  },
+  classes: [new combatClass(combatClasses["rangerClass"])],
   sprite: ".player",
   race: "human",
   hair: 5,

@@ -4,6 +4,7 @@ const perksArray = {
         id: "sorcerer_perks",
         name: "Sorcerer",
         startPos: 550,
+        multiClassRequires: { int: 25 },
         perks: {
             introduction_to_sorcery: {
                 id: "introduction_to_sorcery",
@@ -256,6 +257,7 @@ const perksArray = {
         id: "fighter_perks",
         name: "Fighter",
         startPos: 50,
+        multiClassRequires: { vit: 20, str: 20 },
         perks: {
             battle_sense: {
                 id: "battle_sense",
@@ -489,6 +491,7 @@ const perksArray = {
         id: "barbarian_perks",
         name: "Barbarian",
         startPos: 50,
+        multiClassRequires: { str: 30 },
         perks: {
             thrill_of_battle: {
                 id: "thrill_of_battle",
@@ -743,6 +746,7 @@ const perksArray = {
         id: "paladin_perks",
         name: "Paladin",
         startPos: 50,
+        multiClassRequires: { vit: 20, int: 18 },
         perks: {
             holy_smite: {
                 id: "holy_smite",
@@ -764,6 +768,7 @@ const perksArray = {
         id: "rogue_perks",
         name: "Rogue",
         startPos: 50,
+        multiClassRequires: { dex: 20, cun: 15 },
         perks: {
             way_of_the_rogue: {
                 id: "way_of_the_rogue",
@@ -1035,6 +1040,7 @@ const perksArray = {
         id: "ranger_perks",
         name: "Ranger",
         startPos: 50,
+        multiClassRequires: { dex: 30 },
         perks: {
             target_practice: {
                 id: "target_practice",

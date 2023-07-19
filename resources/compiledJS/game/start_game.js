@@ -35,10 +35,7 @@ const emptyModel = {
         xpNeed: 100,
         level: 1,
     },
-    classes: {
-        main: null,
-        sub: null,
-    },
+    classes: [],
     sprite: ".player",
     race: "human",
     hair: 1,
@@ -207,7 +204,7 @@ function classRaceSelection() {
     <div class="classes">
       ${Object.values(combatClasses)
         .map((combatClass) => {
-        return `<div class="class-pick ${combatClass.id} ${player.classes.main?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
+        return `<div class="class-pick ${combatClass.id} ${player.classes[0]?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
       <p>${lang[combatClass.id + "_name"]}</p>
       <img src="${combatClass.icon}" alt="${combatClass.id}">
     </div>`;
@@ -350,7 +347,7 @@ function beginGame() {
     setTimeout(() => {
         creation.style.display = "none";
     }, 750);
-    tree = player.classes.main.perkTree;
+    tree = player.classes[0].perkTree;
     closeGameMenu(false, true);
     helper.reviveAllDeadEnemies();
     helper.resetAllLivingEnemiesInAllMaps();
@@ -395,7 +392,7 @@ function changeTrait(trait) {
 }
 function checkIfCanStartGame() {
     let canStart = false;
-    if (player.name.trim().length > 1 && player.classes.main)
+    if (player.name.trim().length > 1 && player.classes[0])
         canStart = true;
     try {
         if (canStart) {
@@ -408,7 +405,7 @@ function checkIfCanStartGame() {
 }
 function canContinue() {
     if (creationStep === "class-race") {
-        if (!player.classes?.main?.id)
+        if (!player.classes[0]?.id)
             return false;
         if (traitPicks < 0 || traitPicks > 1)
             return false;
@@ -437,8 +434,8 @@ function changeRace(race) {
     characterCreation(false);
 }
 function changeClass(_combatClass) {
-    player.classes.main = new combatClass(_combatClass);
-    Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq) => {
+    player.classes[0] = new combatClass(_combatClass);
+    Object.entries(classEquipments[player.classes[0].perkTree]).forEach((eq) => {
         let id = eq[0];
         let val = eq[1];
         player[id] = { ...val };

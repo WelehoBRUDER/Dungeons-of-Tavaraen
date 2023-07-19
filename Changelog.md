@@ -4,6 +4,14 @@
 
 ## Major Changes
 - Added new class **Paladin**
+- Complete rework of racial bonuses:
+  - Racial bonuses are now more impactful and unique.
+  - Race now heavily affects your hit points through the game.
+  - Races have different rates of gaining experience.
+
+
+## Minor Changes
+- Vitality now increases your maximum hit points by 3 instead of 5.
 
 # 1.2.4 ~ 30.6.2023
 

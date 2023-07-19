@@ -165,6 +165,8 @@ function getAllModifiersOnce(char, withConditions = true) {
     });
     if (char.raceEffect?.modifiers) {
         Object.entries(char.raceEffect?.modifiers).forEach((eff) => {
+            if (eff[0] === "hpMaxPerLevelV")
+                eff[1] = eff[1] * char.level.level;
             applyModifierToTotal(eff, obj);
         });
     }
