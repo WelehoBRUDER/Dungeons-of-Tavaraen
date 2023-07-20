@@ -237,7 +237,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         breakMoving = true;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
-            await helper.sleep(5);
+            await helper.sleep(3);
             if (!ability && player.speed.movementFill <= -100) {
                 player.speed.movementFill += 100;
                 advanceTurn();

@@ -28,6 +28,7 @@ class PlayerCharacter extends Character {
     respawnPoint;
     gold;
     perks;
+    classPoints;
     sp;
     pp;
     usedShrines;
@@ -73,11 +74,12 @@ class PlayerCharacter extends Character {
         this.respawnPoint = { ...base.respawnPoint } ?? null; // need to add default point, or this might soft lock
         this.gold = base.gold ?? 0;
         this.perks = [...base.perks] ?? [];
+        this.classPoints = base.classPoints ?? 0;
         this.sp = base.sp ?? 0;
         this.pp = base.pp ?? 0;
         this.usedShrines = [...base.usedShrines] ?? [];
         this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
-        this.classes = [...base?.classes] ?? [];
+        this.classes = base?.classes?.main?.id ? convertOldClasses(base.classes) : [...base?.classes] ?? [];
         this.oldCords = { ...base.oldCords } ?? this.cords;
         this.flags = { ...base.flags } ?? [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
@@ -249,12 +251,9 @@ class PlayerCharacter extends Character {
             while (this.level.xp >= this.level.xpNeed) {
                 this.level.xp -= this.level.xpNeed;
                 this.level.level++;
-                if (this.level.level < 6) {
+                this.classPoints++;
+                if (this.level.level % 10 == 0) {
                     this.pp += 2;
-                    this.sp += 4;
-                }
-                else if (this.level.level % 10 == 0) {
-                    this.pp += 3;
                     this.sp += 5;
                 }
                 else {
@@ -460,22 +459,30 @@ class PlayerCharacter extends Character {
     }
     hasClass(options) {
         if (options?.id) {
-            if (this.classes.findIndex((c) => c.id === id) !== -1)
+            if (this.classes.findIndex((c) => c.id === options.id) !== -1)
                 return true;
         }
         if (options?.tree) {
-            if (this.classes.findIndex((c) => c.tree === tree) !== -1)
+            if (this.classes.findIndex((c) => c.perkTree === options.tree) !== -1)
                 return true;
+        }
+    }
+    getClass(options) {
+        if (options?.id) {
+            return this.classes.find((c) => c.id === options.id);
+        }
+        if (options?.tree) {
+            return this.classes.find((c) => c.perkTree === options.tree);
         }
     }
 }
 function nextLevel(level) {
-    let base = 75;
+    let base = 50;
     let exponent = 1.23;
     if (level >= 4 && level < 10)
-        base = 100;
+        base = 75;
     if (level >= 10 && level < 29)
-        base = 150;
+        base = 125;
     if (level >= 29 && level < 40)
         base = 275;
     if (level >= 40 && level < 50)
@@ -539,7 +546,7 @@ let player = new PlayerCharacter({
         xpNeed: 100,
         level: 1,
     },
-    classes: [new combatClass(combatClasses["rangerClass"])],
+    classes: [new combatClass(combatClasses["barbarianClass"])],
     sprite: ".player",
     race: "human",
     hair: 5,
@@ -577,8 +584,9 @@ let player = new PlayerCharacter({
     statusEffects: [],
     inventory: [],
     gold: 50,
-    sp: 5,
-    pp: 6,
+    classPoints: 0,
+    sp: 3,
+    pp: 1,
     respawnPoint: { cords: { x: 175, y: 46 } },
     usedShrines: [],
     grave: null,

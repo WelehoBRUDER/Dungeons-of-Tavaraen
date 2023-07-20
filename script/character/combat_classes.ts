@@ -7,7 +7,7 @@ const combatClasses = {
       rangedDamageP: -10,
       hpMaxPerLevelV: 5,
     },
-    levelStatBonuses: {
+    levelBonuses: {
       // These increase per level invested in the class
       vitV: 1,
       meleeDamageP: 2,
@@ -23,6 +23,11 @@ const combatClasses = {
       meleeDamageP: 10,
       rangedDamageP: -10,
       hpMaxPerLevelV: 3,
+    },
+    levelBonuses: {
+      // These increase per level invested in the class
+      strV: 1,
+      hpMaxV: 2,
     },
     color: "#5c2323",
     perkTree: "barbarian",
@@ -100,6 +105,8 @@ const combatClasses = {
 class combatClass {
   [id: string]: string | any;
   statBonuses: traits;
+  levelBonuses: traits;
+  level: number;
   color: string;
   icon: string;
   perkTree: string;
@@ -107,8 +114,29 @@ class combatClass {
     this.id = base.id;
     const baseClass = combatClasses[this.id];
     this.statBonuses = baseClass.statBonuses;
+    this.levelBonuses = baseClass.levelBonuses;
+    this.level = baseClass.level ?? 1;
     this.color = baseClass.color;
     this.icon = baseClass.icon;
     this.perkTree = baseClass.perkTree;
   }
+
+  getLevelBonuses(options?: { addToLevel: number }) {
+    const bonuses: traits = {};
+    console.log(this);
+    console.log("level bonuses", this.levelBonuses, this.level, options);
+    Object.entries(this.levelBonuses).forEach(([key, value]) => {
+      bonuses[key] = value * (this.level + (options?.addToLevel ?? 0));
+    });
+    return bonuses;
+  }
+}
+
+function convertOldClasses(classes: any) {
+  const _classes = [];
+  _classes.push(new combatClass(classes.main));
+  if (classes.sub) {
+    _classes.push(new combatClass(classes.sub));
+  }
+  return _classes;
 }

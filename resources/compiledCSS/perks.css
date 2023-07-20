@@ -113,16 +113,43 @@
   user-select: none;
   -webkit-user-drag: none;
 }
-.playerLeveling .perksStatic .perkPoints {
-  font-size: 36px;
+.playerLeveling .perksStatic .upgradeClass {
+  display: flex;
+  position: absolute;
+  right: 25px;
+  top: 25px;
+  z-index: 5;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+}
+.playerLeveling .perksStatic .upgradeClass button.classUpButton {
+  background: rgba(16, 16, 16, 0.98);
+  background-image: url(/resources/icons/plus.png);
+  background-size: cover;
+  width: 36px;
+  height: 36px;
+  border: 3px solid goldenrod;
+}
+.playerLeveling .perksStatic .upgradeClass button.classUpButton:hover {
+  filter: brightness(1.5);
+  cursor: pointer;
+}
+.playerLeveling .perksStatic .perkPoints,
+.playerLeveling .perksStatic .classPoints {
+  font-size: 24px;
   color: white;
   background: rgba(24, 24, 24, 0.95);
   padding: 10px;
   position: absolute;
   left: 25px;
-  top: 5px;
+  top: 70px;
   border-radius: 10%;
   box-shadow: -2px 2px 8px 8px rgb(14, 13, 13);
+}
+.playerLeveling .perksStatic .classPoints {
+  top: 15px;
 }
 .playerLeveling .perks {
   width: 80%;
@@ -191,8 +218,8 @@
 }
 .playerLeveling .perkTreesContainer {
   position: absolute;
-  left: calc(25px + 20%);
-  top: 110px;
+  left: calc(30px + 20%);
+  top: 150px;
   overflow: hidden;
   user-select: none;
   width: auto;

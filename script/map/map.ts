@@ -346,7 +346,7 @@ async function movePlayer(goal: tileObject, ability: boolean = false, maxRange: 
   if (isMovingCurrently) breakMoving = true;
   moving: for (let step of path) {
     if (canMoveTo(player, step)) {
-      await helper.sleep(5);
+      await helper.sleep(3);
       if (!ability && player.speed.movementFill <= -100) {
         player.speed.movementFill += 100;
         advanceTurn();

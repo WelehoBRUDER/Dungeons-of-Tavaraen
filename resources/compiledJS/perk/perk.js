@@ -3,8 +3,10 @@ let perksData = [];
 let perks = [];
 let tree = player.classes[0].perkTree;
 const lvl_history = {
+    classUpgrades: [],
     perks: [],
     stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
+    classPoints: 0,
     pp: 0,
     sp: 0,
 };
@@ -86,9 +88,9 @@ class perk {
             if (this.available() && !this.bought()) {
                 player.perks.push(new perk({ ...this }));
                 player.pp--;
-                if (this.tree != "adventurer_shared" && !player.hasClass({ tree: this.tree })) {
-                    player.classespush(new combatClass(combatClasses[this.tree + "Class"]));
-                }
+                // if (this.tree != "adventurer_shared" && !player.hasClass({ tree: this.tree })) {
+                //   player.classes.push(new combatClass(combatClasses[this.tree + "Class"]));
+                // }
                 this.traits.forEach((stat) => {
                     let add = true;
                     player.traits.some((mod) => {
@@ -110,6 +112,28 @@ class perk {
             }
         };
     }
+}
+function upgradeClassLevel(id) {
+    if (player.classPoints <= 0)
+        return;
+    const classToUp = player.getClass({ id: id });
+    if (!classToUp) {
+        player.classes.push(new combatClass(combatClasses[id]));
+    }
+    else {
+        if (classToUp.level >= 20)
+            return;
+        classToUp.level++;
+    }
+    player.classPoints--;
+    lvl_history.classPoints++;
+    if (lvl_history.classUpgrades.findIndex((upg) => upg.id == id) == -1) {
+        lvl_history.classUpgrades.push({ id, level: 1 });
+    }
+    else {
+        lvl_history.classUpgrades.find((upg) => upg.id == id).level++;
+    }
+    formPerks();
 }
 function changePerkTree(newTree) {
     tree = newTree;
@@ -137,12 +161,39 @@ function formPerks(e = null, scrollDefault = false) {
     const baseFont = 12;
     const lineSize = 64;
     const lineWidth = 10;
+    const upgradeClass = document.createElement("div");
+    const classUpButton = document.createElement("button");
+    const classLevel = document.createElement("p");
+    const classPoints = document.createElement("p");
     const points = document.createElement("p");
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    points.textContent = lang["perk_points"] + ": " + player.pp.toString();
-    points.classList.add("perkPoints");
     staticBg.textContent = "";
     perkTreesContainer.textContent = "";
+    const currentClass = player.getClass({ tree: tree });
+    const isCombatClass = tree !== "adventurer_shared";
+    if (isCombatClass) {
+        upgradeClass.classList.add("upgradeClass");
+        classUpButton.classList.add("classUpButton");
+        classLevel.classList.add("classLevel");
+        classLevel.textContent = (player.getClass({ tree: tree })?.level?.toString() ?? "0") + " / 20" ?? "0 / 20";
+        upgradeClass.append(classUpButton, classLevel);
+        let currentEffects = ``;
+        Object.entries(currentClass?.getLevelBonuses()).forEach((stat) => {
+            currentEffects += effectSyntax(stat);
+        });
+        let nextEffects = ``;
+        Object.entries(currentClass?.getLevelBonuses({ addToLevel: 1 })).forEach((stat) => {
+            nextEffects += effectSyntax(stat);
+        });
+        const classUpText = `${lang["upgrade_class"]}\n\nCurrent effects:\n${currentEffects}§\nNext effects:\n${nextEffects}`;
+        tooltip(upgradeClass, classUpText);
+        classUpButton.addEventListener("click", () => upgradeClassLevel(tree + "Class"));
+        staticBg.append(upgradeClass);
+    }
+    classPoints.textContent = lang["class_points"] + ": " + player.classPoints.toString();
+    points.textContent = lang["perk_points"] + ": " + player.pp.toString();
+    classPoints.classList.add("classPoints");
+    points.classList.add("perkPoints");
     Object.entries(combatClasses).forEach((combatClassObject) => {
         const combatClass = combatClassObject[1];
         const classButtonContainer = document.createElement("div");
@@ -153,10 +204,10 @@ function formPerks(e = null, scrollDefault = false) {
         // } else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
         //   classButtonContainer.classList.add("greyedOut");
         // }
-        if (player.classes.findIndex((cl) => cl.id == combatClass.id) == -1 && combatClass.id != "adventurer") {
+        const level = player.getClass({ id: combatClass.id })?.level ?? 0;
+        if (level === 0 && combatClass.id != "adventurer") {
             let canMultiClass = true;
             let playerStats = player.getStats();
-            console.log(combatClass);
             Object.entries(perksArray[combatClass.perkTree].multiClassRequires).forEach((req) => {
                 if (playerStats[req[0]] < req[1])
                     canMultiClass = false;
@@ -170,7 +221,7 @@ function formPerks(e = null, scrollDefault = false) {
         }
         classButtonContainer.addEventListener("click", (a) => changePerkTree(combatClass.perkTree));
         classButtonContainer.classList.add("classButtonContainer");
-        combatClassName.textContent = lang[combatClass.id + "_name"];
+        combatClassName.textContent = `${lang[combatClass.id + "_name"]} ${level > 0 ? `(${level})` : ""}`;
         combatClassIcon.src = combatClass.icon;
         classButtonContainer.style.background = combatClass.color;
         classButtonContainer.append(combatClassIcon, combatClassName);
@@ -189,7 +240,7 @@ function formPerks(e = null, scrollDefault = false) {
     }
     classButtonContainer.append(combatClassIcon, combatClassName);
     perkTreesContainer.append(classButtonContainer);
-    staticBg.append(points);
+    staticBg.append(classPoints, points);
     perks.forEach((_perk) => {
         const perk = document.createElement("div");
         const img = document.createElement("img");
@@ -334,6 +385,7 @@ function openLevelingScreen() {
     document.querySelector(".worldText").style.opacity = "0";
     lvl_history.perks = [];
     lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.classPoints = 0;
     lvl_history.pp = 0;
     lvl_history.sp = 0;
     formPerks();
@@ -456,10 +508,12 @@ function undoChanges() {
         const val = stat[1];
         player.stats[id] -= val;
     });
+    player.classPoints += lvl_history.classPoints;
     player.sp += lvl_history.sp;
     player.pp += lvl_history.pp;
     lvl_history.perks = [];
     lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.classPoints = 0;
     lvl_history.pp = 0;
     lvl_history.sp = 0;
     formPerks();

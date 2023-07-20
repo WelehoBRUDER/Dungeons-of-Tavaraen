@@ -2,6 +2,10 @@
 
 ### Major Update
 
+## CAUTION
+Many game systems have been reworked, it's highly recommended to start a new game for this update.
+Your character may be severely underpowered if you continue an old save.
+
 ## Major Changes
 - Added new class **Paladin**
 - Complete rework of racial bonuses:
@@ -12,6 +16,9 @@
 
 ## Minor Changes
 - Vitality now increases your maximum hit points by 3 instead of 5.
+- Level up bonuses when below level 6 have been removed.
+  - You gain fewer perk and stat points when leveling up.
+  - To make up for this, the experience needed to level up has been lowered.
 
 # 1.2.4 ~ 30.6.2023
 
