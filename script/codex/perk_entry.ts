@@ -1,4 +1,4 @@
-function createPerkInfo(_perk: perk) {
+function createPerkInfo(_perk: Perk) {
   const imageContainer = document.createElement("div");
   const perkImage = document.createElement("img");
   const tempWrapper = document.createElement("div");
@@ -6,7 +6,7 @@ function createPerkInfo(_perk: perk) {
   perkImage.src = _perk.icon;
   imageContainer.append(perkImage);
   tempWrapper.classList.add("tempWrapper");
-  tempWrapper.append(textSyntax(perkTT(new perk(_perk))));
+  tempWrapper.append(textSyntax(perkTT(new Perk(_perk))));
   contentContainer.append(tempWrapper, imageContainer);
 }
 

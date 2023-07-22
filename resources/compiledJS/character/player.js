@@ -122,7 +122,8 @@ class PlayerCharacter extends Character {
         this.updatePerks = (dontUpdateUI = false, dontExecuteCommands = false) => {
             this.perks.forEach((prk, index) => {
                 let cmdsEx = prk.commandsExecuted;
-                prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
+                prk = new Perk({ ...perksArray[prk.tree]["perks"][prk.id], level: prk.level ?? 1 });
+                console.log(prk);
                 if (!cmdsEx && !dontExecuteCommands) {
                     console.log("executing commands");
                     Object.entries(prk.commands)?.forEach((cmd) => {
@@ -130,7 +131,7 @@ class PlayerCharacter extends Character {
                     });
                 }
                 prk.commandsExecuted = true;
-                this.perks[index] = { ...prk };
+                this.perks[index] = new Perk({ ...perksArray[prk.tree]["perks"][prk.id], level: prk.level ?? 1 });
                 prk.traits.forEach((stat) => {
                     if (player.traits.findIndex((t) => t.id === stat.id) !== -1)
                         return;
@@ -474,6 +475,12 @@ class PlayerCharacter extends Character {
         if (options?.tree) {
             return this.classes.find((c) => c.perkTree === options.tree);
         }
+    }
+    getPerk(id) {
+        return this.perks.find((p) => p.id === id);
+    }
+    getPerkLevel(id) {
+        return this.perks.find((p) => p.id === id)?.level ?? 0;
     }
 }
 function nextLevel(level) {

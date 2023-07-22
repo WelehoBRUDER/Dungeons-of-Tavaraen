@@ -18,12 +18,24 @@ const perkColors = {
   rogue: "#2b2b2b",
 } as any;
 
-class perk {
+function convertAllThosePerksForMePlease() {
+  const convertedPerks = { ...perksArray };
+  Object.entries(convertedPerks).forEach(([id, tree]: [string, any]) => {
+    Object.entries(tree.perks).forEach(([perkId, perk]: [string, any]) => {
+      if (perk.effects) {
+        perk.levelEffects = [{ ...perk.effects }];
+        delete perk.effects;
+      }
+    });
+  });
+  console.log(JSON.stringify(convertedPerks, null, 2));
+}
+
+class Perk {
   [id: string]: any;
   name: string;
   desc: string;
   commands?: any;
-  effects?: any;
   commandsExecuted?: boolean;
   pos: tileObject;
   traits?: Array<any>;
@@ -34,7 +46,7 @@ class perk {
   available: Function;
   bought: Function;
   tree: string;
-  constructor(base: perk) {
+  constructor(base: Perk) {
     this.id = base.id;
     let base_ = perksArray[base.tree || tree]["perks"][this.id];
     if (!base_ && this.id) {
@@ -49,8 +61,10 @@ class perk {
     this.name = basePerk.name;
     this.desc = basePerk.desc;
     this.commands = { ...basePerk.commands } ?? {};
-    this.effects = { ...basePerk.effects } ?? {};
     this.commandsExecuted = base.commandsExecuted ?? false;
+    console.log(base.level);
+    this.level = base.level ?? 0;
+    this.levelEffects = base.levelEffects ?? [{}];
     this.pos = basePerk.pos;
     this.relative_to = basePerk.relative_to ?? "";
     this.requires = basePerk.requires ?? [];
@@ -59,59 +73,81 @@ class perk {
     this.icon = basePerk.icon;
     this.tree = basePerk.tree;
 
+    if (this.levelEffects.length < 1) this.levelEffects = [{}];
+
     this.available = () => {
       if (player.pp <= 0 && !this.bought()) return false;
       let available = true;
       if (this.requires?.length > 0) {
         this.requires.some((id: string) => {
-          const perk_check = new perk(perksArray[tree]["perks"][id]);
-          if (!perk_check.bought()) available = false;
+          if (player.getPerkLevel(id) === 0) available = false;
         });
       }
       if (this.mutually_exclusive?.length > 0) {
         this.mutually_exclusive.some((id: string) => {
-          const perk_check = new perk(perksArray[tree]["perks"][id]);
-          if (perk_check.bought()) available = false;
+          if (player.getPerkLevel(id) > 0) available = false;
         });
       }
       return available;
     };
 
     this.bought = () => {
-      let isBought = false;
-      player.perks.some((prk) => {
-        if (prk.id == this.id) return (isBought = true);
-      });
-      return isBought;
+      console.log(player.getPerkLevel(this.id));
+      console.log(this.levelEffects.length);
+      console.log(player.getPerkLevel(this.id) >= this.levelEffects.length);
+      return player.getPerkLevel(this.id) >= this.levelEffects.length;
     };
 
     this.buy = () => {
       if (this.available() && !this.bought()) {
-        player.perks.push(new perk({ ...this }));
-        player.pp--;
-        // if (this.tree != "adventurer_shared" && !player.hasClass({ tree: this.tree })) {
-        //   player.classes.push(new combatClass(combatClasses[this.tree + "Class"]));
-        // }
-        this.traits.forEach((stat: any) => {
-          let add = true;
-          player.traits.some((mod: PermanentStatModifier) => {
-            if (mod.id === stat.id) {
-              add = false;
-              return true;
-            }
+        const ownedPerk = player.getPerk(this.id);
+        if (!ownedPerk) {
+          player.perks.push(new Perk({ ...this, level: 1 }));
+          lvl_history.perks.push({ id: this.id, level: 1 });
+          this.traits.forEach((stat: any) => {
+            let add = true;
+            player.traits.some((mod: PermanentStatModifier) => {
+              if (mod.id === stat.id) {
+                add = false;
+                return true;
+              }
+            });
+            if (add) player.traits.push(stat);
           });
-          if (add) player.traits.push(stat);
-        });
+        } else {
+          ownedPerk.level++;
+          if (!lvl_history.perks.find((perk: any) => perk.id == this.id)) {
+            lvl_history.perks.push({ id: this.id, level: 1 });
+          } else {
+            lvl_history.perks.find((perk: any) => perk.id == this.id).level++;
+          }
+        }
+        lvl_history.pp++;
+        player.pp--;
         player.updateTraits();
         player.updatePerks();
         player.updateAbilities();
-        lvl_history.perks.push(this.id);
-        lvl_history.pp++;
         formPerks();
         formStatUpgrades();
       }
     };
   }
+
+  getEffects(level: number = this.level) {
+    const effects = {};
+    this.levelEffects.forEach((effect: any, index: number) => {
+      if (index >= level) return;
+      Object.entries(effect).forEach((stat: any) => {
+        applyModifierToTotal(stat, effects);
+      });
+    });
+    return effects;
+  }
+
+  // getNextLevelEffects() {
+  //   if (this.level >= this.levelEffects.length) return {};
+  //   return this.getEffects(this.level + 1);
+  // }
 }
 
 function upgradeClassLevel(id: string) {
@@ -153,7 +189,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   // const topScroll = perkArea.scrollTop;
   perkArea.innerHTML = "";
   Object.entries(perksArray[tree].perks).forEach((_perk: any) => {
-    perks.push(new perk(_perk[1]));
+    perks.push(new Perk(_perk[1]));
   });
   hideHover();
   const baseSize: number = 128;
@@ -243,7 +279,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
   classButtonContainer.append(combatClassIcon, combatClassName);
   perkTreesContainer.append(classButtonContainer);
   staticBg.append(classPoints, points);
-  perks.forEach((_perk: perk) => {
+  perks.forEach((_perk: Perk) => {
     const perk = document.createElement("div");
     const img = document.createElement("img");
     const name = document.createElement("p");
@@ -275,7 +311,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     perk.append(img, name);
     perkArea.append(perk, svg);
   });
-  perks.forEach((_perk: perk) => {
+  perks.forEach((_perk: Perk) => {
     let perk = perkArea.querySelector<HTMLDivElement>(`.${_perk.id}`);
     if (_perk.requires) {
       _perk.requires.forEach((req: string) => {
@@ -390,7 +426,8 @@ function openLevelingScreen() {
   state.perkOpen = true;
 }
 
-function perkTT(perk: perk) {
+function perkTT(perk: Perk) {
+  const lvl = player.getPerkLevel(perk.id);
   let txt: string = "";
   txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
   txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
@@ -399,7 +436,7 @@ function perkTT(perk: perk) {
     txt += `<f>16px<f><c>white<c>${lang["requires"]}:  `;
     perk.requires.forEach((req) => {
       let found = false;
-      player.perks.forEach((prk: perk) => {
+      player.perks.forEach((prk: Perk) => {
         if (prk.id == req) {
           found = true;
         }
@@ -413,7 +450,7 @@ function perkTT(perk: perk) {
     txt += `§\n<f>16px<f><c>white<c>${lang["mutually_exclusive"]}:  `;
     perk.mutually_exclusive.forEach((req) => {
       let found = false;
-      player.perks.forEach((prk: perk) => {
+      player.perks.forEach((prk: Perk) => {
         if (prk.id == req) {
           found = true;
         }
@@ -423,14 +460,22 @@ function perkTT(perk: perk) {
     txt = txt.substring(0, txt.length - 2);
     txt += "§";
   }
-  if (Object.values(perk.commands).length > 0) {
+  if (Object.values(perk.commands).length > 0 && lvl === 0) {
     Object.entries(perk.commands).forEach((com: any) => (txt += commandSyntax(com[0], com[1])));
   }
-  if (Object.values(perk.effects).length > 0) {
-    txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
-    Object.entries(perk.effects).forEach((eff) => (txt += effectSyntax(eff, true)));
+  if (Object.keys(perk.levelEffects[0]).length > 0) {
+    if (lvl > 0) {
+      txt += `\n<f>16px<f>${lang["current_effects"] ?? "current_effects"}:\n`;
+      Object.entries(perk.getEffects(lvl)).forEach((stat) => {
+        txt += effectSyntax(stat, true);
+      });
+    }
+    txt += `\n<f>16px<f>${lang["next_level_effects"] ?? "next_level_effects"}:\n`;
+    Object.entries(perk.getEffects(lvl + 1)).forEach((stat) => {
+      txt += effectSyntax(stat, true);
+    });
   }
-  if (perk.traits) {
+  if (perk.traits && lvl === 0) {
     perk.traits.forEach((statModif: any) => {
       txt += statModifTT(statModif);
     });
@@ -497,13 +542,27 @@ function action2(e: MouseEvent) {
 }
 
 function undoChanges() {
-  lvl_history.perks.forEach((prk: string) => {
-    let index = player.perks.findIndex((_prk: any) => _prk.id == prk);
-    player.perks[index].traits.forEach((rem: any) => {
-      const modIndex = player.traits.findIndex((stat: any) => stat.id === rem.id);
-      player.traits.splice(modIndex, 1);
-    });
-    player.perks.splice(index, 1);
+  lvl_history.classUpgrades.forEach((upg: any) => {
+    const classToUp = player.getClass({ id: upg.id });
+    classToUp.level -= upg.level;
+    if (classToUp.level <= 0) {
+      player.classes.splice(
+        player.classes.findIndex((cls: any) => cls.id == upg.id),
+        1
+      );
+    }
+  });
+  lvl_history.perks.forEach((prk: { id: string; level: number }) => {
+    const ownedPerk = player.getPerk(prk.id);
+    ownedPerk.level -= prk.level;
+    if (ownedPerk.level <= 0) {
+      let index = player.perks.findIndex((_prk: any) => _prk.id == prk.id);
+      player.perks[index].traits.forEach((rem: any) => {
+        const modIndex = player.traits.findIndex((stat: any) => stat.id === rem.id);
+        player.traits.splice(modIndex, 1);
+      });
+      player.perks.splice(index, 1);
+    }
   });
   Object.entries(lvl_history.stats).forEach((stat: any) => {
     const id = stat[0];

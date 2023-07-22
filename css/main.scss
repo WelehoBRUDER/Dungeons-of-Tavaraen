@@ -225,7 +225,6 @@ body {
       animation: loading-bar 1.5s linear infinite;
 
       div.loading-bar-fill {
-        transition: 200ms;
         width: 0;
         height: 100%;
         background: rgb(38, 48, 194);
@@ -389,7 +388,9 @@ body {
     display: flex;
 
     .hotbarFrame {
-      transition: all 0.05s, position 0ms;
+      transition:
+        all 0.05s,
+        position 0ms;
       width: calc(124px * var(--ui-scale));
       height: calc(72px * var(--ui-scale));
       border: calc(4px * var(--ui-scale)) solid rgb(90, 89, 89);
@@ -549,7 +550,8 @@ body {
         padding: calc(4px * var(--ui-scale));
         background: rgba(25, 99, 196, 0.75);
         border-radius: calc(4px * var(--ui-scale));
-        box-shadow: inset 0 0 calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(17, 73, 177),
+        box-shadow:
+          inset 0 0 calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(17, 73, 177),
           0 0 calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(3, 14, 34);
 
         span {
@@ -1154,7 +1156,9 @@ body {
     width: calc(480px * var(--ui-scale));
     height: calc(280px * var(--ui-scale));
     background: rgba(15, 15, 15, 0.95);
-    box-shadow: inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95), 0px 0px 4px 2px gold;
+    box-shadow:
+      inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95),
+      0px 0px 4px 2px gold;
     position: absolute;
     right: calc(10px * var(--ui-scale));
     bottom: calc(10px * var(--ui-scale));
@@ -1573,7 +1577,9 @@ body {
         background: rgba(75, 20, 20, 0.95);
         border-radius: 50%;
         margin: calc(8px * var(--ui-scale));
-        box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 6px 4px rgb(39, 39, 39);
+        box-shadow:
+          inset 0 0 4px 4px rgba(45, 15, 15, 0.95),
+          0 0 6px 4px rgb(39, 39, 39);
         border: calc(3px * var(--ui-scale)) solid rgb(59, 59, 59);
 
         img {
@@ -1595,7 +1601,9 @@ body {
 
       .screenButton:hover {
         background: rgba(122, 33, 33, 0.95);
-        box-shadow: inset 0 0 4px 4px rgba(45, 15, 15, 0.95), 0 0 10px 8px rgb(39, 39, 39);
+        box-shadow:
+          inset 0 0 4px 4px rgba(45, 15, 15, 0.95),
+          0 0 10px 8px rgb(39, 39, 39);
       }
     }
   }
@@ -1671,7 +1679,8 @@ body {
         margin-top: calc(3px * var(--ui-scale));
         padding-top: calc(8px * var(--ui-scale));
         padding-bottom: calc(8px * var(--ui-scale));
-        box-shadow: inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83),
+        box-shadow:
+          inset 0 0 0px calc(4px * var(--ui-scale)) rgb(83, 83, 83),
           0 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) rgb(0, 0, 0);
         border-radius: calc(6px * var(--ui-scale));
         background: rgba(58, 58, 58, 0.75);
@@ -1885,7 +1894,8 @@ body {
         width: calc(250px * var(--ui-scale));
         height: calc(110px * var(--ui-scale));
         background: rgb(39, 39, 39);
-        box-shadow: inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15),
+        box-shadow:
+          inset 0 0 calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)) rgb(15, 15, 15),
           0 0 calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)) rgb(8, 8, 8);
         position: absolute;
         top: 50%;

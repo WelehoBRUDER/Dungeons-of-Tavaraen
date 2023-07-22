@@ -52,7 +52,7 @@ function abiTT(abi: ability, character: any = player) {
       txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
       const effect = new statEffect(statusEffects[status]);
       effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-      txt += statTT(effect);
+      txt += statTT(effect, true);
     });
   }
   if (abi.statusesUser?.length > 0) {
@@ -61,7 +61,7 @@ function abiTT(abi: ability, character: any = player) {
       txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
       const effect = new statEffect(statusEffects[status]);
       effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-      txt += statTT(effect);
+      txt += statTT(effect, true);
     });
   }
   if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
@@ -141,7 +141,7 @@ function embedAbiTT(abi: ability, character: any = player) {
       txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
       const effect = new statEffect(statusEffects[status]);
       effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-      txt += statTT(effect);
+      txt += statTT(effect, true);
     });
   }
   if (abi.statusesUser?.length > 0) {
@@ -150,7 +150,7 @@ function embedAbiTT(abi: ability, character: any = player) {
       txt += `<i>${statusEffects[status].icon}<i><f>15px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
       const effect = new statEffect(statusEffects[status]);
       effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-      txt += statTT(effect);
+      txt += statTT(effect, true);
     });
   }
   if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {

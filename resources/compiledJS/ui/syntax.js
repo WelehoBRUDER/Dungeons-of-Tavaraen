@@ -276,9 +276,9 @@ function effectSyntax(effect, embed = false) {
         const id = key.split("ability_")[1];
         const ability = new Ability(abilities[id], player);
         const name = lang[ability.id + "_name"] || ability.id;
-        text += `<i>${ability.icon}<i><c>goldenrod<c>${name} modified:<c>white<c>\n`;
+        text += `<f>${fs}<f><i>${ability.icon}<i><c>goldenrod<c>${name} modified:<c>white<c>\n`;
         Object.entries(value).forEach(([_key, _value]) => {
-            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}`;
+            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}§`;
         });
         return text + "\n";
     }
@@ -290,7 +290,7 @@ function effectSyntax(effect, embed = false) {
         const name = lang["effect_" + effect.id + "_name"] || effect.id;
         text += `<i>${effect.icon}<i><c>goldenrod<c>${name} effect modified:<c>white<c>\n`;
         Object.entries(value).forEach(([_key, _value]) => {
-            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}`;
+            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}§`;
         });
         return text;
     }
@@ -306,12 +306,12 @@ function effectSyntax(effect, embed = false) {
         const name = lang[key] || key;
         const id = key.substring(0, key.length - 1);
         const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
-        return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n`;
+        return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n§`;
     }
     else if (typeof value === "object") {
         let text = "";
         Object.entries(value).forEach(([_key, _value]) => {
-            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}`;
+            text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}§`;
         });
         return text;
     }

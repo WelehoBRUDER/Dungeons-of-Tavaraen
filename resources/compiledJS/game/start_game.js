@@ -496,8 +496,17 @@ player.addItem(new Armor(items.mysteriousGloves));
 player.addItem(new Armor(items.mysteriousLeggings));
 player.addItem(new Armor(items.mysteriousBoots));
 let preloadFinished = false;
+const loadingBarFill = document.querySelector(".loading-bar-fill");
+const loadingTextElement = document.querySelector(".loading-text");
+async function setLoadingBar(value, text) {
+    loadingBarFill.style.width = `${value}%`;
+    loadingTextElement.textContent = text;
+    return new Promise((resolve) => {
+        resolve(true);
+    });
+}
 async function initGame() {
-    document.querySelector(".loading-bar-fill").style.width = "0%";
+    setLoadingBar(0, "Loading settings...");
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
     if (options) {
         settings = new gameSettings(options);
@@ -506,12 +515,10 @@ async function initGame() {
     else
         settings = new gameSettings(settings);
     await gotoMainMenu(true);
-    document.querySelector(".loading-bar-fill").style.width = "10%";
-    document.querySelector(".loading-text").textContent = "Updating player...";
+    await setLoadingBar(10, "Loading game...");
     state.menuOpen = true;
     state.titleScreen = true;
-    document.querySelector(".loading-text").textContent = "Loading mods...";
-    document.querySelector(".loading-bar-fill").style.width = "50%";
+    await setLoadingBar(50, "Loading mods...");
     if (!settings.load_mods) {
         continueLoad();
         return;
@@ -538,12 +545,10 @@ async function initGame() {
 }
 async function continueLoad() {
     preloadFinished = true;
-    document.querySelector(".loading-bar-fill").style.width = "55%";
+    await setLoadingBar(60, "Loading assets...");
     await player.updateAbilities();
     player.updatePerks();
     player.updateTraits();
-    document.querySelector(".loading-text").textContent = "Creating tooltips....";
-    document.querySelector(".loading-bar-fill").style.width = "60%";
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -552,27 +557,22 @@ async function continueLoad() {
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
     updateCommands();
-    document.querySelector(".loading-text").textContent = "Building textures...";
-    await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
-    document.querySelector(".loading-bar-fill").style.width = "70%";
+    await helper.sleep(1); // This stupid buffer ensures that textures replaced by mods are loaded properly
+    await setLoadingBar(70, "Building textures...");
     try {
-        document.querySelector(".loading-text").textContent = "Loading textures...";
+        await setLoadingBar(80, "Loading textures...");
         await loadTextures();
-        document.querySelector(".loading-bar-fill").style.width = "80%";
-        document.querySelector(".loading-text").textContent = "Creating static maps...";
+        await setLoadingBar(85, "Creating static maps...");
         await createStaticMap();
-        document.querySelector(".loading-bar-fill").style.width = "85%";
-        document.querySelector(".loading-text").textContent = "Rendering map...";
+        await setLoadingBar(95, "Rendering map...");
         resizeCanvas();
         renderMinimap(maps[currentMap]);
         renderAreaMap(maps[currentMap]);
-        document.querySelector(".loading-bar-fill").style.width = "95%";
     }
     catch (err) {
         console.warn("Failed rendering map", err);
     }
-    document.querySelector(".loading-text").textContent = "Finishing load";
-    document.querySelector(".loading-bar-fill").style.width = "100%";
+    await setLoadingBar(100, "Done!");
     setTimeout(() => (document.querySelector(".loading").style.display = "none"), 0);
     resizeCanvas();
     renderMinimap(maps[currentMap]);

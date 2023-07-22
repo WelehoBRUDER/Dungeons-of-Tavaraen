@@ -204,7 +204,6 @@ body {
   animation: loading-bar 1.5s linear infinite;
 }
 .main .loading div.loading-bar div.loading-bar-fill {
-  transition: 200ms;
   width: 0;
   height: 100%;
   background: rgb(38, 48, 194);

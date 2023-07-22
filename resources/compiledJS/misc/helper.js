@@ -68,7 +68,7 @@ let helper = {
             }
         });
         trimmed.perks.forEach((perk, index) => {
-            const perkObject = { id: perk.id, tree: perk.tree };
+            const perkObject = { id: Perk.id, tree: Perk.tree };
             if (perk.commandsExecuted)
                 perkObject.commandsExecuted = perk.commandsExecuted;
             trimmed.perks[index] = perkObject;

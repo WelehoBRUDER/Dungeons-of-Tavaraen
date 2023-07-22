@@ -7,7 +7,7 @@ function createPerkInfo(_perk) {
     perkImage.src = _perk.icon;
     imageContainer.append(perkImage);
     tempWrapper.classList.add("tempWrapper");
-    tempWrapper.append(textSyntax(perkTT(new perk(_perk))));
+    tempWrapper.append(textSyntax(perkTT(new Perk(_perk))));
     contentContainer.append(tempWrapper, imageContainer);
 }
 function createAbilityInfo(_ability) {
