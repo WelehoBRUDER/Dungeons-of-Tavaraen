@@ -16,11 +16,11 @@ class statEffect {
         // @ts-ignore
         if (!base)
             throw new Error("BASE EFFECT INVALID!");
-        const defaultEffect = statusEffects[base.id];
+        const defaultEffect = { ...statusEffects[base.id] };
         this.id = defaultEffect.id;
         this.name = defaultEffect.name;
-        this.dot = defaultEffect.dot;
-        this.effects = defaultEffect.effects;
+        this.dot = { ...defaultEffect?.dot };
+        this.effects = { ...defaultEffect.effects };
         this.last = {
             total: defaultEffect.last.total,
             current: defaultEffect.last.total,
@@ -37,6 +37,7 @@ class statEffect {
     init(bonuses) {
         if (!bonuses)
             bonuses = {};
+        console.log(bonuses);
         Object.entries(this).forEach(([key, value]) => {
             if (typeof value === "number") {
                 let bonus = bonuses?.[key + "V"] || 0;

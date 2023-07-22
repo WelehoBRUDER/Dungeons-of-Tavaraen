@@ -29,7 +29,7 @@ const abilities = {
     statusesUser: ["defend"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   focus_strike: {
     id: "focus_strike",
@@ -45,7 +45,7 @@ const abilities = {
     requires_concentration: true,
     icon: "resources/icons/focus_strike.png",
     use_range: "1",
-    ai_chance: 3
+    ai_chance: 3,
   },
   invigorating_finish: {
     id: "invigorating_finish",
@@ -63,7 +63,7 @@ const abilities = {
     action_desc_pl: "attempt to land a finishing blow",
     icon: "resources/icons/invigorating_finish.png",
     use_range: "2",
-    ai_chance: 3
+    ai_chance: 3,
   },
   finishing_blow: {
     id: "finishing_blow",
@@ -79,7 +79,7 @@ const abilities = {
     action_desc_pl: "attempt to land a finishing blow",
     icon: "resources/icons/finishing_blow.png",
     use_range: "2",
-    ai_chance: 3
+    ai_chance: 3,
   },
   chivalrious_blow: {
     id: "chivalrious_blow",
@@ -97,7 +97,7 @@ const abilities = {
     requires_concentration: true,
     icon: "resources/icons/focus_strike.png",
     use_range: "1",
-    ai_chance: 15
+    ai_chance: 15,
   },
   true_shot: {
     id: "true_shot",
@@ -114,7 +114,7 @@ const abilities = {
     icon: "resources/icons/true_shot.png",
     shoots_projectile: "arrowChargedProjectile",
     use_range: "10",
-    ai_chance: 3
+    ai_chance: 3,
   },
   venomous_blow: {
     id: "venomous_blow",
@@ -132,7 +132,7 @@ const abilities = {
     requires_concentration: true,
     icon: "resources/icons/venomous_blow.png",
     use_range: "1",
-    ai_chance: 5
+    ai_chance: 5,
   },
   poisoned_arrow: {
     id: "poisoned_arrow",
@@ -151,7 +151,7 @@ const abilities = {
     icon: "resources/icons/poison_arrow.png",
     shoots_projectile: "arrowPoisonedProjectile",
     use_range: "11",
-    ai_chance: 3
+    ai_chance: 3,
   },
   sundering_arrow: {
     id: "sundering_arrow",
@@ -170,7 +170,7 @@ const abilities = {
     icon: "resources/icons/sundering_arrow.png",
     shoots_projectile: "arrowChargedProjectile",
     use_range: "11",
-    ai_chance: 3
+    ai_chance: 3,
   },
   shock_arrow: {
     id: "shock_arrow",
@@ -193,7 +193,7 @@ const abilities = {
     icon: "resources/icons/shock_arrow.png",
     shoots_projectile: "arrowChargedProjectile",
     use_range: "14",
-    ai_chance: 3
+    ai_chance: 3,
   },
   first_aid: {
     id: "first_aid",
@@ -210,7 +210,7 @@ const abilities = {
     recharge_only_in_combat: true,
     use_range: "0",
     self_target: true,
-    ai_chance: 1
+    ai_chance: 1,
   },
   battle_fury: {
     id: "battle_fury",
@@ -226,13 +226,13 @@ const abilities = {
     statusesUser: ["battle_fury"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   barbarian_rage: {
     id: "barbarian_rage",
     name: "Barbarian Rage",
     mana_cost: 0,
-    cooldown: 25,
+    cooldown: 50,
     damage_multiplier: 0,
     type: "buff",
     action_desc: "flies into a barbaric rage!",
@@ -242,7 +242,7 @@ const abilities = {
     statusesUser: ["rage"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   warrior_shout: {
     id: "warrior_shout",
@@ -268,7 +268,7 @@ const abilities = {
     aoe_size: 3.2,
     aoe_effect: "shoutAOE",
     aoe_ignore_ledge: true,
-    ai_chance: 3
+    ai_chance: 3,
   },
   berserk: {
     id: "berserk",
@@ -285,7 +285,7 @@ const abilities = {
     statusesUser: ["berserk"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   sneaky_stabbing: {
     id: "sneaky_stabbing",
@@ -301,7 +301,7 @@ const abilities = {
     statusesUser: ["sneaky_stabbing"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   awaken: {
     id: "awaken",
@@ -317,7 +317,7 @@ const abilities = {
     statusesUser: ["heightened_senses"],
     use_range: "0",
     self_target: true,
-    ai_chance: 2
+    ai_chance: 2,
   },
   ward_of_aurous: {
     id: "ward_of_aurous",
@@ -334,7 +334,7 @@ const abilities = {
     statusesUser: ["ward_of_aurous"],
     use_range: "0",
     self_target: true,
-    ai_chance: 3
+    ai_chance: 3,
   },
   icy_javelin: {
     id: "icy_javelin",
@@ -343,7 +343,7 @@ const abilities = {
     cooldown: 7,
     damages: {
       magic: 33,
-      ice: 67
+      ice: 67,
     },
     stat_bonus: "int",
     damage_multiplier: 1.2,
@@ -356,7 +356,7 @@ const abilities = {
     icon: "resources/icons/ice_javelin.png",
     shoots_projectile: "iceSpikedProjectile",
     use_range: "10",
-    ai_chance: 2
+    ai_chance: 2,
   },
   piercing_mana_bolt: {
     id: "piercing_mana_bolt",
@@ -365,7 +365,7 @@ const abilities = {
     cooldown: 0,
     damages: {
       pierce: 25,
-      magic: 75
+      magic: 75,
     },
     stat_bonus: "int",
     damage_multiplier: 1,
@@ -376,7 +376,7 @@ const abilities = {
     icon: "resources/icons/piercing_mana_bolt.png",
     shoots_projectile: "piercingManaBoltProjectile",
     use_range: "10",
-    ai_chance: 2
+    ai_chance: 2,
   },
   fireball: {
     id: "fireball",
@@ -385,7 +385,7 @@ const abilities = {
     cooldown: 5,
     damages: {
       crush: 15,
-      fire: 85
+      fire: 85,
     },
     statusesEnemy: ["burning"],
     status_power: 50,
@@ -400,7 +400,7 @@ const abilities = {
     aoe_size: 0,
     aoe_effect: "fireAOE",
     use_range: "9",
-    ai_chance: 2
+    ai_chance: 2,
   },
   smoke_bomb: {
     id: "smoke_bomb",
@@ -409,7 +409,7 @@ const abilities = {
     cooldown: 17,
     damages: {
       crush: 60,
-      fire: 40
+      fire: 40,
     },
     statusesEnemy: ["smoke_bomb_effect"],
     statusesUser: ["smoke_evasion"],
@@ -425,7 +425,7 @@ const abilities = {
     aoe_size: 1.7,
     aoe_effect: "smokeAOE",
     use_range: "7",
-    ai_chance: 2
+    ai_chance: 2,
   },
   shadow_step: {
     id: "shadow_step",
@@ -437,7 +437,7 @@ const abilities = {
     action_desc_pl: "steps into a shadow, moving rapidly.",
     icon: "resources/icons/shadow_step.png",
     use_range: "4",
-    ai_chance: 0
+    ai_chance: 0,
   },
   retreat: {
     id: "retreat",
@@ -451,7 +451,7 @@ const abilities = {
     action_desc_pl: "steps into a shadow, moving rapidly.",
     icon: "resources/icons/retreat.png",
     use_range: "7",
-    ai_chance: 0
+    ai_chance: 0,
   },
   charge: {
     id: "charge",
@@ -467,7 +467,7 @@ const abilities = {
     action_desc_pl: "you charge at foe",
     icon: "resources/icons/charge_ability.png",
     use_range: "8",
-    ai_chance: 5
+    ai_chance: 5,
   },
   barbarian_charge: {
     id: "barbarian_charge",
@@ -484,7 +484,7 @@ const abilities = {
     icon: "resources/icons/barbarian_charge.png",
     recharge_only_in_combat: true,
     use_range: "10",
-    ai_chance: 5
+    ai_chance: 5,
   },
   reap: {
     id: "reap",
@@ -500,7 +500,7 @@ const abilities = {
     action_desc_pl: "you reap foe",
     icon: "resources/icons/charge_ability.png",
     use_range: "12",
-    ai_chance: 10
+    ai_chance: 10,
   },
   challenge: {
     id: "challenge",
@@ -514,7 +514,7 @@ const abilities = {
     action_desc_pl: "you challenge",
     icon: "resources/icons/charge_ability.png",
     use_range: "14",
-    ai_chance: 15
+    ai_chance: 15,
   },
   purification: {
     id: "purification",
@@ -528,7 +528,7 @@ const abilities = {
     icon: "resources/icons/purification.png",
     use_range: "0",
     self_target: true,
-    ai_chance: 1
+    ai_chance: 1,
   },
   summon_skeleton_warrior: {
     id: "summon_skeleton_warrior",
@@ -545,7 +545,7 @@ const abilities = {
     action_desc_pl: "you purify yourself",
     icon: "resources/icons/summonSkelWarrior.png",
     use_range: "8",
-    ai_chance: 1
+    ai_chance: 1,
   },
   blight: {
     id: "blight",
@@ -553,7 +553,7 @@ const abilities = {
     mana_cost: 4,
     cooldown: 5,
     damages: {
-      dark: 100
+      dark: 100,
     },
     statusesEnemy: ["blighted"],
     status_power: 50,
@@ -566,7 +566,7 @@ const abilities = {
     icon: "resources/icons/blighted.png",
     shoots_projectile: "blightProjectile",
     use_range: "6",
-    ai_chance: 2
+    ai_chance: 2,
   },
   distraction: {
     id: "distraction",
@@ -583,7 +583,7 @@ const abilities = {
     action_desc_pl: "you purify yourself",
     icon: "resources/icons/dummy_ability.png",
     use_range: "3",
-    ai_chance: 1
+    ai_chance: 1,
   },
   totem_of_arrows: {
     id: "totem_of_arrows",
@@ -600,7 +600,7 @@ const abilities = {
     action_desc_pl: "you purify yourself",
     icon: "resources/icons/totem_of_arrows.png",
     use_range: "5",
-    ai_chance: 1
+    ai_chance: 1,
   },
   ranger_wolf: {
     id: "ranger_wolf",
@@ -617,6 +617,6 @@ const abilities = {
     action_desc_pl: "you purify yourself",
     icon: "resources/icons/ranger_wolf.png",
     use_range: "4",
-    ai_chance: 1
+    ai_chance: 1,
   },
 } as _abb;

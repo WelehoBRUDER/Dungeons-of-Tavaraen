@@ -639,26 +639,39 @@ const perksArray = {
         id: "thrill_of_battle",
         name: "Thrill of Battle",
         desc: "",
-        traits: [
-          {
-            id: "blood_rage_1",
-          },
-          {
-            id: "blood_rage_2",
-          },
-        ],
         tree: "barbarian",
         pos: {
           x: 7.5,
           y: 1,
         },
-        icon: "resources/icons/rage.png",
+        commands: {
+          add_ability_barbarian_rage: 1,
+        },
+        icon: "resources/icons/berserk.png",
         levelEffects: [
+          {},
           {
-            strV: 1,
+            ability_barbarian_rage: {
+              effect_rage: {
+                effects: {
+                  strVV: 5,
+                  meleeDamagePV: 5,
+                  physicalArmorVV: 15,
+                },
+              },
+              cooldownV: -10,
+            },
           },
           {
-            strV: 1,
+            ability_barbarian_rage: {
+              effect_rage: {
+                effects: {
+                  meleeDamagePV: 10,
+                  physicalArmorVV: 35,
+                },
+              },
+              cooldownV: -10,
+            },
           },
         ],
       },
@@ -857,9 +870,6 @@ const perksArray = {
         id: "perk_barbarian_rage",
         name: "Barbarian Rage",
         desc: "",
-        commands: {
-          add_ability_barbarian_rage: 1,
-        },
         tree: "barbarian",
         pos: {
           x: 4,
@@ -889,15 +899,6 @@ const perksArray = {
         icon: "resources/icons/skull_bleeding_eyes_flame.png",
         levelEffects: [
           {
-            ability_barbarian_rage: {
-              cooldownV: -3,
-              effect_rage: {
-                effects: {
-                  strVV: 5,
-                  resistAllVV: 5,
-                },
-              },
-            },
             damageP: 4,
           },
         ],

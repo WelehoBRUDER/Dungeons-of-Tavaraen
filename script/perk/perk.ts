@@ -76,7 +76,7 @@ class Perk {
     if (this.levelEffects.length < 1) this.levelEffects = [{}];
 
     this.available = () => {
-      if (player.pp <= 0 && !this.bought()) return false;
+      if (player.pp <= 0 && !this.maxed()) return false;
       let available = true;
       if (this.requires?.length > 0) {
         this.requires.some((id: string) => {
@@ -92,14 +92,15 @@ class Perk {
     };
 
     this.bought = () => {
-      console.log(player.getPerkLevel(this.id));
-      console.log(this.levelEffects.length);
-      console.log(player.getPerkLevel(this.id) >= this.levelEffects.length);
+      return player.getPerkLevel(this.id) > 0;
+    };
+
+    this.maxed = () => {
       return player.getPerkLevel(this.id) >= this.levelEffects.length;
     };
 
     this.buy = () => {
-      if (this.available() && !this.bought()) {
+      if (this.available() && !this.maxed()) {
         const ownedPerk = player.getPerk(this.id);
         if (!ownedPerk) {
           player.perks.push(new Perk({ ...this, level: 1 }));
@@ -287,7 +288,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     perk.classList.add(`${_perk.id}`);
     perk.style.backgroundColor = perkColors[tree];
     img.src = _perk.icon;
-    name.textContent = lang[_perk.id + "_name"] ?? _perk.id;
+    name.textContent = `${lang[_perk.id + "_name"] ?? _perk.id} ${player.getPerkLevel(_perk.id)}/${_perk.levelEffects.length}`;
     tooltip(perk, perkTT(_perk));
     perk.style.width = `${baseSize}px`;
     perk.style.height = `${baseSize}px`;
@@ -296,6 +297,7 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
     name.style.fontSize = `${baseFont}px`;
     perk.addEventListener("click", (a) => _perk.buy());
     if (_perk.bought()) perk.classList.add("perkBought");
+    if (_perk.maxed()) perk.classList.add("perkMaxed");
     if (!_perk.available()) {
       perk.classList.add("perkUnavailable");
     }
@@ -318,7 +320,8 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
         let found = perkArea.querySelector<HTMLDivElement>(`.${req}`);
         let color = "rgb(65, 65, 65)";
         let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        if (_perk.bought()) color = "gold";
+        if (_perk.maxed()) color = "lime";
+        else if (_perk.bought()) color = "white";
         else if (!_perk.available()) color = "rgb(40, 40, 40)";
         line.setAttribute("x1", `${+perk.style.left.replace(/\D/g, "") + lineSize}px`);
         line.setAttribute("y1", `${+perk.style.top.replace(/\D/g, "") + lineSize}px`);
@@ -463,7 +466,7 @@ function perkTT(perk: Perk) {
   if (Object.values(perk.commands).length > 0 && lvl === 0) {
     Object.entries(perk.commands).forEach((com: any) => (txt += commandSyntax(com[0], com[1])));
   }
-  if (Object.keys(perk.levelEffects[0]).length > 0) {
+  if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
     if (lvl > 0) {
       txt += `\n<f>16px<f>${lang["current_effects"] ?? "current_effects"}:\n`;
       Object.entries(perk.getEffects(lvl)).forEach((stat) => {

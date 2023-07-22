@@ -60,7 +60,7 @@ function abiTT(abi: ability, character: any = player) {
     abi.statusesUser.forEach((status: string) => {
       txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
       const effect = new statEffect(statusEffects[status]);
-      effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
+      effect.init({ ...character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status] });
       txt += statTT(effect, true);
     });
   }
@@ -192,10 +192,12 @@ function statTT(status: statEffect, embed: boolean = false) {
   let txt: string = "";
   if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
   if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
-  if (status.dot)
+  console.log(status);
+  if (Object.keys(status.dot).length > 0) {
     txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[
       status.dot.damageType + "_damage"
     ].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+  }
   Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed)));
   if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
   if (status.break_concentration)

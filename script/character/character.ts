@@ -345,7 +345,7 @@ class Character {
 
     this.effects = () => {
       this.statusEffects.forEach((status: statEffect, index: number) => {
-        if (status.dot) {
+        if (Object.keys(status.dot).length > 0) {
           const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
           this.stats.hp -= dmg;
           spawnFloatingText(this.cords, dmg.toString(), "red", 32);
