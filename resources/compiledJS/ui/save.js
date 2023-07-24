@@ -112,10 +112,9 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
         loadGame.addEventListener("click", async () => {
             timePlayedNow = performance.now();
             loadingScreen.style.display = "flex";
-            loadingText.textContent = "Loading save...";
-            document.querySelector(".loading-bar-fill").style.width = "0%";
+            await setLoadingBar(0, "Loading save...");
             await helper.sleep(5);
-            document.querySelector(".loading-bar-fill").style.width = "10%";
+            await setLoadingBar(10, "Loading save...");
             let fm;
             let pl;
             let fe;
@@ -146,10 +145,11 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                     if (item.itm.type === "consumable")
                         return (item.itm = new Consumable({ ...items[item.itm.id] }));
                 });
+                pl.updateClasses();
                 pl.updateTraits();
                 pl.updatePerks(true);
                 pl.updateAbilities();
-                document.querySelector(".loading-bar-fill").style.width = "40%";
+                await setLoadingBar(40, "Loading save...");
             }
             catch (err) {
                 console.error(err.message);
@@ -169,17 +169,16 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             actionCooldown = false;
             movementCooldown = false;
             state.inCombat = false;
-            console.log("map", fm);
-            document.querySelector(".loading-bar-fill").style.width = "70%";
+            await setLoadingBar(70, "Loading save...");
             player.updateTraits();
             player.updatePerks(true);
             player.updateAbilities();
             renderMinimap(maps[currentMap]);
             renderAreaMap(maps[currentMap]);
-            document.querySelector(".loading-bar-fill").style.width = "85%";
+            await setLoadingBar(85, "Loading save...");
             helper.purgeDeadEnemies();
             helper.killAllQuestEnemies();
-            document.querySelector(".loading-bar-fill").style.width = "90%";
+            await setLoadingBar(90, "Loading save...");
             spawnQuestMonsters();
             convertEnemytraits();
             closeGameMenu();
@@ -189,7 +188,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
             updateUI();
             handleEscape();
             closeAllWindowsAndMenus();
-            document.querySelector(".loading-bar-fill").style.width = "100%";
+            await setLoadingBar(100, "Save loaded!");
             loadingScreen.style.display = "none";
         });
         deleteGame.addEventListener("click", () => {

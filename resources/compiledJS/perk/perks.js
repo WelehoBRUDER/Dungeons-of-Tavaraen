@@ -595,9 +595,9 @@ const perksArray = {
                 icon: "resources/icons/shield_symbol.png",
                 levelEffects: [
                     {
-                        physicalDefV: 10,
-                        magicalDefV: 5,
-                        elementalDefV: 5,
+                        physicalArmorV: 10,
+                        magicalArmorV: 5,
+                        elementalArmorV: 5,
                         regenHpV: 1.5,
                         evasionV: 5,
                     },
@@ -649,6 +649,19 @@ const perksArray = {
                     add_ability_barbarian_rage: 1,
                 },
                 icon: "resources/icons/berserk.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 1,
+                    },
+                    {
+                        classLevelRequired: 3,
+                        compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+                    },
+                    {
+                        classLevelRequired: 6,
+                        compareAbility: "barbarian_rage",
+                    },
+                ],
                 levelEffects: [
                     {},
                     {
@@ -710,9 +723,34 @@ const perksArray = {
                 relative_to: "weapon_mastery",
                 requires: ["weapon_mastery"],
                 icon: "resources/icons/barbarian_charge.png",
-                levelEffects: [
+                levelProperties: [
                     {
-                        hpMaxV: 10,
+                        classLevelRequired: 3,
+                    },
+                    {
+                        classLevelRequired: 5,
+                        compareAbility: "barbarian_charge", // this will hide the auto generated tooltip
+                    },
+                    {
+                        classLevelRequired: 10,
+                        compareAbility: "barbarian_charge",
+                    },
+                ],
+                levelEffects: [
+                    {},
+                    {
+                        ability_barbarian_charge: {
+                            damage_multiplierP: 30,
+                            cooldownV: -5,
+                            use_rangeV: 2,
+                        },
+                    },
+                    {
+                        ability_barbarian_charge: {
+                            damage_multiplierP: 20,
+                            cooldownV: -5,
+                            use_rangeV: 3,
+                        },
                     },
                 ],
             },
@@ -944,9 +982,9 @@ const perksArray = {
                             cooldownV: -5,
                             effect_berserk: {
                                 effects: {
-                                    physicalDefPV: 50,
-                                    magicalDefPV: 50,
-                                    elementalDefPV: 50,
+                                    physicalArmorPV: 50,
+                                    magicalArmorPV: 50,
+                                    elementalArmorPV: 50,
                                     resistAllPV: 50,
                                     regenHpPV: 50,
                                 },

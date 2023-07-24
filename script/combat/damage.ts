@@ -57,7 +57,6 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
     // Calculate defenses
     let defense = 1;
     const currentArmor = targetArmor[damageCategories[damageType]];
-    console.log("curArmor", currentArmor);
     const penetrationMultiplier = 1 - penetration;
     if (currentArmor > 0) {
       const armorWithLoss = Math.min(currentArmor + penetration, 1);
@@ -69,12 +68,10 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
       1 - (targetResists[damageType] > 0 ? targetResists[damageType] * penetrationMultiplier : targetResists[damageType]) / 100;
 
     // Check for NaN to prevent breaking calculation
-    console.log("def", defense, "res", resistance, "pen", penetrationMultiplier);
     if (isNaN(bonus)) bonus = 0;
     if (isNaN(val)) val = 0;
     if (isNaN(defense)) defense = 1;
     if (isNaN(resistance)) resistance = 1;
-    console.log("def", defense, "res", resistance, "pen", penetrationMultiplier);
 
     // Calculate final damage
     let baseValue: number = damageValue + val + bonus;

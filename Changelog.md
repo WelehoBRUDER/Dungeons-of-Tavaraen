@@ -19,6 +19,7 @@ Your character may be severely underpowered if you continue an old save.
 - Level up bonuses when below level 6 have been removed.
   - You gain fewer perk and stat points when leveling up.
   - To make up for this, the experience needed to level up has been lowered.
+- Tooltips when upgrading skills now show the new values that change.
 
 # 1.2.4 ~ 30.6.2023
 

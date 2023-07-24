@@ -1,12 +1,13 @@
 // @ts-nocheck
 
 interface playerChar extends characterObject {
-  canFly: boolean;
+  [canFly: string]: any;
   sprite: string;
   race: string;
   hair: number;
   eyes: number;
   face: number;
+  level: levelObject;
   weapon: weaponClass | any;
   offhand: any;
   chest: armorClass | any;
@@ -17,26 +18,34 @@ interface playerChar extends characterObject {
   artifact1: any;
   artifact2: any;
   artifact3: any;
-  level: levelObject;
-  hpRegen?: Function;
+  hpRegen: Function;
+  inventory: Array<any>;
+  raceEffect: RaceEffect;
   carryingWeight?: Function;
   maxCarryWeight?: Function;
+  sight?: Function;
   isDead?: boolean;
   grave: any;
   respawnPoint: any;
   gold: number;
+  perks: Array<any>;
+  classPoints: number;
+  sp: number;
+  pp: number;
   usedShrines: Array<any>;
+  updatePerks?: Function;
+  lvlUp?: Function;
   unarmedDamages?: any;
   fistDmg?: Function;
   classes: combatClass[];
   oldCords?: tileObject;
   getArtifactSetBonuses?: Function;
   flags?: any;
-  getBaseStats?: Function;
   addItem?: Function;
   addGold?: Function;
   questProgress?: Array<any>;
-  entitiesEverEncountered?: entityMemory;
+  entitiesEverEncountered: entityMemory;
+  sex: string;
   activeQuest?: number;
   timePlayed?: number;
   calcDamage?: Function;
@@ -182,6 +191,7 @@ class PlayerCharacter extends Character {
     this.updatePerks = (dontUpdateUI: boolean = false, dontExecuteCommands: boolean = false) => {
       this.perks.forEach((prk: any, index: number) => {
         let cmdsEx = prk.commandsExecuted;
+        if (!prk.id) return;
         prk = new Perk({ ...perksArray[prk.tree]["perks"][prk.id], level: prk.level ?? 1 });
         console.log(prk);
         if (!cmdsEx && !dontExecuteCommands) {
@@ -401,20 +411,6 @@ class PlayerCharacter extends Character {
           } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
         });
       }
-      if (this.classes?.main?.statBonuses) {
-        Object.entries(this.classes.main.statBonuses).forEach((eff: any) => {
-          if (!mods?.[eff[0]]) {
-            mods[eff[0]] = eff[1];
-          } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
-        });
-      }
-      if (this.classes?.sub?.statBonuses) {
-        Object.entries(this.classes.sub.statBonuses).forEach((eff: any) => {
-          if (!mods?.[eff[0]]) {
-            mods[eff[0]] = eff[1];
-          } else if (eff[0].endsWith("V")) mods[eff[0]] += eff[1];
-        });
-      }
       baseStats.forEach((stat: string) => {
         if (!mods[stat + "V"]) mods[stat + "V"] = 0;
         if (!mods[stat + "P"]) mods[stat + "P"] = 1;
@@ -483,6 +479,13 @@ class PlayerCharacter extends Character {
       return dmg;
     };
   }
+
+  updateClasses() {
+    this.classes.forEach((cl: combatClass, index: number) => {
+      this.classes[index] = new combatClass({ ...combatClasses[cl.id], level: cl.level });
+    });
+  }
+
   hasClass(options?: { id?: string; tree?: string }) {
     if (options?.id) {
       if (this.classes.findIndex((c: combatClass) => c.id === options.id) !== -1) return true;

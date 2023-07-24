@@ -262,7 +262,7 @@ function getProperties(key: string) {
   return props;
 }
 
-function effectSyntax(effect: any, embed: boolean = false) {
+function effectSyntax(effect: any, embed: boolean = false, compare?: number) {
   // Syntax when value is an ability object
   let key: string = effect[0];
   let value: any = effect[1];
@@ -271,7 +271,7 @@ function effectSyntax(effect: any, embed: boolean = false) {
     let text: string = "";
     const id = key.split("ability_")[1];
     const ability = new Ability(abilities[id], player);
-    const name = lang[ability.id + "_name"] || ability.id;
+    const name = helper.localise(ability.id);
     text += `<f>${fs}<f><i>${ability.icon}<i><c>goldenrod<c>${name} modified:<c>white<c>\n`;
     Object.entries(value).forEach(([_key, _value]) => {
       text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}§`;
@@ -283,7 +283,7 @@ function effectSyntax(effect: any, embed: boolean = false) {
     let text: string = "";
     const id = key.split("effect_")[1];
     const effect = new statEffect(statusEffects[id]);
-    const name = lang["effect_" + effect.id + "_name"] || effect.id;
+    const name = helper.localise("effect_" + effect.id + "_name");
     text += `<i>${effect.icon}<i><c>goldenrod<c>${name} effect modified:<c>white<c>\n`;
     Object.entries(value).forEach(([_key, _value]) => {
       text += ` <f>${fs}<f>${effectSyntax([_key, _value], embed)}§`;
@@ -299,9 +299,14 @@ function effectSyntax(effect: any, embed: boolean = false) {
     const color = props.lowerIsBetter ? (value < 0 ? "lime" : "red") : value > 0 ? "lime" : "red";
     value *= props.multiplyBy;
     key = key.substring(0, key.length - 1);
-    const name = lang[key] || key;
+    const name = helper.localise(key);
     const id = key.substring(0, key.length - 1);
     const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
+    if (compare) {
+      return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}[${value.toFixed(2)}${suffix} ---> ${compare.toFixed(
+        2
+      )}${suffix}]\n§`;
+    }
     return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n§`;
   } else if (typeof value === "object") {
     let text: string = "";

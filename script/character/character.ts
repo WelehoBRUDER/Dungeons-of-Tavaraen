@@ -256,6 +256,7 @@ class Character {
         const armorFlat = this.allModifiers[armor + "ArmorV"] || 0;
         const armorModifier = this.allModifiers[armor + "ArmorP"] || 1;
         armors[armor] = Math.floor((this.armor[armor] + armorFlat) * armorModifier);
+        if (armors[armor] < 0) armors[armor] = 0;
       });
       return armors;
     };

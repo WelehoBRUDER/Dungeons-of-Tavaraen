@@ -86,9 +86,9 @@ const statusEffects = {
     id: "sunder",
     name: "Sundered",
     effects: {
-      physicalDefP: -50,
-      magicalDefP: -50,
-      elementalDefP: -50,
+      physicalArmorP: -50,
+      magicalArmorP: -50,
+      elementalArmorP: -50,
       resistAllP: -50,
     },
     last: {
@@ -218,9 +218,9 @@ const statusEffects = {
       ability_barbarian_charge: {
         cooldownP: -75,
       },
-      physicalDefP: -100,
-      magicalDefP: -100,
-      elementalDefP: -100,
+      physicalArmorP: -100,
+      magicalArmorP: -100,
+      elementalArmorP: -100,
       resistAllP: -100,
       regenHpP: -100,
       regenMpP: -100,

@@ -34,6 +34,9 @@ class Perk {
     desc;
     commands;
     commandsExecuted;
+    level;
+    levelProperties;
+    levelEffects;
     pos;
     traits;
     relative_to;
@@ -59,9 +62,9 @@ class Perk {
         this.desc = basePerk.desc;
         this.commands = { ...basePerk.commands } ?? {};
         this.commandsExecuted = base.commandsExecuted ?? false;
-        console.log(base.level);
         this.level = base.level ?? 0;
-        this.levelEffects = base.levelEffects ?? [{}];
+        this.levelProperties = basePerk.levelProperties ?? [{}];
+        this.levelEffects = basePerk.levelEffects ?? [{}];
         this.pos = basePerk.pos;
         this.relative_to = basePerk.relative_to ?? "";
         this.requires = basePerk.requires ?? [];
@@ -466,16 +469,25 @@ function perkTT(perk) {
         Object.entries(perk.commands).forEach((com) => (txt += commandSyntax(com[0], com[1])));
     }
     if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
+        const props = perk.levelProperties?.[lvl];
         if (lvl > 0) {
-            txt += `\n<f>16px<f>${lang["current_effects"] ?? "current_effects"}:\n`;
-            Object.entries(perk.getEffects(lvl)).forEach((stat) => {
+            if (props?.compareAbility) {
+                const ability = new Ability({ ...abilities[props.compareAbility] }, player);
+                txt += compareAbilityTooltip(ability, player, perk.getEffects(lvl + 1));
+            }
+            else {
+                txt += `\n<f>16px<f>${lang["current_effects"] ?? "current_effects"}:\n`;
+                Object.entries(perk.getEffects(lvl)).forEach((stat) => {
+                    txt += effectSyntax(stat, true);
+                });
+            }
+        }
+        if (!props?.compareAbility) {
+            txt += `\n<f>16px<f>${lang["next_level_effects"] ?? "next_level_effects"}:\n`;
+            Object.entries(perk.getEffects(lvl + 1)).forEach((stat) => {
                 txt += effectSyntax(stat, true);
             });
         }
-        txt += `\n<f>16px<f>${lang["next_level_effects"] ?? "next_level_effects"}:\n`;
-        Object.entries(perk.getEffects(lvl + 1)).forEach((stat) => {
-            txt += effectSyntax(stat, true);
-        });
     }
     if (perk.traits && lvl === 0) {
         perk.traits.forEach((statModif) => {

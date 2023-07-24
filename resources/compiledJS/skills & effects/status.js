@@ -37,7 +37,6 @@ class statEffect {
     init(bonuses) {
         if (!bonuses)
             bonuses = {};
-        console.log(bonuses);
         Object.entries(this).forEach(([key, value]) => {
             if (typeof value === "number") {
                 let bonus = bonuses?.[key + "V"] || 0;

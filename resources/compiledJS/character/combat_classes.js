@@ -114,15 +114,13 @@ class combatClass {
         const baseClass = combatClasses[this.id];
         this.statBonuses = baseClass.statBonuses;
         this.levelBonuses = baseClass.levelBonuses;
-        this.level = baseClass.level ?? 1;
+        this.level = base.level ?? 1;
         this.color = baseClass.color;
         this.icon = baseClass.icon;
         this.perkTree = baseClass.perkTree;
     }
     getLevelBonuses(options) {
         const bonuses = {};
-        console.log(this);
-        console.log("level bonuses", this.levelBonuses, this.level, options);
         Object.entries(this.levelBonuses).forEach(([key, value]) => {
             bonuses[key] = value * (this.level + (options?.addToLevel ?? 0));
         });

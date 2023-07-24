@@ -139,7 +139,7 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   background-size: cover;
   background-position: center;
   user-select: none;
@@ -919,7 +919,7 @@ body {
 .main .playerWindow pre span {
   margin: 0;
   font-size: calc(22px * var(--ui-scale));
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
   line-height: calc(24px * var(--ui-scale));
 }
@@ -980,7 +980,7 @@ body {
 .main .textWindow pre span {
   margin: 0;
   font-size: 25px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
   line-height: 24px;
   white-space: pre-wrap;
@@ -1035,19 +1035,19 @@ body {
   border-radius: 10%;
 }
 .main .mapHover {
-  width: calc(480px * var(--ui-scale));
-  height: calc(280px * var(--ui-scale));
+  width: calc(380px * var(--ui-scale));
+  height: calc(270px * var(--ui-scale));
   background: rgba(15, 15, 15, 0.95);
-  box-shadow: inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95), 0px 0px 4px 2px gold;
+  box-shadow: inset 0px 0px 20px 16px rgba(3, 3, 3, 0.95);
   position: absolute;
   right: calc(10px * var(--ui-scale));
   bottom: calc(10px * var(--ui-scale));
-  border: calc(5px * var(--ui-scale)) solid goldenrod;
+  border: calc(4px * var(--ui-scale)) solid goldenrod;
   display: none;
   pointer-events: none;
 }
 .main .mapHover p {
-  font-size: calc(28px * var(--ui-scale));
+  font-size: calc(21px * var(--ui-scale));
   margin: 0;
 }
 .main .mapHover pre {
@@ -1055,18 +1055,18 @@ body {
 }
 .main .mapHover pre span {
   margin: 0;
-  font-size: calc(22px * var(--ui-scale));
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: calc(16px * var(--ui-scale));
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
-  line-height: calc(16px * var(--ui-scale));
+  line-height: calc(8px * var(--ui-scale));
 }
 .main .mapHover pre img {
-  width: calc(22px * var(--ui-scale));
+  width: calc(18px * var(--ui-scale));
   vertical-align: middle;
 }
 .main .mapHover .enResists {
   position: absolute;
-  top: calc(50px * var(--ui-scale));
+  top: calc(30px * var(--ui-scale));
   right: calc(10px * var(--ui-scale));
 }
 .main #globalHover {
@@ -1093,7 +1093,7 @@ body {
   margin: 0;
   color: inherit;
   font-size: inherit;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
   line-height: inherit;
 }
@@ -1127,7 +1127,7 @@ body {
 }
 .main .worldText pre span {
   font-size: calc(15px * var(--ui-scale));
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   white-space: normal;
   text-shadow: 0px 0px 8px black;
   margin: 0;
@@ -1550,7 +1550,7 @@ body {
   font-size: inherit;
   color: rgb(204, 204, 204);
   font-size: calc(24px * var(--ui-scale));
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
   line-height: inherit;
 }
@@ -1978,7 +1978,7 @@ body {
 .main .questJournalWindow .questInfo pre span {
   margin: 0;
   font-size: calc(22px * var(--ui-scale));
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Montserrat";
   text-shadow: 0px 0px 8px black;
   line-height: calc(24px * var(--ui-scale));
 }

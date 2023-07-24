@@ -8,6 +8,7 @@ interface HelperInterface {
   roundFloat: Function;
   random: Function;
   sleep: Function;
+  localise: Function;
 }
 
 /* Helper object contains multiple misc functions used throughout the code */
@@ -45,8 +46,8 @@ let helper = {
   sleep: function (ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   },
-  trimPlayerObjectForSaveFile: function (playerObject: PlayerCharacter) {
-    const trimmed: PlayerCharacter = { ...playerObject };
+  trimPlayerObjectForSaveFile: function (playerObject: playerChar) {
+    const trimmed: playerChar = { ...playerObject };
     trimmed.inventory.forEach((itm: any, index: number) => {
       if (itm.stackable || itm.type === "consumable")
         trimmed.inventory[index] = {
@@ -75,7 +76,7 @@ let helper = {
       }
     });
     trimmed.perks.forEach((perk: any, index: number) => {
-      const perkObject: any = { id: Perk.id, tree: Perk.tree };
+      const perkObject: any = { id: perk.id, tree: perk.tree, level: perk.level };
       if (perk.commandsExecuted) perkObject.commandsExecuted = perk.commandsExecuted;
       trimmed.perks[index] = perkObject;
     });
@@ -128,5 +129,24 @@ let helper = {
         enemy.restore();
       });
     });
+  },
+  localise: function (string: string) {
+    let localisedString = string;
+    if (lang[string]) {
+      localisedString = lang[string];
+    }
+    if (string.endsWith("V") || string.endsWith("P")) {
+      const baseString = string.substring(0, string.length - 1);
+      if (lang[baseString]) {
+        localisedString = lang[baseString];
+        if (string.endsWith("P")) {
+          localisedString += "%";
+        }
+      }
+    }
+    if (lang[string + "_name"]) {
+      localisedString = lang[string + "_name"];
+    }
+    return localisedString;
   },
 } as HelperInterface;
