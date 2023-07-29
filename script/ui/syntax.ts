@@ -296,7 +296,7 @@ function effectSyntax(effect: any, embed: boolean = false, compare?: number) {
     const valueType = key.substring(key.length - 1);
     const prefix = value >= 0 ? "+" : "";
     const suffix = valueType === "P" || props.addPercentageSuffix ? "%" : props.addSuffix ? props.addSuffix : "";
-    const color = props.lowerIsBetter ? (value < 0 ? "lime" : "red") : value > 0 ? "lime" : "red";
+    const color = props.lowerIsBetter ? (value <= 0 ? "lime" : "red") : value >= 0 ? "lime" : "red";
     value *= props.multiplyBy;
     key = key.substring(0, key.length - 1);
     const name = helper.localise(key);

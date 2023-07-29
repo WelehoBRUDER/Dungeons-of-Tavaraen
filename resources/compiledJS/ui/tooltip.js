@@ -203,6 +203,7 @@ function embedAbiTT(abi, character = player) {
 function compareAbilityTooltip(ability, character, bonuses) {
     const abi = new Ability(ability, character);
     const compare = bonuses["ability_" + ability.id];
+    console.log(compare);
     let txt = "";
     txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
     txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
@@ -288,6 +289,7 @@ function compareAbilityTooltip(ability, character, bonuses) {
             const effect = new statEffect(statusEffects[status]);
             effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             if (compare["effect_" + status]) {
+                console.log(compare["effect_" + status]);
                 txt += compareStatTooltip(effect, compare["effect_" + status]);
             }
             else {
@@ -417,6 +419,16 @@ function compareStatTooltip(status, bonuses) {
             txt += effectSyntax(eff, true);
         }
     });
+    if (bonuses?.effects) {
+        Object.entries(bonuses.effects).forEach((bonus) => {
+            console.log("bonus effects", bonus[0]);
+            if (!status.effects[bonus[0]]) {
+                const comparison = bonus[1];
+                bonus[1] = 0;
+                txt += effectSyntax(bonus, true, comparison);
+            }
+        });
+    }
     if (status.silence) {
         txt += `§<i>${icons.silence}<i><f>16px<f><c>orange<c>${lang["silence"]}\n`;
     }

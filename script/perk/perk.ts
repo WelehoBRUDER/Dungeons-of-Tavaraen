@@ -131,6 +131,7 @@ class Perk {
         player.updateTraits();
         player.updatePerks();
         player.updateAbilities();
+        player.updateAllModifiers();
         formPerks();
         formStatUpgrades();
       }
@@ -145,6 +146,7 @@ class Perk {
         applyModifierToTotal(stat, effects);
       });
     });
+    console.log(effects);
     return effects;
   }
 
@@ -395,7 +397,7 @@ function formStatUpgrades() {
     base.classList.add("statUp");
     baseImg.src = icons[stat];
     baseText.textContent = lang[stat];
-    baseNumber.textContent = player.getBaseStats()[stat].toString();
+    baseNumber.textContent = player.getStats()[stat].toString();
     upgrade.textContent = "+";
     upgrade.addEventListener("click", (a) => upStat(stat));
     tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
@@ -471,21 +473,49 @@ function perkTT(perk: Perk) {
   }
   if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
     const props = perk.levelProperties?.[lvl];
-    if (lvl > 0) {
-      if (props?.compareAbility) {
-        const ability = new Ability({ ...abilities[props.compareAbility] }, player);
-        txt += compareAbilityTooltip(ability, player, perk.getEffects(lvl + 1));
-      } else {
-        txt += `\n<f>16px<f>${lang["current_effects"] ?? "current_effects"}:\n`;
-        Object.entries(perk.getEffects(lvl)).forEach((stat) => {
-          txt += effectSyntax(stat, true);
+    const currentEffects = Object.entries(perk.getEffects(lvl));
+    const nextEffects = Object.entries(perk.getEffects(lvl + 1));
+    const totalCompare: any = {};
+    /* OVERLY COMPLICATED TOOLTIP */
+
+    // First we check if we are comparing an ability upgrade
+    if (props?.compareAbility) {
+      const ability = new Ability({ ...abilities[props.compareAbility] }, player);
+      txt += compareAbilityTooltip(ability, player, perk.getEffects(lvl + 1));
+    }
+    // If not, it gets a bit messy
+    else {
+      // This check is to avoid an ugly line break at the end of the tooltip
+      // Without it, a line break would trigger even when there are no effects to show
+      if (currentEffects.length > 0 || nextEffects.length > 0) {
+        txt += "\n";
+      }
+      // Now we collect all effects and their changes into a single object
+      if (currentEffects.length > 0) {
+        currentEffects.forEach(([key, value]) => {
+          if (typeof value !== "number") return;
+          totalCompare[key] = [value];
         });
       }
-    }
-    if (!props?.compareAbility) {
-      txt += `\n<f>16px<f>${lang["next_level_effects"] ?? "next_level_effects"}:\n`;
-      Object.entries(perk.getEffects(lvl + 1)).forEach((stat) => {
-        txt += effectSyntax(stat, true);
+      if (nextEffects.length > 0) {
+        nextEffects.forEach(([key, value]) => {
+          if (typeof value !== "number") return;
+          if (!totalCompare[key]) totalCompare[key] = [value];
+          else totalCompare[key].push(value);
+        });
+      }
+      // That object is then used to create the tooltip
+      // It might seem cryptic, but it's basically just {key: [current, next]}
+      Object.entries(totalCompare).forEach((stat: any) => {
+        const val = stat[1];
+        const cur = val[0];
+        const next = val[1];
+        stat[1] = cur;
+        if (next) {
+          txt += effectSyntax(stat, true, next);
+        } else {
+          txt += effectSyntax(stat, true);
+        }
       });
     }
   }

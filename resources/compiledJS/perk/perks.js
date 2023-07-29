@@ -701,10 +701,22 @@ const perksArray = {
                 relative_to: "thrill_of_battle",
                 requires: ["thrill_of_battle"],
                 icon: "resources/icons/barbarian_symbol.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 2,
+                    },
+                    {
+                        classLevelRequired: 2,
+                    },
+                ],
                 levelEffects: [
                     {
                         hitChanceV: 5,
                         strV: 2,
+                    },
+                    {
+                        hitChanceV: 5,
+                        strV: 3,
                     },
                 ],
             },
@@ -825,10 +837,15 @@ const perksArray = {
                 relative_to: "weapon_mastery",
                 requires: ["weapon_mastery"],
                 icon: "resources/icons/vitality.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 3,
+                    },
+                ],
                 levelEffects: [
                     {
                         vitV: 3,
-                        hpMaxP: 5,
+                        hpMaxP: 3,
                     },
                 ],
             },
@@ -849,6 +866,11 @@ const perksArray = {
                 relative_to: "weapon_mastery",
                 requires: ["weapon_mastery"],
                 icon: "resources/icons/glass_cannon.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 3,
+                    },
+                ],
                 levelEffects: [
                     {
                         evasionV: 2,
@@ -872,6 +894,11 @@ const perksArray = {
                 relative_to: "weapon_mastery",
                 requires: ["weapon_mastery"],
                 icon: "resources/icons/barbarian_flame.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 3,
+                    },
+                ],
                 levelEffects: [
                     {
                         strV: 1,
@@ -898,6 +925,11 @@ const perksArray = {
                 relative_to: "power_of_injuries",
                 requires: ["hardened_constitution", "power_of_injuries", "sharp_senses"],
                 icon: "resources/icons/skull_of_doom.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 5,
+                    },
+                ],
                 levelEffects: [
                     {
                         vitV: 1,
@@ -907,7 +939,7 @@ const perksArray = {
             },
             perk_barbarian_rage: {
                 id: "perk_barbarian_rage",
-                name: "Barbarian Rage",
+                name: "Bolstered Rage",
                 desc: "",
                 tree: "barbarian",
                 pos: {
@@ -917,10 +949,50 @@ const perksArray = {
                 relative_to: "weapon_mastery",
                 requires: ["weapon_mastery"],
                 icon: "resources/icons/berserk.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 3,
+                        compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+                    },
+                    {
+                        classLevelRequired: 5,
+                        compareAbility: "barbarian_rage",
+                    },
+                    {
+                        classLevelRequired: 10,
+                        compareAbility: "barbarian_rage",
+                    },
+                ],
                 levelEffects: [
                     {
-                        damageP: 2,
-                        resistAllV: -2,
+                        ability_barbarian_rage: {
+                            effect_rage: {
+                                effects: {
+                                    attackSpeedVV: 7,
+                                    movementSpeedVV: 10,
+                                },
+                            },
+                        },
+                    },
+                    {
+                        ability_barbarian_rage: {
+                            effect_rage: {
+                                effects: {
+                                    attackSpeedVV: 8,
+                                    movementSpeedVV: 10,
+                                },
+                            },
+                        },
+                    },
+                    {
+                        ability_barbarian_rage: {
+                            effect_rage: {
+                                effects: {
+                                    attackSpeedVV: 10,
+                                    movementSpeedVV: 10,
+                                },
+                            },
+                        },
                     },
                 ],
             },
