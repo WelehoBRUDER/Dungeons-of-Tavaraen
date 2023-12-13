@@ -166,8 +166,9 @@ function getAllModifiersOnce(char, withConditions = true) {
         obj.hpMaxPerLevelV = Math.floor(hpMaxPerLevelV / char.classes.length);
     }
     char.perks?.forEach((mod) => {
-        console.log(mod);
-        console.log(typeof mod);
+        //console.log(mod);
+        //console.log(typeof mod);
+        console.log("GETTING EFFECTS");
         const effects = mod.getEffects();
         Object.entries(effects).forEach((eff) => {
             applyModifierToTotal(eff, obj);

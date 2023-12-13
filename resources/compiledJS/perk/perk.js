@@ -63,8 +63,8 @@ class Perk {
         this.commands = { ...basePerk.commands } ?? {};
         this.commandsExecuted = base.commandsExecuted ?? false;
         this.level = base.level ?? 0;
-        this.levelProperties = basePerk.levelProperties ?? [{}];
-        this.levelEffects = basePerk.levelEffects ?? [{}];
+        this.levelProperties = basePerk.levelProperties ? [...basePerk.levelProperties] : [{}];
+        this.levelEffects = basePerk.levelEffects ? window.structuredClone([...basePerk.levelEffects]) : [{}];
         this.pos = basePerk.pos;
         this.relative_to = basePerk.relative_to ?? "";
         this.requires = basePerk.requires ?? [];
@@ -102,7 +102,8 @@ class Perk {
             if (this.available() && !this.maxed()) {
                 const ownedPerk = player.getPerk(this.id);
                 if (!ownedPerk) {
-                    player.perks.push(new Perk({ ...this, level: 1 }));
+                    const newPerk = new Perk({ ...perksArray[tree]["perks"][this.id], level: 1 });
+                    player.perks.push(newPerk);
                     lvl_history.perks.push({ id: this.id, level: 1 });
                     this.traits.forEach((stat) => {
                         let add = true;
@@ -136,16 +137,27 @@ class Perk {
             }
         };
     }
+    // FIXME: Something causes the effects to start duplicating
+    // Every duplication shortens the key by 1 character.
+    // UPDATE: The effects no longer duplicate constantly, but instead once when the perk is bought.
+    // This doesn't actually affect the perk itself, but it does affect the tooltip.
+    // Why? I have not found the culprit yet.
     getEffects(level = this.level) {
         const effects = {};
-        this.levelEffects.forEach((effect, index) => {
+        const thisPerk = window.structuredClone({ ...perksArray[this.tree].perks[this.id] });
+        if (thisPerk.id === "thrill_of_battle") {
+            console.log("BEFORE", thisPerk.levelEffects[1]);
+        }
+        thisPerk.levelEffects.forEach((effect, index) => {
             if (index >= level)
                 return;
             Object.entries(effect).forEach((stat) => {
                 applyModifierToTotal(stat, effects);
             });
         });
-        console.log(effects);
+        if (thisPerk.id === "thrill_of_battle") {
+            console.log("AFTER", effects);
+        }
         return effects;
     }
 }
@@ -471,15 +483,30 @@ function perkTT(perk) {
         Object.entries(perk.commands).forEach((com) => (txt += commandSyntax(com[0], com[1])));
     }
     if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
+        // THE PROBLEM HAPPENS HERE
+        // Current/Next effects calls for some reason cause a strange duplication
+        // The most likely suspect is nextEffects, the whole function needs to be re-evaluated
+        // Between the second and third getEffects calls, the effects are duplicated
         const props = perk.levelProperties?.[lvl];
-        const currentEffects = Object.entries(perk.getEffects(lvl));
-        const nextEffects = Object.entries(perk.getEffects(lvl + 1));
+        console.log("GETTING EFFECTS");
+        const currentEffects = Object.entries({ ...perk.getEffects(lvl) });
+        console.log("GETTING EFFECTS");
+        const nextEffects = Object.entries({ ...perk.getEffects(lvl + 1) });
         const totalCompare = {};
         /* OVERLY COMPLICATED TOOLTIP */
+        console.log("ALT BONI?", nextEffects);
+        const boni = {};
+        nextEffects.forEach((eff) => {
+            console.log("ALT BONI?", eff);
+            boni[eff[0]] = eff[1];
+        });
         // First we check if we are comparing an ability upgrade
+        console.log("before boni", boni);
         if (props?.compareAbility) {
-            const ability = new Ability({ ...abilities[props.compareAbility] }, player);
-            txt += compareAbilityTooltip(ability, player, perk.getEffects(lvl + 1));
+            const ability = new Ability({ ...abilities[props.compareAbility] }, { ...player });
+            console.log("GETTING EFFECTS");
+            console.log("boni", boni);
+            txt += compareAbilityTooltip(ability, { ...player }, boni);
         }
         // If not, it gets a bit messy
         else {

@@ -421,7 +421,6 @@ function compareStatTooltip(status, bonuses) {
     });
     if (bonuses?.effects) {
         Object.entries(bonuses.effects).forEach((bonus) => {
-            console.log("bonus effects", bonus[0]);
             if (!status.effects[bonus[0]]) {
                 const comparison = bonus[1];
                 bonus[1] = 0;
