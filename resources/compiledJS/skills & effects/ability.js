@@ -128,7 +128,7 @@ class Ability {
         this.onCooldown = base.onCooldown ?? 0;
         this.equippedSlot = base.equippedSlot ?? -1;
         this.damages = baseAbility.damages;
-        this.damage_multiplier = baseAbility.damage_multiplier ?? 1;
+        this.damage_multiplier = baseAbility.damage_multiplier ?? 0;
         this.resistance_penetration = baseAbility.resistance_penetration ?? 0;
         this.base_heal = baseAbility.base_heal ?? 0;
         this.heal_percentage = baseAbility.heal_percentage ?? 0;

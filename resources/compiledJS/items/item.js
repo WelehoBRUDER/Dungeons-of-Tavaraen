@@ -120,7 +120,7 @@ function itemTT(item) {
                 }
                 else if (value < 0)
                     color = "red";
-                text += `<i>${icons[key + "_armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
+                text += `<i>${icons[key + "Armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
             });
         }
     }

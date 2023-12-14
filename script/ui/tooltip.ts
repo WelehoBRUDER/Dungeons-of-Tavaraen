@@ -1,19 +1,20 @@
 // Tooltip for ability
-function abiTT(abi: ability, character: any = player) {
+function abiTT(abi: ability, character: any = player, options?: { fontSize?: number }) {
 	let txt: string = "";
-	txt += `\t<f>26px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
-	txt += `<f>19px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
-	if (abi.mana_cost > 0 && character.silenced()) txt += `<i>${icons.silence}<i><f>20px<f><c>orange<c>${lang["silence_text"]}§\n`;
+	const fontSize = options?.fontSize ?? 20;
+	txt += `\t<f>${fontSize * 1.3}px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
+	txt += `<f>${fontSize * 0.95}px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
+	if (abi.mana_cost > 0 && character.silenced()) txt += `<i>${icons.silence}<i><f>${fontSize}px<f><c>orange<c>${lang["silence_text"]}§\n`;
 	if (abi.requires_concentration && !character.concentration())
-		txt += `<i>${icons.break_concentration}<i><f>20px<f><c>orange<c>${lang["concentration_text"]}§\n`;
+		txt += `<i>${icons.break_concentration}<i><f>${fontSize}px<f><c>orange<c>${lang["concentration_text"]}§\n`;
 	if (abi.base_heal) {
 		let healFromHP = Math.floor((character.getHpMax() * abi.heal_percentage) / 100) ?? 0;
-		txt += `<i>${icons.heal}<i><f>20px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
+		txt += `<i>${icons.heal}<i><f>${fontSize}px<f>${lang["heal_power"]}: ${abi.base_heal + healFromHP}\n`;
 		if (abi.heal_percentage) {
 			txt += ` <c>silver<c><f>17px<f>${abi.base_heal} + ${abi.heal_percentage}% ${lang["of_max_hp"]}<c>white<c>\n`;
 		}
 	} else if (abi.heal_percentage) {
-		txt += `<i>${icons.heal}<i><f>20px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(
+		txt += `<i>${icons.heal}<i><f>${fontSize}px<f>${lang["heal_power"]}: ${abi.heal_percentage}% ${lang["of_max_hp"]} (${Math.floor(
 			(character.getHpMax() * abi.heal_percentage) / 100
 		)})\n`;
 	}
@@ -25,29 +26,33 @@ function abiTT(abi: ability, character: any = player) {
 			text += `<i>${icons[dmg[0]]}<i><f>17px<f>${dmg[1]}, `;
 		});
 		text = text.substring(0, text.length - 2);
-		txt += `<i>${icons.damage}<i><f>20px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
+		txt += `<i>${icons.damage}<i><f>${fontSize}px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
 	}
 	if (abi.remove_status) {
-		txt += `§<c>white<c><f>20px<f>${lang["cures_statuses"]}: `;
+		txt += `§<c>white<c><f>${fontSize}px<f>${lang["cures_statuses"]}: `;
 		abi.remove_status.forEach((stat) => {
-			txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
+			txt += `<f>${fontSize * 0.8}px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
 		});
 		txt += "\n";
 	}
-	if (abi.damage_multiplier)
-		txt += `<i>${icons.damage}<i><f>20px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
+	if (abi.damage_multiplier) {
+		const abiDamage = approximateDamage(character, abi);
+		txt += `<i>${icons.damage}<i><f>${fontSize}px<f>${lang["damage_flat"]}: ${abiDamage[0]}-${abiDamage[1]}\n`;
+		txt += `<i>${icons.damage}<i><f>${fontSize}px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
+	}
 	if (abi.resistance_penetration)
-		txt += `<i>${icons.rp}<i><f>20px<f>${lang["resistance_penetration"]}: ${
+		txt += `<i>${icons.rp}<i><f>${fontSize}px<f>${lang["resistance_penetration"]}: ${
 			abi.resistance_penetration ? abi.resistance_penetration : "0"
 		}%\n`;
-	if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range}<i><f>20px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
+	if (parseInt(abi.use_range) > 0)
+		txt += `<i>${icons.range}<i><f>${fontSize}px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
 	if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
-		txt += `<f>20px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
+		txt += `<f>${fontSize}px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
 	} else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
-		txt += `<f>20px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
+		txt += `<f>${fontSize}px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
 	}
 	if (abi.statusesEnemy?.length > 0) {
-		txt += `<f>20px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
+		txt += `<f>${fontSize}px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
 		abi.statusesEnemy.forEach((status: string) => {
 			txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
 			const effect = new statEffect(statusEffects[status]);
@@ -56,7 +61,7 @@ function abiTT(abi: ability, character: any = player) {
 		});
 	}
 	if (abi.statusesUser?.length > 0) {
-		txt += `<f>20px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
+		txt += `<f>${fontSize}px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
 		abi.statusesUser.forEach((status: string) => {
 			txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
 			const effect = new statEffect(statusEffects[status]);
@@ -65,125 +70,47 @@ function abiTT(abi: ability, character: any = player) {
 		});
 	}
 	if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
-		txt += `<f>20px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
+		txt += `<f>${fontSize}px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
 	}
-	if (abi.type) txt += `<f>20px<f>${lang["type"]}: ${lang[abi.type]}\n`;
-	if (abi.shoots_projectile != "") txt += `<f>20px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
+	if (abi.type) txt += `<f>${fontSize}px<f>${lang["type"]}: ${lang[abi.type]}\n`;
+	if (abi.shoots_projectile != "")
+		txt += `<f>${fontSize}px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
 	if (abi.requires_melee_weapon)
-		txt += `<i>${icons.melee}<i><f>20px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
+		txt += `<i>${icons.melee}<i><f>${fontSize}px<f>${lang["requires_melee_weapon"]}: ${
+			abi.requires_melee_weapon ? lang["yes"] : lang["no"]
+		}\n`;
 	else if (abi.requires_ranged_weapon)
-		txt += `<i>${icons.ranged}<i><f>20px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
+		txt += `<i>${icons.ranged}<i><f>${fontSize}px<f>${lang["requires_ranged_weapon"]}: ${
+			abi.requires_ranged_weapon ? lang["yes"] : lang["no"]
+		}\n`;
 	if (abi.requires_concentration)
-		txt += `<i>${icons.concentration}<i><f>20px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
-	if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol}<i><f>20px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+		txt += `<i>${icons.concentration}<i><f>${fontSize}px<f>${lang["concentration_req"]}: ${
+			abi.requires_concentration ? lang["yes"] : lang["no"]
+		}\n`;
+	if (abi.recharge_only_in_combat)
+		txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
 	if (abi.summon_unit)
-		txt += `<i>${icons.fighter_symbol}<i><f>20px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>20px<f>${
+		txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>${fontSize}px<f>${
 			lang[abi.summon_unit + "_name"]
 		}<c>white<c>\n`;
-	if (abi.summon_level) txt += `<f>20px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
+	if (abi.summon_level) txt += `<f>${fontSize}px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
 	if (abi.summon_last || abi.permanent)
-		txt += `<f>20px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${
+		txt += `<f>${fontSize}px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${
 			abi.permanent ? "" : lang["turns"]
 		}\n`;
-	if (abi.total_summon_limit) txt += `<f>20px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
+	if (abi.total_summon_limit) txt += `<f>${fontSize}px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
 	if (abi.aoe_size > 0)
-		txt += `<i>${icons.aoe_size}<i><f>20px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
-	if (abi.self_target) txt += `<f>20px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
-	if (abi.mana_cost > 0) txt += `<i>${icons.mana}<i><f>20px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
+		txt += `<i>${icons.aoe_size}<i><f>${fontSize}px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(
+			abi.aoe_size * 2
+		)}\n`;
+	if (abi.self_target) txt += `<f>${fontSize}px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
+	if (abi.mana_cost > 0) txt += `<i>${icons.mana}<i><f>${fontSize}px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
 	if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
-		if (abi.health_cost > 0) txt += `<f>20px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
-		else txt += `<f>20px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
+		if (abi.health_cost > 0) txt += `<f>${fontSize}px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
+		else
+			txt += `<f>${fontSize}px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
 	}
-	if (abi.cooldown > 0) txt += `<i>${icons.cooldown}<i><f>20px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
-	return txt;
-}
-
-function embedAbiTT(abi: ability, character: any = player) {
-	let txt: string = "";
-	txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
-	txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
-	if (abi.mana_cost > 0 && character.silenced()) txt += `<i>${icons.silence}<i><f>16px<f><c>orange<c>${lang["silence_text"]}§\n`;
-	if (abi.requires_concentration && !character.concentration())
-		txt += `<i>${icons.break_concentration}<i><f>16px<f><c>orange<c>${lang["concentration_text"]}§\n`;
-	if (abi.base_heal) txt += `<i>${icons.heal}<i><f>16px<f>${lang["heal_power"]}: ${abi.base_heal}\n`;
-	if (abi.damages) {
-		let total: number = 0;
-		let text: string = "";
-		Object.entries(abi.get_true_damage(character)).forEach((dmg: any) => {
-			total += dmg[1];
-			text += `<i>${icons[dmg[0]]}<i><f>17px<f>${dmg[1]}, `;
-		});
-		text = text.substring(0, text.length - 2);
-		txt += `<i>${icons.damage}<i><f>16px<f>${lang["damage"]}: ${total} <f>17px<f>(${text})\n`;
-	}
-	if (abi.remove_status) {
-		txt += `§<c>white<c><f>16px<f>${lang["cures_statuses"]}: `;
-		abi.remove_status.forEach((stat) => {
-			txt += `<f>16px<f><c>white<c>'<c>yellow<c>${lang["effect_" + stat + "_name"]}<c>white<c>' §`;
-		});
-		txt += "\n";
-	}
-	if (abi.damage_multiplier)
-		txt += `<i>${icons.damage}<i><f>16px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
-	if (abi.resistance_penetration)
-		txt += `<i>${icons.rp}<i><f>16px<f>${lang["resistance_penetration"]}: ${
-			abi.resistance_penetration ? abi.resistance_penetration : "0"
-		}%\n`;
-	if (parseInt(abi.use_range) > 0) txt += `<i>${icons.range}<i><f>16px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
-	if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
-		txt += `<f>16px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
-	} else if (abi.life_steal_percentage && abi.life_steal_trigger_only_when_killing_enemy) {
-		txt += `<f>16px<f>${lang["life_steal_on_kill_1"]} ${abi.life_steal_percentage}% ${lang["life_steal_on_kill_2"]}\n`;
-	}
-	if (abi.statusesEnemy?.length > 0) {
-		txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
-		abi.statusesEnemy.forEach((status: string) => {
-			txt += `<i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-			const effect = new statEffect(statusEffects[status]);
-			effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-			txt += statTT(effect, true);
-		});
-	}
-	if (abi.statusesUser?.length > 0) {
-		txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
-		abi.statusesUser.forEach((status: string) => {
-			txt += `<i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
-			const effect = new statEffect(statusEffects[status]);
-			effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-			txt += statTT(effect, true);
-		});
-	}
-	if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
-		txt += `<f>14px<f>${lang["for_each_enemy_hit"]} ${statusEffects[abi.statusesUser[0]].last.total} ${lang["turns_alt"]}\n`;
-	}
-	if (abi.type) txt += `<f>16px<f>${lang["type"]}: ${lang[abi.type]}\n`;
-	if (abi.shoots_projectile != "") txt += `<f>16px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
-	if (abi.requires_melee_weapon)
-		txt += `<i>${icons.melee}<i><f>16px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
-	else if (abi.requires_ranged_weapon)
-		txt += `<i>${icons.ranged}<i><f>16px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
-	if (abi.requires_concentration)
-		txt += `<i>${icons.concentration}<i><f>16px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
-	if (abi.recharge_only_in_combat) txt += `<i>${icons.fighter_symbol}<i><f>16px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
-	if (abi.summon_unit)
-		txt += `<i>${icons.fighter_symbol}<i><f>16px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>16px<f>${
-			lang[abi.summon_unit + "_name"] ?? abi.summon_unit
-		}<c>white<c>\n`;
-	if (abi.summon_level) txt += `<f>16px<f>${lang["summon_level"]}: ${abi.summon_level}\n`;
-	if (abi.summon_last || abi.permanent)
-		txt += `<f>16px<f>${lang["summon_last"]}: ${abi.permanent ? lang["permanent"] : abi.summon_last - 1} ${
-			abi.permanent ? "" : lang["turns"]
-		}\n`;
-	if (abi.total_summon_limit) txt += `<f>16px<f>${lang["total_summon_limit"]}: ${abi.total_summon_limit}\n`;
-	if (abi.aoe_size > 0)
-		txt += `<i>${icons.aoe_size}<i><f>16px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
-	if (abi.self_target) txt += `<f>16px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
-	if (abi.mana_cost > 0) txt += `<i>${icons.mana}<i><f>16px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
-	if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
-		if (abi.health_cost > 0) txt += `<f>16px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
-		else txt += `<f>16px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
-	}
-	if (abi.cooldown > 0) txt += `<i>${icons.cooldown}<i><f>16px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
+	if (abi.cooldown > 0) txt += `<i>${icons.cooldown}<i><f>${fontSize}px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
 	return txt;
 }
 
@@ -366,15 +293,18 @@ function statTT(status: statEffect, embed: boolean = false) {
 	if (!embed) txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
 	if (!embed) txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
 	if (Object.keys(status.dot).length > 0) {
-		txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "20px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[
-			status.dot.damageType + "_damage"
-		].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+		txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "${fontSize}px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${
+			status.dot.icon
+		}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
 	}
 	Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed)));
-	if (status.silence) txt += `§${embed ? " " : ""}<i>${icons.silence}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["silence"]}\n`;
+	if (status.silence)
+		txt += `§${embed ? " " : ""}<i>${icons.silence}<i><f>${embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${lang["silence"]}\n`;
 	if (status.break_concentration)
-		txt += `§${embed ? " " : ""}<i>${icons.break_concentration}<i><f>${embed ? "16px" : "20px"}<f><c>orange<c>${lang["concentration"]}\n`;
-	if (status.rooted) txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "20px"}<f><c>red<c>${lang["rooted"]}\n`;
+		txt += `§${embed ? " " : ""}<i>${icons.break_concentration}<i><f>${embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${
+			lang["concentration"]
+		}\n`;
+	if (status.rooted) txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "${fontSize}px"}<f><c>red<c>${lang["rooted"]}\n`;
 	if (!embed) txt += `§<i>${icons.cooldown}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
 	else txt += `§${embed ? " " : ""}<i>${icons.cooldown}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
 	return txt;

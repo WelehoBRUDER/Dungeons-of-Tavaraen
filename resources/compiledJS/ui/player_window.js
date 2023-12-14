@@ -14,7 +14,7 @@ function createArmorOrResistanceDisplay(stat, armor) {
     const key = stat[0];
     const val = stat[1];
     const { statContainer, statImage, statText, statValue } = createBaseElementsForStatDisplay();
-    statImage.src = icons[key + (armor ? "_armor" : "Resist")];
+    statImage.src = icons[key + (armor ? "Armor" : "Resist")];
     statText.textContent = lang[key];
     statValue.textContent = val + (armor ? "" : "%");
     tooltip(statContainer, lang[armor ? key + "_tt" : "resistances_tt"] ?? "no tooltip");

@@ -64,7 +64,7 @@ class Perk {
         this.commandsExecuted = base.commandsExecuted ?? false;
         this.level = base.level ?? 0;
         this.levelProperties = basePerk.levelProperties ? [...basePerk.levelProperties] : [{}];
-        this.levelEffects = basePerk.levelEffects ? window.structuredClone([...basePerk.levelEffects]) : [{}];
+        this.levelEffects = basePerk.levelEffects ? spreadLevelEffects(basePerk.levelEffects) : [{}];
         this.pos = basePerk.pos;
         this.relative_to = basePerk.relative_to ?? "";
         this.requires = basePerk.requires ?? [];
@@ -72,6 +72,13 @@ class Perk {
         this.traits = basePerk.traits ?? [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
+        function spreadLevelEffects(effs) {
+            const levelEffects = [];
+            effs.forEach((eff) => {
+                levelEffects.push({ ...eff });
+            });
+            return levelEffects;
+        }
         if (this.levelEffects.length < 1)
             this.levelEffects = [{}];
         this.available = () => {
@@ -144,7 +151,10 @@ class Perk {
     // Why? I have not found the culprit yet.
     getEffects(level = this.level) {
         const effects = {};
+        console.log("%cTHIS IS THE BASE PERK!!!!!!!!!!!!", "color:orange", perksArray[this.tree].perks[this.id].levelEffects[1]?.ability_barbarian_rage?.effect_rage);
         const thisPerk = window.structuredClone({ ...perksArray[this.tree].perks[this.id] });
+        console.log("%cAND THIS IS  A STRUCTURED CLONE", "color:red", thisPerk.levelEffects[1]?.ability_barbarian_rage?.effect_rage);
+        console.log("%cTHIS IS THE BASE PERK AFTER STRUCTURED CLONING!", "color:yellow", perksArray[this.tree].perks[this.id]);
         if (thisPerk.id === "thrill_of_battle") {
             console.log("BEFORE", thisPerk.levelEffects[1]);
         }
@@ -153,6 +163,7 @@ class Perk {
                 return;
             Object.entries(effect).forEach((stat) => {
                 applyModifierToTotal(stat, effects);
+                console.log("%cApplying effect", "color:green", stat);
             });
         });
         if (thisPerk.id === "thrill_of_battle") {
@@ -488,10 +499,12 @@ function perkTT(perk) {
         // The most likely suspect is nextEffects, the whole function needs to be re-evaluated
         // Between the second and third getEffects calls, the effects are duplicated
         const props = perk.levelProperties?.[lvl];
-        console.log("GETTING EFFECTS");
+        console.log("GETTING CURR EFFECTS");
         const currentEffects = Object.entries({ ...perk.getEffects(lvl) });
-        console.log("GETTING EFFECTS");
+        console.log("CURR EFFECTS", currentEffects);
+        console.log("GETTING NEXT EFFECTS");
         const nextEffects = Object.entries({ ...perk.getEffects(lvl + 1) });
+        console.log("NEXT EFFECTS", nextEffects);
         const totalCompare = {};
         /* OVERLY COMPLICATED TOOLTIP */
         console.log("ALT BONI?", nextEffects);
