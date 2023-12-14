@@ -37,6 +37,7 @@ class statEffect {
     init(bonuses) {
         if (!bonuses)
             bonuses = {};
+        console.log("INIT EFFECT", this.id, bonuses);
         Object.entries(this).forEach(([key, value]) => {
             if (typeof value === "number") {
                 let bonus = bonuses?.[key + "V"] || 0;
@@ -57,6 +58,14 @@ class statEffect {
                 });
             }
         });
+        if (bonuses.effects) {
+            Object.entries(bonuses.effects).forEach(([key, value]) => {
+                const _key = key.substring(0, key.length - 1);
+                if (!this.effects[_key] && typeof value === "number") {
+                    this.effects[_key] = value;
+                }
+            });
+        }
         return this;
     }
 }

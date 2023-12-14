@@ -191,6 +191,7 @@ function compareAbilityTooltip(ability, character, bonuses) {
         });
     }
     if (abi.statusesUser?.length > 0) {
+        console.log("%cDOES THIS  HAPPPEN?", "color:silver");
         txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
             txt += `<i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
@@ -198,9 +199,11 @@ function compareAbilityTooltip(ability, character, bonuses) {
             effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             if (compare["effect_" + status]) {
                 console.log(compare["effect_" + status]);
+                console.log("%cDoing the comparison", "color:black", effect, compare);
                 txt += compareStatTooltip(effect, compare["effect_" + status]);
             }
             else {
+                console.log("%cNot doing the comparison", "color:black", effect, compare);
                 txt += statTT(effect, true);
             }
         });
@@ -329,7 +332,11 @@ function compareStatTooltip(status, bonuses) {
     });
     if (bonuses?.effects) {
         Object.entries(bonuses.effects).forEach((bonus) => {
-            if (!status.effects[bonus[0]]) {
+            const key = bonus[0].substring(0, bonus[0].length - 1);
+            console.log(key);
+            if (!key.endsWith("V") && !key.endsWith("P"))
+                return;
+            if (!status.effects[bonus[0]] && !status.effects[key]) {
                 const comparison = bonus[1];
                 bonus[1] = 0;
                 txt += effectSyntax(bonus, true, comparison);

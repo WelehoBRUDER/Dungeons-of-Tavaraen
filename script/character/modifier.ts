@@ -55,7 +55,7 @@ const mergeObjects = (obj1: any, obj2: any, options?: { subtract?: boolean }) =>
 			prev[key] = mergeObjects(value, obj2[key]);
 		}
 		return prev;
-	}, window.structuredClone({ ...obj2 })); // spread to avoid mutating obj2
+	}, JSON.parse(JSON.stringify({ ...obj2 }))); // spread to avoid mutating obj2
 };
 
 const updateObject = (key: string, object: any, mods: any): object => {

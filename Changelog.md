@@ -1,4 +1,4 @@
-# 1.3.0 ~ 30.6.2023
+# 1.3.0 ~ 14.12.2023
 
 ### Major Update
 
@@ -20,6 +20,7 @@ Your character may be severely underpowered if you continue an old save.
   - You gain fewer perk and stat points when leveling up.
   - To make up for this, the experience needed to level up has been lowered.
 - Tooltips when upgrading skills now show the new values that change.
+- Tooltips now display an approximate damage value for abilities.
 
 # 1.2.4 ~ 30.6.2023
 

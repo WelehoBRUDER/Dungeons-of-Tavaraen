@@ -1008,9 +1008,23 @@ const perksArray = {
                 relative_to: "perk_barbarian_rage",
                 requires: ["perk_barbarian_rage"],
                 icon: "resources/icons/skull_bleeding_eyes_flame.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 5,
+                        compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+                    },
+                ],
                 levelEffects: [
                     {
                         damageP: 4,
+                        ability_barbarian_rage: {
+                            effect_rage: {
+                                effects: {
+                                    attackSpeedVV: 5,
+                                    movementSpeedVV: 5,
+                                },
+                            },
+                        },
                     },
                 ],
             },
