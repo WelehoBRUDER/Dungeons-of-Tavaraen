@@ -37,7 +37,6 @@ class statEffect {
     init(bonuses) {
         if (!bonuses)
             bonuses = {};
-        console.log("INIT EFFECT", this.id, bonuses);
         Object.entries(this).forEach(([key, value]) => {
             if (typeof value === "number") {
                 let bonus = bonuses?.[key + "V"] || 0;
@@ -56,6 +55,14 @@ class statEffect {
                     else
                         updateObjectWithoutReturn(_key, _value, bonuses[key]);
                 });
+            }
+            else if (typeof value === "boolean") {
+                if (value) {
+                    this[key] = true;
+                }
+                else {
+                    delete this[key];
+                }
             }
         });
         if (bonuses.effects) {

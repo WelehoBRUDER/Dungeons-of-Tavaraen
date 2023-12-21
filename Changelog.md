@@ -15,12 +15,18 @@ Your character may be severely underpowered if you continue an old save.
 
 
 ## Minor Changes
+- Allowed diagonal movement to squeeze through narrow gaps in walls.
+  - Previosly, if two blockers were diagonal to you, it was impossible to move through.
 - Vitality now increases your maximum hit points by 3 instead of 5.
 - Level up bonuses when below level 6 have been removed.
   - You gain fewer perk and stat points when leveling up.
   - To make up for this, the experience needed to level up has been lowered.
 - Tooltips when upgrading skills now show the new values that change.
 - Tooltips now display an approximate damage value for abilities.
+- Increased tooltip clarity regarding abilities and effects.
+
+## Bug Fixes
+- Fixed ui scale not remembering saved settings
 
 # 1.2.4 ~ 30.6.2023
 

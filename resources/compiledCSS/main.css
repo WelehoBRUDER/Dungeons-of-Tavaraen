@@ -1069,6 +1069,20 @@ body {
   top: calc(30px * var(--ui-scale));
   right: calc(10px * var(--ui-scale));
 }
+.main .effect-container,
+.main .ability-container {
+  border: 0.1rem solid rgb(150, 128, 2);
+  padding: 0.25rem;
+  background: rgba(12, 12, 12, 0.9);
+  margin-left: 0.25rem;
+  margin-top: 0.25rem;
+  line-height: 1.5rem;
+}
+.main .ability-container .effect-container {
+  border: 0.05rem solid rgb(253, 253, 253);
+  background: rgba(0, 0, 0, 0.9);
+  line-height: 1.5rem;
+}
 .main #globalHover {
   width: auto;
   height: auto;
@@ -1083,8 +1097,8 @@ body {
   z-index: 60;
   display: none;
   pointer-events: none;
-  font-size: 22px;
-  line-height: 16px;
+  font-size: 20px;
+  line-height: 20px;
 }
 .main #globalHover pre {
   margin: 0;

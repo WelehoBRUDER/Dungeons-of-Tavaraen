@@ -74,16 +74,21 @@ const emptyModel = {
         chance: 60,
         evasion: 30,
     },
+    hpRegen: () => { },
+    sex: "male",
+    raceEffect: raceEffects.human,
     unarmed_damages: { crush: 1 },
     statusEffects: [],
     inventory: [],
     gold: 50,
     sp: 5,
     pp: 1,
+    classPoints: 0,
     respawnPoint: { cords: { x: 29, y: 105 } },
     usedShrines: [],
     flags: {},
     questProgress: [],
+    entitiesEverEncountered: { items: [], enemies: [], summons: [] },
 };
 const creation = document.querySelector(".mainMenu .characterCreation");
 const content = creation.querySelector(".content .creation-content");
@@ -511,6 +516,7 @@ async function initGame() {
     if (options) {
         settings = new gameSettings(options);
         lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
+        scaleUI(settings.ui_scale / 100);
     }
     else
         settings = new gameSettings(settings);

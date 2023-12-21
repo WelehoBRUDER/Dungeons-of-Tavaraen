@@ -1022,6 +1022,7 @@ const perksArray = {
                                 effects: {
                                     attackSpeedVV: 5,
                                     movementSpeedVV: 5,
+                                    break_concentration: true,
                                 },
                             },
                         },

@@ -150,18 +150,11 @@ class Perk {
 	// Why? I have not found the culprit yet.
 	getEffects(level: number = this.level) {
 		const effects = {};
-		console.log(
-			"%cTHIS IS THE BASE PERK",
-			"color:orange",
-			perksArray[this.tree].perks[this.id].levelEffects[1]?.ability_barbarian_rage?.effect_rage
-		);
 		const thisPerk = window.structuredClone({ ...perksArray[this.tree].perks[this.id] });
-		console.log("%cAND THIS IS  A STRUCTURED CLONE", "color:red", thisPerk.levelEffects[1]?.ability_barbarian_rage?.effect_rage);
 		thisPerk.levelEffects.forEach((effect: any, index: number) => {
 			if (index >= level) return;
 			Object.entries(effect).forEach((stat: any) => {
 				const [key, value] = stat;
-				console.log("EFFECT", key, value);
 				applyModifierToTotal(stat, effects);
 			});
 		});
@@ -238,7 +231,10 @@ function formPerks(e: MouseEvent = null, scrollDefault: boolean = false) {
 		classUpButton.classList.add("classUpButton");
 		classLevel.classList.add("classLevel");
 		classLevel.textContent = (player.getClass({ tree: tree })?.level?.toString() ?? "0") + " / 20" ?? "0 / 20";
-		upgradeClass.append(classUpButton, classLevel);
+		if (player.classPoints > 0) {
+			upgradeClass.append(classUpButton);
+		}
+		upgradeClass.append(classLevel);
 		let currentEffects = ``;
 		Object.entries(currentClass?.getLevelBonuses()).forEach((stat: any) => {
 			currentEffects += effectSyntax(stat);
@@ -494,78 +490,21 @@ function perkTT(perk: Perk) {
 		// Current/Next effects calls for some reason cause a strange duplication
 		// The most likely suspect is nextEffects, the whole function needs to be re-evaluated
 		// Between the second and third getEffects calls, the effects are duplicated
+		// UPDATE: The duplicated values have been hidden for tooltip clarity.
 		const props = perk.levelProperties?.[lvl];
-		console.log("GETTING CURR EFFECTS");
 		const currentEffects = Object.entries({ ...perk.getEffects(lvl) });
-		console.log("CURR EFFECTS", currentEffects);
-		console.log("GETTING NEXT EFFECTS");
 		const nextEffects = Object.entries({ ...perk.getEffects(lvl + 1) });
-		console.log("NEXT EFFECTS", nextEffects);
 		const totalCompare: any = {};
 		/* OVERLY COMPLICATED TOOLTIP */
 
-		console.log("ALT BONI?", nextEffects);
 		const boni: any = {};
 		nextEffects.forEach((eff: any) => {
-			console.log("ALT BONI?", eff);
 			boni[eff[0]] = eff[1];
 		});
 		// First we check if we are comparing an ability upgrade
-		console.log("before boni", boni);
 		if (props?.compareAbility) {
 			const ability = new Ability({ ...abilities[props.compareAbility] }, { ...player });
-			console.log("GETTING EFFECTS");
-			console.log("boni", boni);
-			//const bonuses: any = {};
-			// perksArray[tree].perks[perk.id].levelEffects.forEach((lvlEff: any) => {
-			// 	Object.entries(lvlEff).forEach(([lvlKey, lvlValue]) => {
-			// 		bonuses[lvlKey] = {};
-			// 		Object.entries(lvlValue).forEach(([key, value]: [string, any]) => {
-			// 			if (typeof value !== "number") {
-			// 				bonuses[lvlKey][key] = {};
-			// 				Object.entries(value).forEach(([_key, _value]) => {
-			// 					console.log("%cVALUE", "color:yellow", _value, key);
-			// 					console.log(boni, lvlKey, key, _key);
-			// 					if (bonuses[lvlKey][key][_key]) return;
-			// 					bonuses[lvlKey][key][_key] = {};
-			// 					Object.entries(_value).forEach(([statKey, statValue]) => {
-			// 						console.log(statKey);
-			// 						if (bonuses[lvlKey][key][_key][statKey]) return;
-			// 						bonuses[lvlKey][key][_key][statKey] = JSON.parse(JSON.stringify(boni[lvlKey][key][_key][statKey]));
-			// 						if (bonuses[lvlKey][key][_key][statKey.substring(0, statKey.length - 1)]) {
-			// 							delete bonuses[lvlKey][key][_key][statKey.substring(0, statKey.length - 1)];
-			// 						}
-			// 					});
-			// 				});
-			// 			} else {
-			// 				console.log(boni[lvlKey][key]);
-			// 				bonuses[lvlKey][key] = JSON.parse(JSON.stringify(boni[lvlKey][key]));
-			// 			}
-			// 		});
-			// 	});
-			// 	console.log("%cI DONT THINK BONUSES WORK", "color:grey", bonuses);
-			// });
-			//console.log("%cDIFF", "color:crimson", bonuses, boni);
-			// console.log(boni);
-			// Object.entries(boni).forEach((eff: any) => {
-			// 	console.log("boni  eff or SOMETHING", eff);
-			// 	Object.entries(eff[1]).forEach((eff2: any) => {
-			// 		console.log("boni  eff or SOMETHING 2", eff2);
-			// 		Object.entries(eff2[1]).forEach((eff3: any) => {
-			// 			console.log("BOONUKSET TÄLLÄ HETKELLÄ", eff3[0], eff3[1]);
-			// 			console.log("BOONUSTEN MÄÄRÄ", Object.keys(eff3[1]).length);
-			// 			Object.entries(eff3[1]).forEach((eff4: any) => {
-			// 				console.log("%cBOONUS ARVO", "color:yellow", eff4, eff4[0].substring(0, eff4[0].length - 1), "V", "P");
-			// 				if (!eff4[0].substring(0, eff4[0].length - 1).endsWith("V") && !eff4[0].substring(0, eff4[0].length - 1).endsWith("P")) {
-			// 					console.log("%cDELETING", "color:crimson", eff4[0]);
-			// 					delete boni[eff[0]][eff2[0]][eff3[0]][eff4[0]];
-			// 				}
-			// 			});
-			// 		});
-			// 	});
-			// });
-			// console.log(boni);
-			txt += compareAbilityTooltip(ability, { ...player }, boni);
+			txt += `\n${compareAbilityTooltip(ability, { ...player }, boni)}`;
 		}
 		// If not, it gets a bit messy
 		else {

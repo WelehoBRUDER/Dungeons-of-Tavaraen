@@ -54,19 +54,19 @@ function abiTT(abi, character = player, options) {
     if (abi.statusesEnemy?.length > 0) {
         txt += `<f>${fontSize}px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
-            txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += `<ct>effect-container<ct><i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
             effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
-            txt += statTT(effect, true);
+            txt += statTT(effect, { embed: true }) + "§<nct>-<nct>";
         });
     }
     if (abi.statusesUser?.length > 0) {
         txt += `<f>${fontSize}px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
-            txt += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += `<ct>effect-container<ct><i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
             effect.init({ ...character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status] });
-            txt += statTT(effect, true);
+            txt += statTT(effect, { embed: true }) + "§<nct>-<nct>";
         });
     }
     if (abi.statusesUser?.length > 0 && abi.aoe_size > 0) {
@@ -112,7 +112,7 @@ function compareAbilityTooltip(ability, character, bonuses) {
     const abi = new Ability(ability, character);
     const compare = bonuses["ability_" + ability.id];
     console.log(compare);
-    let txt = "";
+    let txt = "<ct>ability-container<ct>";
     txt += `\t<f>17px<f>${lang[abi.id + "_name"] ?? abi.id}\t\n`;
     txt += `<f>14px<f><c>silver<c>"${lang[abi.id + "_desc"] ?? abi.id + "_desc"}"<c>white<c>\n`;
     if (abi.base_heal)
@@ -177,34 +177,30 @@ function compareAbilityTooltip(ability, character, bonuses) {
         txt += `<f>16px<f><c>white<c>${lang["life_steal_on_kill_1"]} <c>lime<c>[${value}% ---> ${value + bonus}]<c>white<c> ${lang["life_steal_on_kill_2"]}\n`;
     }
     if (abi.statusesEnemy?.length > 0) {
-        txt += `<f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
+        txt += `<ct>effect-container<ct><f>17px<f>${lang["status_effects_enemy"]}<c>white<c>: \n`;
         abi.statusesEnemy.forEach((status) => {
             txt += `<i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
             effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             if (compare["effect_" + status]) {
-                txt += compareStatTooltip(effect, compare["effect_" + status]);
+                txt += compareStatTooltip(effect, compare["effect_" + status]) + "§<nct>-<nct>";
             }
             else {
-                txt += statTT(effect, true);
+                txt += statTT(effect, { embed: true }) + "§<nct>-<nct>";
             }
         });
     }
     if (abi.statusesUser?.length > 0) {
-        console.log("%cDOES THIS  HAPPPEN?", "color:silver");
         txt += `<f>17px<f>${lang["status_effects_you"]}<c>white<c>: \n`;
         abi.statusesUser.forEach((status) => {
-            txt += `<i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
+            txt += `<ct>effect-container<ct><i>${statusEffects[status].icon}<i><f>16px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const effect = new statEffect(statusEffects[status]);
             effect.init(character?.allModifiers?.["ability_" + abi.id]?.["effect_" + status]);
             if (compare["effect_" + status]) {
-                console.log(compare["effect_" + status]);
-                console.log("%cDoing the comparison", "color:black", effect, compare);
-                txt += compareStatTooltip(effect, compare["effect_" + status]);
+                txt += compareStatTooltip(effect, compare["effect_" + status]) + "§<nct>-<nct>";
             }
             else {
-                console.log("%cNot doing the comparison", "color:black", effect, compare);
-                txt += statTT(effect, true);
+                txt += statTT(effect, { embed: true }) + "§<nct>-<nct>";
             }
         });
     }
@@ -284,26 +280,29 @@ function compareAbilityTooltip(ability, character, bonuses) {
     return txt;
 }
 // Tooltip for status
-function statTT(status, embed = false) {
+function statTT(status, options) {
     let txt = "";
-    if (!embed)
+    if (options?.container) {
+        txt += "<ct>effect-container<ct>";
+    }
+    if (!options?.embed)
         txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
-    if (!embed)
+    if (!options?.embed)
         txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
     if (Object.keys(status.dot).length > 0) {
-        txt += `§${embed ? " " : ""}<f>${embed ? "16px" : "${fontSize}px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+        txt += `§${options?.embed ? " " : ""}<f>${options?.embed ? "16px" : "${fontSize}px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
     }
-    Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, embed)));
+    Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, options?.embed)));
     if (status.silence)
-        txt += `§${embed ? " " : ""}<i>${icons.silence}<i><f>${embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${lang["silence"]}\n`;
+        txt += `§${options?.embed ? " " : ""}<i>${icons.silence}<i><f>${options?.embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${lang["silence"]}\n`;
     if (status.break_concentration)
-        txt += `§${embed ? " " : ""}<i>${icons.break_concentration}<i><f>${embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${lang["concentration"]}\n`;
+        txt += `§${options?.embed ? " " : ""}<i>${icons.break_concentration}<i><f>${options?.embed ? "16px" : "${fontSize}px"}<f><c>orange<c>${lang["concentration"]}\n`;
     if (status.rooted)
-        txt += `§${embed ? " " : ""}<b>800<b><f>${embed ? "16px" : "${fontSize}px"}<f><c>red<c>${lang["rooted"]}\n`;
-    if (!embed)
+        txt += `§${options?.embed ? " " : ""}<b>800<b><f>${options?.embed ? "16px" : "${fontSize}px"}<f><c>red<c>${lang["rooted"]}\n`;
+    if (!options?.embed)
         txt += `§<i>${icons.cooldown}<i><f>20px<f>${lang["removed_in"]}: ${status.last.current} ${lang["turns"]}\n`;
     else
-        txt += `§${embed ? " " : ""}<i>${icons.cooldown}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
+        txt += `§${options?.embed ? " " : ""}<i>${icons.cooldown}<i><f>16px<f>${lang["lasts_for"]}: ${status.last.total} ${lang["turns"]}\n`;
     return txt;
 }
 function compareStatTooltip(status, bonuses) {
@@ -333,7 +332,6 @@ function compareStatTooltip(status, bonuses) {
     if (bonuses?.effects) {
         Object.entries(bonuses.effects).forEach((bonus) => {
             const key = bonus[0].substring(0, bonus[0].length - 1);
-            console.log(key);
             if (!key.endsWith("V") && !key.endsWith("P"))
                 return;
             if (!status.effects[bonus[0]] && !status.effects[key]) {

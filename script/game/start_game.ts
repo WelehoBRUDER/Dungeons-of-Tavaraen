@@ -1,88 +1,93 @@
 const emptyModel = {
-  id: "player",
-  name: "",
-  cords: { x: 30, y: 105 },
-  stats: {
-    str: 1,
-    dex: 1,
-    int: 1,
-    vit: 1,
-    cun: 1,
-    hp: 100,
-    mp: 30,
-  },
-  resistances: {
-    slash: 0,
-    crush: 0,
-    pierce: 0,
-    magic: 0,
-    dark: 0,
-    divine: 0,
-    fire: 0,
-    lightning: 0,
-    ice: 0,
-  },
-  statusResistances: {
-    poison: 0,
-    burning: 0,
-    curse: 0,
-    stun: 0,
-    bleed: 0,
-  },
-  level: {
-    xp: 0,
-    xpNeed: 100,
-    level: 1,
-  },
-  classes: [],
-  sprite: ".player",
-  race: "human",
-  hair: 1,
-  eyes: 1,
-  face: 1,
-  weapon: new Weapon({ ...items.stick }),
-  chest: new Armor({ ...items.raggedShirt }),
-  helmet: {},
-  gloves: {},
-  legs: new Armor({ ...items.raggedPants }),
-  boots: new Armor({ ...items.raggedBoots }),
-  offhand: {},
-  artifact1: {},
-  artifact2: {},
-  artifact3: {},
-  grave: null,
-  threat: 25,
-  canFly: false,
-  perks: [],
-  abilities: [
-    new Ability({ ...abilities.attack }, dummy),
-    new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
-    new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
-    new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
-  ],
-  traits: [
-    {
-      id: "resilience_of_the_lone_wanderer",
-    },
-  ],
-  regen: {
-    hp: 0,
-    mp: 0,
-  },
-  hit: {
-    chance: 60,
-    evasion: 30,
-  },
-  unarmed_damages: { crush: 1 },
-  statusEffects: [],
-  inventory: [],
-  gold: 50,
-  sp: 5,
-  pp: 1,
-  respawnPoint: { cords: { x: 29, y: 105 } },
-  usedShrines: [],
-  flags: {},
-  questProgress: [],
+	id: "player",
+	name: "",
+	cords: { x: 30, y: 105 },
+	stats: {
+		str: 1,
+		dex: 1,
+		int: 1,
+		vit: 1,
+		cun: 1,
+		hp: 100,
+		mp: 30,
+	},
+	resistances: {
+		slash: 0,
+		crush: 0,
+		pierce: 0,
+		magic: 0,
+		dark: 0,
+		divine: 0,
+		fire: 0,
+		lightning: 0,
+		ice: 0,
+	},
+	statusResistances: {
+		poison: 0,
+		burning: 0,
+		curse: 0,
+		stun: 0,
+		bleed: 0,
+	},
+	level: {
+		xp: 0,
+		xpNeed: 100,
+		level: 1,
+	},
+	classes: [],
+	sprite: ".player",
+	race: "human",
+	hair: 1,
+	eyes: 1,
+	face: 1,
+	weapon: new Weapon({ ...items.stick }),
+	chest: new Armor({ ...items.raggedShirt }),
+	helmet: {},
+	gloves: {},
+	legs: new Armor({ ...items.raggedPants }),
+	boots: new Armor({ ...items.raggedBoots }),
+	offhand: {},
+	artifact1: {},
+	artifact2: {},
+	artifact3: {},
+	grave: null,
+	threat: 25,
+	canFly: false,
+	perks: [],
+	abilities: [
+		new Ability({ ...abilities.attack }, dummy),
+		new Ability({ ...abilities.retreat, equippedSlot: 0 }, dummy),
+		new Ability({ ...abilities.first_aid, equippedSlot: 1 }, dummy),
+		new Ability({ ...abilities.defend, equippedSlot: 2 }, dummy),
+	],
+	traits: [
+		{
+			id: "resilience_of_the_lone_wanderer",
+		},
+	],
+	regen: {
+		hp: 0,
+		mp: 0,
+	},
+	hit: {
+		chance: 60,
+		evasion: 30,
+	},
+	hpRegen: () => {},
+	sex: "male",
+	raceEffect: raceEffects.human,
+	unarmed_damages: { crush: 1 },
+	statusEffects: [],
+	inventory: [],
+	gold: 50,
+	sp: 5,
+	pp: 1,
+	classPoints: 0,
+	respawnPoint: { cords: { x: 29, y: 105 } },
+	usedShrines: [],
+	flags: {},
+	questProgress: [],
+	entitiesEverEncountered: { items: [], enemies: [], summons: [] },
 } as playerChar;
 const creation = document.querySelector<HTMLDivElement>(".mainMenu .characterCreation");
 const content = creation.querySelector<HTMLDivElement>(".content .creation-content");
@@ -94,129 +99,129 @@ const eyes = [1, 5];
 const faces = [1, 5];
 
 const classEquipments = {
-  fighter: {
-    weapon: new Weapon({ ...items.chippedBlade }),
-    chest: new Armor({ ...items.raggedShirt }),
-    helmet: new Armor({ ...items.leatherHelmet }),
-    gloves: {},
-    legs: new Armor({ ...items.raggedPants }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: new Armor({ ...items.woodenShield }),
-  },
-  barbarian: {
-    weapon: new Weapon({ ...items.chippedAxe }),
-    chest: new Armor({ ...items.leatherChest }),
-    helmet: {},
-    gloves: new Armor({ ...items.leatherBracers }),
-    legs: new Armor({ ...items.raggedPants }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: {},
-  },
-  paladin: {
-    weapon: new Weapon({ ...items.chippedBlade }),
-    chest: new Armor({ ...items.ironArmor }),
-    helmet: new Armor({ ...items.leatherHelmet }),
-    gloves: {},
-    legs: new Armor({ ...items.leatherLeggings }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: new Armor({ ...items.ironShield }),
-  },
-  sorcerer: {
-    weapon: new Weapon({ ...items.apprenticeWand }),
-    chest: new Armor({ ...items.raggedShirt }),
-    helmet: {},
-    gloves: new Armor({ ...items.raggedGloves }),
-    legs: new Armor({ ...items.raggedPants }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: {},
-  },
-  rogue: {
-    weapon: new Weapon({ ...items.dagger }),
-    chest: new Armor({ ...items.raggedShirt }),
-    helmet: new Armor({ ...items.raggedHood }),
-    gloves: new Armor({ ...items.raggedGloves }),
-    legs: new Armor({ ...items.raggedPants }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: new Armor({ ...items.parryingDagger }),
-  },
-  ranger: {
-    weapon: new Weapon({ ...items.huntingBow }),
-    chest: new Armor({ ...items.raggedShirt }),
-    helmet: new Armor({ ...items.woolHat }),
-    gloves: new Armor({ ...items.raggedGloves }),
-    legs: new Armor({ ...items.raggedPants }),
-    boots: new Armor({ ...items.raggedBoots }),
-    offhand: {},
-  },
+	fighter: {
+		weapon: new Weapon({ ...items.chippedBlade }),
+		chest: new Armor({ ...items.raggedShirt }),
+		helmet: new Armor({ ...items.leatherHelmet }),
+		gloves: {},
+		legs: new Armor({ ...items.raggedPants }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: new Armor({ ...items.woodenShield }),
+	},
+	barbarian: {
+		weapon: new Weapon({ ...items.chippedAxe }),
+		chest: new Armor({ ...items.leatherChest }),
+		helmet: {},
+		gloves: new Armor({ ...items.leatherBracers }),
+		legs: new Armor({ ...items.raggedPants }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: {},
+	},
+	paladin: {
+		weapon: new Weapon({ ...items.chippedBlade }),
+		chest: new Armor({ ...items.ironArmor }),
+		helmet: new Armor({ ...items.leatherHelmet }),
+		gloves: {},
+		legs: new Armor({ ...items.leatherLeggings }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: new Armor({ ...items.ironShield }),
+	},
+	sorcerer: {
+		weapon: new Weapon({ ...items.apprenticeWand }),
+		chest: new Armor({ ...items.raggedShirt }),
+		helmet: {},
+		gloves: new Armor({ ...items.raggedGloves }),
+		legs: new Armor({ ...items.raggedPants }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: {},
+	},
+	rogue: {
+		weapon: new Weapon({ ...items.dagger }),
+		chest: new Armor({ ...items.raggedShirt }),
+		helmet: new Armor({ ...items.raggedHood }),
+		gloves: new Armor({ ...items.raggedGloves }),
+		legs: new Armor({ ...items.raggedPants }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: new Armor({ ...items.parryingDagger }),
+	},
+	ranger: {
+		weapon: new Weapon({ ...items.huntingBow }),
+		chest: new Armor({ ...items.raggedShirt }),
+		helmet: new Armor({ ...items.woolHat }),
+		gloves: new Armor({ ...items.raggedGloves }),
+		legs: new Armor({ ...items.raggedPants }),
+		boots: new Armor({ ...items.raggedBoots }),
+		offhand: {},
+	},
 } as any;
 
 let clothToggleCreation = false;
 // steps: class-race, appearance
 let creationStep = "class-race";
 function characterCreation(withAnimations = true) {
-  if (withAnimations) {
-    const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
-    player = new PlayerCharacter({ ...copiedModel });
-    creation.style.display = "flex";
-    traitPicks = 2;
-    creationStep = "class-race";
-    setTimeout(() => {
-      creation.style.opacity = "1";
-    }, 5);
-  }
-  checkIfCanStartGame();
-  content.innerHTML = ""; // Clear screen
-  if (creationStep === "class-race") {
-    classRaceSelection();
-  } else if (creationStep === "appearance") {
-    appearanceSelection();
-  }
-  renderPlayerOutOfMap(256, creationCanvas, creationCtx, "center", player, clothToggleCreation);
+	if (withAnimations) {
+		const copiedModel = JSON.parse(JSON.stringify({ ...emptyModel }));
+		player = new PlayerCharacter({ ...copiedModel });
+		creation.style.display = "flex";
+		traitPicks = 2;
+		creationStep = "class-race";
+		setTimeout(() => {
+			creation.style.opacity = "1";
+		}, 5);
+	}
+	checkIfCanStartGame();
+	content.innerHTML = ""; // Clear screen
+	if (creationStep === "class-race") {
+		classRaceSelection();
+	} else if (creationStep === "appearance") {
+		appearanceSelection();
+	}
+	renderPlayerOutOfMap(256, creationCanvas, creationCtx, "center", player, clothToggleCreation);
 }
 
 const startingTraits = [
-  "strong",
-  "quick",
-  "enduring",
-  "intelligent",
-  "stealthy",
-  "lucky",
-  "healthy",
-  "wise",
-  "regenerating",
-  "magical",
-  "adrenaline",
-  "confident",
+	"strong",
+	"quick",
+	"enduring",
+	"intelligent",
+	"stealthy",
+	"lucky",
+	"healthy",
+	"wise",
+	"regenerating",
+	"magical",
+	"adrenaline",
+	"confident",
 ];
 let traitPicks = 2;
 
 function classRaceSelection() {
-  content.innerHTML = `
+	content.innerHTML = `
   <div class="char-race-container">
     <h1 class="race-select">${lang.choose_race}</h1>
     <div class="races">
       ${Object.entries(raceTexts)
-        .map(([key, { name }]: any) => {
-          return `<div class="race-pick ${key} ${
-            player.race === key ? "selected" : ""
-          }" onclick="changeRace('${key}')"><p>${name}</p></div>`;
-        })
-        .join("")}
+				.map(([key, { name }]: any) => {
+					return `<div class="race-pick ${key} ${
+						player.race === key ? "selected" : ""
+					}" onclick="changeRace('${key}')"><p>${name}</p></div>`;
+				})
+				.join("")}
     </div>
   </div>
   <div class="char-class-container">
     <h1 class="class-select">${lang.choose_class}</h1>
     <div class="classes">
       ${Object.values(combatClasses)
-        .map((combatClass: any) => {
-          return `<div class="class-pick ${combatClass.id} ${
-            player.classes[0]?.id === combatClass.id ? "selected" : ""
-          }" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
+				.map((combatClass: any) => {
+					return `<div class="class-pick ${combatClass.id} ${
+						player.classes[0]?.id === combatClass.id ? "selected" : ""
+					}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
       <p>${lang[combatClass.id + "_name"]}</p>
       <img src="${combatClass.icon}" alt="${combatClass.id}">
     </div>`;
-        })
-        .join("")}
+				})
+				.join("")}
     </div>
   </div>
   <div class="char-traits-container">
@@ -224,12 +229,12 @@ function classRaceSelection() {
     <p class="trait-picks-left">${traitPicks} points</p>
     <div class="traits">
       ${startingTraits
-        .map((trait: string) => {
-          return `<div class="trait-pick ${trait} ${
-            player.traits.findIndex((t: any) => t.id === trait) > -1 ? "selected" : ""
-          }" onclick="changeTrait('${trait}')"><p>${lang[trait + "_name"] ?? trait}</p></div>`;
-        })
-        .join("")}
+				.map((trait: string) => {
+					return `<div class="trait-pick ${trait} ${
+						player.traits.findIndex((t: any) => t.id === trait) > -1 ? "selected" : ""
+					}" onclick="changeTrait('${trait}')"><p>${lang[trait + "_name"] ?? trait}</p></div>`;
+				})
+				.join("")}
   </div>
   </div>
   <div class="continue-buttons">
@@ -237,96 +242,96 @@ function classRaceSelection() {
     <div class="red-button no-anim" onclick="closeCharacterCreation()">Cancel</div>
   </div>
   `;
-  Array.from(content.querySelector<HTMLDivElement>(".races").children).map((race: any) => {
-    tooltip(race, raceTT(race.classList[1]));
-  });
-  Array.from(content.querySelector<HTMLDivElement>(".classes").children).map((combatClass: any) => {
-    tooltip(combatClass, classTT(combatClasses[combatClass.classList[1]]));
-  });
-  Array.from(content.querySelector<HTMLDivElement>(".traits").children).map((trait: any) => {
-    tooltip(trait, statModifTT(traits[trait.classList[1]]));
-  });
+	Array.from(content.querySelector<HTMLDivElement>(".races").children).map((race: any) => {
+		tooltip(race, raceTT(race.classList[1]));
+	});
+	Array.from(content.querySelector<HTMLDivElement>(".classes").children).map((combatClass: any) => {
+		tooltip(combatClass, classTT(combatClasses[combatClass.classList[1]]));
+	});
+	Array.from(content.querySelector<HTMLDivElement>(".traits").children).map((trait: any) => {
+		tooltip(trait, statModifTT(traits[trait.classList[1]]));
+	});
 }
 
 function getHairArray() {
-  const hairArray = [];
-  for (let i = hairs[0]; i <= hairs[1]; i++) {
-    hairArray.push(i);
-  }
-  return hairArray;
+	const hairArray = [];
+	for (let i = hairs[0]; i <= hairs[1]; i++) {
+		hairArray.push(i);
+	}
+	return hairArray;
 }
 
 function getEyesArray() {
-  const eyesArray = [];
-  for (let i = eyes[0]; i <= eyes[1]; i++) {
-    eyesArray.push(i);
-  }
-  return eyesArray;
+	const eyesArray = [];
+	for (let i = eyes[0]; i <= eyes[1]; i++) {
+		eyesArray.push(i);
+	}
+	return eyesArray;
 }
 
 function getFaceArray() {
-  const faceArray = [];
-  for (let i = faces[0]; i <= faces[1]; i++) {
-    faceArray.push(i);
-  }
-  return faceArray;
+	const faceArray = [];
+	for (let i = faces[0]; i <= faces[1]; i++) {
+		faceArray.push(i);
+	}
+	return faceArray;
 }
 
 function getHairImg(hair: number) {
-  return `./resources/tiles/player/hair_${hair}.png`;
+	return `./resources/tiles/player/hair_${hair}.png`;
 }
 
 function getEyesImg(eyes: number) {
-  return `./resources/tiles/player/eyes_${eyes}.png`;
+	return `./resources/tiles/player/eyes_${eyes}.png`;
 }
 
 function getFaceImg(face: number) {
-  return `./resources/tiles/player/nose_mouth_${face}.png`;
+	return `./resources/tiles/player/nose_mouth_${face}.png`;
 }
 
 function appearanceSelection() {
-  content.innerHTML = `
+	content.innerHTML = `
   <div class="char-appearance-container">
     <h1 class="appearance-select">${lang.choose_hair ?? "choose_hair"}</h1>
     <div class="appearances">
       ${getHairArray()
-        .map((hair: number) => {
-          return `<div  class="appearance-pick ${hair} ${
-            player.hair === hair ? "selected" : ""
-          }" onclick="changeHair(${hair})"><img src="${getHairImg(hair)}" alt="hair image ${hair}" ></div>`;
-        })
-        .join("")}
+				.map((hair: number) => {
+					return `<div  class="appearance-pick ${hair} ${
+						player.hair === hair ? "selected" : ""
+					}" onclick="changeHair(${hair})"><img src="${getHairImg(hair)}" alt="hair image ${hair}" ></div>`;
+				})
+				.join("")}
     </div>
   </div>
   <div class="char-appearance-container">
   <h1 class="appearance-select">${lang.choose_eyes ?? "choose_eyes"}</h1>
   <div class="appearances">
     ${getEyesArray()
-      .map((eyes: number) => {
-        return `<div  class="appearance-pick ${eyes} ${
-          player.eyes === eyes ? "selected" : ""
-        }" onclick="changeEyes(${eyes})"><img src="${getEyesImg(eyes)}" alt="eyes image ${eyes}" ></div>`;
-      })
-      .join("")}
+			.map((eyes: number) => {
+				return `<div  class="appearance-pick ${eyes} ${
+					player.eyes === eyes ? "selected" : ""
+				}" onclick="changeEyes(${eyes})"><img src="${getEyesImg(eyes)}" alt="eyes image ${eyes}" ></div>`;
+			})
+			.join("")}
     </div>
   </div>
   <div class="char-appearance-container">
     <h1 class="appearance-select">${lang.choose_face ?? "choose_face"}</h1>
     <div class="appearances">
       ${getFaceArray()
-        .map((face: number) => {
-          return `<div  class="appearance-pick ${face} ${
-            player.face === face ? "selected" : ""
-          }" onclick="changeFace(${face})"><img src="${getFaceImg(face)}" alt="face image ${face}" ></div>`;
-        })
-        .join("")}
+				.map((face: number) => {
+					return `<div  class="appearance-pick ${face} ${
+						player.face === face ? "selected" : ""
+					}" onclick="changeFace(${face})"><img src="${getFaceImg(face)}" alt="face image ${face}" ></div>`;
+				})
+				.join("")}
     </div>
   </div>
   <div class="char-appearance-container">
     <h1 class="appearance-select">${lang.choose_name ?? "choose_name"}</h1>
     <input class="name-input" type="text" value="${
-      player.name
-    }" placeholder="Varien Loreanus" maxlength="24" oninput="changeName(this.value)">
+			player.name
+		}" placeholder="Varien Loreanus" maxlength="24" oninput="changeName(this.value)">
   </div>
   <div class="continue-buttons">
     <div class="blue-button no-anim ${canContinue() ? "" : "disabled"}" onclick="beginGame()">Confirm</div>
@@ -341,175 +346,175 @@ function appearanceSelection() {
 // });
 
 function changeName(value: string) {
-  player.name = value;
-  if (canContinue()) {
-    document.querySelector(".continue-buttons .blue-button").classList.remove("disabled");
-  } else {
-    document.querySelector(".continue-buttons .blue-button").classList.add("disabled");
-  }
+	player.name = value;
+	if (canContinue()) {
+		document.querySelector(".continue-buttons .blue-button").classList.remove("disabled");
+	} else {
+		document.querySelector(".continue-buttons .blue-button").classList.add("disabled");
+	}
 }
 
 function closeCharacterCreation() {
-  creation.style.opacity = "0";
-  setTimeout(() => {
-    creation.style.display = "none";
-  }, 750);
-  gotoMainMenu(true);
+	creation.style.opacity = "0";
+	setTimeout(() => {
+		creation.style.display = "none";
+	}, 750);
+	gotoMainMenu(true);
 }
 
 function toggleStep() {
-  if (creationStep === "class-race") {
-    if (canContinue()) {
-      creationStep = "appearance";
-    }
-  } else creationStep = "class-race";
-  characterCreation(false);
+	if (creationStep === "class-race") {
+		if (canContinue()) {
+			creationStep = "appearance";
+		}
+	} else creationStep = "class-race";
+	characterCreation(false);
 }
 
 function beginGame() {
-  player.updateTraits();
-  player.updateAbilities();
-  creation.style.opacity = "0";
-  setTimeout(() => {
-    creation.style.display = "none";
-  }, 750);
-  tree = player.classes[0].perkTree;
-  closeGameMenu(false, true);
-  helper.reviveAllDeadEnemies();
-  helper.resetAllLivingEnemiesInAllMaps();
-  helper.killAllQuestEnemies();
-  player.updatePerks(true);
-  player.updateAbilities();
-  fallenEnemies = [];
-  turnOver = true;
-  enemiesHadTurn = 0;
-  lootedChests = [];
-  currentMap = "cave_of_awakening";
-  state.inCombat = false;
-  resetAllChests();
-  handleEscape();
-  createStaticMap();
-  renderMinimap(maps[currentMap]);
-  renderAreaMap(maps[currentMap]);
-  moveMinimap();
-  resizeCanvas();
-  setTimeout(() => {
-    openLevelingScreen();
-  }, 0);
+	player.updateTraits();
+	player.updateAbilities();
+	creation.style.opacity = "0";
+	setTimeout(() => {
+		creation.style.display = "none";
+	}, 750);
+	tree = player.classes[0].perkTree;
+	closeGameMenu(false, true);
+	helper.reviveAllDeadEnemies();
+	helper.resetAllLivingEnemiesInAllMaps();
+	helper.killAllQuestEnemies();
+	player.updatePerks(true);
+	player.updateAbilities();
+	fallenEnemies = [];
+	turnOver = true;
+	enemiesHadTurn = 0;
+	lootedChests = [];
+	currentMap = "cave_of_awakening";
+	state.inCombat = false;
+	resetAllChests();
+	handleEscape();
+	createStaticMap();
+	renderMinimap(maps[currentMap]);
+	renderAreaMap(maps[currentMap]);
+	moveMinimap();
+	resizeCanvas();
+	setTimeout(() => {
+		openLevelingScreen();
+	}, 0);
 }
 
 function changeTrait(trait: string) {
-  if (traitPicks > 0) {
-    if (player.traits.findIndex((t: any) => t.id === trait) === -1) {
-      player.traits.push(traits[trait]);
-      traitPicks--;
-    } else {
-      player.traits = player.traits.filter((t: any) => t.id !== trait);
-      traitPicks++;
-    }
-  } else {
-    if (player.traits.findIndex((t: any) => t.id === trait) > -1) {
-      player.traits = player.traits.filter((t: any) => t.id !== trait);
-      traitPicks++;
-    }
-  }
-  characterCreation(false);
+	if (traitPicks > 0) {
+		if (player.traits.findIndex((t: any) => t.id === trait) === -1) {
+			player.traits.push(traits[trait]);
+			traitPicks--;
+		} else {
+			player.traits = player.traits.filter((t: any) => t.id !== trait);
+			traitPicks++;
+		}
+	} else {
+		if (player.traits.findIndex((t: any) => t.id === trait) > -1) {
+			player.traits = player.traits.filter((t: any) => t.id !== trait);
+			traitPicks++;
+		}
+	}
+	characterCreation(false);
 }
 
 function checkIfCanStartGame() {
-  let canStart = false;
-  if (player.name.trim().length > 1 && player.classes[0]) canStart = true;
-  try {
-    if (canStart) {
-      creation.querySelector(".startGame").classList.remove("greyedOut");
-    } else creation.querySelector(".startGame").classList.add("greyedOut");
-  } catch {}
+	let canStart = false;
+	if (player.name.trim().length > 1 && player.classes[0]) canStart = true;
+	try {
+		if (canStart) {
+			creation.querySelector(".startGame").classList.remove("greyedOut");
+		} else creation.querySelector(".startGame").classList.add("greyedOut");
+	} catch {}
 }
 
 function canContinue() {
-  if (creationStep === "class-race") {
-    if (!player.classes[0]?.id) return false;
-    if (traitPicks < 0 || traitPicks > 1) return false;
-  } else {
-    if (player.name.trim().length <= 3 || player.name.length > 24) return false;
-  }
-  return true;
+	if (creationStep === "class-race") {
+		if (!player.classes[0]?.id) return false;
+		if (traitPicks < 0 || traitPicks > 1) return false;
+	} else {
+		if (player.name.trim().length <= 3 || player.name.length > 24) return false;
+	}
+	return true;
 }
 
 function changeHair(n: number) {
-  player.hair = n;
-  characterCreation(false);
+	player.hair = n;
+	characterCreation(false);
 }
 function changeEyes(n: number) {
-  player.eyes = n;
-  characterCreation(false);
+	player.eyes = n;
+	characterCreation(false);
 }
 function changeFace(n: number) {
-  player.face = n;
-  characterCreation(false);
+	player.face = n;
+	characterCreation(false);
 }
 
 function changeRace(race: any) {
-  player.race = race;
-  player.raceEffect = raceEffects[player.race];
-  characterCreation(false);
+	player.race = race;
+	player.raceEffect = raceEffects[player.race];
+	characterCreation(false);
 }
 
 function changeClass(_combatClass: any) {
-  player.classes[0] = new combatClass(_combatClass);
-  Object.entries(classEquipments[player.classes[0].perkTree]).forEach((eq: any) => {
-    let id = eq[0];
-    let val = eq[1];
-    player[id] = { ...val };
-  });
-  characterCreation(false);
-  checkIfCanStartGame();
+	player.classes[0] = new combatClass(_combatClass);
+	Object.entries(classEquipments[player.classes[0].perkTree]).forEach((eq: any) => {
+		let id = eq[0];
+		let val = eq[1];
+		player[id] = { ...val };
+	});
+	characterCreation(false);
+	checkIfCanStartGame();
 }
 
 function changeSex(sex: string) {
-  player.sex = sex;
-  document.querySelector(".player-sex-clothes .selected").classList.remove("selected");
-  document.querySelector(`.player-sex-clothes .${sex}`).classList.add("selected");
-  characterCreation(false);
-  checkIfCanStartGame();
+	player.sex = sex;
+	document.querySelector(".player-sex-clothes .selected").classList.remove("selected");
+	document.querySelector(`.player-sex-clothes .${sex}`).classList.add("selected");
+	characterCreation(false);
+	checkIfCanStartGame();
 }
 
 function toggleClothes() {
-  clothToggleCreation = !clothToggleCreation;
-  if (clothToggleCreation) {
-    document.querySelector(".toggleClothes").classList.add("selected");
-  } else document.querySelector(".toggleClothes").classList.remove("selected");
-  characterCreation(false);
-  checkIfCanStartGame();
+	clothToggleCreation = !clothToggleCreation;
+	if (clothToggleCreation) {
+		document.querySelector(".toggleClothes").classList.add("selected");
+	} else document.querySelector(".toggleClothes").classList.remove("selected");
+	characterCreation(false);
+	checkIfCanStartGame();
 }
 
 function raceTT(race: string) {
-  let txt = "";
-  // @ts-expect-error
-  let entries: any = Object.entries(raceEffects[race].modifiers).sort((a: number, b: number) => b[1] - a[1]);
-  let sortedTotal: any = {};
-  entries.forEach((entry: any) => {
-    sortedTotal[entry[0]] = entry[1];
-  });
-  Object.entries(sortedTotal).forEach((effect) => {
-    txt += effectSyntax(effect);
-  });
-  return txt;
+	let txt = "";
+	// @ts-expect-error
+	let entries: any = Object.entries(raceEffects[race].modifiers).sort((a: number, b: number) => b[1] - a[1]);
+	let sortedTotal: any = {};
+	entries.forEach((entry: any) => {
+		sortedTotal[entry[0]] = entry[1];
+	});
+	Object.entries(sortedTotal).forEach((effect) => {
+		txt += effectSyntax(effect);
+	});
+	return txt;
 }
 
 function classTT(data: any) {
-  let txt = `<c>white<c><f>24px<f>${lang[data.id + "_name"]}\n`;
-  txt += lang[data.id + "_desc"];
-  // @ts-expect-error
-  let entries: any = Object.entries(data.statBonuses).sort((a: number, b: number) => b[1] - a[1]);
-  let sortedTotal: any = {};
-  entries.forEach((entry: any) => {
-    sortedTotal[entry[0]] = entry[1];
-  });
-  Object.entries(sortedTotal).forEach((effect) => {
-    txt += effectSyntax(effect);
-  });
-  return txt;
+	let txt = `<c>white<c><f>24px<f>${lang[data.id + "_name"]}\n`;
+	txt += lang[data.id + "_desc"];
+	// @ts-expect-error
+	let entries: any = Object.entries(data.statBonuses).sort((a: number, b: number) => b[1] - a[1]);
+	let sortedTotal: any = {};
+	entries.forEach((entry: any) => {
+		sortedTotal[entry[0]] = entry[1];
+	});
+	Object.entries(sortedTotal).forEach((effect) => {
+		txt += effectSyntax(effect);
+	});
+	return txt;
 }
 
 // for (let i = 0; i < 30; i++) {
@@ -527,88 +532,89 @@ const loadingBarFill: HTMLDivElement = document.querySelector(".loading-bar-fill
 const loadingTextElement: HTMLDivElement = document.querySelector(".loading-text")!;
 
 async function setLoadingBar(value: number, text: string) {
-  loadingBarFill.style.width = `${value}%`;
-  loadingTextElement.textContent = text;
-  return new Promise((resolve) => {
-    resolve(true);
-  });
+	loadingBarFill.style.width = `${value}%`;
+	loadingTextElement.textContent = text;
+	return new Promise((resolve) => {
+		resolve(true);
+	});
 }
 
 async function initGame() {
-  setLoadingBar(0, "Loading settings...");
-  let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
-  if (options) {
-    settings = new gameSettings(options);
-    lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
-  } else settings = new gameSettings(settings);
+	setLoadingBar(0, "Loading settings...");
+	let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
+	if (options) {
+		settings = new gameSettings(options);
+		lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
+		scaleUI(settings.ui_scale / 100);
+	} else settings = new gameSettings(settings);
 
-  await gotoMainMenu(true);
-  await setLoadingBar(10, "Loading game...");
+	await gotoMainMenu(true);
+	await setLoadingBar(10, "Loading game...");
 
-  state.menuOpen = true;
-  state.titleScreen = true;
+	state.menuOpen = true;
+	state.titleScreen = true;
 
-  await setLoadingBar(50, "Loading mods...");
+	await setLoadingBar(50, "Loading mods...");
 
-  if (!settings.load_mods) {
-    continueLoad();
-    return;
-  }
+	if (!settings.load_mods) {
+		continueLoad();
+		return;
+	}
 
-  const buttons = [
-    {
-      text: "Load mods",
-      class: "blue-button",
-      callback: () => {
-        gotoMods();
-        closeMultiButtonPrompt();
-      },
-    },
-    {
-      text: "Don't load",
-      class: "red-button",
-      callback: () => {
-        continueLoad();
-        closeMultiButtonPrompt();
-      },
-    },
-  ];
-  multiButtonPrompt("load_mods_prompt", buttons);
+	const buttons = [
+		{
+			text: "Load mods",
+			class: "blue-button",
+			callback: () => {
+				gotoMods();
+				closeMultiButtonPrompt();
+			},
+		},
+		{
+			text: "Don't load",
+			class: "red-button",
+			callback: () => {
+				continueLoad();
+				closeMultiButtonPrompt();
+			},
+		},
+	];
+	multiButtonPrompt("load_mods_prompt", buttons);
 }
 
 async function continueLoad() {
-  preloadFinished = true;
-  await setLoadingBar(60, "Loading assets...");
-  await player.updateAbilities();
-  player.updatePerks();
-  player.updateTraits();
-  tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
-  tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
-  tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
-  tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
-  tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
-  tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
-  tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
-  updateCommands();
-  await helper.sleep(1); // This stupid buffer ensures that textures replaced by mods are loaded properly
-  await setLoadingBar(70, "Building textures...");
-  try {
-    await setLoadingBar(80, "Loading textures...");
-    await loadTextures();
-    await setLoadingBar(85, "Creating static maps...");
-    await createStaticMap();
-    await setLoadingBar(95, "Rendering map...");
-    resizeCanvas();
-    renderMinimap(maps[currentMap]);
-    renderAreaMap(maps[currentMap]);
-  } catch (err) {
-    console.warn("Failed rendering map", err);
-  }
-  await setLoadingBar(100, "Done!");
-  setTimeout(() => (document.querySelector<HTMLDivElement>(".loading").style.display = "none"), 0);
-  resizeCanvas();
-  renderMinimap(maps[currentMap]);
-  renderAreaMap(maps[currentMap]);
+	preloadFinished = true;
+	await setLoadingBar(60, "Loading assets...");
+	await player.updateAbilities();
+	player.updatePerks();
+	player.updateTraits();
+	tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
+	tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
+	tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
+	tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
+	tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
+	tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
+	tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
+	updateCommands();
+	await helper.sleep(1); // This stupid buffer ensures that textures replaced by mods are loaded properly
+	await setLoadingBar(70, "Building textures...");
+	try {
+		await setLoadingBar(80, "Loading textures...");
+		await loadTextures();
+		await setLoadingBar(85, "Creating static maps...");
+		await createStaticMap();
+		await setLoadingBar(95, "Rendering map...");
+		resizeCanvas();
+		renderMinimap(maps[currentMap]);
+		renderAreaMap(maps[currentMap]);
+	} catch (err) {
+		console.warn("Failed rendering map", err);
+	}
+	await setLoadingBar(100, "Done!");
+	setTimeout(() => (document.querySelector<HTMLDivElement>(".loading").style.display = "none"), 0);
+	resizeCanvas();
+	renderMinimap(maps[currentMap]);
+	renderAreaMap(maps[currentMap]);
 }
 
 document.addEventListener("DOMContentLoaded", initGame);

@@ -44,7 +44,7 @@ function generateHotbar() {
                     frame.append(cdTxt);
                 }
                 else {
-                    tooltip(abiDiv, abiTT(abi));
+                    tooltip(abiDiv, abiTT(abi, player, { fontSize: 18 }));
                     if (abi.onCooldown == 0 &&
                         player.stats.mp >= abi.mana_cost &&
                         (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) &&

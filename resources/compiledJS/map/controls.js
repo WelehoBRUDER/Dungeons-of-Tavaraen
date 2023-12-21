@@ -342,11 +342,18 @@ function canMove(char, dir) {
     });
     if (fieldMap?.[tile.y]?.[tile.x] === 1)
         movable = false;
-    if (checkDirs[dir]) {
-        if (fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 &&
-            fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1)
-            movable = false;
-    }
+    // Removed this check to allow for more freedom of movement
+    // To be seen if there are any unforeseen consequences
+    // if (checkDirs[dir]) {
+    // 	console.log(checkDirs[dir]);
+    // 	console.log("sivu1", check.y + checkDirs[dir].y1, check.x + checkDirs[dir].x1);
+    // 	console.log("sivu2", check.y + checkDirs[dir].y2, check.x + checkDirs[dir].x2);
+    // 	// if (
+    // 	// 	fieldMap?.[check.y + checkDirs[dir].y1]?.[check.x + checkDirs[dir].x1] === 1 &&
+    // 	// 	fieldMap?.[check.y + checkDirs[dir].y2]?.[check.x + checkDirs[dir].x2] === 1
+    // 	// )
+    // 	// 	movable = false;
+    // }
     if (tile.y < 0 || tile.y >= map.base.length || tile.x < 0 || tile.x >= map.base[0].length)
         movable = false;
     return movable;
