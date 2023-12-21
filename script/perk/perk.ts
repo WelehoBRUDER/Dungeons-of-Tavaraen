@@ -148,16 +148,23 @@ class Perk {
 	// UPDATE: The effects no longer duplicate constantly, but instead once when the perk is bought.
 	// This doesn't actually affect the perk itself, but it does affect the tooltip.
 	// Why? I have not found the culprit yet.
-	getEffects(level: number = this.level) {
+	getEffects(level: number = this.level, options?: { noStacking?: boolean }) {
 		const effects = {};
 		const thisPerk = window.structuredClone({ ...perksArray[this.tree].perks[this.id] });
-		thisPerk.levelEffects.forEach((effect: any, index: number) => {
-			if (index >= level) return;
-			Object.entries(effect).forEach((stat: any) => {
+		if (options?.noStacking) {
+			Object.entries(thisPerk.levelEffects[level - 1]).forEach((stat: any) => {
 				const [key, value] = stat;
 				applyModifierToTotal(stat, effects);
 			});
-		});
+		} else {
+			thisPerk.levelEffects.forEach((effect: any, index: number) => {
+				if (index >= level) return;
+				Object.entries(effect).forEach((stat: any) => {
+					const [key, value] = stat;
+					applyModifierToTotal(stat, effects);
+				});
+			});
+		}
 		return effects;
 	}
 
@@ -497,14 +504,17 @@ function perkTT(perk: Perk) {
 		const totalCompare: any = {};
 		/* OVERLY COMPLICATED TOOLTIP */
 
-		const boni: any = {};
-		nextEffects.forEach((eff: any) => {
-			boni[eff[0]] = eff[1];
-		});
+		// const boni: any = {};
+		// nextEffects.forEach((eff: any) => {
+		// 	boni[eff[0]] = eff[1];
+		// });
 		// First we check if we are comparing an ability upgrade
 		if (props?.compareAbility) {
 			const ability = new Ability({ ...abilities[props.compareAbility] }, { ...player });
-			txt += `\n${compareAbilityTooltip(ability, { ...player }, boni)}`;
+			// Since we don't want to show the player the bonuses they already have
+			// we must first remove the earlier ones from the newest
+			const comparisonBonuses = { ...perk.getEffects(lvl + 1, { noStacking: true }) };
+			txt += `\n${compareAbilityTooltip(ability, { ...player }, comparisonBonuses)}`;
 		}
 		// If not, it gets a bit messy
 		else {
@@ -530,10 +540,16 @@ function perkTT(perk: Perk) {
 			// That object is then used to create the tooltip
 			// It might seem cryptic, but it's basically just {key: [current, next]}
 			Object.entries(totalCompare).forEach((stat: any) => {
-				const val = stat[1];
-				const cur = val[0];
-				const next = val[1];
+				let val = stat[1];
+				let cur = val[0];
+				let next = val[1];
 				stat[1] = cur;
+				if (next === stat[1]) {
+					next = null;
+				}
+				if (stat[0].endsWith("P")) {
+					stat[1] = (stat[1] - 1) * 100;
+				}
 				if (next) {
 					txt += effectSyntax(stat, true, next);
 				} else {

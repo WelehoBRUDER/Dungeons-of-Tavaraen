@@ -274,7 +274,7 @@ function updateUI() {
 	const hpImg = <HTMLImageElement>ui.querySelector(".PlayerHpFill");
 	const mpImg = <HTMLImageElement>ui.querySelector(".PlayerMpFill");
 	const xp = <HTMLDivElement>document.querySelector(".xpBar .barFill");
-	hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
+	hpText.textContent = `${Math.floor(player.stats.hp)} / ${player.getHpMax()}`;
 	hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
 	mpText.textContent = `${Math.floor(player.stats.mp)} / ${player.getMpMax()}`;
 	mpText.innerHTML += ` <span>+${player.getRegen().mp.toFixed(2)}</span>`;

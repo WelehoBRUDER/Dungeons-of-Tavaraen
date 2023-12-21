@@ -11,7 +11,7 @@ const abilities = {
         icon: "resources/icons/atk.png",
         action_desc: "attacks",
         action_desc_pl: "attack",
-        use_range: "weapon_range",
+        use_range: "-1",
     },
     defend: {
         id: "defend",

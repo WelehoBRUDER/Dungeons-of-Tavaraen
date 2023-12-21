@@ -1311,7 +1311,7 @@ const english = {
   spell: "Spell",
   requires_melee_weapon: "Requires Melee Weapon",
   requires_ranged_weapon: "Requires Ranged Weapon",
-  recharge_only_in_combat: "Recharge Only In Combat",
+  recharge_only_in_combat: "Recharges only in combat",
   targets_self: "Targets Self",
   mana_cost: "Mana Cost",
   health_cost: "Health Cost",

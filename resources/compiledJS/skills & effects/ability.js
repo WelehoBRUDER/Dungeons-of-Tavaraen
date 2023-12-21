@@ -142,8 +142,7 @@ class Ability {
         this.shoots_projectile = baseAbility.shoots_projectile ?? "";
         this.icon = baseAbility.icon;
         this.line = baseAbility.line ?? "";
-        this.use_range =
-            typeof parseInt(baseAbility.use_range) === "number" ? parseInt(baseAbility.use_range).toString() : baseAbility.use_range;
+        this.use_range = parseInt(baseAbility.use_range);
         this.requires_melee_weapon = baseAbility.requires_melee_weapon ?? false;
         this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
         this.requires_concentration = baseAbility.requires_concentration ?? false;
@@ -191,6 +190,7 @@ class Ability {
             id = "ability_" + id;
             if (!holder)
                 return;
+            baseStats.use_range = parseInt(baseStats.use_range);
             Object.entries(this).forEach(([key, value]) => {
                 if (typeof value !== "number" || typeof value === "object")
                     return;
@@ -206,6 +206,19 @@ class Ability {
                     this[key] = { ...updateObject(key, value, holder.allModifiers[id]) };
                 }
             });
+            if (holder?.allModifiers?.[id]) {
+                Object.entries(holder?.allModifiers?.[id]).forEach(([bonusKey, bonusValue]) => {
+                    console.log(bonusKey, bonusValue);
+                    if (typeof bonusValue === "boolean") {
+                        if (bonusValue) {
+                            this[bonusKey] = true;
+                        }
+                        else {
+                            delete this[bonusKey];
+                        }
+                    }
+                });
+            }
         };
         this.updateStats(user);
     }

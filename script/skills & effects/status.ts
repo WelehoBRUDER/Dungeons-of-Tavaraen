@@ -76,22 +76,25 @@ class statEffect {
 						this[key][_key] = +((_value + bonus) * modifier).toFixed(2);
 					} else updateObjectWithoutReturn(_key, _value, bonuses[key]);
 				});
-			} else if (typeof value === "boolean") {
-				if (value) {
-					this[key] = true;
+			}
+		});
+		Object.entries(bonuses).forEach(([bonusKey, bonusValue]: [string, any]) => {
+			if (bonusKey === "effects") {
+				Object.entries(bonusValue).forEach(([key, value]) => {
+					const _key = key.substring(0, key.length - 1);
+					if (!this.effects[_key] && typeof value === "number") {
+						this.effects[_key] = value;
+					}
+				});
+			}
+			if (typeof bonusValue === "boolean") {
+				if (bonusValue) {
+					this[bonusKey] = true;
 				} else {
-					delete this[key];
+					delete this[bonusKey];
 				}
 			}
 		});
-		if (bonuses.effects) {
-			Object.entries(bonuses.effects).forEach(([key, value]) => {
-				const _key = key.substring(0, key.length - 1);
-				if (!this.effects[_key] && typeof value === "number") {
-					this.effects[_key] = value;
-				}
-			});
-		}
 
 		return this;
 	}

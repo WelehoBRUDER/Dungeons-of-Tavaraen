@@ -43,7 +43,7 @@ function abiTT(abi, character = player, options) {
     }
     if (abi.resistance_penetration)
         txt += `<i>${icons.rp}<i><f>${fontSize}px<f>${lang["resistance_penetration"]}: ${abi.resistance_penetration ? abi.resistance_penetration : "0"}%\n`;
-    if (parseInt(abi.use_range) > 0)
+    if (abi.use_range > 0)
         txt += `<i>${icons.range}<i><f>${fontSize}px<f>${lang["use_range"]}: ${abi.use_range} ${lang["tiles"]}\n`;
     if (abi.life_steal_percentage && !abi.life_steal_trigger_only_when_killing_enemy) {
         txt += `<f>${fontSize}px<f>${lang["life_steal"]}: ${abi.life_steal_percentage}%\n`;
@@ -75,15 +75,18 @@ function abiTT(abi, character = player, options) {
     if (abi.type)
         txt += `<f>${fontSize}px<f>${lang["type"]}: ${lang[abi.type]}\n`;
     if (abi.shoots_projectile != "")
-        txt += `<f>${fontSize}px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
+        txt += `<f>${fontSize}px<f>${lang["ranged"]}\n`;
     if (abi.requires_melee_weapon)
-        txt += `<i>${icons.melee}<i><f>${fontSize}px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.melee}<i><f>${fontSize}px<f>${lang["requires_melee_weapon"]}
+		}\n`;
     else if (abi.requires_ranged_weapon)
-        txt += `<i>${icons.ranged}<i><f>${fontSize}px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.ranged}<i><f>${fontSize}px<f>${lang["requires_ranged_weapon"]}
+		}\n`;
     if (abi.requires_concentration)
-        txt += `<i>${icons.concentration}<i><f>${fontSize}px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.concentration}<i><f>${fontSize}px<f>${lang["concentration_req"]}
+		}\n`;
     if (abi.recharge_only_in_combat)
-        txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f>${lang["recharge_only_in_combat"]}\n`;
     if (abi.summon_unit)
         txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>${fontSize}px<f>${lang[abi.summon_unit + "_name"]}<c>white<c>\n`;
     if (abi.summon_level)
@@ -95,7 +98,7 @@ function abiTT(abi, character = player, options) {
     if (abi.aoe_size > 0)
         txt += `<i>${icons.aoe_size}<i><f>${fontSize}px<f>${lang["aoe_size"]}: ${Math.floor(abi.aoe_size * 2)}x${Math.floor(abi.aoe_size * 2)}\n`;
     if (abi.self_target)
-        txt += `<f>${fontSize}px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
+        txt += `<f>${fontSize}px<f>${lang["targets_self"]}\n`;
     if (abi.mana_cost > 0)
         txt += `<i>${icons.mana}<i><f>${fontSize}px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
     if (abi.health_cost > 0 || abi.health_cost_percentage > 0) {
@@ -152,8 +155,8 @@ function compareAbilityTooltip(ability, character, bonuses) {
             txt += `<i>${icons.rp}<i><f>16px<f>${lang["resistance_penetration"]}: ${value}%\n`;
         }
     }
-    if (parseInt(abi.use_range) > 0) {
-        const value = parseInt(abi.use_range);
+    if (abi.use_range > 0) {
+        const value = abi.use_range;
         if (compare.use_rangeV) {
             txt += `<i>${icons.range}<i><f>16px<f><c>white<c>${lang["use_range"]}: <c>lime<c>[${value} ---> ${value + compare.use_rangeV}] <c>white<c>${lang["tiles"]}\n`;
         }
@@ -210,15 +213,15 @@ function compareAbilityTooltip(ability, character, bonuses) {
     if (abi.type)
         txt += `<f>16px<f>${lang["type"]}: ${lang[abi.type]}\n`;
     if (abi.shoots_projectile != "")
-        txt += `<f>16px<f>${lang["ranged"]}: ${abi.shoots_projectile != "" ? lang["yes"] : lang["no"]}\n`;
+        txt += `<f>16px<f>${lang["ranged"]}\n`;
     if (abi.requires_melee_weapon)
-        txt += `<i>${icons.melee}<i><f>16px<f>${lang["requires_melee_weapon"]}: ${abi.requires_melee_weapon ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.melee}<i><f>16px<f>${lang["requires_melee_weapon"]}\n`;
     else if (abi.requires_ranged_weapon)
-        txt += `<i>${icons.ranged}<i><f>16px<f>${lang["requires_ranged_weapon"]}: ${abi.requires_ranged_weapon ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.ranged}<i><f>16px<f>${lang["requires_ranged_weapon"]}\n`;
     if (abi.requires_concentration)
-        txt += `<i>${icons.concentration}<i><f>16px<f>${lang["concentration_req"]}: ${abi.requires_concentration ? lang["yes"] : lang["no"]}\n`;
+        txt += `<i>${icons.concentration}<i><f>16px<f>${lang["concentration_req"]}\n`;
     if (abi.recharge_only_in_combat)
-        txt += `<i>${icons.fighter_symbol}<i><f>16px<f>${lang["recharge_only_in_combat"]}: ${lang["yes"]}\n`;
+        txt += `<i>${icons.fighter_symbol}<i><f>16px<f>${lang["recharge_only_in_combat"]}\n`;
     if (abi.summon_unit)
         txt += `<i>${icons.fighter_symbol}<i><f>16px<f><c>white<c>${lang["summons_unit"]}: <c>yellow<c><f>16px<f>${lang[abi.summon_unit + "_name"] ?? abi.summon_unit}<c>white<c>\n`;
     if (abi.summon_level)
@@ -238,7 +241,7 @@ function compareAbilityTooltip(ability, character, bonuses) {
         }
     }
     if (abi.self_target)
-        txt += `<f>16px<f>${lang["targets_self"]}: ${lang["yes"]}\n`;
+        txt += `<f>16px<f>${lang["targets_self"]}\n`;
     if (abi.mana_cost > 0) {
         if (compare.mana_costV) {
             const value = abi.mana_cost;
