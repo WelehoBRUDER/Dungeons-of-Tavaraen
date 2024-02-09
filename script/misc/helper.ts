@@ -135,7 +135,6 @@ let helper = {
 		if (lang[string]) {
 			localisedString = lang[string];
 		}
-		console.log(string, localisedString);
 		if (string.endsWith("V") || string.endsWith("P")) {
 			const baseString = string.substring(0, string.length - 1);
 			if (lang[baseString]) {

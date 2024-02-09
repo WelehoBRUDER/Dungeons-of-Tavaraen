@@ -25,10 +25,12 @@ Your character may be severely underpowered if you continue an old save.
 - Tooltips when upgrading skills now show the new values that change.
 - Tooltips now display an approximate damage value for abilities.
 - Increased tooltip clarity regarding abilities and effects.
+- Added link changelog in menu buttons.
+- UI is automatically scaled to fit screen when loading the game for the first time.
 
 ## Bug Fixes
-- Fixed ui scale not remembering saved settings
-- Certain projectiles fired by enemies no longer stun the game world
+- Fixed ui scale not remembering saved settings.
+- Certain projectiles fired by enemies no longer stun the game world.
 
 # 1.2.4 ~ 30.6.2023
 

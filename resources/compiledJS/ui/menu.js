@@ -344,6 +344,9 @@ async function gotoMainMenu(init = false) {
         mainMenuButtons.append(frame);
     }
 }
+function openChangelog() {
+    location.href = "https://github.com/WelehoBRUDER/Dungeons-of-Tavaraen/blob/main/Changelog.md";
+}
 function convertEnemytraits() {
     Object.values(maps).forEach((mp) => {
         mp.enemies.map((en) => {

@@ -34,24 +34,24 @@ const combatClasses = {
         perkTree: "barbarian",
         icon: "resources/icons/barbarian_symbol.png",
     },
-    paladinClass: {
-        id: "paladinClass",
-        statBonuses: {
-            meleeDamageP: 5,
-            spellDamageP: 5,
-            vitV: 2,
-            hpMaxP: 10,
-            healPowerP: 5,
-            hpMaxPerLevelV: 6,
-        },
-        levelBonuses: {
-            vitV: 1,
-            hpMaxP: 2,
-        },
-        color: "#fcba03",
-        perkTree: "paladin",
-        icon: "resources/icons/paladin_symbol.png",
-    },
+    // paladinClass: {
+    //   id: "paladinClass",
+    //   statBonuses: {
+    //     meleeDamageP: 5,
+    //     spellDamageP: 5,
+    //     vitV: 2,
+    //     hpMaxP: 10,
+    //     healPowerP: 5,
+    //     hpMaxPerLevelV: 6,
+    //   },
+    //   levelBonuses: {
+    //     vitV: 1,
+    //     hpMaxP: 2,
+    //   },
+    //   color: "#fcba03",
+    //   perkTree: "paladin",
+    //   icon: "resources/icons/paladin_symbol.png",
+    // },
     sorcererClass: {
         id: "sorcererClass",
         statBonuses: {

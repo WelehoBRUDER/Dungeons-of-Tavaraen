@@ -546,7 +546,11 @@ async function initGame() {
 		settings = new gameSettings(options);
 		lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
 		scaleUI(settings.ui_scale / 100);
-	} else settings = new gameSettings(settings);
+	} else {
+		settings = new gameSettings(settings);
+		settings.ui_scale = (window.innerWidth / 2560) * 100;
+		scaleUI(settings.ui_scale / 100);
+	}
 
 	await gotoMainMenu(true);
 	await setLoadingBar(10, "Loading game...");

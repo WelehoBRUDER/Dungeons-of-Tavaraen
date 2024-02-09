@@ -35,6 +35,10 @@ const mainButtons = [
         action: () => gotoMods(),
     },
     {
+        id: "menu_changelog",
+        action: () => openChangelog(),
+    },
+    {
         id: "menu_options",
         action: () => gotoSettingsMenu(true),
     },
