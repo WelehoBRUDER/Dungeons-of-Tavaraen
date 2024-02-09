@@ -65,9 +65,9 @@ const statusEffects = {
         id: "burning",
         name: "Burning",
         dot: {
-            damageType: "burning",
+            damageType: "fire",
             damageAmount: 4,
-            icon: icons.burning_icon,
+            icon: icons.burning,
         },
         effects: {
             fireResistV: 10,
@@ -80,7 +80,7 @@ const statusEffects = {
             current: 3,
         },
         type: "burning",
-        textIcon: icons.burning_icon,
+        textIcon: icons.burning,
         icon: "resources/icons/flame_of_passion.png",
     },
     sunder: {
@@ -116,7 +116,7 @@ const statusEffects = {
             current: 4,
         },
         type: "curse",
-        textIcon: icons.chilled_icon,
+        textIcon: icons.chilled,
         icon: "resources/icons/chilled.png",
     },
     blighted: {
@@ -133,7 +133,7 @@ const statusEffects = {
             current: 4,
         },
         type: "curse",
-        textIcon: icons.blight_icon,
+        textIcon: icons.blight,
         icon: "resources/icons/blighted.png",
     },
     rage: {
@@ -404,7 +404,7 @@ const statusEffects = {
             current: 5,
         },
         type: "stun",
-        textIcon: icons.health_cost_icon,
+        textIcon: icons.health_cost,
         icon: "resources/icons/health_cost.png",
     },
     liquid_courage: {
@@ -421,7 +421,7 @@ const statusEffects = {
             total: 50,
             current: 50,
         },
-        textIcon: icons.liquid_courage_icon,
+        textIcon: icons.liquid_courage,
         icon: "resources/icons/drunk.png",
     },
 };

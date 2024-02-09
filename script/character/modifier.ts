@@ -100,6 +100,9 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 		attackSpeedV: 0,
 		critChanceV: 0,
 		critDamageV: 0,
+		physicalSavesV: 0,
+		bodySavesV: 0,
+		mentalSavesV: 0,
 		physicalArmorV: 0,
 		physicalArmorP: 0,
 		magicalArmorV: 0,
@@ -150,9 +153,6 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 		obj.hpMaxPerLevelV = Math.floor(hpMaxPerLevelV / char.classes.length);
 	}
 	char.perks?.forEach((mod: any) => {
-		//console.log(mod);
-		//console.log(typeof mod);
-		console.log("GETTING EFFECTS");
 		const effects = mod.getEffects();
 		Object.entries(effects).forEach((eff: any) => {
 			applyModifierToTotal(eff, obj);

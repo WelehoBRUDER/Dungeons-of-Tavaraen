@@ -241,13 +241,14 @@ class Character {
         this.effects = () => {
             this.statusEffects.forEach((status, index) => {
                 if (Object.keys(status.dot).length > 0) {
-                    const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
+                    console.log(status.dot);
+                    const dmg = calculateStatusDamage(this, status.dot.damageAmount, status.dot.damageType);
                     this.stats.hp -= dmg;
                     spawnFloatingText(this.cords, dmg.toString(), "red", 32);
                     let effectText = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
                     effectText = effectText?.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
                     effectText = effectText?.replace("[ICON]", `<i>${status.dot.icon}<i>`);
-                    effectText = effectText?.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
+                    effectText = effectText?.replace("[STATUS]", `${helper.localise(status.dot.damageType + "_damage")}`);
                     effectText = effectText?.replace("[DMG]", `${dmg}`);
                     displayText(`<c>purple<c>[EFFECT] ${effectText}`);
                     if (this.stats.hp <= 0) {
@@ -308,6 +309,7 @@ class Character {
                     // @ts-expect-error
                     const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
                     const isPlayer = this.id === "player";
+                    console.log("LOGGING THIS", this);
                     fireProjectile(this.cords, target.cords, projectile, this.abilities.find((e) => e.id === "attack"), isPlayer, this);
                     await helper.sleep(110);
                 }
@@ -432,6 +434,7 @@ class Character {
                 }
             }
         };
+        this.getSaves = () => { };
     }
 }
 const dummy = new Character({

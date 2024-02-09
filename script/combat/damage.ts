@@ -1,5 +1,6 @@
 function calculateDamage(attacker: characterObject, target: characterObject, ability: ability, onlyRawDamage: boolean = false) {
-	// Initilize some values needed for the calculation
+	// Initialize some values needed for the calculation
+	console.log(attacker);
 	const attackerStats = attacker.getStats();
 	const targetResists = target.getResists();
 	const targetArmor = target.getArmorReduction();
@@ -110,6 +111,39 @@ function calculateDamage(attacker: characterObject, target: characterObject, abi
 	}
 }
 
+function calculateStatusDamage(target: characterObject, damageValue: number, damageType: string) {
+	// Initialize some values needed for the calculation
+	const targetResists = target.getResists();
+	const targetArmor = target.getArmorReduction();
+
+	// Create damage variable
+	let damage: number = 0;
+
+	// Start calculating damage
+
+	// Calculate defenses
+	let defense = 1;
+	const currentArmor = targetArmor[damageCategories[damageType]];
+	if (currentArmor > 0) {
+		const armorWithLoss = Math.min(currentArmor, 1);
+		defense = defense * (1 - armorWithLoss);
+	} else if (currentArmor) {
+		defense = defense * (1 - currentArmor);
+	}
+	let resistance = 1 - targetResists[damageType] / 100;
+
+	// Check for NaN to prevent breaking calculation
+	if (isNaN(defense)) defense = 1;
+	if (isNaN(resistance)) resistance = 1;
+
+	// Calculate final damage
+	let dmg = Math.floor(damageValue * defense);
+	dmg = Math.floor(dmg * resistance);
+	damage += dmg;
+
+	return damage;
+}
+
 // This function is used to calculate more accurate damage for tooltips
 // The damage presented assumes that the target has 0 armor and 0 resistances
 // It can't be used for actual damage in combat!
@@ -164,8 +198,6 @@ function approximateDamage(attacker: characterObject, ability: ability) {
 		damage = 1;
 		console.warn("Damage is NaN!");
 	}
-
-	console.log("ATTACK TYPE MODIFIER", attackTypeDamageModifier);
 
 	// Return damage and events
 	return [Math.floor(damage * 0.8), Math.floor(damage * 1.2)];

@@ -77,14 +77,11 @@ function abiTT(abi, character = player, options) {
     if (abi.shoots_projectile != "")
         txt += `<f>${fontSize}px<f>${lang["ranged"]}\n`;
     if (abi.requires_melee_weapon)
-        txt += `<i>${icons.melee}<i><f>${fontSize}px<f>${lang["requires_melee_weapon"]}
-		}\n`;
+        txt += `<i>${icons.melee}<i><f>${fontSize}px<f>${lang["requires_melee_weapon"]}\n`;
     else if (abi.requires_ranged_weapon)
-        txt += `<i>${icons.ranged}<i><f>${fontSize}px<f>${lang["requires_ranged_weapon"]}
-		}\n`;
+        txt += `<i>${icons.ranged}<i><f>${fontSize}px<f>${lang["requires_ranged_weapon"]}\n`;
     if (abi.requires_concentration)
-        txt += `<i>${icons.concentration}<i><f>${fontSize}px<f>${lang["concentration_req"]}
-		}\n`;
+        txt += `<i>${icons.concentration}<i><f>${fontSize}px<f>${lang["concentration_req"]}\n`;
     if (abi.recharge_only_in_combat)
         txt += `<i>${icons.fighter_symbol}<i><f>${fontSize}px<f>${lang["recharge_only_in_combat"]}\n`;
     if (abi.summon_unit)
@@ -289,11 +286,13 @@ function statTT(status, options) {
         txt += "<ct>effect-container<ct>";
     }
     if (!options?.embed)
-        txt += `\t<f>26px<f>${lang["effect_" + status.id + "_name"] ?? status.id}\t\n`;
+        txt += `\t<f>26px<f>${helper.localise("effect_" + status.id + "_name")}\t\n`;
     if (!options?.embed)
         txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
     if (Object.keys(status.dot).length > 0) {
-        txt += `§${options?.embed ? " " : ""}<f>${options?.embed ? "16px" : "${fontSize}px"}<f>${lang["deals"]} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+        txt += `§${options?.embed ? " " : ""}<f>${options?.embed ? "16px" : "${fontSize}px"}<f>${helper.localise("deals")} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${helper.localise(status.dot.damageType + "_damage").toLowerCase()} ${helper
+            .localise("damage")
+            .toLowerCase()}\n`;
     }
     Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, options?.embed)));
     if (status.silence)

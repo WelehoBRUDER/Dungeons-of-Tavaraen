@@ -208,7 +208,6 @@ class Ability {
             });
             if (holder?.allModifiers?.[id]) {
                 Object.entries(holder?.allModifiers?.[id]).forEach(([bonusKey, bonusValue]) => {
-                    console.log(bonusKey, bonusValue);
                     if (typeof bonusValue === "boolean") {
                         if (bonusValue) {
                             this[bonusKey] = true;

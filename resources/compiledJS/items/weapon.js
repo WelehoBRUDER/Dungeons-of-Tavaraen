@@ -77,6 +77,7 @@ class Weapon extends Item {
         // Assign correct name based on stat effects.
         if (this.rolledStats.length > 0) {
             let name = "";
+            // Picks the two highest stats for the name
             const maxAdjectives = 2;
             let adjectivesUsed = 0;
             const statKeys = [];

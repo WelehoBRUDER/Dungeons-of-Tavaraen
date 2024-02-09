@@ -90,19 +90,21 @@ function hoverEnemyShow(enemy) {
     resistFrame.classList.add("enResists");
     staticHover.append(name, mainStats, resistFrame);
 }
-function hoverProjectile(projectile) {
-    staticHover.textContent = "";
-    staticHover.style.display = "block";
-    const name = document.createElement("p");
-    name.classList.add("enemyName");
-    name.textContent = `${lang[projectile.id + "_name"] ?? projectile.id}`;
-    let mainStatText = "";
-    mainStatText += `<f>19px<f>${lang["speed"] ?? "speed"}: ${projectile.speed} ${lang["tiles_per_turn"] ?? "tpt"}\n`;
-    mainStatText += `<f>19px<f>${lang["origin"] ?? "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
-    mainStatText += `<f>19px<f><i>${icons.damage}<i>${lang["predicted_damage"] ?? "predicted_damage"}: ${calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg}`;
-    const mainStats = textSyntax(mainStatText);
-    staticHover.append(name, mainStats);
-}
+// function hoverProjectile(projectile: Projectile) {
+//   staticHover.textContent = "";
+//   staticHover.style.display = "block";
+//   const name = document.createElement("p");
+//   name.classList.add("enemyName");
+//   name.textContent = `${lang[projectile.id + "_name"] ?? projectile.id}`;
+//   let mainStatText = "";
+//   mainStatText += `<f>19px<f>${lang["speed"] ?? "speed"}: ${projectile.speed} ${lang["tiles_per_turn"] ?? "tpt"}\n`;
+//   mainStatText += `<f>19px<f>${lang["origin"] ?? "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
+//   mainStatText += `<f>19px<f><i>${icons.damage}<i>${lang["predicted_damage"] ?? "predicted_damage"}: ${
+//     calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg
+//   }`;
+//   const mainStats = textSyntax(mainStatText);
+//   staticHover.append(name, mainStats);
+// }
 /* Hide map hover */
 function hideMapHover() {
     staticHover.textContent = "";

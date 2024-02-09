@@ -231,7 +231,7 @@ function itemTT(item: any) {
 			text += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
 			const statEff = new statEffect(statusEffects[status]);
 			statEff.init(item.modifiers);
-			text += statTT(statEff, true);
+			text += statTT(statEff, { embed: true, container: true });
 		});
 	}
 	if (item.range > 0) text += `<i>${icons.range}<i><c>white<c><f>18px<f>${lang["use_range"]}: ${item.range} ${lang["tiles"]}\n`;

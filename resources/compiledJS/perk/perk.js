@@ -502,10 +502,6 @@ function perkTT(perk) {
         const nextEffects = Object.entries({ ...perk.getEffects(lvl + 1) });
         const totalCompare = {};
         /* OVERLY COMPLICATED TOOLTIP */
-        // const boni: any = {};
-        // nextEffects.forEach((eff: any) => {
-        // 	boni[eff[0]] = eff[1];
-        // });
         // First we check if we are comparing an ability upgrade
         if (props?.compareAbility) {
             const ability = new Ability({ ...abilities[props.compareAbility] }, { ...player });

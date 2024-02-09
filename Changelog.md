@@ -12,6 +12,7 @@ Your character may be severely underpowered if you continue an old save.
   - Racial bonuses are now more impactful and unique.
   - Race now heavily affects your hit points through the game.
   - Races have different rates of gaining experience.
+- Reverted projectile speed as it was causing issues that I couldn't reasoably fix.
 
 
 ## Minor Changes
@@ -27,6 +28,7 @@ Your character may be severely underpowered if you continue an old save.
 
 ## Bug Fixes
 - Fixed ui scale not remembering saved settings
+- Certain projectiles fired by enemies no longer stun the game world
 
 # 1.2.4 ~ 30.6.2023
 
