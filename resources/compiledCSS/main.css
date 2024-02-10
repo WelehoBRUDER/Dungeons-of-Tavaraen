@@ -284,6 +284,9 @@ body {
 .main .canvasLayers :not(.baseSheet) {
   pointer-events: none;
 }
+.main .canvasLayers .quickEffects {
+  z-index: 99;
+}
 .main .canvasLayers .enemyLayers {
   width: 100%;
   height: 100%;

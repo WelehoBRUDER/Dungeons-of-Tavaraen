@@ -327,6 +327,10 @@ body {
       pointer-events: none;
     }
 
+    .quickEffects {
+      z-index: 99;
+    }
+
     .enemyLayers {
       width: 100%;
       height: 100%;

@@ -3,9 +3,10 @@ const combatClasses = {
 		id: "fighterClass",
 		statBonuses: {
 			vitV: 3,
+			strv: 2,
 			meleeDamageP: 10,
 			rangedDamageP: -10,
-			hpMaxPerLevelV: 5,
+			hpMaxPerLevelV: 8,
 		},
 		levelBonuses: {
 			// These increase per level invested in the class
@@ -19,10 +20,10 @@ const combatClasses = {
 	barbarianClass: {
 		id: "barbarianClass",
 		statBonuses: {
-			strV: 3,
-			meleeDamageP: 10,
-			rangedDamageP: -10,
-			hpMaxPerLevelV: 3,
+			strV: 5,
+			meleeDamageP: 12.5,
+			rangedDamageP: -15,
+			hpMaxPerLevelV: 10,
 		},
 		levelBonuses: {
 			// These increase per level invested in the class
@@ -54,10 +55,10 @@ const combatClasses = {
 	sorcererClass: {
 		id: "sorcererClass",
 		statBonuses: {
-			intV: 3,
+			intV: 5,
 			spellDamageP: 10,
-			meleeDamageP: -10,
-			hpMaxPerLevelV: -3,
+			meleeDamageP: -15,
+			hpMaxPerLevelV: 3,
 		},
 		levelBonuses: {
 			intV: 1,
@@ -71,9 +72,10 @@ const combatClasses = {
 		id: "rogueClass",
 		statBonuses: {
 			cunV: 3,
+			dexV: 2,
 			rangedDamageP: 5,
 			meleeDamageP: 5,
-			hpMaxPerLevelV: 1,
+			hpMaxPerLevelV: 5,
 		},
 		levelBonuses: {
 			cunV: 1,
@@ -88,9 +90,10 @@ const combatClasses = {
 		id: "rangerClass",
 		statBonuses: {
 			dexV: 3,
+			vitV: 2,
 			rangedDamageP: 10,
 			meleeDamageP: -5,
-			hpMaxPerLevelV: -2,
+			hpMaxPerLevelV: 4,
 		},
 		levelBonuses: {
 			dexV: 1,

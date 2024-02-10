@@ -11,8 +11,8 @@ function spawnFloatingText(cords, text, color = "grey", fontSize = 30, ms = 800,
         floatingText.style.padding = "2px";
         floatingText.style.borderRadius = "5px";
         floatingText.style.textShadow = `0 0 12px ${color}`;
-        floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / (helper.random(2.5, 0.5))}px`;
-        floatingText.style.top = `${y + spriteSize / (helper.random(4, 1))}px`;
+        floatingText.style.left = `${x - spriteSize / 2.5 + spriteSize / helper.random(2.5, 0.5)}px`;
+        floatingText.style.top = `${y + spriteSize / helper.random(4, 1)}px`;
         floatingText.classList.add("floatingText");
         floatingText.style.animationDuration = `${ms / 1000}s`;
         document.body.append(floatingText);
@@ -27,7 +27,7 @@ function aoeCollision(area, attacker, ability) {
     for (let y = 0; y < spriteLimitY; y++) {
         for (let x = 0; x < spriteLimitX; x++) {
             if (area[mapOffsetStartY + y]?.[mapOffsetStartX + x] == "x") {
-                baseCtx.drawImage(effect, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
+                quickEffectsCtx.drawImage(effect, x * spriteSize - mapOffsetX, y * spriteSize - mapOffsetY, spriteSize, spriteSize);
             }
         }
     }
@@ -38,7 +38,9 @@ function aoeCollision(area, attacker, ability) {
             regularAttack(attacker, en, ability, null, true);
         }
     });
-    setTimeout(modifyCanvas, 150);
+    setTimeout(() => {
+        quickEffectsCanvas.width = quickEffectsCanvas.width;
+    }, 250);
     state.isSelected = false;
     state.abiSelected = {};
     if (ability.cooldown)

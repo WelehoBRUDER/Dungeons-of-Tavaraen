@@ -126,6 +126,7 @@ const icons = {
     attackSpeed: "resources/icons/speed.png",
     liquid_courage: "resources/icons/drunk.png",
     fallback: "resources/icons/uncertainty.png",
+    hpMaxPerLevel: "resources/icons/health_per_level.png",
 };
 const icon = (name) => {
     return icons[name] || icons.fallback;

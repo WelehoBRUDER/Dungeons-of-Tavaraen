@@ -288,6 +288,9 @@ const finnish = {
     raggedGloves_name: "Ryysyiset Hanskat",
     raggedHood_name: "Ryysyinen Huppu",
     woolHat_name: "Villahattu",
+    barbarianClothes_name: "Barbaarin Vaatteet",
+    barbarianKilt_name: "Barbaarin Kiltti",
+    barbarianHandguards_name: "Barbaarin Käsisuojat",
     leatherChest_name: "Nahkaliivi",
     leatherBoots_name: "Nahkakengät",
     leatherLeggings_name: "Nahkajalkasuojat",
@@ -499,6 +502,7 @@ const finnish = {
     no_entry: "Et ole vielä löytänyt tätä asiaa...",
     disable: "Poista käytöstä",
     enable: "Ota käyttöön",
+    hpMaxPerLevel: "Terveys per taso",
     // Character names
     testMerchant_name: "Karl Bauer",
     blacksmithMaroch_name: "Maroch",
@@ -1458,6 +1462,7 @@ const english = {
     no_entry: "You have not yet discovered this...",
     disable: "Disable",
     enable: "Enable",
+    hpMaxPerLevel: "Health per level",
     // Character names
     testMerchant_name: "Karl Bauer",
     blacksmithMaroch_name: "Maroch",

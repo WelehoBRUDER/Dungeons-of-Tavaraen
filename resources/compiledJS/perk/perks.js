@@ -159,9 +159,35 @@ const perksArray = {
                     y: 2,
                 },
                 icon: "resources/icons/fireball_spell.png",
+                levelProperties: [
+                    {
+                        classLevelRequired: 1,
+                    },
+                    {
+                        classLevelRequired: 3,
+                        compareAbility: "fireball", // this will hide the auto generated tooltip
+                    },
+                    {
+                        classLevelRequired: 6,
+                        compareAbility: "fireball", // this will hide the auto generated tooltip
+                    },
+                ],
                 levelEffects: [
                     {
-                        fireDamageP: 10,
+                        fireDamageP: 2,
+                    },
+                    {
+                        ability_fireball: {
+                            cooldownV: -1,
+                            aoe_sizeV: 2.3,
+                            mana_costP: 100,
+                        },
+                    },
+                    {
+                        ability_fireball: {
+                            aoe_sizeV: 0.6,
+                            damage_multiplierP: 15,
+                        },
                     },
                 ],
             },
@@ -179,11 +205,7 @@ const perksArray = {
                 icon: "resources/icons/flame_icon.png",
                 levelEffects: [
                     {
-                        ability_fireball: {
-                            cooldownV: -1,
-                            aoe_sizeV: 2.3,
-                            mana_costP: 100,
-                        },
+                        fireDamageP: 7,
                     },
                 ],
             },

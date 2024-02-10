@@ -149,6 +149,7 @@ async function gotoSaveMenu(inMainMenu = false, animate = true) {
                 pl.updateTraits();
                 pl.updatePerks(true);
                 pl.updateAbilities();
+                pl.updateAllModifiers();
                 await setLoadingBar(40, "Loading save...");
             }
             catch (err) {

@@ -76,7 +76,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
     ctx?.drawImage(earModel, x, y, size, size);
     ctx?.drawImage(eyeModel, x, y, size, size);
     ctx?.drawImage(faceModel, x, y, size, size);
-    ctx?.drawImage(leggings, x, y, size, size);
+    //ctx?.drawImage(leggings, x, y, size, size);
     if (!playerModel.helmet?.coversHair || noClothes)
         ctx?.drawImage(hairModel, x, y, size, size);
     try {
@@ -94,7 +94,7 @@ function renderPlayerOutOfMap(size, canvas, ctx, side = "center", playerModel = 
                 ctx?.drawImage(textureAtlas, bootsModel.x, bootsModel.y, 128, 128, x, y, size, size);
             }
             if (!playerModel.legs?.sprite || (sex === "Female" && !playerModel.chest?.sprite)) {
-                const leggings = document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(playerModel.sex)}`);
+                //const leggings = <HTMLImageElement>document.querySelector(`.sprites .defaultPants${capitalizeFirstLetter(playerModel.sex)}`);
                 ctx?.drawImage(leggings, x, y, size, size);
             }
             if (playerModel.legs?.sprite) {

@@ -359,6 +359,9 @@ class Character {
 					displayText(`<c>purple<c>[EFFECT] ${effectText}`);
 					if (this.stats.hp <= 0) {
 						this.kill();
+						if (this.isFoe) {
+							updateEnemiesTurn();
+						}
 					}
 				}
 				status.last.current--;

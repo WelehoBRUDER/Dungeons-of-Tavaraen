@@ -110,10 +110,10 @@ const classEquipments = {
 	},
 	barbarian: {
 		weapon: new Weapon({ ...items.chippedAxe }),
-		chest: new Armor({ ...items.leatherChest }),
+		chest: new Armor({ ...items.barbarianClothes }),
 		helmet: {},
-		gloves: new Armor({ ...items.leatherBracers }),
-		legs: new Armor({ ...items.raggedPants }),
+		gloves: new Armor({ ...items.barbarianHandguards }),
+		legs: new Armor({ ...items.barbarianKilt }),
 		boots: new Armor({ ...items.raggedBoots }),
 		offhand: {},
 	},

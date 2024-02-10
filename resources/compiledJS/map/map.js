@@ -1,6 +1,8 @@
 "use strict";
 const baseCanvas = document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const quickEffectsCanvas = document.querySelector(".canvasLayers .quickEffects");
+const quickEffectsCtx = quickEffectsCanvas.getContext("2d");
 const fogCanvas = document.querySelector(".canvasLayers .fog");
 const fogCtx = fogCanvas.getContext("2d");
 const mapDataCanvas = document.querySelector(".canvasLayers .mapData");
