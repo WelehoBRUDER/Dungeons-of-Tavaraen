@@ -1,1367 +1,1969 @@
 const perksArray = {
-  sorcerer: {
-    id: "sorcerer_perks",
-    name: "Sorcerer",
-    startPos: 550,
-    perks: {
-      introduction_to_sorcery: {
-        id: "introduction_to_sorcery",
-        name: "Introduction to Sorcery",
-        desc: "",
-        effects: {
-          mpMaxV: 5,
-          intV: 1,
-        },
-        commands: {
-          add_ability_piercing_mana_bolt: 1,
-        },
-        traits: [
-          {
-            id: "frantic_mana_recovery",
-          },
-        ],
-        tree: "sorcerer",
-        pos: { x: 11, y: 1 },
-        icon: "resources/icons/wisdom.png",
-      },
-      intent_studies: {
-        id: "intent_studies",
-        name: "Intent Studies",
-        desc: "",
-        effects: {
-          mpMaxV: 8,
-          intV: 1,
-          ability_piercing_mana_bolt: {
-            mana_costV: -2,
-          },
-        },
-        tree: "sorcerer",
-        relative_to: "introduction_to_sorcery",
-        requires: ["introduction_to_sorcery"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/wisdom.png",
-      },
-      might_of_magic: {
-        id: "might_of_magic",
-        name: "Might of Magic",
-        desc: "",
-        effects: {
-          magicDamageP: 5,
-          mpMaxP: 3,
-        },
-        traits: [
-          {
-            id: "heightened_casting",
-          },
-        ],
-        tree: "sorcerer",
-        relative_to: "intent_studies",
-        requires: ["intent_studies"],
-        pos: { x: 3, y: 2 },
-        icon: "resources/icons/damage.png",
-      },
-      makings_of_a_summoner: {
-        id: "makings_of_a_summoner",
-        name: "Makings of a Summoner",
-        desc: "",
-        effects: {
-          regenMpP: 15,
-        },
-        commands: {
-          add_ability_summon_skeleton_warrior: 1,
-        },
-        tree: "sorcerer",
-        relative_to: "might_of_magic",
-        requires: ["might_of_magic"],
-        pos: { x: 4, y: 1.5 },
-        icon: "resources/icons/portal.png",
-      },
-      magical_bonds: {
-        id: "magical_bonds",
-        name: "Magical Bonds",
-        desc: "",
-        effects: {
-          hpMaxV: 10,
-          ability_summon_skeleton_warrior: {
-            mana_costV: -5,
-            cooldownV: -7,
-            use_rangeV: 2,
-          },
-        },
-        tree: "sorcerer",
-        relative_to: "makings_of_a_summoner",
-        requires: ["makings_of_a_summoner"],
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/summonSkelWarrior.png",
-      },
-      spells_of_battle: {
-        id: "spells_of_battle",
-        name: "Spells of Battle",
-        desc: "",
-        effects: {
-          ability_piercing_mana_bolt: {
-            damage_multiplierP: 12,
-            resistance_penetrationV: 10,
-          },
-        },
-        tree: "sorcerer",
-        relative_to: "might_of_magic",
-        requires: ["might_of_magic"],
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/piercing_mana_bolt.png",
-      },
-      school_of_fire: {
-        id: "school_of_fire",
-        name: "The School of Fire",
-        desc: "",
-        commands: {
-          add_ability_fireball: 1,
-        },
-        effects: {
-          fireDamageP: 10,
-        },
-        tree: "sorcerer",
-        relative_to: "intent_studies",
-        requires: ["intent_studies"],
-        pos: { x: -3, y: 2 },
-        icon: "resources/icons/fireball_spell.png",
-      },
-      molded_by_flame: {
-        id: "molded_by_flame",
-        name: "Molded by Flame",
-        desc: "",
-        effects: {
-          ability_fireball: {
-            cooldownV: -1,
-            aoe_sizeV: 2.3,
-            mana_costP: 100,
-          },
-        },
-        tree: "sorcerer",
-        relative_to: "school_of_fire",
-        requires: ["school_of_fire"],
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/flame_icon.png",
-      },
-      elemental_mage: {
-        id: "elemental_mage",
-        name: "Elemental Mage",
-        desc: "",
-        commands: {
-          add_ability_icy_javelin: 1,
-        },
-        effects: {
-          iceDamageP: 3,
-          fireDamageP: 3,
-          lightningDamageP: 3,
-        },
-        tree: "sorcerer",
-        relative_to: "school_of_fire",
-        requires: ["school_of_fire"],
-        pos: { x: -4, y: 1.5 },
-        icon: "resources/icons/elementalist.png",
-      },
-      piercing_javelin: {
-        id: "piercing_javelin",
-        name: "Armor Piercing Javelin",
-        desc: "",
-        effects: {
-          ability_icy_javelin: {
-            resistance_penetrationV: 25,
-            damage_multiplierP: 20,
-            cooldownP: -20,
-            mana_costP: 50,
-          },
-        },
-        tree: "sorcerer",
-        relative_to: "elemental_mage",
-        requires: ["elemental_mage"],
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/ice_javelin.png",
-      },
-      shield_of_ages: {
-        id: "shield_of_ages",
-        name: "Shield of Ages",
-        desc: "",
-        effects: {
-          magicResistV: 25,
-          mpMaxV: 10,
-        },
-        tree: "sorcerer",
-        relative_to: "intent_studies",
-        requires: ["intent_studies"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/shield_symbol.png",
-      },
-      shield_of_aurous: {
-        id: "shield_of_aurous",
-        name: "Shield of Aurous",
-        desc: "",
-        tree: "sorcerer",
-        commands: {
-          add_ability_ward_of_aurous: 1,
-        },
-        relative_to: "shield_of_ages",
-        requires: ["shield_of_ages"],
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/shield_of_aurous.png",
-      },
-      burning_passion: {
-        id: "burning_passion",
-        name: "Burning Passion",
-        desc: "",
-        tree: "sorcerer",
-        effects: {
-          fireDamageP: 5,
-          fireResistV: 5,
-          intV: 2,
-        },
-        relative_to: "molded_by_flame",
-        requires: ["molded_by_flame", "shield_of_aurous"],
-        pos: { x: 1.5, y: 2 },
-        icon: "resources/icons/resistance_flame.png",
-      },
-      wisdoms_of_the_past: {
-        id: "wisdoms_of_the_past",
-        name: "Wisdoms of the Past",
-        desc: "",
-        tree: "sorcerer",
-        effects: {
-          mpMaxV: 25,
-          regenMpP: 30,
-        },
-        relative_to: "spells_of_battle",
-        requires: ["spells_of_battle", "shield_of_aurous"],
-        pos: { x: -1.5, y: 2 },
-        icon: "resources/icons/mana.png",
-      },
-      // Need to add a spell for this
-      flame_wizard_fury: {
-        id: "flame_wizard_fury",
-        name: "The Flame Wizard's Fury",
-        desc: "",
-        tree: "sorcerer",
-        effects: {
-          fireDamageP: 25,
-        },
-        relative_to: "burning_passion",
-        requires: ["burning_passion", "wisdoms_of_the_past"],
-        pos: { x: 1.5, y: 1.5 },
-        icon: "resources/icons/rage.png",
-      },
-    },
-  },
-  fighter: {
-    id: "fighter_perks",
-    name: "Fighter",
-    startPos: 50,
-    perks: {
-      battle_sense: {
-        id: "battle_sense",
-        name: "Battle Sense",
-        desc: "",
-        effects: {
-          strV: 1,
-        },
-        commands: {
-          add_ability_focus_strike: 1,
-        },
-        tree: "fighter",
-        pos: { x: 7.5, y: 1 },
-        icon: "resources/icons/fighter_symbol.png",
-      },
-      fighters_vitality: {
-        id: "fighters_vitality",
-        name: "Fighter's Vitality",
-        desc: "",
-        effects: {
-          hpMaxV: 10,
-          regenHpV: 0.5,
-        },
-        relative_to: "battle_sense",
-        requires: ["battle_sense"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/health.png",
-      },
-      patient_blow: {
-        id: "patient_blow",
-        name: "Patient Blow",
-        desc: "",
-        effects: {
-          ability_focus_strike: {
-            resistance_penetrationV: 25,
-            cooldownV: -2,
-          },
-        },
-        relative_to: "fighters_vitality",
-        requires: ["fighters_vitality"],
-        tree: "fighter",
-        pos: { x: -4, y: 2 },
-        icon: "resources/icons/focus_strike.png",
-      },
-      resistant_in_melee: {
-        id: "resistant_in_melee",
-        name: "Resistant in Melee",
-        desc: "",
-        effects: {
-          resistAllV: 5,
-          evasionV: 2,
-          regenHpV: 0.25,
-        },
-        relative_to: "patient_blow",
-        requires: ["patient_blow"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/resistance_default.png",
-      },
-      absorber_of_life_force: {
-        id: "absorber_of_life_force",
-        name: "Absorber of Life Force",
-        desc: "",
-        effects: {
-          vitP: 3,
-        },
-        commands: {
-          add_ability_invigorating_finish: 1,
-        },
-        relative_to: "resistant_in_melee",
-        requires: ["resistant_in_melee"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/invigorating_finish.png",
-      },
-      strength_training: {
-        id: "strength_training",
-        name: "Strength Training",
-        desc: "",
-        effects: {
-          strV: 2,
-          vitV: 2,
-          regenHpV: 0.25,
-        },
-        relative_to: "fighters_vitality",
-        requires: ["fighters_vitality"],
-        tree: "fighter",
-        pos: { x: -2, y: 2 },
-        icon: "resources/icons/strength.png",
-      },
-      fighting_style: {
-        id: "fighting_style",
-        name: "Fighting Style",
-        desc: "",
-        effects: {
-          ability_attack: {
-            damage_multiplierP: 10,
-          },
-          hitChanceV: 5,
-        },
-        relative_to: "fighters_vitality",
-        requires: ["fighters_vitality"],
-        tree: "fighter",
-        pos: { x: 2, y: 2 },
-        icon: "resources/icons/damage.png",
-      },
-      furious_assault: {
-        id: "furious_assault",
-        name: "Furious Assault",
-        desc: "",
-        commands: {
-          add_ability_battle_fury: 1,
-        },
-        relative_to: "fighters_vitality",
-        requires: ["fighters_vitality"],
-        tree: "fighter",
-        pos: { x: 4, y: 2 },
-        icon: "resources/icons/fighters_rage.png",
-      },
-      charging_bull: {
-        id: "charging_bull",
-        name: "Charging Bull",
-        desc: "",
-        commands: {
-          add_ability_charge: 1,
-        },
-        relative_to: "furious_assault",
-        requires: ["furious_assault"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/charge_ability.png",
-      },
-      fighting_with_your_voice: {
-        id: "fighting_with_your_voice",
-        name: "Fighting with your voice",
-        desc: "",
-        commands: {
-          add_ability_warrior_shout: 1,
-        },
-        relative_to: "charging_bull",
-        requires: ["charging_bull"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/warrior_shout.png",
-      },
-      tactical_genius: {
-        id: "tactical_genius",
-        name: "Tactical Genius",
-        desc: "",
-        effects: {
-          ability_focus_strike: {
-            strike_cooldownV: -1,
-          },
-          ability_battle_fury: {
-            cooldownV: -3,
-          },
-          cunV: 5,
-        },
-        relative_to: "fighters_vitality",
-        requires: ["fighters_vitality", "strength_training", "fighting_style"],
-        tree: "fighter",
-        pos: { x: 0, y: 3 },
-        icon: "resources/icons/concentration.png",
-      },
-      concentrated_warrior: {
-        id: "concentrated_warrior",
-        name: "Concentrated Warrior",
-        desc: "",
-        effects: {
-          ability_focus_strike: {
-            damage_multiplierP: 15,
-          },
-          ability_charge: {
-            damage_multiplierP: 25,
-            resistance_penetrationV: 10,
-            cooldownV: -3,
-          },
-          hitChanceV: 7,
-        },
-        traits: [
-          {
-            id: "warrior_instinct",
-          },
-        ],
-        relative_to: "tactical_genius",
-        requires: ["tactical_genius", "resistant_in_melee", "charging_bull"],
-        tree: "fighter",
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/concentrated_warrior.png",
-      },
-      bulwark: {
-        id: "bulwark",
-        name: "Bulwark",
-        desc: "",
-        effects: {
-          physicalDefV: 10,
-          magicalDefV: 5,
-          elementalDefV: 5,
-          regenHpV: 1.5,
-          evasionV: 5,
-        },
-        relative_to: "concentrated_warrior",
-        requires: ["concentrated_warrior", "absorber_of_life_force"],
-        mutually_exclusive: ["warrior"],
-        tree: "fighter",
-        pos: { x: -2, y: 2 },
-        icon: "resources/icons/shield_symbol.png",
-      },
-      warrior: {
-        id: "warrior",
-        name: "Warrior",
-        desc: "",
-        effects: {
-          slashDamageP: 5,
-          crushDamageP: 5,
-          pierceDamageP: 5,
-          meleeDamageP: 10,
-          hitChanceV: 5,
-        },
-        relative_to: "concentrated_warrior",
-        requires: ["concentrated_warrior", "fighting_with_your_voice"],
-        mutually_exclusive: ["bulwark"],
-        tree: "fighter",
-        pos: { x: 2, y: 2 },
-        icon: "resources/icons/melee_damage.png",
-      },
-    },
-  },
-  barbarian: {
-    id: "barbarian_perks",
-    name: "Barbarian",
-    startPos: 50,
-    perks: {
-      thrill_of_battle: {
-        id: "thrill_of_battle",
-        name: "Thrill of Battle",
-        desc: "",
-        effects: {
-          strV: 1,
-        },
-        traits: [
-          {
-            id: "blood_rage_1",
-          },
-          {
-            id: "blood_rage_2",
-          },
-        ],
-        tree: "barbarian",
-        pos: { x: 7.5, y: 1 },
-        icon: "resources/icons/rage.png",
-      },
-      weapon_mastery: {
-        id: "weapon_mastery",
-        name: "Weapon Mastery",
-        desc: "",
-        effects: {
-          hitChanceV: 5,
-          strV: 2,
-        },
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "thrill_of_battle",
-        requires: ["thrill_of_battle"],
-        icon: "resources/icons/barbarian_symbol.png",
-      },
-      raging_charge: {
-        id: "raging_charge",
-        name: "Raging Charge",
-        desc: "",
-        effects: {
-          hpMaxV: 10,
-        },
-        commands: {
-          add_ability_barbarian_charge: 1,
-        },
-        tree: "barbarian",
-        pos: { x: -4, y: 2 },
-        relative_to: "weapon_mastery",
-        requires: ["weapon_mastery"],
-        icon: "resources/icons/barbarian_charge.png",
-      },
-      impatient: {
-        id: "impatient",
-        name: "Impatient",
-        desc: "",
-        effects: {
-          ability_barbarian_charge: {
-            cooldownV: -3,
-            damage_multiplierP: 30,
-          },
-          evasionV: 1,
-        },
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "raging_charge",
-        requires: ["raging_charge"],
-        icon: "resources/icons/cooldown_flame.png",
-      },
-      perk_finishing_blow: {
-        id: "perk_finishing_blow",
-        name: "Finishing Blow",
-        desc: "",
-        commands: {
-          add_ability_finishing_blow: 1,
-        },
-        tree: "barbarian",
-        pos: { x: 2, y: 2 },
-        relative_to: "impatient",
-        requires: ["impatient", "ultimate_warrior"],
-        icon: "resources/icons/finishing_blow.png",
-      },
-      true_finish: {
-        id: "true_finish",
-        name: "True Finish",
-        desc: "",
-        effects: {
-          ability_finishing_blow: {
-            damage_multiplierP: 100,
-            resistance_penetrationV: 25,
-          },
-        },
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "perk_finishing_blow",
-        requires: ["perk_finishing_blow"],
-        icon: "resources/icons/finishing_blow_burning.png",
-      },
-      hardened_constitution: {
-        id: "hardened_constitution",
-        name: "Hardenend  Constitution",
-        desc: "",
-        effects: {
-          vitV: 3,
-          hpMaxP: 5,
-        },
-        tree: "barbarian",
-        pos: { x: -2, y: 2 },
-        relative_to: "weapon_mastery",
-        requires: ["weapon_mastery"],
-        icon: "resources/icons/vitality.png",
-      },
-      sharp_senses: {
-        id: "sharp_senses",
-        name: "Sharpened Senses",
-        desc: "",
-        effects: {
-          evasionV: 2,
-        },
-        traits: [
-          {
-            id: "sense_of_danger_1",
-          },
-        ],
-        tree: "barbarian",
-        pos: { x: 2, y: 2 },
-        relative_to: "weapon_mastery",
-        requires: ["weapon_mastery"],
-        icon: "resources/icons/glass_cannon.png",
-      },
-      power_of_injuries: {
-        id: "power_of_injuries",
-        name: "Power of Injuries",
-        desc: "",
-        effects: {
-          strV: 1,
-        },
-        traits: [
-          {
-            id: "reckless_1",
-          },
-        ],
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "weapon_mastery",
-        requires: ["weapon_mastery"],
-        icon: "resources/icons/barbarian_flame.png",
-      },
-      ultimate_warrior: {
-        id: "ultimate_warrior",
-        name: "Ultimate Warrior",
-        desc: "",
-        effects: {
-          vitV: 1,
-          strV: 1,
-        },
-        traits: [
-          {
-            id: "reckless_2",
-          },
-          {
-            id: "sense_of_danger_2",
-          },
-        ],
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "power_of_injuries",
-        requires: ["hardened_constitution", "power_of_injuries", "sharp_senses"],
-        icon: "resources/icons/skull_of_doom.png",
-      },
-      perk_barbarian_rage: {
-        id: "perk_barbarian_rage",
-        name: "Barbarian Rage",
-        desc: "",
-        effects: {
-          damageP: 2,
-          resistAllV: -2,
-        },
-        commands: {
-          add_ability_barbarian_rage: 1,
-        },
-        tree: "barbarian",
-        pos: { x: 4, y: 2 },
-        relative_to: "weapon_mastery",
-        requires: ["weapon_mastery"],
-        icon: "resources/icons/berserk.png",
-      },
-      unyielding_rage: {
-        id: "unyielding_rage",
-        name: "Unyielding Rage",
-        desc: "",
-        effects: {
-          ability_barbarian_rage: {
-            cooldownV: -3,
-            effect_rage: {
-              effects: {
-                strVV: 5,
-                resistAllVV: 5,
-              },
-            },
-          },
-          damageP: 4,
-        },
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "perk_barbarian_rage",
-        requires: ["perk_barbarian_rage"],
-        icon: "resources/icons/skull_bleeding_eyes_flame.png",
-      },
-      perk_berserker: {
-        id: "perk_berserker",
-        name: "Berserker",
-        desc: "",
-        effects: {
-          meleeDamageP: 3,
-          strV: 1,
-        },
-        commands: {
-          add_ability_berserk: 1,
-        },
-        tree: "barbarian",
-        pos: { x: -2, y: 2 },
-        relative_to: "unyielding_rage",
-        requires: ["unyielding_rage", "ultimate_warrior"],
-        icon: "resources/icons/absolute_berserk.png",
-      },
-      perk_calmer_berserk: {
-        id: "perk_calmer_berserk",
-        name: "Calmer Berserking",
-        desc: "",
-        effects: {
-          ability_berserk: {
-            cooldownV: -5,
-            effect_berserk: {
-              effects: {
-                physicalDefPV: 50,
-                magicalDefPV: 50,
-                elementalDefPV: 50,
-                resistAllPV: 50,
-                regenHpPV: 50,
-              },
-            },
-          },
-        },
-        tree: "barbarian",
-        pos: { x: 0, y: 2 },
-        relative_to: "perk_berserker",
-        requires: ["perk_berserker"],
-        icon: "resources/icons/flaming_skull_defending.png",
-      },
-    },
-  },
-  rogue: {
-    id: "rogue_perks",
-    name: "Rogue",
-    startPos: 50,
-    perks: {
-      way_of_the_rogue: {
-        id: "way_of_the_rogue",
-        name: "Way of the Rogue",
-        desc: "",
-        effects: {
-          cunV: 1,
-        },
-        commands: {
-          add_ability_shadow_step: 1,
-        },
-        tree: "rogue",
-        pos: { x: 7.5, y: 1 },
-        icon: "resources/icons/skull.png",
-      },
-      weakpoint_spotter: {
-        id: "weakpoint_spotter",
-        name: "Weakpoint Spotter",
-        desc: "",
-        commands: {
-          add_ability_sneaky_stabbing: 1,
-        },
-        tree: "rogue",
-        relative_to: "way_of_the_rogue",
-        requires: ["way_of_the_rogue"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/damage.png",
-      },
-      shadow_warrior: {
-        id: "shadow_warrior",
-        name: "Shadow Warrior",
-        desc: "",
-        effects: {
-          ability_shadow_step: {
-            use_rangeP: 50,
-            cooldownP: -10,
-          },
-          movementSpeedV: 10,
-          evasionV: 2,
-        },
-        tree: "rogue",
-        relative_to: "weakpoint_spotter",
-        requires: ["weakpoint_spotter"],
-        pos: { x: -1.5, y: 2 },
-        icon: "resources/icons/shadow_step.png",
-      },
-      fighting_dirty: {
-        id: "fighting_dirty",
-        name: "Fighting Dirty",
-        desc: "",
-        commands: {
-          add_ability_venomous_blow: 1,
-        },
-        tree: "rogue",
-        relative_to: "weakpoint_spotter",
-        requires: ["weakpoint_spotter"],
-        pos: { x: 1.5, y: 2 },
-        icon: "resources/icons/venomous_blow.png",
-      },
-      glass_cannon: {
-        id: "glass_cannon",
-        name: "Glass Cannon",
-        desc: "",
-        effects: {
-          damageP: 5,
-          critDamageP: 25,
-          hitChanceV: 4,
-          hpMaxP: -10,
-        },
-        tree: "rogue",
-        relative_to: "shadow_warrior",
-        requires: ["shadow_warrior"],
-        pos: { x: -2, y: 1.5 },
-        icon: "resources/icons/glass_cannon.png",
-      },
-      tricky_distraction: {
-        id: "tricky_distraction",
-        name: "Tricky Distraction",
-        desc: "",
-        effects: {
-          evasionV: 2,
-        },
-        commands: {
-          add_ability_distraction: 1,
-        },
-        tree: "rogue",
-        relative_to: "glass_cannon",
-        requires: ["glass_cannon"],
-        pos: { x: 0, y: 3 },
-        icon: "resources/icons/dummy_ability.png",
-      },
-      simple_strokes: {
-        id: "simple_strokes",
-        name: "Simple Strokes",
-        desc: "",
-        effects: {
-          ability_attack: {
-            damage_multiplierP: 10,
-          },
-          hitChanceV: 2,
-        },
-        tree: "rogue",
-        relative_to: "glass_cannon",
-        requires: ["glass_cannon"],
-        pos: { x: -1.5, y: 1.5 },
-        icon: "resources/icons/damage.png",
-      },
-      ranged_expert: {
-        id: "ranged_expert",
-        name: "Ranged Expert",
-        desc: "",
-        effects: {
-          dexV: 5,
-        },
-        traits: [
-          {
-            id: "confident_shot",
-          },
-        ],
-        tree: "rogue",
-        relative_to: "shadow_warrior",
-        requires: ["shadow_warrior", "fighting_dirty"],
-        pos: { x: 1.5, y: 1.5 },
-        icon: "resources/icons/weapon_bow.png",
-      },
-      poison_specialist: {
-        id: "poison_specialist",
-        name: "Poison Specialist",
-        desc: "",
-        effects: {
-          ability_venomous_blow: {
-            cooldownP: -20,
-            effect_venom: {
-              lastV: 2,
-            },
-          },
-        },
-        tree: "rogue",
-        relative_to: "fighting_dirty",
-        requires: ["fighting_dirty"],
-        pos: { x: 2, y: 1.5 },
-        icon: "resources/icons/venom.png",
-      },
-      poison_taster: {
-        id: "poison_taster",
-        name: "Poison Taster",
-        desc: "",
-        effects: {
-          poisonDefenseV: 50,
-        },
-        tree: "rogue",
-        relative_to: "poison_specialist",
-        requires: ["poison_specialist"],
-        pos: { x: 0, y: 3 },
-        icon: "resources/icons/poison_taster.png",
-      },
-      quicker_draw: {
-        id: "quicker_draw",
-        name: "Quicker Draw",
-        desc: "",
-        effects: {
-          ability_venomous_blow: {
-            cooldownV: -1,
-          },
-          ability_poisoned_arrow: {
-            cooldownV: -3,
-          },
-          ability_shadow_step: {
-            cooldownV: -1,
-          },
-        },
-        tree: "rogue",
-        relative_to: "poison_specialist",
-        requires: ["poison_specialist"],
-        pos: { x: 1.5, y: 1.5 },
-        icon: "resources/icons/cooldown.png",
-      },
-      dance_of_death: {
-        id: "dance_of_death",
-        name: "Dance of Death",
-        desc: "",
-        effects: {
-          critChanceP: 5,
-          critDamageP: 10,
-          pierceDamageP: 15,
-          evasionV: 5,
-        },
-        tree: "rogue",
-        relative_to: "ranged_expert",
-        requires: ["ranged_expert", "glass_cannon"],
-        pos: { x: -1.75, y: 1.5 },
-        icon: "resources/icons/skull_bleeding_eyes.png",
-      },
-      poison_from_afar: {
-        id: "poison_from_afar",
-        name: "Poison from Afar",
-        desc: "",
-        commands: {
-          add_ability_poisoned_arrow: 1,
-        },
-        tree: "rogue",
-        relative_to: "poison_specialist",
-        requires: ["poison_specialist", "ranged_expert"],
-        pos: { x: -1.75, y: 1.5 },
-        icon: "resources/icons/poison_arrow.png",
-      },
-      smoke_screen: {
-        id: "smoke_screen",
-        name: "Smoke Screen",
-        desc: "",
-        effects: {
-          cunP: 3,
-        },
-        commands: {
-          add_ability_smoke_bomb: 1,
-        },
-        tree: "rogue",
-        relative_to: "ranged_expert",
-        requires: ["ranged_expert"],
-        pos: { x: 0, y: 3 },
-        icon: "resources/icons/smoke_bomb.png",
-      },
-      sneakier_stabbing: {
-        id: "sneakier_stabbing",
-        name: "Sneakier Stabbing",
-        desc: "",
-        effects: {
-          ability_sneaky_stabbing: {
-            cooldownP: -20,
-            effect_sneaky_stabbing: {
-              lastV: 3,
-              effects: {
-                critChancePP: 5,
-              },
-            },
-          },
-        },
-        tree: "rogue",
-        relative_to: "smoke_screen",
-        requires: ["smoke_screen"],
-        pos: { x: -1.5, y: 1.5 },
-        icon: "resources/icons/hand_gripping_knife.png",
-      },
-      smoke_and_mirrors: {
-        id: "smoke_and_mirrors",
-        name: "Smoke & Mirrors",
-        desc: "",
-        effects: {
-          ability_smoke_bomb: {
-            cooldownV: -2,
-            damage_multiplierP: 25,
-            effect_smoke_bomb_effect: {
-              lastV: 3,
-            },
-            effect_smoke_evasion: {
-              lastV: 3,
-            },
-          },
-        },
-        tree: "rogue",
-        relative_to: "smoke_screen",
-        requires: ["smoke_screen"],
-        pos: { x: 1.5, y: 1.5 },
-        icon: "resources/icons/smoke_bomb_effect.png",
-      },
-    },
-  },
-  ranger: {
-    id: "ranger_perks",
-    name: "Ranger",
-    startPos: 50,
-    perks: {
-      target_practice: {
-        id: "target_practice",
-        name: "Target Practice",
-        desc: "",
-        effects: {
-          dexV: 1,
-        },
-        commands: {
-          add_ability_true_shot: 1,
-        },
-        tree: "ranger",
-        pos: { x: 8, y: 1 },
-        icon: "resources/icons/target.png",
-      },
-      call_of_the_forest: {
-        id: "call_of_the_forest",
-        name: "Call of the Forest",
-        desc: "",
-        effects: {
-          ability_true_shot: {
-            resistance_penetrationV: 10,
-          },
-          ability_retreat: {
-            cooldownP: -10,
-          },
-          vitV: 2,
-        },
-        tree: "ranger",
-        relative_to: "target_practice",
-        requires: ["target_practice"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/tiles/tree_1.png",
-      },
-      powered_arrow: {
-        id: "powered_arrow",
-        name: "Powered Arrow",
-        desc: "",
-        effects: {
-          rangedDamageP: 2,
-        },
-        commands: {
-          add_ability_sundering_arrow: 1,
-        },
-        tree: "ranger",
-        relative_to: "call_of_the_forest",
-        requires: ["call_of_the_forest"],
-        pos: { x: -2, y: 2 },
-        icon: "resources/icons/ranged_damage.png",
-      },
-      rapid_fire: {
-        id: "rapid_fire",
-        name: "Rapid fire",
-        desc: "",
-        effects: {
-          ability_sundering_arrow: {
-            cooldownP: -33,
-            effect_sunder: {
-              effects: {
-                resistAllVV: -10,
-              },
-            },
-          },
-          dexV: 1,
-        },
-        tree: "ranger",
-        relative_to: "powered_arrow",
-        requires: ["powered_arrow"],
-        pos: { x: -2, y: 1 },
-        icon: "resources/icons/sundering_arrow.png",
-      },
-      critical_hit: {
-        id: "critical_hit",
-        name: "Critical Hit",
-        desc: "",
-        effects: {
-          critDamageP: 15,
-          critChanceP: 5,
-        },
-        tree: "ranger",
-        relative_to: "powered_arrow",
-        requires: ["powered_arrow"],
-        pos: { x: -1, y: 2 },
-        icon: "resources/icons/critical_damage.png",
-      },
-      rangers_call: {
-        id: "rangers_call",
-        name: "Rangers' Call",
-        desc: "",
-        effects: {
-          ability_true_shot: {
-            cooldownV: -2,
-            use_rangeV: 2,
-          },
-          pierceDamageP: 6,
-        },
-        tree: "ranger",
-        relative_to: "call_of_the_forest",
-        requires: ["call_of_the_forest"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/ornate_ranger_bow.png",
-      },
-      awakening: {
-        id: "awakening",
-        name: "Awakening",
-        desc: "",
-        effects: {
-          hpMaxV: 10,
-        },
-        commands: {
-          add_ability_awaken: 1,
-        },
-        tree: "ranger",
-        relative_to: "rangers_call",
-        requires: ["rangers_call"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/eye_awaken.png",
-      },
-      hunter_mark: {
-        id: "hunter_mark",
-        name: "Hunter Mark",
-        desc: "",
-        effects: {
-          dexV: 1,
-        },
-        traits: [
-          {
-            id: "mark_of_hunter",
-          },
-        ],
-        tree: "ranger",
-        relative_to: "awakening",
-        requires: ["awakening"],
-        pos: { x: 0, y: 2 },
-        icon: "resources/icons/hunter_mark.png",
-      },
-      shocking_assault: {
-        id: "shocking_assault",
-        name: "Shocking Assault",
-        desc: "",
-        effects: {
-          dexV: 1,
-        },
-        commands: {
-          add_ability_shock_arrow: 1,
-        },
-        tree: "ranger",
-        relative_to: "hunter_mark",
-        requires: ["hunter_mark"],
-        pos: { x: -1, y: 2 },
-        icon: "resources/icons/shock_arrow.png",
-      },
-      leave_you_paralyzed: {
-        id: "leave_you_paralyzed",
-        name: "Leave you paralyzed",
-        desc: "",
-        effects: {
-          ability_shock_arrow: {
-            cooldownV: -3,
-            effect_paralyzed: {
-              lastV: 2,
-              effects: {
-                resistAllPP: -15,
-              },
-            },
-          },
-          dexV: 1,
-        },
-        tree: "ranger",
-        relative_to: "hunter_mark",
-        requires: ["hunter_mark", "shocking_assault"],
-        pos: { x: 1, y: 2 },
-        icon: "resources/icons/bloom_yellow.png",
-      },
-      wild_call: {
-        id: "wild_call",
-        name: "Rangers' Call",
-        desc: "",
-        effects: {
-          damageP: 2,
-        },
-        commands: {
-          add_ability_ranger_wolf: 1,
-        },
-        tree: "ranger",
-        relative_to: "call_of_the_forest",
-        requires: ["call_of_the_forest"],
-        pos: { x: 2, y: 2 },
-        icon: "resources/icons/ranger_wolf.png",
-      },
-      trusted_companion: {
-        id: "trusted_companion",
-        name: "Rangers' Call",
-        desc: "",
-        effects: {
-          ability_ranger_wolf: {
-            summon_levelV: 9,
-            cooldownV: -20,
-          },
-        },
-        tree: "ranger",
-        relative_to: "wild_call",
-        requires: ["wild_call"],
-        pos: { x: 1, y: 2 },
-        icon: "resources/icons/ranger_wolf.png",
-      },
-      fierce_beast: {
-        id: "fierce_beast",
-        name: "Rangers' Call",
-        desc: "",
-        effects: {
-          all_summons_damageP: 20,
-          all_summons_regenHpP: 100,
-        },
-        tree: "ranger",
-        relative_to: "wild_call",
-        requires: ["wild_call"],
-        pos: { x: 2, y: 1 },
-        icon: "resources/icons/ranger_wolf.png",
-      },
-    },
-  },
-  adventurer_shared: {
-    id: "adventurer_shared",
-    name: "Adventurer",
-    startPos: 50,
-    perks: {
-      hearty_adventurer_1: {
-        id: "hearty_adventurer_1",
-        name: "Hearty Adventurer 1",
-        desc: "",
-        effects: {
-          hpMaxP: 5,
-        },
-        tree: "adventurer_shared",
-        pos: { x: 3, y: 1 },
-        icon: "resources/icons/health.png",
-      },
-      hearty_adventurer_2: {
-        id: "hearty_adventurer_2",
-        name: "Hearty Adventurer 2",
-        desc: "",
-        effects: {
-          hpMaxP: 5,
-        },
-        relative_to: "hearty_adventurer_1",
-        requires: ["hearty_adventurer_1"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/health.png",
-      },
-      hearty_adventurer_3: {
-        id: "hearty_adventurer_3",
-        name: "Hearty Adventurer 3",
-        desc: "",
-        effects: {
-          hpMaxP: 5,
-        },
-        relative_to: "hearty_adventurer_2",
-        requires: ["hearty_adventurer_2"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/health.png",
-      },
-      hearty_adventurer_4: {
-        id: "hearty_adventurer_4",
-        name: "Hearty Adventurer 4",
-        desc: "",
-        effects: {
-          hpMaxP: 5,
-        },
-        relative_to: "hearty_adventurer_3",
-        requires: ["hearty_adventurer_3"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/health.png",
-      },
-      hearty_adventurer_5: {
-        id: "hearty_adventurer_5",
-        name: "Hearty Adventurer 5",
-        desc: "",
-        effects: {
-          hpMaxP: 5,
-        },
-        relative_to: "hearty_adventurer_4",
-        requires: ["hearty_adventurer_4"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/health.png",
-      },
-      first_aid_expert: {
-        id: "first_aid_expert",
-        name: "First Aid Expert",
-        desc: "",
-        effects: {
-          ability_first_aid: {
-            base_healV: 5,
-            cooldownP: -20,
-          },
-          regenHpP: 14,
-        },
-        tree: "adventurer_shared",
-        pos: { x: 6, y: 1 },
-        icon: "resources/icons/first_aid.png",
-      },
-      cleanser: {
-        id: "cleanser",
-        name: "Cleanser",
-        desc: "",
-        effects: {
-          regenHpP: 6,
-        },
-        commands: {
-          add_ability_purification: 1,
-        },
-        relative_to: "first_aid_expert",
-        requires: ["first_aid_expert"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/purification.png",
-      },
-      advancing_backwards: {
-        id: "advancing_backwards",
-        name: "Advancing Backwards",
-        desc: "",
-        effects: {
-          ability_retreat: {
-            cooldownP: -30,
-            use_rangeV: 2,
-          },
-        },
-        relative_to: "cleanser",
-        requires: ["cleanser"],
-        tree: "adventurer_shared",
-        pos: { x: 0, y: 1.5 },
-        icon: "resources/icons/retreat.png",
-      },
-    },
-  },
+	sorcerer: {
+		id: "sorcerer_perks",
+		name: "Sorcerer",
+		startPos: 550,
+		multiClassRequires: {
+			int: 25,
+		},
+		perks: {
+			introduction_to_sorcery: {
+				id: "introduction_to_sorcery",
+				name: "Introduction to Sorcery",
+				desc: "",
+				commands: {
+					add_ability_piercing_mana_bolt: 1,
+				},
+				traits: [
+					{
+						id: "frantic_mana_recovery",
+					},
+				],
+				tree: "sorcerer",
+				pos: {
+					x: 11,
+					y: 1,
+				},
+				icon: "resources/icons/wisdom.png",
+				levelEffects: [
+					{
+						mpMaxV: 5,
+						intV: 1,
+					},
+				],
+			},
+			intent_studies: {
+				id: "intent_studies",
+				name: "Intent Studies",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "introduction_to_sorcery",
+				requires: ["introduction_to_sorcery"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/wisdom.png",
+				levelEffects: [
+					{
+						mpMaxV: 8,
+						intV: 1,
+						ability_piercing_mana_bolt: {
+							mana_costV: -2,
+						},
+					},
+				],
+			},
+			might_of_magic: {
+				id: "might_of_magic",
+				name: "Might of Magic",
+				desc: "",
+				traits: [
+					{
+						id: "heightened_casting",
+					},
+				],
+				tree: "sorcerer",
+				relative_to: "intent_studies",
+				requires: ["intent_studies"],
+				pos: {
+					x: 3,
+					y: 2,
+				},
+				icon: "resources/icons/damage.png",
+				levelEffects: [
+					{
+						magicDamageP: 5,
+						mpMaxP: 3,
+					},
+				],
+			},
+			makings_of_a_summoner: {
+				id: "makings_of_a_summoner",
+				name: "Makings of a Summoner",
+				desc: "",
+				commands: {
+					add_ability_summon_skeleton_warrior: 1,
+				},
+				tree: "sorcerer",
+				relative_to: "might_of_magic",
+				requires: ["might_of_magic"],
+				pos: {
+					x: 4,
+					y: 1.5,
+				},
+				icon: "resources/icons/portal.png",
+				levelEffects: [
+					{
+						regenMpP: 15,
+					},
+				],
+			},
+			magical_bonds: {
+				id: "magical_bonds",
+				name: "Magical Bonds",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "makings_of_a_summoner",
+				requires: ["makings_of_a_summoner"],
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/summonSkelWarrior.png",
+				levelEffects: [
+					{
+						hpMaxV: 10,
+						ability_summon_skeleton_warrior: {
+							mana_costV: -5,
+							cooldownV: -7,
+							use_rangeV: 2,
+						},
+					},
+				],
+			},
+			spells_of_battle: {
+				id: "spells_of_battle",
+				name: "Spells of Battle",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "might_of_magic",
+				requires: ["might_of_magic"],
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/piercing_mana_bolt.png",
+				levelProperties: [
+					{
+						compareAbility: "piercing_mana_bolt",
+					},
+				],
+				levelEffects: [
+					{
+						ability_piercing_mana_bolt: {
+							damage_multiplierP: 12,
+							resistance_penetrationV: 10,
+						},
+					},
+				],
+			},
+			school_of_fire: {
+				id: "school_of_fire",
+				name: "The School of Fire",
+				desc: "",
+				commands: {
+					add_ability_fireball: 1,
+				},
+				tree: "sorcerer",
+				relative_to: "intent_studies",
+				requires: ["intent_studies"],
+				pos: {
+					x: -3,
+					y: 2,
+				},
+				icon: "resources/icons/fireball_spell.png",
+				levelProperties: [
+					{
+						classLevelRequired: 1,
+					},
+					{
+						classLevelRequired: 3,
+						compareAbility: "fireball", // this will hide the auto generated tooltip
+					},
+					{
+						classLevelRequired: 6,
+						compareAbility: "fireball", // this will hide the auto generated tooltip
+					},
+				],
+				levelEffects: [
+					{
+						fireDamageP: 2,
+					},
+					{
+						ability_fireball: {
+							cooldownV: -1,
+							aoe_sizeV: 2.3,
+							mana_costP: 100,
+						},
+					},
+					{
+						ability_fireball: {
+							aoe_sizeV: 0.6,
+							damage_multiplierP: 15,
+						},
+					},
+				],
+			},
+			molded_by_flame: {
+				id: "molded_by_flame",
+				name: "Molded by Flame",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "school_of_fire",
+				requires: ["school_of_fire"],
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/flame_icon.png",
+				levelEffects: [
+					{
+						fireDamageP: 7,
+					},
+				],
+			},
+			elemental_mage: {
+				id: "elemental_mage",
+				name: "Elemental Mage",
+				desc: "",
+				commands: {
+					add_ability_icy_javelin: 1,
+				},
+				tree: "sorcerer",
+				relative_to: "school_of_fire",
+				requires: ["school_of_fire"],
+				pos: {
+					x: -4,
+					y: 1.5,
+				},
+				icon: "resources/icons/elementalist.png",
+				levelEffects: [
+					{
+						iceDamageP: 3,
+						fireDamageP: 3,
+						lightningDamageP: 3,
+					},
+				],
+			},
+			piercing_javelin: {
+				id: "piercing_javelin",
+				name: "Armor Piercing Javelin",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "elemental_mage",
+				requires: ["elemental_mage"],
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/ice_javelin.png",
+				levelProperties: [
+					{
+						compareAbility: "icy_javelin",
+					},
+				],
+				levelEffects: [
+					{
+						ability_icy_javelin: {
+							resistance_penetrationV: 25,
+							damage_multiplierP: 20,
+							cooldownV: 3,
+							mana_costV: 8,
+						},
+					},
+				],
+			},
+			shield_of_ages: {
+				id: "shield_of_ages",
+				name: "Shield of Ages",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "intent_studies",
+				requires: ["intent_studies"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/shield_symbol.png",
+				levelEffects: [
+					{
+						magicResistV: 25,
+						mpMaxV: 10,
+					},
+				],
+			},
+			shield_of_aurous: {
+				id: "shield_of_aurous",
+				name: "Shield of Aurous",
+				desc: "",
+				tree: "sorcerer",
+				commands: {
+					add_ability_ward_of_aurous: 1,
+				},
+				relative_to: "shield_of_ages",
+				requires: ["shield_of_ages"],
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/shield_of_aurous.png",
+			},
+			burning_passion: {
+				id: "burning_passion",
+				name: "Burning Passion",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "molded_by_flame",
+				requires: ["molded_by_flame", "shield_of_aurous"],
+				pos: {
+					x: 1.5,
+					y: 2,
+				},
+				icon: "resources/icons/resistance_flame.png",
+				levelEffects: [
+					{
+						fireDamageP: 5,
+						fireResistV: 5,
+						intV: 2,
+					},
+				],
+			},
+			wisdoms_of_the_past: {
+				id: "wisdoms_of_the_past",
+				name: "Wisdoms of the Past",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "spells_of_battle",
+				requires: ["spells_of_battle", "shield_of_aurous"],
+				pos: {
+					x: -1.5,
+					y: 2,
+				},
+				icon: "resources/icons/mana.png",
+				levelEffects: [
+					{
+						mpMaxV: 25,
+						regenMpP: 30,
+					},
+				],
+			},
+			flame_wizard_fury: {
+				id: "flame_wizard_fury",
+				name: "The Flame Wizard's Fury",
+				desc: "",
+				tree: "sorcerer",
+				relative_to: "burning_passion",
+				requires: ["burning_passion", "wisdoms_of_the_past"],
+				pos: {
+					x: 1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/rage.png",
+				levelEffects: [
+					{
+						fireDamageP: 25,
+					},
+				],
+			},
+		},
+	},
+	fighter: {
+		id: "fighter_perks",
+		name: "Fighter",
+		startPos: 50,
+		multiClassRequires: {
+			vit: 20,
+			str: 20,
+		},
+		perks: {
+			battle_sense: {
+				id: "battle_sense",
+				name: "Battle Sense",
+				desc: "",
+				commands: {
+					add_ability_focus_strike: 1,
+				},
+				tree: "fighter",
+				pos: {
+					x: 7.5,
+					y: 1,
+				},
+				icon: "resources/icons/fighter_symbol.png",
+				levelEffects: [
+					{
+						strV: 1,
+					},
+				],
+			},
+			fighters_vitality: {
+				id: "fighters_vitality",
+				name: "Fighter's Vitality",
+				desc: "",
+				relative_to: "battle_sense",
+				requires: ["battle_sense"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxV: 10,
+						regenHpV: 0.5,
+					},
+				],
+			},
+			patient_blow: {
+				id: "patient_blow",
+				name: "Patient Blow",
+				desc: "",
+				relative_to: "fighters_vitality",
+				requires: ["fighters_vitality"],
+				tree: "fighter",
+				pos: {
+					x: -4,
+					y: 2,
+				},
+				icon: "resources/icons/focus_strike.png",
+				levelProperties: [
+					{
+						compareAbility: "focus_strike",
+					},
+				],
+				levelEffects: [
+					{
+						ability_focus_strike: {
+							resistance_penetrationV: 25,
+							cooldownV: -2,
+						},
+					},
+				],
+			},
+			resistant_in_melee: {
+				id: "resistant_in_melee",
+				name: "Resistant in Melee",
+				desc: "",
+				relative_to: "patient_blow",
+				requires: ["patient_blow"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/resistance.png",
+				levelEffects: [
+					{
+						physicalArmorV: 20,
+						evasionV: 3,
+						regenHpV: 0.25,
+					},
+				],
+			},
+			absorber_of_life_force: {
+				id: "absorber_of_life_force",
+				name: "Absorber of Life Force",
+				desc: "",
+				commands: {
+					add_ability_invigorating_finish: 1,
+				},
+				relative_to: "resistant_in_melee",
+				requires: ["resistant_in_melee"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/invigorating_finish.png",
+				levelEffects: [
+					{
+						vitP: 3,
+					},
+				],
+			},
+			strength_training: {
+				id: "strength_training",
+				name: "Strength Training",
+				desc: "",
+				relative_to: "fighters_vitality",
+				requires: ["fighters_vitality"],
+				tree: "fighter",
+				pos: {
+					x: -2,
+					y: 2,
+				},
+				icon: "resources/icons/strength.png",
+				levelEffects: [
+					{
+						strV: 2,
+						vitV: 2,
+						regenHpV: 0.25,
+					},
+				],
+			},
+			fighting_style: {
+				id: "fighting_style",
+				name: "Fighting Style",
+				desc: "",
+				relative_to: "fighters_vitality",
+				requires: ["fighters_vitality"],
+				tree: "fighter",
+				pos: {
+					x: 2,
+					y: 2,
+				},
+				icon: "resources/icons/damage.png",
+				levelEffects: [
+					{
+						ability_attack: {
+							damage_multiplierP: 10,
+						},
+						hitChanceV: 5,
+					},
+				],
+			},
+			furious_assault: {
+				id: "furious_assault",
+				name: "Furious Assault",
+				desc: "",
+				commands: {
+					add_ability_battle_fury: 1,
+				},
+				relative_to: "fighters_vitality",
+				requires: ["fighters_vitality"],
+				tree: "fighter",
+				pos: {
+					x: 4,
+					y: 2,
+				},
+				icon: "resources/icons/fighters_rage.png",
+			},
+			charging_bull: {
+				id: "charging_bull",
+				name: "Charging Bull",
+				desc: "",
+				commands: {
+					add_ability_charge: 1,
+				},
+				relative_to: "furious_assault",
+				requires: ["furious_assault"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/charge_ability.png",
+			},
+			fighting_with_your_voice: {
+				id: "fighting_with_your_voice",
+				name: "Fighting with your voice",
+				desc: "",
+				commands: {
+					add_ability_warrior_shout: 1,
+				},
+				relative_to: "charging_bull",
+				requires: ["charging_bull"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/warrior_shout.png",
+			},
+			tactical_genius: {
+				id: "tactical_genius",
+				name: "Tactical Genius",
+				desc: "",
+				relative_to: "fighters_vitality",
+				requires: ["fighters_vitality", "strength_training", "fighting_style"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 3,
+				},
+				icon: "resources/icons/concentration.png",
+				levelEffects: [
+					{
+						ability_focus_strike: {
+							cooldownV: -1,
+						},
+						ability_battle_fury: {
+							cooldownV: -3,
+						},
+						cunV: 5,
+					},
+				],
+			},
+			concentrated_warrior: {
+				id: "concentrated_warrior",
+				name: "Concentrated Warrior",
+				desc: "",
+				traits: [
+					{
+						id: "warrior_instinct",
+					},
+				],
+				relative_to: "tactical_genius",
+				requires: ["tactical_genius", "resistant_in_melee", "charging_bull"],
+				tree: "fighter",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/concentrated_warrior.png",
+				levelEffects: [
+					{
+						ability_focus_strike: {
+							damage_multiplierP: 15,
+						},
+						ability_charge: {
+							damage_multiplierP: 25,
+							resistance_penetrationV: 10,
+							cooldownV: -3,
+						},
+						hitChanceV: 7,
+					},
+				],
+			},
+			bulwark: {
+				id: "bulwark",
+				name: "Bulwark",
+				desc: "",
+				relative_to: "concentrated_warrior",
+				requires: ["concentrated_warrior", "absorber_of_life_force"],
+				mutually_exclusive: ["warrior"],
+				tree: "fighter",
+				pos: {
+					x: -2,
+					y: 2,
+				},
+				icon: "resources/icons/shield_symbol.png",
+				levelEffects: [
+					{
+						physicalArmorV: 10,
+						magicalArmorV: 5,
+						elementalArmorV: 5,
+						regenHpV: 1.5,
+						evasionV: 5,
+					},
+				],
+			},
+			warrior: {
+				id: "warrior",
+				name: "Warrior",
+				desc: "",
+				relative_to: "concentrated_warrior",
+				requires: ["concentrated_warrior", "fighting_with_your_voice"],
+				mutually_exclusive: ["bulwark"],
+				tree: "fighter",
+				pos: {
+					x: 2,
+					y: 2,
+				},
+				icon: "resources/icons/melee_damage.png",
+				levelEffects: [
+					{
+						slashDamageP: 5,
+						crushDamageP: 5,
+						pierceDamageP: 5,
+						meleeDamageP: 10,
+						hitChanceV: 5,
+					},
+				],
+			},
+		},
+	},
+	barbarian: {
+		id: "barbarian_perks",
+		name: "Barbarian",
+		startPos: 50,
+		multiClassRequires: {
+			str: 30,
+		},
+		perks: {
+			thrill_of_battle: {
+				id: "thrill_of_battle",
+				name: "Thrill of Battle",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 7.5,
+					y: 1,
+				},
+				commands: {
+					add_ability_barbarian_rage: 1,
+				},
+				icon: "resources/icons/berserk.png",
+				levelProperties: [
+					{
+						classLevelRequired: 1,
+					},
+					{
+						classLevelRequired: 3,
+						compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+					},
+					{
+						classLevelRequired: 6,
+						compareAbility: "barbarian_rage",
+					},
+				],
+				levelEffects: [
+					{},
+					{
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									strVV: 5,
+									meleeDamagePV: 5,
+									physicalArmorVV: 15,
+								},
+							},
+							cooldownV: -10,
+						},
+					},
+					{
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									meleeDamagePV: 10,
+									physicalArmorVV: 35,
+								},
+							},
+							cooldownV: -10,
+						},
+					},
+				],
+			},
+			weapon_mastery: {
+				id: "weapon_mastery",
+				name: "Weapon Mastery",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "thrill_of_battle",
+				requires: ["thrill_of_battle"],
+				icon: "resources/icons/barbarian_symbol.png",
+				levelProperties: [
+					{
+						classLevelRequired: 2,
+					},
+					{
+						classLevelRequired: 2,
+					},
+				],
+				levelEffects: [
+					{
+						hitChanceV: 5,
+						strV: 2,
+					},
+					{
+						hitChanceV: 5,
+						strV: 3,
+					},
+				],
+			},
+			raging_charge: {
+				id: "raging_charge",
+				name: "Raging Charge",
+				desc: "",
+				commands: {
+					add_ability_barbarian_charge: 1,
+				},
+				tree: "barbarian",
+				pos: {
+					x: -4,
+					y: 2,
+				},
+				relative_to: "weapon_mastery",
+				requires: ["weapon_mastery"],
+				icon: "resources/icons/barbarian_charge.png",
+				levelProperties: [
+					{
+						classLevelRequired: 3,
+					},
+					{
+						classLevelRequired: 5,
+						compareAbility: "barbarian_charge", // this will hide the auto generated tooltip
+					},
+					{
+						classLevelRequired: 10,
+						compareAbility: "barbarian_charge",
+					},
+				],
+				levelEffects: [
+					{},
+					{
+						ability_barbarian_charge: {
+							damage_multiplierP: 30,
+							cooldownV: -5,
+							use_rangeV: 2,
+						},
+					},
+					{
+						ability_barbarian_charge: {
+							damage_multiplierP: 20,
+							cooldownV: -5,
+							use_rangeV: 3,
+						},
+					},
+				],
+			},
+			impatient: {
+				id: "impatient",
+				name: "Impatient",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "raging_charge",
+				requires: ["raging_charge"],
+				icon: "resources/icons/cooldown_flame.png",
+				levelEffects: [
+					{
+						movementSpeedV: 10,
+					},
+				],
+			},
+			perk_finishing_blow: {
+				id: "perk_finishing_blow",
+				name: "Finishing Blow",
+				desc: "",
+				commands: {
+					add_ability_finishing_blow: 1,
+				},
+				tree: "barbarian",
+				pos: {
+					x: 2,
+					y: 2,
+				},
+				relative_to: "impatient",
+				requires: ["impatient", "ultimate_warrior"],
+				icon: "resources/icons/finishing_blow.png",
+			},
+			true_finish: {
+				id: "true_finish",
+				name: "True Finish",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "perk_finishing_blow",
+				requires: ["perk_finishing_blow"],
+				icon: "resources/icons/finishing_blow_burning.png",
+				levelProperties: [
+					{
+						classLevelRequired: 12,
+						compareAbility: "finishing_blow", // this will hide the auto generated tooltip
+					},
+				],
+				levelEffects: [
+					{
+						ability_finishing_blow: {
+							damage_multiplierP: 100,
+							resistance_penetrationV: 25,
+						},
+					},
+				],
+			},
+			hardened_constitution: {
+				id: "hardened_constitution",
+				name: "Hardenend  Constitution",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: -2,
+					y: 2,
+				},
+				relative_to: "weapon_mastery",
+				requires: ["weapon_mastery"],
+				icon: "resources/icons/vitality.png",
+				levelProperties: [
+					{
+						classLevelRequired: 3,
+					},
+				],
+				levelEffects: [
+					{
+						vitV: 3,
+						hpMaxP: 3,
+					},
+				],
+			},
+			sharp_senses: {
+				id: "sharp_senses",
+				name: "Sharpened Senses",
+				desc: "",
+				traits: [
+					{
+						id: "sense_of_danger_1",
+					},
+				],
+				tree: "barbarian",
+				pos: {
+					x: 2,
+					y: 2,
+				},
+				relative_to: "weapon_mastery",
+				requires: ["weapon_mastery"],
+				icon: "resources/icons/glass_cannon.png",
+				levelProperties: [
+					{
+						classLevelRequired: 3,
+					},
+				],
+				levelEffects: [
+					{
+						evasionV: 2,
+					},
+				],
+			},
+			power_of_injuries: {
+				id: "power_of_injuries",
+				name: "Power of Injuries",
+				desc: "",
+				traits: [
+					{
+						id: "reckless_1",
+					},
+				],
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "weapon_mastery",
+				requires: ["weapon_mastery"],
+				icon: "resources/icons/barbarian_flame.png",
+				levelProperties: [
+					{
+						classLevelRequired: 3,
+					},
+				],
+				levelEffects: [
+					{
+						strV: 1,
+					},
+				],
+			},
+			ultimate_warrior: {
+				id: "ultimate_warrior",
+				name: "Ultimate Warrior",
+				desc: "",
+				traits: [
+					{
+						id: "reckless_2",
+					},
+					{
+						id: "sense_of_danger_2",
+					},
+				],
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "power_of_injuries",
+				requires: ["hardened_constitution", "power_of_injuries", "sharp_senses"],
+				icon: "resources/icons/skull_of_doom.png",
+				levelProperties: [
+					{
+						classLevelRequired: 5,
+					},
+				],
+				levelEffects: [
+					{
+						vitV: 1,
+						strV: 1,
+					},
+				],
+			},
+			perk_barbarian_rage: {
+				id: "perk_barbarian_rage",
+				name: "Bolstered Rage",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 4,
+					y: 2,
+				},
+				relative_to: "weapon_mastery",
+				requires: ["weapon_mastery"],
+				icon: "resources/icons/berserk.png",
+				levelProperties: [
+					{
+						classLevelRequired: 3,
+						compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+					},
+					{
+						classLevelRequired: 5,
+						compareAbility: "barbarian_rage",
+					},
+					{
+						classLevelRequired: 10,
+						compareAbility: "barbarian_rage",
+					},
+				],
+				levelEffects: [
+					{
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									attackSpeedVV: 7,
+									movementSpeedVV: 10,
+								},
+							},
+						},
+					},
+					{
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									attackSpeedVV: 8,
+									movementSpeedVV: 10,
+								},
+							},
+						},
+					},
+					{
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									attackSpeedVV: 10,
+									movementSpeedVV: 10,
+								},
+							},
+						},
+					},
+				],
+			},
+			unyielding_rage: {
+				id: "unyielding_rage",
+				name: "Unyielding Rage",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "perk_barbarian_rage",
+				requires: ["perk_barbarian_rage"],
+				icon: "resources/icons/skull_bleeding_eyes_flame.png",
+				levelProperties: [
+					{
+						classLevelRequired: 5,
+						compareAbility: "barbarian_rage", // this will hide the auto generated tooltip
+					},
+				],
+				levelEffects: [
+					{
+						damageP: 4,
+						ability_barbarian_rage: {
+							effect_rage: {
+								effects: {
+									attackSpeedVV: 5,
+									movementSpeedVV: 5,
+								},
+							},
+						},
+					},
+				],
+			},
+			perk_berserker: {
+				id: "perk_berserker",
+				name: "Berserker",
+				desc: "",
+				commands: {
+					add_ability_berserk: 1,
+				},
+				tree: "barbarian",
+				pos: {
+					x: -2,
+					y: 2,
+				},
+				relative_to: "unyielding_rage",
+				requires: ["unyielding_rage", "ultimate_warrior"],
+				icon: "resources/icons/absolute_berserk.png",
+				levelEffects: [
+					{
+						meleeDamageP: 3,
+						strV: 1,
+					},
+				],
+			},
+			perk_calmer_berserk: {
+				id: "perk_calmer_berserk",
+				name: "Calmer Berserking",
+				desc: "",
+				tree: "barbarian",
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				relative_to: "perk_berserker",
+				requires: ["perk_berserker"],
+				icon: "resources/icons/flaming_skull_defending.png",
+				levelProperties: [
+					{
+						compareAbility: "berserk",
+					},
+				],
+				levelEffects: [
+					{
+						ability_berserk: {
+							cooldownV: -5,
+							effect_berserk: {
+								effects: {
+									physicalArmorPV: 50,
+									magicalArmorPV: 50,
+									elementalArmorPV: 50,
+									resistAllPV: 50,
+									regenHpPV: 50,
+								},
+							},
+						},
+					},
+				],
+			},
+		},
+	},
+	paladin: {
+		id: "paladin_perks",
+		name: "Paladin",
+		startPos: 50,
+		multiClassRequires: {
+			vit: 20,
+			int: 18,
+		},
+		perks: {
+			holy_smite: {
+				id: "holy_smite",
+				name: "Holy Smite",
+				desc: "",
+				commands: {
+					add_ability_focus_strike: 1,
+				},
+				tree: "paladin",
+				pos: {
+					x: 7.5,
+					y: 1,
+				},
+				icon: "resources/icons/paladin_symbol.png",
+				levelEffects: [
+					{
+						strV: 1,
+					},
+				],
+			},
+		},
+	},
+	rogue: {
+		id: "rogue_perks",
+		name: "Rogue",
+		startPos: 50,
+		multiClassRequires: {
+			dex: 20,
+			cun: 15,
+		},
+		perks: {
+			way_of_the_rogue: {
+				id: "way_of_the_rogue",
+				name: "Way of the Rogue",
+				desc: "",
+				commands: {
+					add_ability_shadow_step: 1,
+				},
+				tree: "rogue",
+				pos: {
+					x: 7.5,
+					y: 1,
+				},
+				icon: "resources/icons/skull.png",
+				levelEffects: [
+					{
+						cunV: 1,
+					},
+				],
+			},
+			weakpoint_spotter: {
+				id: "weakpoint_spotter",
+				name: "Weakpoint Spotter",
+				desc: "",
+				commands: {
+					add_ability_sneaky_stabbing: 1,
+				},
+				tree: "rogue",
+				relative_to: "way_of_the_rogue",
+				requires: ["way_of_the_rogue"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/damage.png",
+			},
+			shadow_warrior: {
+				id: "shadow_warrior",
+				name: "Shadow Warrior",
+				desc: "",
+				tree: "rogue",
+				relative_to: "weakpoint_spotter",
+				requires: ["weakpoint_spotter"],
+				pos: {
+					x: -1.5,
+					y: 2,
+				},
+				icon: "resources/icons/shadow_step.png",
+				levelEffects: [
+					{
+						ability_shadow_step: {
+							use_rangeP: 50,
+							cooldownP: -10,
+						},
+						movementSpeedV: 10,
+						evasionV: 2,
+					},
+				],
+			},
+			fighting_dirty: {
+				id: "fighting_dirty",
+				name: "Fighting Dirty",
+				desc: "",
+				commands: {
+					add_ability_venomous_blow: 1,
+				},
+				tree: "rogue",
+				relative_to: "weakpoint_spotter",
+				requires: ["weakpoint_spotter"],
+				pos: {
+					x: 1.5,
+					y: 2,
+				},
+				icon: "resources/icons/venomous_blow.png",
+			},
+			glass_cannon: {
+				id: "glass_cannon",
+				name: "Glass Cannon",
+				desc: "",
+				tree: "rogue",
+				relative_to: "shadow_warrior",
+				requires: ["shadow_warrior"],
+				pos: {
+					x: -2,
+					y: 1.5,
+				},
+				icon: "resources/icons/glass_cannon.png",
+				levelEffects: [
+					{
+						damageP: 5,
+						critDamageP: 25,
+						hitChanceV: 4,
+						hpMaxP: -10,
+					},
+				],
+			},
+			tricky_distraction: {
+				id: "tricky_distraction",
+				name: "Tricky Distraction",
+				desc: "",
+				commands: {
+					add_ability_distraction: 1,
+				},
+				tree: "rogue",
+				relative_to: "glass_cannon",
+				requires: ["glass_cannon"],
+				pos: {
+					x: 0,
+					y: 3,
+				},
+				icon: "resources/icons/dummy_ability.png",
+				levelEffects: [
+					{
+						evasionV: 2,
+					},
+				],
+			},
+			simple_strokes: {
+				id: "simple_strokes",
+				name: "Simple Strokes",
+				desc: "",
+				tree: "rogue",
+				relative_to: "glass_cannon",
+				requires: ["glass_cannon"],
+				pos: {
+					x: -1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/damage.png",
+				levelEffects: [
+					{
+						ability_attack: {
+							damage_multiplierP: 10,
+						},
+						hitChanceV: 2,
+					},
+				],
+			},
+			ranged_expert: {
+				id: "ranged_expert",
+				name: "Ranged Expert",
+				desc: "",
+				traits: [
+					{
+						id: "confident_shot",
+					},
+				],
+				tree: "rogue",
+				relative_to: "shadow_warrior",
+				requires: ["shadow_warrior", "fighting_dirty"],
+				pos: {
+					x: 1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/weapon_bow.png",
+				levelEffects: [
+					{
+						dexV: 5,
+					},
+				],
+			},
+			poison_specialist: {
+				id: "poison_specialist",
+				name: "Poison Specialist",
+				desc: "",
+				tree: "rogue",
+				relative_to: "fighting_dirty",
+				requires: ["fighting_dirty"],
+				pos: {
+					x: 2,
+					y: 1.5,
+				},
+				icon: "resources/icons/venom.png",
+				levelEffects: [
+					{
+						ability_venomous_blow: {
+							cooldownP: -20,
+							effect_venom: {
+								lastV: 2,
+							},
+						},
+					},
+				],
+			},
+			poison_taster: {
+				id: "poison_taster",
+				name: "Poison Taster",
+				desc: "",
+				tree: "rogue",
+				relative_to: "poison_specialist",
+				requires: ["poison_specialist"],
+				pos: {
+					x: 0,
+					y: 3,
+				},
+				icon: "resources/icons/poison_taster.png",
+				levelEffects: [
+					{
+						darkResistV: 30,
+					},
+				],
+			},
+			quicker_draw: {
+				id: "quicker_draw",
+				name: "Quicker Draw",
+				desc: "",
+				tree: "rogue",
+				relative_to: "poison_specialist",
+				requires: ["poison_specialist"],
+				pos: {
+					x: 1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/cooldown.png",
+				levelEffects: [
+					{
+						ability_venomous_blow: {
+							cooldownV: -1,
+						},
+						ability_poisoned_arrow: {
+							cooldownV: -3,
+						},
+						ability_shadow_step: {
+							cooldownV: -1,
+						},
+					},
+				],
+			},
+			dance_of_death: {
+				id: "dance_of_death",
+				name: "Dance of Death",
+				desc: "",
+				tree: "rogue",
+				relative_to: "ranged_expert",
+				requires: ["ranged_expert", "glass_cannon"],
+				pos: {
+					x: -1.75,
+					y: 1.5,
+				},
+				icon: "resources/icons/skull_bleeding_eyes.png",
+				levelEffects: [
+					{
+						critChanceP: 5,
+						critDamageP: 10,
+						pierceDamageP: 15,
+						evasionV: 5,
+					},
+				],
+			},
+			poison_from_afar: {
+				id: "poison_from_afar",
+				name: "Poison from Afar",
+				desc: "",
+				commands: {
+					add_ability_poisoned_arrow: 1,
+				},
+				tree: "rogue",
+				relative_to: "poison_specialist",
+				requires: ["poison_specialist", "ranged_expert"],
+				pos: {
+					x: -1.75,
+					y: 1.5,
+				},
+				icon: "resources/icons/poison_arrow.png",
+			},
+			smoke_screen: {
+				id: "smoke_screen",
+				name: "Smoke Screen",
+				desc: "",
+				commands: {
+					add_ability_smoke_bomb: 1,
+				},
+				tree: "rogue",
+				relative_to: "ranged_expert",
+				requires: ["ranged_expert"],
+				pos: {
+					x: 0,
+					y: 3,
+				},
+				icon: "resources/icons/smoke_bomb.png",
+				levelEffects: [
+					{
+						cunP: 3,
+					},
+				],
+			},
+			sneakier_stabbing: {
+				id: "sneakier_stabbing",
+				name: "Sneakier Stabbing",
+				desc: "",
+				tree: "rogue",
+				relative_to: "smoke_screen",
+				requires: ["smoke_screen"],
+				pos: {
+					x: -1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/hand_gripping_knife.png",
+				levelEffects: [
+					{
+						ability_sneaky_stabbing: {
+							cooldownP: -20,
+							effect_sneaky_stabbing: {
+								lastV: 3,
+								effects: {
+									critChancePP: 5,
+								},
+							},
+						},
+					},
+				],
+			},
+			smoke_and_mirrors: {
+				id: "smoke_and_mirrors",
+				name: "Smoke & Mirrors",
+				desc: "",
+				tree: "rogue",
+				relative_to: "smoke_screen",
+				requires: ["smoke_screen"],
+				pos: {
+					x: 1.5,
+					y: 1.5,
+				},
+				icon: "resources/icons/smoke_bomb_effect.png",
+				levelEffects: [
+					{
+						ability_smoke_bomb: {
+							cooldownV: -2,
+							damage_multiplierP: 25,
+							effect_smoke_bomb_effect: {
+								lastV: 3,
+							},
+							effect_smoke_evasion: {
+								lastV: 3,
+							},
+						},
+					},
+				],
+			},
+		},
+	},
+	ranger: {
+		id: "ranger_perks",
+		name: "Ranger",
+		startPos: 50,
+		multiClassRequires: {
+			dex: 30,
+		},
+		perks: {
+			target_practice: {
+				id: "target_practice",
+				name: "Target Practice",
+				desc: "",
+				commands: {
+					add_ability_true_shot: 1,
+				},
+				tree: "ranger",
+				pos: {
+					x: 8,
+					y: 1,
+				},
+				icon: "resources/icons/target.png",
+				levelEffects: [
+					{
+						dexV: 1,
+					},
+				],
+			},
+			call_of_the_forest: {
+				id: "call_of_the_forest",
+				name: "Call of the Forest",
+				desc: "",
+				tree: "ranger",
+				relative_to: "target_practice",
+				requires: ["target_practice"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/tiles/tree_1.png",
+				levelEffects: [
+					{
+						ability_true_shot: {
+							resistance_penetrationV: 10,
+						},
+						ability_retreat: {
+							cooldownP: -10,
+						},
+						vitV: 2,
+					},
+				],
+			},
+			powered_arrow: {
+				id: "powered_arrow",
+				name: "Powered Arrow",
+				desc: "",
+				commands: {
+					add_ability_sundering_arrow: 1,
+				},
+				tree: "ranger",
+				relative_to: "call_of_the_forest",
+				requires: ["call_of_the_forest"],
+				pos: {
+					x: -2,
+					y: 2,
+				},
+				icon: "resources/icons/ranged_damage.png",
+				levelEffects: [
+					{
+						rangedDamageP: 2,
+					},
+				],
+			},
+			rapid_fire: {
+				id: "rapid_fire",
+				name: "Rapid fire",
+				desc: "",
+				tree: "ranger",
+				relative_to: "powered_arrow",
+				requires: ["powered_arrow"],
+				pos: {
+					x: -2,
+					y: 1,
+				},
+				icon: "resources/icons/sundering_arrow.png",
+				levelEffects: [
+					{
+						ability_sundering_arrow: {
+							cooldownP: -33,
+							effect_sunder: {
+								effects: {
+									resistAllVV: -10,
+								},
+							},
+						},
+						dexV: 1,
+					},
+				],
+			},
+			critical_hit: {
+				id: "critical_hit",
+				name: "Critical Hit",
+				desc: "",
+				tree: "ranger",
+				relative_to: "powered_arrow",
+				requires: ["powered_arrow"],
+				pos: {
+					x: -1,
+					y: 2,
+				},
+				icon: "resources/icons/critical_damage.png",
+				levelEffects: [
+					{
+						critDamageP: 15,
+						critChanceP: 5,
+					},
+				],
+			},
+			rangers_call: {
+				id: "rangers_call",
+				name: "Rangers' Call",
+				desc: "",
+				tree: "ranger",
+				relative_to: "call_of_the_forest",
+				requires: ["call_of_the_forest"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/ornate_ranger_bow.png",
+				levelEffects: [
+					{
+						ability_true_shot: {
+							cooldownV: -2,
+							use_rangeV: 2,
+						},
+						pierceDamageP: 6,
+					},
+				],
+			},
+			awakening: {
+				id: "awakening",
+				name: "Awakening",
+				desc: "",
+				commands: {
+					add_ability_awaken: 1,
+				},
+				tree: "ranger",
+				relative_to: "rangers_call",
+				requires: ["rangers_call"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/eye_awaken.png",
+				levelEffects: [
+					{
+						hpMaxV: 10,
+					},
+				],
+			},
+			hunter_mark: {
+				id: "hunter_mark",
+				name: "Hunter Mark",
+				desc: "",
+				traits: [
+					{
+						id: "mark_of_hunter",
+					},
+				],
+				tree: "ranger",
+				relative_to: "awakening",
+				requires: ["awakening"],
+				pos: {
+					x: 0,
+					y: 2,
+				},
+				icon: "resources/icons/hunter_mark.png",
+				levelEffects: [
+					{
+						dexV: 1,
+					},
+				],
+			},
+			shocking_assault: {
+				id: "shocking_assault",
+				name: "Shocking Assault",
+				desc: "",
+				commands: {
+					add_ability_shock_arrow: 1,
+				},
+				tree: "ranger",
+				relative_to: "hunter_mark",
+				requires: ["hunter_mark"],
+				pos: {
+					x: -1,
+					y: 2,
+				},
+				icon: "resources/icons/shock_arrow.png",
+				levelEffects: [
+					{
+						dexV: 1,
+					},
+				],
+			},
+			leave_you_paralyzed: {
+				id: "leave_you_paralyzed",
+				name: "Leave you paralyzed",
+				desc: "",
+				tree: "ranger",
+				relative_to: "hunter_mark",
+				requires: ["hunter_mark", "shocking_assault"],
+				pos: {
+					x: 1,
+					y: 2,
+				},
+				icon: "resources/icons/bloom_yellow.png",
+				levelEffects: [
+					{
+						ability_shock_arrow: {
+							cooldownV: -3,
+							effect_paralyzed: {
+								lastV: 2,
+								effects: {
+									resistAllPP: -15,
+								},
+							},
+						},
+						dexV: 1,
+					},
+				],
+			},
+			wild_call: {
+				id: "wild_call",
+				name: "Rangers' Call",
+				desc: "",
+				commands: {
+					add_ability_ranger_wolf: 1,
+				},
+				tree: "ranger",
+				relative_to: "call_of_the_forest",
+				requires: ["call_of_the_forest"],
+				pos: {
+					x: 2,
+					y: 2,
+				},
+				icon: "resources/icons/ranger_wolf.png",
+				levelEffects: [
+					{
+						damageP: 2,
+					},
+				],
+			},
+			trusted_companion: {
+				id: "trusted_companion",
+				name: "Rangers' Call",
+				desc: "",
+				tree: "ranger",
+				relative_to: "wild_call",
+				requires: ["wild_call"],
+				pos: {
+					x: 1,
+					y: 2,
+				},
+				icon: "resources/icons/ranger_wolf.png",
+				levelEffects: [
+					{
+						ability_ranger_wolf: {
+							summon_levelV: 9,
+							cooldownV: -20,
+						},
+					},
+				],
+			},
+			fierce_beast: {
+				id: "fierce_beast",
+				name: "Rangers' Call",
+				desc: "",
+				tree: "ranger",
+				relative_to: "wild_call",
+				requires: ["wild_call"],
+				pos: {
+					x: 2,
+					y: 1,
+				},
+				icon: "resources/icons/ranger_wolf.png",
+				levelEffects: [
+					{
+						all_summons_damageP: 20,
+						all_summons_regenHpP: 100,
+					},
+				],
+			},
+		},
+	},
+	adventurer_shared: {
+		id: "adventurer_shared",
+		name: "Adventurer",
+		startPos: 50,
+		perks: {
+			hearty_adventurer_1: {
+				id: "hearty_adventurer_1",
+				name: "Hearty Adventurer 1",
+				desc: "",
+				tree: "adventurer_shared",
+				pos: {
+					x: 3,
+					y: 1,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxP: 5,
+					},
+				],
+			},
+			hearty_adventurer_2: {
+				id: "hearty_adventurer_2",
+				name: "Hearty Adventurer 2",
+				desc: "",
+				relative_to: "hearty_adventurer_1",
+				requires: ["hearty_adventurer_1"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxP: 5,
+					},
+				],
+			},
+			hearty_adventurer_3: {
+				id: "hearty_adventurer_3",
+				name: "Hearty Adventurer 3",
+				desc: "",
+				relative_to: "hearty_adventurer_2",
+				requires: ["hearty_adventurer_2"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxP: 5,
+					},
+				],
+			},
+			hearty_adventurer_4: {
+				id: "hearty_adventurer_4",
+				name: "Hearty Adventurer 4",
+				desc: "",
+				relative_to: "hearty_adventurer_3",
+				requires: ["hearty_adventurer_3"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxP: 5,
+					},
+				],
+			},
+			hearty_adventurer_5: {
+				id: "hearty_adventurer_5",
+				name: "Hearty Adventurer 5",
+				desc: "",
+				relative_to: "hearty_adventurer_4",
+				requires: ["hearty_adventurer_4"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/health.png",
+				levelEffects: [
+					{
+						hpMaxP: 5,
+					},
+				],
+			},
+			first_aid_expert: {
+				id: "first_aid_expert",
+				name: "First Aid Expert",
+				desc: "",
+				tree: "adventurer_shared",
+				pos: {
+					x: 6,
+					y: 1,
+				},
+				icon: "resources/icons/first_aid.png",
+				levelEffects: [
+					{
+						ability_first_aid: {
+							base_healV: 5,
+							cooldownP: -20,
+						},
+						regenHpP: 14,
+					},
+				],
+			},
+			cleanser: {
+				id: "cleanser",
+				name: "Cleanser",
+				desc: "",
+				commands: {
+					add_ability_purification: 1,
+				},
+				relative_to: "first_aid_expert",
+				requires: ["first_aid_expert"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/purification.png",
+				levelEffects: [
+					{
+						regenHpP: 6,
+					},
+				],
+			},
+			advancing_backwards: {
+				id: "advancing_backwards",
+				name: "Advancing Backwards",
+				desc: "",
+				relative_to: "cleanser",
+				requires: ["cleanser"],
+				tree: "adventurer_shared",
+				pos: {
+					x: 0,
+					y: 1.5,
+				},
+				icon: "resources/icons/retreat.png",
+				levelEffects: [
+					{
+						ability_retreat: {
+							cooldownP: -30,
+							use_rangeV: 2,
+						},
+					},
+				],
+			},
+		},
+	},
 } as any;
 
 const dummyPerk = {
-  id: "ignore",
-  name: "ignore",
-  desc: "",
-  effects: {},
-  tree: "adventurer_shared",
-  pos: { x: -5000, y: -5000 },
-  icon: "",
+	id: "ignore",
+	name: "ignore",
+	desc: "",
+	effects: {},
+	tree: "adventurer_shared",
+	pos: { x: -5000, y: -5000 },
+	icon: "",
 } as any;
 
 /* OUTDATED */

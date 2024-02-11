@@ -8,15 +8,12 @@ const icons = {
     rangedDamage: "resources/icons/ranged_damage.png",
     spellDamage: "resources/icons/spell_damage.png",
     resistance: "resources/icons/resistance.png",
-    physical_armor: "resources/icons/physical_armor.png",
-    magical_armor: "resources/icons/magical_armor.png",
-    elemental_armor: "resources/icons/elemental_armor.png",
+    physicalArmor: "resources/icons/physical_armor.png",
+    magicalArmor: "resources/icons/magical_armor.png",
+    elementalArmor: "resources/icons/elemental_armor.png",
     physical: "resources/icons/physical_armor.png",
     magical: "resources/icons/magical_armor.png",
     elemental: "resources/icons/elemental_armor.png",
-    physicalDef: "resources/icons/physical_armor.png",
-    magicalDef: "resources/icons/magical_armor.png",
-    elementalDef: "resources/icons/elemental_armor.png",
     rp: "resources/icons/resistance_penetration.png",
     fireResist: "resources/icons/resistance_flame.png",
     resistance_penetration: "resources/icons/resistance_penetration.png",
@@ -129,6 +126,7 @@ const icons = {
     attackSpeed: "resources/icons/speed.png",
     liquid_courage: "resources/icons/drunk.png",
     fallback: "resources/icons/uncertainty.png",
+    hpMaxPerLevel: "resources/icons/health_per_level.png",
 };
 const icon = (name) => {
     return icons[name] || icons.fallback;

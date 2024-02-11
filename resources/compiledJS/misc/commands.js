@@ -44,7 +44,8 @@ function commandSyntax(cmd, val) {
             key = key.replace("ability_", "");
             let abi = new Ability(abilities[key], dummy);
             txt = `\n<f>18px<f><c>white<c>${lang["add_ability"]} '<c>yellow<c>${lang[abi.id + "_name"] ?? abi.id}<c>white<c>'\n§`;
-            txt += embedAbiTT(abi);
+            txt += "<nct>ability-container<nct>";
+            txt += abiTT(abi, player, { fontSize: 15 }) + "<nct>break-box<nct>";
         }
     }
     return txt;

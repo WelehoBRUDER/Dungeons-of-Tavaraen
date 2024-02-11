@@ -1,10 +1,12 @@
 "use strict";
 let perksData = [];
 let perks = [];
-let tree = player.classes.main.perkTree;
+let tree = player.classes[0].perkTree;
 const lvl_history = {
+    classUpgrades: [],
     perks: [],
     stats: { str: 0, dex: 0, vit: 0, int: 0, cun: 0 },
+    classPoints: 0,
     pp: 0,
     sp: 0,
 };
@@ -15,12 +17,25 @@ const perkColors = {
     barbarian: "#5c2323",
     rogue: "#2b2b2b",
 };
-class perk {
+function convertAllThosePerksForMePlease() {
+    const convertedPerks = { ...perksArray };
+    Object.entries(convertedPerks).forEach(([id, tree]) => {
+        Object.entries(tree.perks).forEach(([perkId, perk]) => {
+            if (perk.effects) {
+                perk.levelEffects = [{ ...perk.effects }];
+                delete perk.effects;
+            }
+        });
+    });
+}
+class Perk {
     name;
     desc;
     commands;
-    effects;
     commandsExecuted;
+    level;
+    levelProperties;
+    levelEffects;
     pos;
     traits;
     relative_to;
@@ -45,8 +60,10 @@ class perk {
         this.name = basePerk.name;
         this.desc = basePerk.desc;
         this.commands = { ...basePerk.commands } ?? {};
-        this.effects = { ...basePerk.effects } ?? {};
         this.commandsExecuted = base.commandsExecuted ?? false;
+        this.level = base.level ?? 0;
+        this.levelProperties = basePerk.levelProperties ? [...basePerk.levelProperties] : [{}];
+        this.levelEffects = basePerk.levelEffects ? spreadLevelEffects(basePerk.levelEffects) : [{}];
         this.pos = basePerk.pos;
         this.relative_to = basePerk.relative_to ?? "";
         this.requires = basePerk.requires ?? [];
@@ -54,62 +71,122 @@ class perk {
         this.traits = basePerk.traits ?? [];
         this.icon = basePerk.icon;
         this.tree = basePerk.tree;
+        function spreadLevelEffects(effs) {
+            return JSON.parse(JSON.stringify(effs));
+        }
+        if (this.levelEffects.length < 1)
+            this.levelEffects = [{}];
         this.available = () => {
-            if (player.pp <= 0 && !this.bought())
+            if (player.pp <= 0 && !this.maxed())
                 return false;
             let available = true;
             if (this.requires?.length > 0) {
                 this.requires.some((id) => {
-                    const perk_check = new perk(perksArray[tree]["perks"][id]);
-                    if (!perk_check.bought())
+                    if (player.getPerkLevel(id) === 0)
                         available = false;
                 });
             }
             if (this.mutually_exclusive?.length > 0) {
                 this.mutually_exclusive.some((id) => {
-                    const perk_check = new perk(perksArray[tree]["perks"][id]);
-                    if (perk_check.bought())
+                    if (player.getPerkLevel(id) > 0)
                         available = false;
                 });
             }
             return available;
         };
         this.bought = () => {
-            let isBought = false;
-            player.perks.some((prk) => {
-                if (prk.id == this.id)
-                    return (isBought = true);
-            });
-            return isBought;
+            return player.getPerkLevel(this.id) > 0;
+        };
+        this.maxed = () => {
+            return player.getPerkLevel(this.id) >= this.levelEffects.length;
         };
         this.buy = () => {
-            if (this.available() && !this.bought()) {
-                player.perks.push(new perk({ ...this }));
-                player.pp--;
-                if (this.tree != "adventurer_shared" && this.tree != player.classes.main.perkTree && this.tree != player.classes?.sub?.perkTree) {
-                    player.classes.sub = new combatClass(combatClasses[this.tree + "Class"]);
-                }
-                this.traits.forEach((stat) => {
-                    let add = true;
-                    player.traits.some((mod) => {
-                        if (mod.id === stat.id) {
-                            add = false;
-                            return true;
-                        }
+            if (this.available() && !this.maxed()) {
+                const ownedPerk = player.getPerk(this.id);
+                if (!ownedPerk) {
+                    const newPerk = new Perk({ ...perksArray[tree]["perks"][this.id], level: 1 });
+                    player.perks.push(newPerk);
+                    lvl_history.perks.push({ id: this.id, level: 1 });
+                    this.traits.forEach((stat) => {
+                        let add = true;
+                        player.traits.some((mod) => {
+                            if (mod.id === stat.id) {
+                                add = false;
+                                return true;
+                            }
+                        });
+                        if (add)
+                            player.traits.push(stat);
                     });
-                    if (add)
-                        player.traits.push(stat);
-                });
+                }
+                else {
+                    ownedPerk.level++;
+                    if (!lvl_history.perks.find((perk) => perk.id == this.id)) {
+                        lvl_history.perks.push({ id: this.id, level: 1 });
+                    }
+                    else {
+                        lvl_history.perks.find((perk) => perk.id == this.id).level++;
+                    }
+                }
+                lvl_history.pp++;
+                player.pp--;
                 player.updateTraits();
                 player.updatePerks();
                 player.updateAbilities();
-                lvl_history.perks.push(this.id);
-                lvl_history.pp++;
+                player.updateAllModifiers();
                 formPerks();
                 formStatUpgrades();
             }
         };
     }
+    // FIXME: Something causes the effects to start duplicating
+    // Every duplication shortens the key by 1 character.
+    // UPDATE: The effects no longer duplicate constantly, but instead once when the perk is bought.
+    // This doesn't actually affect the perk itself, but it does affect the tooltip.
+    // Why? I have not found the culprit yet.
+    getEffects(level = this.level, options) {
+        const effects = {};
+        const thisPerk = window.structuredClone({ ...perksArray[this.tree].perks[this.id] });
+        if (options?.noStacking) {
+            Object.entries(thisPerk.levelEffects[level - 1]).forEach((stat) => {
+                const [key, value] = stat;
+                applyModifierToTotal(stat, effects);
+            });
+        }
+        else {
+            thisPerk.levelEffects.forEach((effect, index) => {
+                if (index >= level)
+                    return;
+                Object.entries(effect).forEach((stat) => {
+                    const [key, value] = stat;
+                    applyModifierToTotal(stat, effects);
+                });
+            });
+        }
+        return effects;
+    }
+}
+function upgradeClassLevel(id) {
+    if (player.classPoints <= 0)
+        return;
+    const classToUp = player.getClass({ id: id });
+    if (!classToUp) {
+        player.classes.push(new combatClass(combatClasses[id]));
+    }
+    else {
+        if (classToUp.level >= 20)
+            return;
+        classToUp.level++;
+    }
+    player.classPoints--;
+    lvl_history.classPoints++;
+    if (lvl_history.classUpgrades.findIndex((upg) => upg.id == id) == -1) {
+        lvl_history.classUpgrades.push({ id, level: 1 });
+    }
+    else {
+        lvl_history.classUpgrades.find((upg) => upg.id == id).level++;
+    }
+    formPerks();
 }
 function changePerkTree(newTree) {
     tree = newTree;
@@ -129,7 +206,7 @@ function formPerks(e = null, scrollDefault = false) {
     // const topScroll = perkArea.scrollTop;
     perkArea.innerHTML = "";
     Object.entries(perksArray[tree].perks).forEach((_perk) => {
-        perks.push(new perk(_perk[1]));
+        perks.push(new Perk(_perk[1]));
     });
     hideHover();
     const baseSize = 128;
@@ -137,30 +214,70 @@ function formPerks(e = null, scrollDefault = false) {
     const baseFont = 12;
     const lineSize = 64;
     const lineWidth = 10;
+    const upgradeClass = document.createElement("div");
+    const classUpButton = document.createElement("button");
+    const classLevel = document.createElement("p");
+    const classPoints = document.createElement("p");
     const points = document.createElement("p");
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    points.textContent = lang["perk_points"] + ": " + player.pp.toString();
-    points.classList.add("perkPoints");
     staticBg.textContent = "";
     perkTreesContainer.textContent = "";
+    const currentClass = player.getClass({ tree: tree });
+    const isCombatClass = tree !== "adventurer_shared";
+    if (isCombatClass) {
+        upgradeClass.classList.add("upgradeClass");
+        classUpButton.classList.add("classUpButton");
+        classLevel.classList.add("classLevel");
+        classLevel.textContent = (player.getClass({ tree: tree })?.level?.toString() ?? "0") + " / 20" ?? "0 / 20";
+        if (player.classPoints > 0) {
+            upgradeClass.append(classUpButton);
+        }
+        upgradeClass.append(classLevel);
+        let currentEffects = ``;
+        Object.entries(currentClass?.getLevelBonuses()).forEach((stat) => {
+            currentEffects += effectSyntax(stat);
+        });
+        let nextEffects = ``;
+        Object.entries(currentClass?.getLevelBonuses({ addToLevel: 1 })).forEach((stat) => {
+            nextEffects += effectSyntax(stat);
+        });
+        const classUpText = `${lang["upgrade_class"]}\n\nCurrent effects:\n${currentEffects}§\nNext effects:\n${nextEffects}`;
+        tooltip(upgradeClass, classUpText);
+        classUpButton.addEventListener("click", () => upgradeClassLevel(tree + "Class"));
+        staticBg.append(upgradeClass);
+    }
+    classPoints.textContent = lang["class_points"] + ": " + player.classPoints.toString();
+    points.textContent = lang["perk_points"] + ": " + player.pp.toString();
+    classPoints.classList.add("classPoints");
+    points.classList.add("perkPoints");
     Object.entries(combatClasses).forEach((combatClassObject) => {
         const combatClass = combatClassObject[1];
-        if ((player.classes.main?.id && player.classes.sub?.id) || player.level.level < 10) {
-            if (combatClass.id != player.classes.main.id && combatClass.id != player.classes?.sub?.id)
-                return;
-        }
         const classButtonContainer = document.createElement("div");
         const combatClassName = document.createElement("p");
         const combatClassIcon = document.createElement("img");
-        if (combatClass.perkTree == tree) {
-            classButtonContainer.classList.add("goldenBorder");
+        // if (combatClass.perkTree == tree) {
+        //   classButtonContainer.classList.add("goldenBorder");
+        // } else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
+        //   classButtonContainer.classList.add("greyedOut");
+        // }
+        const level = player.getClass({ id: combatClass.id })?.level ?? 0;
+        if (level === 0 && combatClass.id != "adventurer") {
+            let canMultiClass = true;
+            let playerStats = player.getStats();
+            Object.entries(perksArray[combatClass.perkTree].multiClassRequires).forEach((req) => {
+                if (playerStats[req[0]] < req[1])
+                    canMultiClass = false;
+            });
+            if (!canMultiClass) {
+                classButtonContainer.classList.add("greyedOut");
+            }
         }
-        else if (combatClass.id != player.classes.main.id && player.level.level < 10) {
-            classButtonContainer.classList.add("greyedOut");
+        else if (combatClass.perkTree == tree) {
+            classButtonContainer.classList.add("goldenBorder");
         }
         classButtonContainer.addEventListener("click", (a) => changePerkTree(combatClass.perkTree));
         classButtonContainer.classList.add("classButtonContainer");
-        combatClassName.textContent = lang[combatClass.id + "_name"];
+        combatClassName.textContent = `${lang[combatClass.id + "_name"]} ${level > 0 ? `(${level})` : ""}`;
         combatClassIcon.src = combatClass.icon;
         classButtonContainer.style.background = combatClass.color;
         classButtonContainer.append(combatClassIcon, combatClassName);
@@ -179,7 +296,7 @@ function formPerks(e = null, scrollDefault = false) {
     }
     classButtonContainer.append(combatClassIcon, combatClassName);
     perkTreesContainer.append(classButtonContainer);
-    staticBg.append(points);
+    staticBg.append(classPoints, points);
     perks.forEach((_perk) => {
         const perk = document.createElement("div");
         const img = document.createElement("img");
@@ -188,7 +305,7 @@ function formPerks(e = null, scrollDefault = false) {
         perk.classList.add(`${_perk.id}`);
         perk.style.backgroundColor = perkColors[tree];
         img.src = _perk.icon;
-        name.textContent = lang[_perk.id + "_name"] ?? _perk.id;
+        name.textContent = `${lang[_perk.id + "_name"] ?? _perk.id} ${player.getPerkLevel(_perk.id)}/${_perk.levelEffects.length}`;
         tooltip(perk, perkTT(_perk));
         perk.style.width = `${baseSize}px`;
         perk.style.height = `${baseSize}px`;
@@ -198,6 +315,8 @@ function formPerks(e = null, scrollDefault = false) {
         perk.addEventListener("click", (a) => _perk.buy());
         if (_perk.bought())
             perk.classList.add("perkBought");
+        if (_perk.maxed())
+            perk.classList.add("perkMaxed");
         if (!_perk.available()) {
             perk.classList.add("perkUnavailable");
         }
@@ -220,8 +339,10 @@ function formPerks(e = null, scrollDefault = false) {
                 let found = perkArea.querySelector(`.${req}`);
                 let color = "rgb(65, 65, 65)";
                 let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                if (_perk.bought())
-                    color = "gold";
+                if (_perk.maxed())
+                    color = "lime";
+                else if (_perk.bought())
+                    color = "white";
                 else if (!_perk.available())
                     color = "rgb(40, 40, 40)";
                 line.setAttribute("x1", `${+perk.style.left.replace(/\D/g, "") + lineSize}px`);
@@ -296,7 +417,7 @@ function formStatUpgrades() {
         base.classList.add("statUp");
         baseImg.src = icons[stat];
         baseText.textContent = lang[stat];
-        baseNumber.textContent = player.getBaseStats()[stat].toString();
+        baseNumber.textContent = player.getStats()[stat].toString();
         upgrade.textContent = "+";
         upgrade.addEventListener("click", (a) => upStat(stat));
         tooltip(base, lang[stat + "_tt"] ?? "no tooltip");
@@ -324,6 +445,7 @@ function openLevelingScreen() {
     document.querySelector(".worldText").style.opacity = "0";
     lvl_history.perks = [];
     lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.classPoints = 0;
     lvl_history.pp = 0;
     lvl_history.sp = 0;
     formPerks();
@@ -331,6 +453,7 @@ function openLevelingScreen() {
     state.perkOpen = true;
 }
 function perkTT(perk) {
+    const lvl = player.getPerkLevel(perk.id);
     let txt = "";
     txt += `\t<f>21px<f>${lang[perk.id + "_name"] ?? perk.id}\t\n`;
     txt += `<f>15px<f><c>silver<c>"${lang[perk.id + "_desc"] ?? perk.id + "_desc"}"<c>white<c>\n`;
@@ -364,14 +487,85 @@ function perkTT(perk) {
         txt = txt.substring(0, txt.length - 2);
         txt += "§";
     }
-    if (Object.values(perk.commands).length > 0) {
-        Object.entries(perk.commands).forEach((com) => (txt += commandSyntax(com[0], com[1])));
+    if (Object.values(perk.commands).length > 0 && lvl === 0) {
+        Object.entries(perk.commands).forEach((com) => (txt += commandSyntax(com[0], com[1]) + "§"));
     }
-    if (Object.values(perk.effects).length > 0) {
-        txt += `\n<i>${icons.resistance}<i><f>16px<f>${lang["status_effects"]}:\n`;
-        Object.entries(perk.effects).forEach((eff) => (txt += effectSyntax(eff, true)));
+    if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
+        // THE PROBLEM HAPPENS HERE
+        // Current/Next effects calls for some reason cause a strange duplication
+        // The most likely suspect is nextEffects, the whole function needs to be re-evaluated
+        // Between the second and third getEffects calls, the effects are duplicated
+        // UPDATE: The duplicated values have been hidden for tooltip clarity.
+        const props = perk.levelProperties?.[lvl];
+        const currentEffects = Object.entries({ ...perk.getEffects(lvl) });
+        const nextEffects = Object.entries({ ...perk.getEffects(lvl + 1) });
+        const totalCompare = {};
+        /* OVERLY COMPLICATED TOOLTIP */
+        // First we check if we are comparing an ability upgrade
+        if (props?.compareAbility) {
+            const ability = new Ability({ ...abilities[props.compareAbility] }, { ...player });
+            // Since we don't want to show the player the bonuses they already have
+            // we must first remove the earlier ones from the newest
+            const comparisonBonuses = { ...perk.getEffects(lvl + 1, { noStacking: true }) };
+            txt += `\n${compareAbilityTooltip(ability, { ...player }, comparisonBonuses)}`;
+        }
+        // If not, it gets a bit messy
+        else {
+            // This check is to avoid an ugly line break at the end of the tooltip
+            // Without it, a line break would trigger even when there are no effects to show
+            if (currentEffects.length > 0 || nextEffects.length > 0) {
+                txt += "\n";
+            }
+            // Now we collect all effects and their changes into a single object
+            if (currentEffects.length > 0) {
+                currentEffects.forEach(([key, value]) => {
+                    if (typeof value !== "number")
+                        return;
+                    totalCompare[key] = [value];
+                });
+            }
+            if (nextEffects.length > 0) {
+                nextEffects.forEach(([key, value]) => {
+                    if (typeof value !== "number")
+                        return;
+                    if (!totalCompare[key])
+                        totalCompare[key] = [value];
+                    else
+                        totalCompare[key].push(value);
+                });
+            }
+            // That object is then used to create the tooltip
+            // It might seem cryptic, but it's basically just {key: [current, next]}
+            Object.entries(totalCompare).forEach((stat) => {
+                let val = stat[1];
+                let cur = val[0];
+                let next = val[1];
+                stat[1] = cur;
+                if (next === stat[1]) {
+                    next = null;
+                }
+                if (stat[0].endsWith("P")) {
+                    stat[1] = (stat[1] - 1) * 100;
+                }
+                if (next) {
+                    txt += effectSyntax(stat, true, next);
+                }
+                else {
+                    txt += effectSyntax(stat, true);
+                }
+            });
+            // Finally, for ability changes that are too small to warrant a comparison
+            // we can just dump at the end
+            if (nextEffects.length > 0) {
+                nextEffects.forEach(([key, value]) => {
+                    if (typeof value === "number")
+                        return;
+                    txt += effectSyntax([key, value], true);
+                });
+            }
+        }
     }
-    if (perk.traits) {
+    if (perk.traits && lvl === 0) {
         perk.traits.forEach((statModif) => {
             txt += statModifTT(statModif);
         });
@@ -433,23 +627,36 @@ function action2(e) {
     }
 }
 function undoChanges() {
+    lvl_history.classUpgrades.forEach((upg) => {
+        const classToUp = player.getClass({ id: upg.id });
+        classToUp.level -= upg.level;
+        if (classToUp.level <= 0) {
+            player.classes.splice(player.classes.findIndex((cls) => cls.id == upg.id), 1);
+        }
+    });
     lvl_history.perks.forEach((prk) => {
-        let index = player.perks.findIndex((_prk) => _prk.id == prk);
-        player.perks[index].traits.forEach((rem) => {
-            const modIndex = player.traits.findIndex((stat) => stat.id === rem.id);
-            player.traits.splice(modIndex, 1);
-        });
-        player.perks.splice(index, 1);
+        const ownedPerk = player.getPerk(prk.id);
+        ownedPerk.level -= prk.level;
+        if (ownedPerk.level <= 0) {
+            let index = player.perks.findIndex((_prk) => _prk.id == prk.id);
+            player.perks[index].traits.forEach((rem) => {
+                const modIndex = player.traits.findIndex((stat) => stat.id === rem.id);
+                player.traits.splice(modIndex, 1);
+            });
+            player.perks.splice(index, 1);
+        }
     });
     Object.entries(lvl_history.stats).forEach((stat) => {
         const id = stat[0];
         const val = stat[1];
         player.stats[id] -= val;
     });
+    player.classPoints += lvl_history.classPoints;
     player.sp += lvl_history.sp;
     player.pp += lvl_history.pp;
     lvl_history.perks = [];
     lvl_history.stats = { str: 0, dex: 0, vit: 0, int: 0, cun: 0 };
+    lvl_history.classPoints = 0;
     lvl_history.pp = 0;
     lvl_history.sp = 0;
     formPerks();

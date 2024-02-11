@@ -18,7 +18,7 @@ const statusEffects = {
         id: "poison",
         name: "Poison",
         dot: {
-            damageType: "poison",
+            damageType: "dark",
             damageAmount: 5,
             icon: icons.poison,
         },
@@ -41,7 +41,7 @@ const statusEffects = {
         id: "venom",
         name: "Venom",
         dot: {
-            damageType: "poison",
+            damageType: "dark",
             damageAmount: 8,
             icon: icons.venom,
         },
@@ -65,9 +65,9 @@ const statusEffects = {
         id: "burning",
         name: "Burning",
         dot: {
-            damageType: "burning",
+            damageType: "fire",
             damageAmount: 4,
-            icon: icons.burning_icon,
+            icon: icons.burning,
         },
         effects: {
             fireResistV: 10,
@@ -80,16 +80,16 @@ const statusEffects = {
             current: 3,
         },
         type: "burning",
-        textIcon: icons.burning_icon,
+        textIcon: icons.burning,
         icon: "resources/icons/flame_of_passion.png",
     },
     sunder: {
         id: "sunder",
         name: "Sundered",
         effects: {
-            physicalDefP: -50,
-            magicalDefP: -50,
-            elementalDefP: -50,
+            physicalArmorP: -50,
+            magicalArmorP: -50,
+            elementalArmorP: -50,
             resistAllP: -50,
         },
         last: {
@@ -116,7 +116,7 @@ const statusEffects = {
             current: 4,
         },
         type: "curse",
-        textIcon: icons.chilled_icon,
+        textIcon: icons.chilled,
         icon: "resources/icons/chilled.png",
     },
     blighted: {
@@ -133,23 +133,21 @@ const statusEffects = {
             current: 4,
         },
         type: "curse",
-        textIcon: icons.blight_icon,
+        textIcon: icons.blight,
         icon: "resources/icons/blighted.png",
     },
     rage: {
         id: "rage",
         name: "Rage",
         effects: {
-            strV: 10,
-            crushDamageP: 20,
-            slashDamageP: 20,
-            pierceDamageP: 20,
-            resistAllV: 5,
+            strV: 5,
+            meleeDamageP: 10,
+            physicalArmorV: 25,
         },
         silence: true,
         last: {
-            total: 12,
-            current: 12,
+            total: 10,
+            current: 10,
         },
         textIcon: icons.rage,
         aura: "redMist",
@@ -159,12 +157,14 @@ const statusEffects = {
         id: "battle_fury",
         name: "Battle Fury",
         effects: {
-            attack_damage_multiplierP: 20,
-            strV: 10,
-            crushDamageP: 9,
-            slashDamageP: 9,
+            ability_attack: {
+                damage_multiplierP: 20,
+            },
+            strV: 7,
+            crushDamageP: 7,
+            slashDamageP: 7,
             pierceDamageP: 7,
-            attackSpeedV: 30,
+            attackSpeedV: 25,
         },
         silence: true,
         last: {
@@ -221,9 +221,12 @@ const statusEffects = {
             ability_barbarian_charge: {
                 cooldownP: -75,
             },
-            physicalDefP: -100,
-            magicalDefP: -100,
-            elementalDefP: -100,
+            ability_finishing_blow: {
+                health_cost_percentageV: -20,
+            },
+            physicalArmorP: -100,
+            magicalArmorP: -100,
+            elementalArmorP: -100,
             resistAllP: -100,
             regenHpP: -100,
             regenMpP: -100,
@@ -406,7 +409,7 @@ const statusEffects = {
             current: 5,
         },
         type: "stun",
-        textIcon: icons.health_cost_icon,
+        textIcon: icons.health_cost,
         icon: "resources/icons/health_cost.png",
     },
     liquid_courage: {
@@ -423,7 +426,7 @@ const statusEffects = {
             total: 50,
             current: 50,
         },
-        textIcon: icons.liquid_courage_icon,
+        textIcon: icons.liquid_courage,
         icon: "resources/icons/drunk.png",
     },
 };

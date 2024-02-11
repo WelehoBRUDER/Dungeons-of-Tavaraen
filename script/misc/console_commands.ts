@@ -192,6 +192,19 @@ function updateCommands() {
       },
     },
     {
+      name: "cp",
+      help: "Add class points",
+      verboseHelp: "cp [amount] - Add class points.<br>Example: cp 5",
+      isCheat: true,
+      availableParams: [[{ id: "amount - number", onSelect: "5" }]],
+      execute: (args: string[]) => {
+        const cp = args[0] ? parseInt(args[0]) : 0;
+        player.classPoints += cp;
+
+        devConsole.commandHistory.push(`Added ${cp} class points`);
+      },
+    },
+    {
       name: "sp",
       help: "Add skill points",
       verboseHelp: "sp [amount] - Add skill points.<br>Example: sp 5",
@@ -199,7 +212,7 @@ function updateCommands() {
       availableParams: [[{ id: "amount - number", onSelect: "5" }]],
       execute: (args: string[]) => {
         const sp = args[0] ? parseInt(args[0]) : 0;
-        player.skill_points += sp;
+        player.sp += sp;
 
         devConsole.commandHistory.push(`Added ${sp} skill points`);
       },
@@ -211,10 +224,10 @@ function updateCommands() {
       isCheat: true,
       availableParams: [[{ id: "amount - number", onSelect: "5" }]],
       execute: (args: string[]) => {
-        const sp = args[0] ? parseInt(args[0]) : 0;
-        player.perk_points += sp;
+        const pp = args[0] ? parseInt(args[0]) : 0;
+        player.pp += pp;
 
-        devConsole.commandHistory.push(`Added ${sp} perk points`);
+        devConsole.commandHistory.push(`Added ${pp} perk points`);
       },
     },
   ];

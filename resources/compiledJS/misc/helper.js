@@ -68,7 +68,7 @@ let helper = {
             }
         });
         trimmed.perks.forEach((perk, index) => {
-            const perkObject = { id: perk.id, tree: perk.tree };
+            const perkObject = { id: perk.id, tree: perk.tree, level: perk.level };
             if (perk.commandsExecuted)
                 perkObject.commandsExecuted = perk.commandsExecuted;
             trimmed.perks[index] = perkObject;
@@ -125,6 +125,25 @@ let helper = {
                 enemy.restore();
             });
         });
+    },
+    localise: function (string) {
+        let localisedString = string;
+        if (lang[string]) {
+            localisedString = lang[string];
+        }
+        if (string.endsWith("V") || string.endsWith("P")) {
+            const baseString = string.substring(0, string.length - 1);
+            if (lang[baseString]) {
+                localisedString = lang[baseString];
+                if (string.endsWith("P")) {
+                    localisedString += "%";
+                }
+            }
+        }
+        if (lang[string + "_name"]) {
+            localisedString = lang[string + "_name"];
+        }
+        return localisedString;
     },
 };
 //# sourceMappingURL=helper.js.map

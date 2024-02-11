@@ -138,13 +138,16 @@ const traits = {
             hitChanceV: 25,
         },
     },
-    warrior_instrict: {
+    warrior_instinct: {
         id: "warrior_instinct",
         conditions: {
             hp_less_than: 50,
         },
         effects: {
-            resistAllV: 4,
+            physicalArmorV: 30,
+            magicalArmorV: 30,
+            elementalArmorV: 30,
+            meleeDamageP: 5,
         },
     },
     blood_rage_1: {
@@ -269,61 +272,61 @@ const traits = {
     enduring: {
         id: "enduring",
         effects: {
-            vitP: 10,
+            vitP: 5,
         },
     },
     strong: {
         id: "strong",
         effects: {
-            strP: 10,
+            strP: 5,
         },
     },
     quick: {
         id: "quick",
         effects: {
-            dexP: 10,
+            dexP: 5,
         },
     },
     intelligent: {
         id: "intelligent",
         effects: {
-            intP: 10,
+            intP: 5,
         },
     },
     stealthy: {
         id: "stealthy",
         effects: {
-            cunP: 10,
+            cunP: 5,
         },
     },
     lucky: {
         id: "lucky",
         effects: {
-            expGainP: 10,
+            expGainP: 5,
         },
     },
     healthy: {
         id: "healthy",
         effects: {
-            hpMaxP: 10,
+            hpMaxP: 3,
         },
     },
     wise: {
         id: "wise",
         effects: {
-            mpMaxP: 10,
+            mpMaxP: 3,
         },
     },
     regenerating: {
         id: "regenerating",
         effects: {
-            regenHpP: 10,
+            regenHpP: 15,
         },
     },
     magical: {
         id: "magical",
         effects: {
-            regenMpP: 10,
+            regenMpP: 15,
         },
     },
     adrenaline: {

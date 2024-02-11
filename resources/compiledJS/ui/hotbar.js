@@ -44,7 +44,7 @@ function generateHotbar() {
                     frame.append(cdTxt);
                 }
                 else {
-                    tooltip(abiDiv, abiTT(abi));
+                    tooltip(abiDiv, abiTT(abi, player, { fontSize: 18 }));
                     if (abi.onCooldown == 0 &&
                         player.stats.mp >= abi.mana_cost &&
                         (abi.health_cost_percentage > 0 ? player.hpRemain() >= abi.health_cost_percentage : true) &&
@@ -264,7 +264,7 @@ function updateUI() {
     const hpImg = ui.querySelector(".PlayerHpFill");
     const mpImg = ui.querySelector(".PlayerMpFill");
     const xp = document.querySelector(".xpBar .barFill");
-    hpText.textContent = `${Math.round(player.stats.hp)} / ${player.getHpMax()}`;
+    hpText.textContent = `${Math.floor(player.stats.hp)} / ${player.getHpMax()}`;
     hpText.innerHTML += `<br><span>+${player.getRegen().hp.toFixed(2)}</span>`;
     mpText.textContent = `${Math.floor(player.stats.mp)} / ${player.getMpMax()}`;
     mpText.innerHTML += ` <span>+${player.getRegen().mp.toFixed(2)}</span>`;
@@ -295,5 +295,6 @@ tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${se
 tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
 tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
 tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+tooltip(document.querySelector(".codScrb"), `${lang["setting_hotkey_codex"]} [${settings["hotkey_codex"]}]`);
 tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
 //# sourceMappingURL=hotbar.js.map

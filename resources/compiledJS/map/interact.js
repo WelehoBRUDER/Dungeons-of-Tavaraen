@@ -58,47 +58,53 @@ function hoverEnemyShow(enemy) {
     const enemyStats = enemy.getStats();
     const enemyMiscStats = enemy.getHitchance();
     let mainStatText = "";
-    mainStatText += `<f>20px<f><i>${icons.health}<i>${lang["health"]}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
-    mainStatText += `<f>20px<f><i>${icons.mana}<i>${lang["mana"]}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
-    mainStatText += `<f>20px<f><i>${icons.str}<i>${lang["str"]}: ${enemyStats.str}\n`;
-    mainStatText += `<f>20px<f><i>${icons.dex}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
-    mainStatText += `<f>20px<f><i>${icons.vit}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
-    mainStatText += `<f>20px<f><i>${icons.int}<i>${lang["int"]}: ${enemyStats.int}\n`;
-    mainStatText += `<f>20px<f><i>${icons.cun}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
-    mainStatText += `<f>20px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
-    mainStatText += `<f>20px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
+    mainStatText += `<f>16px<f><i>${icons.health}<i>${helper.localise("hpMax")}: ${Math.floor(enemy.stats.hp)}/${enemy.getHpMax()}\n`;
+    mainStatText += `<f>16px<f><i>${icons.mana}<i>${helper.localise("mpMax")}: ${Math.floor(enemy.stats.mp)}/${enemy.getMpMax()}\n`;
+    const charArmor = enemy.getArmor();
+    mainStatText += `<f>16px<f><i>${icons.physicalArmor}<i>${lang["physicalArmor"]}: ${charArmor.physical}\n`;
+    mainStatText += `<f>16px<f><i>${icons.magicalArmor}<i>${lang["magicalArmor"]}: ${charArmor.magical}\n`;
+    mainStatText += `<f>16px<f><i>${icons.elementalArmor}<i>${lang["elementalArmor"]}: ${charArmor.elemental}\n`;
+    mainStatText += `<f>16px<f><i>${icons.str}<i>${lang["str"]}: ${enemyStats.str}\n`;
+    mainStatText += `<f>16px<f><i>${icons.dex}<i>${lang["dex"]}: ${enemyStats.dex}\n`;
+    mainStatText += `<f>16px<f><i>${icons.vit}<i>${lang["vit"]}: ${enemyStats.vit}\n`;
+    mainStatText += `<f>16px<f><i>${icons.int}<i>${lang["int"]}: ${enemyStats.int}\n`;
+    mainStatText += `<f>16px<f><i>${icons.cun}<i>${lang["cun"]}: ${enemyStats.cun}\n`;
+    mainStatText += `<f>16px<f><i>${icons.hitChance}<i>${lang["hitChance"]}: ${enemyMiscStats.chance}\n`;
+    mainStatText += `<f>16px<f><i>${icons.evasion}<i>${lang["evasion"]}: ${enemyMiscStats.evasion}\n`;
     let enTotalDmg = enemy.trueDamage();
-    mainStatText += `<f>20px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
+    mainStatText += `<f>16px<f><i>${icons.damage}<i>${lang["damage"]}: ${enTotalDmg.total}(`;
     Object.entries(enTotalDmg.split).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        mainStatText += `<f>20px<f><i>${icons[key]}<i>${val}`;
+        mainStatText += `<f>16px<f><i>${icons[key]}<i>${val}`;
     });
     mainStatText += "<c>white<c>)\n";
     const mainStats = textSyntax(mainStatText);
-    let resists = `<f>20px<f><i>${icons.resistAll}<i>${lang["resistance"]}\n`;
+    let resists = `<f>16px<f><i>${icons.resistAll}<i>${lang["resistance"]}\n`;
     Object.entries(enemy.getResists()).forEach((res) => {
         const key = res[0];
         const val = res[1];
-        resists += `<f>20px<f><i>${icons[key + "Resist"]}<i>${lang[key]} ${val}%\n`;
+        resists += `<f>16x<f><i>${icons[key + "Resist"]}<i>${lang[key]} ${val}%\n`;
     });
     const resistFrame = textSyntax(resists);
     resistFrame.classList.add("enResists");
     staticHover.append(name, mainStats, resistFrame);
 }
-function hoverProjectile(projectile) {
-    staticHover.textContent = "";
-    staticHover.style.display = "block";
-    const name = document.createElement("p");
-    name.classList.add("enemyName");
-    name.textContent = `${lang[projectile.id + "_name"] ?? projectile.id}`;
-    let mainStatText = "";
-    mainStatText += `<f>19px<f>${lang["speed"] ?? "speed"}: ${projectile.speed} ${lang["tiles_per_turn"] ?? "tpt"}\n`;
-    mainStatText += `<f>19px<f>${lang["origin"] ?? "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
-    mainStatText += `<f>19px<f><i>${icons.damage}<i>${lang["predicted_damage"] ?? "predicted_damage"}: ${calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg}`;
-    const mainStats = textSyntax(mainStatText);
-    staticHover.append(name, mainStats);
-}
+// function hoverProjectile(projectile: Projectile) {
+//   staticHover.textContent = "";
+//   staticHover.style.display = "block";
+//   const name = document.createElement("p");
+//   name.classList.add("enemyName");
+//   name.textContent = `${lang[projectile.id + "_name"] ?? projectile.id}`;
+//   let mainStatText = "";
+//   mainStatText += `<f>19px<f>${lang["speed"] ?? "speed"}: ${projectile.speed} ${lang["tiles_per_turn"] ?? "tpt"}\n`;
+//   mainStatText += `<f>19px<f>${lang["origin"] ?? "origin"}: ${lang[projectile.shooter.id + "_name"]}\n`;
+//   mainStatText += `<f>19px<f><i>${icons.damage}<i>${lang["predicted_damage"] ?? "predicted_damage"}: ${
+//     calculateDamage(projectile.shooter, dummy, projectile.ability, true).dmg
+//   }`;
+//   const mainStats = textSyntax(mainStatText);
+//   staticHover.append(name, mainStats);
+// }
 /* Hide map hover */
 function hideMapHover() {
     staticHover.textContent = "";

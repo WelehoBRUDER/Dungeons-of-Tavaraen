@@ -28,6 +28,7 @@ class PlayerCharacter extends Character {
     respawnPoint;
     gold;
     perks;
+    classPoints;
     sp;
     pp;
     usedShrines;
@@ -73,11 +74,12 @@ class PlayerCharacter extends Character {
         this.respawnPoint = { ...base.respawnPoint } ?? null; // need to add default point, or this might soft lock
         this.gold = base.gold ?? 0;
         this.perks = [...base.perks] ?? [];
+        this.classPoints = base.classPoints ?? 0;
         this.sp = base.sp ?? 0;
         this.pp = base.pp ?? 0;
         this.usedShrines = [...base.usedShrines] ?? [];
         this.unarmedDamages = base.unarmedDamages ?? { crush: 5 };
-        this.classes = { ...base.classes } ?? {};
+        this.classes = base?.classes?.main?.id ? convertOldClasses(base.classes) : [...base?.classes] ?? [];
         this.oldCords = { ...base.oldCords } ?? this.cords;
         this.flags = { ...base.flags } ?? [];
         this.questProgress = base.questProgress ? [...base.questProgress] : [];
@@ -120,7 +122,10 @@ class PlayerCharacter extends Character {
         this.updatePerks = (dontUpdateUI = false, dontExecuteCommands = false) => {
             this.perks.forEach((prk, index) => {
                 let cmdsEx = prk.commandsExecuted;
-                prk = new perk({ ...perksArray[prk.tree]["perks"][prk.id] });
+                if (!prk.id)
+                    return;
+                prk = new Perk({ ...perksArray[prk.tree]["perks"][prk.id], level: prk.level ?? 1 });
+                console.log(prk);
                 if (!cmdsEx && !dontExecuteCommands) {
                     console.log("executing commands");
                     Object.entries(prk.commands)?.forEach((cmd) => {
@@ -128,7 +133,7 @@ class PlayerCharacter extends Character {
                     });
                 }
                 prk.commandsExecuted = true;
-                this.perks[index] = { ...prk };
+                this.perks[index] = new Perk({ ...perksArray[prk.tree]["perks"][prk.id], level: prk.level ?? 1 });
                 prk.traits.forEach((stat) => {
                     if (player.traits.findIndex((t) => t.id === stat.id) !== -1)
                         return;
@@ -249,12 +254,9 @@ class PlayerCharacter extends Character {
             while (this.level.xp >= this.level.xpNeed) {
                 this.level.xp -= this.level.xpNeed;
                 this.level.level++;
-                if (this.level.level < 6) {
+                this.classPoints++;
+                if (this.level.level % 10 == 0) {
                     this.pp += 2;
-                    this.sp += 4;
-                }
-                else if (this.level.level % 10 == 0) {
-                    this.pp += 3;
                     this.sp += 5;
                 }
                 else {
@@ -365,24 +367,6 @@ class PlayerCharacter extends Character {
                         mods[eff[0]] += eff[1];
                 });
             }
-            if (this.classes?.main?.statBonuses) {
-                Object.entries(this.classes.main.statBonuses).forEach((eff) => {
-                    if (!mods?.[eff[0]]) {
-                        mods[eff[0]] = eff[1];
-                    }
-                    else if (eff[0].endsWith("V"))
-                        mods[eff[0]] += eff[1];
-                });
-            }
-            if (this.classes?.sub?.statBonuses) {
-                Object.entries(this.classes.sub.statBonuses).forEach((eff) => {
-                    if (!mods?.[eff[0]]) {
-                        mods[eff[0]] = eff[1];
-                    }
-                    else if (eff[0].endsWith("V"))
-                        mods[eff[0]] += eff[1];
-                });
-            }
             baseStats.forEach((stat) => {
                 if (!mods[stat + "V"])
                     mods[stat + "V"] = 0;
@@ -458,14 +442,48 @@ class PlayerCharacter extends Character {
             return dmg;
         };
     }
+    updateClasses() {
+        this.classes.forEach((cl, index) => {
+            this.classes[index] = new combatClass({ ...combatClasses[cl.id], level: cl.level });
+        });
+    }
+    hasClass(options) {
+        if (options?.id) {
+            if (this.classes.findIndex((c) => c.id === options.id) !== -1)
+                return true;
+        }
+        if (options?.tree) {
+            if (this.classes.findIndex((c) => c.perkTree === options.tree) !== -1)
+                return true;
+        }
+    }
+    getClass(options) {
+        if (options?.id) {
+            return this.classes.find((c) => c.id === options.id);
+        }
+        if (options?.tree) {
+            return this.classes.find((c) => c.perkTree === options.tree);
+        }
+    }
+    getClassLevels() {
+        return this.classes.reduce((acc, val) => {
+            return acc + val.level;
+        }, 0);
+    }
+    getPerk(id) {
+        return this.perks.find((p) => p.id === id);
+    }
+    getPerkLevel(id) {
+        return this.perks.find((p) => p.id === id)?.level ?? 0;
+    }
 }
 function nextLevel(level) {
-    let base = 75;
+    let base = 50;
     let exponent = 1.23;
     if (level >= 4 && level < 10)
-        base = 100;
+        base = 75;
     if (level >= 10 && level < 29)
-        base = 150;
+        base = 125;
     if (level >= 29 && level < 40)
         base = 275;
     if (level >= 40 && level < 50)
@@ -529,10 +547,7 @@ let player = new PlayerCharacter({
         xpNeed: 100,
         level: 1,
     },
-    classes: {
-        main: new combatClass(combatClasses["rangerClass"]),
-        sub: null,
-    },
+    classes: [new combatClass(combatClasses["rangerClass"])],
     sprite: ".player",
     race: "human",
     hair: 5,
@@ -570,8 +585,9 @@ let player = new PlayerCharacter({
     statusEffects: [],
     inventory: [],
     gold: 50,
-    sp: 5,
-    pp: 6,
+    classPoints: 0,
+    sp: 3,
+    pp: 1,
     respawnPoint: { cords: { x: 175, y: 46 } },
     usedShrines: [],
     grave: null,

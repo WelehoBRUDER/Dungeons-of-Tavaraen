@@ -1,5 +1,6 @@
 interface armorClass extends itemClass {
-  resistances: damageClass;
+  resistances?: damageClass;
+  armor?: defenseClass;
   stats?: any;
   commands?: any;
   resString?: any;

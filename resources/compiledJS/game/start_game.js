@@ -35,10 +35,7 @@ const emptyModel = {
         xpNeed: 100,
         level: 1,
     },
-    classes: {
-        main: null,
-        sub: null,
-    },
+    classes: [],
     sprite: ".player",
     race: "human",
     hair: 1,
@@ -77,16 +74,21 @@ const emptyModel = {
         chance: 60,
         evasion: 30,
     },
+    hpRegen: () => { },
+    sex: "male",
+    raceEffect: raceEffects.human,
     unarmed_damages: { crush: 1 },
     statusEffects: [],
     inventory: [],
     gold: 50,
     sp: 5,
     pp: 1,
+    classPoints: 0,
     respawnPoint: { cords: { x: 29, y: 105 } },
     usedShrines: [],
     flags: {},
     questProgress: [],
+    entitiesEverEncountered: { items: [], enemies: [], summons: [] },
 };
 const creation = document.querySelector(".mainMenu .characterCreation");
 const content = creation.querySelector(".content .creation-content");
@@ -107,12 +109,21 @@ const classEquipments = {
     },
     barbarian: {
         weapon: new Weapon({ ...items.chippedAxe }),
-        chest: new Armor({ ...items.leatherChest }),
+        chest: new Armor({ ...items.barbarianClothes }),
         helmet: {},
-        gloves: new Armor({ ...items.leatherBracers }),
-        legs: new Armor({ ...items.raggedPants }),
+        gloves: new Armor({ ...items.barbarianHandguards }),
+        legs: new Armor({ ...items.barbarianKilt }),
         boots: new Armor({ ...items.raggedBoots }),
         offhand: {},
+    },
+    paladin: {
+        weapon: new Weapon({ ...items.chippedBlade }),
+        chest: new Armor({ ...items.ironArmor }),
+        helmet: new Armor({ ...items.leatherHelmet }),
+        gloves: {},
+        legs: new Armor({ ...items.leatherLeggings }),
+        boots: new Armor({ ...items.raggedBoots }),
+        offhand: new Armor({ ...items.ironShield }),
     },
     sorcerer: {
         weapon: new Weapon({ ...items.apprenticeWand }),
@@ -198,7 +209,7 @@ function classRaceSelection() {
     <div class="classes">
       ${Object.values(combatClasses)
         .map((combatClass) => {
-        return `<div class="class-pick ${combatClass.id} ${player.classes.main?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
+        return `<div class="class-pick ${combatClass.id} ${player.classes[0]?.id === combatClass.id ? "selected" : ""}" style="background: ${combatClass.color}" onclick='changeClass(${JSON.stringify(combatClass)})'>
       <p>${lang[combatClass.id + "_name"]}</p>
       <img src="${combatClass.icon}" alt="${combatClass.id}">
     </div>`;
@@ -341,7 +352,7 @@ function beginGame() {
     setTimeout(() => {
         creation.style.display = "none";
     }, 750);
-    tree = player.classes.main.perkTree;
+    tree = player.classes[0].perkTree;
     closeGameMenu(false, true);
     helper.reviveAllDeadEnemies();
     helper.resetAllLivingEnemiesInAllMaps();
@@ -386,7 +397,7 @@ function changeTrait(trait) {
 }
 function checkIfCanStartGame() {
     let canStart = false;
-    if (player.name.trim().length > 1 && player.classes.main)
+    if (player.name.trim().length > 1 && player.classes[0])
         canStart = true;
     try {
         if (canStart) {
@@ -399,7 +410,7 @@ function checkIfCanStartGame() {
 }
 function canContinue() {
     if (creationStep === "class-race") {
-        if (!player.classes?.main?.id)
+        if (!player.classes[0]?.id)
             return false;
         if (traitPicks < 0 || traitPicks > 1)
             return false;
@@ -428,8 +439,8 @@ function changeRace(race) {
     characterCreation(false);
 }
 function changeClass(_combatClass) {
-    player.classes.main = new combatClass(_combatClass);
-    Object.entries(classEquipments[player.classes.main.perkTree]).forEach((eq) => {
+    player.classes[0] = new combatClass(_combatClass);
+    Object.entries(classEquipments[player.classes[0].perkTree]).forEach((eq) => {
         let id = eq[0];
         let val = eq[1];
         player[id] = { ...val };
@@ -490,22 +501,33 @@ player.addItem(new Armor(items.mysteriousGloves));
 player.addItem(new Armor(items.mysteriousLeggings));
 player.addItem(new Armor(items.mysteriousBoots));
 let preloadFinished = false;
+const loadingBarFill = document.querySelector(".loading-bar-fill");
+const loadingTextElement = document.querySelector(".loading-text");
+async function setLoadingBar(value, text) {
+    loadingBarFill.style.width = `${value}%`;
+    loadingTextElement.textContent = text;
+    return new Promise((resolve) => {
+        resolve(true);
+    });
+}
 async function initGame() {
-    document.querySelector(".loading-bar-fill").style.width = "0%";
+    setLoadingBar(0, "Loading settings...");
     let options = JSON.parse(localStorage.getItem(`DOT_game_settings`));
     if (options) {
         settings = new gameSettings(options);
         lang = await eval(JSON.parse(localStorage.getItem(`DOT_game_language`)));
+        scaleUI(settings.ui_scale / 100);
     }
-    else
+    else {
         settings = new gameSettings(settings);
+        settings.ui_scale = (window.innerWidth / 2560) * 100;
+        scaleUI(settings.ui_scale / 100);
+    }
     await gotoMainMenu(true);
-    document.querySelector(".loading-bar-fill").style.width = "10%";
-    document.querySelector(".loading-text").textContent = "Updating player...";
+    await setLoadingBar(10, "Loading game...");
     state.menuOpen = true;
     state.titleScreen = true;
-    document.querySelector(".loading-text").textContent = "Loading mods...";
-    document.querySelector(".loading-bar-fill").style.width = "50%";
+    await setLoadingBar(50, "Loading mods...");
     if (!settings.load_mods) {
         continueLoad();
         return;
@@ -532,12 +554,10 @@ async function initGame() {
 }
 async function continueLoad() {
     preloadFinished = true;
-    document.querySelector(".loading-bar-fill").style.width = "55%";
+    await setLoadingBar(60, "Loading assets...");
     await player.updateAbilities();
     player.updatePerks();
     player.updateTraits();
-    document.querySelector(".loading-text").textContent = "Creating tooltips....";
-    document.querySelector(".loading-bar-fill").style.width = "60%";
     tooltip(document.querySelector(".invScrb"), `${lang["setting_hotkey_inv"]} [${settings["hotkey_inv"]}]`);
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
@@ -546,27 +566,22 @@ async function continueLoad() {
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
     tooltip(settingsTopbar.querySelector(".loadFile"), lang["load_settings_file"]);
     updateCommands();
-    document.querySelector(".loading-text").textContent = "Building textures...";
-    await helper.sleep(500); // This stupid buffer ensures that textures replaced by mods are loaded properly
-    document.querySelector(".loading-bar-fill").style.width = "70%";
+    await helper.sleep(1); // This stupid buffer ensures that textures replaced by mods are loaded properly
+    await setLoadingBar(70, "Building textures...");
     try {
-        document.querySelector(".loading-text").textContent = "Loading textures...";
+        await setLoadingBar(80, "Loading textures...");
         await loadTextures();
-        document.querySelector(".loading-bar-fill").style.width = "80%";
-        document.querySelector(".loading-text").textContent = "Creating static maps...";
+        await setLoadingBar(85, "Creating static maps...");
         await createStaticMap();
-        document.querySelector(".loading-bar-fill").style.width = "85%";
-        document.querySelector(".loading-text").textContent = "Rendering map...";
+        await setLoadingBar(95, "Rendering map...");
         resizeCanvas();
         renderMinimap(maps[currentMap]);
         renderAreaMap(maps[currentMap]);
-        document.querySelector(".loading-bar-fill").style.width = "95%";
     }
     catch (err) {
         console.warn("Failed rendering map", err);
     }
-    document.querySelector(".loading-text").textContent = "Finishing load";
-    document.querySelector(".loading-bar-fill").style.width = "100%";
+    await setLoadingBar(100, "Done!");
     setTimeout(() => (document.querySelector(".loading").style.display = "none"), 0);
     resizeCanvas();
     renderMinimap(maps[currentMap]);

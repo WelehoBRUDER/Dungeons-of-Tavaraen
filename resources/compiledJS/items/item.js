@@ -120,7 +120,7 @@ function itemTT(item) {
                 }
                 else if (value < 0)
                     color = "red";
-                text += `<i>${icons[key + "_armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
+                text += `<i>${icons[key + "Armor"]}<i><f>18px<f><c>white<c>${lang[key]}: <c>${color}<c>${value} <c>white<c>\n`;
             });
         }
     }
@@ -177,7 +177,7 @@ function itemTT(item) {
             text += `<i>${statusEffects[status].icon}<i><f>17px<f>${lang["effect_" + statusEffects[status].id + "_name"]}\n`;
             const statEff = new statEffect(statusEffects[status]);
             statEff.init(item.modifiers);
-            text += statTT(statEff, true);
+            text += statTT(statEff, { embed: true, container: true });
         });
     }
     if (item.range > 0)

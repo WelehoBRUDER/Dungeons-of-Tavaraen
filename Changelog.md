@@ -1,3 +1,42 @@
+# 1.3.0 ~ 14.12.2023
+
+### Major Update
+
+## CAUTION
+Many game systems have been reworked, it's highly recommended to start a new game for this update.
+Your character may be severely underpowered if you continue an old save.
+
+Status damage types are in the process of being integrated with all other damage types.
+Currently poison damage is replaced with dark damage as a placeholder.
+
+## Major Changes
+- Complete rework of racial bonuses:
+  - Racial bonuses are now more impactful and unique.
+  - Race now affects your hit points through the game.
+  - Races have different rates of gaining experience.
+- Reverted projectile speed as it was causing issues that I couldn't reasonably fix.
+
+
+## Minor Changes
+- Allowed diagonal movement to squeeze through narrow gaps in walls.
+  - Previosly, if two blockers were diagonal to you, it was impossible to move through.
+- Vitality now increases your maximum hit points by 3 instead of 5.
+- Level up bonuses when below level 6 have been removed.
+  - You gain fewer perk and stat points when leveling up.
+  - To make up for this, the experience needed to level up has been lowered.
+- Tooltips when upgrading skills now show the new values that change.
+- Tooltips now display an approximate damage value for abilities.
+- Increased tooltip clarity regarding abilities and effects.
+- Added link changelog in menu buttons.
+- Changed some perks around.
+- UI is automatically scaled to fit screen when loading the game for the first time.
+
+## Bug Fixes
+- Fixed ui scale not remembering saved settings.
+- Fixed the fighter perk "Balanced Warrior" not giving its trait.
+- Fixed enemy health bars not updating without enemy moving.
+- Certain projectiles fired by enemies no longer stun the game world.
+
 # 1.2.4 ~ 30.6.2023
 
 ## Major Changes

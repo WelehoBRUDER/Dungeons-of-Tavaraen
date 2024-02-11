@@ -57,22 +57,22 @@ function generatePath(start, end, canFly, distanceOnly = false, retreatPath = 0)
         if (fieldMap[y][x] == v) {
             // Check diagonal
             // North-west
-            if (fieldMap[y - 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
+            if (fieldMap[y - 1]?.[x - 1] === 0) {
                 fieldMap[y - 1][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y - 1, dist: calcDistance(x - 1, y - 1, start.x, start.y) });
             }
             // North-east
-            if (fieldMap[y - 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y - 1]?.[x] === 0)) {
+            if (fieldMap[y - 1]?.[x + 1] === 0) {
                 fieldMap[y - 1][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y - 1, dist: calcDistance(x + 1, y - 1, start.x, start.y) });
             }
             // South-west
-            if (fieldMap[y + 1]?.[x - 1] === 0 && (fieldMap[y]?.[x - 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
+            if (fieldMap[y + 1]?.[x - 1] === 0) {
                 fieldMap[y + 1][x - 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x - 1, y: y + 1, dist: calcDistance(x - 1, y + 1, start.x, start.y) });
             }
             // South-east
-            if (fieldMap[y + 1]?.[x + 1] === 0 && (fieldMap[y]?.[x + 1] === 0 || fieldMap[y + 1]?.[x] === 0)) {
+            if (fieldMap[y + 1]?.[x + 1] === 0) {
                 fieldMap[y + 1][x + 1] = v + 1;
                 checkGrid.push({ v: v + 1, x: x + 1, y: y + 1, dist: calcDistance(x + 1, y + 1, start.x, start.y) });
             }

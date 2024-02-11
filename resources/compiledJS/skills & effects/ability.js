@@ -41,9 +41,9 @@ const possible_stat_modifiers = [
     "mpP",
     "resistAllV",
     "resistAllP",
-    "physicalDefP",
-    "magicalDefP",
-    "elementalDefP",
+    "physicalArmorP",
+    "magicalArmorP",
+    "elementalArmorP",
     "hitChanceV",
     "hitChanceP",
     "evasionV",
@@ -128,7 +128,7 @@ class Ability {
         this.onCooldown = base.onCooldown ?? 0;
         this.equippedSlot = base.equippedSlot ?? -1;
         this.damages = baseAbility.damages;
-        this.damage_multiplier = baseAbility.damage_multiplier ?? 1;
+        this.damage_multiplier = baseAbility.damage_multiplier ?? 0;
         this.resistance_penetration = baseAbility.resistance_penetration ?? 0;
         this.base_heal = baseAbility.base_heal ?? 0;
         this.heal_percentage = baseAbility.heal_percentage ?? 0;
@@ -142,8 +142,7 @@ class Ability {
         this.shoots_projectile = baseAbility.shoots_projectile ?? "";
         this.icon = baseAbility.icon;
         this.line = baseAbility.line ?? "";
-        this.use_range =
-            typeof parseInt(baseAbility.use_range) === "number" ? parseInt(baseAbility.use_range).toString() : baseAbility.use_range;
+        this.use_range = baseAbility.use_range;
         this.requires_melee_weapon = baseAbility.requires_melee_weapon ?? false;
         this.requires_ranged_weapon = baseAbility.requires_ranged_weapon ?? false;
         this.requires_concentration = baseAbility.requires_concentration ?? false;
@@ -206,6 +205,18 @@ class Ability {
                     this[key] = { ...updateObject(key, value, holder.allModifiers[id]) };
                 }
             });
+            if (holder?.allModifiers?.[id]) {
+                Object.entries(holder?.allModifiers?.[id]).forEach(([bonusKey, bonusValue]) => {
+                    if (typeof bonusValue === "boolean") {
+                        if (bonusValue) {
+                            this[bonusKey] = true;
+                        }
+                        else {
+                            delete this[bonusKey];
+                        }
+                    }
+                });
+            }
         };
         this.updateStats(user);
     }

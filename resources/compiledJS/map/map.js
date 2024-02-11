@@ -1,6 +1,8 @@
 "use strict";
 const baseCanvas = document.querySelector(".canvasLayers .baseSheet");
 const baseCtx = baseCanvas.getContext("2d");
+const quickEffectsCanvas = document.querySelector(".canvasLayers .quickEffects");
+const quickEffectsCtx = quickEffectsCanvas.getContext("2d");
 const fogCanvas = document.querySelector(".canvasLayers .fog");
 const fogCtx = fogCanvas.getContext("2d");
 const mapDataCanvas = document.querySelector(".canvasLayers .mapData");
@@ -237,7 +239,7 @@ async function movePlayer(goal, ability = false, maxRange = 99, action = null) {
         breakMoving = true;
     moving: for (let step of path) {
         if (canMoveTo(player, step)) {
-            await helper.sleep(5);
+            await helper.sleep(3);
             if (!ability && player.speed.movementFill <= -100) {
                 player.speed.movementFill += 100;
                 advanceTurn();

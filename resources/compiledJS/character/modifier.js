@@ -68,7 +68,7 @@ const mergeObjects = (obj1, obj2, options) => {
             prev[key] = mergeObjects(value, obj2[key]);
         }
         return prev;
-    }, { ...obj2 }); // spread to avoid mutating obj2
+    }, JSON.parse(JSON.stringify({ ...obj2 }))); // spread to avoid mutating obj2
 };
 const updateObject = (key, object, mods) => {
     return Object.entries(object).map(([_key, value]) => {
@@ -112,6 +112,9 @@ function getAllModifiersOnce(char, withConditions = true) {
         attackSpeedV: 0,
         critChanceV: 0,
         critDamageV: 0,
+        physicalSavesV: 0,
+        bodySavesV: 0,
+        mentalSavesV: 0,
         physicalArmorV: 0,
         physicalArmorP: 0,
         magicalArmorV: 0,
@@ -148,18 +151,26 @@ function getAllModifiersOnce(char, withConditions = true) {
             applyModifierToTotal(eff, obj);
         });
     });
-    if (char.classes?.main?.statBonuses) {
-        Object.entries(char.classes.main.statBonuses).forEach((eff) => {
-            applyModifierToTotal(eff, obj);
+    if (char.classes) {
+        let hpMaxPerLevelV = 0;
+        char.classes.forEach((cls) => {
+            if (cls.statBonuses) {
+                Object.entries(cls.statBonuses).forEach((eff) => {
+                    if (eff[0] === "hpMaxPerLevelV")
+                        hpMaxPerLevelV += eff[1] * cls.level;
+                    else
+                        applyModifierToTotal(eff, obj);
+                });
+            }
+            Object.entries(cls.getLevelBonuses()).forEach((eff) => {
+                applyModifierToTotal(eff, obj);
+            });
         });
-    }
-    if (char.classes?.sub?.statBonuses) {
-        Object.entries(char.classes.sub.statBonuses).forEach((eff) => {
-            applyModifierToTotal(eff, obj);
-        });
+        obj.hpMaxPerLevelV = hpMaxPerLevelV / char.getClassLevels();
     }
     char.perks?.forEach((mod) => {
-        Object.entries(mod.effects).forEach((eff) => {
+        const effects = mod.getEffects();
+        Object.entries(effects).forEach((eff) => {
             applyModifierToTotal(eff, obj);
         });
     });

@@ -103,6 +103,7 @@ function buffOrHeal(character, ability) {
 }
 /* This function needs to be updated at some point */
 function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
+    console.log("CURRENT ATTACKER", attacker);
     if (targetCords) {
         maps[currentMap].enemies.forEach((en) => {
             if (targetCords.x == en.cords.x && targetCords.y == en.cords.y)
@@ -116,6 +117,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             attacker.stats.hp -= (attacker.getHpMax() * ability.health_cost_percentage) / 100;
     }
     const { dmg, evade, critRolled } = calculateDamage(attacker, target, ability);
+    console.log("dmg", dmg);
     if (ability.statusesEnemy?.length > 0) {
         ability.statusesEnemy.forEach((status) => {
             const _Effect = new statEffect({ ...statusEffects[status] });
@@ -154,10 +156,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         });
     }
     if (target.isFoe) {
+        const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
         setTimeout((paskaFixi) => {
             if (!enemyIndex(target.cords))
                 return;
-            const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
             try {
                 layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
@@ -207,6 +209,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             attacker.stats.hp += lifeSteal;
             spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
         }
+        renderSingleEnemy(target, layer);
         if (target.stats.hp <= 0) {
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);

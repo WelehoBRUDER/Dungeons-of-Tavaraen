@@ -16,11 +16,11 @@ class statEffect {
         // @ts-ignore
         if (!base)
             throw new Error("BASE EFFECT INVALID!");
-        const defaultEffect = statusEffects[base.id];
+        const defaultEffect = { ...statusEffects[base.id] };
         this.id = defaultEffect.id;
         this.name = defaultEffect.name;
-        this.dot = defaultEffect.dot;
-        this.effects = defaultEffect.effects;
+        this.dot = { ...defaultEffect?.dot };
+        this.effects = { ...defaultEffect.effects };
         this.last = {
             total: defaultEffect.last.total,
             current: defaultEffect.last.total,
@@ -55,6 +55,24 @@ class statEffect {
                     else
                         updateObjectWithoutReturn(_key, _value, bonuses[key]);
                 });
+            }
+        });
+        Object.entries(bonuses).forEach(([bonusKey, bonusValue]) => {
+            if (bonusKey === "effects") {
+                Object.entries(bonusValue).forEach(([key, value]) => {
+                    const _key = key.substring(0, key.length - 1);
+                    if (!this.effects[_key] && typeof value === "number") {
+                        this.effects[_key] = value;
+                    }
+                });
+            }
+            if (typeof bonusValue === "boolean") {
+                if (bonusValue) {
+                    this[bonusKey] = true;
+                }
+                else {
+                    delete this[bonusKey];
+                }
             }
         });
         return this;

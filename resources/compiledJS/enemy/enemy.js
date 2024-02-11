@@ -240,7 +240,6 @@ class Enemy extends Character {
             let dmg = 0;
             let dmgs = {};
             // @ts-ignore
-            // @ts-ignore
             Object.entries(this.damages).forEach((value) => {
                 const key = value[0];
                 const num = value[1];
@@ -249,7 +248,6 @@ class Enemy extends Character {
                 val += this.allModifiers.damageV || 0;
                 mod *= this.allModifiers.damageP || 1;
                 let bonus = 0;
-                // @ts-ignore
                 // @ts-ignore
                 if (this.shootsProjectile)
                     bonus += (num * this.getStats().dex) / 50;

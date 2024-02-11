@@ -114,7 +114,8 @@ class Character {
             const hpFlat = this.allModifiers["hpMaxV"] || 0;
             const hpModifier = this.allModifiers["hpMaxP"] || 1;
             const vit = this.getStats().vit;
-            return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + vit * 5) * hpModifier), 0);
+            const levelBonus = this.allModifiers["hpMaxPerLevelV"] * this.level.level || 0;
+            return Math.max(Math.floor(((this.stats?.hpMax ?? 20) + hpFlat + levelBonus + vit * 3) * hpModifier), 0);
         };
         this.getMpMax = () => {
             const mpFlat = this.allModifiers["mpMaxV"] || 0;
@@ -157,6 +158,8 @@ class Character {
                 const armorFlat = this.allModifiers[armor + "ArmorV"] || 0;
                 const armorModifier = this.allModifiers[armor + "ArmorP"] || 1;
                 armors[armor] = Math.floor((this.armor[armor] + armorFlat) * armorModifier);
+                if (armors[armor] < 0)
+                    armors[armor] = 0;
             });
             return armors;
         };
@@ -237,18 +240,22 @@ class Character {
         };
         this.effects = () => {
             this.statusEffects.forEach((status, index) => {
-                if (status.dot) {
-                    const dmg = Math.floor(status.dot.damageAmount * (1 - this.getStatusResists()[status.dot.damageType] / 100));
+                if (Object.keys(status.dot).length > 0) {
+                    console.log(status.dot);
+                    const dmg = calculateStatusDamage(this, status.dot.damageAmount, status.dot.damageType);
                     this.stats.hp -= dmg;
                     spawnFloatingText(this.cords, dmg.toString(), "red", 32);
                     let effectText = this.id == "player" ? lang["damage_from_effect_pl"] : lang["damage_from_effect"];
                     effectText = effectText?.replace("[TARGET]", `<c>white<c>'<c>yellow<c>${this.name}<c>white<c>'`);
                     effectText = effectText?.replace("[ICON]", `<i>${status.dot.icon}<i>`);
-                    effectText = effectText?.replace("[STATUS]", `${lang[status.dot.damageType + "_damage"]}`);
+                    effectText = effectText?.replace("[STATUS]", `${helper.localise(status.dot.damageType + "_damage")}`);
                     effectText = effectText?.replace("[DMG]", `${dmg}`);
                     displayText(`<c>purple<c>[EFFECT] ${effectText}`);
                     if (this.stats.hp <= 0) {
                         this.kill();
+                        if (this.isFoe) {
+                            updateEnemiesTurn();
+                        }
                     }
                 }
                 status.last.current--;
@@ -305,6 +312,7 @@ class Character {
                     // @ts-expect-error
                     const projectile = this.weapon?.firesProjectile || this.shootsProjectile;
                     const isPlayer = this.id === "player";
+                    console.log("LOGGING THIS", this);
                     fireProjectile(this.cords, target.cords, projectile, this.abilities.find((e) => e.id === "attack"), isPlayer, this);
                     await helper.sleep(110);
                 }
@@ -429,6 +437,7 @@ class Character {
                 }
             }
         };
+        this.getSaves = () => { };
     }
 }
 const dummy = new Character({

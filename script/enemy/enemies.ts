@@ -19,6 +19,11 @@ const enemies = {
       hpMax: 10,
       mpMax: 0,
     },
+    armor: {
+      physical: 10,
+      magical: 0,
+      elemental: 0,
+    },
     resistances: {
       slash: 0,
       crush: 0,
@@ -74,6 +79,11 @@ const enemies = {
       mp: 0,
       hpMax: 14,
       mpMax: 0,
+    },
+    armor: {
+      physical: 10,
+      magical: 0,
+      elemental: 0,
     },
     resistances: {
       slash: 0,
@@ -131,6 +141,11 @@ const enemies = {
       hpMax: 14,
       mpMax: 0,
     },
+    armor: {
+      physical: 10,
+      magical: 0,
+      elemental: 0,
+    },
     resistances: {
       slash: 0,
       crush: 0,
@@ -186,6 +201,11 @@ const enemies = {
       mp: 0,
       hpMax: 20,
       mpMax: 0,
+    },
+    armor: {
+      physical: 15,
+      magical: 0,
+      elemental: 0,
     },
     resistances: {
       slash: 0,
@@ -247,6 +267,11 @@ const enemies = {
       hpMax: 30,
       mpMax: 0,
     },
+    armor: {
+      physical: 25,
+      magical: 15,
+      elemental: 0,
+    },
     resistances: {
       slash: 5,
       crush: 5,
@@ -306,6 +331,11 @@ const enemies = {
       mp: 0,
       hpMax: 20,
       mpMax: 0,
+    },
+    armor: {
+      physical: 0,
+      magical: 0,
+      elemental: 0,
     },
     resistances: {
       slash: -5,
@@ -368,6 +398,11 @@ const enemies = {
       hpMax: 25,
       mpMax: 0,
     },
+    armor: {
+      physical: 60,
+      magical: 35,
+      elemental: 0,
+    },
     resistances: {
       slash: 45,
       crush: 15,
@@ -426,6 +461,11 @@ const enemies = {
       mp: 0,
       hpMax: 20,
       mpMax: 0,
+    },
+    armor: {
+      physical: 60,
+      magical: 35,
+      elemental: 0,
     },
     resistances: {
       slash: 45,
@@ -487,6 +527,11 @@ const enemies = {
       hpMax: 14,
       mpMax: 4,
     },
+    armor: {
+      physical: 60,
+      magical: 60,
+      elemental: 15,
+    },
     resistances: {
       slash: 45,
       crush: 15,
@@ -544,6 +589,11 @@ const enemies = {
       mp: 70,
       hpMax: 30,
       mpMax: 50,
+    },
+    armor: {
+      physical: 75,
+      magical: 80,
+      elemental: 15,
     },
     resistances: {
       slash: 50,
@@ -608,6 +658,11 @@ const enemies = {
       hpMax: 40,
       mpMax: 0,
     },
+    armor: {
+      physical: 5,
+      magical: 25,
+      elemental: 0,
+    },
     resistances: {
       slash: 0,
       crush: 5,
@@ -668,6 +723,11 @@ const enemies = {
       hpMax: 30,
       mpMax: 0,
     },
+    armor: {
+      physical: 10,
+      magical: 20,
+      elemental: 0,
+    },
     resistances: {
       slash: 5,
       crush: 5,
@@ -724,6 +784,11 @@ const enemies = {
       mp: 0,
       hpMax: 55,
       mpMax: 0,
+    },
+    armor: {
+      physical: 10,
+      magical: 50,
+      elemental: 0,
     },
     resistances: {
       slash: 0,
@@ -785,6 +850,11 @@ const enemies = {
       mp: 0,
       hpMax: 75,
       mpMax: 0,
+    },
+    armor: {
+      physical: 25,
+      magical: 50,
+      elemental: 5,
     },
     resistances: {
       slash: 10,
@@ -851,6 +921,11 @@ const enemies = {
       hpMax: 50,
       mpMax: 0,
     },
+    armor: {
+      physical: 30,
+      magical: 60,
+      elemental: 10,
+    },
     resistances: {
       slash: 5,
       crush: 5,
@@ -916,6 +991,11 @@ const enemies = {
       hpMax: 60,
       mpMax: 0,
     },
+    armor: {
+      physical: 30,
+      magical: 15,
+      elemental: 0,
+    },
     resistances: {
       slash: 10,
       crush: 10,
@@ -974,6 +1054,11 @@ const enemies = {
       hpMax: 80,
       mpMax: 0,
     },
+    armor: {
+      physical: 75,
+      magical: 0,
+      elemental: 15,
+    },
     resistances: {
       slash: 30,
       crush: 15,
@@ -1031,6 +1116,11 @@ const enemies = {
       mp: 0,
       hpMax: 75,
       mpMax: 0,
+    },
+    armor: {
+      physical: 25,
+      magical: 0,
+      elemental: 0,
     },
     resistances: {
       slash: 5,
@@ -1092,6 +1182,11 @@ const enemies = {
       hpMax: 90,
       mpMax: 0,
     },
+    armor: {
+      physical: 50,
+      magical: 25,
+      elemental: 0,
+    },
     resistances: {
       slash: 25,
       crush: 25,
@@ -1152,6 +1247,11 @@ const enemies = {
       hpMax: 100,
       mpMax: 0,
     },
+    armor: {
+      physical: 90,
+      magical: 40,
+      elemental: 60,
+    },
     resistances: {
       slash: 40,
       crush: 15,
@@ -1209,6 +1309,11 @@ const enemies = {
       mp: 0,
       hpMax: 120,
       mpMax: 0,
+    },
+    armor: {
+      physical: 110,
+      magical: 75,
+      elemental: 75,
     },
     resistances: {
       slash: 50,
@@ -1270,6 +1375,11 @@ const enemies = {
       mp: 0,
       hpMax: 30,
       mpMax: 0,
+    },
+    armor: {
+      physical: 60,
+      magical: 75,
+      elemental: 45,
     },
     resistances: {
       slash: 40,
@@ -1341,6 +1451,11 @@ const enemies = {
       hpMax: 25,
       mpMax: 0,
     },
+    armor: {
+      physical: 130,
+      magical: 50,
+      elemental: 95,
+    },
     resistances: {
       slash: 60,
       crush: 60,
@@ -1411,6 +1526,11 @@ const enemies = {
       mp: 60,
       hpMax: 75,
       mpMax: 60,
+    },
+    armor: {
+      physical: 120,
+      magical: 80,
+      elemental: 80,
     },
     resistances: {
       slash: 45,
