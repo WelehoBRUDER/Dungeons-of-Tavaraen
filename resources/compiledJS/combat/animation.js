@@ -209,7 +209,6 @@ async function fireProjectile(start, end, projectileSprite, ability, isPlayer, a
 // 	}
 state.abiSelected = {};
 state.isSelected = false;
-updateUI();
 // if (path.length * 50 > highestWaitTime) highestWaitTime = path.length * 50;
 // try {
 //   let collided = false;

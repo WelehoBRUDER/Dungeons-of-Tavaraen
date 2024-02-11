@@ -18,7 +18,7 @@ const statusEffects = {
         id: "poison",
         name: "Poison",
         dot: {
-            damageType: "poison",
+            damageType: "dark",
             damageAmount: 5,
             icon: icons.poison,
         },
@@ -41,7 +41,7 @@ const statusEffects = {
         id: "venom",
         name: "Venom",
         dot: {
-            damageType: "poison",
+            damageType: "dark",
             damageAmount: 8,
             icon: icons.venom,
         },
@@ -157,12 +157,14 @@ const statusEffects = {
         id: "battle_fury",
         name: "Battle Fury",
         effects: {
-            attack_damage_multiplierP: 20,
-            strV: 10,
-            crushDamageP: 9,
-            slashDamageP: 9,
+            ability_attack: {
+                damage_multiplierP: 20,
+            },
+            strV: 7,
+            crushDamageP: 7,
+            slashDamageP: 7,
             pierceDamageP: 7,
-            attackSpeedV: 30,
+            attackSpeedV: 25,
         },
         silence: true,
         last: {
@@ -218,6 +220,9 @@ const statusEffects = {
             attackSpeedV: 20,
             ability_barbarian_charge: {
                 cooldownP: -75,
+            },
+            ability_finishing_blow: {
+                health_cost_percentageV: -20,
             },
             physicalArmorP: -100,
             magicalArmorP: -100,

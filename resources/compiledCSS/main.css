@@ -1408,12 +1408,10 @@ body {
 }
 .main .rightTop .playerButtons {
   position: relative;
-  display: grid;
-  width: auto;
-  height: calc(75px * var(--ui-scale));
   top: calc(10px * var(--ui-scale));
   left: calc(20px * var(--ui-scale));
-  grid-template-columns: repeat(4, 1fr);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 .main .rightTop .playerButtons .screenButton {
   position: relative;

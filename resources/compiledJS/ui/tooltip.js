@@ -135,18 +135,21 @@ function compareAbilityTooltip(ability, character, bonuses) {
         txt += "\n";
     }
     if (abi.damage_multiplier) {
+        console.log("abi", abi.damage_multiplier, "compare", compare);
         if (compare.damage_multiplierP) {
             const value = Math.round(abi.damage_multiplier * 100);
-            txt += `<i>${icons.damage}<i><f>16px<f>${lang["damage_multiplier"]}: [${value}% ---> ${value + compare.damage_multiplierP}%]\n`;
+            const change = compare.damage_multiplierP;
+            txt += `<i>${icons.damage}<i><f>16px<f><c>white<c>${lang["damage_multiplier"]}: <c>${change > 0 ? "lime" : "red"}<c>[${value}% ---> ${value + change}%]<c>white<c>\n`;
         }
         else {
             txt += `<i>${icons.damage}<i><f>16px<f>${lang["damage_multiplier"]}: ${Math.round(abi.damage_multiplier * 100)}%\n`;
         }
     }
-    if (abi.resistance_penetration) {
+    if (abi.resistance_penetration || compare.resistance_penetrationV) {
         const value = abi.resistance_penetration ?? 0;
+        const change = compare.resistance_penetrationV;
         if (compare.resistance_penetrationV) {
-            txt += `<i>${icons.rp}<i><f>16px<f><c>white<c>${lang["resistance_penetration"]}: <c>lime<c>[${value}% ---> ${value + compare.resistance_penetrationV}%]<c>white<c>\n`;
+            txt += `<i>${icons.rp}<i><f>16px<f><c>white<c>${lang["resistance_penetration"]}: <c>${change > 0 ? "lime" : "red"}<c>[${value}% ---> ${value + change}%]<c>white<c>\n`;
         }
         else {
             txt += `<i>${icons.rp}<i><f>16px<f>${lang["resistance_penetration"]}: ${value}%\n`;
@@ -242,7 +245,8 @@ function compareAbilityTooltip(ability, character, bonuses) {
     if (abi.mana_cost > 0) {
         if (compare.mana_costV) {
             const value = abi.mana_cost;
-            txt += `<i>${icons.mana}<i><f>16px<f><c>white<c>${lang["mana_cost"]}: <c>lime<c>[${value} ---> ${value + compare.mana_costV}]<c>white<c>\n`;
+            const change = compare.mana_costV;
+            txt += `<i>${icons.mana}<i><f>16px<f><c>white<c>${lang["mana_cost"]}: <c>${change < 0 ? "lime" : "red"}<c>[${value} ---> ${value + change}]<c>white<c>\n`;
         }
         else {
             txt += `<i>${icons.mana}<i><f>16px<f>${lang["mana_cost"]}: ${abi.mana_cost}\n`;
@@ -252,7 +256,8 @@ function compareAbilityTooltip(ability, character, bonuses) {
         if (abi.health_cost > 0) {
             if (compare.health_costV) {
                 const value = abi.health_cost;
-                txt += `<f>16px<f><i>${icons.health_cost}<i><c>white<c>${lang["health_cost"]}: <c>lime<c>[${value} ---> ${value + compare.health_costV}]<c>white<c>\n`;
+                const change = compare.health_costV;
+                txt += `<f>16px<f><i>${icons.health_cost}<i><c>white<c>${lang["health_cost"]}: <c>${change < 0 ? "lime" : "red"}<c>[${value} ---> ${value + change}]<c>white<c>\n`;
             }
             else {
                 txt += `<f>16px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost}`;
@@ -261,7 +266,8 @@ function compareAbilityTooltip(ability, character, bonuses) {
         else {
             if (compare.health_cost_percentageV) {
                 const value = abi.health_cost_percentage;
-                txt += `<f>16px<f><i>${icons.health_cost}<i><c>white<c>${lang["health_cost"]}: <c>lime<c>[${value}% ---> ${value + compare.health_cost_percentageV}%]<c>white<c>\n`;
+                const change = compare.health_cost_percentage;
+                txt += `<f>16px<f><i>${icons.health_cost}<i><c>white<c>${lang["health_cost"]}: <c>${change < 0 ? "lime" : "red"}<c>[${value}% ---> ${value + change}%]<c>white<c>\n`;
             }
             else {
                 txt += `<f>16px<f><i>${icons.health_cost}<i>${lang["health_cost"]}: ${abi.health_cost_percentage}% ${lang["of_max_hp"]}\n`;
@@ -271,7 +277,8 @@ function compareAbilityTooltip(ability, character, bonuses) {
     if (abi.cooldown > 0) {
         if (compare.cooldownV) {
             const value = abi.cooldown;
-            txt += `<i>${icons.cooldown}<i><f>16px<f><c>white<c>${lang["cooldown"]}: <c>lime<c>[${value} ---> ${value + compare.cooldownV}] <c>white<c>${lang["turns"]}\n`;
+            const change = compare.cooldownV;
+            txt += `<i>${icons.cooldown}<i><f>16px<f><c>white<c>${lang["cooldown"]}: <c>${change < 0 ? "lime" : "red"}<c>[${value} ---> ${value + change}] <c>white<c>${lang["turns"]}\n`;
         }
         else {
             txt += `<i>${icons.cooldown}<i><f>16px<f>${lang["cooldown"]}: ${abi.cooldown} ${lang["turns"]}\n`;
@@ -290,9 +297,7 @@ function statTT(status, options) {
     if (!options?.embed)
         txt += `<f>18px<f><c>silver<c>"${lang["effect_" + status.id + "_desc"] ?? status.id + "_desc"}"\t\n`;
     if (Object.keys(status.dot).length > 0) {
-        txt += `§${options?.embed ? " " : ""}<f>${options?.embed ? "16px" : "${fontSize}px"}<f>${helper.localise("deals")} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${helper.localise(status.dot.damageType + "_damage").toLowerCase()} ${helper
-            .localise("damage")
-            .toLowerCase()}\n`;
+        txt += `§${options?.embed ? " " : ""}<f>${options?.embed ? "16px" : "${fontSize}px"}<f>${helper.localise("deals")} ${status.dot.damageAmount} <i>${status.dot.icon}<i>${helper.localise(status.dot.damageType).toLowerCase()} ${helper.localise("damage").toLowerCase()}\n`;
     }
     Object.entries(status.effects).forEach((eff) => (txt += effectSyntax(eff, options?.embed)));
     if (status.silence)
@@ -317,10 +322,10 @@ function compareStatTooltip(status, bonuses) {
     if (Object.keys(status.dot).length > 0) {
         const value = status.dot.damageAmount;
         if (bonuses.dot) {
-            txt += `§<f>"16px"<f><c>white<c>${lang["deals"]} <c>lime<c>[${value} ---> ${value + bonuses.dot.damageAmount}] <c>white<c><i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+            txt += `§<f>"16px"<f><c>white<c>${lang["deals"]} <c>lime<c>[${value} ---> ${value + bonuses.dot.damageAmount}] <c>white<c><i>${status.dot.icon}<i>${helper.localise(status.dot.damageType).toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
         }
         else {
-            txt += `§<f>"16px"<f>${lang["deals"]} ${value} <i>${status.dot.icon}<i>${lang[status.dot.damageType + "_damage"].toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
+            txt += `§<f>"16px"<f>${lang["deals"]} ${value} <i>${status.dot.icon}<i>${helper.localise(status.dot.damageType).toLowerCase()} ${lang["damage"].toLowerCase()}\n`;
         }
     }
     Object.entries(status.effects).forEach((eff) => {

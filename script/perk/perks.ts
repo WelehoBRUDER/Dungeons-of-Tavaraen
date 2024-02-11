@@ -134,6 +134,11 @@ const perksArray = {
 					y: 1.5,
 				},
 				icon: "resources/icons/piercing_mana_bolt.png",
+				levelProperties: [
+					{
+						compareAbility: "piercing_mana_bolt",
+					},
+				],
 				levelEffects: [
 					{
 						ability_piercing_mana_bolt: {
@@ -243,13 +248,18 @@ const perksArray = {
 					y: 1.5,
 				},
 				icon: "resources/icons/ice_javelin.png",
+				levelProperties: [
+					{
+						compareAbility: "icy_javelin",
+					},
+				],
 				levelEffects: [
 					{
 						ability_icy_javelin: {
 							resistance_penetrationV: 25,
 							damage_multiplierP: 20,
-							cooldownP: -20,
-							mana_costP: 50,
+							cooldownV: 3,
+							mana_costV: 8,
 						},
 					},
 				],
@@ -407,6 +417,11 @@ const perksArray = {
 					y: 2,
 				},
 				icon: "resources/icons/focus_strike.png",
+				levelProperties: [
+					{
+						compareAbility: "focus_strike",
+					},
+				],
 				levelEffects: [
 					{
 						ability_focus_strike: {
@@ -427,11 +442,11 @@ const perksArray = {
 					x: 0,
 					y: 2,
 				},
-				icon: "resources/icons/resistance_default.png",
+				icon: "resources/icons/resistance.png",
 				levelEffects: [
 					{
-						resistAllV: 5,
-						evasionV: 2,
+						physicalArmorV: 20,
+						evasionV: 3,
 						regenHpV: 0.25,
 					},
 				],
@@ -561,7 +576,7 @@ const perksArray = {
 				levelEffects: [
 					{
 						ability_focus_strike: {
-							strike_cooldownV: -1,
+							cooldownV: -1,
 						},
 						ability_battle_fury: {
 							cooldownV: -3,
@@ -801,11 +816,7 @@ const perksArray = {
 				icon: "resources/icons/cooldown_flame.png",
 				levelEffects: [
 					{
-						ability_barbarian_charge: {
-							cooldownV: -3,
-							damage_multiplierP: 30,
-						},
-						evasionV: 1,
+						movementSpeedV: 10,
 					},
 				],
 			},
@@ -837,6 +848,12 @@ const perksArray = {
 				relative_to: "perk_finishing_blow",
 				requires: ["perk_finishing_blow"],
 				icon: "resources/icons/finishing_blow_burning.png",
+				levelProperties: [
+					{
+						classLevelRequired: 12,
+						compareAbility: "finishing_blow", // this will hide the auto generated tooltip
+					},
+				],
 				levelEffects: [
 					{
 						ability_finishing_blow: {
@@ -1083,6 +1100,11 @@ const perksArray = {
 				relative_to: "perk_berserker",
 				requires: ["perk_berserker"],
 				icon: "resources/icons/flaming_skull_defending.png",
+				levelProperties: [
+					{
+						compareAbility: "berserk",
+					},
+				],
 				levelEffects: [
 					{
 						ability_berserk: {
@@ -1338,7 +1360,7 @@ const perksArray = {
 				icon: "resources/icons/poison_taster.png",
 				levelEffects: [
 					{
-						poisonDefenseV: 50,
+						darkResistV: 30,
 					},
 				],
 			},

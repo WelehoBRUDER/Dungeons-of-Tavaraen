@@ -187,6 +187,13 @@ const properties: any = {
 	mana_costP: {
 		lowerIsBetter: true,
 	} as Property,
+	health_costV: {
+		lowerIsBetter: true,
+	} as Property,
+	health_cost_percentageV: {
+		lowerIsBetter: true,
+		addPercentageSuffix: true,
+	} as Property,
 	critRateV: {
 		addPercentageSuffix: true,
 	} as Property,
@@ -303,9 +310,10 @@ function effectSyntax(effect: any, embed: boolean = false, compare?: number) {
 		const id = key.substring(0, key.length - 1);
 		const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
 		if (compare) {
-			return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}[${value.toFixed(2)}${suffix} ---> ${compare.toFixed(
+			const compareColor = props.lowerIsBetter ? (value >= compare ? "lime" : "red") : value <= compare ? "lime" : "red";
+			return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${compareColor}<c>${prefix}[${value.toFixed(
 				2
-			)}${suffix}]\n§`;
+			)}${suffix} ---> ${compare.toFixed(2)}${suffix}]\n§`;
 		}
 		return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n§`;
 	} else if (typeof value === "object") {

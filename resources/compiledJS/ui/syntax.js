@@ -193,6 +193,13 @@ const properties = {
     mana_costP: {
         lowerIsBetter: true,
     },
+    health_costV: {
+        lowerIsBetter: true,
+    },
+    health_cost_percentageV: {
+        lowerIsBetter: true,
+        addPercentageSuffix: true,
+    },
     critRateV: {
         addPercentageSuffix: true,
     },
@@ -307,7 +314,8 @@ function effectSyntax(effect, embed = false, compare) {
         const id = key.substring(0, key.length - 1);
         const icon = icons[key] ? icons[key] : icons[id] ? icons[id] : icons["fallback"];
         if (compare) {
-            return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}[${value.toFixed(2)}${suffix} ---> ${compare.toFixed(2)}${suffix}]\n§`;
+            const compareColor = props.lowerIsBetter ? (value >= compare ? "lime" : "red") : value <= compare ? "lime" : "red";
+            return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${compareColor}<c>${prefix}[${value.toFixed(2)}${suffix} ---> ${compare.toFixed(2)}${suffix}]\n§`;
         }
         return `<i>${icon}<i><f>${fs}<f><c>white<c>${name}: <c>${color}<c>${prefix}${value.toFixed(2)}${suffix}\n§`;
     }

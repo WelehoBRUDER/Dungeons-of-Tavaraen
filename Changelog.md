@@ -6,13 +6,15 @@
 Many game systems have been reworked, it's highly recommended to start a new game for this update.
 Your character may be severely underpowered if you continue an old save.
 
+Status damage types are in the process of being integrated with all other damage types.
+Currently poison damage is replaced with dark damage as a placeholder.
+
 ## Major Changes
-- Added new class **Paladin**
 - Complete rework of racial bonuses:
   - Racial bonuses are now more impactful and unique.
-  - Race now heavily affects your hit points through the game.
+  - Race now affects your hit points through the game.
   - Races have different rates of gaining experience.
-- Reverted projectile speed as it was causing issues that I couldn't reasoably fix.
+- Reverted projectile speed as it was causing issues that I couldn't reasonably fix.
 
 
 ## Minor Changes
@@ -26,10 +28,13 @@ Your character may be severely underpowered if you continue an old save.
 - Tooltips now display an approximate damage value for abilities.
 - Increased tooltip clarity regarding abilities and effects.
 - Added link changelog in menu buttons.
+- Changed some perks around.
 - UI is automatically scaled to fit screen when loading the game for the first time.
 
 ## Bug Fixes
 - Fixed ui scale not remembering saved settings.
+- Fixed the fighter perk "Balanced Warrior" not giving its trait.
+- Fixed enemy health bars not updating without enemy moving.
 - Certain projectiles fired by enemies no longer stun the game world.
 
 # 1.2.4 ~ 30.6.2023

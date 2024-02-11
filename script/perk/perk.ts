@@ -28,7 +28,6 @@ function convertAllThosePerksForMePlease() {
 			}
 		});
 	});
-	console.log(JSON.stringify(convertedPerks, null, 2));
 }
 
 class Perk {
@@ -490,7 +489,7 @@ function perkTT(perk: Perk) {
 		txt += "§";
 	}
 	if (Object.values(perk.commands).length > 0 && lvl === 0) {
-		Object.entries(perk.commands).forEach((com: any) => (txt += commandSyntax(com[0], com[1])));
+		Object.entries(perk.commands).forEach((com: any) => (txt += commandSyntax(com[0], com[1]) + "§"));
 	}
 	if (Object.keys(perk.levelEffects[0]).length > 0 || perk.levelEffects.length > 1) {
 		// THE PROBLEM HAPPENS HERE
@@ -552,6 +551,15 @@ function perkTT(perk: Perk) {
 					txt += effectSyntax(stat, true);
 				}
 			});
+
+			// Finally, for ability changes that are too small to warrant a comparison
+			// we can just dump at the end
+			if (nextEffects.length > 0) {
+				nextEffects.forEach(([key, value]) => {
+					if (typeof value === "number") return;
+					txt += effectSyntax([key, value], true);
+				});
+			}
 		}
 	}
 	if (perk.traits && lvl === 0) {

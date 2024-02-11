@@ -17,6 +17,12 @@ if (localStorage.getItem("DOT_game_devtools") === "true") {
 if (DEVTOOLS.ENABLED) {
     document.querySelector(".devTools").style.display = "block";
 }
+else {
+    window.addEventListener("beforeunload", (e) => {
+        (e || window.event).returnValue = "Are you sure?";
+        return "Are you sure?";
+    });
+}
 function updateDeveloperInformation() {
     let txt = "";
     devBox.textContent = "";

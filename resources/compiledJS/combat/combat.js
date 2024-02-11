@@ -156,10 +156,10 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
         });
     }
     if (target.isFoe) {
+        const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
         setTimeout((paskaFixi) => {
             if (!enemyIndex(target.cords))
                 return;
-            const layer = document.querySelector(`.enemy${enemyIndex(target.cords)}`);
             try {
                 layer.style.animation = "none";
                 layer.offsetHeight; /* trigger reflow */
@@ -209,6 +209,7 @@ function regularAttack(attacker, target, ability, targetCords, isAoe = false) {
             attacker.stats.hp += lifeSteal;
             spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
         }
+        renderSingleEnemy(target, layer);
         if (target.stats.hp <= 0) {
             target.kill();
             spawnFloatingText(target.cords, lang["gained_xp"].replace("[XP]", Math.floor(target.xp * player.allModifiers.expGainP)), "lime", 32, 1800, 100);

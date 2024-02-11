@@ -32,7 +32,6 @@ function createMerchantWindow(resetInv = true, justSort = false) {
         currentMerchantInventory = createMerchantItems(currentMerchant);
     merchantInv.append(createItems(currentMerchantInventory, "MERCHANT_SELLING", null, false));
     playerInv.append(createItems(player.inventory, "PLAYER_SELLING"));
-    console.log(playerInv.childNodes[0]);
     playerInv.querySelector(".itemList").scrollBy(sellingScroll, sellingScroll);
     pendingBuyArea.innerHTML = "";
     pendingSellArea.innerHTML = "";
@@ -53,7 +52,7 @@ function createMerchantWindow(resetInv = true, justSort = false) {
             itemAmnt.textContent = pending.amount;
             itemFrame.append(itemAmnt);
         }
-        itemFrame.addEventListener("mouseup", e => removeItemFromBuying(i));
+        itemFrame.addEventListener("mouseup", (e) => removeItemFromBuying(i));
         pendingBuyArea.append(itemFrame);
     }
     for (let i = 0; i < pendingItemsSelling.length; i++) {
@@ -73,7 +72,7 @@ function createMerchantWindow(resetInv = true, justSort = false) {
         }
         else
             sellingPrice += Math.round(pending.fullPrice() * 0.5);
-        itemFrame.addEventListener("mouseup", e => removeItemFromSelling(i));
+        itemFrame.addEventListener("mouseup", (e) => removeItemFromSelling(i));
         pendingSellArea.append(itemFrame);
     }
     priceArea.innerHTML = "";
@@ -103,8 +102,10 @@ function createMerchantItems(itemsInv) {
     let inv = [];
     for (let item of itemsInv) {
         let addThisItem = true;
-        pendingItemsBuying.forEach((pending) => { if (pending.id == item.id && item.unique)
-            addThisItem = false; });
+        pendingItemsBuying.forEach((pending) => {
+            if (pending.id == item.id && item.unique)
+                addThisItem = false;
+        });
         if (!addThisItem)
             continue;
         let _item = { ...items[item.id] };

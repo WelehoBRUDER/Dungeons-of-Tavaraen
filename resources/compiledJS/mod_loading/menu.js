@@ -59,7 +59,6 @@ function toggleMod(mod) {
     const name = mod.classList[1];
     modsSettings[name] = !modsSettings[name];
     const button = modsWindowInfo.querySelector(".toggle-mod");
-    console.log(name);
     if (modsSettings[name]) {
         button.textContent = lang.disable ?? "Disable";
         button.classList?.remove("blue-button");

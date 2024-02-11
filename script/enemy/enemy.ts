@@ -194,25 +194,21 @@ class Enemy extends Character {
 					} else if (chosenAbility.self_target) {
 						buffOrHeal(this, chosenAbility);
 					} else if (chosenAbility.shoots_projectile) {
-						console.log("TRIGGERED RANGED ABI");
 						fireProjectile(this.cords, this.chosenTarget.cords, chosenAbility.shoots_projectile, chosenAbility, false, this);
 					} else {
 						regularAttack(this, this.chosenTarget, chosenAbility);
 					}
 				} else if (chosenAbility && parseInt(chosenAbility.use_range) == 1 && pathDistance <= this.attackRange) {
-					console.log("TRIGGERED SPELL OR ABI");
 					// @ts-ignore
 					attackTarget(this, this.chosenTarget, weaponReach(this, 1, this.chosenTarget));
 					regularAttack(this, this.chosenTarget, chosenAbility);
 				}
 				// Check if enemy should shoot the target
 				else if (this.shootsProjectile && arrowPathDistance <= this.attackRange && missileWillLand) {
-					console.log("TRIGGERED SHOOT");
 					this.doNormalAttack(this.chosenTarget);
 				}
 				// Check if enemy should instead punch the target (and is in range)
 				else if (!this.shootsProjectile && punchingDistance <= this.attackRange) {
-					console.log("TRIGGERED PUNCH");
 					this.doNormalAttack(this.chosenTarget);
 				}
 				// If there's no offensive action to be taken, just move towards the target.

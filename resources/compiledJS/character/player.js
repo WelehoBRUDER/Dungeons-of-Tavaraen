@@ -465,6 +465,11 @@ class PlayerCharacter extends Character {
             return this.classes.find((c) => c.perkTree === options.tree);
         }
     }
+    getClassLevels() {
+        return this.classes.reduce((acc, val) => {
+            return acc + val.level;
+        }, 0);
+    }
     getPerk(id) {
         return this.perks.find((p) => p.id === id);
     }
@@ -542,7 +547,7 @@ let player = new PlayerCharacter({
         xpNeed: 100,
         level: 1,
     },
-    classes: [new combatClass(combatClasses["barbarianClass"])],
+    classes: [new combatClass(combatClasses["rangerClass"])],
     sprite: ".player",
     race: "human",
     hair: 5,

@@ -152,6 +152,7 @@ window.addEventListener("keyup", (e) => {
         tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
         tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
         tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+        tooltip(document.querySelector(".codScrb"), `${lang["setting_hotkey_codex"]} [${settings["hotkey_codex"]}]`);
         tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
         selectingHotkey = "";
     }
@@ -308,6 +309,7 @@ function gotoSettingsMenu(inMainMenu = false) {
                     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
                     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
                     tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+                    tooltip(document.querySelector(".codScrb"), `${lang["setting_hotkey_codex"]} [${settings["hotkey_codex"]}]`);
                     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
                     tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
                     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);
@@ -552,6 +554,7 @@ function LoadSettings(name, settings) {
     tooltip(document.querySelector(".chaScrb"), `${lang["setting_hotkey_char"]} [${settings["hotkey_char"]}]`);
     tooltip(document.querySelector(".perScrb"), `${lang["setting_hotkey_perk"]} [${settings["hotkey_perk"]}]`);
     tooltip(document.querySelector(".jorScrb"), `${lang["setting_hotkey_journal"]} [${settings["hotkey_journal"]}]`);
+    tooltip(document.querySelector(".codScrb"), `${lang["setting_hotkey_codex"]} [${settings["hotkey_codex"]}]`);
     tooltip(document.querySelector(".escScrb"), `${lang["open_menu"]} [ESCAPE]`);
     tooltip(settingsTopbar.querySelector(".save"), lang["save_settings"]);
     tooltip(settingsTopbar.querySelector(".saveFile"), lang["save_settings_file"]);

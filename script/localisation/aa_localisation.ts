@@ -25,7 +25,7 @@ const finnish = {
 
 	str_tt: `<i>${icons["str"]}<i>Voima parantaa <i>${icons["melee"]}<i>voima aseiden vahinkoa 2%,\n ja parantaa maksimi taakkaa 0.5`,
 	dex_tt: `<i>${icons["dex"]}<i>Taito parantaa <i>${icons["ranged"]}<i>taito aseiden vahinkoa 2%,\nsekä nostaa <i>${icons["hitChance"]}<i>iskujen tarkkuutta ja <i>${icons["evasion"]}<i>väistelyä 0.25`,
-	vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 5,\n<i>${icons["regenHp"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
+	vit_tt: `<i>${icons["vit"]}<i>Sisu parantaa <i>${icons["health"]}<i>terveyttä 3,\n<i>${icons["regenHp"]}<i>terveyden palautimista 1%\n ja maksimi taakkaa 1`,
 	int_tt: `<i>${icons["int"]}<i>Älykkyys parantaa <i>${icons["mana"]}<i>taikaa 2,\n<i>${icons["regenMp"]}<i>taian palautimista 1%\n ja <i>${icons["damage"]}<i>maagista vahinkoa 2%`,
 	cun_tt: `<i>${icons["cun"]}<i>Oveluus parantaa <i>${icons["critDamage"]}<i>krit vahinkoa 1.5%,\n ja <i>${icons["critDamage"]}<i>krit mahdollisuutta 0.4%`,
 	critDamage_tt: `<i>${icons["critDamage"]}<i>Krit vahinko on kertoja joka parantaa kriittisiä iskuja.`,
@@ -630,6 +630,7 @@ const finnish = {
 	menu_new_game: "Uusi Peli",
 	menu_load_game: "Lataa Peli",
 	menu_mods: "Modit",
+	menu_changelog: "Muutosloki",
 
 	setting_log_enemy_movement: "Kirjaa hahmojen sijainnit",
 	setting_toggle_minimap: "Minikartta pois/päällä",
@@ -1174,7 +1175,7 @@ const english = {
 
 	str_tt: `<i>${icons["str"]}<i>Strength increases <i>${icons["melee"]}<i>damage with strength scaling weapons by 2%,\n and encumbrance by 0.5`,
 	dex_tt: `<i>${icons["dex"]}<i>Dexterity increases <i>${icons["ranged"]}<i>damage with dexterity scaling weapons by 2%,\nand increases both <i>${icons["hitChance"]}<i>Hit chance and <i>${icons["evasion"]}<i>evasion by 0.25`,
-	vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 5,\n<i>${icons["regenHp"]}<i>health regeneration by 1%\n and encumbrance by 1`,
+	vit_tt: `<i>${icons["vit"]}<i>Vitality increases <i>${icons["health"]}<i>health by 3,\n<i>${icons["regenHp"]}<i>health regeneration by 1%\n and encumbrance by 1`,
 	int_tt: `<i>${icons["int"]}<i>Intelligence increases <i>${icons["mana"]}<i>mana by 2,\n<i>${icons["regenMp"]}<i>mana recovery by 1%\n and <i>${icons["damage"]}<i>magical damage by 2%`,
 	cun_tt: `<i>${icons["cun"]}<i>Cunning increases <i>${icons["critDamage"]}<i>crit damage by 1.5%,\n and <i>${icons["critDamage"]}<i>crit chance by 0.4%`,
 	critDamage_tt: `<i>${icons["critDamage"]}<i>Crit damage is the multiplier that improves crit hits.`,
@@ -1665,6 +1666,7 @@ const english = {
 	menu_new_game: "New Game",
 	menu_load_game: "Load Game",
 	menu_mods: "Mods",
+	menu_changelog: "Changelog",
 
 	setting_log_enemy_movement: "Log character movement",
 	setting_toggle_minimap: "Toggle minimap",

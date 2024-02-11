@@ -142,7 +142,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 		char.classes.forEach((cls: any) => {
 			if (cls.statBonuses) {
 				Object.entries(cls.statBonuses).forEach((eff: any) => {
-					if (eff[0] === "hpMaxPerLevelV") hpMaxPerLevelV += eff[1];
+					if (eff[0] === "hpMaxPerLevelV") hpMaxPerLevelV += eff[1] * cls.level;
 					else applyModifierToTotal(eff, obj);
 				});
 			}
@@ -150,7 +150,7 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 				applyModifierToTotal(eff, obj);
 			});
 		});
-		obj.hpMaxPerLevelV = Math.floor(hpMaxPerLevelV / char.classes.length);
+		obj.hpMaxPerLevelV = hpMaxPerLevelV / char.getClassLevels();
 	}
 	char.perks?.forEach((mod: any) => {
 		const effects = mod.getEffects();
@@ -160,7 +160,6 @@ function getAllModifiersOnce(char: any, withConditions = true) {
 	});
 	if (char.raceEffect?.modifiers) {
 		Object.entries(char.raceEffect?.modifiers).forEach((eff: any) => {
-			if (eff[0] === "hpMaxPerLevelV") eff[1] = eff[1] * char.level.level;
 			applyModifierToTotal(eff, obj);
 		});
 	}

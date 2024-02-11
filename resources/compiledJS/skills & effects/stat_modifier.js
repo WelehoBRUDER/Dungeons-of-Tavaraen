@@ -138,13 +138,16 @@ const traits = {
             hitChanceV: 25,
         },
     },
-    warrior_instrict: {
+    warrior_instinct: {
         id: "warrior_instinct",
         conditions: {
             hp_less_than: 50,
         },
         effects: {
-            resistAllV: 4,
+            physicalArmorV: 30,
+            magicalArmorV: 30,
+            elementalArmorV: 30,
+            meleeDamageP: 5,
         },
     },
     blood_rage_1: {

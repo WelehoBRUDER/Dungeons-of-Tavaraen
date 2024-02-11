@@ -157,9 +157,9 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
 	}
 
 	if (target.isFoe) {
+		const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
 		setTimeout((paskaFixi: null) => {
 			if (!enemyIndex(target.cords)) return;
-			const layer = document.querySelector<HTMLCanvasElement>(`.enemy${enemyIndex(target.cords)}`);
 			try {
 				layer.style.animation = "none";
 				layer.offsetHeight; /* trigger reflow */
@@ -205,6 +205,8 @@ function regularAttack(attacker: characterObject, target: characterObject, abili
 			attacker.stats.hp += lifeSteal;
 			spawnFloatingText(attacker.cords, lifeSteal.toString(), "lime", 36);
 		}
+
+		renderSingleEnemy(target as Enemy, layer);
 
 		if (target.stats.hp <= 0) {
 			target.kill();
