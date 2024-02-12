@@ -60,7 +60,7 @@ const enemies = {
         attackRange: 1,
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy)],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "slime_default",
         loot: [{ type: "gold", amount: [1, 5] }],
     },
@@ -121,7 +121,7 @@ const enemies = {
         attackRange: 1,
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy)],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "slime_default",
         loot: [{ type: "gold", amount: [4, 11] }],
     },
@@ -182,7 +182,7 @@ const enemies = {
         attackRange: 1,
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy)],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "slime_default",
         loot: [{ type: "gold", amount: [4, 11] }],
     },
@@ -244,7 +244,7 @@ const enemies = {
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy)],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
@@ -309,7 +309,7 @@ const enemies = {
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.battle_fury, dummy)],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
@@ -375,7 +375,7 @@ const enemies = {
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.poisoned_arrow, dummy)],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "cornered_animal" }, { id: "fast" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_ranged",
         loot: [
             { type: "weapon", amount: [1, 1], item: "hiisiBow", chance: 25 },
@@ -439,7 +439,7 @@ const enemies = {
         canFly: false,
         abilities: [new Ability(abilities.attack, dummy)],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "skeleton_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "chippedBlade", chance: 20 },
@@ -505,7 +505,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.sundering_arrow, dummy)],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
         levelingTemplate: "skeleton_ranged",
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         loot: [
             { type: "weapon", amount: [1, 1], item: "huntingBow", chance: 20 },
             { type: "gold", amount: [4, 15] },
@@ -571,7 +571,7 @@ const enemies = {
         threat: 20,
         traits: [{ id: "magical_regen" }],
         levelingTemplate: "skeleton_mage",
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         loot: [{ type: "gold", amount: [4, 15] }],
     },
     skeletonLich: {
@@ -635,7 +635,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy), new Ability(abilities.blight, dummy), new Ability(abilities.fireball, dummy)],
         traits: [{ id: "magical_regen" }, { id: "weaker_natural_ability" }],
         levelingTemplate: "skeleton_mage",
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         loot: [
             { type: "armor", amount: [1, 1], item: "crownOfWisdom", chance: 5 },
             { type: "armor", amount: [1, 1], item: "lichRobes", chance: 10 },
@@ -689,7 +689,7 @@ const enemies = {
             evasion: 20,
         },
         threat: 25,
-        retreatLimit: 25,
+        retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
         alive: true,
         xp: 37,
         type: "barbarian",
@@ -753,7 +753,7 @@ const enemies = {
             evasion: 20,
         },
         threat: 25,
-        retreatLimit: 25,
+        retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
         alive: true,
         xp: 37,
         sprite: "norsemanHunter",
@@ -816,7 +816,7 @@ const enemies = {
             evasion: 25,
         },
         threat: 30,
-        retreatLimit: 25,
+        retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
         alive: true,
         xp: 75,
         sprite: "femaleOrcRaider",
@@ -882,7 +882,7 @@ const enemies = {
             evasion: 25,
         },
         threat: 30,
-        retreatLimit: 25,
+        retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
         alive: true,
         xp: 75,
         sprite: "maleOrcRaider",
@@ -952,7 +952,7 @@ const enemies = {
             evasion: 25,
         },
         threat: 30,
-        retreatLimit: 25,
+        retreatLimit: 25, // when enemy has this % hp left, it runs away from the player once.
         alive: true,
         xp: 500,
         sprite: "orcChieftess",
@@ -1034,7 +1034,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.2,
         traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [{ type: "gold", amount: [22, 44] }],
     },
@@ -1097,7 +1097,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.2,
         traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [{ type: "gold", amount: [22, 44] }],
     },
@@ -1159,7 +1159,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.2,
         traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
@@ -1224,7 +1224,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.2,
         traits: [{ id: "troll_regeneration" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "beast_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "trollClub", chance: 15 },
@@ -1290,7 +1290,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.33,
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "slow" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "bulwark",
         loot: [{ type: "gold", amount: [65, 150] }],
     },
@@ -1353,7 +1353,7 @@ const enemies = {
         abilities: [new Ability(abilities.attack, dummy)],
         scale: 1.33,
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }, { id: "slow" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "bulwark",
         loot: [
             { type: "weapon", amount: [1, 1], item: "stoneHalberd", chance: 12 },
@@ -1422,7 +1422,7 @@ const enemies = {
             new Ability(abilities.chivalrious_blow, dummy),
         ],
         traits: [{ id: "no_natural_regen" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "balanced",
         loot: [
             { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
@@ -1498,7 +1498,7 @@ const enemies = {
             new Ability(abilities.chivalrious_blow, dummy),
         ],
         traits: [{ id: "low_natural_regen" }, { id: "magically_impotent" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "magical_melee",
         loot: [
             { type: "weapon", amount: [1, 1], item: "silverSword", chance: 10 },
@@ -1576,7 +1576,7 @@ const enemies = {
             new Ability(abilities.reap, dummy),
         ],
         traits: [{ id: "medium_natural_regen" }, { id: "weaker_natural_ability" }],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         levelingTemplate: "magical_melee",
         loot: [{ type: "gold", amount: [288, 541] }],
     },

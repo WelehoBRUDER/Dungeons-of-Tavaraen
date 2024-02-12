@@ -57,7 +57,7 @@ const summons = {
                 id: "magically_impotent",
             }
         ],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         statsPerLevel: {
             str: 2,
             dex: 1,
@@ -182,7 +182,7 @@ const summons = {
                 id: "magically_impotent",
             }
         ],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         statsPerLevel: {
             str: 4,
             dex: 0,
@@ -244,7 +244,7 @@ const summons = {
                 id: "magically_impotent",
             }
         ],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         statsPerLevel: {
             str: 0,
             dex: 0,
@@ -304,7 +304,7 @@ const summons = {
         abilities: [
             new Ability(abilities.attack, dummy),
         ],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         statsPerLevel: {
             dex: 3,
             vit: 2
@@ -368,7 +368,7 @@ const summons = {
                 id: "magically_impotent",
             }
         ],
-        retreatLimit: 0,
+        retreatLimit: 0, // when enemy has this % hp left, it runs away from the player once.
         statsPerLevel: {
             str: 2,
             dex: 1,

@@ -317,15 +317,14 @@ function summonUnit(ability: ability, cords: tileObject) {
 		}
 	}
 	const playerBuffs: any = {};
-	player.perks.forEach((prk: any) => {
-		Object.entries(prk.effects).forEach((eff: any) => {
-			if (eff[0].startsWith("all_summons")) {
-				let key = eff[0].replace("all_summons_", "");
-				let value = eff[1];
-				playerBuffs[key] = value;
-			}
-		});
+	Object.entries(player.allModifiers).forEach((eff: any) => {
+		if (eff[0].startsWith("all_summons")) {
+			let key = eff[0].replace("all_summons_", "");
+			let value = eff[1];
+			playerBuffs[key] = value;
+		}
 	});
+
 	let newSummon = new Summon({
 		...{
 			...summons[ability.summon_unit],

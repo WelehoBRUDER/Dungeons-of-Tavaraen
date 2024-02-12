@@ -498,7 +498,7 @@ const finnish = {
     sell_item: "Myy esine",
     quest_added: "<c>goldenrod<c>Tehtävä '<c>gold<c>[QUEST]<c>goldenrod<c>' alkanut!",
     revive: "Olet herännyt henkiin pyhäköllä!",
-    enter_area: "Astu sisälle",
+    enter_area: "Astu sisälle", // kassun käännös
     no_entry: "Et ole vielä löytänyt tätä asiaa...",
     disable: "Poista käytöstä",
     enable: "Ota käyttöön",
