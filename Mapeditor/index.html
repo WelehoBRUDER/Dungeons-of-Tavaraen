@@ -84,7 +84,7 @@
       <div class="valintaPohja"></div>
       <div class="buttonBox">
         <button class="done" onclick="enemyStatsConfirm()">Done</button>
-        <button class="reset" onclick="enemyDelete()">Delete</button>
+        <button class="/reset" onclick="enemyDelete()">Delete</button>
       </div>
     </div>
   </div>
@@ -121,9 +121,9 @@
   <img src="../resources/tiles/enemies/soul_wraith.png" alt="" class="soulWraith sprite">
 
   <!-- Health & Mana Bars -->
-  <img src="resources/tiles/enemies/healthBackground.png" alt="" class="hpBg sprite">
-  <img src="resources/tiles/enemies/healthBar.png" alt="" class="hpBar sprite">
-  <img src="resources/tiles/enemies/healthBorder.png" alt="" class="hpBorder sprite">
+  <img src="/resources/tiles/enemies/healthBackground.png" alt="" class="hpBg sprite">
+  <img src="/resources/tiles/enemies/healthBar.png" alt="" class="hpBar sprite">
+  <img src="/resources/tiles/enemies/healthBorder.png" alt="" class="hpBorder sprite">
 
   <!-- Map Tiles  -->
   <img src="../resources/tiles/tileMap.png" alt="" class="tileAtlas sprite">
@@ -147,19 +147,18 @@
 <!-- CODEBASE HAS BEEN REFACTORED! -->
 <!-- THERE ARE A LOT OF NEW FILES AND AS SUCH LOADING THEM IS NOW SPLIT TO MULTIPLE BLOCKS -->
 
+
 <!-- Most crucial files, these must be loaded before all others -->
-<script src="/resources/compiledJS/ui/syntax.js"></script>
 <script src="/resources/compiledJS/ui/drag.js"></script>
 <script src="/resources/compiledJS/ui/icons.js"></script>
 <script src="/resources/compiledJS/map/tiles.js"></script>
 <script src="/resources/compiledJS/map/static_maps.js"></script>
 <script src="/resources/compiledJS/misc/helper.js"></script>
-<script src="/resources/compiledJS/misc/commands.js"></script>
 <script src="/resources/compiledJS/ui/settings.js"></script>
-<script src="/resources/compiledJS/enemy/enemy_leveling.js"></script>
+<script src="/resources/compiledJS/npc/flags.js"></script>
 
 <!-- Localisation files -->
-<script src="/resources/compiledJS/localisation/_localisation.js"></script>
+<script src="/resources/compiledJS/localisation/aa_localisation.js"></script>
 <script src="/resources/compiledJS/localisation/codex_localisation.js"></script>
 <script src="/resources/compiledJS/localisation/dialog_localisation.js"></script>
 <script src="/resources/compiledJS/localisation/quest_localisation.js"></script>
@@ -176,9 +175,9 @@
 <script src="/resources/compiledJS/skills & effects/abilities.js"></script>
 <script src="/resources/compiledJS/skills & effects/effects.js"></script>
 <script src="/resources/compiledJS/skills & effects/stat_modifier.js"></script>
-<script src="/resources/compiledJS/perk/perks.js"></script>
 <script src="/resources/compiledJS/ui/tooltip.js"></script>
 <script src="/resources/compiledJS/ui/menu_buttons.js"></script>
+<script src="/resources/compiledJS/enemy/enemy_leveling.js"></script>
 
 <!-- Important Classes -->
 <script src="/resources/compiledJS/skills & effects/ability.js"></script>
@@ -194,18 +193,37 @@
 <script src="/resources/compiledJS/character/player.js"></script>
 <script src="/resources/compiledJS/summon/summon.js"></script>
 <script src="/resources/compiledJS/map/map_data.js"></script>
-<script src="/resources/compiledJS/npc/npc.js"></script>
+<script src="/resources/compiledJS/combat/projectile.js"></script>
 
 <!-- Important data / arrays -->
 <script src="/resources/compiledJS/summon/summons.js"></script>
 <script src="/resources/compiledJS/enemy/enemies.js"></script>
-<script src="/resources/compiledJS/npc/characters.js"></script>
+
+<!-- Important functions -->
+<script src="/resources/compiledJS/items/inventory.js"></script>
+
+<!-- Import every single map -->
+<!-- This takes a lot of space -->
+<script src="/script/map/maps/test_dungeon_0.js"></script>
+<script src="/script/map/maps/test_dungeon_1.js"></script>
+<script src="/script/map/maps/cave_of_awakening.js"></script>
+<script src="/script/map/maps/western_heere_coast.js"></script>
+<script src="/script/map/maps/central_heere.js"></script>
+<script src="/script/map/maps/eastern_heere.js"></script>
 
 <!-- Map rendering -->
 <script src="/resources/compiledJS/map/maps.js"></script>
+<script src="/resources/compiledJS/map/map_misc.js"></script>
+<script src="/resources/compiledJS/map/map_mini.js"></script>
+<script src="/resources/compiledJS/map/render_functions.js"></script>
+<script src="/resources/compiledJS/map/path.js"></script>
+<script src="/resources/compiledJS/map/render_player.js"></script>
 
-
-
-
+<!-- Combat -->
+<script src="/resources/compiledJS/combat/animation.js"></script>
+<script src="/resources/compiledJS/combat/effects.js"></script>
+<script src="/resources/compiledJS/combat/turn.js"></script>
+<script src="/resources/compiledJS/combat/damage.js"></script>
+<script src="/resources/compiledJS/combat/combat.js"></script>
 
 <script src="scripts/editor.js"></script>
